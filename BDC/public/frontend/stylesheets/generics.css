@@ -1,0 +1,280 @@
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}     
+  #predefined_Task .cr_date{
+	width:175px;
+	margin-left:10px;
+	margin-right:10px;
+ }
+   #predefined_Task a {
+    color: #6B6B6B;
+    font-weight: bold;
+    text-decoration: none;
+}
+ #predefined_Task  .descr{
+	width:300px;
+	margin-left:30px;
+	padding-right: 10px !important;
+ }
+ #predefined_Task  .project-type {
+    width: 160px  !important;
+}
+ #predefined_Task  .requirement{
+     margin-left:15px;
+	width:150px;
+ } 		
+ #predefined_Task .deliverable{
+      margin-left:15px;
+	width:150px;
+ }			    			
+  #predefined_Task  .responsible{
+    margin-left:15px;
+	width:150px;
+ }
+ .cr_date{
+	width:90px;
+	margin-left: 21px;
+	text-align: right !important;
+	/* margin-left:52px;
+	margin-right:10px; */
+ }
+.up_date {
+    margin-left: 105px  !important;
+	width:80px;
+	text-align: right !important;
+}
+ .responsible{
+    margin-left:15px;
+	width:245px !important;
+ }
+ .new-generic-project{
+    color: #000000;
+    float: left;
+    text-decoration: none;
+    width: 120px;
+}
+.edit-icon {
+    height: 16px !important;
+    width: 14px !important;
+}
+
+.project-type {
+    width: 200px !important;
+}
+
+.historic-project-type-data:hover{
+	background: none repeat scroll 0% 0% #F9E796;
+}
+.project-type-data:hover{
+	background: none repeat scroll 0% 0% #F9E796;
+}
+#project_type h3{
+   color: #55B9D9;
+    float: left;
+	width:100%;
+	background-color: #F3F4F5;
+    height: auto;
+    line-height: 27px;
+    min-height: 30px;
+}
+#project_type h3 span{
+	 font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+}
+#project_type .program-div{
+	background: url("../images/sub_task_add_icon_new.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    height: 28px;
+    line-height: 22px;
+    margin: 10px 10px 10px 0 !important;
+    padding: 0 0 0 25px;
+    width: 80%;
+}
+#project_type .back_link{
+    color: #55B9D9;
+    float: left;
+    line-height: 28px;
+  
+}
+
+.back_link span{
+	font-size: 11px;
+	font-weight: bold;
+}
+#project_type .parent-icon {
+     color: #D9DCE0;
+    float: left;
+    font-size: 15px;
+    height: 26px;
+    line-height: 29px;
+    width: 12px;
+}
+
+#project_type .header {
+    color: #666666;
+    float: left;
+    font-weight: bold;
+    width: 130px;
+    padding: 10px;
+}
+
+#project_type .program-data {
+   /* border-right: 1px dashed #F3F4F5; */
+    color: #6B6B6B;
+    float: left;
+    width: 765px;
+    padding: 10px;
+}
+#project_type  ul{
+	float: left;
+	width: 100%;
+}
+#project_type  li{
+	float: left;
+	width: 100%;
+}
+#project_type .edit-icon{
+	margin-left: 25px;
+	
+}
+#program_container .current {
+    background: url("../images/employee/project_icon.png") ;
+    height: 11px;
+    margin-left: 0;
+    margin-right: 5px;
+    margin-top: 1px;
+    width: 11px;
+}
+#program_container .historic {
+    background: url("../images/employee/sub_task_icon.png") ;
+    height: 11px;
+    margin-left: 0;
+    margin-right: 5px;
+    margin-top: 1px;
+    width: 11px;
+}
+.predefined-tasks .cr_date{
+	width:200px;
+	margin-left:10px;
+	margin-right:10px;
+	
+ }
+#manage-predefined-tasks .dependency-select{
+ width: 91.4%;
+ }
+ .pre_title{
+ 	float: left;
+ 	width: 160px;
+ 	word-break: break-all !important;
+ 	padding-right: 10px !important;
+ }
+ .pre_discipline{
+ 	float: left;
+ 	width: 120px;
+ }
+ .pre_role{
+	float: left;
+ 	width: 150px;
+ }
+  .pre_deliverable{
+ 	float: left;
+ 	width: 150px;
+ 	padding-right: 15px
+ }
+#manage-predefined-tasks select{
+ 	border-radius: 0;
+    color: #315663;
+    float: left;
+    font-size: 11px;
+    padding: 3px !important;
+    height: 80px
+ }
+ .pre_depend{
+ 	float: left;
+ 	width: 150px;
+ }
+ .pre_action{
+ 	float: left;
+ 	width: 80px;
+ }
+#manage-predefined-tasks li{
+ 	float: left;
+ 	width: auto;
+ 	padding: 6px;
+ }
+ 
+
+#manage-predefined-tasks .header span{
+  	font-size: 13px;
+  	font-weight: bold;
+  }
+.select_task{
+  	text-decoration: underline;
+  	cursor: pointer;
+	font-weight: bold;
+}
+  
+.delete_icon {
+    background-image: url("../images/close_icon.png");
+    cursor: pointer;
+    float: left;
+    height: 18px;
+    margin-left: 96px;
+    width: 18px;
+}
+.delete-icon{
+	   background: url("../images/close_icon.png") no-repeat;
+    float: left;
+    height: 20px;
+     margin: 3px 0 0 10px;
+    width: 18px;
+}
+
+.generic-tasks-list{
+	width: 100%;
+	float: left;
+	font-weight: bold;
+	color: #666;
+}
+.generic-tasks-list li.header{
+	width: 100% ;
+	float: left;
+	background: #315663;
+	color: #FFF;
+}
+.generic-tasks-list ul{
+	width: 100%;
+	float: left;
+}
+.generic-tasks-list li{
+	float: left;
+    padding: 5px;
+    width: 100%;
+}
+.generic-tasks-list .pre_depend{
+	width: 235px;
+}
+.generic-tasks-list .task-listing .pre_depend{
+	width: 235px;
+
+}
+.generic-tasks-list .multiselect input{
+	float: left;
+	margin: 3px 4px 0;
+	padding: 0;
+}
+.generic-tasks-list .pre_action{
+	margin-left: 10px;
+}
+.generic-odd-row{
+	background: #e7edef	
+}
+.generic-even-row{
+	
+}

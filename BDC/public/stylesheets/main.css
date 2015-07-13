@@ -1,0 +1,389 @@
+form dd.error {
+	color: #ff0000;
+	float: left;
+}
+
+form dl dt label {
+	display: block;
+	margin-bottom: 4px ! important;
+	margin-left: 8px ! important;
+}
+
+form dl .info {
+	visibility: none !important;
+	display: none !important;
+}
+
+.right {
+	float: right;
+}
+
+.table-tr-odd-bg {
+	background-color: #EBEBEB;
+}
+
+.reportLink {
+	color: #315663;
+	font-weight: bold;
+	float: right;
+	margin-right: 10px;
+	margin-top: 25px;
+}
+
+.first-row {
+	background-color: #404040;
+	color: #ffffff;
+}
+
+.form-div {
+	width: 100% !important;
+	margin: 0 !important;
+}
+
+#rId_field {
+	display: none !important;
+}
+
+.push-left20px {
+	margin-left: 20px;
+}
+
+.push-left10px {
+	margin-left: 10px;
+}
+
+.display-none {
+	display: none !important;
+}
+
+.pretend-top10px {
+	padding-top: 10px;
+}
+
+.chkbox {
+	margin-top: -10px;
+}
+
+.push-top-15px {
+	margin-top: -15px;
+}
+
+#myUser select {
+	width: 31.6239%
+}
+
+span.error {
+	background: url("/assets/images/arrow_error.png") no-repeat scroll 0
+		center transparent;
+	color: #888888;
+	font: bold 11px/1em Arial, sans-serif;
+	height: 11px;
+	padding: 7px 15px 10px 20px;
+	position: absolute;
+}
+
+.color-black {
+	color: #000000;
+}
+
+.pretend-top100px {
+	padding-top: 100px
+}
+
+.push-bottom9px {
+	margin-top: 9px;
+}
+
+.cancel-button {
+	height: 18px;
+	padding-top: 2px;
+}
+
+.textarea-height {
+	height: 150px;
+}
+
+tr:hover {
+	background: #f9e796;
+}
+
+.first-row:hover {
+	background: #333333;
+}
+
+.width49per {
+	width: 49%;
+}
+
+.pretend-left10px {
+	padding-left: 10px;
+}
+
+.left {
+	float: left;
+}
+
+.left-full {
+	float: left;
+	width: 100%
+}
+
+.p-details {
+	width: 100%;
+	float: left;
+	display: none;
+	background: none repeat scroll 0 0 #FFFFFF;
+	margin: 10px 10px 10px 0;
+	padding: 10px 10px 10px 0;
+	width: 90%;
+}
+
+.planning-task {
+	background: url("/assets/frontend/images/zoom-in.png") no-repeat scroll
+		3px center/10px auto rgba(0, 0, 0, 0);
+	float: left;
+	font-weight: bold;
+	height: 11px;
+	line-height: 12px;
+	text-align: center;
+	width: 88px;
+}
+
+.new-task-plan:HOVER {
+	background-color: #9FF3F9;
+	color: #fff;
+}
+
+.project-task {
+	float: left;
+	width: 50%;
+}
+
+.project-task .span4,.project-task .span6 {
+	width: 300px;
+}
+
+.project-task label {
+	width: 300px
+}
+
+.project-details-admin {
+	float: left;
+	width: 45%;
+	min-height: 17.25em;
+}
+
+.project-details-admin td {
+	line-height: 22px;
+	font-size: 12px;
+}
+
+.project-details-admin .td-left {
+	width: 110px;
+}
+
+.project-details-admin .odd-td {
+	background: #eee;
+}
+
+.assign-sub-task .odd-td {
+	background: #eee;
+}
+
+.assign-sub-task .under-limit-spent {
+	color: #008000;
+	font-weight: bold;
+}
+
+.assign-sub-task .over-limit-spent {
+	color: #FF0000;
+	font-weight: bold;
+}
+
+.project-details-admin span {
+	float: left;
+	padding: 3px;
+	width: 100%;
+}
+
+.project-details-admin p {
+	margin-top: 100px;
+	text-align: center;
+}
+
+.project-sub-task {
+	float: left;
+	width: 50%;
+}
+
+.project-sub-task .span4,.project-sub-task .input-xlarge {
+	width: 300px
+}
+
+#myUser label {
+	width: 200px;
+	float: left;
+}
+
+#myUser span {
+	width: 100%;
+	float: left;
+}
+
+#myUserUpdate span {
+	width: 100%;
+	float: left;
+}
+
+#myUserUpdate label {
+	width: 200px;
+	float: left;
+}
+
+.allocate-user {
+	background-color: #808080;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.allocation-step1-title {
+	color: #000000;
+	float: left;
+	width: 100%;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0 0 10px;
+	text-decoration: underline;
+	width: 100%;
+}
+
+.allocation-step1-select {
+	color: #FFFFFF;
+	float: left;
+	font-weight: bold;
+	text-align: center;
+	width: 111px;
+	cursor: pointer;
+}
+
+.allocation-step2-select {
+	color: #FFFFFF;
+	cursor: pointer;
+	float: left;
+	font-weight: bold;
+	text-align: center;
+	width: 111px;
+}
+
+.allocation-step3-select {
+	color: #FFFFFF;
+	cursor: pointer;
+	float: left;
+	font-weight: bold;
+	text-align: center;
+	width: 111px;
+}
+
+.allocation-step2-project-details {
+	float: left;
+	margin: 10px 0;
+	padding: 10px 0;
+	width: 97.4%;
+}
+
+.assign-sub-task td {
+	line-height: 18px;
+}
+
+.logo_new img {
+	float: left;
+	width: 230px;
+}
+
+.fn-gantt .dataPanel {
+	margin-left: 0px !important;
+}
+
+.styleId {
+	word-break: break-all;
+	width: 50px !important;
+}
+
+.styleName {
+	word-break: break-all;
+	width: 200px !important;
+}
+
+.styleUpdatedBy {
+	word-break: break-all;
+	width: 150px !important;
+}
+
+.styleUpdateDate {
+	word-break: break-all;
+	width: 120px !important;
+}
+
+.styleActive {
+	word-break: break-all;
+	width: 50px !important;
+}
+
+.historic-project-type-data:hover {
+	background: none repeat scroll 0% 0% #F9E796;
+}
+
+.project-type-data:hover {
+	background: none repeat scroll 0% 0% #F9E796;
+}
+
+#sla_value_field {
+	width: 11%;
+	float: left;
+}
+
+#sla_value {
+	width: 100%;
+	float: left;
+}
+
+#sla_unit_field {
+	width: 50%;
+	float: left;
+}
+
+.submit-service-catalogue-buttons {
+	float: left;
+	width: 100%;
+}
+
+#sla_unit {
+	width: 25%;
+}
+
+.department-emp-list {
+	color: #0088cc;
+	line-height: 18px;
+	text-decoration: none;
+}
+
+#service_scope_field {
+	display: none;
+}
+
+.activate-status {
+	background-image: url("../images/right_sign.png");
+	background-repeat: no-repeat;
+	height: 22px;
+	float:right;
+	width: 32px;
+}
+
+.activate-status_1 {
+	background-image: url("../images/right_sign.png");
+	background-repeat: no-repeat;
+	height: 22px;
+	float:right;
+	width: 45px;
+}

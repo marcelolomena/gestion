@@ -1,0 +1,112 @@
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr�               |
+|--------------------------------------------------*/
+
+.dtree {
+	padding:3px;
+    color: #666;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.headerCell{
+	border: 1px solid black;
+	 text-align: center; 
+	 vertical-align: middle;
+}
+
+.tableCells{
+	border:1px solid #dadada;
+	text-align: left !important;
+	 padding-left: 5px;
+	 vertical-align: middle;
+	 height: 20px;
+	 background: none repeat scroll 0 0 #ffffff;
+}
+.tableCells1{
+		border:1px solid #dadada;
+	text-align: left !important;
+	 padding-left: 5px;
+	 vertical-align: middle;
+	 height: 20px;
+	 background: none repeat scroll 0 0 #DBEAF9;
+}
+.tableView{
+    background: none repeat scroll 0 0 #315663;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    color: #ffffff;
+    float: left;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    height: 48px;
+    line-height: 48px;
+    margin: 0;
+    padding: 0 10px;
+    width: 914px;
+}
+#changeableContents{
+ height: 700px;
+}
+
+div.menuReport {
+    vertical-align: top;
+    height: 700px;
+    width: 244px;
+}
+
+div.divLine {
+    background-color: #e8e8e8;
+    background-image: url("../images/dtree-images/line.png");
+    background-repeat: repeat-y;
+    width: 10px;
+    /* height: 700px; */
+}
+table.reference, table.tecspec {
+    border-collapse: collapse;
+    width: 100%;
+}
+section.slider {
+    margin: 10px 83px !important;
+/*     border-bottom: dashed 1px #c8c8c8; 
+    border-top: dashed 1px #c8c8c8; 
+    border-right: dashed 1px #c8c8c8;  */
+     background-color: #e8e8e8;
+}
+  .outerContainer{
+/*   border-top: dashed 1px #c8c8c8; 
+   border-bottom: dashed 1px #c8c8c8;  */
+    bottom: 50px;
+    left: 5px;
+    overflow: auto;
+    position: absolute;
+    top:170px;
+    width: 244px;
+    }
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: blue;
+	text-decoration: underline;
+}
+.dtree a.nodeSel {
+	background-color: #c0d2ec;
+}
+.dtree #dd0 .clip {
+	/* overflow: scroll; */
+	height: 500px;
+}

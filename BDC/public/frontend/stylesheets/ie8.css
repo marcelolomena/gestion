@@ -1,0 +1,502 @@
+* {
+	font-family: Arial !important;
+}
+
+.header-right .cufon {
+	color: #fff;
+	font-weight: bold;
+}
+
+cufontext {
+	display: none ! important;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
+	{
+	display: block;
+}
+
+body {
+	line-height: 1;
+}
+
+ol,ul {
+	list-style: none;
+}
+
+blockquote,q {
+	quotes: none;
+}
+
+blockquote:before,blockquote:after,q:before,q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/*==================== Fonts ============================
+@font-face {
+	font-family: 'Conv_MyriadPro-Regular';
+	src: url('../fonts/MyriadPro-Regular.eot');
+	src: url('../fonts/MyriadPro-Regular.woff') format('woff'), url('../fonts/MyriadPro-Regular.ttf') format('truetype'), url('../fonts/MyriadPro-Regular.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}*/
+/*----------------- Layout ----------------------*/
+body {
+	padding: 0;
+	margin: 0;
+	font-family: !important;
+	font-size: 12px;
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+	color: #000;
+	background: url(/images/new_design/body_bg.png) repeat-x;
+}
+
+.calendarTitle {
+	color: #00CDFF;
+	font-family:;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 28px;
+	margin-left: 80px;
+	position: relative;
+	text-align: center;
+	width: 778px;
+	position: relative;
+	height: 30px;
+}
+
+#add-new-program-form select {
+	padding-bottom: 6px !important;
+}
+
+input[type=name],input[type=password] {
+	padding-bottom: 0px !important;
+	padding-top: 10px !important;
+}
+
+#new-task-form #title_field input[type=text] {
+	padding-top: 7px !important;
+}
+
+#new-task-form #remark_field input[type=text] {
+	padding-top: 7px !important;
+}
+
+#fo-new-task select {
+	padding-bottom: 4px !important;
+}
+
+.heightInpx {
+	height: 20px !important;
+	font-size: 13px !important;
+}
+
+.roadmap-select {
+	border: 1px solid;
+	border-radius: 5px;
+	color: #315663;
+	float: left;
+	height: 32px;
+	padding: 4px 2px 6px;
+}
+
+.timeSheetCalanderwrapper {
+	float: left;
+	margin-left: 41px !important;
+}
+
+.clander-prev-weer {
+	background: url("../images/cal_nav_btn.png") no-repeat scroll left top;
+	cursor: pointer;
+	float: left;
+	height: 21px;
+	position: relative;
+	top: 20px;
+	width: 50px;
+}
+
+.clander-next-weer {
+	background: url("../images/cal_nav_btn.png") no-repeat scroll right
+		bottom;
+	float: left;
+	text-align: right;
+	width: 50px;
+	cursor: pointer;
+	position: relative;
+	top: 20px;
+	height: 21px;
+}
+
+.delete-timesheet {
+	background: url("../images/close_icon.png") no-repeat scroll center
+		center;
+	cursor: pointer;
+	float: left;
+	height: 20px;
+	line-height: 28px;
+	width: 100%;
+}
+
+.fn-gantt .leftPanel {
+	border-right: 1px solid #DDDDDD;
+	float: left;
+	overflow: hidden;
+	position: relative;
+	width: 150px;
+}
+
+.legends_div {
+	display: none;
+}
+
+.baseline-label {
+	padding-top: 4px;
+}
+
+.fn-gantt .fn-content {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+
+.team_task_div_change tr:first-child {
+	background: #FFF
+}
+
+.team_task_div_change tr:first-child+tr {
+	background: #E3EAED
+}
+
+.team_task_div_change tr:first-child+tr+tr {
+	background: #fff
+}
+
+.team_task_div_change tr:first-child+tr+tr+tr {
+	background: #E3EAED
+}
+
+.team_task_div_change tr:first-child+tr+tr+tr+tr {
+	background: #fff
+}
+
+.team_task_div_change tr:first-child+tr+tr+tr+tr+tr {
+	background: #E3EAED
+}
+
+.team_task_div_change tr:first-child+tr+tr+tr+tr+tr+tr {
+	background: #fff
+}
+
+.ui-datepicker {
+	width: 215px;
+}
+
+.ui-datepicker-header {
+	float: left;
+	width: 96%;
+	position: relative;
+}
+
+.ui-datepicker-calendar {
+	float: left;
+	position: relative;
+}
+
+.ui-datepicker-next {
+	
+}
+
+.fn-gantt-loader-spinner span {
+	display: none;
+}
+
+.newtask-div span {
+	width: 80px;
+	float: left;
+}
+
+.add_subtask span {
+	width: 100px;
+	float: left;
+}
+
+.font-helvetica {
+	color: #fff;
+}
+
+.timesheet-wrapper {
+	margin-left: 91px !important;
+}
+
+.slider-marker {
+	top: -19px !important;
+}
+
+.weekTitle {
+	margin-left: 30% !important;
+}
+
+#search-user {
+	padding-left: 5px !important;
+}
+
+#task-gantt-label {
+	height: 35px !important;
+}
+.new-member-title {
+	background: none repeat scroll 0 0 #5BC3E6;
+	color: #FFFFFF;
+	float: left;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 32px;
+	padding: 2px 0 0 10px;
+	width: 99%;
+	word-wrap: break-word;
+}
+
+#sap_id_field {
+	float: left;
+	width: 320px;
+}
+
+#project-sap-form label {
+	float: left;
+	width: 120px;
+	font-weight: bold;
+	color: #666;
+}
+
+#project-sap-form input {
+	width: 140px !important;
+	color: #666;
+}
+
+#project-expense span {
+	float: left;
+	width: 160px !important;
+}
+
+#project-expense dt {
+	float: left;
+	width: 0px;
+}
+
+#available-investment span {
+	float: left;
+	margin-left: 20px;
+	width: 170px !important;
+}
+
+#project-sap-form .investment-title {
+	padding-left: 142px;
+}
+
+#project-sap-form .expenditure-title {
+	padding-left: 20px;
+}
+
+#project-sap-form .btn {
+	width: 120px !important;
+}
+
+#project-sap-form .push-left127px {
+	margin-left: 120px !important;
+}
+
+#project-sap .disabled-input {
+	border: none;
+	color: #666666;
+	font-weight: bold;
+	background: #E8E8E8;
+	padding: 6px;
+}
+
+#available-investment dl {
+	margin-left: 30px;
+}
+
+#project_type .back_link {
+	color: #55b9d9 !important;
+	float: left !important;
+	line-height: 28px !important;
+}
+
+#project_type a {
+	outline: medium none;
+	text-decoration: none;
+}
+
+.back_link span {
+	font-size: 11px;
+	font-weight: bold;
+}
+
+#project_type h3 {
+	background-color: #f3f4f5;
+	color: #55b9d9;
+	float: left;
+	height: auto;
+	line-height: 27px;
+	min-height: 30px;
+	width: 100%;
+}
+
+#project_type h3 span {
+	font-size: 12px;
+	font-weight: bold;
+	padding: 5px;
+}
+
+#project_type ul {
+	float: left;
+	width: 100%;
+}
+
+#project_type ol,ul {
+	list-style: outside none none;
+}
+
+#project_type li {
+	float: left;
+	width: 100%;
+}
+
+#project_type .header {
+	color: #666666;
+	float: left;
+	font-weight: bold;
+	padding: 10px;
+	width: 130px;
+}
+
+#project_type .program-data {
+	color: #6b6b6b;
+	float: left;
+	padding: 10px;
+	width: 765px;
+}
+
+#project-sap dl {
+	padding: 5px !important;
+}
+
+#project-investment dl,#project-expense dl {
+	padding: 0px !important;
+}
+
+#available-investment dd,#available-expense dd {
+	margin: 0 0 15px !important;
+}
+
+#search_scope1,#search_scope2,#search_scope3 {
+	margin-top: 0px !important;
+}
+
+.push-left-99px {
+	margin-left: 99px;
+}
+
+.predefined-list-push-left-99px {
+	margin-left: 120px !important;
+}
+
+.sap-title {
+	background: none repeat scroll 0 0 #5bc3e6;
+	color: #ffffff;
+	float: left;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 32px;
+	padding: 2px 0 0 10px;
+	width: 99%;
+	word-wrap: break-word;
+}
+.total-sap-invest,.spi,.clouse-date{
+	float: left;
+	text-align: left;
+}
+#sub-task-detail .sub-task-h3{
+	width: 98.5% !important;
+}
+.time_subtask_details{
+	margin-left: 90px !important;
+}
+
+.upload-document-icon {
+    background: url("../images/upload-document.png") no-repeat scroll 0 3px !important;
+    line-height: 15px !important;
+}
+.product_main .download_div {
+
+     margin-top: 24px !important;
+}
+#project-sap-form label {
+	   line-height: 52px !important;
+}
+#sap_id_field label{
+	 line-height: 34px !important;
+	 width: 140px;
+}
+#add-new-project-form label{
+	line-height: 32px !important;
+}
+#add-new-project-form label {
+	line-height: 32px !important;
+}
+
+#add-new-project-form #description_field  label {
+	line-height: 28px !important;
+}
+#add-new-project-form #project_name_field label{
+	line-height: 28px !important;
+}
+#add-new-project-form #start_date_field label{
+	line-height: 28px !important;
+}
+#add-new-project-form #final_release_date_field label{
+	line-height: 28px !important;
+}
+
+.investment-title {
+	    margin: none !important;
+}
+.issue-member{
+	margin-top: 7px !important;
+	margin-left: 10px;
+}
+#sap_id_field dt{
+	width: 155px;
+}
+.push-left127px{
+	padding-left: 140px !important;
+	margin-left: 0px !important;
+}
+.pageRecord_tasklist{
+	width: 50px !important;
+	margin-top: 2px !important;
+}
+.pageRecord_label{
+      padding-top: 3px !important;
+      float: left ;
+}
+.margin-top5{
+ padding-top: 4px !important;
+}
+#pageRecord{
+	padding: none !important;
+}
+#new-predefined-task-form SELECT{
+	padding-bottom: 7px !important;
+	padding-top: 7px !important;
+}
+#search_scope input{
+	border: none !important;
+}

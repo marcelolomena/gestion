@@ -1,0 +1,413 @@
+section.timesheet-section{
+	float: left;
+    margin: 0 auto;
+    padding: 0;
+    width: 80em;
+}
+.timesheet-head{
+	background: none repeat scroll 0 0 #315663;
+    /*border-top-left-radius: 6px;
+    border-top-right-radius: 6px;*/
+    color: #FFFFFF;
+    float: left;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    height: 36px;
+    line-height: 36px;
+    /*margin: 40px 0 0;*/
+    padding: 0 10px;
+    width: 58.7em;
+}
+.timesheet-wrapper table{
+	width:100%;
+	float:left;
+	margin-top: 6px;
+}
+.timesheet-wrapper table th{
+	background-color: #EEEEEE;
+	color: #6B6B6B;
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 0 5px 5px;
+     text-align: left;
+  
+}
+.timesheet-wrapper{
+	  float: left;
+      margin-left: 51px;
+    margin-top: 10px;
+    width: 779px;
+    margin-bottom: 20px;
+  
+}
+.timesheet-wrapper table td{
+	text-align: left;
+	padding: 5px;
+	padding-top: 9px;
+}
+.width30px{
+	width:30px;
+}
+.calanderCell{	
+    border-bottom: 1px solid #CFD9DD;
+    border-right: 1px solid #CFD9DD;
+    border-top: 1px solid #CFD9DD;
+    color: #000000;
+    float: left;
+    font-family: Arial;
+    font-size: 11px;
+    height: 64px;
+    margin: 0;
+    overflow-x: hidden;
+    padding: 0;
+    text-align: center;
+    width: 110px;
+    z-index: 10000;
+    cursor: pointer;
+}
+.calanderCell:hover{
+	background:#BFE1Ec;
+}
+.numberCell{
+    margin: 0 0 0 31px !important;
+    cursor:pointer;
+    padding: 4px 0 0;
+}
+.currentDate{
+	background:#BFE1Ec;
+}
+.clander-prev-weer{
+	background: url("../images/cal_nav_btn.png") no-repeat scroll left top rgba(0, 0, 0, 0);
+    cursor: pointer;
+    float: left;
+    height: 21px;
+    position: relative;
+    top: 20px;
+    width: 50px;
+}
+.clander-next-weer{
+	background: url("../images/cal_nav_btn.png") no-repeat scroll right bottom rgba(0, 0, 0, 0);
+	float: left;
+    text-align: right;
+    width: 50px;
+	cursor:pointer;
+	  position: relative;
+    top: 20px;
+	
+    height: 21px;
+}
+.map_data_detail {
+	width:779px;
+}
+.timeSheetCalanderwrapper{
+	width:auto; 
+	margin-left: auto;
+    
+}
+.calendarTitle{
+	 margin-left: 50px;
+    position: relative;
+    text-align: center;
+    width: 778px;
+     line-height: 28px;
+   
+    color: #00CDFF;
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: bold;
+   
+}
+
+.fo-btn-timesheet {
+/*       background-color: #4F5759;
+    border: medium none;
+   
+    border-radius: 3px 3px 3px 3px;
+    color: #FFFFFF;
+    cursor: pointer;
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    height: 25px;
+    list-style: none outside none;
+    margin: 0 0 20px 1px;
+    padding: 0;
+    position: relative;
+    top: 7px;
+    width: 70px; */
+}
+#timesheet-form span {
+	 color: #FF0000;
+    float: inherit;
+    font-style: italic;
+    margin-left: 9px;
+}
+form{
+	width: 100%;
+	background:none;
+	margin:0px;
+	padding:0px;
+}
+.delete-timesheet{
+	  background: url("../images/close_icon.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    float: left;
+    height: 16px;
+    line-height: 28px;
+    width: 20px;
+    cursor: pointer;
+	
+}
+.timesheet-row{
+	border-bottom:1px solid #E7EDEF;
+	color: #999999;
+}
+.timesheet-form-row{
+	border: 1px solid #EEEEEE;
+    float: left;
+}
+#task_milesotne, #tasks{
+	 border: 1px solid #315663;
+    border-radius: 5px 5px 5px 5px;
+    color: #315663;
+    font-size: 12px;
+    height: 30px;
+    margin: 0;
+    padding: 5px;
+    width: 180px;
+}
+#task_milesotne, #sub-tasks{
+	 border: 1px solid #315663;
+    border-radius: 5px 5px 5px 5px;
+    color: #315663;
+    font-size: 12px;
+    height: 30px;
+    margin: 0;
+    padding: 5px;
+    width: 180px;
+}
+.timesheet-form-row{
+	    border:2px solid #BFE1EC;
+}
+
+#hours{
+	border: 1px solid #315663;
+    border-radius: 5px 5px 5px 5px;
+    color: #315663;
+    font-size: 12px;
+    height: 20px;
+    margin-top: 0;
+}
+#notes{
+	border: 1px solid #315663;
+    border-radius: 5px 5px 5px 5px;
+    color: #315663;
+    font-size: 12px;
+    height: 20px;
+    margin-top: 0;
+    width: 298px;
+}
+.hours-spent{
+	  color: #666666;
+    float: left;
+    font-weight: bold;
+    margin-left: 357px;
+    padding: 12px 0 0;
+    width: 22%;
+}
+.left-full{
+	float: left;
+	width: 100%;
+}
+.add-row-button{
+	float: right;
+    margin-right: 4px;
+}
+.task-action-div{
+	margin: 10px 0 15px;
+}
+.timesheet-row td{
+    word-wrap: break-word;
+}
+.cancel-timesheet{
+	background: url("../images/close_icon.png") no-repeat scroll 1px 1px;
+	float: right;
+       height: 18px;
+    margin-right: 15px;
+    width: 18px;
+    cursor: pointer;
+    
+}
+form button {
+    color: #315663 !important;
+    float: left;
+    height: 32px;
+    width: 100px;
+}
+#timesheet-details{
+	
+    float: left;
+    width: 100%;
+    
+}
+.left-panel{
+    float: left;
+    width: 50%;
+    min-height: 200px;
+}
+.right-panel{
+    float: left;
+    width: 49%;
+    min-height: 200px;
+}
+#timesheet-details h3{
+	background:  #315663;
+    color: #FFFFFF;
+    float: left;
+    font-weight: bold;
+    height: 28px;
+    line-height: 27px;
+    margin: 0;
+    padding: 0 0 0 10px;
+    width: 90%
+    
+}
+#timesheet-details ul{
+	float: left;
+	width: 92%;
+	  
+}
+#timesheet-details .even-records{
+	 padding: 6px;
+    width: 97.5%;
+	float: left;
+	background: #fff;
+}
+#timesheet-details .odd-records{
+	padding: 6px;
+    width: 97.5%;
+	float: left;
+	background: #E7EDEF;
+}
+#booking-list{
+	margin-top: 5px;
+	color: #666;
+}
+#booking-list .book-hour-input{
+	margin: 0px !important;
+}
+
+#booking-list input{
+	padding: 3px;
+	width: 80px;
+	color: #666;
+	font-weight: bold;
+}
+#booking-list li.header{
+	 background: #315663;
+	 color: #fff;
+}
+#booking-list li.even-row{
+	background: #E7EDEF;
+}
+#booking-list li.odd-row{
+	background: #fff;
+}
+#booking-list ul{
+	float: left;
+	width: 98%;	
+	font-weight: bold;
+}
+#booking-list li{
+	float: left;
+	width: 100%;
+	padding: 10px;
+}
+#booking-list li:hover{
+	backgroun: #f9e796;
+}
+#booking-list span{
+	float: left;
+	width: 175px;
+}
+#booking-list span.header{
+	font-weight: bold;
+}
+#booking-list .book-hours,#booking-list .book-hours-external{
+	background: none repeat scroll 0 0 #008000;
+    border: 1px solid;
+    color: #FFFFFF;
+    padding: 3px;
+    width: 30px;
+     cursor: pointer;
+}
+.project-type-list{
+	  color: #666666;
+    font-weight: bold;
+}
+
+.text-box-hours {
+    background-color: #dadada !important;
+    border-color: red !important;
+    padding-left: 4px;
+}
+.non_project_list{
+		border: none;
+	color: #666;
+	margin: 0;
+	padding: 0;
+	width: 70px;
+	background: #CFD3D3;
+}
+.nonproject_class{
+    border: 1px solid #e3eaed;
+    border-radius: 6px;
+    float: left;
+    width: 759px;
+}
+.nproject_list {
+	border: 1px solid #E3EAED;
+	border-radius: 6px 6px 6px 6px;
+	float: left;
+	width: 759px;
+}
+
+.nproject_list h3 {
+    background: none repeat scroll 0 0 #315663;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    color: #ffffff;
+    float: left;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    height: 48px;
+    line-height: 48px;
+    margin: 0;
+    padding: 0 10px;
+    width: 759px;
+}
+
+
+#booking-list .header_date {
+    font-weight: bold;
+        float: left;
+    width: 150px;
+}
+.subtask_name:hover{
+	color: black;
+   cursor: pointer;
+}
+
+.highlight-class{
+	background-color: #f9e796;
+}
+.booked-hour-main{
+	background: none;
+    border: none;
+    float: left;
+    margin: 0;
+    min-height: 10px;
+    padding: 0;
+}

@@ -1,0 +1,190 @@
+/*
+This CSS used for Roadmap...
+*/ 
+
+.map-control{
+        overflow: hidden;
+    }
+    .m-zoom-control{
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+            background-color: #F2F2F2;
+    float: left;
+    height: 43px;
+    left: 25px;
+    position: absolute;
+    top: 25px;
+    width: 18px;
+    z-index: 2000000;
+    padding: 6px;
+    }    
+    
+    .m-button-zoom-out, .m-button-zoom-in{float: left;clear:both;width:25px;height:25px;background-repeat: no-repeat;}
+    .m-button-zoom-in {
+    background: url("../images/zoom-in.png") no-repeat scroll 0 0 transparent;    
+}
+.m-button-zoom-out {
+    background: url("../images/zoom-out.png") no-repeat scroll 0 0 transparent;
+}
+
+#dialog-overlay{
+ 
+    /* set it to fill the whil screen */
+    width:100%; 
+    height:100%;
+     
+    /* transparency for different browsers */
+    filter:alpha(opacity=95); 
+    -moz-opacity:0.95; 
+    -khtml-opacity: 0.95; 
+    opacity: 0.95; 
+    background:#000; 
+ 
+    /* make sure it appear behind the dialog box but above everything else */
+    position:absolute; 
+    top:0; left:0; 
+    z-index:3000; 
+ 
+    /* hide it by default */
+    display:none;
+}
+ 
+ 
+#dialog-box, .release-info  {
+     
+    background-color: #F3F4F6 !important;
+    border: 1px solid #1C97D0;
+    /* transparency for different browsers */
+    filter:alpha(opacity=95); 
+    -moz-opacity:0.95; 
+    -khtml-opacity: 0.95; 
+    opacity: 0.95;
+    border-radius: 10px;
+    
+    /* styling of the dialog box, i have a fixed dimension for this demo */
+    width:275px; 
+     
+    /* make sure it has the highest z-index */
+    position:absolute; 
+    z-index:5000; 
+ 
+    /* hide it by default */
+    display:none;
+    padding-bottom: 10px;
+   
+}
+
+.release-info{
+    /*display: block;*/
+    right: 90px;
+    top: 30px;
+    padding: 10px;
+     color: #CCCCCC;
+    font-family: arial;
+    font-size: 12px;
+}
+ 
+#dialog-box .dialog-content {
+    /* style the content */
+    text-align:left; 
+    padding:0 5px; 
+	margin:4px 4px 4px 2px;
+    color:#ccc; 
+    font-family:arial;
+    font-size:12px;
+    
+}
+ 
+a.button {
+    /* styles for button */
+    margin:10px auto 0 auto;
+    text-align:center;
+    display: block;
+    width:50px;
+    padding: 5px 10px 6px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    line-height: 1;
+     
+    /* button color */
+    background-color: #e33100;
+     
+    /* css3 implementation :) */
+    /* rounded corner */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+     
+    /* drop shadow */
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+     
+    /* text shaow */
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    position: relative;
+    cursor: pointer;
+     
+}
+ 
+a.button:hover {
+    background-color: #c33100;  
+}
+ 
+/* extra styling */
+#dialog-box .dialog-content p {
+    font-weight:700; margin:0;
+}
+ 
+#dialog-box .dialog-content ul {
+    margin:10px 0 10px 20px; 
+    padding:0; 
+    height:50px;
+}
+
+.dialog-title{
+    clear: both;
+    color: #000000;
+    float: left;
+    font-family: arial;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    /*margin-top: 10px;*/
+    padding: 3px 3px 3px 9px;
+    text-shadow: 1px 1px #DDDDDD;
+    width: 94%;
+}
+.dialog-title-first{
+    margin-top: 0px;
+}
+.dialog-arrow{
+    background-image: url("../images/popup.png");
+    background-position: 0 -14px;
+    background-repeat: no-repeat;
+    float: left;
+    height: 15px;
+    left: -12px;
+    position: absolute;
+    top: 10px;
+    width: 13px;
+    display: none;
+}
+.dialog-message{
+    clear: both;
+    float: left;
+     /*margin-left: 5%;
+   width: 90%;*/    
+}
+.clear_both{clear: both;
+    float: left;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 96%;}
+.border-with-radius{-moz-border-radius: 5px;-webkit-border-radius: 5px;background-color: #666;}
+.slider-marker{height: 11px;left: 0;position: relative;top: -17px !important;width: 7px;margin-left: -0.60em;}
+.slider-marker1{height: 11px;left: 0;position: relative;top: -16px !important;width: 7px;margin-left: -0.65em;}
+.slider-marker2{height: 11px;left: 0;position: relative;top: -15px !important;;width: 7px;margin-left: -0.65em;}
+.slider-uat{background-image: url('../images/blue.png');}
+.slider-cl{background-image: url('../images/green.png');}
+.slider-esa{background-image: url('../images/red.png');}

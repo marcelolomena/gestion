@@ -1,0 +1,196 @@
+#employee-overview {
+    float: left;
+    width: 100%;
+    background: none repeat scroll 0 0 #f3f4f5;
+}
+
+.employee-list-left {
+    float: left;
+    min-height: 400px;
+    width: 31%;
+    border-top-left-radius: 6px;
+}
+
+
+.employee-list-right {
+    float: left;
+    width: 69%;
+}
+
+#employee-overview .division_name {
+    padding-left: 10px;
+    width: 88%;
+}
+
+#employee-overview .division_icon {
+    background: url("../images/employee/program_icon.png") no-repeat scroll;
+    height: 15px;
+    margin-left: 5px;
+    margin-top: 2px;
+    width: 15px;
+}
+
+
+#employee-overview .data-row {
+    color: #6b6b6b;
+    cursor: pointer;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 18px;
+    margin: 0;
+    padding: 4px 0;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+#employee-overview h3 {
+    background: none repeat scroll 0 0 #315663;
+    color: #ffffff;
+    float: left;
+    font-weight: bold;
+    height: 28px;
+    line-height: 27px;
+    margin: 0;
+    padding: 0 0 0 10px;
+    width: 268px;
+}
+
+
+.emp_listing {
+    background: url("../images/ui-bg_glass_100_f6f6f6_1x400.png") repeat scroll;
+    float: left;
+    min-height: 250px;
+    padding: 0;
+    width: 100%;
+}
+
+#emp_list .header{
+	background: none repeat scroll 0 0 #315663;
+    border-top-right-radius: 6px;
+    color: #ffffff;
+    float: left;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    height: 44px;
+    line-height: 22px;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+.employee_name {
+	float: left;
+    width: 30%;
+}
+
+.employee_rut{
+	float: left;
+    width: 13%;
+}
+.employee_email{
+	float: left;
+    width: 26%;
+}
+.employee_telephone{
+	float: left;
+    width: 20%;
+}
+.employee_action{
+	float: left;
+    width: 10%;
+}
+.emp_row{
+	color:black;
+	padding: 10px 0;
+    text-align: center;
+}
+.emp_row_odd{
+	  background-color: none repeat scroll 0 0 #ffffff;
+}
+.emp_row_even{
+	background-color: #e7edef;
+}
+.emp_row a{
+	color: #6b6b6b;
+    font-weight: bold;
+    text-decoration: none;
+    width:100%;
+}
+
+.emp_row a :hover{
+/*	background: none repeat scroll 0 0 #dabc58 !important;*/
+}
+
+.emp_row .edit-icon{
+    background-image: url("../images/skills-edit.png");
+    cursor: pointer;
+    float: left;
+    height: 15px;
+    margin-left: 8px;
+    width: 14px;
+    margin-left: 25px;
+}
+
+.genrencia_icon{
+	background: url("../images/employee/project_icon.png") no-repeat scroll ;
+    height: 15px;
+    margin-left: 20px;
+    margin-top: 2px;
+    width: 15px;
+}
+
+.department_icon{
+ background: url("../images/employee/task_icon.png") no-repeat scroll;
+    height: 15px;
+    margin-left: 30px;
+    margin-top: 2px;
+    width: 15px;
+}
+
+.self_report_icon_division{
+    background: url("../images/employee/sub_task_icon.png") no-repeat scroll;
+    height: 15px;
+    margin-left: 20px;
+    margin-top: 2px;
+    width: 15px;
+}
+
+.self_report_icon_gerencia {
+    background: url("../images/employee/sub_task_icon.png") no-repeat scroll;
+    height: 15px;
+    margin-left: 30px;
+    margin-top: 2px;
+    width: 15px;
+}
+
+
+.genrencia_title{
+	 padding-left: 10px;
+    width: 84%;
+    float:left;
+}
+
+.department_title{
+	 padding-left: 10px;
+    width: 77%;
+    float:left;
+}
+   
+#search-employee-form dl, #search-employee-form dt, #search-employee-form dd {
+    width: 100%;
+}   
+
+search-employee-form dt label {
+    width: 90%;
+}
+#search-employee-form label {
+    color: #666666;
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 28px;
+    margin-right: 10px;
+    text-align: left;
+    width: 150px;
+}

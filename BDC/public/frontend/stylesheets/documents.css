@@ -1,0 +1,446 @@
+#docuement-overview, #docuement-overview-subtask{
+	
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    margin-bottom : 10px;
+}
+.document-left{
+	float: left;
+	width: 31%;
+	min-height: 280px;
+	background: none repeat scroll 0 0 #f3f4f5;
+}
+.document-right{
+	float: left;
+	 width: 69%;
+}
+
+#search-result .document-right{
+	float: left;
+	 width: 100%;
+}
+
+#document-overview-result {
+	width:100%;
+	float:left;
+}
+
+#search-result #document-overview-result .document-right{
+	float: left;
+	 width: 69%;
+}
+
+.team_task_div .document-right-subtask{
+	width:100%;
+}
+.cloud_ico{
+	background : url("../images/cloud_bg.png") no-repeat;
+    font-size: 20px;
+    font-weight: bold;
+    height: 53px;
+    padding-left: 62px;
+    padding-top: 20px;
+    width: 401px;
+}
+.doc_listing, .doc_listing_subtask{
+	  background : url("../images/ui-bg_glass_100_f6f6f6_1x400.png") repeat;
+	float: left;
+	padding: 15px;
+	width: 93%;
+	min-height : 250px;
+}
+
+#search-result .doc_listing{
+	  background : url("../images/ui-bg_glass_100_f6f6f6_1x400.png") repeat;
+	float: left;
+	padding: 0;
+	width: 100%;
+	min-height : 250px;
+}
+
+.team_task_div .doc_listing, .team_task_div .doc_listing_subtask{
+	min-height : 30px;
+	background:none;
+}
+
+#pDetail_page .doc_listing, #pDetail_page .doc_listing_subtask{
+	width: 100%;
+}
+
+#docuement-overview h3{
+	background: #315663;
+    color: #FFFFFF;
+    float: left;
+    font-weight: bold;
+    height: 28px;
+    line-height: 27px;
+    margin: 0;
+    padding: 0 0 0 10px;
+    width: 268px;
+}
+
+#search_page #docuement-overview h3{
+	background: #315663;
+    color: #FFFFFF;
+    float: left;
+    font-weight: bold;
+    height: 28px;
+    line-height: 27px;
+    margin: 0;
+    padding : 0;
+    width: 100%;
+}
+
+#docuement-overview .data-row-even{	
+	color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 100%;
+    word-wrap: break-word;
+    line-height: 18px;
+    cursor: pointer;
+}
+#docuement-overview .data-row-odd{
+	cursor: pointer;
+    color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 100%;
+    word-wrap: break-word;
+    line-height: 18px;
+}
+
+#docuement-overview .program-data-row-even{
+	color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 288px;
+    word-wrap: break-word;
+    line-height: 18px;
+    cursor: pointer;
+}
+#docuement-overview .program-data-row-odd{
+	cursor: pointer;
+    color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 288px;
+    word-wrap: break-word;
+    line-height: 18px;
+}
+#docuement-overview .program-list{
+	 border-top: 1px solid #666666;
+    float: left;
+    padding-left: 10px !important;
+    width: 280px;
+}
+#docuement-overview .project-list{
+	 border-top: 1px solid #666666;
+    float: left;
+    padding-left: 10px !important;
+    width: 345px;
+}
+#docuement-overview  .task_list{
+	border-top: 1px solid;
+    display: block;
+    float: left;
+    padding-left: 26px !important;
+    width: 272px !important;
+}
+#docuement-overview .project-data-row-even{
+	color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 280px;
+    word-wrap: break-word;
+    line-height: 18px;
+    cursor: pointer;
+}
+
+.new-division-doc {
+    background: url("../images/sub_task_add_icon_new.png") no-repeat;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    height: 28px;
+    line-height: 22px;
+    margin-left: 10px;
+    padding: 0 0 0 25px;
+    width: 80%;
+    margin-top: 10px;
+}
+
+.new-division-doc a {
+    color: #000000;
+    text-decoration: none;
+}
+
+#docuement-overview .project-data-row-odd{
+	cursor: pointer;
+    color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 280px;
+    word-wrap: break-word;
+    line-height: 18px;
+}
+#docuement-overview .task-data-row-even{
+	color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 272px;
+    word-wrap: break-word;
+    line-height: 18px;
+    cursor: pointer;
+}
+#docuement-overview .task-data-row-odd{
+	cursor: pointer;
+    color: #6B6B6B;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    width: 272px;
+    word-wrap: break-word;
+    line-height: 18px;
+}
+
+#docuement-overview  .sub_task_list{
+	border-top: 1px solid;
+    display: block;
+    float: left;
+    padding-left: 40px;
+    width: 250px;
+}
+#docuement-overview  .project_icon{
+	  background : url("../images/employee/project_icon.png") no-repeat;
+	  width: 15px;
+	  height: 15px;
+      margin-left: 20px;
+      margin-top: 2px;
+    
+}
+#docuement-overview  .project_title{
+   padding-left: 10px;
+   width: 81%;
+}
+#docuement-overview  .task_icon{
+	  background : url("../images/employee/task_icon.png") no-repeat;
+	  width: 15px;
+	  height: 15px;
+      margin-left: 30px;
+      margin-top: 2px;
+    
+}
+#docuement-overview  .task_title{
+   padding-left: 10px;
+   width: 77%;
+}
+#docuement-overview  .sub_task_icon{
+	  background : url("../images/employee/sub_task_icon.png") no-repeat;
+	  width: 15px;
+	  height: 15px;
+      margin-left: 40px;
+      margin-top: 2px;
+    
+}
+#docuement-overview  .sub_task_title{
+   padding-left: 10px;
+   width: 71%;
+}
+#docuement-overview  .program_icon{
+	  background : url("../images/employee/program_icon.png") no-repeat;
+	  width: 15px;
+	  height: 15px;
+      margin-left: 5px;
+      margin-top: 2px;
+    
+}
+#docuement-overview  .program_title{
+   padding-left: 10px;
+   width: 72%;
+}
+
+#docuement-overview  .division_icon{
+	  background : url("../images/division_icon_blue.png") no-repeat;
+	  width: 15px;
+	  height: 15px;
+      margin-left: 5px;
+      margin-top: 2px;
+    
+}
+#docuement-overview  .division_title{
+   padding-left: 10px;
+   width: 88%;
+}
+.document-right h2, .document-right-subtask h2{
+	 border-bottom: 2px solid #A1CFDE;
+    font-size: 14px;
+    font-weight: bold;
+    width: 100%;
+}
+
+#search-result .document-right h2{
+	 border-bottom: 2px solid #A1CFDE;
+    font-size: 14px;
+    font-weight: bold;
+    width: 98%;
+    margin: 10px;
+}
+
+#search-result .document-right ul{
+	margin: 10px;
+    width: 98%;
+}
+.document-right .no-document{
+/*	padding-bottom: 10px;*/
+}
+.doc_listing li, .doc_listing_subtask li{
+	float: left;
+	padding: 5px;
+}
+
+#search-result .doc_listing li{
+	float: left;
+	padding: 5px 0;
+}
+.doc_listing .doc_title, .doc_listing_subtask .doc_title, #document-overview-result .doc_listing .doc_title{
+	float: left;
+    width: 183px !important;
+    word-wrap: break-word;
+}
+.doc_listing .doc_version, .doc_listing_subtask .doc_version, #document-overview-result .doc_listing .doc_version{
+	float: left;
+    width: 70px !important;
+    word-wrap: break-word;
+}
+.doc_listing  .doc_date, .doc_listing_subtask  .doc_date, #document-overview-result .doc_listing .doc_date{
+	float: left;
+    width: 100px !important;
+}
+.doc_listing .doc_user, .doc_listing_subtask .doc_user, #document-overview-result .doc_listing .doc_user{
+	float: left;
+    width: 145px !important;
+    word-wrap: break-word;
+}
+.doc_listing .doc_action, .doc_listing_subtask .doc_action, #document-overview-result .doc_listing .doc_action{
+	float: left;
+    width: 85px !important;
+}
+
+#search-result .doc_listing .doc_title{
+	float: left;
+    width: 275px;
+    word-wrap: break-word;
+}
+#search-result .doc_listing .doc_version{
+	float: left;
+    width: 130px;
+    word-wrap: break-word;
+}
+#search-result .doc_listing  .doc_date{
+	float: left;
+    width: 160px
+}
+#search-result .doc_listing .doc_user{
+	float: left;
+    width: 200px;
+    word-wrap: break-word;
+}
+#search-result .doc_listing .doc_action{
+	float: left;
+    width: 120px;
+}
+
+
+
+
+.bold{
+	font-weight: bold; 
+}
+.push-top20px{
+	margin-top: 20px;
+}
+.doc_info{
+		  background : url("../images/i_icon.png") no-repeat;
+		  height: 15px;
+		  width: 20px;
+		  float: left;
+}
+.doc_view{
+		  background : url("../images/view_ico.png") no-repeat;
+		  height: 15px;
+		  width: 20px;
+		  float: left;
+}
+.doc_edit{
+		  background : url("../images/skills-edit.png") no-repeat;
+		  height: 15px;
+		  width: 20px;
+		  float: left;
+}
+.doc_delete{
+		  background : url("../images/delete_icon.png") no-repeat;
+		  height: 15px;
+		  width: 20px;
+		  float: left;
+}
+#search-document-form .info{
+	display:none;
+}
+.search-result-datarow-even{
+	background-color: #e7edef;
+	width:100%
+}
+.search-result-datarow-odd{
+	background-color: #f3f4f5;
+	width:100%
+}
+
+#document_overview .doc_listing{
+	width:100%;
+}
+#search-result h3{
+	padding:0px;
+	width:100%;
+}
+
+#document_overview_section .focus_on_title {
+	width: 260px;
+	float: left;
+	padding: 0;
+	margin: -18px 0 0 13px;
+	position: absolute;
+}
