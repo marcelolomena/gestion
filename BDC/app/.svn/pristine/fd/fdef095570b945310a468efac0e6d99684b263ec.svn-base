@@ -1,0 +1,110 @@
+@(todaydate:String,nextDate:String,projects:Seq[Project],divisons:Seq[Divisions],programs: Seq[ProgramMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<div class="right weekCalenderView"  id="calenderView" >
+  	  <input type="button" name="" class="left roadmap-view-input   " value="Week"  id="weekView">
+	  <input type="button" name="" class="left roadmap-view-input roadmap-view-input-active" value="Month"  id="monthView">
+	  <input type="hidden" id="viewType" name="viewType" value="35" />
+</div>
+ 		
+ 		<div class="right roadmapView"  id="roadmapView" style="width:525px;float: right;">
+  	  <input type="button" name="" class="left roadmap-view-input roadmap-view-input-active  " value="Milestones"  id="milestoneView">
+		  <input type="button" name="" class="left roadmap-view-input " value="Goals"  id="goalView">
+ 		  <input type="hidden" id="roadmapType" name="viewType" value="1" />
+</div>
+<section class="slider" id="home_page">
+  	<div class="focus_on width_full" style="margin:10px 0 25px 52px;padding:10px;width:87.5%;">
+	      <div class="focus_on_title"><img width="69" height="13" alt="" src="@routes.Assets.at("frontend/images/focus_on.jpg")"></div>
+	     
+	     <div class="width_full roadmap-display">
+     		  <span class="left " style="width:270px;">
+     		  	 <label>@Messages("roadmap.division")</label>
+                  <select name="roadmap-division" id="roadmap-division"  class="roadmap-select">
+                  <option value="NA"> @Messages("roadmap.selectDivision")</option>
+	                   @for(d <- divisons) {
+                  			<option value="@d.dId">@if(d.division.length>30){@d.division.toString().substring(0, 30)...}else{@d.division} </option>
+	                   }
+                  </select> 
+     		  	</span>
+     		  	<span class="left "  style="width:270px;">
+     		  	 <label>@Messages("roadmap.program")</label>
+                  <select name="roadmap-program" id="roadmap-program" class="roadmap-select">
+                  <option value="NA">@Messages("roadmap.selectProgram")</option>
+	                   @for(p <- programs) {
+                  			<option value="@p.program_id ">@if(p.program_name.length>30){@p.program_name.toString().substring(0, 30)...}else{@p.program_name} </option>
+	                   }
+                  </select> 
+                  
+     		  	</span>
+    		  	<span class="left "  style="width:270px;" >
+    		  	 <label>@Messages("roadmap.project")</label>
+     		  	<select  tabindex="1" name="roadmap-projects" id="roadmap-projects" class="roadmap-select">
+		          <option value="NA">@Messages("roadmap.selectProject")</option>
+		          @for(p <- projects){
+		         	<option value="@p.pId" >@if(p.project_name.length>30){@p.project_name.substring(0, 30) ...}else{@p.project_name}</option>
+		   			}
+		        </select>
+     		  	</span>
+     		  </div>
+     		  <input type="hidden" id="roadmap-type" name="roadmap-type" value="none" />
+	      
+	     
+	   	 <div class="product_detail_link">
+	      </div>
+  	</div>
+  	   
+    <div class="map-container"  >
+    	<div id="country_map" class="map-div"></div>
+        <div id="map" class="map-div" disabled="true"></div>
+    </div>
+
+   <div class="calender_main" >
+   		
+        <div class="play_button"><a href="javascript:void(0);"><img src="@routes.Assets.at("frontend/images/play_button.png")" width="39" height="39" alt=""></a></div>
+        <input type="text" readonly='true' class="calender_button" value="@todaydate" id="start_date" />
+        <div class="demo">
+            <div id="slider-range-min"></div>    
+        </div><!-- End demo -->
+        <input type="text" readonly='true' class="calender_button2" value="@nextDate" id="end_date" />
+    </div>
+    
+    <div class="map_data_main">
+    	<div class="map_data_title">
+        	<span class="moving_arrow"><img src="@routes.Assets.at("frontend/images/spacer.gif")" width="1" height="1" alt=""></span>
+	        <div class="calendarTitle">&nbsp;</div>
+        </div>
+        <div class="map_data_detail">
+        	
+        </div>
+        
+       
+    </div>
+   
+  @frontend.footer()
+        
+</section>
+	<div class="loader"><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>
+<div id="dialog-box"><div class="dialog-content">
+</div><div class="dialog-arrow"></div></div>
+
+ 
+
+</div>
+@frontend.headerScripts()	
+<script type="text/javascript" language="javascript">
+$(function(){
+   // Notation.notations = 
+   
+   $("#roadmap-program").live("change", renderRoadmapProjectList);
+    
+    $("#roadmap-division").live("change", renderRoadmapProgramList);
+    
+    $("#roadmap-projects").live("change", renderRoadmapProjectDetails);
+   onLoadRoadMap();
+});
+</script>
+</body>

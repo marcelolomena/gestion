@@ -1,0 +1,72 @@
+@(baseLines: Seq[Baseline])(implicit session: play.api.mvc.Session) 
+@import helper._
+@import services._
+<div> 
+
+<div class="project_list"> 
+<table id="myTable" style=" border: 1px solid #dadada; width: 100%;  border-collapse: collapse; ">
+<thead style="height:35px; background: none repeat scroll 0 0 #315663;color: #ffffff;">
+  		<td style="" class="headerCell">Project</td>	
+  		<td class="headerCell">Task/Sub Task</td>
+  		<td  class="headerCell">Changed By</td>
+  		<td class="headerCell">Field Name</td>
+  		<td  class="headerCell">Original Value</td>
+  		<td  class="headerCell"> Changed Value</td>
+ 		<td  class="headerCell"> Changed Date</td>
+  </thead>
+  <tbody id="baseline_list">
+  
+   @for((baseLine,index) <- baseLines.zipWithIndex){
+   		<tr class="tableCells">
+    	<td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">
+	    	@if(baseLine.object_type=="task"){
+	    		@ProjectService.findProject(TaskService.findTaskDetailsByTaskId(baseLine.ref_id).get.pId).get.project_name
+	    	}else{
+	    		@ProjectService.findProject(TaskService.findTaskDetailsByTaskId(Integer.parseInt(SubTaskServices.findSubTasksBySubTaskId(baseLine.ref_id.toString()).get.task_id.toString)).get.pId).get.project_name
+	    	}	
+    	 </td>
+	    	@if(baseLine.object_type == "task"){
+	    	     <td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@TaskService.findTaskDetailsByTaskId(baseLine.ref_id).get.task_title </td>
+	    	}else{
+	    	     <td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@SubTaskServices.findSubTasksBySubTaskId(baseLine.ref_id.toString()).get.title </td>
+	    	}
+  		<td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@UserService.findUserDetailsById(baseLine.user_id.toLong).get.first_name </td>
+  		<td class=" change_set" style="padding-left:5px; width:96% ;">@baseLine.change_set </td>
+  		<td class=" org_value" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;"></td>
+ 		<td class=" changed_value" style="padding-left:5px; border-left:1px solid #dadada; vertical-align: middle;"></td>
+ 	    <td class="" style="padding-left:5px;border-left:1px solid #dadada; vertical-align: middle;">@baseLine.changed_at.format("dd-MM-yyyy") </td> 
+   	   </tr>
+		}
+    </tbody>
+    </table>
+</div>
+</div>
+ <script type="text/javascript">
+	$(document).ready(function(){
+		$("#baseline_list .change_set").each(function(ind, item){
+			var _self = $(this);
+			var orignalValue = $(_self).next();
+			var changedValue = $(orignalValue).next();
+			var changeDate = $(changedValue).next();
+			var changeSet = $(_self).html();
+			var json = JSON.parse(changeSet);
+			var appendTable = "";
+			$(json).each(function(index, item){
+				if(index > 0){
+					var parentTd = $(_self).parent().clone();
+					$(parentTd).toggleClass("cloned-td");
+					$(parentTd).find(".change_set").html(item.fieldName);
+					$(parentTd).find(".org_value").html(item.org_value);
+					$(parentTd).find(".changed_value").html(item.new_value);
+					$(_self).parent().after(parentTd);
+				}else {
+					$(changedValue).html(item.new_value);
+					$(orignalValue).html(item.org_value);
+					$(_self).html(item.fieldName);
+				}
+			});
+			$("#baseline_list tr:even").addClass("tableCells1");
+			$("#baseline_list tr:odd").removeClass("tableCells1");
+		});
+	});
+ </script>

@@ -1,0 +1,533 @@
+@(searchCriteria : Form[SearchCriteria], documents : Seq[DocumentMaster], currentVersions : java.util.HashMap[String, Seq[VersionDetails]], previousVersions : java.util.HashMap[String, Seq[VersionDetails]], isCurrentDocumentPresent  :String, isPreviousDocumentPresent: String, requestedDocumentType : String)(implicit lang:Lang)
+@import java.math.BigInteger; var i=1;var final_string =""; var doc_details : Option[SearchResultDocumentMaster]=null;
+@import play.api.i18n._ 
+@import services._
+@import helper._
+
+@if(!searchCriteria.data.get("searchTitle").isEmpty && !searchCriteria.data.get("searchTitle").get.toString().isEmpty()){
+	<div class="width_full">
+	    <h3 id="productNm" style="background: none repeat scroll 0 0 #f3f4f5;color: #55b9d9;">
+	    	<span style="width:auto;   word-wrap: break-word; margin-left: 5px;" class="left font13px">@searchCriteria.data.get("searchTitle").get.toString()</span>
+  		 </h3>
+	</div>
+}
+<ul id="search-result-tab" class="content-box-tabs">
+@if(searchCriteria.data.get("parentType").get.equals("DIVISION") || searchCriteria.data.get("parentType").get.equals("ALL")){
+	    <li><a class="division current " href='javascript:void(0)'>Division</a></li>
+		<li><a class="program " href='javascript:void(0)'>Programa</a></li>
+	    <li><a class="project" href='javascript:void(0)'>Proyecto</a></li>
+	    <li><a class="task" href="javascript:void(0)">Tarea </a></li>
+	   	<li><a class="subtask" href='javascript:void(0)'>Sub Tarea</a></li>
+	}else { 
+	@if(searchCriteria.data.get("parentType").get.equals("PROGRAM")){
+		<li><a class="program current" href='javascript:void(0)'>Programa</a></li>
+	    <li><a class="project" href='javascript:void(0)'>Proyecto</a></li>
+	    <li><a class="task" href="javascript:void(0)">Tarea</a></li>
+	   	<li><a class="subtask" href='javascript:void(0)'>Sub Tarea</a></li>
+	}else { 
+		@if(searchCriteria.data.get("parentType").get.equals("PROJECT")){
+			<li><a href="javascript:void(0)" class="project current" >Proyecto</a></li>
+    		<li><a class="task" href="javascript:void(0)">Tarea</a></li>
+    		<li><a class="subtask" href="javascript:void(0)">Sub Tarea</a></li>
+		}else {
+			@if(searchCriteria.data.get("parentType").get.equals("TASK")){
+				<li><a class="task current" href="javascript:void(0)">Tarea</a></li>
+	    		<li><a class="subtask" href="javascript:void(0)">Sub Tarea</a></li>
+			}else{
+				@if(searchCriteria.data.get("parentType").get.equals("SUBTASK")){	
+					<li><a class="subtask current" href="javascript:void(0)">Sub Tarea</a></li>
+				}else {
+					<li><a class="document current" href="javascript:void(0)">Documents</a></li>
+				}
+			
+			}
+		}
+		}
+	}
+</ul>
+<div class="content-box-content" style="width:100%; margin-top: 0px; float:left;">	
+		@form(action = controllers.Frontend.routes.Documents.searchResult, 'id->"search-result-form") {
+			<input type="hidden" value='@searchCriteria.data.get("parentType")' id="parentType" name="parentType"/>
+			<input type="hidden" value='@searchCriteria.data.get("parentId")' id="parentId" name="parentId"/>
+			<input type="hidden" value='@searchCriteria.data.get("searchScope")' id="searchScope" name="searchScope"/>
+			<input type="hidden" value='@searchCriteria.data.get("userId")' id="userId" name="userId"/>
+			<input type="hidden" value='@searchCriteria.data.get("searchText")' id="searchText" name="searchText"/>
+			<input type="hidden" value='@searchCriteria.data.get("documentType")' id="documentType" name="documentType"/>
+			<input type="hidden" value='@searchCriteria.data.get("searchTitle")' id="searchTitle" name="searchTitle"/>
+		}
+	
+	<div  class="document-right">
+		<div class="doc_listing">
+			@if(documents.size > 0){
+				@if(searchCriteria.data.get("searchScope").get.equals("2")){
+					<h2> @Messages("document.currentsdocuments")</h2>
+					@if(!isCurrentDocumentPresent.isEmpty()){
+						<div id="current_documents">
+							<ul class="width_full">
+								<li>
+									<span class="doc_title bold" style="width: 180px !important;">@Messages("document.documenttitle")</span> 
+									<span class="doc_version bold" style="width: 100px !important;"> @Messages("document.version")</span>
+									<span class="doc_date bold" style="width: 130px !important; padding-right: 7px;">@Messages("document.dateofupload")</span> 
+									<span class="doc_user bold" style="width: 150px !important;">@Messages("document.uploadedby")</span> 
+									<span class="doc_user bold" style="width: 230px !important;">@Messages("document.parentname")</span> 
+									<span class="doc_action bold" style="width: 120px !important;">@Messages("document.action")</span>
+								</li>
+								
+								@for((doc, index) <- documents.zipWithIndex){
+									@for(currentVersion <- currentVersions.get(doc.Id.get.toString())){
+										@{doc_details = DocumentService.findDocumentDetails(doc.parent_type, doc.parent_id.toString())}
+										<li class=" @if( index%2==0 ){search-result-datarow-even}else{search-result-datarow-odd}">
+										
+										@if(doc.parent_type.equals("PROGRAM")){
+												
+												<span class=" row-with-parent-info">
+												@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+												<span class=" row-with-parent-info">
+											@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")
+												 </span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<span class=" row-with-parent-info">
+										@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("") 
+												 </span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+										</li>
+										
+										<li class="show-document-details @if( index%2==0 ){search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}" id="dpr_@doc.Id.get">
+											
+											<span  class="doc_title" style="width: 180px !important;">@doc.title</span> 
+											<span class="doc_version" style="width: 100px !important;">@currentVersion.version_alias</span>
+											<span class="doc_date" style="width: 136px !important;"> @currentVersion.creation_date.format("dd/MM/YYYY")</span> 
+											<span class="doc_user" style="width: 150px !important;">@UserService.findUserDetailsById(currentVersion.user_id.toLong).get.first_name @UserService.findUserDetailsById(currentVersion.user_id.toLong).get.last_name</span>
+											@if(doc.parent_type.equals("PROGRAM")){
+												<input type="hidden" id="pr_@doc.Id" value="@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@* @ProgramService.findProgramMasterDetailsById(doc.parent_id.toString).get.program_name *@
+												@doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+												<input type="hidden"  id="pr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+											@*	@ProjectService.findProjectDetails(doc.parent_id.intValue).get.project_name*@
+											@doc_details.get.project_name.getOrElse("")
+												 </span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<input type="hidden"  id="pr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")/@doc_details.get.task_title.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+											@*	@TaskService.findTaskDetailsByTaskId(doc.parent_id.intValue).get.task_title *@
+											@doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<input type="hidden"  id="pr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+											@*	@if(!SubTaskServices.findSubTasksBySubTaskId(doc.parent_id.toString).isEmpty){
+													@SubTaskServices.findSubTasksBySubTaskId(doc.parent_id.toString).get.title	
+												}else{
+													&nbsp;
+												}*@
+												@doc_details.get.title.getOrElse("")
+												 </span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<input type="hidden"  id="pr_@doc.Id" value="@doc_details.get.division.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+											
+											<span class="doc_action" style="width: 120px !important;padding-left: 7px;"> 
+												<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_notes"></span>
+												<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+												<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), requestedDocumentType, "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+												<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' class="delete-doc @doc.Id.toString()" id="@doc.Id.toString()_delete-doc"><span  class="doc-delete" title="Delete Document"></span></a>
+											</span>
+										</li>
+									}
+								}
+							</ul>
+						</div>
+					}else {
+						<span class="left push-top20px no-document">@Messages("document.nodocumentavailableforselected") @searchCriteria.data.get("parentType").get</span>
+					}
+					<h2 class="left push-top20px"> @Messages("document.previoussdocuments")</h2>
+					@if(!isPreviousDocumentPresent.isEmpty()){
+						<div id="previous_documents">
+							<ul class="width_full">
+								<li>
+									<span class="doc_title bold" style="width: 180px !important;">@Messages("document.documenttitle")</span> 
+									<span class="doc_version bold" style="width: 100px !important;"> @Messages("document.version")</span>
+									<span class="doc_date bold" style="width: 136px !important;">@Messages("document.dateofupload")</span> 
+									<span class="doc_user bold" style="width: 150px !important;">@Messages("document.uploadedby")</span> 
+									<span class="doc_user bold" style="width: 230px !important;">@Messages("document.parentname")</span> 
+									<span class="doc_action bold" style="width: 120px !important;">@Messages("document.action")</span>
+								</li>
+								@for((doc, index) <- documents.zipWithIndex){
+									@for((version,vIndex) <- previousVersions.get(doc.Id.get.toString()).zipWithIndex){
+										@{i = i+1}
+										@{doc_details = DocumentService.findDocumentDetails(doc.parent_type, doc.parent_id.toString())}
+														<li class=" @if( index%2==0 ){search-result-datarow-even}else{search-result-datarow-odd}">
+										
+										@if(doc.parent_type.equals("PROGRAM")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+												<span class=" row-with-parent-info">
+											@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")
+												 </span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<span class=" row-with-parent-info">
+										       @doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("") 
+												 </span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+										</li>
+										<li class="pshow-document-details @if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc..toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.toString()}" id="ppr_@doc.Id.get">
+											<span class="doc_title" style="width: 180px !important;">@doc.title</span> 
+											<span class="doc_version" style="width: 100px !important;">@version.version_alias</span>
+											<span class="doc_date" style="width: 130px !important;">@version.creation_date.format("dd/MM/YYYY")</span> 
+											<span class="doc_user" style="width: 150px !important;">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name </span>
+											@if(doc.parent_type.equals("PROGRAM")){
+												<input type="hidden" id="spr_@doc.Id" value="@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@*@ProgramService.findProgramMasterDetailsById(doc.parent_id.toString).get.program_name*@
+												@doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+											<input type="hidden" id="spr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@* @ProjectService.findProjectDetails(doc.parent_id.intValue).get.project_name *@
+												@doc_details.get.project_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<input type="hidden"  id="spr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@*@TaskService.findTaskDetailsByTaskId(doc.parent_id.intValue).get.task_title *@
+												@doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<input type="hidden"  id="spr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@*@SubTaskServices.findSubTasksBySubTaskId(doc.parent_id .toString).get.title *@
+												@doc_details.get.title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<input type="hidden"  id="spr_@doc.Id" value="@doc_details.get.division.getOrElse("")">
+												<span class="doc_user" style="width: 224px !important;">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+											<span class="doc_action" style="width: 120px !important;padding-left: 7px;">
+												<span class="doc_info" title="@version.version_notes"></span>
+												<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
+												<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), requestedDocumentType, "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+												<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="@doc.Id.toString()_delete-doc" class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a> 
+											</span>
+										</li>
+									}
+								}
+							</ul>
+						</div>
+					}else {
+						<span class="left push-top20px no-document">@Messages("document.nodocumentavailableforselected") @searchCriteria.data.get("parentType").get</span>
+					}
+				}else {
+					@if(searchCriteria.data.get("searchScope").get.equals("1")){
+						<h2 class="left push-top20px"> @Messages("document.previoussdocuments")</h2>
+						@if(!isPreviousDocumentPresent.isEmpty()){
+							<div id="previous_documents">
+								<ul class="width_full">
+									<li>
+										<span class="doc_title bold" style="width: 180px !important;">@Messages("document.documenttitle") </span> 
+										<span class="doc_version bold" style="width: 125px !important;">@Messages("document.version")</span>
+										<span class="doc_date bold" style="width: 160px !important;"> @Messages("document.dateofupload")</span> 
+										<span class="doc_user bold" style="width: 140px !important;">@Messages("document.uploadedby")</span> 
+										<span class="doc_user bold" style="width: 187px !important;">@Messages("document.parentname")</span> 
+										<span class="doc_action bold" style="width: 120px !important;">@Messages("document.action")</span>
+									</li>
+									@for((doc, index) <- documents.zipWithIndex){
+										@{doc_details = DocumentService.findDocumentDetails(doc.parent_type, doc.parent_id.toString())}
+													
+										@for((version,vIndex) <- previousVersions.get(doc.Id.get.toString()).zipWithIndex){
+											<li class=" @if( index%2==0 ){search-result-datarow-even}else{search-result-datarow-odd}">
+											@if(doc.parent_type.equals("PROGRAM")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+												<span class=" row-with-parent-info">
+											@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")
+												 </span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<span class=" row-with-parent-info">
+										@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("") 
+												 </span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<span class=" row-with-parent-info">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+										</li>
+											
+											@{i = i+1}
+											<li class="next-show-document-details @if( i%2==0 ){ search-result-datarow-even }else{ search-result-datarow-odd }" id="ppprev_@doc.Id.get">
+												<span class="doc_title" style="width: 180px !important;">@doc.title</span> 
+												<span class="doc_version" style="width: 125px !important;">@version.version_alias</span>
+												<span class="doc_date" style="width: 160px !important;">@version.creation_date.format("dd/MM/YYYY")</span> 
+												<span class="doc_user">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name </span>
+											@if(doc.parent_type.equals("PROGRAM")){
+												<input type="hidden" id="npr_@doc.Id" value="@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")">
+												<span class="doc_user" style="width: 183px !important;">
+												@*@ProgramService.findProgramMasterDetailsById(doc.parent_id.toString).get.program_name*@
+												@doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+											<input type="hidden" id="npr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")">
+												<span class="doc_user" style="width: 183px !important;">
+												@* @ProjectService.findProjectDetails(doc.parent_id.intValue).get.project_name *@
+												@doc_details.get.project_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<input type="hidden"  id="npr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")">
+												<span class="doc_user" style="width: 183px !important;">
+												@*@TaskService.findTaskDetailsByTaskId(doc.parent_id.intValue).get.task_title *@
+												@doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<input type="hidden"  id="npr_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("")">
+												<span class="doc_user" style="width: 183px !important;">
+												@*@SubTaskServices.findSubTasksBySubTaskId(doc.parent_id .toString).get.title *@
+												@doc_details.get.title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<input type="hidden"  id="npr_@doc.Id" value="@doc_details.get.division.getOrElse("")">
+												<span class="doc_user" style="width: 183px !important;">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+												<span class="doc_action" style="width: 120px !important;">
+													<span class="doc_info" title="@version.version_notes"></span>
+														<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a> 
+												</span>
+											</li>
+										}
+									}
+								</ul>
+							</div>
+						}else {
+							<span class="left push-top20px no-document">@Messages("document.nodocumentavailableforselected") @searchCriteria.data.get("parentType").get</span>
+						}
+						
+					}else {
+						@if(searchCriteria.data.get("searchScope").get.equals("0")){
+							<h2> @Messages("document.currentsdocuments")</h2>
+							@if(!isCurrentDocumentPresent.isEmpty()){
+								<div id="current_documents">
+									<ul class="width_full">
+										<li>
+											<span class="doc_title bold" style="width: 180px !important;">@Messages("document.documenttitle")</span> 
+											<span class="doc_version bold" style="width: 130px !important;"> @Messages("document.version")</span>
+											<span class="doc_date bold" style="width: 160px !important;"> @Messages("document.dateofupload")</span> 
+											<span class="doc_user bold" style="width: 110px !important;">@Messages("document.uploadedby")</span> 
+												<span class="doc_user bold" style="width: 187px !important;">@Messages("document.parentname")</span> 
+											<span class="doc_action bold" style="width: 120px !important;"> @Messages("document.action")</span>
+										</li>
+										
+										@for((doc, index) <- documents.zipWithIndex){
+											@{doc_details = DocumentService.findDocumentDetails(doc.parent_type, doc.parent_id.toString())}
+										
+											
+											@for(version <- currentVersions.get(doc.Id.get.toString())){
+												<li class=" @if( index%2==0 ){search-result-datarow-even}else{search-result-datarow-odd}">
+										
+														@if(doc.parent_type.equals("PROGRAM")){
+															<span class="row-with-parent-info">
+															@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")
+															</span>
+														}
+														@if(doc.parent_type.equals("PROJECT")){
+															<span class="row-with-parent-info">
+														@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")
+															 </span>
+														}
+														@if(doc.parent_type.equals("TASK")){
+															<span class="row-with-parent-info">
+															@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")
+															</span>
+														}
+														@if(doc.parent_type.equals("SUBTASK")){
+															<span class="row-with-parent-info">
+													@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("") 
+															 </span>
+														}
+														@if(doc.parent_type.equals("DIVISION")){
+															<span class="row-with-parent-info">
+															@doc_details.get.division.getOrElse("NA")
+															</span>
+														}
+													</li>
+												
+												<li class="prev-show-document-details @if( index%2==0 ){ search-result-datarow-even }else{ search-result-datarow-odd }" id="pprev_@doc.Id.get">
+													<span class="doc_title" style="width: 187px  !important;">@doc.title</span> 
+													<span class="doc_version" style="width: 130px !important;">@version.version_alias</span>
+													<span class="doc_date" style="width: 160px !important;">@version.creation_date.format("dd/MM/YYYY")</span> 
+													<span class="doc_date">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name </span>
+											@if(doc.parent_type.equals("PROGRAM")){
+												<input type="hidden" id="prev_@doc.Id" value="@doc_details.get.division.getOrElse("") / @doc_details.get.program_name.getOrElse("")">
+												<span class="doc_user" style="width: 189px !important;">
+												@*@ProgramService.findProgramMasterDetailsById(doc.parent_id.toString).get.program_name*@
+												@doc_details.get.program_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("PROJECT")){
+											<input type="hidden" id="prev_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("")">
+												<span class="doc_user" style="width: 189px !important;">
+												@* @ProjectService.findProjectDetails(doc.parent_id.intValue).get.project_name *@
+												@doc_details.get.project_name.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("TASK")){
+												<input type="hidden"  id="prev_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("")">
+												<span class="doc_user" style="width: 189px !important;">
+												@*@TaskService.findTaskDetailsByTaskId(doc.parent_id.intValue).get.task_title *@
+												@doc_details.get.task_title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("SUBTASK")){
+												<input type="hidden"  id="prev_@doc.Id" value="@doc_details.get.program_name.getOrElse("") / @doc_details.get.project_name.getOrElse("") / @doc_details.get.task_title.getOrElse("") / @doc_details.get.title.getOrElse("")">
+												<span class="doc_user" style="width: 189px !important;">
+												@*@SubTaskServices.findSubTasksBySubTaskId(doc.parent_id .toString).get.title *@
+												@doc_details.get.title.getOrElse("")
+												</span>
+											}
+											@if(doc.parent_type.equals("DIVISION")){
+												<input type="hidden"  id="prev_@doc.Id" value="@doc_details.get.division.getOrElse("")">
+												<span class="doc_user" style="width: 189px !important;">
+												@doc_details.get.division.getOrElse("NA")
+												</span>
+											}
+													<span class="doc_action" style="width: 120px !important;">
+														<span class="doc_info" title="@version.version_notes"></span> 
+														<a href='@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_path' target='_blank'><span class="doc_view"></span></a> 
+														<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), doc.parent_type, "UPDATE")'><span class="doc_edit"></span> </a>
+													</span>
+												</li>
+											}
+										}
+									</ul>
+								</div>
+							}else {
+								<span class="left push-top20px no-document">@Messages("document.nodocumentavailableforselected") @searchCriteria.data.get("parentType").get</span>
+							}
+							
+						}
+					}
+				}
+			}else {
+				<h2 class="left push-top20px no-document">@Messages("document.nodocumentavailableforselectedcriteria")</h2>
+			}
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".delete-doc").unbind("click", deleteDocument);
+		$(".delete-doc").bind("click", deleteDocument);
+
+		$(".show-document-details").data('powertip',function() {
+			var _this= $(this);
+			var id= _this.attr("id").split("_")[1];
+			var context = $("#pr_"+id).val();
+			return context;
+		});
+
+		$(".show-document-details").powerTip({
+			placement : 'n', 
+			mouseOnToPopup : true
+		});
+
+
+
+		
+		$(".pshow-document-details").data('powertip',function() {
+			var _this= $(this);
+			var id= _this.attr("id").split("_")[1];
+			var context = $("#spr_"+id).val();
+			return context;
+		});
+
+		$(".pshow-document-details").powerTip({
+			placement : 'n', 
+			mouseOnToPopup : true
+		});
+
+
+		$(".prev-show-document-details").data('powertip',function() {
+			var _this= $(this);
+			var id= _this.attr("id").split("_")[1];
+			var context = $("#prev_"+id).val();
+			return context;
+		});
+
+		$(".prev-show-document-details").powerTip({
+			placement : 'n', 
+			mouseOnToPopup : true
+		});
+		
+		$(".next-show-document-details").data('powertip',function() {
+			var _this= $(this);
+			var id= _this.attr("id").split("_")[1];
+			var context = $("#npr_"+id).val();
+			return context;
+		});
+
+		$(".next-show-document-details").powerTip({
+			placement : 'n', 
+			mouseOnToPopup : true
+		});
+		
+	});
+</script>

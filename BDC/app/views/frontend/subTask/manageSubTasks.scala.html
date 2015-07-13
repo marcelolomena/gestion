@@ -1,0 +1,88 @@
+@(currentSub:String,task_id:String, subtask:Seq[SubTaskMaster],projectMap : scala.collection.mutable.HashMap[String, String], taskMap :scala.collection.mutable.HashMap[String, String], subTaskMap: scala.collection.mutable.HashMap[String, String])(implicit lang:Lang)
+@import helper._
+@import services._
+<style>
+
+.multiselect {
+    width:20em;
+    height:15em;
+    overflow:auto;
+}
+ 
+.multiselect label {
+    display:block;
+}
+ 
+.multiselect-on {
+    color:#ffffff;
+    background-color:#5BC3E6;
+}
+</style>       
+           
+<div class="block-body width_full" style="min-height:220px;float: left;" id="manage-tasks">
+<p style="width:96%"><span class="type">Seleccione Sub-Tarea</span><span class="close-popup-box"></span></p>
+<div class="dependency-select">
+	<div class="left">
+	<input type="hidden" value="@task_id" id="task_id">
+	<input type="hidden" value="@currentSub" id="currentSubTask">
+	<span style="margin-top: 0px;float:left " >
+	       <select name="project" id="project" class="input-xlarge">
+	          <option value="">--- Seleccione Proyecto ---</option>
+	       		@for(p <- projectMap){
+	       			<option value="@p._1">@p._2</option>	
+       			}
+	       </select> 
+	</span>
+	<span style="margin-top: 20px;float:left">
+	       <select name="task" id="task" class="input-xlarge">
+	          <option value="">--- Seleccione Tarea ---</option>
+	       		@for(t <- taskMap){
+	       			<option value="@t._1">@t._2</option>	
+       			}
+	       </select> 
+	</span>
+	<span id="subtask" style="margin-top: 20px;float:left;width: 100% " >
+		
+		@for(s <- subTaskMap){
+			<span class="multiselect" id="multiselect_@s._1" >
+   			 	<label><input type="checkbox" name="task_depend[]" value="@s._1" />@if(s._2.length() >200){@s._2.substring(0,200)...}else{@s._2}</label>
+   			</span>
+   		}
+	       @*<select name="subtask" id="subtask" class="input-xlarge">
+	          <option value="">--- Choose Sub Task ---</option>
+	       		@for(s <- subTaskMap){
+	       			<option value="@s._1">@s._2</option>	
+       			}
+	       </select>*@ 
+	</span>
+	@*<span style="margin-top: 13px;float:left">
+	       <select name="task" id="task" class="input-xlarge">
+	       <option value="">No Dependencies</option>
+	       @for(t <- tasks){
+	       		  	<option value="@t.sub_task_id.get" >@t.title </option>
+	       }
+	   	   </select> 
+	</span>*@
+	
+	<span style="margin-top: 20px;float:left " class="display-none">
+	       <select name="dependency_type" id="dependency_type" class="input-xlarge">
+	       		<option value="1">Finish-Start</option>
+	        	<option value="2">Start-Start</option>
+	         	<option value="3">Start-Finish</option>
+	          	<option value="4">Finish-Finish</option>
+	       </select> 
+	</span>
+	</div>
+	<div class="left"  style="margin-top: 10px;">
+	   		@*<input class="btn pull-left add-task-depend" value="Add" type="button"/>*@
+	       <input class="btn pull-left done-task-selection push-left50px" value="Completo" type="button" style="margin-left: 5px;"/>
+	</div> 
+</div>
+<div class="left" style="margin-top: 15px;margin-left: 15px;">
+	<span style=" color: #666666;font-size: 13px; font-weight: bold;float:left;">Seleccione Dependencia Sub Tareas</span> 
+	<ul class="dependency-task-list width_full">
+	
+	</ul>
+</div>
+<input type="hidden" id="myTasks" value=""/> 
+</div>

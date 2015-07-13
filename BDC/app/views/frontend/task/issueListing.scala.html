@@ -1,0 +1,50 @@
+@(parent_id:String,parent_type:Integer)(implicit request:play.api.mvc.RequestHeader,lang:Lang)
+@import services._; var issues =RiskService.findIssueList(parent_id, parent_type);
+<ul id="issue_list">
+	
+	@if(issues.size>0){
+		<li class="top-header"  style="@if(parent_type==3){width:99%}">
+			<span class="role header">Fecha</span>
+			<span class="member header">Titulo</span>
+			<span class="member header">Categoria</span>
+			<span class="member header"> @Messages("taskdetails.issuesubCategory")</span>
+			@*<span class="member header"> Action Plan</span>*@
+			<span class="member header">Prioridad</span>
+			<span class="active header">Accion</span>
+		</li>
+		@for( (p,index) <- issues.zipWithIndex){
+			<li class="@if(index%2==0){even_row}else{odd_row}"  style="@if(parent_type==3){width:99%}">	
+				<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@{new java.text.SimpleDateFormat("dd-MM-yyyy").format(p.issue_date)}</span>
+				<span class="member">@p.title </span>
+				@*<span class="member">@p.description </span>*@
+				<span class="member">
+					@services.RiskService.findIssueCategoryForCategoryId(p.category.toString()).get.category_name
+				</span>
+				<span class="member">
+				@if(!services.RiskService.findIssueSubCategoryForSubCategoryId(p.sub_category.toString()).isEmpty){
+					@services.RiskService.findIssueSubCategoryForSubCategoryId(p.sub_category.toString()).get.name
+				}else{
+				NA
+				}
+				
+				 </span>
+				@*<span class="member">@p.action_plan</span>*@
+				<span class="member">
+				@{
+					p.priority match{
+						case 0=> "Alto (3)"
+						case 1=> "Mediano (2)"
+						case 2=> "Bajo (1)"
+					}
+				}
+				</span>
+				<a href="@controllers.Frontend.routes.Program.editIssue(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
+					@if(utils.UserAccess.checkAccess(request,"delete_issue")){
+				<span class="delete-issue delete-icon" id="issue_@p.id" style="margin-left: 5px"></span>
+				}
+			</li>
+		}
+  }else{
+  	<li><span>No hay Issues...</span></li>
+  }
+</ul>

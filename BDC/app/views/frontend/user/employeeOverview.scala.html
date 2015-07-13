@@ -1,0 +1,76 @@
+@(users : Seq[Users], divisions : Seq[Divisions], employeeCountDivisionWise :java.util.HashMap[String, String], genrenciaDivisionWiseMap : java.util.HashMap[String, Seq[Genrencias]], employeeCountGenrenciaWise : java.util.HashMap[String, String], departmentGenrenciaWiseMap : java.util.HashMap[String, Seq[Departments]], employeeCountDepartmentWise : java.util.HashMap[String, String], employeeCountReportingDirectToDivision : java.util.HashMap[String, String], employeeCountReportingDirectToGerencia : java.util.HashMap[String, String],  searchForm : Form[EmployeeSearchMaster], count : Long)(implicit session: play.api.mvc.Session,lang:Lang)
+@import services._
+<div id="employee-overview">
+<input id="records" value="@count" type="hidden"/>
+	<div class="employee-list-left">
+	 	@for( (division, index) <- divisions.zipWithIndex){
+			<div id="division_@division.dId.get.toString"  class="data-row">
+				<a><span class="left division_icon"></span><span class="left division_name">@division.division (@employeeCountDivisionWise.get(division.dId.get.toString()))</span></a>
+			</div>
+			<div id="d_genrencia_@division.dId.get.toString" class="display-none">
+				@for( (genrencia, gIndex) <-genrenciaDivisionWiseMap.get(division.dId.get.toString).zipWithIndex ){
+					<div  id="genrencia_@genrencia.dId.get.toString" class="genrencia-list data-row">
+						<span class="left genrencia_icon"></span><span class="left genrencia_title">@genrencia.genrencia (@Integer.parseInt(employeeCountGenrenciaWise.get(genrencia.dId.get.toString)) )</span>
+					</div>
+					<div id="g_department_@genrencia.dId.get.toString" class="display-none">
+						@for( (department, dIndex ) <- departmentGenrenciaWiseMap.get(genrencia.dId.get.toString).zipWithIndex){
+							<div  id="department_@department.dId.get" class="department-list data-row">
+								<span class="left department_icon"></span><span class="left department_title">@department.department (@Integer.parseInt(employeeCountDepartmentWise.get(department.dId.get.toString())))</span>
+							</div>
+						}
+						@if(Integer.parseInt(employeeCountReportingDirectToGerencia.get(genrencia.dId.get.toString)) >0 ){
+							<div  id="genrencia_@genrencia.dId.get.toString" class="department-list data-row self-ref">
+								<span class="left self_report_icon_gerencia"></span><span class="left department_title">Employees reporting to Gerencia(@employeeCountReportingDirectToGerencia.get(genrencia.dId.get.toString))</span>
+							</div>
+						}
+					</div>
+				}
+				@if(Integer.parseInt(employeeCountReportingDirectToDivision.get(division.dId.get.toString)) > 0){
+					<div  id="division_@division.dId.get.toString" class="genrencia-list data-row self-ref">
+							<span class="left self_report_icon_division"></span><span class="left genrencia_title">Employee reporting to this division (@employeeCountReportingDirectToDivision.get(division.dId.get.toString))</span>
+					</div>
+				}
+			</div>
+		}
+	</div>
+	<div  class="employee-list-right">
+		<div class="emp_listing">
+			<div id="emp_list">
+				<ul class="width_full">
+					@if(users != null && users.size > 0){
+						<li class="width_full header">
+							<span class="employee_name bold">Empleado</span> 
+							<span class="employee_rut bold">RUT</span>
+							<span class="employee_email bold"> Email </span> 
+							<span class="employee_telephone bold">Teléfono de contacto</span>
+							<span class="employee_action">@Messages("admin.action")</span> 
+						</li>
+						 @for((u, index) <- users.zipWithIndex){
+							<li class="width_full emp_row  @if(index%2==0 ){ emp_row_odd }else{ emp_row_even }">
+								<a href="/employee/@u.uid">	
+									<span class="employee_name">@u.first_name&nbsp;@u.last_name</span> 
+									<span class="employee_rut">@u.rut_number</span>
+									<span class="employee_email">@u.email</span> 
+									@if(!UserService.findUserOfficeDetailsById(u.uid.get).isEmpty && UserService.findUserOfficeDetailsById(u.uid.get).get.user_type.toString.equals("1")){ 
+										<span class="employee_telephone">Permanent</span>
+									}else{
+										<span class="employee_telephone">Contractorr</span>
+									}
+									<a href="/edit-user/@u.uid"><span class="edit-icon" ></span></a>
+								</a>
+							
+							</li>
+						 }
+					}else{
+						<li class="width_full header">No Users found for this department.	</li>
+					}
+				
+				</ul>
+			</div>
+		</div>
+		
+		  <div class="width_full push-top20px">
+	       		<ul id="emp_pagination_div"></ul>
+	      </div>
+	</div>
+</div>

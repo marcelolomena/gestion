@@ -1,0 +1,200 @@
+@(user:Option[Users], username:String,departments:Seq[Departments])
+@import helper._
+	
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+	
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav("Admin")
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+
+    
+    <div class="content">
+       	<div class="header">
+        	<h1 class="page-title">User</h1>
+        </div>
+        
+           <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">Home</a> <span class="divider">/</span></li>
+            <li><a href="#">User List</a> <span class="divider">/</span></li> @*routes.User.userList*@
+            <li class="active">Edit User Details</li>
+        </ul>
+
+ <div class="container-fluid">
+ 	
+	<div class="row-fluid">
+	@if(user!=null){
+        <div class="block">
+            <p class="block-heading">Edit User Details</p>
+            <div class="block-body">@*routes.User.saveUser*@
+               @form(action = null, 'id->"myUserUpdate") {
+               	 <input type="hidden" id="mode" name="mode" value="edit" />
+                 <input type="hidden" id="uId" name="uId" value="@user.get.uid" />
+               	
+               	<span>   
+           	     <label>Department</label>
+                  <select name="department" id="department" class="input-xlarge ">
+                    <option value="">--Select Department--</option>
+                 
+                 </select> 
+                 </span>
+                 
+                 <span>
+               	<label>First Name</label>
+                	<input id="first_name" name="first_name" type="text" value="@user.get.first_name.split(" ")(0)" class="span4"> 
+                	<input id="first_name2" name="first_name2" type="text" value="@{if(user.get.first_name.trim().split(" ").length>1){user.get.first_name.split(" ")(1)}else{""}}" class="span4">
+                </span>
+                
+                <span>   
+                <label>Last Name</label>
+                	<input id="last_name" name="last_name" type="text"value="@user.get.last_name.split(" ")(0)" class="span4">
+                	<input id="last_name2" name="last_name2" type="text"value="@{if(user.get.last_name.trim().split(" ").length>1){ user.get.last_name.split(" ")(1) }else{""}}" class="span4">
+                  </span> 
+             
+             	<span>
+	                <label>User Name</label>
+	                <input id="uname" name="uname" type="text" value="@user.get.uname" class="span4" readonly="readonly">
+                </span>
+                
+                <span>    
+	                <label>RUT Number</label>
+	                <input id="rut_number" name="rut_number" type="text" class="span4" value="@user.get.rut_number">
+                </span>
+                
+                <span>
+                 <label>Contact  Number (Residence/Mobile)</label>
+                <input id="contact_number" name="contact_number" type="text" class="span4" value="@user.get.contact_number">
+                </span>
+                <span>
+                <label>Email</label>
+                <input id="email" name="email" type="text" value="@user.get.email" class="span4" readonly="readonly">
+                </span>
+               
+                @*<span>
+                <label>Country</label>
+                	<input id="country" name="country" type="text" value="@user.get.country" class="span4">
+                </span>
+                
+                <span>      
+                  <label>State</label>
+                  	<input id="state" name="state" type="text" value="@user.get.state" class="span4">
+                 </span>
+                    
+                  <span>
+                  <label>City</label>
+                 		<input id="city" name="city" type="text" value="@user.get.city" class="span4">
+                   </span>*@
+                  
+                  <span>
+                   <label>Date of Birth</label>
+                   <input id="birth_date" name="birth_date" type="text" class="span4 datepicker" value="@user.get.birth_date.format("dd-mm-yyyy")"  >
+                   </span>
+                   
+                  <span>  
+                   <label>Office Number (With Extension)</label>
+                   <input id="office_number" name="office_number" type="text" value=""  class="span4">
+                  </span>
+                  
+                  <span> 
+                   <label>Joining Date</label>
+                   <input id="joining_date" name="joining_date" type="text" class="span4 datepicker" value="">
+                  </span> 
+                 @*  <label>Designation</label>
+                   <input id="designation" name="designation" type="text" value="@user.get.designation"  class="span4">
+                   *@ 
+                    
+                 <span>
+	                  <label>Rate per Hour</label>
+	                  <input id="rate_hour" name="rate_hour" type="text" value="" class="span4">
+	             </span>
+                  <span> 
+                   <label>User Role</label>
+                     <select name="isAdmin" id="isAdmin" class="input-xlarge">
+                        <option value="0" >User</option>
+                        <option value="1" >Admin</option>
+                        <option value="2">Manager</option>
+                        <option value="3" >CEO</option>
+                     </select> 
+                   </span>  
+                 
+                 
+                 <span>
+                     <label>User Type</label>
+                     <select name="user_type" id="user_type" class="input-xlarge">
+                        <option value="1">Permanent</option>
+                        <option value="2" >Contractor</option>
+                     </select> 
+                     </span>
+                   
+                  	<span>
+	                   <label>Work Hours (HH.mm)/day</label>
+	                   <input id="work_hours" name="work_hours" type="number" class="span4" value="">
+                    </span>
+                     
+                   <span>
+                     <label>Overtime Applicable</label>
+                     <select name="bonus_app" id="bonus_app" class="input-xlarge">
+                        <option value="0">No</option>
+                        <option value="1" >Yes</option>
+                     </select> 
+                     </span>
+                     
+                     
+                 <span>
+                  <label>Active</label>
+                  <select name="active" id="active" class="input-xlarge ">
+                     <option value="Active" @{if(user.get.status.toString() == "Active") "selected='selected'"}>Yes</option>
+                     <option value="Inactive" @{if(user.get.status.toString() == "Inactive") "selected='selected'"}>No</option>
+                  </select> 
+                  
+                </span> 
+                 	 
+                     	 	       
+                  <div class="pretend-top10px pull-left row-fluid">
+                   <input class="chkbox btn pull-left" value="Update" type="submit"/><a href="javascript:history.back(-1);" class="btn push-left20px pull-left cancel-button" style="margin-top:-10px">Cancel</a></div>
+                  <div class="clearfix"></div> 
+                    }
+               
+            </div>
+        </div>
+   	}
+
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+
+	 
+	<!-- Footer panel -->                    
+  	 @footer()
+                    
+    </div>
+</div>
+    </div>
+   </body>
+</html>
+
+

@@ -1,0 +1,178 @@
+package controllers.Frontend
+
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
+import org.json.JSONObject
+
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
+import play.api.mvc.Action
+import play.api.mvc.Controller
+import services.DivisionService
+import services.ProgramService
+import services.ProjectService
+import services.RoadmapServices
+import services.TaskService
+import services.UserService
+
+object Roadmap extends Controller {
+
+  var same_date = ""
+  var count = 0
+
+  /**
+   * on load default action load
+   */
+  def roadmapDisplay = Action {
+
+    implicit request =>
+
+      request.session.get("username").map { user =>
+
+        val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+        val todaydate = format.format(new java.util.Date())
+        val today = Calendar.getInstance()
+        today.setTime(new java.util.Date())
+        today.add(Calendar.DATE, 1)
+        today.add(Calendar.MONTH, 1)
+        val dateNew = today.getTime()
+        val nextDate = format.format(dateNew)
+        val uId = Integer.parseInt(request.session.get("uId").get)
+        val utype = Integer.parseInt(request.session.get("utype").get)
+        val projects = ProjectService.findProjectList
+        val user = UserService.findUserDetailsById(uId)
+        val divisons = DivisionService.findAllDivisions
+        val programs = ProgramService.findAllPrograms("", "")
+
+        Ok(views.html.frontend.roadmap.roadmap(todaydate, nextDate, projects, divisons, programs)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get,"user_profile"-> request.session.get("user_profile").get)
+
+      }.getOrElse {
+        Redirect(routes.Login.loginUser())
+      }
+
+  }
+
+  /**
+   * ajax call to get the product details ropad map
+   */
+  def roadmapProductDetails = Action { implicit request =>
+
+    val startDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getQueryString("start_date").get)
+    val endDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getQueryString("end_date").get)
+    val pId = request.getQueryString("pId").get
+    val roadmapType = request.getQueryString("product").get
+    var projectId = ""
+    var mainJSON = ""
+    var comma = ","
+    var productJson = """"Product":{"""
+    var detailsJeson = """"":"""
+    var completeJSON = ""
+    val uId = Integer.parseInt(request.session.get("uId").get)
+    val uType = Integer.parseInt(request.session.get("utype").get)
+
+    val data = RoadmapServices.getRoadmapCalenderDetailsForProgram(startDate, endDate, pId, roadmapType, uId, uType)
+    var test1 = """"Product":""";
+    for (d <- data) {
+      var programDates = ProgramService.findProgramDateDetailsById(d.program_id.get.toString)
+      var desc = "" //d.description.getBytes("UTF-8")
+      var nodeProduct = new JSONObject()
+      var innerProduct = new JSONObject()
+      var pName = ""
+      /*if (d.program_name.length() > 13) {
+        pName = d.program_name.substring(0, 13) + "..."
+      } else {
+        pName = d.program_name
+      }*/   
+      pName = d.program_name
+      productJson = """{"id":"""" + d.program_id.get + """","pId":"""" + "" + """","title":"""" + pName + """","dscription":"""" + desc + """","release_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(programDates.get.closure_date.get) + """","planned_start_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(programDates.get.initiation_planned_date) + """","status":"""" + "0" + """"}""" + comma + """"""
+
+      /*var projectID = d.program_id.get.toString
+      innerProduct.put("id", d.program_id.get.toString)
+      innerProduct.put("pId", d.program_id.get.toString)
+      innerProduct.put("title", d.program_name)
+      innerProduct.put("dscription", "")
+      if (!programDates.get.closure_date.isEmpty) {
+        innerProduct.put("release_date", new SimpleDateFormat("yyyy-MM-dd").format(programDates.get.closure_date.get))
+      } else {
+        innerProduct.put("release_date", "")
+      }
+
+      if (!programDates.get.initiation_planned_date.isEmpty)
+        innerProduct.put("planned_start_date", new SimpleDateFormat("yyyy-MM-dd").format(programDates.get.initiation_planned_date.get))
+      else
+        innerProduct.put("planned_start_date", new SimpleDateFormat("yyyy-MM-dd").format(programDates.get.initiation_planned_date.get))
+      */
+
+      nodeProduct.put("Product", innerProduct)
+
+      completeJSON += productJson;
+      /**
+       * Fill the Project data of QA Type
+       */
+
+      var projects = ProjectService.findProjectListForProgram(d.program_id.toString())
+      for (p <- projects) {
+
+        if (p.project_mode == 5 ) {
+          var projectName = ""
+           projectName = p.project_name
+          /*if (p.project_name.length() > 13) {
+            projectName = p.project_name.substring(0, 13)
+          } else {
+            projectName = p.project_name
+          }*/
+          productJson = """{"id":"""" + p.pId.get + """","pId":"""" + "" + """","title":"""" + projectName + """","dscription":"""" + desc + """","release_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(p.final_release_date) + """","planned_start_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(p.start_date) + """","status":"""" + "1" + """"}""" + comma + """"""
+          completeJSON += productJson;
+          nodeProduct.put("Product", innerProduct)
+        }
+
+      }
+
+    }
+
+    //productJson =  productJson
+
+    mainJSON = "{" + test1 + "[" + completeJSON.dropRight(1) + "]}"
+    // println("complete json - " + mainJSON);
+    val json: JsValue = Json.parse(mainJSON)
+
+    /*
+		val data = RoadmapServices.getRoadmapCalenderDetails(startDate, endDate, pId, roadmapType, uId, uType)
+		for (d <- data) {
+			var desc = "" //d.description.getBytes("UTF-8")
+			var nodeProduct = new JSONObject()
+			var innerProduct = new JSONObject()
+			productJson = """"Product":{"id":"""" + d.pId + """","pId":"""" + d.project_id + """","title":"""" + d.project_name + """","dscription":"""" + desc + """"}""" + comma + """"""
+			var projectID = d.pId.get.toString
+
+			innerProduct.put("id", d.pId.get.toString)
+			innerProduct.put("pId", d.pId.get.toString)
+			innerProduct.put("title", d.project_name)
+			innerProduct.put("dscription", "")
+			nodeProduct.put("Product", innerProduct)
+
+			/**
+			 * Milestone details....
+			 */
+
+			val milestone = TaskService.findTaskListByProjectId(projectID)
+
+			for (m <- milestone) {
+
+				var countryJason = ""
+				//country json ...
+				countryJason += """"Country":{"id":"""" + "" + """","title":"""" + "" + """","code":"""" + "" + """","lat":"null","lng":"null"},"""
+				val newJSOn = productJson + countryJason
+				var milestone_title = m.task_title
+				val mDesc = "empty" //m.milestone_description
+				detailsJeson = "{" + newJSOn + """"CountryProduct":{"id":"""" + m.tId + """","product_id":"""" + m.tId + """","country_id":"""" + "" + """","uat_staff_launch_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(m.plan_start_date) + """","expected_store_availability_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(m.plan_end_date) + """","customer_launch_date":"""" + new SimpleDateFormat("yyyy-MM-dd").format(m.plan_end_date) + """","milestone_title":"""" + milestone_title + """","milestone_code":"""" + m.task_code + """","description":"""" + mDesc + """","milestoneStatus":"""" + m.task_status + """"}}""" + comma
+				//merge whole json ...
+				completeJSON += detailsJeson
+			}
+
+		}*/
+
+    Ok(json).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get,"user_profile"-> request.session.get("user_profile").get)
+  }
+}

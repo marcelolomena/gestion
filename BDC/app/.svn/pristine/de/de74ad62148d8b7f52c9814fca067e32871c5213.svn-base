@@ -1,0 +1,86 @@
+@(documents : Seq[DocumentMaster],subtask_id:String)(implicit session: play.api.mvc.Session, lang:Lang, req : play.api.mvc.RequestHeader)	
+@import services._
+<link rel="stylesheet" href="/assets/frontend/stylesheets/documents.css">
+<div style="margin-top:20px;" class="width_full">
+				
+				@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){
+					<a href='@controllers.Frontend.routes.Documents.uploadDocument(subtask_id, "TIME", "ADD")'><span class="upload-document-icon">Upload Document</span></a>
+				}
+				
+					<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(subtask_id)'><span class="upload-document-icon">Go To Sub-Task Detail Page</span></a>
+		  </div>
+<div style="float: left; height: auto; overflow: hidden;" class="product_main" id="timesheet_doc_list_id">
+		  <div id="p_page" class="subtask_doc_list">
+			     <div class="width_full" id="project_task_list">
+			  <div class="team_sub_task_div ">
+<div class="width_full"> 		
+		  <div id="docuement-overview">
+		  	<div  class="document-right">
+		  		<div class="timesheet-doc_listing">
+					@if(documents.size > 0){	
+						<h2> @Messages("document.currentsdocuments")</h2>
+						<div id="current_documents">
+							<ul class="width_full">
+								<li>
+									<span class="doc_title bold">@Messages("document.documenttitle")</span> 
+									<span class="doc_version bold"> @Messages("document.version") </span>
+									<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+									<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+									<span class="doc_action bold"> @Messages("document.action")</span>
+								</li>
+								
+									@for(doc <- documents){
+										<li>
+											<span class="doc_title">@doc.title</span> 
+											<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_alias</span>
+											<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
+											<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.last_name</span>
+											<span class="doc_action"> 
+												<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_notes"></span>
+												<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+												<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "TIME", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+											</span>
+										</li>
+									}
+							</ul>
+						</div>
+					
+						<h2 class="left ">@Messages("document.previoussdocuments")</h2>
+						<div id="previous_documents">
+							<ul class="width_full">
+								<li>
+								<span class="doc_title bold">@Messages("document.documenttitle")</span> 
+									<span class="doc_version bold"> @Messages("document.version") </span>
+									<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+									<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+									<span class="doc_action bold"> @Messages("document.action")</span>
+								</li>
+								@for(doc <- documents){
+									@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.toString()).isEmpty){
+										@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.toString())){
+											<li>
+												<span class="doc_title">@doc.title</span> 
+												<span class="doc_version">@version.version_alias</span>
+												<span class="doc_date"> @version.creation_date.format("dd/MM/YYYY")</span> 
+												<span class="doc_user">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name </span>
+												<span class="doc_action"> 
+													<span class="doc_info" title="@version.version_notes"></span>
+													<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a> 
+												</span>
+											</li>
+										}
+									}
+								}
+							</ul>
+						</div>
+					}else {
+						<h2 class="left  no-document">  @Messages("document.nodocumentavailableforselected") @Messages("addSubTask.subtasktitle")</h2>
+					}
+				</div>
+		  	</div>
+		  </div>
+		  </div>
+		  </div>
+		  </div>
+		  </div>
+		  </div>

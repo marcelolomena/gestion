@@ -1,0 +1,65 @@
+@(previousDate:String,todayDate:String)(implicit lang:Lang)
+<div id="tab4" class="tab-content" >
+	@*<img style="margin-top:5px;float: left" width="480" height="300" alt="" src="@routes.Assets.at("frontend/images/new_chart.png")">
+	<img style="margin-left:10px;margin-top:5px;" width="195" height="472" alt="" src="@routes.Assets.at("frontend/images/chart_calculation.png")">*@
+	
+	<div class="tabbed_1_left display-none" id="dashboard-timesheet" style="width:690px;">
+	<h2>@Messages("dashboardemp.timesheetForTask")</h2>
+	</div>
+	<h2>@Messages("dashboardemp.timesheetForTask")</h2>
+	<div class="tabbed_1_left " id="dashboard-pie-chart" style="width:690px;">
+	
+	</div>
+	
+	<div id="dashboard-timesheet-filer"class="left width_full dashboard-seperate"><!-- class removed -  -->
+		<h2>@Messages("dashboardemp.timesheetForProject")</h2>
+		<div class="focus_on width_full" id="timesheet-filter" >
+               
+                  <div class="focus_on_title"><img width="69" height="13" alt="" src="@routes.Assets.at("frontend/images/focus_on.jpg")"></div>
+                  <div class="timesheet-action">
+	                  <span class="left"> 
+	                 	<label>From</label>
+	                  	<input type="text" id="from_date" value="@previousDate" class="calender_button2 " readonly="true">
+	                  </span>
+	                  <span class="left">
+		                  <label>To</label>
+		                  <input type="text" id="to_date" value="@todayDate" class="calender_button2 " readonly="true">
+	                  </span>
+	                  <span class="left" style=" margin-top: 12px;">
+	                  	<input type="button" id="find" value="Show" />
+	                  </span>
+                  
+           			</div>
+           </div>
+	</div>
+	<div class="tabbed_1_left" id="dashboard-timesheet-project" style="width:690px;">
+	</div>   
+	      
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	//renderTimeSheetGraph();
+	renderPieChart();
+	
+	renderTimeSheetPerProject("","");
+
+	$("#from_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "yy-mm-dd",
+		maxDate: "today",
+		onSelect: function(d,inst){
+			var dt= $.datepicker.parseDate('yy-mm-dd',d);
+            $('#to_date').datepicker('option','minDate',dt);
+            $('#to_date').datepicker( "refresh" );
+        }
+	});
+	
+	$("#to_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "yy-mm-dd",
+		maxDate: "today"
+	});
+	//$("#from_date" ).datepicker( "setDate", new Date());
+	$("#find").on("click", renderTimeSheetPerProjectTime);
+});
+</script>   

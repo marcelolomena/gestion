@@ -1,0 +1,68 @@
+@(subtask: Option[SubTaskMaster],task:Option[Tasks],project : Option[Project],users:Seq[Users], roles:Seq[UserRoleMaster], d3:Long)(implicit lang:Lang, req : play.api.mvc.RequestHeader)
+@import helper._
+@import services._;var bankhours = TaskService.getAllocatedHours(subtask.get.task_id.toString());var external_hours = TaskService.getExternalResouceAllocatedHours(subtask.get.task_id.toString());var finalhours = task.get.plan_time - (external_hours+bankhours) 
+<div class="block-body">
+	<div style="float:left;width: 100%;"> 
+		<div class="project-task" id="fo-new-task"> 
+			<div class="block-body">
+				<p>@Messages("assignsubtask.subtaskallocation") - @subtask.get.title <span class="close-popup-box"></span> </p>
+ 				@form(action = controllers.Frontend.routes.SubTask.saveSubTaskAllocation, 'id->"assign_subtask") { 
+	        		 
+	        		  <input type="hidden" id="mode" name="mode" value="add" />
+	        		  <input type="hidden" id="sub_task_id" name="sub_task_id" value="@subtask.get.sub_task_id.get" />
+	        		  <input type="hidden" id="task_id" name="task_id" value="@task.get.tId" />
+	        		  <input type="hidden" id="max_hours" name="max_hours" value="@finalhours" />
+	        		  <input type="hidden" id="project_id" name="project_id" value="@project.get.pId.get" />
+	        		  <input type="hidden" id="subtask_project_id" name="subtask_project_id" value="@project.get.pId.get" />
+	        		  <input type="hidden" id="days" name="days" value="@d3" />
+	        		
+	        		@*<div class="width_full">
+		  				<input type="text" id="search-user" name="search-user" class="left" value="" placeholder="search user">
+		  				<span class="search-user-icon"></span>
+	  				</div>
+	  				@{if( dep.dId.toString() == project.get.department.toString() ) "selected='selected'"}
+	  				*@
+	  				
+	        		  <label>@Messages("assignsubtask.userRole") </label>
+	        		  
+	       		      <select name="user_role" id="user_role" class="input-xlarge width208px">
+	                    <option value=""> @Messages("assignsubtask.placeholder.userRoles")</option>
+	                  	 @for(role <- roles) {
+	                     	<option value="@role.rId" >@role.role </option>
+	                   	 }
+	                  </select> 
+		  			
+ 			       	
+				    
+				    <div class="width_full">
+				  	   <span style="float:left;width:509px" class="user-select">
+				  	   <label>@Messages("assignsubtask.assignuser")</label>
+					  	    <select name="user" id="user" class="input-xlarge width208px">
+			                   	<option value=""> @Messages("assignsubtask.placeholder.assignuser")</option>
+			                   	@for(u <- users){
+			                   		<option value="@u.uid">@u.first_name.toString()  @u.last_name.toString()</option>
+			                   	}
+			            	</select>
+		            	</span>
+		            	<span class="left"  style="margin-top:-10px; display:none;">
+			            	<input type="text" id="search-user" name="search-user" class="left" placeholder="@Messages("assignsubtask.placeholder.searchuser")">
+			            	<span class="search-user-icon"></span>
+		            	</span>
+	                </div>  
+	                  <div class="width_full" style="margin-top: 1px;">
+	                   <label>@Messages("assignsubtask.estimatedtime") </label>
+	        		  <input type="text" maxlength="6"  id="estimated_time" name="estimated_time"  type="number" class="left estimated_time_assign" placeholder="@Messages("assignsubtask.placeholder.estimated_time")" />
+	                  </div> 
+					   
+					  <div class="width_full"> 
+	        		  <label> @Messages("assignsubtask.hrsallocation")</label> <span class="left" style=" padding:7px 0 7px;">@finalhours</span> 
+					</div>
+	                 <div class="width_full" style="margin-top: 20px;"> 
+       					<input class="btn" value="Assign" type="submit" style="margin-left: -37px;">
+       					<input class="btn cancel-form" style="margin-left:26px;" value="Cancel" type="button"/>
+          			</div>
+	    		}
+        	</div>
+   		</div>
+	</div>
+</div>

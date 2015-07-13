@@ -1,0 +1,301 @@
+@(program_id:String,program_member: Form[ProgramMembers],programRoles:java.util.HashMap[String, String],userMap: java.util.HashMap[String, String], progrma_members: Seq[models.ProgramInternalMembers], external_resource: Seq[models.ProgramMembersExternalAllocation], periods: Seq[models.UserPeriods])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")">
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="program_member_form">
+
+<div class="width_full" >
+<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+	  	<a href="@controllers.Frontend.routes.Program.programDetails(program_id)" style="font-weight: bold">
+	  		<span class="left">@Messages("newmember.programdetails")</span>
+  	  	</a>
+   </h3>
+ </div>
+ 
+	<p class="new-member-title"> @Messages("newmember.selectroles")</p>
+
+	<div class="width_full" >
+		@form(action = controllers.Frontend.routes.Program.saveMembers(program_id),  'id->"program-member-form") {
+					<input type="hidden" value="@program_id" id="program_id" name="program_id"/>
+					<input type="hidden" value="0" id="is_active" name="is_active"/>	
+					<input type="hidden" name="pData" id="pData" value=""/>
+			      	 @select(
+				         program_member("role_id"),
+				         options(programRoles),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("newmember.role") ,
+				          '_default -> Messages("newmember.chooserole")
+			      	)
+			      	 @select(
+				         program_member("member_id"),
+				         options(userMap),
+				         'class -> "input-xlarge  ",
+				         '_label ->  Messages("newmember.member"),
+				          '_default -> Messages("newmember.choosemember")
+			      	)
+			      	<div id="periods_inputs" style="display:none;">
+			 		@for(p <- periods){
+				      	<dl style="display: block;">
+						    <dt><label for="periods_@p.periods" name="periods_@p.periods">@p.periods</label></dt>
+						    <dd>
+						    	<input type="text" name="periods_@p.periods" id="@p.periods" style="margin: 0 0 5px;width: 20px;"> %
+							</dd>
+						</dl>
+					}
+					</div>
+			      	<div id="software_factory_inputs" style="display:none;">
+				      	<dl id="provider_name_field" class=" " style="display: block;">
+						    <dt><label for="provider_name">@Messages("newmember.providername")</label></dt>
+						    <dd>
+						    	<input type="text" placeholder="@Messages("newmember.nameofprovider")" class="" value="" name="provider_name" id="provider_name" style="margin: 0 0 5px;width: 250px;">
+							</dd>
+						</dl>
+						
+						<dl id="number_of_resources_field" class=" " style="display: block;">
+						    <dt><label for="number_of_resources">@Messages("newmember.numberofresources")</label></dt>
+						    <dd>
+						    	<input type="text" placeholder="@Messages("newmember.numberofresources")" maxlength="3"  class="" value="" name="number_of_resources" id="number_of_resources" style="margin: 0 0 5px;width: 250px;">
+							</dd>
+						</dl>
+					</div>
+					
+					<div id="sub_contractor_inputs" c>
+				      	<dl id="name_of_provider_field" class=" " style="display: block;">
+						    <dt><label for="name_of_provider">@Messages("newmember.providername")</label></dt>
+						    <dd>
+						    	<input type="text" placeholder="@Messages("newmember.nameofprovider")" class="" value="" name="name_of_provider" id="name_of_provider" style="margin: 0 0 5px;width: 250px;">
+							</dd>
+						</dl>
+						
+						<dl id="name_of_resources_field" class=" " style="display: block;">
+						    <dt><label for="name_of_resource">@Messages("newmember.nameofresource")</label></dt>
+						    <dd>
+						    	<input type="text" placeholder="@Messages("newmember.nameofresource")" class="" value="" name="name_of_resource" id="name_of_resource" style="margin: 0 0 5px;width: 250px;">
+							</dd>
+						</dl>
+					</div>
+					
+			        <dl id="member_id_search_field " class=" display-none">
+		   				<dt>
+		   					<label for="member_id_search"> @Messages("newmember.member")</label>
+		   				</dt>
+			    		<dd>
+			   			 <input type="text" value="" id="member_id_search" name="member_id_search" placeholder="Search Member"/>	
+						</dd>
+			    	</dl>
+			      		<div class="width_full" >
+						       	<span class="left push-left84px"><input class="btn  form-button" value="@Messages("button.save")" type="submit"/></span>
+						       	<span class="left" style="margin-left:30px;"> <input id="done-member" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+				          	</div>
+				}
+	</div>
+	<div class="width_full" >
+		<ul id="member_list" style="width: 100%;float: left">
+			<li class="top-header">
+				<span class="role header" >@Messages("newmember.role")</span>
+				<span class="member header" style="padding-left: 25px;">@Messages("booktime.provider")</span>
+				<span class="provider header"> @Messages("newmember.member")</span>
+				<span class="active header">@Messages("newmember.action")</span>
+			</li>
+			@if(progrma_members.size>0){
+						@for( (p,index) <- progrma_members.zipWithIndex){
+							<li class="@if(index%2==0){even_row}else{odd_row}">	
+								@if(UserRoleService.findUserRoleById(p.role_id.toString).isEmpty){
+									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >&nbsp</span>
+								}else{
+									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >@UserRoleService.findUserRoleById(p.role_id.toString).get.role </span>
+								}
+								<span class="member">BCH</span>
+								<span class="provider">@UserService.findUserDetails(p.member_id).get.first_name&nbsp;@UserService.findUserDetails(p.member_id).get.last_name</span>
+								@if(utils.UserAccess.checkAccess(req,"program_member_delete")){
+									<span class="active member-action @if(p.is_active==0){enabled_member}else{disabled_member}" id="m_@p.id"></span>
+								}
+							</li>
+						}
+					}else{
+						<span class="no-member">@Messages("programDetails.nomemeber")</span>
+					}
+					@if(external_resource.size > 0){
+						@for( (e,index) <- external_resource.zipWithIndex){
+							<li class="@if(index%2==0){even_row}else{odd_row}">	
+								@if(UserRoleService.findUserRoleById(e.provider_type.toString).isEmpty){
+									<span id="r_@e.id" class="role @if(e.is_deleted==0){active-sap}else{in-active-sap}" >&nbsp</span>
+								}else{
+									<span id="r_@e.id" class="role @if(e.is_deleted==0){active-sap}else{in-active-sap}" >@UserRoleService.findUserRoleById(e.provider_type.toString).get.role </span>
+								}
+								<span class="member">@e.provider_name.toString()</span>
+								@if(!e.provider_name.isEmpty()){
+									<span class="provider">	
+									@if(e.provider_type == 46){
+										@e.resource_name &nbsp;	
+									}else{
+										@if(!e.number_of_resources.isEmpty){
+											@e.number_of_resources.get	
+										}else{
+											@Messages("booktime.externalresource")
+										}
+										
+									}
+									</span>
+								}else{
+									<span class="provider">@Messages("booktime.externalresource")</span>
+								}
+							
+								<span class="active member-action-external @if(e.is_deleted==0){enabled_member}else{disabled_member}" id="m_@e.id"></span>
+							</li>
+						}
+					}
+		
+		</ul>
+	</div>
+	<div id="dialog-confirm"></div>	
+</section>
+<div id="pop-box-over" class="display-none"></div>
+</div>
+
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+	
+		var text = $("#member_id_field dd.error").html();
+		var element = $("#member_id_field dd.error");
+		if(text!=""){
+			$("#member_id_search_field").append(element);
+		}
+		
+		var selected_member = $("#member_id option:selected" ).text(); 
+		if(selected_member != "--- Choose Member ---"){
+				$("#member_id_search").val(selected_member)		
+		}
+		autocompleteMemberSearch();
+
+		$(".member-action").on("click", renderProgramMember);
+		
+		$(".member-action-external").on("click", renderProgramMemberExternal);
+		
+		$('#done-member').on('click',function() {
+		 	window.location.href='/program-details/@program_id';
+		});
+		
+		$("#role_id").on("change", function(){
+			var selectedOption = $(this).val()
+			if(selectedOption == 46) {
+				$("#member_id_field").slideUp(function(){
+					$("#software_factory_inputs").slideUp();
+					$("#sub_contractor_inputs").slideDown();
+				});
+				
+			}else if(selectedOption == 47){
+				$("#member_id_field").slideUp(function(){
+					$("#sub_contractor_inputs").slideUp();
+					$("#software_factory_inputs").slideDown();
+				});
+			}else{
+				$("#member_id_field").slideDown(function(){
+					$("#software_factory_inputs").slideUp();
+					$("#sub_contractor_inputs").slideUp();
+				});
+			}
+		});
+		
+		$("#program-member-form").on("submit", function(){
+		
+			var txtData = "";
+	        $("form :input[name^='periods_']").each(function() {
+	            txtData+=$(this).attr('id') + ";" + $(this).val() + "|";
+	        });
+
+	        $("#pData").val(txtData);
+        
+			var selectedRoleId = $("#role_id").val();
+			if(selectedRoleId == 46){
+				var providerName = $("#name_of_provider").val();
+				if(providerName == ""){
+					alert("Please insert provider name");
+				}else{
+					var nameOfResource = $("#name_of_resource").val();
+					if(nameOfResource == ""){
+						
+					}
+					jQuery.ajax({
+						url : "/add-external-contractor",
+						type : "POST",
+						data : "program_id=" + $("#program_id").val()
+								+ "&role_id=" + selectedRoleId + "&provider_name=" + providerName + "&name_of_resource=" + nameOfResource,
+						cache : false,
+						success : function(data) {
+							if (data != 'success') {
+								alert("alertSomethingWentWrong");
+							}else{
+								location.reload();
+							}
+						},
+						error : function() {
+							alert("alertSomethingWentWrong");
+						}
+					});
+				}
+				return false;
+			}else if(selectedRoleId == 47){
+				var providerName = $("#provider_name").val();
+				if(providerName == ""){
+					alert("Please insert provider name");
+				}else{
+					var numberOfResources = $("#number_of_resources").val();
+					if(numberOfResources == ""){
+						alert("Please insert number of the resource.");
+					}else{
+						jQuery.ajax({
+							url : "/add-software-factory",
+							type : "POST",
+							data : "program_id=" + $("#program_id").val()
+									+ "&role_id=" + selectedRoleId + "&provider_name=" + providerName + "&number_of_resources=" + numberOfResources,
+							cache : false,
+							success : function(data) {
+								if (data != 'success') {
+									alert("alertSomethingWentWrong");
+								}else{
+									location.reload();
+								}
+							},
+							error : function() {
+								alert("alertSomethingWentWrong");
+							}
+						});
+					}
+				}
+				return false;
+			}else{
+				//console.log("pico");
+				//$("form :label[name^='periods_']").remove();
+				//$("form :input[name^='periods_']").remove();
+				$("#periods_inputs").remove();
+				return true;
+			}
+			
+		});
+		
+		
+		$("#number_of_resource").keydown(function (e) {
+	        if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+            (e.keyCode >= 96 && e.keyCode <= 105))) {
+	        }
+	        else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+	                     e.keyCode != 9) {
+	            e.preventDefault();
+	        }
+	    });
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+@(risk:Option[RiskManagementMaster],parent_id:String)
+@import services._;
+@import org.apache.commons.lang3.StringUtils
+<div class="width_full" id="risk-master-data">
+
+<div class="width_full">
+	<div class="width_full">
+		<span class="listing-header">Detalles<span class="add-alert" id="al_@risk.get.id">Enviar Alerta</span></span>
+	</div>
+<div id="risk-other-details" class="width_full">
+	<span class="header odd_row">Nombre</span><span class="infos">@risk.get.name</span>
+	<span class="header even_row">Causa</span><span class="infos">@risk.get.cause</span>
+	<span class="header odd_row">Evento</span><span class="infos">@risk.get.event</span>
+	<span class="header even_row">Impacto</span><span class="infos">@risk.get.imapct</span>	
+	<span class="header odd_row ">Categoria/Subcategoria</span>	
+	<span class="infos">
+	@{
+		if(!RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).isEmpty){
+			RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).get.category_name
+		}
+		
+		
+		
+	}
+<span style="margin-left: 10px;margin-right: 10px;"> / </span>
+	@{
+		if(risk.get.sub_category.isWhole()){
+			if(!RiskCategoryService.findRiskSubCategoryById(risk.get.sub_category.toString()).isEmpty){
+				RiskCategoryService.findRiskSubCategoryById(risk.get.sub_category.toString()).get.name		
+			}else{
+				"NA"	
+			}
+		
+		}else{
+		"NA"
+		}
+	}
+
+	</span>
+	<span class="header even_row">Variables Impactados</span><span class="infos">
+	@{
+		risk.get.variable_imapact.toInt match{
+			case 0=>"Plazo"
+			case 1=>"Presupuesto"
+			case 2=>"Alcance"
+			case 3=>"Calidad"
+			case 4=>"Plazo/Presupuesto"
+			case 5=>"Plazo/Alcance"
+	        case 6=>"Plazo/Alcance/Presupuesto"
+			case 7=>"Plazo/Calidad"
+			case 8=>"Presupuesto/Calidad"
+		    case 9=>"Alcance/Calidad"
+			case 10=>"Plazo/Presupuesto/Alcance/CalidadPlazo/Presupuesto/Calidad"
+		}
+	}
+		</span>
+	<span class="header odd_row">Probabilidad de ocurrencia</span><span class="infos">
+	@{
+		risk.get.probablity_of_occurence match{
+			case 0=>"Alto"
+			case 1=>"Mediano"
+			case 2=>"Bajo"
+			
+		}
+		
+	}</span>
+	<span class="header even_row">Quantificacion Impacto</span><span class="infos">
+	@{
+		risk.get.quantification match{
+			case 0=>"Alto"
+			case 1=>"Mediano"
+			case 2=>"Bajo"
+		}
+		
+	}</span>
+	<span class="header odd_row">Estrategia de Respuesta</span><span class="infos">
+	@{
+		risk.get.strategic_reply match{
+			case 0=> "Acceptar"
+			case 1=> "Mitgar"
+			case 2=> "Evitar"
+			case 3=> "Transerir"
+		}
+	}
+	</span>
+	<span class="header even_row">Responsable</span><span class="infos">@UserService.findUserDetails(risk.get.responsible).get.first_name.substring(0,1)&nbsp;.@UserService.findUserDetails(risk.get.responsible).get.last_name  </span>
+	<span class="header odd_row">Plan de Respuesta</span><span class="infos">
+		@if(!risk.get.reply_action.isEmpty){
+			@risk.get.reply_action.get
+		}else{
+			&nbsp;
+		}
+	</span>
+	<span class="header even_row">Plan de Contingencia</span><span class="infos">
+		@if(!risk.get.configuration_plan.isEmpty){
+			@risk.get.configuration_plan.get
+		}else{
+			&nbsp;
+		}
+	</span>
+@*	<span class="header odd_row ">Risk State : </span><span class="infos">
+		@if(!risk.get.risk_state.isEmpty){
+			@{
+				risk.get.risk_state.get match{
+					case 0=>"Latente"
+					case 1=>"Mitigado"
+					case 2=>"Evitado"
+					case 3=>"Materializado"
+					case 4=>"No Materializado"
+				}
+			}
+		}else{
+			&nbsp;
+		}
+		
+	</span>*@
+	<span class="header odd_row">Documento Contingencia</span><span class="infos">
+
+		@if(!risk.get.document_category.isEmpty && !StringUtils.isEmpty(risk.get.document_category.get.trim())){
+				<a target="_blank" href='/documents/@risk.get.document_category.get' id="document_category_1" name="document_category_1" style="color: #000000;font-weight: bold;">Download Document</a>
+		} else{
+			NA
+		}
+	</span>
+	<span class="header even_row">Fecha de Control</span><span class="infos">
+	@risk.get.risk_clouser_date.format("dd/MM/YYYY")
+	</span>
+	<span class="header odd_row"> &nbsp; </span><span class="infos">&nbsp;</span>
+</div>
+</div>	
+</div>
+<div id="risk_alert">
+</div>
+

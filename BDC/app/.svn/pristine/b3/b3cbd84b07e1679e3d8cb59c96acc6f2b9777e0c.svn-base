@@ -1,0 +1,34 @@
+package services
+
+import play.api.Play.current
+import play.api.db.DB;
+import anorm.SqlParser._;
+import models._;
+import anorm._
+import com.typesafe.plugin._;
+
+object ActivityLogServices {
+  
+  /*def saveActivityLogServices(act: Activity): Int = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          insert into art_activity_log( activity_type, message, user_id, refId, created_at) 
+            values ({activity_type}, {message}, {user_id}, {refId}, {created_at})
+          """).on(
+          'activity_type -> act.activity_type,
+          'message -> act.message,
+          'user_id -> act.user_id,
+          'refId -> act.refId,
+          'created_at -> act.created_at).executeUpdate()
+    }
+  }
+
+  def getAllActivityLogs(): Seq[Activity] = {
+    var sqlString = ""
+    sqlString = "SELECT  * FROM art_activity_log ORDER BY  created_at DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Activity.activityLog *)
+    }
+  }*/
+}

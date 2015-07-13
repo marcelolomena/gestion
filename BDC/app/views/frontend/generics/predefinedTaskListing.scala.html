@@ -1,0 +1,54 @@
+@(predefinedTasks: Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang) 
+@import services._
+@import java.text.SimpleDateFormat
+
+<style>
+.page-for-predefined-task{
+ display: block;
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+}
+</style>
+
+<div class="project_list" style=" height: 570px !important;">
+  <h3 class="title">
+  		<span >@Messages("maintenance.title")</span>	
+  		<span style="margin-left:160px;"> @Messages("maintenance.description")</span>
+  		<span style="margin-left:253px;">  @Messages("maintenance.discipline")</span>
+ 		<span style="margin-left:109px;"> @Messages("maintenance.deliverable")</span>
+ 		<span class="predefined-list-push-left-99px"> @Messages("maintenance.action")</span> 
+ 		
+  </h3>
+  	<div class="project_list_1  padding-none project_list_2" >
+    	<div id="predefined_Task" class="design_team_left_detail_1_left width_full predefined-tasks">
+   		    	  @if(predefinedTasks.size>0){
+				    	@for((pTasks , index)<- predefinedTasks.zipWithIndex){
+				    		<div class="@if(index % 2 == 0){program_list_1 program_list}else{program_list_2 program_list } predefined-data">
+						    		<span class="left project-type">@pTasks.task_title </span>
+					    			<span class="left descr">@pTasks.task_description </span>
+					    			<span class="left requirement">
+					    			@{
+					    				if(!pTasks.task_discipline.isEmpty && !TaskDesciplineService.findTaskDesciplineById(pTasks.task_discipline .get.toString).isEmpty){
+					    					TaskDesciplineService.findTaskDesciplineById(pTasks.task_discipline .get.toString).get.task_discipline	
+					    				}
+					    			} 
+					    			</span>
+					    			<span class="left deliverable">
+					    				@if(!DeliverableService.findDeliverableById(pTasks.deliverable.toString).isEmpty){
+				    						@DeliverableService.findDeliverableById(pTasks.deliverable.toString).get.deliverable.toString()
+				    					}	
+					    			</span>
+				    			<span class="left" style="margin-left: 23px;">
+				    				<span class="left"><a  href="@controllers.Frontend.routes.Generics.editPredefinedTask(pTasks.tId.get.toString())" class="edit-icon" ></a></span>
+				    				<span class="left delete-predefined" id="p_@pTasks.tId.get.toString()"></span>
+				    			</span>
+		      				</div>
+		      			}
+			    	}else{
+			    		<div class="width_full no-task">  @Messages("maintenance.nopredefinedtasks")</div>
+		    		}
+   	   </div>
+    </div>
+</div>
+ <div id="predefined_id"> </div>

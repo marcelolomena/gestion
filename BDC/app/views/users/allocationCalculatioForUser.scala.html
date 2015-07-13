@@ -1,0 +1,9 @@
+@(user:Option[Users])
+@if(user!=null){
+<div class="left-full" style="font-style: italic;margin: 1px 0 15px;">
+	Rate per hours for @user.get.first_name&nbsp;@user.get.last_name is 00	
+</div>
+}else{
+<div class="left-full">
+</div>
+}

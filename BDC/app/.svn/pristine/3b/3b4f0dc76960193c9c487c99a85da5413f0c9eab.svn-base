@@ -1,0 +1,153 @@
+@(id:String,username:String,profileIdMap: java.util.HashMap[String,String],profileCodeMap: java.util.HashMap[String,String],divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap :java.util.HashMap[String,String],userForm : play.api.data.Form[UserMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import util.Random
+
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		<div class="" id="new_program_header">
+				<p>@Messages("editUsersProfile.update")</p>
+		</div>
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;background: #fff;margin-top: 0;">
+			<div id="user-profile-header" class="">
+				 @form(action=controllers.Frontend.routes.User.updateUsersProfile(id), 'id->"myUser",'method->"POST") { 
+              	 <input type="hidden" id="added_date" name="added_date" value="@userForm.data.get("added_date")" />
+              	  <input type="hidden" id="isverify" name="isverify" value="@userForm.data.get("isverify")" />
+              	  <input type="hidden" id="verify_code" name="verify_code" value="@userForm.data.get("verify_code")" />
+              	   <input type="hidden" id="verify_date" name="verify_date" value="@userForm.data.get("verify_date")" />
+              	  
+ 				<input type="hidden" id="password" name="password" value="@userForm.data.get("password").get" />
+              	 @select(userForm("office.division"),
+              	 	options(divisionMap), 
+              	 	'class -> "input-xlarge ", 
+              	 	'_label -> Messages("editUsersProfile.division"),
+              	 		'name->"division",
+              	 	'_default -> "--- Choose Division ---")
+              	 	
+              	 	
+	             @select(userForm("office.gerencia"),
+	             	options(gerenciasMap),
+	             	'class -> "input-xlarge ", 
+	             	'_label ->Messages("editUsersProfile.gerencia"),
+	             	'name->"gerencia",
+	             	'_default -> Messages("addNewProgram.placeholder.management"))
+	             	
+                 @select(userForm("office.department"),
+                 	options(departmentsMap),
+                 	'class->"input-xlarge ",
+                 	'_label->Messages("editUsersProfile.department"),
+                 	'name->"department",
+                 	'_default -> "--- Choose A Department ---")
+   
+                 @inputText(userForm("first_name"),
+                 	'id->"first_name",
+                 	'name->"first_name",
+                 	'class->"span4",
+                 	'_label->Messages("editUsersProfile.firstname"))
+
+                 @inputText(userForm("last_name"),
+                 	'id->"last_name",
+                 	'name->"last_name",
+                 	'class->"span4",
+                 	'_label->Messages("editUsersProfile.lastname"))
+                 	
+                 @inputText(userForm("uname"),
+                 	'id->"uname",
+                 	'name->"uname",
+                 	'class->"span4 disabled",
+                 	'readonly -> "readonly",
+                 	'_label->Messages("editUsersProfile.username"))
+                 	
+
+     <input type="hidden" id="rut_number" name="rut_number" value="@userForm.data.get("rut_number")" />
+                 	
+        <input type="hidden" id="contact_number" name="contact_number" value="@userForm.data.get("contact_number")" />
+                 	
+                 	 
+                 @inputText(userForm("email"),
+                 	'id->"email",'name->"email",
+                 	'class->"span4 disabled",
+                 	'readonly ->"readonly",
+                 	'_label->Messages("editUsersProfile.email"))
+                 	
+                 
+                 <input type="hidden" id="birth_date" name="birth_date" value="@userForm.data.get("birth_date")" />
+                 <input type="hidden" id="office_number" name="office.office_number" value="@userForm.data.get("office.office_number")" />
+                  <input type="hidden" id="office_number" name="office.joining_date" value="@userForm.data.get("office.joining_date")" />
+                 @inputText(userForm("office.rate_hour"),'id->"rate_hour",'name->"rate_hour",'class->"span4",'_label->"Rate per Hour")  
+                 @select(userForm("office.isadmin"),options(profileIdMap),'id->"isAdmin",'name->"isAdmin",'class->"input-xlarge ",'_label->Messages("addUser.isAdmin"))
+                 
+                 @select(userForm("office.user_type"),options("1"->"Permanent", "2"->"Contractor"),'id->"user_type",'name->"user_type",'class->"input-xlarge ",'_label->"User Type")
+                 @inputText(userForm("office.work_hours"),'id->"work_hours",'name->"work_hours",'class->"span4",'_label->"Work Hours (HH.mm)/day",'value->"@userForm.data.get('work_hours').get")  
+                 @select(userForm("office.bonus_app"),options("0"->"No", "1"->"Yes"),'id->"bonus_app",'name->"bonus_app",'class->"input-xlarge ",'_label->"Overtime Applicable",'value->"@userForm.data.get('bonus_app').get")
+                 
+                 @select(userForm("status"),options("1"->"Active", "0"->"Inactive"),'id->"status",'name->"status",'class->"input-xlarge ",'_label->"Status")
+                  
+               	   <div class="width_full" style="margin-top: 14px;"> 
+                	<span class="left" style="margin-left: 215px;"><input class="btn form-button" value="@Messages("button.update")" type="submit"/></span>
+                	<span class="left" style="margin-left: 30px;"><input id="cancel-profile" class="btn form-button" value="@Messages("button.cancel")" type="button"></span>
+               	</div>
+               	 <div class="display-none">
+               	@select(userForm("office.user_profile"),options(profileCodeMap),'id->"user_profile",'name->"user_profile",'class->"input-xlarge ",'_label-> "User Profile")
+               </div>
+                    }
+              
+			</div>
+    		<div>
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	   $('#cancel-profile').on('click',function() {
+		   window.location.href='/employee/@id';
+	   });
+	});
+	$("#birth_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true
+	});
+	$("#joining_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true
+	});
+
+	$("#office_division").live("change", renderUserGerenciaAndDepartmentList);
+	//$("#").live("change", renderUserDepartmentList);
+	
+	$("#office_gerencia").live("change", renderUserDepartmentList);
+</script>
+</body>
+</html>

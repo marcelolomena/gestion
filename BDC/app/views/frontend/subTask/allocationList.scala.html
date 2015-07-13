@@ -1,0 +1,102 @@
+@(allocationList:Seq[SubTaskAllocation], allocationListExternal:Seq[SubTaskAllocationExternal] )
+@import services._; var esteamed_time : Double= 0;
+
+<div class="width_full" id="sub_allocation_list">
+@if(allocationList.size>0 || allocationListExternal.size>0){
+	<table>
+	<tr class="header_row">
+	<th class="allocation_user_provider_header">Proveedor</th>
+	<th class="allocation_user_header">Miembro</th>
+	<th class="allocation_hours">Agregado Horas</th>
+	<th class="allocation_hours">Asignados Horas</th>
+	<th class="action">Action</th>
+	</tr>
+	@for( (objAllocate, index)<- allocationList.zipWithIndex){
+		
+		<tr class="@{if((index+1)%2==0){"odd_row"}else{"even_row"}}">
+			<td class="allocation_user_provider">
+				BCH
+			</td>
+			<td class="allocation_user">
+				<a  href="/employee/@objAllocate.user_id">@UserService.findUserDetailsById(objAllocate.user_id).get.first_name&nbsp;@UserService.findUserDetailsById(objAllocate.user_id).get.last_name</a>
+			</td>
+			
+		 	
+		 	<td class="hour_row"  style="width:13%;float:left">
+		 		@TimesheetService.getBookedHoursforUser(objAllocate.user_id.toString,objAllocate.sub_task_id.toString())
+		 		  
+		 		@*<span class="chat_user"></span><span class="edit_assigned_user" id="s_@objAllocate.id" ></span>*@
+		 	</td>
+		 	<td class="hour_row" style="width:13%;float:left">
+		 		<input id="user_hour_@objAllocate.id" name="user_hour" type="text" maxlength="6" class="user_hour" readonly="readonly" disabled="disabled" value="@objAllocate.estimated_time">
+		 		@*<span class="chat_user"></span><span class="edit_assigned_user" id="s_@objAllocate.id" ></span>*@
+		 	</td>
+		 	<td class="hour_row"  style="width:6%;float:left">
+		 	<span style="float:left;" class="edit-internal-allocation edit-allocation-hours"  id="all_@objAllocate.id"></span>
+		 	@if(TimesheetService.getTimesheetsForSubTaskAndUser(objAllocate.user_id.toString,objAllocate.sub_task_id.toString).size ==0){
+		 		<span style="float:right;" class="delete-allocation" id="d_@objAllocate.id" ></span>
+	 		}
+	 		</td>
+		</tr>
+	}
+	
+	@for( (objAllocate, index)<- allocationListExternal.zipWithIndex){
+		
+		<tr class="@{if((index+1)%2==0){"odd_row"}else{"even_row"}}">
+			<td class="allocation_user_provider">
+			
+			@if(!ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).isEmpty){
+				@if(Integer.parseInt(ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).get.provider_type.toString()) == 46){
+						@ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).get.provider_name &nbsp;	
+				}else{
+					@if(!ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).get.provider_name.isEmpty){
+						@ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).get.provider_name	
+					}else{
+						External Resouce
+					}
+				
+				}
+			}else{
+				&nbsp;
+			}
+			
+			</td>
+		 	<td class="allocation_user">
+		 		@if(!ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).isEmpty){
+					@if(Integer.parseInt(ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).get.provider_type.toString()) == 46){
+		 				@ProgramMemberExternalService.findProgramMemberExternalById(objAllocate.external_resource_id.toString).get.resource_name
+		 			}else{
+			 			@if(!ProgramMemberService.findExternalProgramMemberDetails(objAllocate.external_resource_id.toString()).get.number_of_resources.isEmpty){
+			 					@ProgramMemberExternalService.findProgramMemberExternalById(objAllocate.external_resource_id.toString).get.number_of_resources.get
+			 				}
+			 			}
+		 		}
+		 	
+		 	</td>
+		 	
+		 	
+		 	
+		 	<td class="hour_row"  style="width:13%;float:left">
+		 		@TimesheetService.getBookedHoursforExternalUser(objAllocate.external_resource_id.toString,objAllocate.sub_task_id.toString())
+		 	</td>
+		 	<td class="hour_row"  style="width:13%;float:left">
+		 	<input id="user_hour_@objAllocate.id" name="user_hour" type="text" maxlength="6" class="user_hour" readonly="readonly" disabled="disabled" value="@objAllocate.estimated_time">  @*<span class="chat_user"></span><span class="edit_assigned_user" id="s_@objAllocate.id" ></span>*@</td>
+		 	<td>
+		 		<span class="edit-external-allocation edit-allocation-hours" id="eall_@objAllocate.id"></span>
+		 		@if(TimesheetService.getTimesheetsForSubTaskAndExternalUser(objAllocate.external_resource_id.toString,objAllocate.sub_task_id.toString).size ==0){
+		 			<span class="delete-external-allocation" id="d_@objAllocate.id" ></span>
+		 		}
+	 		</td>
+		</tr>
+	}
+	
+	
+</table>
+}else{
+<table>
+	<tr class="header_row" style="background: none;">
+		<td>No hay recursos asignado.</td>
+	</tr>
+</table>	
+}
+</div>

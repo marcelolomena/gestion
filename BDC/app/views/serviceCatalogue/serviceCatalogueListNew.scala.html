@@ -1,0 +1,132 @@
+@(serviceCatalogueList : Seq[ServiceCatalogueMaster])(implicit lang:Lang)
+@import services._;var user:Option[Users]= null;
+	
+<table class="table">
+  <thead>
+    <tr class="first-row">
+      <th> @Messages("service.catelogue.id")</th>
+      <th> @Messages("service.catelogue.service_name")</th>
+     @* <th> Service Description</th>*@
+       <th>@Messages("service.catelogue.updated_by")</th>
+         <th>@Messages("service.catelogue.updated_date")</th>
+      <th>@Messages("service.catelogue.status")</th>
+      <th style="width: 26px;"> @Messages("programtype.action")</th>
+    </tr>
+  </thead>
+  <tbody>
+   @for(service <- serviceCatalogueList){
+      <tr>
+        <td><span>@service.id.get</span></td>
+         <td><a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" > @service.service_name.toString()  </a></td>
+       @* <td><span>@if(service.description.length>30){@service.description.substring(0,30)...}else{@service.description}</span></td>*@
+         <td> <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" ><span>
+	@{ user = UserService.findUserDetailsById(service.updated_by.toLong) }			           
+         	      	@user.get.first_name.substring(0, 1).
+      	       @user.get.last_name	
+        </span></a></td>
+             <td> <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" ><span>
+              @service.updation_date.format("dd-MM-yyyy")</span></a></td>
+        <td> <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" ><span id="s_@service.id">@if(service.is_deleted.toLong==1){
+        	Inactive
+        	}else{
+           Active
+        	}</span></a></td>
+        <td>
+        	 <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())"><i class="icon-pencil"></i></a>
+        	@* @if(isAllowedtoDeleteMap.get(service.id.get.toString)){*@
+        	 	<a  role="button" data-toggle="modal" >
+        	 	@if(service.is_deleted.toLong==1){
+          		 	<i id="service_@service.id.get.toString" class="activate-status status_update" style="cursor: pointer;"></i>
+          		 }else{
+          		 <i id="service_@service.id.get.toString" class="icon-remove status_update" style="cursor: pointer;"></i>
+          		 }
+          		 </a>
+          		@* }*@
+  </td>
+      </tr>
+     }
+ </tbody>
+</table>
+	 
+ <script type="text/javascript">
+ $(document).ready(function(){
+ 
+  $(".status_update").on("click", renderDeleteItemFromList);
+	function renderDeleteItemFromList(){
+		var _this = $(this);
+		var _status=_this.hasClass('activate-status');
+		var deletion_id = _this.attr("id").split("_")[1];
+		$("#dialog-confirm").html("@Messages("delete.confirm1.catelogue")");
+				// Define the Dialog and its properties.
+				$("#dialog-confirm").dialog({
+					resizable : false,
+					modal : true,
+					title : "@Messages("delete.confirm.title")",
+					height : 150,
+					width : 300,
+					buttons : {
+						"Yes" : function() {
+							var url = "/update-service-catalogue-status?id=" + deletion_id+"&status="+_status;
+							$.post(url, function(data) {
+								if (data == "Success") {
+									//window.location.reload();
+									if($(_this).parents("tbody").children().length==1){
+									       if(typeof getUrlParameter("page") !== "undefined" && getUrlParameter("page") !== null){
+									        var page_num = parseInt(getUrlParameter("page"));
+									        var record =  parseInt(getUrlParameter("record"));
+									        page_num= page_num - 1;
+									        var sPageURL = window.location.href;
+									        var sURLVariables = sPageURL.split('?')[0];
+									        //window.location.href =sURLVariables+"?page="+page_num+"&record="+record
+									        if(_status){
+									        	_this.addClass("icon-remove");
+									        	_this.removeClass('activate-status');
+									        	$("#s_"+deletion_id).html("Active");
+									        }else{
+									        	_this.addClass('activate-status');
+									        	_this.removeClass("icon-remove");
+									        	$("#s_"+deletion_id).html("Inactive");
+									        }
+									       }else{
+									         if(_status){
+									        	_this.addClass("icon-remove");
+									        	_this.removeClass('activate-status');
+									        	$("#s_"+deletion_id).html("Active");
+									        }else{
+									        	_this.addClass('activate-status');
+									        	_this.removeClass("icon-remove");
+									        	$("#s_"+deletion_id).html("Inactive");
+									        }
+									        //window.location.reload();
+									       }
+ 											}else{
+	 											 if(_status){
+										        	_this.addClass("icon-remove")
+										        	_this.removeClass('activate-status');
+										        	$("#s_"+deletion_id).html("Active");
+										        }else{
+										        	_this.addClass('activate-status');
+										        	_this.removeClass("icon-remove");
+										        	$("#s_"+deletion_id).html("Inactive");
+										        }
+ 											 //window.location.reload();
+ 											}
+								}
+							});
+							$(this).dialog('close');
+							$("#pop-box-over").css("display", "none");
+							$("#dialog-confirm").css("display", "none");
+						},
+						"No" : function() {
+							$(this).dialog('close');
+							$("#pop-box-over").css("display", "none");
+							$("#dialog-confirm").css("display", "none");
+						}
+					}
+				});
+				$("#pop-box-over").css("display", "block");
+				$("#dialog-confirm").css("display", "block");
+			}
+   });
+ </script>
+ 

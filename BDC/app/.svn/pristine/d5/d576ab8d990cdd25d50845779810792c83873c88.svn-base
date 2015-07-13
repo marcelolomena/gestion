@@ -1,0 +1,59 @@
+@(projects: Seq[Project])(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@import services._
+@frontend.layout()
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider" id="pDetail_page">
+<div class="product_main">
+  <div class="product_detail_1">
+ <!--<h3 class="title">Project List</h3>-->
+@if(projects!=null){
+<div class="project_list">
+  <h3 class="title">
+  		<span style="margin-left:10px">@Messages("programDetails.projects")</span>	
+  		<span style="margin-left:355px">@Messages("programDetails.duration")</span>
+  		<span style="margin-left:135px">@Messages("programDetails.task")</span>
+ <!-- 		<span style="margin-left:45px">Goals</span> -->
+  </h3>
+  	<div class="project_list_1  padding-none">
+    	<div class="design_team_left_detail_1_left " id="container">
+   		    @for(p <- projects){
+   		    	<a href="/project-details/@p.pId">
+		    		<div class="project_list_1  ">
+		        		<p class=""> @p.project_name  </p>
+		        		<span class="design_team_span " style="margin-left:20px">@p.start_date.format("dd-MM-yyyy") &nbsp;To&nbsp;@p.final_release_date.format("dd-MM-yyyy")</span>
+	        			<span class="design_team_span " style="width:80px;margin-left:100px">@TaskService.findProjectTaskCount(p.project_id)</span>
+	        			@{/* <span class="design_team_span " style="width:80px;margin-left:100px">@Goals.findProjectGoalCount(p.project_id)</span> */}
+	        			<div class="dash_left_team_detail_1_data-3 ">
+	             			<div class="dash_left_detail_1_data-3-2">
+	             				@if(TaskService.findProjectTaskCount(p.project_id)==0){
+	              				<img width="14" height="14" alt="" src="@routes.Assets.at("frontend/images/i_icon.png")">
+	              				}
+	              			</div>
+	            		</div>
+		      		</div>
+	      		</a>
+	      	}
+   	   </div>
+    </div>
+ </div>
+}else{
+<div class="design_team_left_detail_1_data_12 width411px">
+	<p>@Messages("employeeProfile.projectlistnotavailable")</p>
+</div>
+}
+</div>
+
+
+
+</div>
+@frontend.footer()
+</section>
+	
+	
+</div>
+@frontend.headerScripts()	
+</body>

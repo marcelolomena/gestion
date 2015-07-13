@@ -1,0 +1,116 @@
+@(impactTypes:Seq[ImpactTypes],username:String,totalCount:Long,pagination:String)(implicit lang:Lang)
+@import services._
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+  </head>
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+
+     <input type="hidden" value="@totalCount"  class="reccount" />
+    <div class="content">
+  
+        <div class="header">
+        	<h1 class="page-title"> @Messages("impacttype.programimpacttype")</h1>
+        </div>
+        
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index"> @Messages("impacttype.home")</a> <span class="divider">/</span></li>
+            <li class="active"> @Messages("impacttype.programimpacttypelist")</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+                    
+	<div class="btn-toolbar">
+	   <a href="@routes.ImpactType.createImpactType"><span class="btn"><i class="icon-plus"></i>  @Messages("impacttype.newprogramimpacttype")</span></a>
+	   	<!-- <form class="search form-inline right">
+       		<input type="text" placeholder="Search...">
+       	 <button class="btn right">Search</button>
+       	  
+		 <div class="search form-inline right" >
+       		<input type="text" class="searchKey" value="" placeholder="Search...">
+       	 	<button class="btn right searchBtn">Search</button>
+       	 </div>-->
+	  	<div class="btn-group">
+	  	</div>
+	</div>
+		  	
+	
+	<div class="well">
+	    <table class="table">
+	      <thead>
+	        <tr class="first-row">
+	          <th>  @Messages("impacttype.id")</th>
+	          <th> @Messages("impacttype.programimpacttype")</th>
+	          <th style="width: 26px;"> @Messages("impacttype.action")</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        @for(impactType <- impactTypes) {
+	        <tr>
+ 	          <td><a href="@routes.ImpactType.editImpactType(impactType.id.get.toString)">@impactType.id </a></td>
+	          <td><a href="@routes.ImpactType.editImpactType(impactType.id.get.toString)">@impactType.impact_type </a></td>
+	          <td>
+	              <a href="@routes.ImpactType.editImpactType(impactType.id.get.toString)"><i class="icon-pencil "></i></a>
+	              <a href="@routes.ImpactType.deleteImpactType(impactType.id.get.toString);" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
+	          </td>
+	        </tr>
+	        }
+	      </tbody>
+	    </table>
+	    @if(totalCount >10){
+		<div>No of Records Per Page   @Messages("")
+			<select id="pageRecord" class="pageRecord span1" >
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			</select>
+		</div>
+		<!-- Pagination -->
+		<div class="pagination">
+		    <ul>
+		      @Html(pagination)
+		    </ul>
+		</div>
+		}else{
+		<input id="pageRecord" class="pageRecord"  type="hidden" value="10">
+		}	
+	</div>
+
+	
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+
+	<!-- Footer panel -->                    
+  	 @footer()
+                    
+    </div>
+</div>
+    </div>
+   </body>
+</html>

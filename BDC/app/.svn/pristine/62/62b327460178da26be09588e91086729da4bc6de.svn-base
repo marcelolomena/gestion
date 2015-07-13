@@ -1,0 +1,73 @@
+@(projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@import services._
+@import java.text.SimpleDateFormat
+
+
+<style>
+.page-for-predefined-task{
+ display: block;
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+}
+
+</style>
+<div class="project_list">
+  <h3 class="title">
+  		<span>  @Messages("generics.projecttypelist.projecttype") </span>	
+  		
+  		<span style="margin-left:120px;"> @Messages("generics.projecttypelist.responsible") </span>
+ 		<span style="margin-left:181px;">@Messages("generics.projecttypelist.creationdate") </span>
+ 		<span style="margin-left:71px;"> @Messages("generics.projecttypelist.lastupdate") </span>
+ 		<span class="push-left-99px"> @Messages("generics.projecttypelist.action") </span>
+
+  </h3>
+  	<div class="project_list_1  padding-none project_list_2" id="">
+    	<div id="program_container" class="design_team_left_detail_1_left width_full" >
+   		    	  @if(projectTypes.size>0){
+				    	@for((pType , index)<- projectTypes.zipWithIndex){
+				    		<div class="@if(index % 2 == 0){program_list_1 program_list}else{program_list_2 program_list } project-type-data">
+					    		<a href="@controllers.Frontend.routes.Generics.projectTypeDetailTempalte(pType.id.get.toString)">
+						    		<span class="left project-type">
+						    			
+						    			<span class='@{
+						    				pType.states match {
+						    					case 0 =>
+						    							"current"
+						    					case 1 =>
+						    							"historic"
+					    					}
+					    				 }'></span>
+					    				 @GenericProjectTypeService.findGenericProjectTypeById(pType.project_type.toString).get.generic_project_type
+					    				 
+					    			</span>
+					    			
+					    			<span class="left responsible">@UserService.findUser(pType.responsible.toString()).get.first_name @UserService.findUser(pType.responsible.toString()).get.last_name  </span>
+					    			<span class="left cr_date">
+					    				@if(!pType.creation_date.isEmpty){
+					    					@{new SimpleDateFormat("dd-MM-yyyy").format(pType.creation_date.get)}
+					    				}
+					    			</span>
+					    			<span class="left up_date">
+					    			@if(!pType.updation_date.isEmpty){
+					    				@{new SimpleDateFormat("dd-MM-yyyy").format(pType.updation_date.get)}
+					    			}
+					    			</span>
+					    		</a>			
+				    			<span class="left" style="margin-left:104px!important;">
+				    				<a href="@controllers.Frontend.routes.Generics.editProjectType(pType.id.get.toString())" class="edit-icon" ></a>
+				    				@* <a href="@controllers.Frontend.routes.GenericProjectMaster.deleteProjectType("")" class="doc_delete"> delete</a>*@
+				    			</span>
+				    			
+		      				</div>
+		      			
+		      			}
+			    	}else{
+			    		<div class="width_full no-task">@Messages("maintenance.noprojecttypeavailable") </div>
+		    		}
+   	   </div>
+    </div>
+</div>
+
+
+ <div id="historic_id"> </div>

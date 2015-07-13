@@ -1,0 +1,52 @@
+@(tasks:Seq[GenericTasks])(implicit lang:Lang)
+@import helper._
+@import services._
+<style>
+ select {
+    border: 1px solid #315663;
+    border-radius: 5px;
+    color: #315663 !important;
+    float: left;
+    font-size: 13px;
+    height: 33px;
+    margin: 0;
+    padding: 4px 2px 6px;
+    width: 84%;
+}
+</style>          
+<div class="block-body width_full" style="min-height:220px;float: left;" id="manage-tasks">
+<p style="width:96%"><span class="type">@Messages("maintenance.selecttasks")</span><span class="close-popup-box"></span></p>
+<div class="dependency-select">
+	 
+	<div class="left">
+	<span style="margin-top: 13px;">
+	       <select name="task" id="task" class="input-xlarge ">
+	       <option value=""> @Messages("maintenance.nodependencies")</option>
+	       @for(t <- tasks){
+	       		  	<option value="@t.tId.get" >@t.task_title </option>
+	       }
+	   	   </select> 
+	</span>
+	
+	<span style="margin-top: 20px;float:left" class="display-none">
+	       <select name="dependency_type" id="dependency_type" class="input-xlarge ">
+	       		<option value="1">Finish-Start</option>
+	        	<option value="2">Start-Start</option>
+	         	<option value="3">Start-Finish</option>
+	          	<option value="4">Finish-Finish</option>
+	       </select> 
+	</span>
+	</div>
+	<div  class="left"  style="margin-top: 25px;">
+	   		<input class="btn pull-left add-task-depend" value="@Messages("button.add")" type="button"/>
+	       <input class="btn pull-left done-task-selection push-left50px" value="@Messages("button.done")" type="button" style="margin-left:30px"/>
+	</div> 
+</div>
+<div class="left" style="margin-top: 15px;margin-left: 15px;">
+	<span style="color:#666666;font-size: 13px; font-weight: bold;float:left;">@Messages("maintenance.selecteddependencytasks")</span> 
+	<ul class="dependency-task-list width_full">
+	
+	</ul>
+</div>
+	<input type="hidden" id="myTasks" value=""/> 
+</div>

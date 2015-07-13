@@ -1,0 +1,46 @@
+@(users :Seq[Users])(implicit session: play.api.mvc.Session) 
+@import helper._
+@import models._
+@import services._
+
+<div class="project_list"> 
+<table class="" style=" border: 1px solid #dadada; width: 100%;  border-collapse: collapse; ">
+<thead style="height:35px; background: none repeat scroll 0 0 #315663;color: #ffffff;">
+  		<td style="" class="headerCell">Division</td>	
+  		<td class="headerCell">Gerentia</td>
+  		<td  class="headerCell">Department</td>
+  		<td class="headerCell">Name</td>
+  		<td  class="headerCell">RUT No</td>
+ 		<td  class="headerCell"> Email</td>
+ 	    <td  class="headerCell">Date Of Birth</td> 
+ 	    <td  class="headerCell">Date Of Join</td> 
+  </thead>
+  <tbody>
+  	    @for((user,index) <- users.zipWithIndex){
+    	<tr class=" " id="">
+    	@if(index%2==0){
+    	<td class="tableCells">@DivisionService.findDivisionById(UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.division).get.division</td>	
+  		<td class="tableCells">@if(!UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.gerencia.isEmpty){@GenrenciaService.findGenrenciaById(UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.gerencia.get).get.genrencia}</td>
+  		<td class="tableCells">@if(!UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.department.isEmpty){ @DepartmentService.findDepartmentById(UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.department.get).get.department   }</td>
+  		<td class="tableCells">@user.first_name  @user.last_name </td>
+  		<td class="tableCells">@user.rut_number</td>
+  		<td class="tableCells">@user.email </td>
+ 		<td class="tableCells">@user.birth_date </td>
+ 	    <td class="tableCells">@UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.joining_date </td> 
+   	  }else{
+   	    <td class="tableCells1">@DivisionService.findDivisionById(UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.division).get.division</td>
+   	    
+  		<td class="tableCells1">@if(!UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.gerencia.isEmpty){@GenrenciaService.findGenrenciaById(UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.gerencia.get).get.genrencia}</td>
+  		<td class="tableCells1">@if(!UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.department.isEmpty){ @DepartmentService.findDepartmentById(UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.department.get).get.department }</td>
+  		<td class="tableCells1">@user.first_name  @user.last_name </td>
+  		<td class="tableCells1">@user.rut_number</td>
+  		<td class="tableCells1">@user.email </td>
+ 		<td class="tableCells1">@user.birth_date </td>
+ 	    <td class="tableCells1">@UserService.findUserOfficeDetails(Integer.parseInt(user.uid.get.toString())).get.joining_date </td> 
+   	  }
+   	  
+   	   </tr>
+  }
+    </tbody>
+    </table>
+</div>

@@ -1,0 +1,39 @@
+@(project_id:String)(implicit req : play.api.mvc.RequestHeader,lang:Lang)
+@import services._
+@import utils._;
+@import java.text.DecimalFormat;var df = new DecimalFormat("0.00")
+ 	
+<div class="width_full " >
+	@if(!SAPServices.findAllProjectSAPMasterDetails(project_id).isEmpty){
+		<ul id="project_sap_list">
+			<li class="top-header">
+				<span class="role header">@Messages("booktime.date")</span>
+				<span class="member header" style="margin-left:10px">@Messages("projectdetails.sapnumber")</span>
+				<span class="member header">@Messages("leftnav.budgettype")</span>
+				<span class="member header">@Messages("programdetails.sapdetails.investment")</span>
+				<span class="member header">@Messages("programdetails.sapdetails.expenditure")</span>
+				<span class="active header">@Messages("programdetails.action")</span>
+			</li>
+		
+						@for( (p,index) <- SAPServices.findAllProjectSAPMasterDetails(project_id).zipWithIndex){
+			<li class="@if(index%2==0){even_row}else{odd_row}">	
+				<span id="p_s_@p.id.get" class="role @if(p.is_active==1){active-sap}else{in-active-sap}">@p.creation_date.get.format("dd/MM/YYYY")</span>
+				<span class="member">@SAPServices.findSAPMasterDetails(p.sap_id.toString).get.sap_number </span>
+					<span class="member">@BudgetTypeService.findBudgetTypeById(SAPServices.findSAPMasterDetails(p.sap_id.toString).get.budget_type.toString).get.budget_type </span>
+				<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateProjectSAPInvestment(p.id.get.toString))</span>
+				<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateProjectSAPExpenditure(p.id.get.toString)) </span>
+				@if(utils.UserAccess.checkAccess(req,"project_sap_update")){
+					<a href="@controllers.Frontend.routes.ProjectMaster.editProjectSAP(p.id.get.toString())" class="edit-icon" ></a>
+				}
+				@if(utils.UserAccess.checkAccess(req,"project_sap_delete")){
+					<span class="active active-project-sap @if(p.is_active==1){enabled_member}else{disabled_member}" id="pm_@p.id.get"></span>
+				}
+			</li>
+			}
+			}else{
+				<span class="no-member"> @Messages("programDetails.nosap")</span>
+			}
+	
+		
+		</ul>
+</div>

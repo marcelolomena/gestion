@@ -1,0 +1,71 @@
+@(sub_task_status:Form[SubTaskStatus],sub_task_id:String,task_id:String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="program_member_form">
+
+<div class="width_full" >
+<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+	  	<a href="@controllers.Frontend.routes.SubTask.editSubTask(sub_task_id)" style="font-weight: bold">
+	  		<span class="left">Volver</span>
+  	  	</a>
+   </h3>
+ </div>
+ 
+<p class="new-member-title">@Messages("editsubtask.updatesubtaskstatus")</p>
+
+	<div class="width_full" >
+		@form(action = controllers.Frontend.routes.SubTask.updateStatus(sub_task_id),  'id->"status-form") {
+			<input type="hidden" id="id" name="id" value="@if(!sub_task_status.data.get("id").isEmpty){@sub_task_status.data.get("id").get}"/>
+			<input type="hidden" id="sub_task_id" name="sub_task_id" value="@sub_task_id"/>
+			<input type="hidden" id="status_for_date" name="status_for_date" value="@(new java.util.Date().format("dd-MM-yyyy"))"/>
+			<div class="width_full" >
+				@textarea(
+		                sub_task_status("reason_for_change"),
+		                'class -> "span4", 
+		                '_label -> Messages("editsubtask.reasonforchangestatus"),
+		                'placeholder -> Messages("editsubtask.enterreasonforchangestatus"),
+					    'rows -> 7,
+					    'cols -> 60
+	            )
+	           	@select(
+				         sub_task_status("status"),
+				         options("0"-> "Verde","1"->"Amarillo","2"->"Rojo"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("editsubtask.status"),
+				         '_default -> Messages("editsubtask.choosestatus")
+		      	)	
+	      	</div>
+	      	<div class="width_full" >
+			       	<span class="left push-left170px"><input class="btn  form-button" value='@Messages("button.save")' type="submit"/></span>
+			       	<span  class="left" style="margin-left:30px;"><input id="cancel-sap" class="btn form-button" value='@Messages("button.cancel")' type="button"/></span>
+			</div>	
+		}
+	
+	</div>
+	
+	<div id="dialog-confirm"></div>	
+</section>
+<div id="pop-box-over" class="display-none"></div>
+</div>
+
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$('#cancel-sap').on('click',function() {
+		 window.location.href='@controllers.Frontend.routes.SubTask.editSubTask(sub_task_id)';
+	});
+});
+</script>
+</body>
+</html>

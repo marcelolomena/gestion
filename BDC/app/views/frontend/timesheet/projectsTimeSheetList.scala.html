@@ -1,0 +1,48 @@
+@(tasks:Seq[Timesheet])(implicit session: play.api.mvc.Session,lang:Lang)
+@import services._
+@import models._
+@import java.math.BigInteger; var hr=0; var min = 0;
+@import java.math.BigDecimal; var pppp=0.0; 
+@import scala.math.BigDecimal.RoundingMode
+@if(tasks.size>0){
+@for(task <- tasks) {
+<tr class="timesheet-row">
+	<td>@if(task.task_type==1){
+		@ProjectService.findProject(task.pId).get.project_name
+		 }else{
+		 Non Project
+		 }</td>
+	@*<td>@if(task.task_type==1){@TaskService.findMilestoneDetailsByMilestoneId(task.task_id).get.milestone_title}else{Non Project}</td>*@
+	<td>@if(task.task_type==1){
+		@SubTaskServices.findSubTaskDetailsBySubtaskId(task.sub_task_id.toString()).get.task
+		}else{
+		@SubTaskServices.findNonProjectTasksById(task.sub_task_id.toString).get.task
+		}</td>
+	<td class="hours-cal">
+	@{hr = task.hours.toString().trim().replace(".", "_").split("_").apply(0).toInt}
+	@{min = (task.hours.toString().trim().replace(".", "_").split("_").apply(1).toInt * 60 /100).toInt}
+		@{pppp=task.hours.toString().trim().replace(".", "_").split("_").apply(1).toDouble}
+	@if(min<10){
+		@if(pppp>0 && pppp<=1){
+	    @hr:01
+		}else{
+		@hr:0@min
+		}
+	 }else{
+	@hr:@min
+	}
+	</td>
+	@*<td>@task.notes</td>*@
+	<td> @*<span class="edit-timesheet-icon" onclick="javascript:deleteTimesheet(this,@task.Id);" ></span>*@
+	    <span class="delete-timesheet" onclick="javascript:deleteTimesheet(this,@task.Id);" ></span></td>
+</tr>
+}
+}else{
+<tr class="timesheet-row">
+<td>No Records Available...</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+}

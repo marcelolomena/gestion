@@ -1,0 +1,121 @@
+@(workflows: Seq[Workflows],username:String,totalCount:Long,pagination:String)(implicit lang:Lang)
+@import services._
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+
+	
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+
+     <input type="hidden" value="@totalCount"  class="reccount" />
+    <div class="content">
+        <div class="header">
+        	<h1 class="page-title">@Messages("addProgramWorkflowStatus.Programworkflowstatus")</h1>
+        </div>
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">@Messages("addProjectWorkflowStatus.home") </a> <span class="divider">/</span></li>
+            <li class="active">@Messages("addProgramWorkflowStatus.ProgramWorkflowStatusList")</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+                    
+	<div class="btn-toolbar">
+	   <a href="@routes.WorkflowStatus.addWorkflowStatus"><span class="btn"><i class="icon-plus"></i>@Messages("addProgramWorkflowStatus.newProgramworkflowstatus") </span></a>
+	   	<!-- <form class="search form-inline right">
+       		<input type="text" placeholder="Search...">
+       	 <button class="btn right">Search</button>
+       	  
+		 <div class="search form-inline right" >
+       		<input type="text" class="searchKey" value="" placeholder="Search...">
+       	 	<button class="btn right searchBtn">Search</button>
+       	 </div>-->
+	  	<div class="btn-group">
+	  	</div>
+	</div>
+		  	
+	
+	<div class="well">
+	    <table class="table">
+	      <thead>
+	        <tr class="first-row">
+	          <th>@Messages("addDivison.id")</th>
+	          <th>@Messages("addProgramWorkflowStatus.Programworkflowstatus")</th>
+	          <th style="width: 26px;">@Messages("addDepartment.action")</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        @for(workflow <- workflows) {
+	        <tr>
+ 	          <td><a href="@routes.WorkflowStatus.editWorkflowStatus(workflow.id.get.toString)">@workflow.id </a></td>
+	          <td><a href="@routes.WorkflowStatus.editWorkflowStatus(workflow.id.get.toString)">@workflow.workflow_status </a></td>
+           	  
+	          <td>
+	              <a href="@routes.WorkflowStatus.editWorkflowStatus(workflow.id.get.toString)"><i class="icon-pencil "></i></a>
+	              <a href="@routes.WorkflowStatus.deleteWorkflowStatus(workflow.id.get.toString);" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
+	          </td>
+	        </tr>
+	        }
+	        
+	      </tbody>
+	    </table>
+	    
+	    @if(totalCount >10){
+		<div>@Messages("addDepartment.noofrecordsperpage")
+			<select id="pageRecord" class="pageRecord span1" >
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			</select>
+		</div>
+		<!-- Pagination -->
+		<div class="pagination">
+		    <ul>
+		      @Html(pagination)
+		    </ul>
+		</div>
+		}else{
+		<input id="pageRecord" class="pageRecord"  type="hidden" value="10">
+		}	
+	</div>
+
+	
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">@Messages("addDepartment.deleteconfirmation")</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>@Messages("addDepartment.deleteuser")</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+
+	<!-- Footer panel -->                    
+  	 @footer()
+                    
+    </div>
+</div>
+    </div>
+    
+   </body>
+</html>

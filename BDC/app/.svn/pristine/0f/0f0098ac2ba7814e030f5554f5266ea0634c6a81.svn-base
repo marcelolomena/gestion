@@ -1,0 +1,33 @@
+@(milestone:Seq[Tasks], countList:Seq[String], baselineEnabled : Boolean)(implicit lang:Lang)
+@import services._
+<li class="header_task">
+    		<div class="task_title">Task @Messages("task.updatedTaskList.task")</div>
+    		<div class="task_owner_name">Task Owner  @Messages("task.updatedTaskList.taskowner")</div>
+    		<div class="task_plan_start_date">Planned Start Date  @Messages("task.updatedTaskList.plannedstartdate")</div>
+    		<div class="task_plan_end_date">Planned End Date  @Messages("task.updatedTaskList.plannedenddate")</div>
+    		<div class="task_plan_time">Allocated Hours  @Messages("task.updatedTaskList.allocatedhours")</div>
+    		<div class="task_staus" @if(!baselineEnabled) {style="width:14%"}else{style="width:7%"}>Status  @Messages("task.updatedTaskList.status")</div>
+    		<div class="baseline_status" @if(!baselineEnabled) {style="display:none"}else{}>Track Changes  @Messages("task.updatedTaskList.trackchanges")</div>
+    		<div class="task_action">Action  @Messages("task.updatedTaskList.action")</div>
+    	</li>
+    	@for( (m , index)<- milestone.zipWithIndex){
+    	<li class='width_full task_data @{if((index+1)%2==0){"task_odd_row"}else{"task_even_row"}}'>
+    		<a href="/project-task-details/@m.tId">	
+	    		<div class="main_task_data">
+	    		<div class="task_title"><span class="status_@m.task_status"></span>@m.task_title</div>
+	    		<div class="task_owner_name" >@if(m.owner != -1){ @UserService.findUserDetailsById(m.owner.toLong).get.first_name}</div>
+	    		<div class="task_plan_start_date"  style="">@m.plan_start_date.format("dd-MM-yyyy") </div>
+	    		<div class="task_plan_end_date" style="">@m.plan_end_date.format("dd-MM-yyyy") </div>
+	    		<div class="task_plan_time" style="">@m.plan_time </div>
+	    		<div class="task_staus" @if(!baselineEnabled) {style="width:14%"}else{style="width:7%"}>@TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size </div>
+	    		<div class="baseline_status" @if(!baselineEnabled) {style="display:none"}else{}>@if(!countList(index).equals("0")){Y} else {N}</div>
+	    		</div>
+  			</a>
+	    		<div  class="task_action">
+	    			<a href="/project-task-details/@m.tId">	<span id="st_@m.tId" class="show_tasks_details"></span></a>
+	    			<span id="et_@m.tId" class="edit_tasks_details display-none"></span>
+	    			@*<span id="dt_@m.mId" class="delete_tasks_details"></span>*@
+	    			<span ></span>
+	    		</div>
+    	</li>		
+    	}

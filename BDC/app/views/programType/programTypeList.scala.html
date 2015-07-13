@@ -1,0 +1,195 @@
+@(programtypes: Seq[ProgramTypeMaster],username:String,totalCount:Long,pagination:String)(implicit lang:Lang)
+@import services._
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+  </head>
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+
+     <input type="hidden" value="@totalCount"  class="reccount" />
+    <div class="content">
+  
+        <div class="header">
+        	<h1 class="page-title">@Messages("programtype.progtamtype")</h1>
+        </div>
+        
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">@Messages("programtype.home")</a> <span class="divider">/</span></li>
+            <li class="active"> @Messages("programtype.programtypelist")</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+	<div class="btn-toolbar">
+	   <a href="@routes.ProgramType.createProgramType"><span class="btn"><i class="icon-plus"></i>@Messages("programtype.newprogramtype")</span></a>
+	  	<div class="btn-group">
+	  	</div>
+	</div>
+		  	
+	
+	<div class="well">
+	    <table class="table">
+	      <thead>
+	        <tr class="first-row">
+	          <th> @Messages("programtype.id")</th>
+	          <th> @Messages("programtype.progtamtype")</th>
+	          <th> @Messages("programtype.description")</th>
+	          <th> @Messages("programtype.uploadedBy")</th>
+	             <th>@Messages("budgettype.updateddate")</th>
+	               <th>@Messages("service.catelogue.status")</th>
+	          <th style="width: 26px;"> @Messages("programtype.action")</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        @for(programtype <- programtypes) {
+	        <tr>
+ 	          <td><a href="@routes.ProgramType.editProgramType(programtype.id.get.toString)">@programtype.id </a></td>
+	          <td><a href="@routes.ProgramType.editProgramType(programtype.id.get.toString)">@programtype.program_type </a></td>
+	          <td><span>@if(programtype.description.length>30){@programtype.description.substring(0,30)...}else{ @programtype.description}</span></td>
+	          <td><span><a href="@routes.ProgramType.editProgramType(programtype.id.get.toString)">
+	          @if(!UserService.findUserDetailsById(programtype.user_id.toLong).isEmpty){
+	          	      @UserService.findUserDetailsById(programtype.user_id.toLong).get.first_name.subSequence(0, 1). 
+			          @UserService.findUserDetailsById(programtype.user_id.toLong).get.last_name
+	          }else{
+	          NA
+	          }
+	           </a></span></td>
+	          <td><span><a href="@routes.ProgramType.editProgramType(programtype.id.get.toString)">@programtype.creation_date.format("dd-MM-yyyy") </a></span></td>
+	         
+	          <td><span><a href="@routes.ProgramType.editProgramType(programtype.id.get.toString)">
+	          @if(programtype.is_deleted){
+	          	Inactive
+	          	}else{
+	          	Active
+	          	}
+	          </a></span></td>
+	          <td>
+	              <a href="@routes.ProgramType.editProgramType(programtype.id.get.toString)"><i class="icon-pencil "></i></a>
+	             
+	              <a  role="button" data-toggle="modal">
+	              @if(programtype.is_deleted){
+	              <i id="programtype_@programtype.id.get.toString" class="activate-status status_update" style="cursor: pointer;"></i>
+	              }else{
+	                <i id="programtype_@programtype.id.get.toString" class="icon-remove status_update" style="cursor: pointer;"></i>
+	              }
+	              </a>
+	          </td>
+	        </tr>
+	        }
+	        
+	      </tbody>
+	    </table>
+	    
+	    @if(totalCount >10){
+		<div>No of Records Per Page
+			<select id="pageRecord" class="pageRecord span1" >
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			</select>
+		</div>
+		<!-- Pagination -->
+		<div class="pagination">
+		    <ul>
+		      @Html(pagination)
+		    </ul>
+		</div>
+		}else{
+		<input id="pageRecord" class="pageRecord"  type="hidden" value="10">
+		}	
+	</div>
+	<!-- <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div> -->
+	<!-- Footer panel -->                    
+  	 @footer()
+  	  <div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"> 
+  	</div>
+   
+	<div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span><div class="dialog-content">
+	</div>
+	</div>
+	<div class="tooltip"></div>	
+    </div>
+</div>
+    </div>
+        <script type="text/javascript">
+	  $(document).ready(function(){
+		  $(".status_update").on("click", renderDeleteItemFromList);
+			function renderDeleteItemFromList(){
+				var _this = $(this);
+				var _status= _this.hasClass('activate-status');
+				var deletion_id = _this.attr("id").split("_")[1];
+				$("#dialog-confirm").html("@Messages("delete.confirm1.programtype")");
+						// Define the Dialog and its properties.
+						$("#dialog-confirm").dialog({
+							resizable : false,
+							modal : true,
+							title : "@Messages("delete.confirm.title")",
+							height : 150,
+							width : 300,
+							buttons : {
+								"Yes" : function() {
+									var url = "/update-programtype?id=" + deletion_id+"&status="+_status;
+									$.post(url, function(data) {
+											if (data == "Success") {
+    											//window.location.reload();
+    											if($(_this).parents("tbody").children().length==1){
+											       if(typeof getUrlParameter("page") !== "undefined" && getUrlParameter("page") !== null){
+											        var page_num = parseInt(getUrlParameter("page"));
+											        var record =  parseInt(getUrlParameter("record"));
+											        page_num= page_num - 1;
+											        var sPageURL = window.location.href;
+											        var sURLVariables = sPageURL.split('?')[0];
+											        window.location.href =sURLVariables+"?page="+page_num+"&record="+record
+											       }else{
+											        window.location.reload();
+											       }
+    											}else{
+    											    window.location.reload();
+    											}
+    										}
+									});
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								},
+								"No" : function() {
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								}
+							}
+						});
+						$("#pop-box-over").css("display", "block");
+						$("#dialog-confirm").css("display", "block");
+					}
+	    });
+    </script>
+   </body>
+</html>

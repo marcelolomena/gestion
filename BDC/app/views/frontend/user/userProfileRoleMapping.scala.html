@@ -1,0 +1,70 @@
+@(user :Option[Users],roles: Seq[models.UserRole],userProfileRoles: Seq[UserProfileMapping])(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import helper._
+@import java.lang._
+@import services._
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider" id="home_page">
+	<div class="left map border-top"></div>
+
+	<div class="emp_img_div emp-edit-info">
+		
+		<div style="width:100%;">
+        	<div class="edit-profile-title">
+        	 	@Messages("editUsersSkills.profilerolemapping")
+        	 	<span style="float: right; font-size: 13px !important;margin-top: 10px !important;"> @user.get.first_name @user.get.last_name </span>
+        	</div>
+           
+                    
+            <div style="width:50%" class="left">
+               @*@select(skillForm("skill_id"),options(hashMapSkill),'class->"input-xlarge",'name->"skill",'_default ->Messages("employee.editskills.default"),'_label->"")*@
+               <div class="width_full" style="margin: 30px 0 10px;">
+               	<input id="user_id" type="hidden" value="@user.get.uid.get"/>
+	            <select class="input-xlarge" name="role_id" id="role_id">
+		            <option value="" class="blank">---Agregar programa Rol---</option>
+		        	@for(r <- roles){
+		        		<option value="@r.rId.get">@r.role </option>	
+		        	}
+	        	</select>
+	           </div>
+               <div class="width_full pull-left row-fluid left">
+               		<span class="left update-role" ><span class="profile-action">Agregar</span><img  width="30" height="30" src="/assets/frontend/images/button_check.png" alt=""></span>
+               		<span class="left cancel-role push-left30px" ><a href="/edit-user/@user.get.uid.get.toString()"><span class="profile-action">@Messages("editUsersSkills.cancel")  </span><img width="30" height="30" src="/assets/frontend/images/button-cross_blue.png" alt=""></a></span>
+               		<div class="clearfix"></div> 
+               </div>
+		
+			</div>
+             <div class="skill-list" style="width:50%; float:right;  margin-top: 10px;">
+				<div class="dash_detail_1_right push-top6px" style="margin:20px 0 0 20px;float:left"><h3 style="width:436px;font-size:14px">Perfil Rol</h3>
+					@for((u,index) <- userProfileRoles.zipWithIndex){
+						<div class="dash_right_data_main">
+							<div class="dash_right_data_2 @if(index%2!=0){dash_right_data_2_odd}" style="width:448px">
+								<div class="dash_right_data_left" style="width:400px"> 
+										@if(!UserRoleService.findUserRoleById(u.user_role.toString()).isEmpty){
+											@UserRoleService.findUserRoleById(u.user_role.toString()).get.role
+										}	 
+								</div>
+								<span id="m_@u.id" style="float:right;margin-right: 11px;margin-left: 0px" class="delete_icon remove-role"></span>
+							</div>
+						</div>
+					}
+			</div>
+			</div>
+		</div>
+		</div>
+		
+		@frontend.footer()
+</section>
+</div>
+@frontend.headerScripts()	
+<script type="text/javascript">
+	$(".update-role").on("click", renderUpdateProfileRoleMapping);
+	$(".remove-role").on("click", renderRemoveProfileRole);
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+@(projectTypeForm :Form[GenericProjectType],ptypes :java.util.HashMap[String, String],id:String,etype:String)(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import util.Random
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+			<div id="new_program_header" class="">
+				<p>@Messages("addNewProject.editProject")  @* @ProgramService.findProgramMasterDetailsById(program.toString()).get.program_description *@</p>
+			</div>
+    		<div>
+    			@form(action = controllers.Frontend.routes.Generics.updateProjectType(id),'id->"add-new-project-form") { 
+				<div class="left">
+    	        <input id="responsible" name="responsible" type="hidden"  value="@session.get("uId")" >
+    	         <input id="id" name="id" type="hidden"  value="@id">
+    	         
+    	         <div class="left width_full padding-top-3px" style="padding-bottom: 5px; padding-top: 4px;" >
+    	         <dt>
+					<label for="description" style="width: 202px !important;">@Messages("addnewprojecttype.newProjectType")</label>
+					</dt>
+    	         <input  name="project_type1" type="text" class="span4"  value="@etype" disabled="disabled">
+	           </div>
+	           			<div class="left width_full padding-top-3px display-none" >
+	    					@select(
+				                projectTypeForm("project_type"),
+				                options(ptypes),
+				                'class -> "input-xlarge  dep-user ", 
+				                '_label -> Messages("addnewprojecttype.newProjectType")
+				            )
+	           			</div>
+
+	           			<div class="left width_full" style="padding-bottom: 5px; padding-top: 4px;">
+	    					@textarea(
+				                projectTypeForm("description"),
+				                'class -> "span4", 
+				                '_label -> Messages("addnewprojecttype.description"),
+				                'placeholder -> "Enter Project-Type Description",
+							    'rows -> 5,
+							    'cols -> 60
+				            )
+	           			</div>
+	           			
+	           			<div class="left width_full padding-top-3px" >
+	    					@select(
+						         projectTypeForm("states"),
+						         options("0"->"Current", "1"->"Historic"),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addnewprojecttype.status")
+						      )
+	    				</div>
+	           					
+           			</div>
+          
+          		<div class="width_full" style="margin-top:16px;">
+				       	<span class="left push-left189px"><input class="btn  form-button" value="@Messages("button.update")" type="submit"/></span>
+				       	<span class="left" style="margin-left:30px;"> <input id="cancel-project" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+		          	</div>
+          
+    			}
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	   $('#cancel-project').on('click',function() {
+		 window.location.href='@controllers.Frontend.routes.Generics.overview()';
+	   });
+	   
+	});
+</script>

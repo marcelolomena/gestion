@@ -1,0 +1,507 @@
+@(project_id:String,sap_form: Form[ProjectSAP],saps:java.util.HashMap[String, String],planned_hour:Double)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")">
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="project-sap">
+<div class="width_full">
+<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+	  	<a href="@controllers.Frontend.routes.ProjectMaster.projectDetails(project_id)" style="font-weight: bold">
+	  		<span class="left"> @Messages("uploaddocument.projectdetails")</span>
+  	  	</a>
+  	  	    
+  	  	
+		
+   </h3>
+
+<p class="page-heading">@Messages("projectdetails.SAPforaproject")</p>
+	<div class="width_full" >
+		
+		@form(action = controllers.Frontend.routes.ProjectMaster.saveProjectSAP(project_id),  'id->"project-sap-form") {
+					
+					<input type="hidden" value="@project_id" id="project_id" name="project_id"/>
+					<input type="hidden" value="1" id="is_active" name="is_active"/>	
+			
+					<div class="width_full">
+					<span style="float: left;width:100%;margin-bottom: 20px">
+						@select(
+				         sap_form("sap_id"),
+				         options(saps),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("projectdetails.SAPnumbers"),
+				          '_default -> Messages("projectdetails.chooseSAP")
+			      		)
+			      	
+					</span>
+					</div>
+					
+					
+					<div class="width_full">
+							<div id="project-investment" style="float: left;width: 315px">
+								<span class="investment-title">@Messages("addsap.amountofinvestment")</span>
+								
+								  @inputText(
+					                sap_form("project_investment.investment_hardware"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.hardware"),
+					               'maxlength -> "12"
+					            	)
+								  @inputText(
+					                sap_form("project_investment.investment_software"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.software"),
+					                   'maxlength -> "12"
+					            	)
+								  @inputText(
+					                sap_form("project_investment.investment_telecommunication"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.telecommunication"),
+					                'maxlength -> "12"
+					            	)
+								  @inputText(
+					                sap_form("project_investment.investment_development"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.development"),
+					                'maxlength -> "12"
+					            	)
+								  @inputText(
+					                sap_form("project_investment.investment_other"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.other"),
+					               'maxlength -> "12"
+					            	)
+								  @inputText(
+					                sap_form("project_investment.investment_qa"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.QA"),
+					            'maxlength -> "12"
+					            	)
+								  @inputText(
+					                sap_form("project_investment.investment_improvements"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.improvement"),
+					                   'maxlength -> "12"
+					            	)
+								 @inputText(
+					                sap_form("project_investment.investment_recurring_first"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> Messages("addsap.recurring1styear"),
+					              'maxlength -> "12"
+					            	)
+								
+							</div>
+							<div id="project-expense">
+								<span class="expenditure-title">@Messages("addsap.amountofexpenditure")</span>
+									@inputText(
+						                sap_form("project_expenditure.expenditure_hardware"),
+						                'class -> "span4", 
+						                'placeholder -> Messages("addsap.enteramount"),
+						                '_label -> "",
+						              'maxlength -> "12"
+						            	)
+					            
+									@inputText(
+						                sap_form("project_expenditure.expenditure_software"),
+						                'class -> "span4", 
+						                'placeholder -> Messages("addsap.enteramount"),
+						                '_label -> "",
+						              'maxlength -> "12"
+						            	)
+						            
+								  @inputText(
+					                sap_form("project_expenditure.expenditure_telecommunication"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> "", 
+					                  'maxlength -> "12"
+					            	)
+					            
+								@inputText(
+					                sap_form("project_expenditure.expenditure_development"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> "",
+					              'maxlength -> "12"
+					            	)
+					            
+								@inputText(
+					                sap_form("project_expenditure.expenditure_other"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> "",
+					                'maxlength -> "12"
+					            	)
+					            
+								@inputText(
+					                sap_form("project_expenditure.expenditure_qa"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> "",
+					                'maxlength -> "12"
+					            	)
+					            
+								@inputText(
+					                sap_form("project_expenditure.expenditure_improvements"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> "",
+					                   'maxlength -> "12"
+					            	)
+					            
+								@inputText(
+					                sap_form("project_expenditure.expenditure_recurring_first"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("addsap.enteramount"),
+					                '_label -> "",
+					                 'maxlength -> "12"
+					            	)
+					            
+								
+								
+							</div>
+							<div id="available-investment" style="  border-left: 1px solid #C6C6C6;">
+								<span class="investment-title" style="padding-left:25px">@Messages("addsap.availableinvestment")</span>
+								  @inputText(
+					                sap_form("available_investment_hardware"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                'type -> "number",
+					                'min -> "0",
+					                'readonly -> "readonly",
+					                'step -> "any",
+					                'tabindex ->"-1"
+					            	)
+								  @inputText(
+					                sap_form("available_investment_software"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                 'type -> "number",
+					                 'min -> "0",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1",
+					                'step -> "any"
+					            	)
+								 @inputText(
+					                sap_form("available_investment_telecommunication"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                 'type -> "number",
+					                 'min -> "0", 
+					                 'readonly -> "readonly",
+					                 'step -> "any",
+					                'tabindex ->"-1"
+					            	)
+								 @inputText(
+					                sap_form("available_investment_development"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                 'type -> "number",
+					                 'min -> "0",
+					                 'readonly -> "readonly",
+					                 'step -> "any",
+					                'tabindex ->"-1"
+					                
+					            	)
+								  @inputText(
+					                sap_form("available_investment_other"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> " ",
+					                 'type -> "number",
+					                 'step -> "any",
+					                 'min -> "0",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+								  @inputText(
+					                sap_form("available_investment_qa"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                 'type -> "number",
+					                 'step -> "any",
+					                 'min -> "0",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+								  @inputText(
+					                sap_form("available_investment_improvements"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                 'type -> "number",
+					                 'min -> "0",
+					                  'readonly -> "readonly",
+					                  'step -> "any",
+					                'tabindex ->"-1"
+					            	)
+								  @inputText(
+					                sap_form("available_investment_recurring_first"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "  ",
+					                 'type -> "number",
+					                 'min -> "0",
+					                  'readonly -> "readonly",
+					                  'step -> "any",
+					                'tabindex ->"-1"
+					            	)
+								</span>
+							</div>
+							<div id="available-expense">
+								<span class="expenditure-title"  >@Messages("addsap.availableexpenditure")</span>
+								@inputText(
+					                sap_form("available_expenditure_hardware"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                 'type -> "number",
+					                 'min -> "0",
+					                 'step -> "any",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								@inputText(
+					                sap_form("available_expenditure_software"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                 'type -> "number",
+					                 'step -> "any",
+					                 'min -> "0",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								@inputText(
+					                sap_form("available_expenditure_telecommunication"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "", 
+					                'type -> "number",
+					                'min -> "0",
+					                'step -> "any",
+					                 'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								@inputText(
+					                sap_form("available_expenditure_development"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                 'type -> "number",
+					                 'min -> "0",
+					                 'step -> "any",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            @inputText(
+					                sap_form("available_expenditure_other"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                 'type -> "number",
+					                 'min -> "0",
+					                 'step -> "any",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								@inputText(
+					                sap_form("available_expenditure_qa"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                 'type -> "number",
+					                 'min -> "0",
+					                 'step -> "any",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								@inputText(
+					                sap_form("available_expenditure_improvements"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                 'type -> "number",
+					                 'min -> "0",
+					                 'step -> "any",
+					                  'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								@inputText(
+					                sap_form("available_expenditure_recurring_first"),
+					                'class -> "span4 disabled-input", 
+					                '_label -> "",
+					                'type -> "number",
+					                'min -> "0",
+					                'step -> "any",
+					                 'readonly -> "readonly",
+					                'tabindex ->"-1"
+					            	)
+					            
+								
+							</div>
+					</div>
+					
+		      		
+			         
+			            
+			          
+			            
+			            
+			            
+			          
+			            
+			      	 @*@select(
+				         program_member("role_id"),
+				         options(programRoles),
+				         'class -> "input-xlarge ",
+				         '_label -> "Role" ,
+				          '_default -> "--- Choose Role ---"
+			      	)
+			      	 @select(
+				         program_member("member_id"),
+				         options(userMap),
+				         'class -> "input-xlarge display-none ",
+				         '_label -> "Member" ,
+				          '_default -> "--- Choose Member ---"
+			      	)*@
+			    
+			      		<div class="width_full" >
+						       	<span class="left" style="margin-left:145px"><input class="btn  form-button" value='@Messages("button.add")' type="submit"/></span>
+						       		<span  class="left" style="margin-left:30px;"><input id="cancel-sap" class="btn form-button" value='@Messages("booktime.cancel")' type="button"/></span>
+						</div>
+				}
+	</div>
+	<div class="width_full">
+		<h3 class="layer-title">
+		    <span class="left">@Messages("projectdetails.projectSAPlisting")</span>
+		    
+   		</h3>
+		@frontend.project.projectSapListing(project_id)
+	</div>
+	
+	
+</div>		
+<div id="dialog-confirm"></div>	
+</section>
+<div id="pop-box-over" class="display-none"></div>
+</div>
+
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+	
+		
+		$("#sap_id").on("change", renderProjectSAPDetails);
+
+		 $('#project_investment_investment_hardware').mask('0.000.000.000', {reverse: true});
+		 $('#project_expenditure_expenditure_hardware').mask('0.000.000.000', {reverse: true});
+		 $('#project_investment_investment_software').mask('0.000.000.000', {reverse: true});
+		  $('#project_expenditure_expenditure_software').mask('0.000.000.000', {reverse: true});
+		 $('#project_investment_investment_telecommunication').mask('0.000.000.000', {reverse: true});
+		  $('#project_expenditure_expenditure_telecommunication').mask('0.000.000.000', {reverse: true});
+		 $('#project_investment_investment_development').mask('0.000.000.000', {reverse: true});
+		  $('#project_expenditure_expenditure_development').mask('0.000.000.000', {reverse: true});
+		 $('#project_investment_investment_other').mask('0.000.000.000', {reverse: true});
+		  $('#project_expenditure_expenditure_other').mask('0.000.000.000', {reverse: true});
+		 $('#project_investment_investment_improvements').mask('0.000.000.000', {reverse: true});
+
+		 
+		  $('#project_investment_investment_qa').mask('0.000.000.000', {reverse: true});
+		  $('#project_expenditure_expenditure_qa').mask('0.000.000.000', {reverse: true});
+		   $('#project_expenditure_expenditure_improvements').mask('0.000.000.000', {reverse: true});
+		  $('#project_investment_investment_recurring_first').mask('0.000.000.000', {reverse: true});
+		 $('#project_expenditure_expenditure_recurring_first').mask('0.000.000.000', {reverse: true});
+
+
+
+		$("#available_investment_hardware").val("0");
+		$("#available_investment_software").val("0");
+		$("#available_investment_telecommunication").val("0");
+		$("#available_investment_development").val("0");
+		$("#available_investment_other").val("0");
+		$("#available_investment_qa").val("0");
+		$("#available_investment_improvements").val("0");
+		$("#available_investment_recurring_first").val("0");
+		
+		$("#available_expenditure_hardware").val("0");
+		$("#available_expenditure_software").val("0");
+		$("#available_expenditure_telecommunication").val("0");
+		$("#available_expenditure_development").val("0");
+		$("#available_expenditure_other").val("0");
+		$("#available_expenditure_qa").val("0");
+		$("#available_expenditure_improvements").val("0");
+		$("#available_expenditure_recurring_first").val("0");
+
+
+		var id = $("#sap_id").val();
+
+		if(id != ""){
+			var project_id = $("#project_id").val();
+			var url="/project-sap-details?id="+id+"&project_id="+project_id+"&t=" + Date.now();
+		 	
+		 	
+		    $.get(url, function(data) {
+		    	if(data != "fail"){
+		    		var obj = JSON.parse(data);
+		    	
+		    		$("#available_investment_hardware").val(obj[0].hardware);
+		    		$("#available_investment_software").val(obj[0].software);
+		    		$("#available_investment_telecommunication").val(obj[0].telecommunication);
+		    		$("#available_investment_development").val(obj[0].development);
+		    		$("#available_investment_other").val(obj[0].other);
+		    		$("#available_investment_qa").val(obj[0].qa);
+		    		$("#available_investment_improvements").val(obj[0].improvements);
+		    		$("#available_investment_recurring_first").val(obj[0].recurring_first);
+		    		
+		    		$("#available_expenditure_hardware").val(obj[1].hardware);
+		    		$("#available_expenditure_software").val(obj[1].software);
+		    		$("#available_expenditure_telecommunication").val(obj[1].telecommunication);
+		    		$("#available_expenditure_development").val(obj[1].development);
+		    		$("#available_expenditure_other").val(obj[1].other);
+		    		$("#available_expenditure_qa").val(obj[1].qa);
+		    		$("#available_expenditure_improvements").val(obj[1].improvements);
+		    		$("#available_expenditure_recurring_first").val(obj[1].recurring_first);
+		    	}else{
+		    		$("#available_investment_hardware").val("0");
+		    		$("#available_investment_software").val("0");
+		    		$("#available_investment_telecommunication").val("0");
+		    		$("#available_investment_development").val("0");
+		    		$("#available_investment_other").val("0");
+		    		$("#available_investment_qa").val("0");
+		    		$("#available_investment_improvements").val("0");
+		    		$("#available_investment_recurring_first").val("0");
+		    		
+		    		$("#available_expenditure_hardware").val("0");
+		    		$("#available_expenditure_software").val("0");
+		    		$("#available_expenditure_telecommunication").val("0");
+		    		$("#available_expenditure_development").val("0");
+		    		$("#available_expenditure_other").val("0");
+		    		$("#available_expenditure_qa").val("0");
+		    		$("#available_expenditure_improvements").val("0");
+		    		$("#available_expenditure_recurring_first").val("0");
+		    	}
+		    });
+		}
+
+		$('#cancel-sap').on('click',function() {
+			 window.location.href='@controllers.Frontend.routes.ProjectMaster.projectDetails(project_id)';
+		});
+		
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+@(username:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@import helper._
+@frontend.layout()	
+<head>
+<title>Reports</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/dtree.css")">
+	<script src="@routes.Assets.at("javascripts/dtree.js")" type="text/javascript"></script>
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<span id="report_title_id" class="showBaselineForTask" style="margin-left: 84px;"> </span> <span style="float: right;margin-top: 7px;width: 110px;">Export to <img alt="pdf" src="@routes.Assets.at("frontend/images/pdf_icon.png")"> <img alt="xls" src="@routes.Assets.at("frontend/images/icon-xls.png")" style="margin-left: 2px;"></span>
+<section class="slider" id="">
+@leftNavForReports()
+<section class="" id="changeableContents">
+    
+ </section>
+</section>
+<div style="margin-top: 100%;">
+@frontend.footer()
+</div>
+</div>
+ 
+	
+@frontend.headerScripts()	
+<script type="text/javascript">
+ $(document).ready(function(){
+	 $('#id0').hide();
+
+
+	 
+	 var urlForRender = '/program-list';
+	   $.get(urlForRender,  function(data) {
+		   $('#changeableContents').html(data);
+	   });
+   $('#report_title_id').text('Program List');
+
+
+   
+	 $('#dd1 #sd2').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+		$('#report_title_id').text('Program List');
+		 return false;
+	 });
+	 $('#dd1 #sd3').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+       $('#report_title_id').text('Project List');
+		 return false;
+	 });
+	 $('#dd1 #sd4').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+	    $('#report_title_id').text('Baseline Change View');
+		 return false;
+	 });
+	 $('#dd1 #sd5').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+	     $('#report_title_id').text('Employee List');
+		 return false;
+	 });
+	 $('#dd1 #sd6').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+		$('#report_title_id').text('Program Status');
+		 return false;
+	 });
+	 $('#dd1 #sd7').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+	      $('#report_title_id').text('Project Status');
+		 return false;
+	 });
+	 $('#dd1 #sd8').click(function() {
+		 var urlForRender = $(this).attr("href");
+			   $.get(urlForRender,  function(data) {
+				   $('#changeableContents').html(data);
+			   });
+		 $('#report_title_id').text('Hours Booked Per Month');
+		 return false;
+	 });
+
+ });
+	
+</script>
+	</body>	
+</html>

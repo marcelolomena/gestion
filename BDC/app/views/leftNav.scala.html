@@ -1,0 +1,47 @@
+@()(implicit lang:Lang)
+
+ <div class="sidebar-nav">
+    
+   <a href="#error-menu1" class="nav-header" data-toggle="collapse">ORG Structure Management<i class="icon-chevron-up"></i></a>
+	<ul id="error-menu1" class="nav nav-list collapsed">
+		<li id="dv" ><a href="@routes.Division.divisionList()"> @Messages("leftnav.divmanagement")</a></li>
+   		<li id="ge" ><a href="@routes.Genrencia.genrenciaList()"> @Messages("leftnav.gerenciamanagement")</a></li>
+   		<li id="dm" ><a href="@routes.Department.departmentList()"> @Messages("leftnav.departmentmanagement") </a></li>
+   		<li id="programT" ><a href="@routes.ProgramType.programTypeList">  @Messages("leftnav.programtype")</a></li>
+   		<li id="subT" ><a href="@routes.SubType.subTypeList">@Messages("leftnav.programsubtype")</a></li>
+   		
+   		@*<li id="ImpType" ><a href="@routes.ImpactType.impactTypeList">Program Impact Type </a></li>
+   		<li id="progWork" ><a href="@routes.WorkflowStatus.workflowList">Program Workflow Status</a></li>*@ 
+   		
+   		<li id="progDiscipline" ><a href="@routes.TaskDescipline.taskDesciplineList"> @Messages("leftnav.programtaskdiscipline")</a></li> 
+   		<li id="projActive"><a href="@routes.ProjectWorkflowStatus.projectWorkflowList"> @Messages("leftnav.projectworkflowstatus")</a></li>
+   		<li id="UserRoleActive"><a href="@routes.UserRole.userRoleList"> @Messages("leftnav.adduserrole")</a></li>
+   		<li id="stageActive"><a href="@routes.Stage.stageList">  @Messages("leftnav.Stage")</a></li>
+   		<li id="delActive"><a href="@routes.Deliverable.deliverableList">  @Messages("leftnav.deliverable")</a></li>
+   		 @*<li id="pTypeActive"><a href="@routes.GenericProjectType.genericProjectTypeList">   @Messages("leftnav.genericprojecttype")</a></li>*@
+   		<li id="dTypeActive"><a href="@routes.DocumentType.documentTypeList"> @Messages("leftnav.documenttype")</a></li>
+   		<li id="bTypeActive"><a href="@routes.BudgetType.budgetTypeList">@Messages("leftnav.budgettype")</a></li>
+		<li id="catservice"><a href="@routes.ServiceCatalogue.serviceCatalogueList">@Messages("leftnav.servciecatalogue")</a></li>   		
+		<li id="userProfileId" class="display-none"><a href="@routes.UserProfile.userProfileList">@Messages("leftnav.userprofile")</a></li>   		
+		
+	</ul>
+         @*<a href="#error-menu" class="nav-header " data-toggle="collapse">Module<i class="icon-chevron-up"></i></a>
+         <ul id="error-menu" class="nav nav-list collapsed ">
+         <li id="pms"><a href="@routes.Program.programList">Programs</a></li>
+        <li id="pm" ><a href="@routes.Application.projectList(1)">Project Management</a></li>
+        <li id="um"><a href="@routes.User.userList">User Management</a></li>
+        @*<li id="mil"><a href='@routes.Milestone.milestoneList'>Project Tasks</a></li>
+        @{/* <li id="hm"><a href="@routes.Milestone.milestoneHistoryList">Milestones History</a></li> */}
+        <li id="tm"><a href="@routes.Milestone.teamMemberList">Task & Team</a></li>
+        <li id="mtk"><a href="@routes.Milestone.tasksList">Sub-Tasks</a></li>
+        <li id="sba"><a href="@routes.SubTask.step1">Sub-Tasks Allocation</a></li>*@
+        
+        @*<li id="pms"><a href="@routes.Milestone.projectManagementPM">PM-Level Setting</a></li>
+        <li id="ceo"><a href="@routes.Milestone.projectManagementCEO">C-Level Setting</a></li>*@
+        @{ /* <li id="gl"><a href="@routes.Goal.goalsList">Goals</a></li>
+         <li id="gh"><a href="@routes.Goal.goalsHistoryListing">Goals History</a></li> 
+    	<li id="gt"><a href="@routes.Goal.teamMemberList">Goals & Team </a></li>
+    	<li id="gtk"><a href="@routes.Goal.tasksList">Goals Tasks</a></li>
+    	</ul> */}
+    
+</div>

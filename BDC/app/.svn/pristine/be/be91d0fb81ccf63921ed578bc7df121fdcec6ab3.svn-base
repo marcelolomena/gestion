@@ -1,0 +1,104 @@
+@(programValues : java.util.HashMap[String, String],usersValues : java.util.HashMap[String, String],templateValues : java.util.HashMap[String, String],pertForm : Form[InputPert])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+
+@frontend.layout()
+</head>
+<body>
+	@frontend.topLayout()
+	<div class="main">
+		@frontend.header()
+
+<div class="focus_on width_full" style="padding:10px 0px; margin:20px 0px;" id = "search_program_id">
+	 	
+	 	<div class="search-form-wrapper" style="padding: 10px 40px;">
+		@form(action = controllers.Frontend.routes.Pert.resultPert, 'id->"add-new-program-form") {
+
+						<div class="left width-pr50 padding-top-3px" >
+			        	@select(
+		            		pertForm("programa"),
+		       				options(programValues),
+							'class -> "input-xlarge",
+							'_label -> Messages("newpert.programa"),
+							'_default -> Messages("newpert.programa")
+						)
+						</div>
+	
+						<div class="left width_full padding-top-3px">
+		            	@select(
+				            	pertForm("lider"),
+				       			options(usersValues),
+								'class -> "input-xlarge",
+								'_label -> Messages("newpert.lider"),
+								'_default -> Messages("newpert.lider"))
+	
+		           		</div>
+
+            
+
+					<div class="left width_full padding-top-3px">
+	            	@select(
+			            	pertForm("plantilla"),
+			       			options(templateValues),
+							'class -> "input-xlarge", 
+							'_label -> Messages("newpert.plantilla"),
+							'_default -> Messages("newpert.plantilla")) 
+
+	            	</div>
+					<div class="left width_full padding-top-3px">
+		           				@inputText(
+					                pertForm("fecha"),
+					                'class -> "span4", 
+					                '_label -> Messages("newpert.fecha"),
+					                'placeholder -> Messages("newpert.fecha")
+					            )
+					</div>
+
+			
+
+					<div class="left width_full padding-top-3px">           
+		           				@inputText(
+					                pertForm("cajero"),
+					                'class -> "span4", 
+					                '_label -> Messages("newpert.cajero"),
+					                'placeholder -> Messages("newpert.cajero")
+					                
+					            )
+					</div>
+					<div class="left width_full padding-top-3px">
+	           				@inputText(
+				                pertForm("direccion"),
+				                'class -> "span4", 
+				                '_label -> Messages("newpert.direccion"),
+				                'placeholder -> Messages("newpert.direccion")
+				                
+				            )
+					</div>
+
+      		<div class="width_full" style="margin-top:26px;">
+				       		<span class="left" style="margin-left:312px;"><input class="btn form-button" value="@Messages("button.save")" type="submit"/></span>
+				       		<span  class="left" style="margin-left:30px;"><input id="cancel-program" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+           </div>
+        }	
+        </div>
+</div>
+
+</div>
+@frontend.headerScripts()
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#fecha").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth : true,
+		changeYear : true
+	});
+	
+
+});
+
+</script>
+</body>
+</html>

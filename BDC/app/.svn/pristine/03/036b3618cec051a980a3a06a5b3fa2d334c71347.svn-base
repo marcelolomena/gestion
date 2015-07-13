@@ -1,0 +1,42 @@
+@(message: String,username : String)
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+	
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+
+    <div class="content">
+        <div class="header">
+        	<h1 class="page-title">Dashboard</h1>
+        </div>
+        <ul class="breadcrumb">
+               <li><a href="@routes.Application.index">Home</a> <span class="divider">/</span></li>
+            <li class="active">Dashboard</li>
+        </ul>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				   
+				<!-- Footer panel -->                    
+			  	 @footer()
+			</div>
+		</div>
+   </div>
+   </body>
+</html>
+
+

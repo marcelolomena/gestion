@@ -1,0 +1,51 @@
+@(users : Seq[Users], parentId : String, parentType : String,count:Long, selectedPage : Integer)(implicit session: play.api.mvc.Session,lang:Lang)
+@import services._
+
+<input id="records" value="@count" type="hidden"/>
+<input id="selected-page" value="@selectedPage" type="hidden"/>
+<div class="emp_listing">
+	<div id="emp_list">
+		<ul class="width_full">
+			@if(users != null && users.size > 0){
+				<li class="width_full header">
+					<span class="employee_name bold">@Messages("admin.employee")</span> 
+					<span class="employee_rut bold">@Messages("admin.userRole")</span>
+					<span class="employee_email bold"> @Messages("admin.email") </span> 
+					<span class="employee_telephone bold">@Messages("admin.userType")</span>
+					<span class="employee_action">@Messages("admin.action")</span> 
+				</li>
+				 @for((u, index) <- users.zipWithIndex){
+					<li class="width_full emp_row  @if(index%2==0 ){ emp_row_odd }else{ emp_row_even }">
+						<a href="/employee/@u.uid">	
+							<span class="employee_name">@u.first_name&nbsp;@u.last_name</span> 
+							<span class="employee_rut">
+							@{
+								if(!UserProfileServices.findUserProfileById(UserService.findUserOfficeDetailsById(u.uid.get).get.isadmin.toString()).isEmpty){
+									UserProfileServices.findUserProfileById(UserService.findUserOfficeDetailsById(u.uid.get).get.isadmin.toString()).get.profile_name
+								}else{
+									"NA"
+								}
+							}	
+							</span>	 
+							<span class="employee_email">@u.email</span> 
+							@if(!UserService.findUserOfficeDetailsById(u.uid.get).isEmpty && UserService.findUserOfficeDetailsById(u.uid.get).get.user_type.toString.equals("1")){ 
+								<span class="employee_telephone">Permanent</span>
+							}else{
+								<span class="employee_telephone">Contractorr</span>
+							}
+							<a href="/edit-user/@u.uid"><span class="edit-icon" ></span></a>
+						</a>
+					
+					</li>
+				 }
+			}else{
+				<li class="width_full header">No Users found for this @parentType.</li>
+			}
+		
+		</ul>
+	</div>
+</div>
+ <div class="width_full push-top20px">
+	<ul id="emp_pagination_div"></ul>
+</div>
+			

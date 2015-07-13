@@ -1,0 +1,417 @@
+@(subtaskDetail: Option[models.SubTaskMaster],start_date:java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import java.util.Date
+@import services._
+@import java.util.Date._
+@import java.math.BigInteger; var totalMin2 = 0;var totalHours2 = 0;
+@import java.text.DecimalFormat;var totalHours: scala.math.BigDecimal = 0; var df = new DecimalFormat("00.00");
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/timesheet.css")">
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="book-time">
+<div class="width_full" >
+<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+    	<span class="left " style="color:#55b9d9;text-decoration: none;cursor: pointer; line-height: 27px;font-weight:bold; "id="cancel-booking">Task Details</span>
+	  	
+  	  	<span class="parent-icon"> &#60; </span>
+  	  	<a href="#" style="font-weight: bold">
+	  		<span class="left">Book TIme</span>
+  	  	</a>
+   </h3>
+ </div>
+<input type="hidden" value="@subtaskDetail.get.sub_task_id.get" id="sub_task">
+<input id="planned_start_date" type="hidden" value='@start_date.format("dd-MM-yy")' />
+<input id="planned_end_date" type="hidden" value='@subtaskDetail.get.plan_end_date.format("dd-MM-yy")' />
+<div class="width_full" id="booking-list" >
+
+	<ul >
+		<li class="header">
+			<span class="header">@Messages("booktime.provider")</span>
+			<span class="header">@Messages("booktime.member")</span>
+			<span class="header" style="text-align: left;">@Messages("booktime.bookedhours")</span>
+			<span class="header_date">@Messages("booktime.startdate")</span>
+			<span class="header_date">@Messages("booktime.enddate")</span>
+			<span class="header" style="width:65px;padding-left: 10px;">@Messages("booktime.action")</span>
+		</li>
+		@for( (a,index)  <- SubTaskServices.findSubTasksAllocationBySubTask(subtaskDetail.get.sub_task_id.get.toString()).zipWithIndex) {
+			<li class="@if(index%2==0){even-row}else{odd-row}" id="@a.user_id">
+				<div class="width_full">
+					<span class="emp-book-time" id="mem_@a.user_id.toString()">BCH </span>
+					<span  class="emp-book-time" id="mem_@a.user_id.toString()">@UserService.findUser(a.user_id.toString).get.first_name&nbsp;@UserService.findUser(a.user_id.toString).get.last_name </span>
+					<span id='available_hours_@(a.user_id + "_" + a.id.get)'style="text-align: left;width:173px">
+						
+					@{totalMin2 = 0}
+					@{totalHours2 = 0}
+					@for(t <- TimesheetService.getUserTimesheetsList(a.user_id.toString, subtaskDetail.get.sub_task_id.get.toString())){
+						@{totalHours2 = totalHours2 + TimesheetService.formatTimesheetHour2(t.hours.toDouble).toString().replace(":","_").split("_").apply(0).toInt}
+						@{totalMin2 = totalMin2 + TimesheetService.formatTimesheetHour2(t.hours.toDouble).toString().replace(":","_").split("_").apply(1).toInt}
+					}
+					@while(totalMin2 >= 60 ){
+						@{totalHours2 = totalHours2 + 1} 
+						@{totalMin2 = totalMin2 - 60}
+					}
+					@if(totalMin2 < 10){
+						@{totalHours2 + ":0" + totalMin2}
+						<input type="hidden" disabled="disabled" readonly="readonly" class="booked-hour-main" id="booked-hour-main_@a.user_id" value="@{totalHours2 + ".0" + totalMin2}">
+					}else{
+						@{totalHours2 + ":" + totalMin2}
+						<input type="hidden" disabled="disabled" readonly="readonly" class="booked-hour-main" id="booked-hour-main_@a.user_id" value="@{totalHours2 + "." + totalMin2}">
+					}
+						@*@if(TimesheetService.getAvailableHoursforUser(a.user_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time).toInt >0){
+							<input type="text" disabled="disabled" readonly="readonly" class="booked-hour-main" id="booked-hour-main_@a.user_id" value="@TimesheetService.formatTimesheetHour(TimesheetService.getAvailableHoursforUser(a.user_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time))">
+							}else{
+								0
+							}*@	
+						
+					</span>	
+					@*@if(TimesheetService.getAvailableHoursforUser(a.user_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time).toInt >0){*@
+						<div class="left" style="width:150px">
+							<input id='input_planned_start_date_@(a.user_id + "_" + a.id.get)' type="text" style="margin: -3px 0;" name="input_planned_start_date_@a.user_id"/>
+						</div>
+						<span id='planned_start_date_@(a.user_id + "_" + a.id.get)' class="display-none">@subtaskDetail.get.plan_start_date.format("dd-MM-yyyy")</span>
+					@*}else{
+						<span id='planned_start_date_@(a.user_id + "_" + a.id.get)' class="">@subtaskDetail.get.plan_start_date.format("dd-MM-yyyy")</span>
+					}*@
+					
+					@*@if(TimesheetService.getAvailableHoursforUser(a.user_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time).toInt >0){*@
+					<div class="left" style="width:150px">
+						<input id='input_planned_end_date_@(a.user_id + "_" + a.id.get)' type="text" style="margin: -3px 0;" name="input_planned_start_date_@a.user_id" />
+					</div>
+					<span id='planned_end_date_@(a.user_id + "_" + a.id.get)' class="display-none">@subtaskDetail.get.plan_end_date.format("dd-MM-yyyy")</span>
+					@*}else{
+						<span id='planned_end_date_@(a.user_id + "_" + a.id.get)' class="">@subtaskDetail.get.plan_end_date.format("dd-MM-yyyy")</span>
+					}*@
+					<span class="go-book" id="user_@a.user_id.toString()" title="@a.id.get">@Messages("booktime.book")</span>
+					<span id="allocation-id" class="display-none">@a.id.get</span>
+					@*@if(TimesheetService.getAvailableHoursforUser(a.user_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time).toInt >0){*@
+						@*<span style="width:90px"><input type="text" min="0" max="100" maxlength="3" name="user_hour" class="user_hour" id='user_hour_@(a.user_id + "_" + a.id.get)' style="width:70px;margin: -3px 0; padding: 2px;"></span>
+						<span style="width:30px;margin: -3px 0; padding: 5px;" class="book-hours" id='user_@(a.user_id + "_" + a.id.get)'>Book</span>
+						<span style="width:30px;" class="delete-external-allocation"></span>*@
+					@*}else{
+						<span style="  width: 44px;margin: -3px 0;padding: 4px 15px;background: #6DF2EB;" class="book-hours" id="user_@a.user_id">Booked</span>
+					}*@	
+				</div>
+				<div id="emp_@a.user_id.toString()" class="book-row display-none">
+				
+				</div>
+			</li>	
+		}
+	</ul>
+	
+	<p class="page-heading-external">@Messages("booktime.externalresourcesbooktime")</p>
+	<ul >
+		
+		@for( (a,index)  <- SubTaskServices.findSubTasksAllocationExternalBySubTask(subtaskDetail.get.sub_task_id.get.toString()).zipWithIndex) {
+			<li class="@if(index%2==0){even-row}else{odd-row}" id="@a.external_resource_id">
+				<div class="width_full">
+					<span class="emp-book-time" id="prov_@a.external_resource_id.toString()">@SubTaskServices.findExternalResuouseDetailsByResouceId(a.external_resource_id.toString()).get.provider_name &nbsp; </span>
+					<span class="emp-book-time" id="prov_@a.external_resource_id.toString()">
+						@if(!ProgramMemberService.findExternalProgramMemberDetails(a.external_resource_id.toString()).isEmpty){
+							@if(Integer.parseInt(ProgramMemberService.findExternalProgramMemberDetails(a.external_resource_id.toString()).get.provider_type.toString()) == 46){
+									@ProgramMemberService.findExternalProgramMemberDetails(a.external_resource_id.toString()).get.resource_name &nbsp;	
+							}else{
+								@if(!ProgramMemberService.findExternalProgramMemberDetails(a.external_resource_id.toString()).get.number_of_resources.isEmpty){
+									@ProgramMemberService.findExternalProgramMemberDetails(a.external_resource_id.toString()).get.number_of_resources.get  &nbsp;		
+								}else{
+									@Messages("booktime.externalresource")
+								}
+							
+							}
+						}else{
+							&nbsp;	
+						}
+					
+					</span>
+					
+					<span id='available_hours_@(a.external_resource_id + "_" + a.id.get)'style="text-align: left;width:173px">
+					@{totalMin2 = 0}
+					@{totalHours2 = 0}
+					@for(t <- TimesheetService.getUserTimesheetsListExternal(a.external_resource_id.toString, subtaskDetail.get.sub_task_id.get.toString())){
+						@{totalHours2 = totalHours2 + TimesheetService.formatTimesheetHour2(t.hours.toDouble).toString().replace(":","_").split("_").apply(0).toInt}
+						@{totalMin2 = totalMin2 + TimesheetService.formatTimesheetHour2(t.hours.toDouble).toString().replace(":","_").split("_").apply(1).toInt}
+					}
+					@while(totalMin2 >= 60 ){
+						@{totalHours2 = totalHours2 + 1} 
+						@{totalMin2 = totalMin2 - 60}
+					}
+					@if(totalMin2 < 10){
+						@{totalHours2 + ":0" + totalMin2}
+						<input type="hidden" disabled="disabled" readonly="readonly" class="booked-hour-main" id="booked-hour-main_@a.external_resource_id" value="@{totalHours2 + ".0" + totalMin2}">
+					}else{
+						@{totalHours2 + ":" + totalMin2}
+						<input type="hidden" disabled="disabled" readonly="readonly" class="booked-hour-main" id="booked-hour-main_@a.external_resource_id" value="@{totalHours2 + "." + totalMin2}">
+					}
+						@*@if(TimesheetService.getAvailableHoursforExternalUser(a.external_resource_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time).toInt >0){
+							<input type="text" disabled="disabled" readonly="readonly" class="booked-hour-main" id="booked-hour-main_@a.external_resource_id" value="@TimesheetService.formatTimesheetHour(TimesheetService.getAvailableHoursforExternalUser(a.external_resource_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time))">
+						}else{
+							0
+						}*@	
+						
+					</span>	
+					@*@if(TimesheetService.getAvailableHoursforUser(a.external_resource_id.toString, subtaskDetail.get.sub_task_id.get.toString(), a.estimated_time).toInt >0){*@
+						<div class="left" style="width:150px;">
+							<input id='input_planned_start_date_@(a.external_resource_id + "_" + a.id.get)' type="text" style="margin: -3px 0;" name="input_planned_start_date_@a.external_resource_id"/>
+						</div>
+						<span id='planned_start_date_@(a.external_resource_id + "_" + a.id.get)' class="display-none">@subtaskDetail.get.plan_start_date.format("dd-MM-yyyy")</span>
+					@*}else{
+						<span id='planned_start_date_@(a.external_resource_id + "_" + a.id.get)' class="">@subtaskDetail.get.plan_start_date.format("dd-MM-yyyy")</span>
+					}*@
+					
+					@*@if(a.estimated_time>0){*@
+					<div class="left" style="width:150px">
+						<input id='input_planned_end_date_@(a.external_resource_id + "_" + a.id.get)' type="text" style="margin: -3px 0;" name="input_planned_start_date_@a.external_resource_id" />
+					</div>
+					<span id='planned_end_date_@(a.external_resource_id + "_" + a.id.get)' class="display-none">@subtaskDetail.get.plan_end_date.format("dd-MM-yyyy")</span>
+					@*}else{
+						<span id='planned_end_date_@(a.external_resource_id + "_" + a.id.get)' class="">@subtaskDetail.get.plan_end_date.format("dd-MM-yyyy")</span>
+					}*@
+					<span class="go-book"  id="exuser_@a.external_resource_id.toString()" title="@a.id.get">@Messages("booktime.book")</span>
+					<span id="allocation-id" class="display-none">@a.id.get</span>
+					
+					
+					@*@if( a.estimated_time >0){*@
+						@*<span style="width:90px"><input type="text" min="0" max="100" maxlength="3" name="user_hour" class="user_hour" id='user_hour_@(a.external_resource_id + "_" + a.id.get)' style="width:70px;margin: -3px 0; padding: 2px;"></span>
+						<span style="width:30px;margin: -3px 0; padding: 5px;" class="book-hours-external" id='user_@(a.external_resource_id + "_" + a.id.get)'>Book</span>
+						<span style="width:30px;" class="delete-pmo-allcation"></span>*@
+					@*}else{
+						<span style="  width: 44px;margin: -3px 0;padding: 4px 15px;background: #6DF2EB;" class="book-hours-external" id="user_@a.external_resource_id">Booked</span>
+					}*@	
+				</div>
+				<div id="emp_@a.external_resource_id.toString()" class="book-row display-none">
+				
+				</div>
+			</li>	
+		}
+	</ul>
+	
+	<div id="dialog-confirm"></div>
+	
+<div class="width_full">
+	<input type="button" value="@Messages("booktime.cancel")" class="btn form-button" id="cancel-booking2">
+</div>
+</div>
+</section>
+
+<div class="loader" style="display: none;"><img src="/assets/frontend/images/loading.gif"></div>
+
+<div id="pop-box-over" class="display-none"> 
+</div>
+   
+</div>
+@frontend.headerScripts()
+<script src="@routes.Assets.at("frontend/js/main.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$(".user_hour").keydown(function (e) {
+        if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+              (e.keyCode >= 96 && e.keyCode <= 105))) {
+        }
+        else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 9) {
+            e.preventDefault();
+        }
+    });
+	$(".booked-hour-main").mask('00:00');
+		 
+	$(".book-hours").on("click",renderBookTimeNew);
+	$(".book-hours-external").on("click",renderBookTimeExternal);
+	$(".go-book").on("click",renderBookTimeRows);
+	
+	$(".emp-book-time").on("click",renderTimesheetForUser)
+	
+	$("#cancel-booking").on("click", function(){
+		window.location.href='@controllers.Frontend.routes.Task.projectTaskDetails(subtaskDetail.get.task_id.toString())?#@subtaskDetail.get.sub_task_id.get';
+	});
+	
+    $("#cancel-booking2").on("click", function(){
+		window.location.href='@controllers.Frontend.routes.Task.projectTaskDetails(subtaskDetail.get.task_id.toString())?#@subtaskDetail.get.sub_task_id.get';
+	});
+	var plannedStartDate = $("#planned_start_date").val();
+	var plannedEndDate = $("#current-date").val();
+	
+	$("#booking-list li ").each(function(index, item){
+		if(!$(item).hasClass('header')){
+			
+			var user_id = $(item).attr('id');
+			var allocation_id = $(item).find('#allocation-id').html();
+			var startDateInput = $(item).find("#input_planned_start_date_" + user_id + "_" + allocation_id);
+			var endDateInput = $(item).find("#input_planned_end_date_" + user_id + "_" + allocation_id);
+			
+			$(startDateInput).datepicker({
+				buttonImageOnly : true,
+				dateFormat : "dd-mm-yy",
+				minDate : plannedStartDate,
+				maxDate : plannedEndDate,
+				defaultDate : plannedStartDate,
+				changeMonth : true,
+				changeYear : true,
+				onSelect: function(selected,evnt) {
+			         var startDateId = $(this).attr('id');
+			         var splittedId = startDateId.split('_');
+			         $("#input_planned_end_date_" + splittedId[4] + "_" + splittedId[5]).datepicker('option', 'minDate', selected);
+			    }
+			});
+			
+			$(endDateInput).datepicker({
+				buttonImageOnly : true,
+				dateFormat : "dd-mm-yy",
+				minDate : plannedStartDate,
+				maxDate : plannedEndDate,
+				changeMonth : true,
+				changeYear : true
+			});
+		}
+	});
+	
+	jQuery(".delete-timesheet-book-time").live("click",function(){
+		var _this = $(this);
+		var allocation_id = $(_this).parent().parent().parent().parent().parent().find("#allocation-id").html();		
+		var emp = $(_this).parent().parent().parent().parent().attr("id");
+		var emp_data = emp.split("_");
+		var booked_hr = AllTrim($("#booked-hour-main_"+emp_data[1]).val());
+		var data = $(this).attr('data');
+		var id = $(this).attr('id');
+		var url = "";
+		if (data=="int"){
+			url = "/daleteTimesheetBookTime?id="+id+"&data=int";
+		}
+		if (data=="ext"){
+			url = "/daleteTimesheetBookTime?id="+id+"&data=ext";
+		}
+		if(confirm("�Seguro que quieren eliminar esta entrada")){
+			jQuery.ajax({
+				url: url,
+				cache:false,
+				tye:"GET",
+				dataType : "html",
+				success: function (data) {
+					$(_this).parent().remove();				
+					//$("#available_hours_"+emp_data[1]+"_"+allocation_id).html(parseInt(booked_hr)-parseInt($(_this).prev().prev().html()))
+					//alert($(_this).prev().prev().html())
+					
+					var min = 0;
+					var hours = 0;
+					var new_hr= ""+( parseFloat(booked_hr.replace(":",".")) - parseFloat($(_this).prev().prev().html()))
+					var hour_string = new_hr.split(".");
+					if( parseInt(hour_string[1]) > 59){
+						min = parseInt(hour_string[1]) - 60
+						hours= parseInt(hour_string[0]) + 1 
+					}else{
+						hours = parseInt(hour_string[0]);
+						min= parseInt(hour_string[1]);
+					}
+					window.location.reload();
+					//var final_hours = parseFloat(hours+"."+min);
+						
+					//$("#booked-hour-main_"+emp_data[1]).val(final_hours);
+					//$("#booked-hour-main_"+emp_data[1]).mask('00:00');
+		        },
+		        error: function () {
+		        	alert("alertSomethingWentWrong");
+		        }
+			});
+		}else{
+			return false;
+		}
+	});
+	
+	jQuery(".edit-timesheet-book-time").live("click",function(){
+		var _this = $(this);
+		var data = $(this).attr('data');
+		var id = $(this).attr('id');		
+		var c_val = AllTrim($(_this).prev().html());
+		$(_this).prev().html("");
+		$(_this).prev().append('<input type="text" style="width:70px;margin: -3px 0; padding: 2px;" id="" class="user_hour" name="" maxlength="5"  value="'+c_val+'">');
+		$(_this).removeClass("edit-icon");
+		$(_this).removeClass("edit-timesheet-book-time");
+		$(_this).addClass("edit-hours");
+		$(_this).addClass("edit-hours-book-time");		
+		$(".user_hour").mask('00:00');
+	});
+	
+	jQuery(".edit-hours-book-time").live("click",function(){
+		var _this = $(this);		
+		var c_date = $(_this).prev().prev().prev().html();
+		var c_date_data = c_date.split("-");
+		var c_date_data_new = c_date_data[2]+"-"+c_date_data[1]+"-"+c_date_data[0];	
+		var emp = $(_this).parent().parent().parent().parent().attr("id");
+		var emp_data = emp.split("_");	
+		var allocation_id = $(_this).parent().parent().parent().parent().parent().find("#allocation-id").html();
+		var booked_hr = AllTrim($("#available_hours_"+emp_data[1]+"_"+allocation_id).html());
+		var data = $(this).attr('data');
+		var id = $(this).attr('id');
+		var url = "";
+		var c_val = $(_this).prev().children().val();
+		if(validateMinutes(c_val)){
+		
+			if (data=="int"){
+			url = "/updateTimesheetBookTime?id="+id+"&data=int&c_val="+c_val+"&c_date_data_new="+c_date_data_new+"&user="+emp_data[1];
+			}
+			if (data=="ext"){
+				url = "/updateTimesheetBookTime?id="+id+"&data=ext&c_val="+c_val+"&c_date_data_new="+c_date_data_new+"&user="+emp_data[1];
+			}
+			jQuery.ajax({
+				url: url,
+				cache:false,
+				tye:"GET",
+				dataType : "html",
+				success: function (data) {		
+				  var _json = JSON.parse(data);
+					if(_json.status == "success"){
+						$(_this).prev().html("");
+						$(_this).prev().html(c_val);
+						$(_this).removeClass("edit-hours");
+						$(_this).removeClass("edit-hours-book-time");
+						$(_this).addClass("edit-icon");
+						$(_this).addClass("edit-timesheet-book-time");
+						var u_hr = 0;
+						$('#emp_'+emp_data[1]).find(".u_hours").each(function() {
+							if($(this).html()!=""){
+								
+								u_hr = u_hr + parseFloat($(this).html().replace(":","."));
+							}
+						});
+						//$("#available_hours_"+emp_data[1]+"_"+allocation_id).html(u_hr);
+						var min = 0;
+						var hours = 0;
+						var new_hr= ""+u_hr 
+						var hour_string = new_hr.split(".");
+					@*	if( parseInt(hour_string[1]) > 59){
+							min = parseInt(hour_string[1]) - 60
+							hours= parseInt(hour_string[0]) + 1 
+						}else{
+							hours = parseInt(hour_string[0]);
+							min= parseInt(hour_string[1]);
+						}
+						var final_hours = parseFloat(hours+"."+min)*@
+						//alert(emp_data[1]);
+							window.location.reload();
+						//$("#booked-hour-main_"+emp_data[1]).val(_json.internal_user_total_hrs);
+						//$("#booked-hour-main_"+emp_data[1]).mask('00:00');
+					}	
+					else{
+						alert("Horas debe ser mayor que 0 y menor que 24 por d�a.");
+					}
+		        },
+		        error: function () {
+		        	alert("alertSomethingWentWrong");
+		        }
+			});	
+		}else{
+			alert("Please enter valid minutes.");
+		}
+		
+		
+						
+	});	
+});	
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+@(employees:Seq[Office])
+@import services._
+<div class="dash_detail_1_left" >
+      <div class="dash_left_detail_1_main ">
+	      @if(employees.size>0){
+	          @for( (emp, index)  <- employees.zipWithIndex){
+		        <a href="/employee/@emp.uid" >
+		          <span class=" @if(index%2==0){dash_left_detail_1_data}else{dash_left_detail_1_data2} employee-data">
+			           <span class="dash_left_detail_1_data-2 push-left10px">@UserService.findUserDetailsById(emp.uid.toLong).get.first_name&nbsp;@UserService.findUserDetailsById(emp.uid.toLong).get.last_name </span>
+			           <span class=" push-left10px" style="text-decoration: none;color:#6B6B6B;font-weight: bold;">
+							@if(!emp.department.isEmpty){
+								@if(!DepartmentService.findDepartmentById(emp.department.get).isEmpty){
+									@DepartmentService.findDepartmentById(emp.department.get).get.department
+								} 
+							}
+		 			   </span>
+			            @*<span class=" push-left10px" style="text-decoration: none;color:#6B6B6B;font-weight: bold;">@emp.joining_date.format("dd-MM-yyyy")</span>*@
+			      </span>
+		        </a>
+		      }
+		  }else{
+		  	<div class="no-user">No Records Available... </div>
+		  }
+  	  </div>
+</div>

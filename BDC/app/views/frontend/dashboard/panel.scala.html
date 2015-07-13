@@ -1,0 +1,92 @@
+@()(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+
+@frontend.layout()
+<style type="text/css" media="screen">
+    th.ui-th-column div{
+        white-space:normal !important;
+        height:auto !important;
+        padding:2px;
+    }
+</style>
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="panel_page">
+
+		<div class="product_main">
+		  	<div class="product_detail_1">
+
+				<table id="jqGrid"></table>
+				<div id="jqGridPager"></div>
+				
+			</div>
+		</div>
+	  	@frontend.footer()
+	</section>
+		
+		
+</div>
+@frontend.headerScripts()
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
+<script src="@routes.Assets.at("frontend/jqgrid/js/i18n/grid.locale-es.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#jqGrid").jqGrid({
+        url: '/panel',
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+            { label: 'División', name: 'division', key: true, width: 300 },
+            { label: 'Programa', name: 'programa', width: 250 },
+            { label: 'Responsable', name: 'responsable', width: 150 },
+            { label: 'Fecha Inicio', name: 'fecini', width: 150 },
+            { label: 'Fecha Comprometida', name: 'feccom', width: 150 },
+            { label: '% Avance', name: 'pai', key: true, width: 120 },
+            { label: '% Plan', name: 'pae', width: 100 },
+            { label: 'SPI', name: 'spi', width: 50 },
+            { label: 'CPI', name: 'cpi', width: 50 },
+            { label: 'Inversión', name: 'inversion', width: 150 },  
+            { label: 'Gasto', name: 'gasto', width: 150 }                      
+        ],
+		viewrecords: true,
+		regional : "es",
+        width: 1050,
+        height: 450,
+        rowNum: 20,
+        pager: "#jqGridPager",
+        grouping: true,
+        groupingView: {
+            groupField: ["division"],
+            groupColumnShow: [true],
+            groupText: ["<b>{0}</b>"],
+            groupOrder: ["asc"],
+            groupSummary: [false],
+            groupCollapse: false
+            
+        }
+    });	
+	$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search: false});
+	$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
+	       caption:"",
+	       title: "Exportar a Excel", 
+	       onClickButton : function () { 
+	    	   $("#jqGrid").jqGrid('excelExport',{"url":"getExcel"});
+	       } 
+	});
+});
+
+
+</script>
+</body>
+</html>

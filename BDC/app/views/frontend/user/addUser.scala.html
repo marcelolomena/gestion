@@ -1,0 +1,180 @@
+@(username:String,profileIdMap: java.util.HashMap[String,String],profileCodeMap: java.util.HashMap[String,String], divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap :java.util.HashMap[String,String],userForm :play.api.data.Form[UserMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import util.Random
+
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		<div class="" id="new_program_header">
+				<p>@Messages("addUser.addNewEmpDetails")</p>
+		</div>
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;background: #fff;margin-top: 0;">
+			<div id="user-header" class="">
+				 @form(action = controllers.Frontend.routes.User.saveUser, 'id->"myUser") { 
+              	    <input type="hidden" id="added_date" name="added_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
+              	   <input type="hidden" id="status" name="status" value="1" />
+               
+               	 @select(userForm("office.division"),
+              	 	options(divisionMap), 
+              	 	'class -> "input-xlarge ", 
+              	 	'_label -> Messages("addUser.division"),
+              	 		'name->"division",
+              	 	'_default -> Messages("addUser.placeholder.division")
+              	 	)
+              	 	
+              	 	
+	             @select(userForm("office.gerencia"),
+	             	options(gerenciasMap),
+	             	'class -> "input-xlarge ", 
+	             	'_label -> Messages("addUser.gerencia"),
+	             	'name->"gerencia",
+	             	'_default -> Messages("addUser.placeholder.gerencia") 
+	             	)
+	             	
+                 @select(userForm("office.department"),
+                 	options(departmentsMap),
+                 	'name->"department",
+                 	'class->"input-xlarge ",
+                 	'_label->Messages("addUser.department"),
+                 	'_default -> Messages("addUser.placeholder.department") 
+                 	)
+   
+   
+                 @inputText(userForm("first_name"),
+                 	'id->"first_name",
+                 	'name->"first_name",
+                 	'class->"span4",
+                 	'_label->Messages("addUser.first_name"),
+                 	'placeholder ->Messages("addUser.placeholder.first_name")
+                 	)
+
+                 @inputText(userForm("last_name"),
+                 	'id->"last_name",
+                 	'name->"last_name",
+                 	'class->"span4",
+                 	'_label->Messages("addUser.last_name"),
+                 	'placeholder ->Messages("addUser.placeholder.last_name")
+                 	)
+                 	
+                 @inputText(userForm("uname"),
+                 	'id->"uname",
+                 	'name->"uname",
+                 	'class->"span4",
+                 	'_label->Messages("addUser.uname"),
+                 	'placeholder ->Messages("addUser.placeholder.uname")
+                 	)
+                 	
+                 @inputPassword(userForm("password"),
+                 	'id->"password",
+                 	'name->"password",
+                 	'class->"span4 ",
+                 	'_label-> Messages("addUser.password"),
+                 	'placeholder ->Messages("addUser.placeholder.password")
+                 	)
+                 	
+              @*  @inputText(userForm("rut_number"),
+                 	'id->"rut_number",
+                 	'name->"rut_number",
+                 	'class->"span4",
+                 	'_label->Messages("addUser.rut_number"),
+                 	'placeholder ->Messages("addUser.placeholder.rut_number")
+                 	)
+                 	
+                 @inputText(userForm("contact_number"),
+                 	'id->"contact_number",
+                 	'name->"contact_number",
+                 	'class->"span4",
+                 	'_label->Messages("addUser.contact_number"),
+                 	'placeholder ->Messages("addUser.placeholder.contact_number")
+                 	)*@
+                 	
+                 	 
+                 @inputText(userForm("email"),
+                 	'id->"email",'name->"email",
+                 	'class->"span4",
+                 	'_label->Messages("addUser.email"),
+                 	'placeholder ->Messages("addUser.placeholder.email")
+                 	)
+                 
+                 <input type="hidden" id="birth_date" name="birth_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
+                 <input type="hidden" id="office_number" name="office.office_number" value="9999999999" />
+                 <input type="hidden" id="office_number" name="office.joining_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
+                 <input type="hidden" id="rut_number" name="rut_number" value="Default_RUT" />
+                 <input type="hidden" id="contact_number" name="contact_number" value="9999999999" />
+        
+                @*   @inputText(userForm("birth_date"),'id->"birth_date",'name->"birth_date",'class->"span4 datepicker",'_label->Messages("addUser.birth_date"),'placeholder ->Messages("addUser.placeholder.birth_date"))
+                 @inputText(userForm("office.office_number"),'id->"office_number",'name->"office_number",'class->"span4",'_label->Messages("addUser.office_number"),'placeholder ->Messages("addUser.placeholder.office_number"))  
+                 @inputText(userForm("office.joining_date"),'id->"joining_date",'name->"joining_date",'class->"span4 datepicker",'_label->Messages("addUser.joining_date"),'placeholder ->Messages("addUser.placeholder.joining_date") )   *@
+                
+                 @inputText(userForm("office.rate_hour"),'id->"rate_hour",'name->"rate_hour",'class->"span4",'_label->Messages("addUser.rate_hour"),'placeholder ->Messages("addUser.placeholder.rate_hour") )  
+                 @select(userForm("office.isadmin"),options(profileIdMap),'id->"isAdmin",'name->"isAdmin",'class->"input-xlarge ",'_label->Messages("addUser.isAdmin"))
+                 
+                 @select(userForm("office.user_type"),options("1"->"Permanent","2"->"Contractor","3"->"Sub-Contractor","4"->"Software-Factory"),'id->"user_type",'name->"user_type",'class->"input-xlarge ",'_label->Messages("addUser.user_type"))
+                 @inputText(userForm("office.work_hours"), 'id->"work_hours",'name->"work_hours",'class->"span4",'_label->Messages("addUser.work_hours"),'placeholder ->Messages("addUser.placeholder.work_hours"))  
+                 @select(userForm("office.bonus_app"),options("0"->Messages("optionvalue.no"), "1"->Messages("optionvalue.yes")),'id->"bonus_app",'name->"bonus_app",'class->"input-xlarge ",'_label->Messages("addUser.bonus_app"),'placeholder ->Messages("addUser.placeholder.bonus_app"))
+                <div class="width_full push-top20px"> 
+                	<span class="left" style="margin-left: 215px;"><input class="btn pull-left save-user" value="@Messages("button.save")" type="submit"/></span>
+                	<span class="left" style="margin-left: 135px;"><a href="javascript:history.back(-1);" class="btn push-left20px cancel-user pull-left">@Messages("button.cancel")</a></span>
+               	</div>
+                <div class="clearfix"></div> 
+               <div class="display-none">
+               @select(userForm("office.user_profile"),options(profileCodeMap),'id->"user_profile",'name->"user_profile",'class->"input-xlarge ",'_label-> "User Profile")
+               </div>
+            }
+              
+			</div>
+    		<div>
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$("#isAdmin").on("change",renderUserProfile);	
+		
+		$("#office_division").live("change", renderUserGerenciaList);
+		$("#office_gerencia").live("change", renderUserDepartmentList);
+		$("#birth_date").datepicker({
+			buttonImageOnly : true,
+			dateFormat : "dd-mm-yy",
+			changeMonth : true,
+			changeYear : true
+		});
+
+		$("#joining_date").datepicker({
+			buttonImageOnly : true,
+			dateFormat : "dd-mm-yy",
+			changeMonth : true,
+			changeYear : true
+		});
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+@(id:String,riskForm : Form[RiskManagement],usersMap:java.util.HashMap[String,String],riskcategoryMap:java.util.HashMap[String,String],subCategoryMap:java.util.HashMap[String,String],parent_id:String,parent_type:Integer, progrm: Option[ProgramDates], selectedSubCategory : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+@import utils._
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@*@if(UserAuthentication.IsAuthenticatedAdmin(session.get("utype").get)){
+	<div class="width_full" id="new-auth" style="border:1px solid red;">hello</div>
+}*@
+@frontend.header()
+<section class="slider" id="program-details">
+	<div class="width_full" >
+		<h3 id="productNm " class="parent-new-h3" style="width:100%; padding:0px;">
+    		<span class="parent-icon"> &#60; </span>
+    		@*<a href="@controllers.Frontend.routes.Program.riskManagement(parent_id, parent_type)" style="font-weight: bold"><span class="left">Volver</span></a>*@
+    		@{
+    			parent_type.intValue() match{
+    				case 0 =>
+    					Html("<a href='/program-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+  	  				case 1=>
+  	  					Html("<a href='/project-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				case 2=>
+    					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				case 3=>
+    					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    			}
+   			 }
+   		</h3>
+   		
+   		<div id="new_program_header">
+				<p> 
+					<span class="title-head"> @Messages("editrisk.title") </span>
+				</p>
+			</div>
+ 	</div>
+	<div class="product_main">
+	
+		<div class="width_full">
+			<input type="hidden" id="program_start_date" value="@progrm.get.initiation_planned_date.format("dd-MM-yyyy")"/>
+			<input type="hidden" id="program_end_date" value="@progrm.get.release_date.format("dd-MM-yyyy")"/>
+			@form(action = controllers.Frontend.routes.Risks.updateRisk(id), 'id->"risk-management-form" , 'enctype -> "multipart/form-data") {
+				<div class="left width_full">
+					<div class="left" style="width:50%">
+			      	
+			      		@inputText(
+			                riskForm("name"),
+			                'class -> "span5", 
+			                '_label -> Messages("addNewRisk.name"),
+			                'placeholder -> Messages("addNewRisk.nameHint")
+			                
+			            )
+			         </div>
+				
+			      	<div class="left" style="width:50%">
+			      	
+			      		@inputText(
+			                riskForm("cause"),
+			                'class -> "span5", 
+			                '_label -> Messages("addNewRisk.cause"),
+			                'placeholder -> Messages("addNewRisk.causeHint")
+			                
+			            )
+			         </div>
+		         </div>
+		         
+		         <div class="left width_full">
+			      		<div class="left" style="width:50%">
+			      	
+				      		@inputText(
+				                riskForm("event"),
+				                'class -> "span5", 
+				                '_label -> Messages("addNewRisk.event"),
+				                'placeholder -> Messages("addNewRisk.eventHint")
+				                
+				            )
+			         </div>
+			         
+			         <div class="left" style="width:50%">
+			      	
+			      		@inputText(
+			                riskForm("imapct"),
+			                'class -> "span5", 
+			                '_label -> Messages("addNewRisk.impact"),
+			                'placeholder -> Messages("addNewRisk.impactHint")
+			                
+			            )
+		         	</div>
+		         
+		         </div>
+		         
+		        
+		         
+		         
+		          <div class="left width_full">
+		      		<div class="right width-pr50 padding-top-3px" >
+			      		@select(
+				         riskForm("probablity_of_occurence"),
+				         options("0"->"Alto", "1"->"Mediano","2"->"Bajo"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.occurenceProbability"),
+				          '_default -> Messages("addNewRisk.occurenceProbabilityHint")
+				      )
+		            </div>
+		            
+		            <div class="right width-pr50 padding-top-3px" >
+			      		@select(
+				         riskForm("quantification"),
+				         options("0"->"Alto", "1"->"Mediano","2"->"Bajo"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.quantification"),
+				          '_default -> Messages("addNewRisk.quantificationHint")
+				      )
+		            </div>
+		         </div>
+		         
+		         
+		          <div class="left width_full">
+		      		<div class="right width-pr50 padding-top-3px" >
+			      		@select(
+				         riskForm("strategic_reply"),
+				         options("0"->"Acceptar", "1"->"Mitgar","2"->"Evitar", "3" -> "Transerir"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.strategicReply"),
+				          '_default -> Messages("addNewRisk.strategicReplyHint")
+				      )
+		            </div>
+		            
+		            <div class="right width-pr50 padding-top-3px" >
+		            
+		            @select(
+				         riskForm("responsible"),
+				          options(usersMap),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.responsible"),
+				          '_default -> Messages("addNewRisk.responsibleHint")
+				      )
+			      		
+		            </div>
+		         </div>
+		         
+		         <div class="left width_full">
+		        	 @textarea(
+		                riskForm("configuration_plan"),
+		                'class -> "span5", 
+		                '_label ->  Messages("addNewRisk.replyAction"),
+		                'placeholder ->  Messages("addNewRisk.replyActionHint"),
+					    'rows -> 7,
+					    'cols -> 60
+	            	)
+				  </div>
+				  
+				  
+		         <div class="left width_full">
+		        	 @textarea(
+		                riskForm("reply_action"),
+		                'class -> "span5", 
+		                '_label ->  Messages("addNewRisk.configurationPlan"),
+		                'placeholder ->  Messages("addNewRisk.configurationPlanHint"),
+					    'rows -> 7,
+					    'cols -> 60
+	            	)
+				  </div>
+		         
+		         <div class="left width_full">
+			       <div class="left width-pr50 padding-top-3px" >
+			      		@select(
+				         riskForm("variable_imapact"),
+				         options("0"->"Plazo", "1"->"Presupuesto","2"->"Alcance","3"->"Calidad", "4"->"Plazo/Presupuesto","5"->"Plazo/Alcance","6"->"Plazo/Alcance/Presupuesto", "7"->"Plazo/Calidad","8"->"Presupuesto/Calidad","9"->"Alcance/Calidad","10"->"Plazo/Presupuesto/Alcance/CalidadPlazo/Presupuesto/Calidad"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.variableImpact")
+				         
+				      )
+		            </div>
+				      <div class="right width-pr50 padding-top-3px" >
+				      		@inputText(
+		                riskForm("risk_clouser_date"),
+		                'class -> "span6", 
+		                '_label -> Messages("addNewRisk.clouserDate"),
+		                'placeholder -> Messages("addNewRisk.clouserDateHint")
+		                
+		            )
+				      
+				      
+		            </div>
+		            
+		         </div>
+			
+				
+		 		<div class="left width_full">
+		      
+		            <div class="left width-pr50 padding-top-3px" >
+			         		@select(
+				         riskForm("risk_category"),
+				         options(riskcategoryMap),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.riskCategory"),
+				         '_default -> Messages("addNewRisk.riskCategoryHint")
+				         
+				      )
+		            </div>
+		            		<div class="right width-pr50 padding-top-3px" >
+				      		@select(
+				         riskForm("sub_category"),
+				         options(subCategoryMap),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addrisk.subcategoryrisk"),
+				         '_default -> Messages("addrisk.selectsubcategoryrisk")
+				         
+				      )
+		            </div>
+		         </div>
+		          <div class="left width_full">
+		            <div class="left width-pr50 padding-top-3px" >
+			     	 @if(parent_type==0 || parent_type==1){
+					   @inputText(
+					         riskForm("document_category"),
+					         'type->"hidden",
+					         'value->""
+					      )
+					}else{
+							<dl id="upload-document">
+								<dt>
+		           					@if(!riskForm.data.get("document_category").isEmpty && !riskForm.data.get("document_category").get.trim().isEmpty()){
+		           						<a target="_blank" href='/documents/@riskForm.data.get("document_category").get' id="document_category_1" name="document_category_1" style="color: #000000;font-weight: bold;">Descargar Documento</a>
+		           					} else{
+										NA
+									} 
+	           					</dt>
+							<dt><label for="document_category"> @Messages("uploaddocument.uploaddocument")</label></dt>
+	  							<dt>
+	  								<dd>
+	  									<input id="document_category" name="document_category" type="file">
+									</dd>
+								</dt>
+							</dl>		           			
+					}
+		            </div>
+		         </div>
+		        <dl id="member_id_search_field " class=" display-none">
+	   				<dt>
+	   					<label for="member_id_search"> @Messages("newmember.member")</label>
+	   				</dt>
+		    		<dd>
+		   			 <input type="text" value="" id="member_id_search" name="member_id_search" placeholder="Search Member"/>	
+					</dd>
+		    	</dl>
+	      		<div class="width_full" style="text-align:center;">
+			       	<span class=""><input class="btn  form-button" value="@Messages("button.save")" type="submit"/></span>
+			       	<span class="" style="margin-left:30px;"> <input id="done-risk" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+	          	</div>
+	          		<input type="hidden" value="@selectedSubCategory" name="selectedSubCategory" id="selectedSubCategory" />
+			}
+		</div>
+	</div>
+	@frontend.footer()
+	<div class="loader"><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>
+</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		//minDate : "today",
+		$('#document_category_field').hide();
+		var minDate = $("#program_start_date").val();
+		var maxDate = $("#program_end_date").val();
+		
+		$("#risk_clouser_date").datepicker({
+				buttonImageOnly : true,
+				dateFormat : "dd-mm-yy",
+				minDate : minDate,
+				maxDate : maxDate,
+				changeMonth : true,
+				changeYear : true
+		});
+	
+		$('#done-risk').on('click',function() {
+			   window.location.href='@controllers.Frontend.routes.Risks.riskManagement(parent_id, parent_type)';
+		});
+		
+		var alreadySelectedSubCategory = $("#selectedSubCategory").val();
+		$("#risk_category").on("change",callAlert);
+		var selectedRiskCategory = $("#risk_category").val();
+		if(selectedRiskCategory != ""){
+			 var url = "/risk-sub-category/" + selectedRiskCategory;
+			    $.ajax({
+					url : url,
+					type : "GET",
+					cache : false,
+					dataType : "html",
+					async : false,
+					success : function(data) {
+						$("#sub_category").html(data);
+						if(alreadySelectedSubCategory != ""){
+							$("#sub_category option[value='" + alreadySelectedSubCategory +"']").attr("selected", "selected");
+						}
+					}
+				});
+		}
+	});
+	function callAlert(){
+	    var selectedCategoryId = $(this).val();
+	    if(selectedCategoryId == ""){
+	    	var htmlOption = "<option> Select Sub Category</option>"
+	    	$("#sub_category").html(htmlOption);
+	    }else{
+	    
+		    var url = "/risk-sub-category/" + selectedCategoryId;
+		    $.ajax({
+				url : url,
+				type : "GET",
+				cache : false,
+				dataType : "html",
+				async : false,
+				success : function(data) {
+					$("#sub_category").html(data);
+				}
+			});
+	    }
+	}
+</script>
+</body>
+</html>

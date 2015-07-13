@@ -1,0 +1,101 @@
+@(programs: Seq[ProgramMaster])(implicit lang: Lang)
+@import services._
+@import java.util.Calendar
+@import utils._
+@import java.text.DecimalFormat; var df = new DecimalFormat("00"); var df2 = new DecimalFormat("0.0");
+<table id="dashboard-report">
+	<tr class="header">
+		<th class="program-name">Programas</th>
+		<th class="responsible">Responsable </th>
+		<th class="initiaition-date">Fecha Inicio</th>
+		<th class="clouse-date">Fecha Comprometida</th>
+		<th class="clouse-date">% Avance</th>
+		<th class="planned-date">@Messages("dashboard.plannedpercentage") </th>
+		<th class="spi">SPI</th>
+		<th class="total-sap-invest">Inversi�n</th>
+		<th class="total-sap-invest" style="width:50px !">Gasto</th>
+		<th class="calender-coloum" colspan="@(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH))">@utils.DateTime.getMonthName(1)</th>
+ 		<th class="calender-coloum" colspan="@utils.DateTime.getMaxDaysForMonth(2)">@utils.DateTime.getMonthName(2) </th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getMaxDaysForMonth(3)">@utils.DateTime.getMonthName(3)</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getMaxDaysForMonth(4)">@utils.DateTime.getMonthName(4)</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getMaxDaysForMonth(5)">@utils.DateTime.getMonthName(5)</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getMaxDaysForMonth(6)">@utils.DateTime.getMonthName(6)</th>
+  		
+	</tr>
+	
+				@for((p, index) <- programs.zipWithIndex){
+			<tr class="@if(index%2==0){report-even}else{report-odd}">
+				<td class="program-name show-projects"  id="p_@p.program_id" style="vertical-align: top">
+					@if(p.program_name.length() > 25){
+						@{p.program_name.substring(0, 25)} ...
+					}else{
+						@p.program_name
+					}
+				</td>
+				<td class="responsible" style="vertical-align: top">
+			 			@UserService.findUser(p.demand_manager.toString).get.first_name.substring(0, 1) &nbsp;@UserService.findUser(p.demand_manager.toString).get.last_name
+	    	  	</td>
+				<td class="initiaition-date" style="vertical-align: top">@Html(ProgramService.findInitiationDateBaslineChange(p.program_id.get.toString))</td>
+				<td class="clouse-date" style="vertical-align: top">@Html(ProgramService.findClouseDateBaslineChange(p.program_id.get.toString))</td>
+				<td class="clouse-date" style="vertical-align: top">@p.completion_percentage%</td>
+				<td class="planned-date" style="vertical-align: top">@p.completion_percentage%</td>
+				<td class="spi" style="vertical-align: top">
+					@if(!EarnValueService.getEarnCalculationForProgram(p.program_id.get.toString).isEmpty){
+						@df2.format(EarnValueService.getEarnCalculationForProgram(p.program_id.get.toString).get.scheduled_perforamce_index.get) 
+					}else{
+						0.0
+					}
+				</td>
+				<td class="total-sap-invest" style="vertical-align: top">@SAPServices.calculateTotalSAPInvestment(p.program_id.toString())</td>
+				<td class="total-sap-invest" style="vertical-align: top">@SAPServices.calculateTotalSAPExpenditure(p.program_id.toString())</td>
+				
+	@*			@for(a <- 0 until (Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH))){
+					<td class="calender-coloum  @utils.DateTime.getYearNumber(1)" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-@{utils.DateTime.getMonthNumber(1)}-@{utils.DateTime.getYearNumber(1)}">&nbsp; </td>
+        		}
+				@for(a <- 0 until utils.DateTime.getMaxDaysForMonth(2) ){
+        			<td class="calender-coloum" id="@{p.program_id}-@{df.format(a+1)}-@{utils.DateTime.getMonthNumber(2)}-@{utils.DateTime.getYearNumber(2)}" style="vertical-align: top"> &nbsp; </td>
+	    		}
+				@for(a <- 0 until utils.DateTime.getMaxDaysForMonth(3)){
+        			<td class="calender-coloum" id="@{p.program_id}-@{df.format(a+1)}-@{utils.DateTime.getMonthNumber(3)}-@{utils.DateTime.getYearNumber(3)}" style="vertical-align: top">&nbsp; </td>
+	    		}
+	    		@for(a <- 0 until utils.DateTime.getMaxDaysForMonth(4)){
+        			<td class="calender-coloum" id="@{p.program_id}-@{df.format(a+1)}-@{utils.DateTime.getMonthNumber(4)}-@{utils.DateTime.getYearNumber(4)}" style="vertical-align: top"> &nbsp;</td>
+	    		}
+	    		@for(a <- 0 until utils.DateTime.getMaxDaysForMonth(5)){
+        			<td class="calender-coloum" id="@{p.program_id}-@{df.format(a+1)}-@{utils.DateTime.getMonthNumber(5)}-@{utils.DateTime.getYearNumber(5)}" style="vertical-align: top">&nbsp; </td>
+	    		}
+	    		@for(a <- 0 until utils.DateTime.getMaxDaysForMonth(6)){
+        			<td class="calender-coloum" id="@{p.program_id}-@{df.format(a+1)}-@{utils.DateTime.getMonthNumber(6)}-@{utils.DateTime.getYearNumber(6)}" style="vertical-align: top">&nbsp;</td>
+	    		}		*@
+			</tr>
+			
+			}	
+			</table>
+			
+			<script type="text/javascript">
+	$(document).ready(function() {
+
+		$('#dashboard-report').find('.clouse-date td').each(function() {
+
+			var obj = $(this).html();
+			var id = $(this).attr("id");
+			var color = "";
+			if ($(this).hasClass("text-strike-through")) {
+		
+			} else {
+				
+			}
+			if($(this).parent().prev().html() != null){
+				
+				color = "#F25959"
+			}else{
+				color = "#1DEF1A"
+			}
+			if($(this).parent().next().html() == null){
+				$("#" + id + "-" + obj).css("background", color);
+				$("#" + id + "-" + obj).html("X");
+			}
+
+		});
+	});
+</script>

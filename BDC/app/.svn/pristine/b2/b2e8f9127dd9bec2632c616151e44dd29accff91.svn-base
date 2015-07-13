@@ -1,0 +1,35 @@
+@(risk_id:String)(implicit request:play.api.mvc.RequestHeader,lang:Lang)
+@import services._
+<ul id="risk_list">
+	<li class="top-header">
+		<span class="role header" ">@Messages("booktime.date")</span>
+		<span class="member header">@Messages("programdetails.name")</span>
+		<span class="member header">@Messages("programdetails.cause")</span>
+		<span class="member header">@Messages("programdetails.event")</span>
+		<span class="member header">@Messages("programdetails.impact")</span>
+		<span class="member header">@Messages("risklisting.riskstate")</span>
+		<span class="active header">@Messages("program.action")</span>
+	</li>
+	@for( (p,index) <- RiskService.findRiskIssueList(risk_id).zipWithIndex){
+	<li class="@if(index%2==0){even_row}else{odd_row} @p.id.toString">	
+		<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@{new java.text.SimpleDateFormat("dd-MM-yyyy").format(p.issue_date)}</span>
+		<span class="member">@p.title </span>
+		<span class="member">@p.category </span>
+		<span class="member">@p.members_involved</span>
+		<span class="member">@p.priority </span>
+		<span class="member">
+			@if(!p.action_plan.isEmpty){
+				@p.action_plan.get 	
+			}else{
+				&nbsp;
+			}
+		  
+		</span>
+		<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
+		  	  	@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
+		<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
+		}
+	</li>
+	}
+
+</ul>

@@ -1,0 +1,286 @@
+@(taskForm: Form[GenericTask],id:String,desipline :java.util.HashMap[String, String], stagesMap :java.util.HashMap[String, String],userRoleMap :java.util.HashMap[String, String],deliverablesMap :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import util.Random
+@import java.util.Date
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+			<div id="new_program_header" >
+				<p> @Messages("maintenance.editgenerictask")</p>
+			</div>
+   		<div class="width_full">
+   		 	<input type="hidden" id="project_start" name="project_start" value="" />
+      		<input type="hidden" id="project_end" name="project_end" value="" />
+    			@form(action = controllers.Frontend.routes.Generics.updateGenericTask(id),  'id->"new-predefined-task-form") { 
+		      	  <input type="hidden" id="status" name="status" value="1" />
+		      	  <input type="hidden" id="task_details.predefined_task_id" name="task_details.predefined_task_id" value="@taskForm.data.get("task_details.predefined_task_id")" />
+		      	  <input type="hidden" id="task_details.is_active" name="task_details.is_active" value="@taskForm.data.get("task_details.is_active")" />
+		          <input type="hidden" id="task_mode" name="task_mode" value="@taskForm.data.get("task_mode")" />
+		          <input id="task_details.task_code" name="task_details.task_code" type="hidden" class="span4 " value="SYS@Random.nextInt(9999)" readonly="readonly" style="background:#E3EAED;">
+		   	  	  <input id="plan_start_date" name="plan_start_date" value="@{new Date().format("dd-MM-yyyy")}" type="hidden" class="span4 datepicker" />
+		    	  <input id="plan_end_date" name="plan_end_date" value="@{new Date().format("dd-MM-yyyy")}" type="hidden" class="span4 datepicker"/>
+		    	  <input id="plan_time" name="plan_time" type="hidden" class="span4 " value="0"  maxlength="5">
+		    	  <input id="completion_percentage" name="completion_percentage" type="hidden" class="span4 " value="0"  maxlength="5">
+		    	  <input id="task_status" name="task_status" type="hidden" class="span4 " value="0"  maxlength="5">
+		    	  <input id="task_owner" name="task_owner" type="hidden" class="span4 " value="1"  maxlength="5">
+		    	   
+				   	@select(
+				           	taskForm("task_details.task_type"),
+				       		options("1"->"Generic Task","2"->"Key Task","3"->"Milestone"),
+							'class -> "input-xlarge ",
+							'_label -> Messages("maintenance.tasktype"),
+							'_default -> Messages("maintenance.selecttasktype") )
+								
+								
+				
+				      @*<label>Task Code</label>*@      
+				       
+				        
+				    	@inputText(
+				               taskForm("title"),
+				               'class -> "span4", 
+				                'placeholder -> "Enter Task Title",
+				               '_label ->Messages("maintenance.tasktitle"),
+				               'maxlength -> "60"
+				            )
+								            
+				      @*<label>Title</label>
+				        <input id="title" name="title" type="text" class="span4"> 
+				     
+				           
+				            
+					<label class="display-none">Country</label>
+					 <input id="country" name="country" type="text" class="span4 display-none" value="Chile"> 
+				  	
+				           
+				      <label class="display-none">State</label>
+				       <input id="state" name="state" type="text" class="span4 display-none" value="Maule"> 
+				       
+				        
+				      <label class="display-none">City</label>
+				       <input id="city" name="city" type="text" class="span4 display-none" value="Rancagua">
+				       *@
+				       
+				      
+				       @*@select(
+				            	taskForm("task_depend"),
+				       			options(dependentTasks),
+								'class -> "input-xlarge ",
+								'_label -> "Dependencies",
+								'_default -> "--- No Dependencies ---")
+								
+				       @inputText(
+				               taskForm("plan_start_date"),
+				               'class -> "span4", 
+				                'placeholder -> "Enter Start Date",
+				               '_label -> "Planned Start Date (dd-mm-yyyy)"
+				            )
+								
+						@inputText(
+				               taskForm("plan_end_date"),
+				               'class -> "span4", 
+				                'placeholder -> "Enter End Date",
+				               '_label -> "Planned End Date (dd-mm-yyyy)"
+				            )*@
+				              
+				     @* <label>Planned Start Date (Approx)( dd-mm-yyyy )</label>
+				       <input id="plan_start_date" name="plan_start_date" value="" type="text" class="span4 datepicker" />
+				        
+				       <label>Planned End Date (Approx)( dd-mm-yyyy )</label>
+				       <input id="plan_end_date" name="plan_end_date" value="" type="text" class="span4 datepicker"/>*@ 
+				
+				        @*
+				       <label>Completion Date (Approx)( dd - MM - yyyy )</label>
+				       <input id="milestone_release_date" name="milestone_release_date" value="" type="text" class="span4 datepicker" readonly="readonly" /> 
+				        *@ 
+				      
+				      	@textarea(
+				               taskForm("description"),
+				               'class -> "span4", 
+				               '_label -> Messages("maintenance.description"),
+				               'placeholder ->  Messages("maintenance.enterdescription"),
+							    'rows -> 5,
+							    'cols -> 60
+				           )
+								            
+				       @*<label>Task Description</label>
+				       <textarea id="description" name="description" value="Smith" rows="3" class="input-xlarge span6"></textarea>*@ 
+				        
+				       @*<label >Plan Time (In Hours)</label>
+				       <input id="plan_time" name="plan_time" type="number" class="span4 " value=""  maxlength="5"> 
+				        @inputText(
+				               taskForm("plan_time"),
+				               'class -> "span4", 
+				               'style-> "margin-top: 1px",
+				                'placeholder -> "Enter Plan Time",
+				               '_label -> "Plan Time (In Hours)",
+				               'maxlength ->"5"
+				            )
+				           
+				        
+				        
+				         @select(
+					         taskForm("task_status"),
+					         options("0"->"Green", "1"->"Amber","2"->"Red"),
+					         'class -> "input-xlarge ",
+					         '_label -> "Status"
+					     
+					      ) *@ 
+					   
+					      
+				       @*<span class="width_full" style="   margin-top: 9px;">
+				       <label>Status</label>
+				       <select name="milestone_status" id="milestone_status" class="input-xlarge ">
+				     	  <option value="0" selected="selected" >Green</option>
+				     	  <option value="1">Amber</option>
+				           <option value="2">Red</option>
+				         
+				       </select> 
+				       
+				       </span>*@
+				           @inputText(
+					               taskForm("remark"),
+					               'class -> "span4 ", 
+					               '_label ->  Messages("maintenance.remark"),
+					               'placeholder -> Messages("maintenance.entertaskremark"),
+							       'maxlength -> "100"
+				           )
+				     
+				     
+				            @select(
+				            	taskForm("task_discipline"),
+				       			options(desipline),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("maintenance.taskdiscipline"),
+								'_default -> Messages("maintenance.selecttaskdiscipline"))
+							
+							
+				            @*inputText(
+				               taskForm("completion_percentage"),
+				               'class -> "span4", 
+				                'placeholder -> "Enter Completion Percentage",
+				               '_label -> "Completion %"
+				            )*@
+				            
+				           
+				            
+	                     
+								
+				        @*<label>Task Owner</label>
+				    	<select name="task_owner" id="task_owner" class="input-xlarge ">
+				       		<option value="" >select owner</option>
+				       		@for(user<-users){
+				       			<option class="dep-user" value="@user.uid" @{if(user.uid.toString() == project.get.project_manager.toString()) "selected='selected'"}>@user.first_name&nbsp;@user.last_name</option>
+				       		}
+				   		</select>*@
+				   		
+				   		@select(
+					           	taskForm("task_details.stage"),
+					       		options(stagesMap),
+								'class -> "input-xlarge ",
+								'_label -> Messages("maintenance.stage"),
+								'_default ->  Messages("maintenance.selectstage"))
+								
+								
+						 @select(
+					           	taskForm("task_details.user_role"),
+					       		options(userRoleMap),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("maintenance.userrole"),
+								'_default -> Messages("maintenance.selectuserrole"))
+							
+							
+							
+						@select(
+					           	taskForm("task_details.deliverable"),
+					       		options(deliverablesMap),
+								'class -> "input-xlarge ",
+								'_label -> Messages("maintenance.deliverable"),
+								'_default ->  Messages("maintenance.selectdeliverable"))
+								
+				   		@* 
+				   		
+				   		@select(
+					         taskForm("task_owner"),
+					         options(userMap),
+					         'class -> "input-xlarge ",
+					         '_label -> "Task Owner",
+					          '_default -> "---Choose Task Owner---"
+					     
+					      )
+					    <input type="text" id="search-user" name="search-user" class="left"  style="margin-top: 20px;border-radius:5px;height:21px;" placeholder="Search User">
+				        <span class="search-user-icon push-top20px"></span>
+				        *@
+				        
+				        
+							
+				         @* @select(
+				            	taskForm("dependencies_type"),
+				       			options("1"->"Finish-Start","2"->"Start-Start","3"->"Start-Finish","4"->"Finish-Finish"),
+								'class -> "input-xlarge ",
+								'_label -> "Dependency Type")*@
+				       
+			
+				            
+				       	 <span class="task-dependency" id="task-dependency">@Messages("newTask.managedependancies") </span>
+				        
+			             
+				       	
+		          	<div class="width_full" style="margin-top:30px;">
+			       		<span class="left" style="margin-left:211px;"><input class="btn form-button" value="Save" type="submit"/></span>
+			       		<span  class="left" style="margin-left:10px;"><input id="cancel-generic-task" class="btn form-button" value="Cancel" type="button"/></span>
+			       		
+			       		 @inputText(
+				               taskForm("task_depend"),
+				               'class -> "span4", 
+				                'placeholder -> "",
+				               '_label -> "",
+				               'type -> "hidden"
+				            )
+		       		</div>
+        		}
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+	<div id="pop-box" class="display-none"> 
+  </div>
+</div>
+
+  
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/generics.js")"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$("#cancel-generic-task").on('click',function() {
+		 window.location.href='@controllers.Frontend.routes.Generics.projectTypeDetailTempalte(taskForm.data.get("task_mode").get)';
+	   });
+	   autocompleteOwnerSearch();
+	   $("#task-dependency").on("click", rederGenericTaskDependency);
+	
+});
+
+</script>
+
+
+
+
+	

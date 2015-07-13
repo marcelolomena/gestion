@@ -1,0 +1,82 @@
+@(parent_id:String,parent_type:Integer)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import services._
+@import play.api.i18n._
+@import play.api._
+@import java.math.BigInteger; var i=1;var risks= RiskService.findRiskList(parent_id, parent_type);
+@import utils._
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@*@if(UserAuthentication.IsAuthenticatedAdmin(session.get("utype").get)){
+	<div class="width_full" id="new-auth" style="border:1px solid red;">hello</div>
+}*@
+@frontend.header()
+<section class="slider" id="program-details">
+	<div class="width_full" >
+		<h3 id="productNm" class="parent-new-h3">
+    		<span class="parent-icon"> &#60; </span>
+    		@{
+    			parent_type.intValue() match{
+    				case 0 =>
+    					Html("<a href='/program-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+  	  				case 1=>
+  	  					Html("<a href='/project-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				case 2=>
+    					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				case 3=>
+    					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				
+    			}
+   			 }
+    		
+	  		   		</h3>
+ 	</div>
+ 	<div class="program-div push-top10px" id="new-program-member">
+ 		@if(RiskService.validateRiskFunction(parent_id,parent_type)){
+ 			<span><a href="@controllers.Frontend.routes.Risks.addRisk(parent_id,parent_type)"> @Messages("programdetails.addrisk")</a></span>	
+ 		}else{
+ 				<span><a href="javascript:void(0);">You can not add Risk here</a></span>
+ 		}
+	   	
+	</div>
+	
+	
+	<div class="product_main">
+		<div class="left-div-risk">
+			<span class="listing-header">@Messages("dashboard.risk")</span>	
+			@for( (p,index) <- risks.zipWithIndex){
+				<span class="width_full left-panel-risk @if(index%2==0){even_row}else{odd_row} " id="r_@p.id">@p.name</span>
+			}
+			@if(risks.size==0){
+				<span class="width_full even_row" style="padding: 4px">@Messages("subtaskdetail.noriskavailable") ...</span>
+			}
+		</div>
+		<div class="right-panel-risk">
+		</div>
+	</div>
+
+	@frontend.footer()
+	<div class="loader"><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>
+</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".left-panel-risk").on("click",renderRiskDetails)
+		$(".left-div-risk").find(".left-panel-risk:first").trigger("click");			
+	});
+</script>
+	

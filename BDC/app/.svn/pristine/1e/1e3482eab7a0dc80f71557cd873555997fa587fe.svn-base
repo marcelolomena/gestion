@@ -1,0 +1,87 @@
+@(baseline:Seq[Baseline])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import services._
+
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+
+@frontend.header()
+
+<section class="slider" id="pDetail_page">
+<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+	<div id="baseline_list" class="width_full">
+			@if(baseline.length > 0 ){
+			    <ul class="width_full" id="t_data_list">
+			    	<li class="header_task">
+			    		<div class="object_type"> @Messages("task.baseline.type")</div>
+			    		<div class="changed_by">@Messages("task.baseline.changedby")</div>
+			    		<div class="change_set">&nbsp;</div>
+			    		<div class="change_at">@Messages("task.baseline.changedate")</div>
+			    	</li>
+			    	@for( (m , index)<- baseline.zipWithIndex){
+				    	<li class='width_full task_data'>
+				    		<div class="main_task_data"></div>
+				    		<div class="object_type">
+			    				<span class=""> @if("subtask".equals(m.object_type.toString())){SUB TASK }else{ TASK } </span> 
+			    			</div>
+				    		<div class="changed_by" >@UserService.findUserDetailsById(m.user_id.toLong).get.first_name</div>
+				    		<div class="change_set"  style="">@m.change_set</div>
+				    		<div class="change_at" style="">@m.changed_at.format("dd-MM-yyyy")</div>
+				    			
+				    	</li>		
+			    	}
+			    	<span class=""> 
+				    	@if( "subtask".equals(baseline(0).object_type.toString())){
+				    		<span class="basline-back"> <a class="backButton" href="/edit-subtask/@baseline(0).ref_id.toString()"> <<&nbsp;Back </a></span>
+				    	 }else{
+				    		<span class="basline-back"> <a class="backButton" href="/task-edit/@baseline(0).ref_id.toString()"> <<&nbsp;Back </a></span>
+				    	  } 
+				    </span> 
+			    </ul>
+		    }
+		    <ul id="task_items"></ul>
+		    </div>
+</div>
+  @frontend.footer()
+</section>
+  	 <div id="pop-box-over" class="display-none"> 
+  	 </div>
+  <div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span><div class="dialog-content">
+	</div>
+</div>
+	<div class="tooltip"></div>		
+</div>	 
+@frontend.headerScripts()
+ <script type="text/javascript">
+	$(document).ready(function(){
+		$("#baseline_list li .change_set").each(function(ind, item){
+			var _self = $(this);
+			var changeSet = $(_self).html();
+			if(ind != 0){
+				
+				var json = JSON.parse(changeSet);
+				if(json.length > 0){
+					var appendTable = '<ul class="width_full" id="baseline-changeset"><li class="header_task"><div class="object_type"></div><div class="changed_by">Original Value</div><div class="change_set">Updated Value</div></li>';
+					$(json).each(function(index, item){
+						appendTable = appendTable + '<li class="width_full task_data' + '"><div class="main_task_data"></div><div class="object_type">' + item.fieldName + '</div><div class="changed_by">' + item.org_value + '</div><div class="change_set"  style="">' + item.new_value + '</div></li>';
+					});
+
+					appendTable = appendTable + '</ul>';
+					$(_self).html(appendTable);
+				}
+			}
+		});
+	});
+ </script>

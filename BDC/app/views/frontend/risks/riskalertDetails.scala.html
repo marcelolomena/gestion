@@ -1,0 +1,84 @@
+@(id:String)(implicit lang:Lang)
+@import services._
+@import play.api.i18n._
+@import play.api._;var alert=RiskService.findRiskAlertsById(id); 
+<div id="alert-listing_@id" class="width_full alert-details-listing">
+@if(alert != null){
+	 <ul>
+	 <li>
+	 		 <span class="right "><input type="checkbox" id="alert_disable_@alert.get.id.get" name="alert_disable" class="right alert_disable input-hide-label" value="@alert.get.id.get" style="margin-right: 10px;"></span>
+	 		 <span class="right hide_label"> Hide :</span>
+	 </li>
+	 	<li>
+	 	<span class="alert-label">@Messages("profile.riskeventType")</span>
+	 	<span class="alert-text">
+	 		@{
+		 		alert.get.event_type.get match{
+		 			case 1=>"Automatic"
+		 			case 2=>"Manual"		
+		 		}
+	 		}
+	 	</span>
+	 	</li>
+	 	<li>
+	 	<span class="alert-label">@Messages("profile.riskalertType")</span>
+	 	<span class="alert-text">
+	 		@{
+		 		alert.get.alert_type.get match{
+		 			case 1=>"RISK-General"
+		 			case 2=>"RISK-Serious"		
+		 		}
+	 		}
+	 	</span>
+	 	</li>
+	 	<li>
+		 	<span class="alert-label">@Messages("dashboard.risk")</span>
+		 	<span class="alert-text">
+		 		@RiskService.findRiskDetails(alert.get.risk_id.toString()).get.name		
+			 </span>
+	 	</li>
+	 	<li>
+		 	<span class="alert-label">@Messages("profile.eventcode")</span>
+		 	<span class="alert-text">
+		 		@{
+		 			
+			 		alert.get.event_code.get match{
+						case 1=>"Risk"
+						case 2=>"Issue" 			
+			 		}
+		 		}	
+			 </span>
+	 	</li>
+	 	<li>
+		 	<span class="alert-label">@Messages("profile.eventdetails")</span>
+		 	<span class="alert-text">
+			 	@if(!alert.get.event_details.isEmpty){
+			 			@alert.get.event_details.get
+			 	}
+		 	 </span>
+	 	</li>
+	 	<li>
+		 	<span class="alert-label">@Messages("booktime.date")</span>
+		 	<span class="alert-text">
+		 	@if(!alert.get.event_date.isEmpty){
+		 		@alert.get.event_date.get.format("dd-MM-yyyy")
+		 	}
+		 	</span>
+	 	</li>
+	 	<li>
+		 	<span class="alert-label">@Messages("profile.criticality")</span>
+		 	<span class="alert-text">
+		 	@{
+			 	if(!alert.get.criticality.isEmpty){
+			 		alert.get.criticality.get.toInt match{
+			 		 case 1=>"High"
+			 		 case 2=>"Medium"
+			 		 case 3=>"Low"	
+			 		}
+			 	}
+		 	}
+		 	</span>
+	 	</li>
+	 </ul>
+ }
+</div>

@@ -1,0 +1,71 @@
+@(username:String, myImpactTypeForm:play.api.data.Form[ImpactTypes])(implicit lang:Lang)
+@import helper._
+	
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+	 
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav("Admin")
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+    <div class="content">
+       	<div class="header">
+        	<h1 class="page-title">@Messages("impacttype.programimpacttype")</h1>
+        </div>
+        
+           <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">@Messages("impacttype.home")</a> <span class="divider">/</span></li>
+          	 <li><a href="@routes.ImpactType.impactTypeList">@Messages("impacttype.programimpacttypelist") </a> <span class="divider">/</span></li>
+            <li class="active"> @Messages("impacttype.editprogramimpacttype")</li>
+        </ul>
+
+ <div class="container-fluid">
+ 	
+	<div class="row-fluid">
+
+        <div class="block">
+            <p class="block-heading">@Messages("impacttype.editprogramimpacttype")</p>
+             <div class="block-body">
+               @form(action = routes.ImpactType.updateImpactType, 'id->"myImpactTypeEdit") {
+	                @inputText(myImpactTypeForm("id"),'_label->"",'name -> "id",'style->"visibility:hidden")
+	                @inputText(myImpactTypeForm("impact_type"),'_label ->Messages("impacttype.programimpacttype"),'class->"span4",'name -> "impact_type")
+	                <div> <input style="margin-left:12px;margin-right:12px;" class="btn" value="Save" type="submit"/><a href="javascript:history.back(-1);" class="btn">Cancel</a></div>
+	                <div class="clearfix"></div> 
+             }
+            </div>
+        </div>
+
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the ...?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+	<!-- Footer panel -->                    
+  	 @footer()
+                    
+    </div>
+</div>
+    </div>
+   </body>
+</html>

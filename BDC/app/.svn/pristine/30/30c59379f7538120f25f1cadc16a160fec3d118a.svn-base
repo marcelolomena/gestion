@@ -1,0 +1,54 @@
+@(programs: Seq[ProgramMaster])(implicit session: play.api.mvc.Session) 
+@import helper._
+@import services._
+<div class="project_list"> 
+<table class="" style=" border: 1px solid #dadada; width: 100%;  border-collapse: collapse; ">
+<thead style="height:35px; background: none repeat scroll 0 0 #315663;color: #ffffff;">
+  		<td style="" class="headerCell">Program Type</td>	
+  		<td class="headerCell">Program Code</td>
+  		<td  class="headerCell">Program Manager</td>
+  		<td class="headerCell"> Program</td>
+  		<td  class="headerCell"> Projects</td>
+ 		<td  class="headerCell"> Program Initiation Date</td>
+ 	    <td  class="headerCell">Estimated Closure Date</td> 
+  </thead>
+  <tbody>
+    @for((program,index) <- programs.zipWithIndex){
+    	<tr class=" " id="">
+    	@if(index%2==0){
+    		    	<td class="tableCells" style="text-align: left !important; padding: 5px;">
+    		@if(program.program_type.toString()=="1"){
+			    				BCH Initiativa
+			    			}
+			    			@if(program.program_type.toString()=="2"){
+			    				BCH Requirement
+			    			}
+  		<td class="tableCells">@program.program_code  </td>
+  		<td class="tableCells">@UserService.findUserDetailsById(program.program_manager.toLong).get.first_name </td>
+  		<td class="tableCells" style=" width: 310px;">@program.program_name </td>
+  		<td class="tableCells">@ProjectService.findProjectListForProgram(program.program_id.toString()).size </td>
+  		
+ 		<td class="tableCells">@if(ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.initiation_planned_date != null)	{ @ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.initiation_planned_date.format("dd-MM-yyyy")} </td>
+ 	    <td class="tableCells">@if(!ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.closure_date.isEmpty) {@ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.closure_date.get.format("dd-MM-yyyy") }</td> 
+    	}else{
+    	    	<td class="tableCells1" style="text-align: left !important; padding: 5px;">
+    		@if(program.program_type.toString()=="1"){
+			    				BCH Initiativa
+			    			}
+			    			@if(program.program_type.toString()=="2"){
+			    				BCH Requirement
+			    			}
+  		<td class="tableCells1">@program.program_code  </td>
+  		<td class="tableCells1">@UserService.findUserDetailsById(program.program_manager.toLong).get.first_name </td>
+  		<td class="tableCells1" style=" width: 310px;">@program.program_name </td>
+  		<td class="tableCells1">@ProjectService.findProjectListForProgram(program.program_id.toString()).size </td>
+  		
+ 		<td class="tableCells1">@if(ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.initiation_planned_date != null)	{ @ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.initiation_planned_date.format("dd-MM-yyyy")} </td>
+ 	    <td class="tableCells1">@if(!ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.closure_date.isEmpty) {@ProgramService.findProgramDateDetailsById(program.program_id.toString()).get.closure_date.get.format("dd-MM-yyyy") }</td> 
+    	}
+
+   	   </tr>
+    	}
+    </tbody>
+    </table>
+</div>

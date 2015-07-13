@@ -1,0 +1,65 @@
+@(sub_task_id:String,user_id:String,user_type:String,dateMap: java.util.LinkedHashMap[String, String])
+@import services._;
+@import java.text.SimpleDateFormat;var FormattedDATE = new SimpleDateFormat("dd-MM-yyyy");var Formatted2 = new SimpleDateFormat("yyyy-MM-dd")
+@import java.text.DecimalFormat; var df = new DecimalFormat("00.00");
+<div class="width_full" style="margin-top: 10px; border: 1px solid;">
+<div style="width:600px;float: left;border-right: 1px solid ">
+	<ul id="new-book-hours"> 
+		<li style="border-bottom: 1px solid;width: 98.7%;">
+			<span style="width: 100px;">Fecha</span>
+			<span style="width: 250px;">Agregado Horas</span>
+			<span>Horas</span>
+		</li>
+		<form id="book-time-listing">
+		<input type="hidden" value="@user_type" name="user_type" id="user_type">
+		<input type="hidden" value="@user_id" name="user_id" id="user_id">
+		<input type="hidden" value="@sub_task_id" name="sub_task_id" id="sub_task_id">
+		@for(key <- dateMap.keySet ){
+			<li class="book-row">
+				<span style="width: 100px;">@dateMap.get(key)<input type="hidden" value="@dateMap.get(key)" name="curr_date[]"/></span>
+				<span style="width: 250px;" class="previous-hours">@TimesheetService.formatTimesheetHour2(TimesheetService.getAllUserBookedHourForDay(user_id.toInt, Formatted2.format(FormattedDATE.parse(dateMap.get(key))),user_type))</span>
+				<span> <input type="text" class="book-hour-input" name="curr_hours[]" maxlength="5"> </span>
+			</li>
+		}
+		</form>
+		@*@if(subtaskBCH != null){
+			@for(s <- subtaskBCH){
+				<li>
+					<span>@s.task_for_date.format("dd-MM-yyyy")</span>
+					<span>
+						@if(s.booked_by.get==1){
+							PMO
+						}else{
+							Self
+						}
+					</span>
+					<span>@s.hours</span>
+					<span class="edit-icon" style="background-repeat: no-repeat;height: 15px; width: 16px;float: left;"></span>
+					<span class="delete-timesheet-book-time "></span>
+				</li>
+				
+			}
+		}
+		
+		@if(subtaskEX != null){
+			@for(s <- subtaskEX){
+				<li>
+					<span>@s.task_for_date.format("dd-MM-yyyy")</span>
+					<span>
+							PMO
+					</span>
+					<span>@s.hours</span>
+					<span class="edit-icon" style="background-repeat: no-repeat;height: 15px; width: 16px;float: left;"></span>
+					<span class="delete-timesheet-book-time "></span>
+				</li>
+				
+			}
+		}*@
+	
+	</ul>
+</div>
+<div style="float: left;width:200px;    margin: 50px 0 0 35px;">
+	<span class="left" ><input class="btn form-button" id="submit-book-hours" style="width: 135px;" value="Horas Agregado" type="button"/></span>
+</div>
+
+</div>

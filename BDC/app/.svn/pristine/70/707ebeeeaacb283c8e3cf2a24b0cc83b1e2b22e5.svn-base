@@ -1,0 +1,48 @@
+@(subtaskBCH:Seq[models.Timesheet],subtaskEX:Seq[TimesheetExternal])
+@import java.text.DecimalFormat; var df = new DecimalFormat("00.00");
+@import services._
+<div class="width_full" style="margin-top: 10px; border: 1px solid;">
+<ul> 
+	<li style="border-bottom: 1px solid;">
+		<span>Fecha</span>
+		<span>Agregado por</span>
+		<span>Horas</span>
+		<span>Accion</span>
+	</li>
+	
+	@if(subtaskBCH != null){
+		@for(s <- subtaskBCH){
+			<li>
+				<span>@s.task_for_date.format("dd-MM-yyyy")</span>
+				<span>
+					@if(s.booked_by.get==1){
+						PMO
+					}else{
+						Self
+					}
+				</span>
+				<span class="u_hours">@TimesheetService.formatTimesheetHour2(s.hours.toDouble)</span>
+				<span class="edit-icon edit-timesheet-book-time" data="int" id="@s.Id.get" style="background-repeat: no-repeat;height: 15px; width: 16px;float: left;"></span>
+				<span class="delete-timesheet-book-time" data="int" id="@s.Id.get"></span>
+			</li>
+			
+		}
+	}
+	
+	@if(subtaskEX != null){
+		@for(s <- subtaskEX){
+			<li>
+				<span>@s.task_for_date.format("dd-MM-yyyy")</span>
+				<span>
+						PMO
+				</span>
+				<span class="u_hours">@TimesheetService.formatTimesheetHour2(s.hours.toDouble)</span>
+				<span class="edit-icon edit-timesheet-book-time" data="ext" id="@s.Id.get" style="background-repeat: no-repeat;height: 15px; width: 16px;float: left;"></span>
+				<span class="delete-timesheet-book-time" data="ext" id="@s.Id.get"></span>
+			</li>
+			
+		}
+	}
+
+</ul>
+</div>

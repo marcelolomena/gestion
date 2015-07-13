@@ -1,0 +1,51 @@
+@(parent_id:String,parent_type:Integer)(implicit request: play.api.mvc.RequestHeader,lang:Lang)
+@import services._; var risks =RiskService.findRiskList(parent_id, parent_type);
+<ul id="risk_list">
+	
+	@if(risks.size>0){
+		<li class="top-header"  style="@if(parent_type==3){width:99%}">
+			<span class="role header">@Messages("booktime.date")</span>
+			<span class="member header">@Messages("programdetails.name")</span>
+			<span class="member header">@Messages("programdetails.cause")</span>
+			<span class="member header">@Messages("programdetails.event")</span>
+			<span class="member header">@Messages("programdetails.impact")</span>
+			<span class="member header">@Messages("programdetails.responsible")</span>
+			<span class="active header">@Messages("program.action")</span>
+		</li>
+		@for( (p,index) <- risks.zipWithIndex){
+			<li class="@if(index%2==0){even_row}else{odd_row} @p.id.toString"  style="@if(parent_type==3){width:99%}">	
+				<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@{new java.text.SimpleDateFormat("dd-MM-yyyy").format(p.risk_clouser_date)}</span>
+				<span class="member">@p.name </span>
+				<span class="member">@p.cause </span>
+				<span class="member">@p.event</span>
+				<span class="member">@p.imapct </span>
+				<span class="member">@UserService.findUserDetails(p.responsible).get.first_name.substring(0,1).&nbsp;@UserService.findUserDetails(p.responsible).get.last_name </span>
+				@*<span class="member">
+				@if(!p.risk_state.isEmpty){
+					@{
+						p.risk_state.get match{
+						case 0=>"Latente"
+						case 1=>"Mitigado"
+						case 2=>"Evitado"
+						case 3=>"Materializado"
+						case 4=>"No Materializado"
+						}
+					}
+				}else{
+					&nbsp;
+				}
+				  
+				</span> *@
+				<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
+				
+					@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
+				<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
+				}
+			</li>
+		}
+  }else{
+  	<li><span>No hay Riesgos...</span></li>
+  }
+		
+
+</ul>

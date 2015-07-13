@@ -1,0 +1,191 @@
+@(username : String, disciplineMap :java.util.HashMap[String, String], userRoleMap:java.util.HashMap[String, String], slaUnitMap:java.util.HashMap[String, String], serviceCatalogueForm : play.api.data.Form[ServiceCatalogues])(implicit lang:Lang)
+@import helper._
+<!-- 
+Header panel 
+ -->
+@header()
+ </head>
+
+ <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+ <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+ <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+ <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+ <!--[if (gt IE 9)|!(IE)]><!--> 
+ <body class=""> 
+ <!--<![endif]-->
+   
+   <!-- Top Navigation bar -->
+   @topNav(username)
+   <!-- Left Navigation Bar -->
+   @leftNav()
+   
+   <div class="content">
+       <div class="header">
+       <h1 class="page-title">@Messages("servcieCatalogue.serviceCatalogueTitle")  </h1>
+       </div>
+
+       <ul class="breadcrumb">
+           <li><a href="@routes.Application.index"> @Messages("addDepartment.home")</a> <span class="divider">/</span></li>
+         	<li><a href='@routes.ServiceCatalogue.serviceCatalogueList'>@Messages("servcieCatalogue.catalogueList")</a> <span class="divider">/</span></li>
+           <li class="active"> @Messages("servcieCatalogue.addNewCatalogue")</li>
+       </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+	<div class="dialog form-div">
+        <div class="block">
+            <p class="block-heading">@Messages("servcieCatalogue.catalogueDetails")</p>
+            <div class="block-body">
+               @form(action = routes.ServiceCatalogue.saveCatalogue, 'id->"newCatalog") {
+               		@select(serviceCatalogueForm("discipline"), options(disciplineMap), 'name->"discipline",'class->"input-xlarge",'_label->Messages("servcieCatalogue.discipline"),'default->"--Select Service Discipline--")
+                    @inputText(serviceCatalogueForm("service_code"),'name->"service_code",'class->"span4",'_label->Messages("servcieCatalogue.serviceCode"))
+                    @inputText(serviceCatalogueForm("service_name"),'name->"service_name",'class->"span4",'_label->Messages("servcieCatalogue.serviceName"))
+                    @textarea(
+		                serviceCatalogueForm("description"),
+		                'class -> "span4", 
+		                '_label -> Messages("servcieCatalogue.serviceDescription"),
+		                'placeholder -> Messages("servcieCatalogue.serviceDescription"),
+					    'rows -> 7,
+					    'cols -> 60
+	            	)
+                    
+                     <div>
+			            	<dl id="service_scope1" class=" ">
+							    <dt><label for="service_scope">@Messages("servcieCatalogue.serviceScope")</label></dt>
+							    <dd>
+							    	<div style="width:100%;float: left;">
+							    		<input type="checkbox" class="form-control" id="service_scope1" style="float:left" name="service_scope1" value="1" >
+								    	<label for="service_scope1" style="width:50%; float:left;  margin-left: 10px;">@Messages("servcieCatalogue.serviceScopeRequirement")</label>
+								    </div>
+								    <div style="width:100%;float: left;">
+  										<input type="checkbox" class="form-control" id="service_scope2" style="float:left" name="service_scope2" value="2">
+  										<label for="service_scope2" style="width:50%; float:left;  margin-left: 10px;">@Messages("servcieCatalogue.serviceScopePlanning")</label>
+									</div>
+									<div style="width:100%;float: left;">
+  										<input type="checkbox" class="form-control" id="service_scope3" style="float:left" name="service_scope3" value="3">
+  										<label for="service_scope3" style="width:50%; float:left;  margin-left: 10px;">@Messages("servcieCatalogue.serviceScopeDevelopment")</label>
+									</div>
+									<div style="width:100%;float: left;">
+										<input type="checkbox" class="form-control" id="service_scope4" style="float:left" name="service_scope4" value="4">
+										<label for="service_scope4" style="width:50%; float:left;  margin-left: 10px;">@Messages("servcieCatalogue.serviceScopeStabilization")</label>
+									</div>
+									<div style="width:100%;float: left;">
+										<input type="checkbox" class="form-control" id="service_scope5" style="float:left" name="service_scope5" value="5">
+										<label for="service_scope5" style="width:50%; float:left;  margin-left: 10px;">@Messages("servcieCatalogue.serviceScopeContinuity")</label>
+									</div>
+								</dd>
+								
+								<dd class="error left-full service-scope-error">At least one value should be selected.</dd>
+								
+							</dl>
+			            </div>
+			           @inputText(serviceCatalogueForm("service_scope"),'name->"service_scope",'class->"span4", 'type -> "hidden") 
+			           @select(serviceCatalogueForm("service_requestor_role"), options(userRoleMap), 'name->"discipline",'class->"input-xlarge",'_label->Messages("servcieCatalogue.serviceRequesterRole"),'default->"--Select Requester Role--")
+			           @select(serviceCatalogueForm("executive_role_primary"), options(userRoleMap), 'name->"discipline",'class->"input-xlarge",'_label->Messages("servcieCatalogue.primaryExecutiveRole"),'default->"--Select Primary Executive role--")
+			           @select(serviceCatalogueForm("executive_role_secondary"), options(userRoleMap), 'name->"discipline",'class->"input-xlarge",'_label->Messages("servcieCatalogue.secondaryExecutiveRole"),'default->"--Select Secondary Executive role--") 
+			           @inputText(serviceCatalogueForm("sla_value"),'name->"sla_value",'class->"span4",'_label->Messages("servcieCatalogue.slaValue"))
+			           @select(serviceCatalogueForm("sla_unit"), options(slaUnitMap), 'name->"sla_unit",'class->"input-xlarge",'_label->Messages("servcieCatalogue.slaUnit"),'default->"--Select SLA Unit--") 
+                 	<div class="submit-service-catalogue-buttons">
+                  		<input type="submit" style="margin-left:12px;margin-right:12px;" class="btn"  value="Save" />
+                		 <a href="javascript:history.back(-1);" class="btn">Cancel</a>
+                	</div>
+                 	<div class="clearfix"></div> 
+               }
+            </div>
+        </div>
+    </div>
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">@Messages("addDepartment.deleteconfirmation")</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>@Messages("addDepartment.deleteuser")</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+	<!-- Footer panel -->                    
+  	 @footer()
+    </div>
+</div>
+    </div>
+   </body>
+</html>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var serviceScope = $("#service_scope").val();
+		if(serviceScope != null){
+			serviceScope = $.trim(serviceScope);
+		}
+		if(serviceScope != null && serviceScope != "" && serviceScope.length > 0){
+			var serviceScopeArr = serviceScope.split(",");
+			for(i=0;i<serviceScopeArr.length;i++){
+				if(serviceScopeArr[i] == 1){
+					$('input:checkbox[name=service_scope1]').attr('checked',true);
+				}
+				
+				if(serviceScopeArr[i] == 2){
+					$('input:checkbox[name=service_scope2]').attr('checked',true);
+				}
+				if(serviceScopeArr[i] == 3){
+					$('input:checkbox[name=service_scope3]').attr('checked',true);
+				}
+				if(serviceScopeArr[i] == 4){
+					$('input:checkbox[name=service_scope4]').attr('checked',true);
+				}
+				if(serviceScopeArr[i] == 5){
+					$('input:checkbox[name=service_scope5]').attr('checked',true);
+				}
+			}
+		}else{
+		
+		}
+		$(".service-scope-error").css("display","none");
+		
+		$("#newCatalog").submit(function(){
+			var serviceScopeValues = "";
+			if($('input:checkbox[name=service_scope1]').is(':checked') && serviceScopeValues.length > 0){
+				serviceScopeValues = serviceScopeValues + ",1";  
+			}else if($('input:checkbox[name=service_scope1]').is(':checked') && serviceScopeValues.length == 0){
+				serviceScopeValues = serviceScopeValues +  "1";
+			}
+			
+			if($('input:checkbox[name=service_scope2]').is(':checked') && serviceScopeValues.length > 0){
+				serviceScopeValues = serviceScopeValues + ",2";  
+			}else if($('input:checkbox[name=service_scope2]').is(':checked') && serviceScopeValues.length == 0){
+				serviceScopeValues = serviceScopeValues +  "2";
+			}
+			
+			if($('input:checkbox[name=service_scope3]').is(':checked') && serviceScopeValues.length > 0){
+				serviceScopeValues = serviceScopeValues + ",3";  
+			}else if($('input:checkbox[name=service_scope3]').is(':checked') && serviceScopeValues.length == 0){
+				serviceScopeValues = serviceScopeValues +  "3";
+			}
+			
+			if($('input:checkbox[name=service_scope4]').is(':checked') && serviceScopeValues.length > 0){
+				serviceScopeValues = serviceScopeValues + ",4";  
+			}else if($('input:checkbox[name=service_scope4]').is(':checked') && serviceScopeValues.length == 0){
+				serviceScopeValues = serviceScopeValues +  "4";
+			}
+			
+			if($('input:checkbox[name=service_scope5]').is(':checked') && serviceScopeValues.length > 0){
+				serviceScopeValues = serviceScopeValues + ",5";  
+			}else if($('input:checkbox[name=service_scope5]').is(':checked') && serviceScopeValues.length == 0){
+				serviceScopeValues = serviceScopeValues +  "5";
+			}
+			$("#service_scope").val(serviceScopeValues);
+			
+			if(serviceScopeValues == ""){
+				$(".service-scope-error").css("display","block");
+				return false;
+			}else{
+				$(".service-scope-error").css("display","none");
+			}
+			
+		})
+	});
+</script>

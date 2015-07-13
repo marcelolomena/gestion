@@ -1,0 +1,205 @@
+@(totalCount:Long,pagination:String,username : String, serviceCatalogueList : Seq[ServiceCatalogueMaster], isAllowedtoDeleteMap : java.util.HashMap[String, Boolean], disciplineMap: java.util.HashMap[String, String])(implicit lang:Lang)
+@import services._;var user:Option[Users]= null;
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+  </head>
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+
+   <!-- Left Navigation Bar -->
+    @leftNav()     
+    <div class="content">
+  
+        <div class="header">
+        	<h1 class="page-title">@Messages("servicecatalogue.servicecatalogue")</h1>
+        </div>
+        
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">@Messages("servicecatalogue.home")</a> <span class="divider">/</span></li>
+            <li class="active"> @Messages("servicecatalogue.servicecataloguelist")</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+	<div class="btn-toolbar">
+	    <a href="@routes.ServiceCatalogue.addServiceCatalogue"><span class="btn"><i class="icon-plus"></i>@Messages("servicecatalogue.addNewServiceCatalogue")</span></a>
+	  	<div class="btn-group"></div>
+	</div>
+	<div  class="row-fluid">
+		<dl id="discipline_field" class=" ">
+    <dt><label for="discipline">Disciplina Servicio</label></dt>
+    <dd>
+    	<select class="input-xlarge" name="discipline" id="discipline">
+	        <option value="">--Select Service Discipline--</option>
+	        @for(ds <- disciplineMap.keySet()){
+	        	   <option value="@ds">@disciplineMap.get(ds)</option>
+	        }
+      	</select>
+</dd>
+    
+    
+        <dd class="info" style="display: none;">Numeric</dd>
+    
+</dl>
+	</div>
+	<div class="well">
+	    <table class="table">
+	      <thead>
+	        <tr class="first-row">
+	          <th> @Messages("service.catelogue.id")</th>
+	          <th> @Messages("service.catelogue.service_name")</th>
+	         @* <th> Service Description</th>*@
+	           <th>@Messages("service.catelogue.updated_by")</th>
+	             <th>@Messages("service.catelogue.updated_date")</th>
+	          <th>@Messages("service.catelogue.status")</th>
+	          <th style="width: 26px;"> @Messages("programtype.action")</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+		      @for(service <- serviceCatalogueList){
+			        <tr>
+			          <td><span>@service.id.get</span></td>
+		 	          <td><a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" > @service.service_name.toString()  </a></td>
+			         @* <td><span>@if(service.description.length>30){@service.description.substring(0,30)...}else{@service.description}</span></td>*@
+			           <td> <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" ><span>
+						@{ user = UserService.findUserDetailsById(service.updated_by.toLong) }			           
+              	      	@user.get.first_name.substring(0, 1).
+	          	       @user.get.last_name	
+			          </span></a></td>
+			               <td> <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" ><span>
+			                @service.updation_date.format("dd-MM-yyyy")</span></a></td>
+			          <td> <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())" ><span>@if(service.is_deleted.toLong==1){
+			          	Inactive
+			          	}else{
+			             Active
+			          	}</span></a></td>
+			          <td>
+			          	 <a href="@routes.ServiceCatalogue.editServiceCatalogue(service.id.get.toString())"><i class="icon-pencil"></i></a>
+			          	@* @if(isAllowedtoDeleteMap.get(service.id.get.toString)){*@
+			          	 	<a  role="button" data-toggle="modal" >
+			          	 	@if(service.is_deleted.toLong==1){
+	              		 	<i id="service_@service.id.get.toString" class="activate-status status_update" style="cursor: pointer;"></i>
+	              		 }else{
+	              		 <i id="service_@service.id.get.toString" class="icon-remove status_update" style="cursor: pointer;"></i>
+	              		 }
+	              		 </a>
+	              		@* }*@
+					  </td>
+			        </tr>
+		        }
+		    </tbody>
+	    </table>
+	 @if(totalCount >10){
+		<div>No of Records Per Page
+			<select id="pageRecord" class="pageRecord span1" >
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			</select>
+		</div>
+		<!-- Pagination -->
+		<div class="pagination">
+		    <ul>
+		      @Html(pagination)
+		    </ul>
+		</div>
+		}else{
+		<input id="pageRecord" class="pageRecord"  type="hidden" value="10">
+		}	
+	</div>
+	<!--  <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div> -->
+	<!-- Footer panel -->                    
+  	 @footer()
+  	   	  <div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"> 
+  	</div>
+   
+	<div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span><div class="dialog-content">
+	</div>
+	</div>
+	<div class="tooltip"></div>	
+    </div>
+    </div>
+</div>
+    </div>
+            <script type="text/javascript">
+	  $(document).ready(function(){
+	  
+	  $("#discipline").on("change",renderServiceCatalogList)
+		  $(".status_update").on("click", renderDeleteItemFromList);
+			function renderDeleteItemFromList(){
+				var _this = $(this);
+				var _status=_this.hasClass('activate-status');
+				var deletion_id = _this.attr("id").split("_")[1];
+				$("#dialog-confirm").html("@Messages("delete.confirm1.catelogue")");
+						// Define the Dialog and its properties.
+						$("#dialog-confirm").dialog({
+							resizable : false,
+							modal : true,
+							title : "@Messages("delete.confirm.title")",
+							height : 150,
+							width : 300,
+							buttons : {
+								"Yes" : function() {
+									var url = "/update-service-catalogue-status?id=" + deletion_id+"&status="+_status;
+									$.post(url, function(data) {
+										if (data == "Success") {
+											//window.location.reload();
+											if($(_this).parents("tbody").children().length==1){
+											       if(typeof getUrlParameter("page") !== "undefined" && getUrlParameter("page") !== null){
+											        var page_num = parseInt(getUrlParameter("page"));
+											        var record =  parseInt(getUrlParameter("record"));
+											        page_num= page_num - 1;
+											        var sPageURL = window.location.href;
+											        var sURLVariables = sPageURL.split('?')[0];
+											        window.location.href =sURLVariables+"?page="+page_num+"&record="+record
+											        
+											       }else{
+											        window.location.reload();
+											       }
+   											}else{
+   											 window.location.reload();
+   											}
+										}
+									});
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								},
+								"No" : function() {
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								}
+							}
+						});
+						$("#pop-box-over").css("display", "block");
+						$("#dialog-confirm").css("display", "block");
+					}
+	    });
+    </script>
+   </body>
+</html>

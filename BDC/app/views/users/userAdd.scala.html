@@ -1,0 +1,102 @@
+@(username:String,divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap :java.util.HashMap[String,String],userForm :play.api.data.Form[UserMaster])
+@import helper._
+	
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+	
+<script type="text/javascript">
+ $(document).ready(function(){
+	    $("#division").on("change", renderGerenciaList);
+		$("#genrencia").on("change", renderDepartmentList);
+ });
+	
+</script>
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+	   <!-- Left Navigation Bar -->
+    @leftNav()
+    
+    <div class="content">
+        <div class="header">
+        <h1 class="page-title">User</h1>
+        </div>
+
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">Home</a> <span class="divider">/</span></li>
+            <li><a href="">User List</a> <span class="divider">/</span></li>@*routes.User.userList*@
+            <li class="active">Add New User</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+                    
+	<div class="dialog form-div">
+        <div class="block">
+            <p class="block-heading">Add New User</p>
+            <div class="block-body">@*routes.User.saveUser*@
+               @form(action = null, 'id->"myUser") { 
+              	    <input type="hidden" id="mode" name="mode" value="add" />
+              	 @select(userForm("division"),options(divisionMap), 'class -> "span4 ", '_label -> " Division",'_default -> "--- Choose Division ---")
+	             @select(userForm("genrencia"),options(gerenciasMap),'class -> "span4", '_label -> " Gerencia",'_default -> Messages("addNewProgram.placeholder.management"))
+                 @select(userForm("department"),options(departmentsMap),'name->"department",'class->"span4",'_label->"Department")
+                 @inputText(userForm("first_name"),'id->"first_name",'name->"first_name",'class->"span4",'_label->"First Name")
+                 @inputText(userForm("last_name"),'id->"last_name",'name->"last_name",'class->"span4",'_label->"Last Name")
+                 @inputText(userForm("uname"),'id->"uname",'name->"uname",'class->"span4",'_label->"User Name")
+                 @inputPassword(userForm("password"),'id->"password",'name->"password",'class->"span4",'_label->"Password")
+                 @inputText(userForm("rut_number"),'id->"rut_number",'name->"rut_number",'class->"span4",'_label->"RUT Number")
+                 @inputText(userForm("contact_number"),'id->"contact_number",'name->"contact_number",'class->"span4",'_label->"Contact  Number (Residence/Mobile)") 
+                 @inputText(userForm("email"),'id->"email",'name->"email",'class->"span4",'_label->"Email")
+                 @inputDate(userForm("birth_date"),'id->"birth_date",'name->"birth_date",'class->"span4 datepicker",'_label->"Date of Birth (dd - mm -yyyy)")
+                 @inputText(userForm("office_number"),'id->"office_number",'name->"office_number",'class->"span4",'_label->"Office Number (With Extension)")  
+                 @inputDate(userForm("joining_date"),'id->"joining_date",'name->"joining_date",'class->"span4 datepicker",'_label->"Joining Date  (dd - mm -yyyy)")   
+                 @inputText(userForm("rate_hour"),'id->"rate_hour",'name->"rate_hour",'class->"span4",'_label->"Rate per Hour")  
+                 @select(userForm("isAdmin"),options("0"->"User", "2"->"Manager","1"->"Admin","3"->"CEO"),'id->"isAdmin",'name->"isAdmin",'class->"span4",'_label->"User Role")
+                 @select(userForm("user_type"),options("1"->"Permanent", "2"->"Contractor"),'id->"user_type",'name->"user_type",'class->"span4",'_label->"User Type")
+                 @inputText(userForm("work_hours"),'type->"time",'id->"work_hours",'name->"work_hours",'class->"span4",'_label->"Work Hours (HH.mm)/day")  
+                 @select(userForm("bonus_app"),options("0"->"No", "1"->"Yes"),'id->"bonus_app",'name->"bonus_app",'class->"span4",'_label->"Overtime Applicable")
+                <div> <input class="btn pull-left" value="Save" type="submit"/><a href="javascript:history.back(-1);" class="btn push-left20px pull-left">Cancel</a></div>
+                <div class="clearfix"></div> 
+                    }
+               
+            </div>
+        </div>
+     
+    </div>
+	
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+
+	 
+	<!-- Footer panel -->                    
+  	 @footer()
+                    
+    </div>
+</div>
+    </div>
+
+   </body>
+
+</html>

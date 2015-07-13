@@ -1,0 +1,73 @@
+@(program_status:Form[ProgramStatus],program_id:String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="program_member_form">
+
+<div  >
+<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+	  	<a href="@controllers.Frontend.routes.Program.editProgram(program_id)" style="font-weight: bold">
+	  		<span class="left">@Messages("employeeProfile.back")</span>
+  	  	</a>
+   </h3>
+ </div>
+ 
+<p class="new-member-title">@Messages("employeeProfile.updateprogramstatus")</p>
+
+		
+				
+	<div class="width_full" >
+		@form(action = controllers.Frontend.routes.Program.updateStatus(program_id),  'id->"status-form") {
+			<input type="hidden" id="id" name="id" value="@if(!program_status.data.get("id").isEmpty){@program_status.data.get("id").get}"/>
+			<input type="hidden" id="program_id" name="program_id" value="@program_id"/>
+			<input type="hidden" id="status_for_date" name="status_for_date" value="@(new java.util.Date().format("dd-MM-yyyy"))"/>
+			<div class="width_full" >
+				@textarea(
+		                program_status("reason_for_change"),
+		                'class -> "span4", 
+		                '_label -> "Reason for Change Status",
+		                'placeholder -> "Enter reason for chnage the status",
+					    'rows -> 7,
+					    'cols -> 60
+	            )
+	           	@select(
+				         program_status("status"),
+				         options("0"-> "Green","1"->"Amber","2"->"Red"),
+				         'class -> "input-xlarge ",
+				         '_label -> "Status",
+				         '_default -> "--- Choose Status ---"
+		      	)	
+	      	</div>
+	      	<div class="width_full" >
+			       	<span class="left push-left170px"><input class="btn  form-button" value="Change" type="submit"/></span>
+			       	<span  class="left" style="margin-left:30px;"><input id="cancel-sap" class="btn form-button" value="Cancel" type="button"/></span>
+			</div>	
+		}
+	
+	</div>
+	
+	<div id="dialog-confirm"></div>	
+</section>
+<div id="pop-box-over" class="display-none"></div>
+</div>
+
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$('#cancel-sap').on('click',function() {
+		 window.location.href='@controllers.Frontend.routes.Program.editProgram(program_id)';
+	});
+});
+</script>
+</body>
+</html>

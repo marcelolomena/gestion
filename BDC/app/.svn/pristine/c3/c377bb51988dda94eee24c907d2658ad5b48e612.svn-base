@@ -1,0 +1,49 @@
+@(divisions: Seq[Divisions], activatTab : String)(implicit lang: Lang)
+@import services._
+@import java.util.Calendar
+@import java.text.SimpleDateFormat
+@import utils._;var isValid = false; var formatDate = new SimpleDateFormat("dd-MM-yyyy");var earn_value : Option[SpiCpiCalculations] = null;var  program_risks:  Seq[RiskManagementMaster] = null;var project_risks: Seq[RiskManagementMaster]= null;var task_risks:  Seq[RiskManagementMaster]= null;var sub_task_risks: Seq[RiskManagementMaster]=null;
+@import java.text.DecimalFormat; var df = new DecimalFormat("00"); var df2 = new DecimalFormat("0.0");var programs:Seq[ProgramMaster] = null; var projects:Seq[Project] = null; var tasks: Seq[Tasks] = null; var sub_tasks: Seq[SubTasks] = null; var user : Option[Users]= null;
+
+			
+<iframe id="txtArea1" style="display:none"></iframe>
+
+<div id="divTableDataHolder">
+	@*<a download="program-report.xls" class="export-excel" href="javascript:void(0)" onclick="return fnExcelReport()">@Messages("dashboard.ExporttoExcel")</a>*@
+	<div class="left width_full">
+		<div class="left width_full" id="risk_filter">
+			<ul id="risk-filter-tab" class="content-box-tabs">
+				<li><a class="program current" href='@controllers.Frontend.routes.Dashboard.riskReportForPrograms()'>Programa</a></li>
+			    <li><a class="project" href='@controllers.Frontend.routes.Dashboard.riskReportForProjects()'>Proyecto</a></li>
+			    <li><a class="task" href="@controllers.Frontend.routes.Dashboard.riskReportForTasks()">Tarea</a></li>
+			   	<li><a class="subtask" href='@controllers.Frontend.routes.Dashboard.riskReportForSubtasks()'>Sub Tarea</a></li>
+			</ul>
+		</div>
+		
+		<div id="risk_result">
+			@frontend.dashboard.riskReportForPrograms(divisions)
+		</div>
+		
+	</div>
+</div>
+<script type="text/javascript">
+	function fnExcelReport() {
+		var tab_text=$('div[id$=divTableDataHolder]').html();
+        tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+        tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE "); 
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+        	txtArea1.document.open("application/CSV","replace");
+         	txtArea1.document.write(tab_text);
+         	txtArea1.document.close();
+         	txtArea1.focus(); 
+          	sa=txtArea1.document.execCommand("SaveAs",true,"dashboard.xls");
+        } else                 
+    		sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
+       return (sa);
+	}
+</script>

@@ -1,0 +1,74 @@
+@(employee :Option[Users], employeeImage :String,profileImgForm :Form[ProfileImage])(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import services._
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+@import helper._
+@frontend.headerScripts()
+<script type="text/javascript">
+
+</script>
+<section class="slider" id="home_page">
+	<div class="left map border-top">
+	</div>
+	  <div>
+			<div style="float:left;">
+				<span class="left">
+					<img src="/documents/@employeeImage" id="target">
+				</span>
+			</div>
+		</div>
+		<div class="cropBtn">
+		@form(action = routes.Application.cropImage(employee.get.uid.get.toLong),'class->"normalForm", 'id -> "crop-profile-image") {
+		         <input type="hidden" id="x" name="x">
+		         <input type="hidden" id="y" name="y">
+		         <input type="hidden" id="w" name="w">
+		         <input type="hidden" id="h" name="h">
+		         <input type="hidden" id="profile_image" name="profile_image">
+		         <input type="submit" id="uploadImage" value="@Messages("button.cropImage")" class="btn">
+		}
+       </div>
+	@frontend.footer()
+</section>
+	</div>
+
+	
+</body>
+<script type="text/javascript">
+	$("#target").load(function(){
+		
+		$('dt label').hide();
+	 	var jcrop_api;
+	    $('#target').Jcrop({
+	      onSelect:   showCoords,
+	      bgColor:    'white',
+	      bgOpacity:  .4,
+	      setSelect:   [ 100, 100, 50, 50 ],
+          aspectRatio: 16 /16
+	    },function(){
+	      jcrop_api = this;
+	    });
+
+	  	// Simple event handler, called from onChange and onSelect
+	  	// event handlers, as per the Jcrop invocation above
+	  	function showCoords(c) {
+		    $('#x').val(c.x);
+		    $('#y').val(c.y);
+		    $('#w').val(c.w);
+		    $('#h').val(c.h);
+	  	};
+
+	});
+	$(document).ready(function(){
+		delay = 2000;
+		setTimeout(function() {
+			$('#target').attr("src", '/documents/@employeeImage?' + new Date().getTime());
+		}, delay);
+		
+	})
+	
+</script>
+</html>

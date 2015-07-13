@@ -1,0 +1,255 @@
+@( subtasks: Seq[SubTasks] ,nonProjectTasks: Seq[NonProjectTask])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@import helper._
+@import services._ 
+@frontend.layout()
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/timesheet.css")">
+<link href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")" rel="stylesheet">
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="timesheet-section">
+<div class="timesheet-details">
+	<div class="timeSheetCalanderwrapper">
+	<div class="calendarTitle"></div>
+		<div class="clander-prev-weer"></div>
+		<div class="map_data_detail"></div>
+		<div class="clander-next-weer"></div>
+	</div>
+	<input type="hidden" id="langtotalval" value="@Messages("timesheet.total")" />
+	<input type="hidden" id="langhrsval" value="@Messages("booktime.hours")" />
+	<input type="hidden" id="langminval" value="@Messages("timesheet.minutes")" />
+	<div class="timesheet-wrapper">
+			@*<h3 class="timesheet-head">Time Sheet</h3>*@
+			<table id="timesheet-list">
+				<thead>
+				<tr>
+					<th style="width:40%">@Messages("timesheet.project")</th>
+					<!-- <th style="width:20%">Task</th> -->
+					<th style="width:40%">@Messages("addSubTask.subtasktitle")</th>
+					<th style="width:10%">@Messages("booktime.hours")</th>
+					<th style="width:10%">@Messages("booktime.action")</th>
+				</tr>
+				
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div class="left-full task-action-div">
+				<span class="hours-spent"></span>
+				<span class="add-row-button"><input type="button" value="Add Time" id="addNewRow" /></span>
+			</div>
+			
+			<div class="width_full timesheet-sub-task-details">
+				
+				<span class="allocated-time"></span>
+				<span class="booked-time"></span>
+				<span class="available-time"></span>
+			</div>
+			 @form(action = controllers.Frontend.routes.TimeSheet.saveTaskPlan, 'id->"timesheet-form") {
+				<table class="newRow timesheet-form-row">
+				</table>
+				<input type="hidden" name="task_for_date" id="task_for_date" />
+				<input type="hidden" name="user_id" id="user_id" value="@session.get("uId").get"/>
+				
+				<input type="hidden" name="time_available" id="time_available">
+			}
+			<div id="project_type_id" class="display-none" >
+			</div>
+			
+			
+			
+<div class="subtask_list" style="margin-top: 20px;">
+  <h3 class="title @if(subtasks == null){display-none}">
+  	<span style="width: 89%;  float:left;">@Messages("addSubTask.subtasktitle")</span>
+  	
+  		<span style="width:auto; float:left;">@Messages("booktime.hours")</span>
+  </h3>
+  	<div class="project_list_1  padding-none project_list_2">
+  		
+    	<div id="program_container" class="design_team_left_detail_1_left width_full">
+				@if(subtasks != null){
+					@for((subtask,index) <- subtasks.zipWithIndex){
+					<div class="@if( index%2==0 ){ subtask_list_1 }else{ subtask_list_2 } subtask_list " >
+			           <span class="left project-type-list " style=" width: 672px;" ><span class="subtask_name"  id="s_@subtask.sub_task_id.get"> @subtask.task</span></span>
+			    		
+			    			<span class="left " style="width: auto;">
+			    				<input type="text" style=" padding-left: 4px;" maxlength="5" placeholder="HH:MM"  id="sub_@subtask.sub_task_id.get"   class="estimated_cost_program add-border" />
+			    			 </span>
+					</div>
+				 }
+				 
+				 }else{
+				 <div class="subtask_list" >
+			     <div class="design_team_left_detail_1_data_12 ">
+							<p>No Sub Task Available...</p>
+						</div>
+						}
+						
+						@if(nonProjectTasks!=null){
+				<div style="float: left; width: 100%; margin-top: 30px;">
+				  <h3 class="title">
+				  	<span style="width: 89%;  float:left;">@Messages("timesheet.nonprojectTask")</span>
+				  		<span style="width:auto; float:left;">@Messages("booktime.hours")</span>
+				  </h3>
+				</div>
+						@for((np,index) <- nonProjectTasks.zipWithIndex){
+					<div class="@if( index%2==0 ){ subtask_list_1 }else{ subtask_list_2 } subtask_list " >
+			           <span class="left project-type-list nonproject_name" style=" width: 672px;" >@np.task </span>
+			    			<span class="left " style="width: auto;">
+			    				<input type="text" style=" padding-left: 4px;" maxlength="5" placeholder="HH:MM"   id="nproj_@np.id.get" class="estimated_cost_program add-border" />
+			    			 </span>
+					</div>
+				}
+   	   </div>
+    </div>
+ </div>
+  <div id="button_id">
+	<div style="width:10%"></div>
+	<div style="width:10%;"></div>
+ <div style="width:70% ;float: left; margin-bottom: 20px; margin-left: 30%; ">
+		<span><input type="submit" id="save-subtask-hours" class="left fo-btn-timesheet btn" value="@Messages("button.save")"></span>
+		<span><input type="button" style="margin-left:11px;" value="@Messages("button.reset")" class="btn cancel-form"></span>
+	</div> 
+	
+</div>
+ }else{
+<div class="design_team_left_detail_1_data_12 ">
+	<p>No Non-Projects Available...</p>
+</div>
+}
+	
+
+	
+@*@if(nonProjectTasks!=null){
+<div class="nproject_list" style="margin-top: 20px;">
+  <h3 class="title">
+  	<span style="width: 89%;  float:left;">Non Project Task</span>
+  		<span style="width:auto; float:left;">Hours</span>
+  </h3>
+  	<div class="project_list_1  padding-none project_list_2">
+    	<div id="program_container" class="design_team_left_detail_1_left width_full">
+				@for((np,index) <- nonProjectTasks.zipWithIndex){
+					<div class="@if( index%2==0 ){ subtask_list_1 }else{ subtask_list_2 } nproject_list " >
+			           <span class="left project-type-list nonproject_name" style=" width: 672px; " id="np_@np.id.get">@np.task </span>
+			    			<span class="left " style="width: auto;">
+			    				<input type="text" style=" padding-left: 4px;" maxlength="2"  id="nproj_@np.id.get" class="non_project_list add-border" />
+			    			 </span>
+					</div>
+				}
+   	   </div>
+    </div>
+ </div>
+ 
+ <div id="button_id" class="">
+	<div style="width:10%"></div>
+	<div style="width:10%;"></div>
+ <div style="width:100% ;float: left; margin-bottom: 20px; margin-left: 30%; ">
+		<span><input type="submit" id="save-subtask-hours" class="left fo-btn-timesheet btn" value="Save"></span>
+		<span><input type="button" style="margin-left:11px;" value="Cancel" class="cancel-form btn"></span>
+	</div> 
+	
+</div>
+ }else{
+<div class="design_team_left_detail_1_data_12 width411px">
+	<p>Non Project task List Not Available...</p>
+</div>
+} *@
+	
+			
+	</div>
+	
+	<div class="width_full display-none" id="subtask_div_change_id">
+
+		
+		<div class="team_sub_task_div team_task_div_change time_subtask_details"   style="margin-left: 50px;width:776px; border: 2px solid #bfe1ec;min-height: none !important ;">
+
+		<div class="design_team_left_detail_1  padding-none" style="float: left;width: 98%;  ">
+			<table id="subtask-details" >
+			<tbody >
+			<tr >
+				<td class="timesheet-th-header">@Messages("taskDetails.title")</td>
+				<td id="title_id"> </td>
+			</tr>
+			<tr>
+				<td class="timesheet-th-header">@Messages("taskDetails.description")</td>
+				<td id="descr_id"> </td>
+			</tr>
+			<tr>
+				<td class="timesheet-th-header">@Messages("taskDetails.plannedStartDate")</td>
+				<td id="plan_start_date"> </td>
+			</tr>
+			<tr>
+				<td class="timesheet-th-header">@Messages("taskDetails.plannedenddate")</td>
+				<td id="plan_end_date"> </td>
+			</tr>
+			
+			<tr>
+				<td class="timesheet-th-header">@Messages("addDepartment.projectworkflowstatus")</td>
+				<td>
+					<span id="status_id" style="height:20px;width:20px"></span>
+				</td>
+			</tr>
+			
+			<tr style="display:block" class="subtask-baseline">
+				<td class="timesheet-th-header">@Messages("taskDetails.trackchanges")</td>
+				<td id="track_changes_id"> </td>
+			</tr>
+			
+			
+			<tr>
+				<td class="timesheet-th-header left">@Messages("taskDetails.subtaskdependancy")</td>
+				<td id="subtask_dependancy_id"> </td>
+			</tr>
+			</tbody>
+			</table>
+   	   </div>
+		<div id="timesheet_doc_list_id">
+		</div>
+	
+	</div>
+	
+	</div>
+	
+	@* <div id="timesheet-details">
+		<div class="left-panel">
+			<h3 style="">Current Sub Tasks </h3>
+			<ul>
+				@for((c,index) <- currentSubTasks.zipWithIndex){
+					<li class="@if(index%2==0){odd-records}else{even-records}">@c.task </li>	
+				}
+				
+			</ul>
+		</div>
+		<div class="right-panel">
+			<h3 style="">Upcoming Sub Tasks </h3>
+			<ul>
+				@for((c,index) <- futureSubTasks.zipWithIndex){
+					<li class="@if(index%2==0){odd-records}else{even-records}">@c.task </li>	
+				}
+				
+			</ul>
+		</div>
+	
+	</div> *@
+	
+</div>
+	@frontend.footer()
+
+	 	  <div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"> 
+  	</div>
+   
+	<div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span><div class="dialog-content">
+	</div>
+	</div>
+	<div class="tooltip"></div>	
+</section>
+</div>
+@frontend.headerScripts()
+@*<script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>*@
+<script src="@routes.Assets.at("frontend/js/timesheet.js")" type="text/javascript"></script> 
+<script src="@routes.Assets.at("frontend/js/jquery.maskedinput.min.js")" type="text/javascript"></script>
+</body>
+</html>

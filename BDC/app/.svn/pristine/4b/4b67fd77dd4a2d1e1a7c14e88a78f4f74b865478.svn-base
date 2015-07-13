@@ -1,0 +1,197 @@
+@(searchForm : Form[SearchMaster], documentType :java.util.HashMap[String, String],divisions : Seq[Divisions], programs : Seq[ProgramMaster], projects : Seq[Project], tasks : Seq[Tasks], subtasks : Seq[SubTasks], users : Seq[Users])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@import play.api.i18n._ 
+@import services._
+@import helper._
+@frontend.layout()
+</head>
+<body>
+	@frontend.topLayout()
+	<div class="main">
+		@frontend.header()
+		<section class="slider" id="search_page">
+			<div class="search_main">
+			  <div class="width_full">
+			 		<div class="content-box-content"></div>
+					<div id="docuement-overview">
+						<div class="width_full">
+							<h3 class="width_full"><span class="push-left10px">Advance Search</span> </h3>
+							<div class="focus_on width_full" style="padding:10px 0;">
+	     						 	<div class="focus_on_title"><img width="69" height="13" alt="" src="@routes.Assets.at("frontend/images/focus_on.jpg")"></div>
+	     						 	<div class="search-form-wrapper" style="padding: 10px 40px;">
+									@form(action = controllers.Frontend.routes.Documents.searchResult, 'id->"search-document-form") {
+									
+										<div class="width_full">
+											
+									      		 @inputText(
+									                searchForm("search_filter"),
+									                'class -> "", 
+									                 'placeholder -> "Enter Search Text",
+									                '_label -> "Search Text"
+									            )
+								            
+							            </div>
+							            
+							 <div class="field-wrapper">
+								            <dl id="program_field" class=" ">
+											    <dt><label for="program">Division</label></dt>
+											    <dd>
+												    <select class="input-xlarge " name="program" id="program">
+												            <option value="" class="blank">--- Choose Division ---</option>
+												           @for(d <- divisions) {
+									                  			<option value="@d.dId.get">@if(d.division.length>50){@d.division.toString().substring(0, 50)...}else{@d.division} </option>
+										                   }
+												    </select>
+												</dd>
+											</dl>	 	
+							            </div>
+							            
+							             <div class="field-wrapper"> 
+								      		 	@select(
+									            	searchForm("document_type"),
+									       			options(documentType),
+													'class -> "input-xlarge ",
+													'_label -> "Document Type",
+													'_default -> "--- Choose Document Type ---")
+							            </div>
+							            
+							            
+									 	<div class="field-wrapper">
+								            <dl id="program_field" class=" ">
+											    <dt><label for="program">Program</label></dt>
+											    <dd>
+												    <select class="input-xlarge " name="program" id="program">
+												            <option value="" class="blank">--- Choose Program ---</option>
+												           @for(p <- programs) {
+									                  			<option value="@p.program_id">@if(p.program_name.length>50){@p.program_name.toString().substring(0, 50)...}else{@p.program_name} </option>
+										                   }
+												    </select>
+												</dd>
+											</dl>	 	
+							            </div>
+							            
+							             <div class="field-wrapper"> 
+								      		 	@select(
+									            	searchForm("document_type"),
+									       			options(documentType),
+													'class -> "input-xlarge ",
+													'_label -> "Document Type",
+													'_default -> "--- Choose Document Type ---")
+							            </div>
+							            
+							            <div class="field-wrapper"> 
+							            	<dl id="project_field" class=" ">
+											    <dt><label for="project">Project</label></dt>
+											    <dd>
+												    <select class="input-xlarge " name="project" id="project">
+												            <option value="" class="blank">--- Choose Project ---</option>
+												           @for(project <- projects) {
+									                  			<option value="@project.pId" >@if(project.project_name.length>50){@project.project_name.substring(0,50) ...}else{@project.project_name}</option>
+										                   }
+												    </select>
+												</dd>
+											</dl>
+							            </div>
+							            
+							           
+							           
+							            <div class="field-wrapper" > 
+							            	<dl id="user_field" class=" ">
+											    <dt><label for="user">Responsible</label></dt>
+											    <dd>
+												    <select class="input-xlarge " name="user" id="user">
+												            <option value="" class="blank">--- Choose Responsible ---</option>
+												           @for(user <- users) {
+									                  			<option value="@user.uid" >@user.first_name  @user.last_name </option>
+										                   }
+												    </select>
+												</dd>
+											</dl>
+							            </div>
+							            
+							            
+							            <div class="field-wrapper"> 
+							            	<dl id="tasks_field" class=" ">
+											    <dt><label for="task">Task</label></dt>
+											    <dd>
+												    <select class="input-xlarge " name="task" id="task">
+												            <option value="" class="blank">--- Choose Task ---</option>
+												           @for(task <- tasks) {
+									                  			<option value="@task.tId" >@if(task.task_title.length>50){@task.task_title.substring(0, 50) ...}else{@task.task_title}</option>
+										                   }
+												    </select>
+												</dd>
+											</dl>
+							            </div>
+							            
+							            <div class="field-wrapper white-border" style="width: 49%">
+							            	<dl id="search_scope" class=" ">
+											    <dt><label for="search_scope">Search Scopesss</label></dt>
+											    <dd>
+											    	<div style="width:100%;float: left;">
+												    	<input style ="width:16px;float: left;" type="radio" name="search_scope" value="0" checked="checked" id="search_scope1"/><label for="search_scope1" style="font-family: Helvetica; font-size: 13px; margin: 3px 0 0 8px; min-height: 21px; font-weight: normal; float:left; width:90%;">Current documents</label>
+												    </div>
+												    <div style="width:100%;float: left;">
+    													<input style ="width:16px;float: left; " type="radio" name="search_scope" value="1" checked="checked" id="search_scope2"/><label for="search_scope2" style="font-family: Helvetica; font-size: 13px; margin: 3px 0 0 8px; min-height: 21px; font-weight: normal; float:left; width:90%;">Historical documents</label>
+    												</div>
+    												<div style="width:100%;float: left;">
+    													<input style ="width:16px;float: left; " type="radio" name="search_scope" value="2" checked="checked" id="search_scope3"/><label for="search_scope3" style="font-family: Helvetica; font-size: 13px; margin: 3px 0 0 8px; min-height: 21px; font-weight: normal; float:left; width:90%;">Current and historical documents</label>
+    												</div>
+    												
+												</dd>
+												<dd class="info">Numeric</dd>
+											</dl>
+							            </div>
+							            
+							            
+							            <div class="field-wrapper white-border" style="margin-top: -64px;"> 
+							            	<dl id="subtask_field" class=" ">
+											    <dt><label for="sub_task">Sub Task</label></dt>
+											    <dd>
+												    <select class="input-xlarge " name="sub_task" id="sub_task">
+												            <option value="" class="blank">--- Choose Sub Task ---</option>
+												           @for(subtask <- subtasks) {
+									                  			<option value="@subtask.sub_task_id" >@if(subtask.task.length>50){@subtask.task.substring(0, 50) ...}else{@subtask.task}</option>
+										                   }
+												    </select>
+												</dd>
+											</dl>
+							            </div>
+							            
+							            
+							            
+							             
+							            <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
+							            	<span class="left" style="margin-top: 15px;"><input class="btn form-button" value="Search" type="submit"/></span>
+				       						<span class="left" style="margin-left: 29px; margin-top: 15px;"> <input id="cancel-project" class="btn form-button" value="Cancel" type="button"/></span>
+							            </div>
+							           
+							           
+							        }	
+							        </div>
+							  </div>
+							  <div id="search-result" style="margin-top: 10px; float:left; width:100%; display:none;">
+							  	<ul id="search-result-tab" class="content-box-tabs">
+							  	 <li><a href="javascript:void(0)" class="search-tab1 current">Division</a></li>
+						            <li><a href="javascript:void(0)" class="search-tab1 ">Program</a></li>
+						            <li><a class="search-tab2" href="javascript:void(0)">Project</a></li>
+						            <li><a class="search-tab2" href="javascript:void(0)">Task</a></li>
+						            <li><a class="search-tab4" href="javascript:void(0)">Sub Task</a></li>
+						        </ul>
+						        <div class="content-box-content" style="width:100%; margin-top: 0px; float:left;">
+						        	
+						        </div>
+							  </div>
+							  
+						</div>
+					</div>
+				</div>
+			  @frontend.footer()
+		</section>
+			
+			
+	</div>
+	@frontend.headerScripts()
+	<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/documents.css")">
+	<script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
+</body>
+</html>

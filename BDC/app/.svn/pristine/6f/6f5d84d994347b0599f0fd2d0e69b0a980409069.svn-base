@@ -1,0 +1,244 @@
+@(user :Option[Users],hashMapRate:java.util.TreeMap[String,String],hashMapSkill: java.util.HashMap[String,String],skillForm:Form[SkillsMaster])(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import helper._
+@import java.lang._
+@import services._
+</head>
+<body>
+@frontend.topLayout()
+<link href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")" rel="stylesheet">
+<div class="main">
+@frontend.header()
+<section class="slider" id="home_page">
+	<div class="left map border-top"></div>
+
+	<div class="emp_img_div emp-edit-info">
+		
+		<div style="width:100%;">
+        	<div class="edit-profile-title">
+        	 	@Messages("editUsersSkills.upgradeskills") 
+        	 	<span style="float: right; font-size: 13px !important;margin-top: 10px !important;"> @user.get.first_name @user.get.last_name </span>
+        	</div>
+           
+                    
+            <div style="width:50%" class="left">
+          @form(action = controllers.Frontend.routes.User.updateSkills(user.get.uid.get.toString()),'id->"mySkillUpdate",'class->"fo-edit-form",'method->"POST"){
+                <input type="hidden" value="@user.get.uid.get.toString()" name="uId" id="uId">
+                
+                 <input type="hidden"  name="selected_rating" id="selected_rating">
+                 
+                @select(skillForm("skill_id"),options(hashMapSkill),'class->"input-xlarge",'name->"skill",'_default ->Messages("employee.editskills.default"),'_label->"")
+				<div class="input select rating-b left" style=" margin-top: 20px;">
+		       @select(skillForm("rating"),options(hashMapRate),'id->"example-b",'name->"rating",'_label->Messages("employee.editskills.rating"))
+        		</div>
+				
+               <div style="width:235px;" class=" pull-left row-fluid left">
+               		<span class="left update-skills" id="upgradeId"><span class="profile-action">@Messages("editUsersSkills.upgrade") </span><img  width="30" height="30" src="/assets/frontend/images/button_check.png" alt=""></span>
+               		<span class="left cancel-profile" ><a href="/employee/@user.get.uid.get.toString()"><span class="profile-action">@Messages("editUsersSkills.cancel")  </span><img width="30" height="30" src="/assets/frontend/images/button-cross_blue.png" alt=""></a></span>
+               <div class="clearfix"></div> 
+               </div>
+		}
+			</div>
+             <div class="skill-list" style="width:50%; float:right;  margin-top: 10px;">
+
+		 @if(UserService.findAllSkillsByUserId(user.get.uid.get).size > 0){
+		 <div class="dash_detail_1_right push-top6px" style="margin:20px 0 0 20px;float:left"><h3 style="width:436px;font-size:14px">@Messages("editUsersSkills.skills")</h3>
+			@for(s <- UserService.findAllSkillsByUserId(user.get.uid.get)){
+				<div class="dash_right_data_main">
+					<div class="dash_right_data_2 " style="width:448px">
+						<div class="dash_right_data_left" style="width:180px"> 
+							@UserService.findSkillBySkillId(s.sId).get.skill 
+						</div>
+						
+							<div class="right remove-skill" id="s_@s.sId"></div>
+							<div class="dash_right_data_right skill_not_endorsed" style="width:90px;font-weight: bold;font-size: 12px;"> 
+						@{
+							(s.rating.toString()) match{
+								case "1" => Messages("editUsersSkills.bad")
+								case "2" =>  Messages("editUsersSkills.medium")
+								case "3" =>  Messages("editUsersSkills.ok")
+								case "4" =>  Messages("editUsersSkills.quitegood")
+								case "5" => Messages("editUsersSkills.awesome")
+							}
+							
+						}					
+												
+						</div>
+					</div>
+				</div>
+			}
+			</div>     
+			}
+			</div>
+		</div>
+		</div>
+		
+		@frontend.footer()
+		 <div id="dialog-confirm"></div> 
+		 <div id="pop-box-over" class="display-none"></div>
+</section>
+	</div>
+@frontend.headerScripts()	
+
+<script type="text/javascript">
+	$(function() {
+		$('#example-b').barrating();
+		$(".remove-skill").on("click", renderRemoveSkill);
+		
+		$(".bar-rating").find("a").mouseleave(function(){
+		    var value = $('#selected_rating').val();
+		   if(value !=''){
+		 	switch (value) {
+				case '1':
+					$('#example-b_field a:nth-child(1)').addClass('current selected');
+					var bad = "@Messages("editUsersSkills.bad")";
+				    $('.current-rating').delay( 800 ).text(bad);
+					break;
+				case '2':
+					$('#example-b_field a:nth-child(2)').addClass('current selected');
+							$("a:nth-child(1)").addClass("selected");
+						    var med = "@Messages("editUsersSkills.medium")";
+							$('.current-rating').delay( 800 ).text(med);
+					break;
+				case '3':
+					$('#example-b_field a:nth-child(3)').addClass('current selected');
+							$("a:nth-child(2)").addClass("selected");
+							$("a:nth-child(1)").addClass("selected");
+							var good = "@Messages("editUsersSkills.ok")";
+							$(".current-rating").delay( 800 ).text(good);
+					break;
+				case '4':
+					$('#example-b_field a:nth-child(4)').addClass('current selected');
+							$("a:nth-child(3)").addClass("selected");
+							$("a:nth-child(2)").addClass("selected");
+							$("a:nth-child(1)").addClass("selected");
+							var verygood =  "@Messages("editUsersSkills.quitegood")";
+							$('.current-rating').delay( 800 ).text(verygood);
+					break;
+				case '5':
+					$('#example-b_field a:nth-child(5)').addClass('current selected');
+							$("a:nth-child(4)").addClass("selected");
+							$("a:nth-child(3)").addClass("selected");
+							$("a:nth-child(2)").addClass("selected");
+							$("a:nth-child(1)").addClass("selected");
+							var awesome = "@Messages("editUsersSkills.awesome")";
+							$('.current-rating').delay( 800 ).text(awesome);
+					break;
+				}
+				}else if(value ==''){
+				    rating = "@Messages("editUsersSkills.bad")";
+					$('#example-b_field a:nth-child(1)').addClass('current selected');
+					$("a:nth-child(5)").removeClass("selected current");
+					$("a:nth-child(4)").removeClass("selected current");
+					$("a:nth-child(3)").removeClass("selected current");
+					$("a:nth-child(2)").removeClass("selected current");
+				}
+				
+		});
+	
+		$('.rating-enable').click(function() {
+			$('#example-b').barrating();
+			$(this).addClass('deactivated');
+			$('.rating-disable').removeClass('deactivated');
+		});
+
+		$('.rating-disable').click(function() {
+			$('select').barrating('destroy');
+			$(this).addClass('deactivated');
+			$('.rating-enable').removeClass('deactivated');
+		});
+
+		$('.rating-enable').trigger('click');
+
+		$("#upgradeId").off("click").on("click", renderUpdateSkills);
+
+		$(".dash_right_data_2:odd").addClass("dash_right_data_2_odd");
+	});
+
+	var sel=selectSkillsRatings();
+    
+	function renderUpdateSkills() {
+		var skill_id = $("#skill_id").val();
+		if (skill_id != "") {
+			$(".dash_right_data_2:odd").addClass("dash_right_data_2_odd");
+			var url = $("#mySkillUpdate").attr("action");
+			var sData = $('#mySkillUpdate').serialize();
+			$.post(url, sData, function(data) {
+				if (data != "fails") {
+
+					alert("Skill  updated.");
+					window.location.reload(true);
+					$(".dash_right_data_2:odd").addClass(
+							"dash_right_data_2_odd");
+
+				}
+			});
+		}
+
+	}
+	
+	function selectSkillsRatings(){
+		$('#skill_id').on('change', function() {
+			var skill_id = $("#skill_id").val();
+			var url = "/get-skill-by-id?id=" + skill_id;
+			
+			$.get(url, function(data) {
+				var rating = ""
+				if(data !=''){
+				   $('#mySkillUpdate #selected_rating').val(data);
+			
+				switch (data) {
+				case '1':
+					rating = "@Messages("editUsersSkills.bad")";
+					$('#example-b_field a:nth-child(1)').addClass(
+									'current selected');
+					break;
+				case '2':
+					rating = "@Messages("editUsersSkills.medium")";
+					$('#example-b_field a:nth-child(2)').addClass(
+									'current selected');
+							$("a:nth-child(1)").addClass("selected");
+					break;
+				case '3':
+					rating = "@Messages("editUsersSkills.ok")";
+					$('#example-b_field a:nth-child(3)').addClass(
+									'current selected');
+							$("a:nth-child(2)").addClass("selected");
+							$("a:nth-child(1)").addClass("selected");
+					break;
+				case '4':
+					rating = "@Messages("editUsersSkills.quitegood")";
+					$('#example-b_field a:nth-child(4)').addClass(
+									'current selected');
+							$("a:nth-child(3)").addClass("selected");
+							$("a:nth-child(2)").addClass("selected");
+							$("a:nth-child(1)").addClass("selected");
+					break;
+				case '5':
+					rating = "@Messages("editUsersSkills.awesome")";
+					$('#example-b_field a:nth-child(5)').addClass(
+									'current selected');
+							$("a:nth-child(4)").addClass("selected");
+							$("a:nth-child(3)").addClass("selected");
+							$("a:nth-child(2)").addClass("selected");
+							$("a:nth-child(1)").addClass("selected");
+					break;
+				}
+				$('.current-rating').text(rating);
+		       }else if(data ==''){
+		       $('#mySkillUpdate #selected_rating').val('1');
+				    rating = "@Messages("editUsersSkills.bad")";
+					$('#example-b_field a:nth-child(1)').addClass('current selected');
+					$("a:nth-child(5)").removeClass("selected current");
+					$("a:nth-child(4)").removeClass("selected current");
+					$("a:nth-child(3)").removeClass("selected current");
+					$("a:nth-child(2)").removeClass("selected current");
+				}
+			});
+			  
+		});
+	}
+	
+</script>
+</body>
+</html>

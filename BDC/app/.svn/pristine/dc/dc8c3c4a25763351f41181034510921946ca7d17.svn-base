@@ -1,0 +1,414 @@
+@(sub_task_id:String,task :Option[Tasks],project :Option[Project], programDetails : Option[ProgramMaster],subTaskForm :play.api.data.Form[SubTaskMaster],baselineAvailable : Boolean, baselineEnabledForProject : Boolean, catalogues : java.util.HashMap[String, String], disciplineMap: java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@import helper._
+@frontend.layout()
+@import services._
+
+
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="pDetail_page">
+
+		<input id="projectId" value="@project.get.pId" class="display-none"/>
+		<input id="project_id" value="@project.get.project_id" class="display-none"/>
+		
+		
+
+		<div class="product_main" style="float: left; height: auto; overflow: hidden;">
+		  <div class="product_detail_1 ">
+		  	  <div> 
+		  		<h3 class="parent-new-h3" id="productNm">
+			    <span class="parent-icon"> &lt; </span>
+				  <a href="/program-details/@programDetails.get.program_id.get.toString()">
+				  	<span class="left">@programDetails.get.program_name </span>
+			  	  </a>
+			  	   <span class="parent-icon">&gt;</span>
+			  	   <a href="/project-details/@project.get.pId.get.toString()">
+			  	   		<span class="left"> @project.get.project_name </span>
+			  	   </a>
+			  	   <span class="parent-icon">&gt;</span>
+			  	   <a href="/project-task-details/@task.get.tId.get.toString">
+			  	   		<span class="left">@task.get.task_title</span>
+			  	   </a>
+			  </h3>
+		  
+		  
+		  	</div>
+		  
+			 <div id="new_program_header">
+				<p> 
+					<span class="title-head">@Messages("addSubTask.editsubtask") </span>
+					<span class="title-head-status"><a href="@controllers.Frontend.routes.SubTask.updateSubTaskStatus(sub_task_id)">@Messages("editsubtask.changestatus")</a></span>
+				</p>
+			</div>
+			  
+		  </div>
+		  <input type="hidden" id="isValid" name="isValid" value="@SubTaskServices.checkSubTaskValidDependency(sub_task_id)" />
+	  <input id="task_start_date" name="task_start" type="hidden" value="@task.get.plan_start_date.format("yyyy-MM-dd")">
+     <input id="task_end_date" name="task_end" type="hidden" value="@task.get.plan_end_date.format("yyyy-MM-dd")" >
+	 @form(action = controllers.Frontend.routes.SubTask.updateSubTask(sub_task_id), 'id->"edit_subtask_form",'method->"POST") { 
+	     <input id="task_id" name="task_id" type="hidden" value="@task.get.tId" >
+	     <input id="sub_task_id" name="sub_task_id" type="hidden" value="@sub_task_id" >
+	  	 <input id="actual_start_date" name="actual_start_date" type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+	  	 <input id="actual_end_date" name="actual_end_date" type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+	  	 <input id="added_date" name="added_date" type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+	  	  <input id="status" name="status" type="hidden" value="@subTaskForm.data.get("status").get" >
+	  	  <input id="task_complete" name="task_complete" type="hidden" value="@subTaskForm.data.get("task_complete").get" >
+				
+  		  @inputText(subTaskForm("task_title"),'name->"task_title",'class->"span4",'_label->Messages("addSubTask.subtask"),'placeholder->Messages("addSubTask.placeholder.subtask"))
+          @textarea(subTaskForm("task_description"),'name->"task_description",'rows->"7",'class->"input-xlarge span6",'maxlength->"160",'_label->Messages("addSubTask.description"),'placeholder-> Messages("addSubTask.placeholder.description"))	
+          @inputText(subTaskForm("planned_start_date"),'name->"planned_start_date",'class->"span4 datepicker",'_label->Messages("addSubTask.plannedstartdate"),'placeholder->Messages("addSubTask.placeholder.plannedstartdate"))
+          @inputText(subTaskForm("planned_end_date"),'name->"planned_end_date",'class->"span4 datepicker",'_label->Messages("addSubTask.plannedenddate") ,'placeholder->Messages("addSubTask.placeholder.plannedenddate"))
+          
+          @if(TimesheetService.checkTaskPlanning(sub_task_id)){
+          	@inputText(subTaskForm("completion_percentage"),'name->"completion_percentage",'class->"span4 ",'_label->Messages("addSubTask.completionper"),'placeholder->Messages("addSubTask.placeholder.completionper"))	
+          }else{
+           <input id="completion_percentage" name="completion_percentage" type="hidden" value="@subTaskForm.data.get("completion_percentage").getOrElse("0")" >
+          }
+          
+          @*@select(subTaskForm("status"),options("0"->"Verde","1"->"Amarillo","2"->"Rojo"),'name->"status",'default->"--choose status--",'_label->Messages("addSubTask.status"),'style->"margin-bottom:15px;")
+          @select(subTaskForm("task_complete"),options("0"->"No","1"->"Si"),'class->"input-xlarge",'name->"task_complete",'_label->Messages("addSubTask.taskcomplete"))*@   
+           @select(subTaskForm("descipline"),options(disciplineMap),'class->"input-xlarge margin-top7",'name->"descipline",'_label->"Disciplina",  '_default -> "Seleccione Disciplina")
+          @select(subTaskForm("catalogue_id"),options(catalogues),'class->"input-xlarge",'name->"catalogue_id",'_label->Messages("addSubTask.srviceCatalogue"),  '_default -> Messages("newTask.serviceCatalogueSelect"))
+	           
+         @* @select(
+           	subTaskForm("dependencies_type"),
+      			options("1"->"Finish-Start","2"->"Start-Start","3"->"Start-Finish","4"->"Finish-Finish"),
+			'class -> "input-xlarge ",
+			'_label -> "Dependency Type")
+			*@	       
+	      <span class="task-dependency">@Messages("addSubTask.subtaskdependancy")</span>
+				        
+	    
+          <div class="width_full" style="margin-top:3px;">
+	       		<span class="left" style="margin-left:233px;"><input class="btn form-button" value='@Messages("button.save")' type="submit"/></span>
+	       		<span  class="left" style="margin-left:30px;"><input id="cancel-subtask" class="btn form-button" value='@Messages("button.cancel")' type="button"/></span>
+		     	@if(baselineAvailable && baselineEnabledForProject){
+		    	<span> <a  class="showBaseline" href="/show-baseline/@sub_task_id/subtask">@Messages("addSubTask.showbaseline") </a></span>
+		    	}
+			    @inputText(
+		              subTaskForm("dependencies_type"),
+		              'class -> "span4", 
+		               'placeholder -> "",
+		              '_label -> "",
+		              'type -> "hidden"
+		             
+		           )   
+		           
+	              @inputText(
+		              subTaskForm("sub_task_depend"),
+		              'class -> "span4", 
+		               'placeholder -> "",
+		              '_label -> "",
+		              'type -> "hidden"
+		             
+		           )   
+          </div>
+           
+        
+	}
+      
+   </div>
+    @frontend.footer()
+   </section>
+  	<div id="pop-box" class="display-none"> 
+	<div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"></div>
+     <div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+     	<span class="dialog-close"></span><div class="dialog-content"></div>
+	</div>
+   </div>
+   </div>
+   </div>
+ </div>
+	 
+
+  	 <div id="pop-box-over" class="display-none"> 
+  	 </div>
+   
+  <div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span><div class="dialog-content">
+	</div>
+</div>
+ 
+ 
+	<div class="tooltip"></div>		
+</div>	 
+   @frontend.headerScripts()	
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")" id="jquery-ui" rel="stylesheet">
+   <script type="text/javascript">
+   $(document).ready(function() {
+   
+   
+   
+   	   var catalogue_id = $("#catalogue_id").val();
+	   var descipline = $("#descipline").val();
+       if(typeof catalogue_id!="undefined" && catalogue_id!=""){
+           if(typeof descipline =="undefined" || descipline == ""){
+	       		var url = "/get-service-catalog-discipline/" + catalogue_id+"?t="+Date.now();
+			  	$.get(url, function(data) {
+			  		var json = $.parseJSON(data);
+			  		if(json.success){
+			  			var id = json.success
+			  			$("#descipline").val(id);
+					}
+			  	});
+	   
+	       }
+       }
+       $("#jquery-ui").attr("disabled", "disabled");
+       var errorText = $("#planned_end_date_field").find("dd.error").html();
+	   var newText = "Subtask end date can not be greater than Task end date.";
+	   
+	   if(errorText==newText){
+	     
+	   	var sub_task_id = $("#sub_task_id").val();
+		var end_date = $("#planned_end_date").val();
+	   	if(typeof sub_task_id != 'undefined'){
+	 	
+	   		validateSubTaskEdit(sub_task_id,end_date)
+   		}
+	   }
+       
+
+	   var errorText = $("#planned_start_date_field").find("dd.error").html();
+	   var newText = "Sub Task start date can not be earlier than task start date.";
+	   
+	   if(errorText==newText){
+	     
+	   	var sub_task_id = $("#sub_task_id").val();
+		var start_date = $("#planned_start_date").val();
+	   	if(typeof sub_task_id != 'undefined'){
+	 	
+	   		validateSubTaskStartDate(sub_task_id,start_date)
+   		}
+	   }
+       
+
+       
+   
+   	   $("#descipline").on("change",renderServiceCatalog);
+	   $('#cancel-subtask').on('click',function() {
+			 window.location.href='/project-task-details/@task.get.tId?#@sub_task_id';
+		   });
+		   
+	  /*   var value = parseFloat();
+	    if(!isNaN(value)){
+	     $('#completion_percentage').val(value);
+	     $('#completion_percentage').addClass('disabled');
+	     $('#completion_percentage').attr('readonly','readonly');
+	    } */
+	   var chkValid = $("#isValid").val();
+	   if(chkValid=="false"){
+	   		//document.getElementById('dependencies_type').disabled = true;
+			document.getElementById('sub_task_depend').disabled = true;
+			$(".task-dependency").addClass("display-none"); 
+	     }else{
+	        $(".task-dependency").on("click", rederEditSubTaskDependency);
+	      }
+	   	
+
+	  
+	  var subtasks=  $("#sub_task_depend").val();
+	  
+	  if(subtasks!=""){
+	  
+			var url="/get-dependent-subtask-dates?sub_tasks="+subtasks;
+		 	$.get(url, function(data) {
+		 		var obj = JSON.parse(data);
+		 		if(obj.minDate){
+		 		
+		 			
+		 			var maxD = $("#task_end_date").val().replace(/-/g, '/');
+		 			var minD =obj.maxDate.replace(/-/g, '/');
+		 			
+		        	$("#planned_start_date").datepicker("destroy");
+		 			$("#planned_end_date").datepicker("destroy");
+		 			//alert("This Sub Task should be scheduled between "+ new Date(minD) +" & "+new Date(maxD))
+		 			$("#planned_start_date").datepicker({
+		 				buttonImageOnly: true,
+		 				minDate:  new Date(minD),
+		 				maxDate:  new Date(maxD),
+		 				dateFormat: "dd-mm-yy",
+		 				changeMonth: true,
+	 					changeYear: true,
+		 				onSelect: function(d,inst){
+		 					var dt= $.datepicker.parseDate('dd-mm-yy',d);
+		 		            $('#planned_end_date').datepicker('option','minDate',dt);
+		 		            $('#planned_end_date').datepicker( "refresh" );
+		 		        }
+		 			});
+		 			
+		 			$( "#planned_end_date" ).datepicker({
+		 				buttonImageOnly: true,
+		 				changeMonth: true,
+	 					changeYear: true,
+		 				minDate:  new Date($("#task_start_date").val().split(' ')[0].replace(/-/g, '/')),
+		 				maxDate: new Date($("#task_end_date").val().split(' ')[0].replace(/-/g, '/')),
+		 				dateFormat: "dd-mm-yy"
+		 			});
+		 			
+		
+		 		}else{
+		 			
+		 			var maxD = $("#task_end_date").val().replace(/-/g, '/');
+		 			var minD =$("#task_start_date").val().replace(/-/g, '/');
+		 			
+		        	$("#planned_start_date").datepicker("destroy");
+		 			$("#planned_end_date").datepicker("destroy");
+		 			//alert("This Sub Task should be scheduled between "+ new Date(minD) +" & "+new Date(maxD))
+		 			$("#planned_start_date").datepicker({
+		 				buttonImageOnly: true,
+		 				minDate:  new Date(minD),
+		 				maxDate:  new Date(maxD),
+		 				dateFormat: "dd-mm-yy",
+		 				changeMonth: true,
+	 					changeYear: true,
+		 				onSelect: function(d,inst){
+		 					var dt= $.datepicker.parseDate('dd-mm-yy',d);
+		 		            $('#planned_end_date').datepicker('option','minDate',dt);
+		 		            $('#planned_end_date').datepicker( "refresh" );
+		 		        }
+		 			});
+		 			
+		 			$( "#planned_end_date" ).datepicker({
+		 				buttonImageOnly: true,
+		 				changeMonth: true,
+	 					changeYear: true,
+		 				minDate:  new Date($("#task_start_date").val().split(' ')[0].replace(/-/g, '/')),
+		 				maxDate: new Date($("#task_end_date").val().split(' ')[0].replace(/-/g, '/')),
+		 				dateFormat: "dd-mm-yy"
+		 			});
+		 			
+		 		}
+		 		
+		 		
+		 	});
+ 	 }else{
+ 	 
+	   $("#planned_start_date").datepicker({
+			buttonImageOnly: true,
+				changeMonth: true,
+		  changeYear: true,
+			minDate:  new Date($("#task_start_date").val().split(' ')[0].replace(/-/g, '/')),
+			maxDate:  new Date($("#task_end_date").val().split(' ')[0].replace(/-/g, '/')),
+			dateFormat: "dd-mm-yy",
+			onSelect: function(d,inst){
+				var dt= $.datepicker.parseDate('dd-mm-yy',d);
+	            $('#planned_end_date').datepicker('option','minDate',dt);
+	            $('#planned_end_date').datepicker( "refresh" );
+	        }
+		});
+		
+		$( "#planned_end_date" ).datepicker({
+			buttonImageOnly: true,
+				changeMonth: true,
+		  changeYear: true,
+			minDate:  new Date($("#task_start_date").val().split(' ')[0].replace(/-/g, '/')),
+			maxDate: new Date($("#task_end_date").val().split(' ')[0].replace(/-/g, '/')),
+			dateFormat: "dd-mm-yy"
+		});
+		
+	}
+		$.validator.addMethod("truedate", function (value) {
+		    function GetFullYear(year) {
+		        var twoDigitCutoffYear = 10 % 100;
+		        var cutoffYearCentury = 10 - twoDigitCutoffYear;
+		        return ((year > twoDigitCutoffYear) ? (cutoffYearCentury - 100 + year) : (cutoffYearCentury + year));
+		    }
+			if (value == null || value == '')
+			    return true;
+			var yearFirstExp = new RegExp("^\\s*((\\d{4})|(\\d{2}))([-/]|\\. ?)(\\d{1,2})\\4(\\d{1,2})\\.?\\s*$");
+			try {
+			    m = value.match(yearFirstExp);
+			    var day, month, year;
+			    if (m != null && (m[2].length == 4)) {
+			        day = m[6];
+			        month = m[5];
+			        year = (m[2].length == 4) ? m[2] : GetFullYear(parseInt(m[3]));
+			    }
+			    else {
+			        var yearLastExp = new RegExp("^\\s*(\\d{1,2})([-/]|\\. ?)(\\d{1,2})(?:\\s|\\2)((\\d{4})|(\\d{2}))(?:\\s\u0433\\.)?\\s*$");
+			        m = value.match(yearLastExp);
+			        if (m == null) {
+			            return null;
+			        }
+			        day = m[1];
+			        month = m[3];
+			        year = (m[5].length == 4) ? m[5] : GetFullYear(parseInt(m[6]));
+			    }
+			    month -= 1;
+			    var date = new Date(year, month, day);
+			    if (year < 100) {
+			        date.setFullYear(year);
+			    }
+			    return (typeof (date) == "object" && year == date.getFullYear() && month == date.getMonth() && day == date.getDate()) ? date.valueOf() : null;
+			}
+			catch (err) {
+			    return null;
+			}
+		}, "Invalid date");
+		
+       $('#edit-sub-task-form12345').validate({
+    		errorElement:'span',
+    		rules:{
+    			task_title:{
+    				required: true,
+    				maxlength: 60
+    			},
+    			task_description:{
+    				required: true,
+    				maxlength: 160
+    			},
+    			planned_start_date:{
+    				required: true,
+    				truedate: true
+    			},
+    			planned_end_date:{
+    				required: true,
+    				truedate: true
+    			}
+    	 			
+    		},
+    		messages:{
+    			task_title:{
+    				required: "Please enter the sub task.",
+    				maxlength: "Title should be less than 60 characters."
+    			},
+    			task_description:{
+    				required: "Please enter sub task description",
+    				maxlength: "Description should be less than 160 characters."
+    			},
+    			planned_start_date:{
+    				required: "Please select date."
+    			},
+    			planned_end_date:{
+    				required: "Please select date."
+    			}
+    			
+    		}
+       });
+   
+       $(".close-popup-box, .cancel-form").off("click").on("click",
+				renderClosePoup);
+   });
+   </script>
+   	</body>	
+	
+	
+</html>

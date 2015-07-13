@@ -1,0 +1,75 @@
+@(programs :Seq[ProgramMaster],dateMap: java.util.HashMap[String,java.util.HashMap[String,Double]])(implicit session: play.api.mvc.Session) 
+@import services._
+@import java.util._
+<div class=""> 
+<div class="project_list"> 
+<table class="" style=" border: 1px solid #dadada; width: 100%;  border-collapse: collapse; ">
+<thead id="bookedHr" style="height:35px; background: none repeat scroll 0 0 #315663;color: #ffffff;">
+ 	     <td id="id" class="headerCell">Programs</td> 
+ 	     <td id="id0" class="headerCell"></td>
+ 	    <td id="id1" class="headerCell"></td>	
+  		<td id="id2" class="headerCell"></td>
+  		<td id="id3" class="headerCell"></td>
+  		<td id="id4" class="headerCell"></td>
+  		<td id="id5" class="headerCell"></td>
+  </thead>
+  <tbody>
+  @for((program,index) <- programs.zipWithIndex){
+  	<tr class=" " id="">
+    	<td class="tableCells">@program.program_name </td>	
+  		<td class="tableCells">@dateMap.get(program.program_name).get("9")</td>
+  		<td class="tableCells">@dateMap.get(program.program_name).get("10")</td>
+  		<td class="tableCells">@dateMap.get(program.program_name).get("11")</td>
+  		<td class="tableCells">@dateMap.get(program.program_name).get("12")</td>
+ 		<td class="tableCells">@dateMap.get(program.program_name).get("1")</td>
+ 	    <td class="tableCells">@dateMap.get(program.program_name).get("2")</td> 
+   	   </tr>
+  }
+    </tbody>
+    </table>
+</div>
+</div>
+@frontend.headerScripts()
+
+ <script type="text/javascript">
+	$(document).ready(function(){
+     var arr = getNext12MonthNamesWithYear();
+		      $("#bookedHr #id0").text(arr[0]);
+			  $("#bookedHr #id1").text(arr[1]);
+			  $("#bookedHr #id2").text(arr[2]);
+			  $("#bookedHr #id3").text(arr[3]);
+			  $("#bookedHr #id4").text(arr[4]);
+			  $("#bookedHr #id5").text(arr[5]);
+	});
+
+	    var monthNames = new Array();
+
+	    monthNames[0] = "Jan";
+	    monthNames[1] = "Feb";
+	    monthNames[2] = "Mar";
+	    monthNames[3] = "Apr";
+	    monthNames[4] = "May";
+	    monthNames[5] = "Jun";
+	    monthNames[6] = "Jul";
+	    monthNames[7] = "Aug";
+	    monthNames[8] = "Sep";
+	    monthNames[9] = "Oct";
+	    monthNames[10] = "Nov";
+	    monthNames[11] = "Dec";
+
+	    function getNext12MonthNamesWithYear() {
+	        var now = new Date();
+	        var month = now.getMonth();
+	        var year = now.getFullYear();
+	        var res = [];
+	        for (var i = 0; i <6; ++i) {
+	            res.push(monthNames[month] + ' - ' + year);
+	            if (++month === 12) {
+	                month = 0;
+	                ++year;
+	            }
+	        }
+	        return res;
+	    }
+
+ </script>

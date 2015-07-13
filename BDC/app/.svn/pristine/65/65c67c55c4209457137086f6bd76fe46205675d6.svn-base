@@ -1,0 +1,91 @@
+@(divisions: Seq[Divisions])
+@import services._
+@import java.util.Calendar
+@import java.text.SimpleDateFormat
+@import utils._;var isValid = false; var formatDate = new SimpleDateFormat("dd-MM-yyyy");var earn_value : Option[SpiCpiCalculations] = null;var  program_risks:  Seq[RiskManagementMaster] = null;var project_risks: Seq[RiskManagementMaster]= null;var task_risks:  Seq[RiskManagementMaster]= null;var sub_task_risks: Seq[RiskManagementMaster]=null;
+@import java.text.DecimalFormat; var df = new DecimalFormat("00"); var df2 = new DecimalFormat("0.0");var programs:Seq[ProgramMaster] = null; var projects:Seq[Project] = null; var tasks: Seq[Tasks] = null; var sub_tasks: Seq[SubTasks] = null; var user : Option[Users]= null;
+<ul class="width_full">
+	<li class="header">
+		<span class="title bold">@Messages("riskDashboard.parentName")</span> 
+		<span class="responsible title bold"> @Messages("riskDashboard.responsible")</span>
+		<span class="name title bold">@Messages("riskDashboard.name")</span> 
+		<span class="cause title bold">@Messages("riskDashboard.cause")</span> 
+		<span class="event title bold">@Messages("riskDashboard.event")</span> 
+		<span class="impact title bold">@Messages("riskDashboard.impact")</span>
+		<span class="clouser_date bold title">@Messages("riskDashboard.closerDate")</span>
+		<span class="cuantification title bold">@Messages("riskDashboard.cuantification")</span>
+		<span class="strategic_reply title bold">@Messages("riskDashboard.strategicReply")</span>
+	</li>
+	@for((d,index2) <- divisions.zipWithIndex){
+		@{isValid = false}
+		@{programs = ProgramService.findAllProgramMasterDetailsForDivision(d.dId.get.toString()) }
+		@if(programs.size>0){
+			@for((p, index) <- programs.zipWithIndex){
+				
+				@{projects = ProjectService.findProjectListForProgram(p.program_id.get.toString())}
+				@for((proj, index) <- projects.zipWithIndex){
+					@{tasks = TaskService.findTaskListByProjectId(proj.pId.get.toString())}
+					@for(t <- tasks){
+						<li class="header-title width_full @if(programs.size==0){display-none}">
+							<span class="width_full" style=" font-style: italic; font-weight: bold;line-height: 16px;">@d.division.trim() / @p.program_name / @proj.project_name / @t.task_title</span>
+						</li>
+						@{ sub_tasks = SubTaskServices.findSubTasksByTask(t.tId.get.toString()) }
+						@for(subt <- sub_tasks){
+							@{ sub_task_risks = RiskService.findRiskList(subt.sub_task_id.get.toString(), 3)}
+							@if(sub_task_risks.size>0){
+								@{isValid = true}
+								@for(r <- sub_task_risks){
+									<li class="width_full row-data">
+										<span class="title">@subt.task</span>
+										<span class="responsible title">
+											@{user = UserService.findUser(r.responsible.toString())}
+									 		@if(!user.isEmpty){
+									 			@user.get.first_name.substring(0, 1) .&nbsp;@user.get.last_name	
+									 		} 
+										</span>
+										<span class="name title">@r.name</span> 
+										<span class="cause title">@r.cause</span> 
+										<span class="event title">@r.event</span> 
+										<span class="impact title">@r.imapct</span>
+										<span class="clouser_date title">@formatDate.format(r.risk_clouser_date)</span>
+										<span class="cuantification title">
+											@{
+												r.quantification match{
+													case 0 => "Alto"
+													case 1 => "Mediano"
+													case 2 => "Bajo"
+												} 
+											}
+										</span>
+										<span class="strategic_reply title">
+											@{
+												r.strategic_reply match{
+													case 0=> "Acceptar"
+													case 1=> "Mitgar"
+													case 2=> "Evitar"
+													case 3=> "Transerir"
+												}
+											}
+										</span>
+									</li>	
+								}
+							}else{
+								<li class="width_full row-data">
+									<span class="title">@subt.task</span>
+									<span class="responsible title">NA</span>
+									<span class="name title">NA</span> 
+									<span class="cause title">NA</span> 
+									<span class="event title">NA</span> 
+									<span class="impact title">NA</span>
+									<span class="clouser_date title">NA</span>
+									<span class="cuantification title">NA</span>
+									<span class="strategic_reply title">NA</span>
+								</li>
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+</ul>

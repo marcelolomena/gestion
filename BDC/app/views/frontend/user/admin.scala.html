@@ -1,0 +1,183 @@
+@(users : Seq[Users],divisionMap :java.util.HashMap[String, String],gerenciaMap :java.util.HashMap[String, String],departmentMap :java.util.HashMap[String, String], divisions : Seq[Divisions], employeeCountDivisionWise :java.util.HashMap[String, String], genrenciaDivisionWiseMap : java.util.HashMap[String, Seq[Genrencias]], employeeCountGenrenciaWise : java.util.HashMap[String, String], departmentGenrenciaWiseMap : java.util.HashMap[String, Seq[Departments]], employeeCountDepartmentWise : java.util.HashMap[String, String], employeeCountReportingDirectToDivision : java.util.HashMap[String, String], employeeCountReportingDirectToGerencia : java.util.HashMap[String, String],  searchForm : Form[EmployeeSearchMaster],totalCount:Long)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@import play.api.i18n._ 
+@import services._
+@import helper._;var officeDetails : Option[Office]= null; var userprofile: Option[UserProfiles] = null
+@import utils._
+  
+@frontend.layout()
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+
+<section class="slider" id="user_management">
+		<input type="hidden" value="@totalCount" id="record-count">
+	<div class="left" style="margin-bottom: 10px;">
+	  @if(utils.UserAccess.checkAccess(req,"user_create")){
+		  <span class="left push-top20px">
+		  		<a href="/add-new-user" class="new-program-a"><div class="program-div" ><span>@Messages("admin.newemployee")</span></div></a>
+		  </span>
+	  }
+	</div>
+
+	<ul id="employee-listing-tab" class="content-box-tabs" style="width:100%; padding:0  !important;">
+			<li style="margin:0;"><a class="employeeOverview current" href='javascript:void(0)'>@Messages("employee.employeelisting")</a></li>
+    		
+    		<li style="margin:0; float:right;"><a class="searchForm" href='javascript:void(0)'>@Messages("employeesearch.title")</a></li>
+    </ul>
+    <div style="width:100%; margin-top: 0px; float:left;" class="content-box-content"></div>
+    
+    <div class="focus_on width_full" style="padding:10px 0; margin:10px 0;display:none;">
+	 	<div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
+	 	<div class="search-form-wrapper" style="padding: 10px 40px;">
+	 	
+		 	@form(action = controllers.Frontend.routes.User.searchEmployeeResult, 'id->"search-employee-form") {
+		 		<input type="hidden" value='' name='parent_type' />
+		 		<input type="hidden" value='' name='parent_id' />
+		 		<div class="width_full">
+		      		 @inputText(
+		                searchForm("search_filter"),
+		                'class -> "", 
+		                 'placeholder -> Messages("searchtext.placeholder"),
+		                '_label -> Messages("searchtext.title")
+		            )
+				</div>
+				
+				<div class="field-wrapper">
+					@select(searchForm("division"),options(divisionMap),'class->"input-xlarge",'id->"division",'_label->Messages("programDetails.division"),'_default->Messages("programsearch.selectdivision"))
+	            </div>
+			            
+	             <div class="field-wrapper">
+					@select(searchForm("gerencia"),options(gerenciaMap),'class->"input-xlarge",'id->"gerencia",'_label->Messages("programDetails.gerencia"),'_default->Messages("employeesearch.choosegerencia"))
+	            </div>
+	            
+	            <div class="field-wrapper">
+					@select(searchForm("department"),options(departmentMap),'class->"input-xlarge",'id->"department",'_label->Messages("addDepartment.title"),'_default->Messages("employeesearch.choosedepartment"))	
+	            </div>
+	            <input type="hidden" name="start" id="start" value="1">
+	            <input type="hidden" name="end" id="end" value="10">
+	            <div style="width:100%; float:left; margin-bottom:15px;">
+	            <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
+			            	<span class="left" style="margin-top: 15px;"><input class="btn form-button" value="@Messages("button.search")" type="submit"/></span>
+       						<span class="left" style="margin-left: 29px; margin-top: 15px;"> <input id="cancel-employee-search" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+			            </div>
+			     </div>
+		 	}
+		 </div>
+	</div>
+			
+	<div id="employee-overview-wrapper">
+		<div id="employee-overview">
+			<div class="employee-list-left">
+			 	@for( (division, index) <- divisions.zipWithIndex){
+					<div id="division_@division.dId.get.toString"  class="data-row">
+						<a><span class="left division_icon"></span><span class="left division_name">@division.division (@employeeCountDivisionWise.get(division.dId.get.toString()))</span></a>
+					</div>
+					<div id="d_genrencia_@division.dId.get.toString" class="display-none">
+						@for( (genrencia, gIndex) <-genrenciaDivisionWiseMap.get(division.dId.get.toString).zipWithIndex ){
+							<div  id="genrencia_@genrencia.dId.get.toString" class="genrencia-list data-row">
+								<span class="left genrencia_icon"></span><span class="left genrencia_title">@genrencia.genrencia (@employeeCountGenrenciaWise.get(genrencia.dId.get.toString) )</span>
+							</div>
+							<div id="g_department_@genrencia.dId.get.toString" class="display-none">
+								@for( (department, dIndex ) <- departmentGenrenciaWiseMap.get(genrencia.dId.get.toString).zipWithIndex){
+									<div  id="department_@department.dId.get" class="department-list data-row">
+										<span class="left department_icon"></span><span class="left department_title">@department.department (@employeeCountDepartmentWise.get(department.dId.get.toString()))</span>
+									</div>
+								}
+								@if(Integer.parseInt(employeeCountReportingDirectToGerencia.get(genrencia.dId.get.toString)) >0 ){
+									<div  id="selfgenrencia_@genrencia.dId.get.toString" class="department-list data-row self-ref">
+										<span class="left self_report_icon_gerencia"></span><span class="left department_title">Employees reporting to Gerencia (@employeeCountReportingDirectToGerencia.get(genrencia.dId.get.toString))</span>
+									</div>
+								}
+							</div>
+						}
+						@if(Integer.parseInt(employeeCountReportingDirectToDivision.get(division.dId.get.toString)) > 0){
+							<div  id="selfdivision_@division.dId.get.toString" class="genrencia-list data-row self-ref">
+									<span class="left self_report_icon_division"></span><span class="left genrencia_title">Employee reporting to this division (@employeeCountReportingDirectToDivision.get(division.dId.get.toString))</span>
+							</div>
+						}
+					</div>
+				}
+			</div>
+			<div  class="employee-list-right">
+				<div class="emp_listing">
+					<div id="emp_list">
+						<ul class="width_full">
+							@if(users != null && users.size > 0){
+								<li class="width_full header">
+									<span class="employee_name bold">@Messages("admin.employee")</span> 
+									<span class="employee_rut bold">@Messages("admin.userRole")</span>
+									<span class="employee_email bold"> @Messages("admin.email") </span> 
+									<span class="employee_telephone bold">@Messages("admin.userType")</span>
+									<span class="employee_action">@Messages("admin.action")</span> 
+								</li>
+								 @for((u, index) <- users.zipWithIndex){
+									<li class="width_full emp_row  @if(index%2==0 ){ emp_row_odd }else{ emp_row_even }">
+										<a href="/employee/@u.uid">	
+
+											<span class="employee_name">@u.first_name&nbsp;@u.last_name</span>
+											<span class="employee_rut">
+											@{
+												officeDetails = UserService.findUserOfficeDetailsById(u.uid.get)
+												userprofile = UserProfileServices.findUserProfileById(officeDetails.get.isadmin.toString())
+											}
+											@{
+												
+												if(!userprofile.isEmpty)
+												{
+													userprofile.get.profile_name
+												}else{
+													"NA"
+												}
+											}	
+											</span>	 
+											
+											<span class="employee_email">@u.email</span> 
+											@if(!officeDetails.isEmpty && officeDetails.get.user_type.toString.equals("1")){ 
+												<span class="employee_telephone">Permanent</span>
+											}else{
+												<span class="employee_telephone">Contractorr</span>
+											}
+
+											<a href="/edit-user/@u.uid"><span class="edit-icon" ></span></a>
+										</a>
+									
+									</li>
+								 }
+							}else{
+								<li class="width_full header">No Users found for this department.	</li>
+							}
+						
+						</ul>
+					</div>
+				</div>
+				
+				  <div class="width_full push-top20px">
+			       		<ul id="emp_pagination_div"></ul>
+			      </div>
+			</div>
+		</div>
+		
+		 	
+      </div>
+	
+	<div class="left map border-top"></div>
+	
+
+
+	@frontend.footer()
+</section>
+</div>
+@frontend.headerScripts()	
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/employee.css")">
+<script src="@routes.Assets.at("frontend/js/employee.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		
+	});
+</script>
+</body>
+</html>

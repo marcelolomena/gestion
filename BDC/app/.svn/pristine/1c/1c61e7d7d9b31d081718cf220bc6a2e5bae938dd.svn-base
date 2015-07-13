@@ -1,0 +1,13 @@
+@()(implicit session: play.api.mvc.Session, req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider">
+    <div class="map"><img src="@routes.Assets.at("frontend/images/restricted_access.jpg")" width="960" alt=""></div>
+</section>
+
+</div>
+</body>

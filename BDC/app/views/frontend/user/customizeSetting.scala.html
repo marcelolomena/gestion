@@ -1,0 +1,88 @@
+@(pUserProjectList: Seq[Project] ,pList: Seq[Project],pIds:String,uId: String)(implicit session: play.api.mvc.Session) 
+@import helper._
+@import services._
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<div class="width-full">
+
+
+	<div class="width-full project-grid">
+
+	<div style="float:left;margin-left:50px;width: 300px;">
+		<input class="search-project" name="search-project" placeholder="Search Project" value="" type="text" style="width: 300px;"/>
+	</div>
+	
+	
+	<div class="left row-div">
+	<div style="float:left;width:100%;margin-bottom: 20px;margin-top: 10px;">
+	
+	    @form(action = controllers.Frontend.routes.Login.updateUserProjectManagementSetting, 'id->"myPMUpdate", 'class->"pm-form") {
+			<input type="hidden" value="@uId" name="uId" id="uId">
+			<input type="hidden" value="@pIds" name="pId" id="pId">
+	     }
+	     <div class="p_listing"> 
+	     @if(pList.length > 0 ){
+		     @for(p <- pList){
+		     	<a herf="/project-details/@p.pId" target="_blank" class="p_details_list">
+			       	<span style="float:left;width: 100%; ">
+			        	<span class="left"><input type="checkbox" class="chk-select" checked="checked"  name="@p.pId" value="">
+			        	</span>
+			        	<span class="left p_list_title">@ProjectService.findProjectDetails(Integer.parseInt(p.pId.toString)).get.project_name</span>
+			        </span>
+		        </a>
+		        
+		     }
+	     }
+	      @if(pUserProjectList.length > 0 ){
+		    <!--  <hr class=" left"  style="float:left;margin: 10px;width: 800px;"> -->
+		     @for(p <- pUserProjectList){
+		     	<a herf="/project-details/@p.pId" target="_blank" class="p_details_list">
+			       	<span style="float:left;width: 550px; ">
+			        	<span class="left"><input type="checkbox" class="chk-select"  name="@p.pId" value=""></span>
+			        	<span class="left p_list_title">@ProjectService.findProjectDetails(Integer.parseInt(p.pId.toString)).get.project_name</span>
+			        </span>
+		        </a>
+		        
+		     }
+	     }
+	     </div>
+ 
+    </div>
+     <div class="focus_on width235px" style=" margin: 15px 0 30px 30px;padding: 10px 0 20px;">
+           <div class="focus_on_title"><img width="69" height="13" alt="" src="@routes.Assets.at("frontend/images/focus_on.jpg")"></div>
+          	@* <div class="all_country">
+             <div id="websites5_msddHolder" style="height:0px;overflow:hidden;position:absolute;" class="ddOutOfVision"><select style="width:230px;" tabindex="1" id="websites5" name="websites5">
+               <option title="" selected="selected" value="" name="">By Revenue</option>
+               <option title="" value="PrototypeCombobox" name="">Products 1</option>
+               <option title="" value="PrototypeCombobox" name="">Products 2</option>
+               <option title="" value="PrototypeCombobox" name="">Products 3</option>
+             </select></div><div style="width: 232px;" class="dd" id="websites5_msdd"><div class="ddTitle" id="websites5_title"><span class="arrow" id="websites5_arrow"></span><span id="websites5_titletext" class="ddTitleText"><span class="ddTitleText">By Revenue</span></span></div><div style="width: 230px; height: auto; max-height: 400px;" class="ddChild" id="websites5_child"><a id="websites5_msa_0" style="[object CSS2Properties]" class="selected enabled" href="javascript:void(0);"><span class="ddTitleText">By Revenue</span></a><a id="websites5_msa_1" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 1</span></a><a id="websites5_msa_2" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 2</span></a><a id="websites5_msa_3" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 3</span></a></div></div>
+           </div>
+           <div class="all_country">
+             <div id="websites6_msddHolder" style="height:0px;overflow:hidden;position:absolute;" class="ddOutOfVision"><select style="width:230px;" tabindex="1" id="websites6" name="websites6">
+               <option title="" selected="selected" value="" name="">By Department</option>
+               <option title="" value="PrototypeCombobox" name="">Products 1</option>
+               <option title="" value="PrototypeCombobox" name="">Products 2</option>
+               <option title="" value="PrototypeCombobox" name="">Products 3</option>
+             </select></div><div style="width: 232px;" class="dd" id="websites6_msdd"><div class="ddTitle" id="websites6_title"><span class="arrow" id="websites6_arrow"></span><span id="websites6_titletext" class="ddTitleText"><span class="ddTitleText">By Department</span></span></div><div style="width: 230px; height: auto; max-height: 400px;" class="ddChild" id="websites6_child"><a id="websites6_msa_0" style="[object CSS2Properties]" class="selected enabled" href="javascript:void(0);"><span class="ddTitleText">By Department</span></a><a id="websites6_msa_1" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 1</span></a><a id="websites6_msa_2" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 2</span></a><a id="websites6_msa_3" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 3</span></a></div></div>
+           </div>
+           <div class="all_country">
+             <div id="websites7_msddHolder" style="height:0px;overflow:hidden;position:absolute;" class="ddOutOfVision"><select style="width:230px;" tabindex="1" id="websites7" name="websites7">
+               <option title="" selected="selected" value="" name="">By Resources</option>
+               <option title="" value="PrototypeCombobox" name="">Products 1</option>
+               <option title="" value="PrototypeCombobox" name="">Products 2</option>
+               <option title="" value="PrototypeCombobox" name="">Products 3</option>
+             </select></div><div style="width: 232px;" class="dd" id="websites7_msdd"><div class="ddTitle" id="websites7_title"><span class="arrow" id="websites7_arrow" style="background-position: 0px 0px;"></span><span id="websites7_titletext" class="ddTitleText"><span class="ddTitleText">By Resources</span></span></div><div style="width: 230px; height: auto; max-height: 400px;" class="ddChild" id="websites7_child"><a id="websites7_msa_0" style="[object CSS2Properties]" class="selected enabled" href="javascript:void(0);"><span class="ddTitleText">All Departments</span></a><a id="websites7_msa_1" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 1</span></a><a id="websites7_msa_2" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 2</span></a><a id="websites7_msa_3" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 3</span></a></div></div>
+           </div>*@
+          <div class="left " style=" margin: 15px 0 0 23px;width: 240px;">
+			<input class="update-pm" value="Update" type="button"/>
+    	</div>
+   </div>
+                
+    </div>
+	      
+	</div>
+		 <span class="close-icon"></span>  
+	</div>
+	
+</div>

@@ -1,0 +1,19 @@
+@(message: String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+	@frontend.layout()
+	</head>
+	<body>
+	<div class="top_part " style="background-position: left -213px;">
+        	<div class="top_part_left" >
+            	<p><img width="17" height="17" src="@routes.Assets.at("frontend/images/login_ico.png")" alt=""> Balkrishna Raut <a href="#">@Messages("topNav.logout")</a></p>
+            </div>
+            <div class="top_part_right">
+            	<ul>
+                	<li><a href="#"><img width="17" height="14" src="@routes.Assets.at("frontend/images/message_ic.png")" alt="">Messages</a> <span>2</span></li>
+                    <li><a href="#"><img width="17" height="17" src="@routes.Assets.at("frontend/images/setting_ic.png")" alt="">Settings</a></li>
+                </ul>
+            </div>
+	</div>
+	<div class="main">
+	
+	@frontend.header()
+	</div>

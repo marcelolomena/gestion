@@ -1,0 +1,162 @@
+@(username : String,usersMap :java.util.HashMap[String,String], reportToMap :java.util.HashMap[String, String],deptForm: play.api.data.Form[Departments])(implicit lang:Lang)
+@import helper._
+@import services._	
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+		
+	<script type="text/javascript">
+	 $(document).ready(function(){
+		    $("#report_type").off("change").on("change", renderreport_toList);
+	 });
+	 function renderreport_toList() {
+			var _this = $(this);
+			var d_id = _this.val();
+			var url = "/get-report_to-list?report_type=" + d_id;
+			$.get(url, function(data) {
+				$("#report_to").html(data);
+			});
+		}
+   </script> 
+	
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+
+    <div class="content">
+       	<div class="header">
+        	<h1 class="page-title">@Messages("leftnav.departmentmanagement")</h1>
+        </div>
+        
+           <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">@Messages("addDepartment.home")</a> <span class="divider">/</span></li>
+            <li><a href="@routes.Department.departmentList">@Messages("addDepartment.departmentlist") </a> <span class="divider">/</span></li>
+            <li class="active"> @Messages("addDepartment.editdepartment")</li>
+        </ul>
+
+ <div class="container-fluid">
+ 	
+	<div class="row-fluid">
+
+        <div class="block">
+            <p class="block-heading">@Messages("addDepartment.updatedepartment")</p>
+           
+             <div class="block-body">
+             
+               @form(action = routes.Department.updateDepartment, 'id->"myMilestone") {
+               		<input type="hidden" value="0" name="organization_depth" id="organization_depth">
+	          	     
+	                 @inputText(deptForm("department"),'name->"department",'class->"span4",'_label->Messages("addDepartment.department"))     
+	                 @select(deptForm("user_id"),options(usersMap),'class->"input-xlarge",'default->"--User--",'_label->Messages("addDepartment.departmenthead"))
+	                 @select(deptForm("report_type"),options("0"->"Genrencia","1"->"Department"),'_label->Messages("addDepartment.reporttotype"),'class->"input-xlarge")
+	                 @select(deptForm("report_to"),options(reportToMap),'_label->Messages("addDepartment.reportto"),'class->"input-xlarge",'default->"--Select Report To Type--")          
+	                <input type="hidden" name="id" value="@deptForm.data.get("id")">
+	                 <input type="hidden" name="is_deleted" value="@deptForm.data.get("is_deleted")">
+	                <div> <input class="btn pull-left" value="Save" type="submit"/><a href="javascript:history.back(-1);" class="btn push-left20px pull-left ">Cancel</a></div>
+	                <div class="clearfix"></div> 
+             }
+            </div>
+            
+			<div class="block-body"> 
+		          <table class="table">
+			      <thead>
+			        <tr class="first-row">
+			          <th>   @Messages("addDepartment.employee")</th>
+			          <th>  Rol de Empleador</th>
+			         @*<th>  Tipo de Usuario</th> *@
+			        </tr>
+			      </thead>
+			      <tbody>
+			      @for(u <- UserService.findUserPersonalDetailsByDepartment(deptForm.data.get("id").get.toString())){
+				        <tr class="emp_row">
+			 	          <td><span class="department-emp-list"> @u.first_name &nbsp;@u.last_name  </span></td>
+				         
+				          	@if(!UserService.findUserOfficeDetailsById(u.uid.get).isEmpty && UserService.findUserOfficeDetailsById(u.uid.get).get.user_type.toString.equals("1")){ 
+								 <td><span class="department-emp-list"> Permanent </span></td>
+							}else{
+								<td><span class="department-emp-list"> Contractorr </span></td>
+							}
+				          <td ><span class="department-emp-list"> 
+			       
+							
+						@*	@UserProfileServices.findUserProfileById(UserService.findUserOfficeDetailsById(u.uid.get).get.isadmin.toString()).get.profile_name *@
+				           </span></td>
+				        
+				        </tr>
+			        }
+			        
+			      </tbody>
+			      
+			    </table>
+			    
+			    
+				  <div class="width_full push-top20px">
+			       		<ul id="emp_pagination_div"></ul>
+			      </div>
+	      	</div>            
+            
+        </div>
+  
+
+<!-- 	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel"> @Messages("addDepartment.deleteconfirmation")</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>@Messages("addDepartment.deleteuser")</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>  -->
+	<!-- Footer panel -->                    
+  	 @footer()
+                    
+    </div>
+</div>
+    </div>
+   </body>
+</html>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/simplePagination.css")">
+<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		var items = $(".emp_row");
+		var numItems = items.length;
+		if(numItems > 0){
+			$('#emp_pagination_div').css('display', 'block');
+			var perPage = 10;
+			items.slice(perPage).hide();
+			$("#emp_pagination_div").pagination({
+				items : numItems,
+				itemsOnPage : perPage,
+				cssStyle : "light-theme",
+				onPageClick : function(pageNumber) { // this is where the magic happens
+					// someone changed page, lets hide/show trs appropriately
+					var showFrom = perPage * (pageNumber - 1);
+					var showTo = showFrom + perPage;
+					items.hide() // first hide everything, then show for the new page
+					.slice(showFrom, showTo).show();
+				}
+			});
+		}else if(numItems === 0){
+			$('#emp_pagination_div').css('display', 'none');
+		}
+	});
+</script>
+

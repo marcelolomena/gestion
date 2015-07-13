@@ -1,0 +1,69 @@
+@(departments: Seq[Departments],employees:Seq[Office])(implicit lang:Lang)
+<div id="tab2" class="tab-content" >
+          <div class="tabbed_1_data">
+              <div class="tabbed_1_left" id="employeeMap">
+              	      <h3><span class="emp-names" >@Messages("dashboardemp.employee")</span> <span class="left">@Messages("dashboardemp.department")</span></h3>
+              @employeeList(employees)
+              
+              </div>
+              <div class="tabbed_1_right">
+                @*<div class="date_piker_1">
+                  <h4><span><img width="10" height="10" alt="" src="@routes.Assets.at("frontend/images/date_bg-1.png")"></span>DATE RANGE</h4>
+                  <input type="text" style="margin-left: 9px;" id="datepicker" value="Last 6 Months" class="date-input" name="">
+                </div>
+                <div class="dash_compare_with">
+                  <h4><span><img width="10" height="10" alt="" src="@routes.Assets.at("frontend/images/comare-with.png")"></span>COMPARE WITH</h4>
+                  <div id="websites4_msddHolder" style="height:0px;overflow:hidden;position:absolute;" class="ddOutOfVision"><select style="width:230px;" tabindex="1" id="websites4" name="websites4">
+                    <option title="" selected="selected" value="" name="">Compare Yearly Average</option>
+                    <option title="" value="PrototypeCombobox" name="">Products 1</option>
+                    <option title="" value="PrototypeCombobox" name="">Products 2</option>
+                    <option title="" value="PrototypeCombobox" name="">Products 3</option>
+                  </select></div><div style="width: 232px;" class="dd" id="websites4_msdd"><div class="ddTitle" id="websites4_title"><span class="arrow" id="websites4_arrow"></span><span id="websites4_titletext" class="ddTitleText"><span class="ddTitleText">Compare Yearly Average</span></span></div><div style="width: 230px; height: auto; max-height: 400px;" class="ddChild" id="websites4_child"><a id="websites4_msa_0" style="[object CSS2Properties]" class="selected enabled" href="javascript:void(0);"><span class="ddTitleText">Compare Yearly Average</span></a><a id="websites4_msa_1" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 1</span></a><a id="websites4_msa_2" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 2</span></a><a id="websites4_msa_3" style="[object CSS2Properties]" class="enabled" href="javascript:void(0);"><span class="ddTitleText">Products 3</span></a></div></div>
+                </div>*@
+                <div class="focus_on" id="dashboard-employee" style="margin-top:0px;">
+               
+                  <div class="focus_on_title"><img width="69" height="13" alt="" src="@routes.Assets.at("frontend/images/focus_on.jpg")"></div>
+                  <div class="all_country">
+                    <label>@Messages("dashboardemp.department")</label>
+                  		<select name="division" id="division" class="input-xlarge" >
+                  		<option value="NA">--Select Department--</option>
+		                   @for(d <- departments) {
+	                  			<option value="@d.dId">@if(d.department.length>30){@d.department.toString().substring(0, 30)...}else{@d.department} </option>
+		                   }
+                 		</select> 
+                 
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          	 <div id="emp_list_item"> </div>
+          <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+          <script type="text/javascript">
+$(document).ready(function(){
+	$("#division").off("change").on("change", renderEmployeeList);
+	var items = $("#employeeMap .employee-data");
+	var numItems = items.length;
+	if(numItems > 10){
+		$('#emp_list_item').css('display', 'block');
+	var perPage =10;
+	items.slice(perPage).hide();
+	$("#emp_list_item").pagination({
+		items : numItems,
+		itemsOnPage : perPage,
+		cssStyle : "light-theme",
+		onPageClick : function(pageNumber) { // this is where the magic happens
+			// someone changed page, lets hide/show trs appropriately
+
+			var showFrom = perPage * (pageNumber - 1);
+			var showTo = showFrom + perPage;
+
+			items.hide() // first hide everything, then show for the new page
+			.slice(showFrom, showTo).show();
+		}
+	});
+	}else if(numItems === 0){
+		$('#emp_list_item').css('display', 'none');
+	}
+});
+</script>

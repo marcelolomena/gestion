@@ -1,0 +1,95 @@
+@(task_id:String,tasks: Seq[SubTasks],team_title:String)
+<script type="text/javascript">
+$(document).ready(function () {
+ 			
+    var url="/sub-task-graph?id="+$("#task_id").val();
+    $.post(url,
+       function(data) {
+     
+   	 var mainString = ""
+       	var obj = JSON.parse(data);
+   	 	//console.log(obj);
+   	  $("#flot-placeholder").html("");
+   	 	//$("#teamhistory").html("");
+   	 	if(obj.length>0){
+       	 	
+             $("#flot-placeholder").gantt({
+ 				source: obj,
+ 				navigate: "scroll",
+ 				scale: "days",
+ 				maxScale: "months",
+ 				minScale: "days",
+ 				itemsPerPage: 10,
+ 				waitText:"Please Wait...", 
+ 				 'scrollToToday': true,
+ 				onItemClick: function(data) {
+ 	 			
+ 	 				var taskId = data;
+ 	 				getTaskDetails(taskId);
+ 				},
+ 				onAddClick: function(dt, rowId) {
+ 					//alert("Empty space clicked - add an item!"+);
+ 				},
+ 				onRender: function() {
+ 					if (window.console && typeof console.log === "function") {
+ 						//console.log("chart rendered");
+ 						var count = 0;
+ 					    $('.leftPanel').find('.fn-label').each(function(){
+ 							//$("#"+$(this).attr('id')).removeClass("selected-task");
+ 							if(count == 0){
+ 								//console.log($(this).attr('id'));
+ 								$("#"+$(this).attr('id')).trigger("click");
+ 							}
+ 							count ++;
+ 							
+ 					   });
+  					   
+ 					}
+ 				}
+ 			});
+            //var offset = $("#flot-placeholder").offset();
+      		//var h = parseInt($("#flot-placeholder").height())-60;
+      		 
+      		//$("#flot-placeholder").css("height",h+"px");
+      		$("#flot-placeholder").css("margin-top","10px");
+      		$("#flot-placeholder").css("margin-bottom","-25px");
+      		
+      	
+      		
+   	 	}else{
+   	 		$("#flot-placeholder").css("height","0px");
+   	 		$("#flot-placeholder").css("margin-top","10px");
+   	 	}
+    });
+
+
+            
+ });
+
+
+</script>
+@if(tasks.size==0){
+	<div class="width_full no-data-tasks">No details Available...</div>
+}else{
+
+
+<div class="tab-content default-tab" id="tabProduct">
+<input id="task_id" value="@task_id" class="display-none"/ >
+   <div class="tabbed_1_left width956px" id="flot-placeholder">
+     
+   </div>
+  	
+</div>
+ <div class="team_task_div">
+ </div>
+
+}
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+ $(".design_team_left_detail_1_data_1:odd").addClass("design_team_left_detail_1_data_2");
+ $(".design_team_left_detail_1_data_1:even").removeClass("design_team_left_detail_1_data_2");
+});
+</script>

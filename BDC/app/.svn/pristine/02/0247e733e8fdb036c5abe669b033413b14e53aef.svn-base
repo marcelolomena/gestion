@@ -1,0 +1,1146 @@
+@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternal])(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import services._
+@import utils._
+@import play.api.i18n._
+@import play.api._
+@import java.math.BigInteger; var subTasks: Seq[SubTasks]= null ; var i=1;var pStatus: Option[ProjectStatus] = null;var version: Option[VersionDetails] = null;var versions: Seq[VersionDetails] = null;var user: Option[Users] = null;
+@import utils._;var programtypes: Option[ProgramTypeMaster] = ProgramTypeService.findProgramTypeById(program.get.program_type.toString);var subtypes: Option[SubTypes] = null; var genrenciaDetails :Option[Genrencias] =  null;var departmentDetails : Option[Departments]= null;
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")">
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@*@if(UserAuthentication.IsAuthenticatedAdmin(session.get("utype").get)){
+	<div class="width_full" id="new-auth" style="border:1px solid red;">hello</div>
+}*@
+@frontend.header()
+<section class="slider" id="program-details">
+<input id="program" value="@program.get.program_id" class="display-none"/>
+<input id="projectId" value="" class="display-none"/>
+<input id="project_id" value="" class="display-none"/>
+<input id="projectDetails" value="" class="display-none"/>
+<input type="hidden" id="user_profile_id" @if(!session.get("user_profile").isEmpty) {value="@session.get("user_profile").get"}>
+<input id="program_changeset" name="program_changeset" value="@changeSet" type="hidden"/>
+<div class="product_main">
+  <div class="product_detail_1">
+  
+   	<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+	  	<a href="/programs">
+	  		<span class="left"> @Messages("programDetails.proogramlist")</span>
+  	  	</a>
+  	  	
+  	  	@if(utils.UserAccess.checkAccess(req,"update_program")){
+	  	  	<a href="/edit-program/@program.get.program_id" style="float:right;margin-right: 12px;"> 
+		 		<span class="edit-project edit-icon edit-text">@Messages("programDetails.edit") </span>
+		 	</a>
+	 	}
+		@*<a href="@controllers.Frontend.routes.Program.exportToExcel(program.get.program_id.get.toString())" class="exportToexcel">
+	  		<span > Export to excel </span>
+  	  	 </a>*@
+   </h3>
+   <h3 id="productNm">
+	    <span class="left font13px" style="width:930px;   word-wrap: break-word;">@program.get.program_name </span>
+			     
+   </h3>
+  <div class="width_full" id="program-detail" style="margin-bottom: 26px;" >
+  	
+  	<ul style="width: 290px;float:left;  border-right: 1px dashed #666666; min-height:215px;">
+  		<li>
+  			<div class="width_full" style="margin:5px 0 10px;padding-left: 8px;">
+		  <span class="program-desc-label">@Messages("programDetails.description")</span>
+		  	
+			<span class="program-desc">@program.get.program_description</span>	
+		  </div>
+		</li>
+		
+		
+		
+  	</ul>
+  	<ul style="width: 320px;float:left;margin-left: 10px;border-right: 1px dashed #666666;min-height: 215px;">
+  		<li>
+  			<span class="header">@Messages("addNewProgram.programTypedetail")</span>
+  			<span class="program-data">
+				@if(!programtypes.isEmpty){
+					@programtypes.get.program_type
+			  	}
+			</span>
+		</li>
+		
+		<li>
+			<span class="header">@Messages("addNewProgram.programSubType")</span>
+			<span class="program-data">
+				
+				@if(!program.get.program_sub_type.isEmpty){
+					@{ subtypes = SubTypeService.findSubTypeById(program.get.program_sub_type.get.toString) }
+					@if(!subtypes.isEmpty){
+						@subtypes.get.sub_type	
+					}
+			  	}
+			 </span>
+		</li>
+		
+		<li>
+			<span class="header">@Messages("programDetails.demandmanager")</span>
+		
+			<span class="program-data" style="margin-left:5px;">@if(!UserService.findUserDetailsById(program.get.demand_manager.toLong).isEmpty){ <a href="/employee/@program.get.demand_manager" class="progDemandMgr">@UserService.findUserDetailsById(program.get.demand_manager.toLong).get.first_name&nbsp;@UserService.findUserDetailsById(program.get.demand_manager.toLong).get.last_name</a>}</span>
+		</li>
+  		<li>
+			<span class="header">@Messages("programDetails.division")</span>
+			<span class="program-data">@DivisionService.findDivisionById(programDetail.get.devison).get.division</span>
+		</li>
+		
+		<li>
+			<span class="header">@Messages("programDetails.gerencia") </span>
+			<span class="program-data">
+				@if(!programDetail.get.management.isEmpty){
+					@{genrenciaDetails = GenrenciaService.findGenrenciaById(programDetail.get.management.get) }
+					@if(!genrenciaDetails.isEmpty){
+						@genrenciaDetails.get.genrencia
+					}
+	  					
+	  			}	
+	  		</span>
+		</li>
+
+			<li>
+			<span class="header">@Messages("programDetails.department") </span>
+			<span class="program-data">
+				@if(!programDetail.get.department.isEmpty){
+					@{departmentDetails= DepartmentService.findDepartmentById(programDetail.get.department.get) }
+  					@if(!departmentDetails.isEmpty){
+  						@departmentDetails.get.department
+ 					}
+ 				}
+			</span>
+		</li>
+				<li>
+			<span class="header"> @Messages("programDetails.completionpercentage")</span>
+			<span class="program-data" style="margin-left: 10px;">
+  					@completion_percentage_forProgram
+			</span>
+		</li>
+				<li>
+			<span class="header">@Messages("programDetails.expectedcompletionpercentage")</span>
+			<span class="program-data" style="margin-left: 10px;">
+  					@expected_completion_percentage
+			</span>
+		</li>
+		
+		
+         <li>
+			<span class="header"> Estado </span>
+			<span style="float: left;width:143px;">
+					<select  disabled="disabled" readonly="readonly" class="workflow_status_program" >
+						<option value="1" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==1){selected="selected"}}>  En Curso</option>
+						<option value="2" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==2){selected="selected"}}>Finalizado</option>
+						<option value="3" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==3){selected="selected"}}> Suspendido</option>
+						<option value="4" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==4){selected="selected"}}> Cancelado</option>
+					</select>
+				</span>
+				@if(!program.get.work_flow_status.isEmpty){
+				@if(!utils.UserAccess.checkAccessSession(session,"program_status_update") && program.get.work_flow_status.get<=2){
+				<span class="edit-status" style="cursor: pointer;"></span>
+				}
+				@if(utils.UserAccess.checkAccessSession(session,"program_status_update")){
+				<span class="edit-status" style="cursor: pointer;"></span>
+				}
+				}
+		</li>
+  	</ul>
+  	<ul style="width: 310px;float:left;margin-left: 10px;  min-height:215px;">
+  		
+  		<li>
+			<span class="header">@Messages("programDetails.initiationdate")</span>
+			<span class="program-data" style="width:auto;" id="initial_planned_date">
+			@if(programDates.get.initiation_planned_date != null){
+				@programDates.get.initiation_planned_date.format("dd-MM-yyyy")
+			}
+				
+			</span>
+		</li>
+		
+		<li>
+			<span class="header">@Messages("programDetails.releaseDate")</span>
+			<span class="program-data"  id="release_date">
+				@if(programDates.get.release_date != null){
+					@programDates.get.release_date.format("dd-MM-yyyy")
+				}
+			</span>
+		</li>
+				
+		<li>
+			<span class="header">@Messages("addNewProgram.detailedClosureDate")</span>
+			<span class="program-data"  id="closure_date">
+				@if(!programDates.get.closure_date.isEmpty){
+					@programDates.get.closure_date.get.format("dd-MM-yyyy")
+				}else{
+				NA
+				}
+			</span>
+		</li>
+				
+		
+		
+		<li>
+			<span class="header">@Messages("programDetails.allocatedhours")</span>
+			<span class="program-data">@ProgramService.findSpentHoursForPrgoram(program.get.program_id.get.toString())
+			</span>
+		</li>
+		<li>
+			<span class="header">@Messages("programDetails.bookedhours") </span>
+			<span class="program-data">@ProgramService.findBookedHoursForPrgoram(program.get.program_id.get.toString())
+			</span>
+		</li>
+		
+		
+		<li>
+			<span class="header">@Messages("addNewProgram.plannedhours")</span>
+			<span class="program-data ">
+				<span style="float: left;width:73px">
+				@if(!program.get.planned_hours.isEmpty){
+					<input type="text"  disabled="disabled" value="@program.get.planned_hours.get.toLong" min="0" maxlength="9" readonly="readonly" class="planned_hours" />
+					
+				}else{
+					<input type="text" disabled="disabled" value="0" maxlength="9" min="0" class="planned_hours" readonly="readonly"/>
+				}
+				</span>
+				@if(utils.UserAccess.checkAccess(req,"program_plan_hours")){
+					<span class="edit-hours"></span>
+				}
+			</span>
+		</li>
+		
+		<li>
+			<span class="header">@Messages("addNewProgram.estimatedCost")</span>
+			<span class="program-data ">
+				<span style="float: left;width:73px">
+				@if(!program.get.estimated_cost.isEmpty){
+					<input type="text"  disabled="disabled" value="@program.get.estimated_cost.get.toLong" maxlength="11"  readonly="readonly" class="estimated_cost_program" />
+					
+				}else{
+					<input type="text" disabled="disabled" value="0" maxlength="11"  class="estimated_cost_program" readonly="readonly"/>
+				}
+				</span>
+					<span class="edit-estimated-cost"></span>
+			</span>
+		</li>
+		<li>
+			<span class="header">@Messages("programDetails.programcode")</span>
+			<span class="program-data ">
+				@if(program.get.program_code.isWhole() ){
+					@program.get.program_code
+				}
+			</span>
+		</li>
+		<li>
+			<span class="header">@Messages("addNewProgram.ppmnumber")</span>
+			<span class="program-data ">
+				@if(!programDetail.get.sap_code.isEmpty ){
+					@programDetail.get.sap_code.get
+				}
+			</span>
+		</li>
+		
+		
+  	</ul>
+  	</div>
+  	<h3 id="productNm">
+		<span class="left">@Messages("subtaskdetail.programrisk")</span>
+	</h3>
+ 	<div class="program-div" id="new-risk">
+	   	<span><a href="@controllers.Frontend.routes.Risks.riskManagement(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>
+	</div>
+	<div class="width_full">
+				@frontend.risks.riskListing(program.get.program_id.get.toString(),riskParentType.Program.id)
+	</div>
+	@if(utils.UserAccess.checkAccess(req,"program_member_listing")){
+		<h3 id="productNm" style="margin-top: 20px;">
+			    <span class="left">@Messages("programdetails.programmembers")</span>
+			    
+		</h3>
+		
+		@if(utils.UserAccess.checkAccess(req,"program_member_add")){
+	   		<div class="program-div" id="new-program-member">
+	   			<span><a href="@controllers.Frontend.routes.Program.newMembers(program.get.program_id.get.toString)">  @Messages("programdetails.newmember")</a></span>
+			</div>
+		}
+		
+		
+			<div class="width_full" id="program_member_list" >
+				<ul id="member_list">
+					<li class="top-header">
+						<span class="role header" style="margin-left: 13px;">@Messages("newmember.role")</span>
+						<span class="member header">@Messages("booktime.provider")</span>
+						<span class="provider header">@Messages("newmember.member")</span>
+						<span class="active header">@Messages("newmember.action")</span>
+					</li>
+					@if(progrma_members.size>0){
+						@for( (p,index) <- progrma_members.zipWithIndex){
+							<li class="@if(index%2==0){even_row}else{odd_row}">	
+								@if(UserRoleService.findUserRoleById(p.role_id.toString).isEmpty){
+									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >&nbsp</span>
+								}else{
+									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >@UserRoleService.findUserRoleById(p.role_id.toString).get.role </span>
+								}
+								<span class="member">BCH</span>
+								<span class="provider">@UserService.findUserDetails(p.member_id).get.first_name&nbsp;@UserService.findUserDetails(p.member_id).get.last_name</span>
+								@if(utils.UserAccess.checkAccess(req,"program_member_delete")){
+									<span class="active member-action @if(p.is_active==0){enabled_member}else{disabled_member}" id="m_@p.id"></span>
+								}
+							</li>
+						}
+					}else{
+						<span class="no-member">@Messages("programDetails.nomemeber")</span>
+					}
+					@if(external_resource.size > 0){
+						@for( (e,index) <- external_resource.zipWithIndex){
+							<li class="@if(index%2==0){even_row}else{odd_row}">	
+								@if(UserRoleService.findUserRoleById(e.provider_type.toString).isEmpty){
+									<span id="r_@e.id" class="role @if(e.is_deleted==0){active-sap}else{in-active-sap}" >&nbsp</span>
+								}else{
+									<span id="r_@e.id" class="role @if(e.is_deleted==0){active-sap}else{in-active-sap}" >@UserRoleService.findUserRoleById(e.provider_type.toString).get.role </span>
+								}
+								<span class="member">@e.provider_name.toString()</span>
+								@if(!e.provider_name.isEmpty()){
+									<span class="provider">	
+									@if(e.provider_type == 46){
+										@e.resource_name &nbsp;	
+									}else{
+										@if(!e.number_of_resources.isEmpty){
+											@e.number_of_resources.get	
+										}else{
+											@Messages("booktime.externalresource")
+										}
+										
+									}
+									</span>
+								}else{
+									<span class="provider">@Messages("booktime.externalresource")</span>
+								}
+							
+								<span class="active member-action-external @if(e.is_deleted==0){enabled_member}else{disabled_member}" id="m_@e.id"></span>
+							</li>
+						}
+					}
+				</ul>
+			</div>
+		}
+		@if(utils.UserAccess.checkAccess(req,"program_sap_listing")){
+			<h3 id="productNm">
+			    <span class="left"> @Messages("projectdetails.projectSAPlisting")</span>
+		   	</h3>
+		   	@if(utils.UserAccess.checkAccess(req,"program_sap_add")){
+			   	<div class="program-div" id="new-program-sap">
+			   		<span><a href="@controllers.Frontend.routes.Program.newSAP(program.get.program_id.get.toString)">@Messages("programdetails.addsap")</a></span>
+				</div>
+			}
+			
+			<div class="width_full " id="sap_listing" style="margin-bottom:30px;">
+			@if(saps.size>0){
+				<ul id="sap_list">
+				
+					<li class="top-header height28px">
+						<span class="role header" style="width:83px"> @Messages("programdetails.sapdetails.date")</span>
+						@*<span class="member header">@Messages("programdetails.sapdetails.sapno")</span>
+						<span class="member header">  @Messages("programdetails.sapdetails.budgettype")</span>*@
+						<span class="member header"> @Messages("programdetails.sapdetails.investment")</span>
+						<span class="member header"> @Messages("programdetails.sapdetails.expenditure")</span>
+						<span class="member header">  @Messages("programdetails.availableinvestment")</span>
+						<span class="member header">  @Messages("programdetails.availableexpenditure")</span>
+						<span class="member header">  @Messages("saplisting.projectedinvestment") </span>
+						<span class="member header"> @Messages("saplisting.projectedexpenses") </span>
+						<span class="active header"> @Messages("programDetails.action")</span>
+					</li>
+					@for( (p,index) <- saps.zipWithIndex){
+					<li class="@if(index%2==0){even_row}else{odd_row} @p.id.toString">	
+						<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@p.creation_date.get.format("dd/MM/YYYY")</span>
+						@*<span class="member">@p.sap_number </span>
+						<span class="member">@BudgetTypeService.findBudgetTypeById(p.budget_type.toString).get.budget_type </span>*@
+						<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPInvestment(p.id.toString))</span>
+						<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPExpenditure(p.id.toString))</span>
+						<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPInvestment(p.id.toString)) </span>
+						<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPExpenditure(p.id.toString)) </span>
+						<span class="member">@if(SAPServices.calculateProgramSAPAvailableInvestment(p.id.toString)==0){@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPInvestment(p.id.toString))}else{@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPAvailableInvestment(p.id.toString))} </span>
+						<span class="member">@if(SAPServices.calculateProgramSAPAvailableExpenditure(p.id.toString)==0){@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPExpenditure(p.id.toString))}else{@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPAvailableExpenditure(p.id.toString))} </span>
+						@if(utils.UserAccess.checkAccess(req,"program_sap_update")){
+							<a href="@controllers.Frontend.routes.Program.editSAP(p.id.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
+						}
+						@if(utils.UserAccess.checkAccess(req,"program_sap_delete")){
+							<span class="active-sap program-sap @if(p.is_active==0){sap-enabled}else{sap-disabled}" id="sap_@p.id" style="margin-left: 5px"></span>
+						}
+					</li>
+					}
+				
+				</ul>
+			}else{
+					<span class="no-member"> @Messages("programDetails.nosap")</span>
+			}
+		</div>
+	}
+		
+	@if(utils.UserAccess.checkAccess(req,"project_listing")){
+	 	<h3  class="header-background">
+		   <span class="left">@Messages("programDetails.projects")</span>
+	    </h3>
+	    
+	    @if(utils.UserAccess.checkAccess(req,"project_add")){
+		    <div class="program-div" id="new-program">
+		   		<span><a href="/add-new-project/@program.get.program_id">@Messages("programDetails.newproject") </a></span>
+			</div>
+		}
+	  	<!-- Project Listing  -->
+		 	@if(projectList.size>0){
+			<div class="project_list">
+			  <h3 class="title" style="width: 98.2%">
+			  	<span>@Messages("programDetails.nameofproject")</span>
+				<span style="margin-left: 385px;">@Messages("programDetails.duration")</span>
+				<span style="margin-left: 142px;">@Messages("programDetails.task") </span>
+				<span style="margin-left: 30px;">@Messages("addDepartment.projectworkflowstatus")</span>
+				<span style="margin-left: 40px;">@Messages("programDetails.action") </span> 
+			  </h3>
+			  	<div class="project_list_1  padding-none">
+			    	<div class="design_team_left_detail_1_left " id="container">
+			   		    @for(p <- ProjectService.findProjectListForProgram(programDetail.get.program_id.toString())){
+					    		<div class="project_list_1">
+					    			<a href="/project-details/@p.pId" class="left">
+					        		<p class="left show-project-details" id="pr_@p.pId.get"> @p.project_name  </p>
+					        		<span class="display-none" id="show_pr_@p.pId.get">@p.project_name </span>
+					        		<span class="design_team_span " style="margin-left:48px">@p.start_date.format("dd-MM-yyyy") &nbsp;To&nbsp;@p.final_release_date.format("dd-MM-yyyy")</span>
+				        			<span class="design_team_span " style="width:80px;margin-left:100px">@TaskService.findProjectTaskCount(p.pId.get.toString)</span>
+				        			@{/* <span class="design_team_span " style="width:80px;margin-left:100px">@Goals.findProjectGoalCount(p.project_id)</span> */}
+				        			</a>
+				        			
+				        			@{
+				        				pStatus= ProjectService.findProjectStatus(p.pId.get.toString())
+				        				if(!pStatus.isEmpty){
+				        						pStatus.get.status match{
+				        								case 0 => <span class='status_0 status-change'></span>	
+														case 1 => <span class='status_1 status-change'></span>	
+														case 2 => <span class='status_2 status-change'></span>
+				        						}
+				        				}else{
+				        				<span class='status_0 status-change'></span>
+				        				}
+				        			
+				        			}
+				        			@if(utils.UserAccess.checkAccess(req,"project_delete")){
+					        			<span class="left">
+				              				<span class="delete_icon-project" id="m_@p.pId"></span>
+					            		</span>
+				            		}
+					      		</div>
+				      	}
+			    </div>
+			    </div>
+			 </div>
+			
+		 }
+	 }
+	 <div class="width_full" >
+	     	@if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
+     			<div class="width_full">
+				    <h3  class="header-background" id="task-gantt-label">
+					<span class="left" style="padding: 5px;">@Messages("programdetails.ganttchartview")</span>
+				    </h3>
+				    
+				</div>
+				<div class="width_full" id="project-gantt" style="width: 97.7%;">
+				</div>
+			}
+			
+				
+    </div>
+    @if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
+	  	 <h3 id="productNm_earnedvalueanalysis" style="margin-top: 20px">
+		    <span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
+		 </h3>
+		<div class="width_full" id="earn-value">
+		     <div id="container_id" style="height: 300px;"> </div>
+		    <div id="container_2" style="height: 300px;"> </div>
+		    <div id="container_3" style="height: 300px;"> </div>
+		</div>
+	}else{
+		 <div class="width_full" id="earn-value" style="display: none;">
+
+	          <div id="container_id" style="height: 300px;"></div>
+	 		  <div id="container_2" style="height: 300px;"></div>
+	 		  <div id="container_3" style="height: 300px;"></div>
+		 </div>
+	 	 <div class="project_list project-list-none">
+			<p>@Messages("programDetails.noprojectsavailable") </p>
+		</div>
+	}
+	
+	@if(projectList.size>0 && utils.UserAccess.checkAccess(req,"task_listing")){
+			  <div class="width_full  " id="earn-value-info"  >
+				<h3 id="productNm">
+				    <span class="left"> @Messages("programDetails.earnedvalueanalysis") </span>
+			    </h3> 
+			   
+				    @*<table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="th-header">@Messages("programDetails.earnedvalue")</td>
+							<td class="earn-data"><span id="ev"></span> </td>
+							<td class="th-header">@Messages("programDetails.scheduleperformanceindex") </td>
+							<td class="earn-data"><span id="spi"></span></td>
+						</tr>
+						<tr>
+							<td class="th-header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="earn-data"><span id="pv"></span>  </td>
+							<td class="th-header">@Messages("programDetails.costperformanceindex")</td>
+							<td class="earn-data"><span id="cpi"></span></td>
+						</tr>
+						<tr>
+							<td class="th-header">@Messages("programDetails.actualcost")</td>
+							<td class="earn-data"><span id="ac"></span></td>
+							<td class="th-header">@Messages("programDetails.estimetcopmletion")</td>
+							<td class="earn-data"><span id="eac"></span></td>
+						</tr>
+						<tr>
+							<td class="th-header">@Messages("programDetails.costvariance")</td>
+							<td class="earn-data"><span id="cv"></span></td>
+							<td class="th-header">@Messages("programDetails.estimatetocomplete") </td>
+							<td class="earn-data"><span id="etc"></span></td>
+						</tr>
+						<tr>
+							<td class="th-header">@Messages("programDetails.scheduledvar")</td>
+							<td class="earn-data"><span id="sv"></span></td>
+							<td class="th-header">@Messages("programDetails.completionpercentage")</td>
+							<td class="earn-data">	<div style="float: right; margin-right: 30px;">%</div>
+							<div id="cp" class="percentagesComplete"> @completion_percentage_forProject</div></td>
+						</tr>
+						</tbody>
+					</table>*@
+					
+					 <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="th-header">@Messages("programDetails.earnedvalue") </td>
+							<td class="earn-data"><span id="ev"></span> </td>
+							<td class="th-header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="earn-data"><span id="spi"></span></td>
+						</tr>
+						<tr>
+							<td class="th-header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="earn-data"><span id="pv"></span>  </td>
+							<td class="th-header">@Messages("programDetails.costperformanceindex") </td>
+							<td class="earn-data"><span id="cpi"></span></td>
+						</tr>
+						<tr>
+							<td class="th-header">@Messages("programDetails.actualcost")</td>
+							<td class="earn-data"><span id="ac"></span></td>
+							<td class="th-header">@Messages("programDetails.estimetcopmletion")</td>
+							<td class="earn-data"><span id="eac"></span></td>
+						</tr>
+						<tr>
+							@*<td class="th-header">@Messages("programDetails.costvariance")</td>
+							<td class="earn-data"><span id="cv">20.00 %</span></td>*@
+							
+							<td class="th-header">@Messages("programDetails.scheduledvar")</td>
+							<td class="earn-data"><span id="sv">@completion_percentage_forProgram %</span></td>
+							<td class="th-header">@Messages("programDetails.estimatetocomplete")</td>
+							<td class="earn-data"><span id="etc"></span></td>
+						</tr>
+						@*	<tr>
+							
+						<td class="th-header">@Messages("programDetails.completionpercentage") </td>
+							<td class="earn-data">
+							<div style="float: right; margin-right: 30px;">%</div>
+							<div id="cp" class="percentagesComplete">@compl_per_task_show</div>
+							</td>
+						</tr>*@
+						</tbody>
+					</table>
+	  			</div>
+ 		  }
+		
+	<h3 class="header-background" style="margin-top: 30px;width:100.2%;">
+	    <span class="left">Sub Resumen de tareas</span>
+   	</h3>	
+	<div class="width_full" id="program-subtask-summary">
+	@{subTasks = SubTaskServices.findAllSubTasksForProgram(program.get.program_id.get.toString)}
+	
+	@frontend.program.programSubTaskSummary(subTasks)
+	<ul id="sub_task_items"></ul>
+	
+	</div>
+		
+	<h3  class="header-background" style="margin-top: 30px;">
+	    <span class="left"> @Messages("uploaddocument.documents")</span>
+   	</h3>
+	
+	@if(utils.UserAccess.checkAccess(req,"upload_program_document")){
+		<div class="program-div" id="new-program">
+		 	<span><a href='@controllers.Frontend.routes.Documents.uploadDocument(program.get.program_id.get.toString, "PROGRAM", "ADD")'> @Messages("uploaddocument.uploaddocument")</a></span>
+		</div>
+		
+		<div id="docuement-overview">
+					<div class="document-left">
+						<h3 style="width:99%;font-size:14px;height:26px;padding-left: 5px;"> @Messages("uploaddocument.program")</h3>
+							<div id="pro_@program.get.program_id"  class="data-row-even">
+								<span class="left program_icon"></span><span class="left program_title">@program.get.program_name</span>
+							</div>
+							<div id="p_pr_@program.get.program_id" class="">
+								@for( (pr, pIndex) <- projectList.zipWithIndex ){
+									<div  id="pr_@pr.pId.get" class="project-list @if( pIndex%2==0 ){ project-data-row-even }else{ project-data-row-odd }">
+									<span class="left project_icon"></span><span class="left project_title">@pr.project_name</span>
+									
+									</div>
+									<div id="t_@pr.pId.get" class="display-none">
+										@for( (task, tIndex ) <- TaskService.findTaskListByProjectId(pr.pId.get.toString).zipWithIndex){
+											<div  id="ts_@task.tId.get" class="task_list @if( tIndex%2==0 ){ task-data-row-even }else{ task-data-row-odd }">
+											<span class="left task_icon"></span><span class="left task_title">@task.task_title</span>
+												
+												
+											</div>
+											<div id="s_@task.tId.get" class=" display-none">
+											
+													@for( (subtask, sIndex) <- SubTaskServices.findSubTasksByTask(task.tId.get.toString).zipWithIndex ){
+															<div  id="st_@subtask.sub_task_id.get" class=" sub_task_list @if( sIndex%2==0 ){ data-row-even }else{ data-row-odd }">
+																<span class="left sub_task_icon"></span><span class="left sub_task_title">@subtask.task</span>
+															</div>
+													}
+											</div>
+										}
+									</div>
+								}
+							</div>
+					</div >
+					<div  class="document-right">
+						<div class="doc_listing">
+							@if(documents.size > 0){	
+								<h2 class="push-top20px"> @Messages("uploaddocument.currentdocuments")</h2>
+								<div id="current_documents">
+									<ul class="width_full">
+										<li>
+											<span class="doc_title bold">@Messages("uploaddocument.documenttitle")</span> 
+											<span class="doc_version bold"> @Messages("uploaddocument.version")</span>
+											<span class="doc_date bold">@Messages("uploaddocument.dateofupload")</span> 
+											<span class="doc_user bold">  @Messages("uploaddocument.uploadedby")</span> 
+											<span class="doc_action bold"> @Messages("uploaddocument.action")</span>
+										</li>
+										@for((doc, index) <- documents.zipWithIndex){
+											@{version = DocumentService.findAllCurrentVersions(doc.Id.get.toString())}
+											@{user = UserService.findUserDetailsById(version.get.user_id.toLong)}
+												
+											<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}">
+												<span class="doc_title">@doc.title</span> 
+												<span class="doc_version">@version.get.version_alias</span>
+												<span class="doc_date"> @version.get.creation_date.format("dd/MM/YYYY")</span> 
+												<span class="doc_user">@user.get.first_name&nbsp;@user.get.last_name </span>
+												<span class="doc_action"> 
+													<span class="doc_info" title="@version.get.version_notes"></span>
+													<a href='/documents/@version.get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+													<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "PROGRAM", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+													<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="Programa_@doc.Id.toString()" class="delete-doc @doc.Id.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+												</span>
+											</li>
+										}
+									</ul>
+								</div>
+							
+								<h2 class="left push-top20px">@Messages("uploaddocument.previousdocuments")</h2>
+								<div id="previous_documents">
+									<ul class="width_full">
+										<li>
+											<span class="doc_title bold">  @Messages("uploaddocument.documenttitle")</span> 
+											<span class="doc_version bold"> @Messages("uploaddocument.version")</span>
+											<span class="doc_date bold">    @Messages("uploaddocument.dateofupload")</span> 
+											<span class="doc_user bold">  @Messages("uploaddocument.uploadedby")</span> 
+											<span class="doc_action bold"> @Messages("uploaddocument.action")</span>
+										</li>
+										@for(doc <- documents){
+											@{ versions = DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString())}	
+											@if(!versions.isEmpty){
+												@for(ver <- versions){
+													@{user = UserService.findUserDetailsById(ver.user_id.toLong)}
+													@{i = i+1}
+													<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.get.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.get.toString()}">
+														<span class="doc_title">@doc.title</span>
+														<span class="doc_version">@ver.version_alias</span> 
+														<span class="doc_date"> @ver.creation_date.format("dd/MM/YYYY")</span> 
+														<span class="doc_user">@user.get.first_name </span>
+														<span class="doc_action"> 
+															<span class="doc_info" title="@ver.version_notes"></span>
+															<a href='/documents/@ver.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
+															<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "PROGRAM", "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+															<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+														</span>
+													</li>
+												}
+											}
+										}
+									</ul>
+								</div>
+						}else {
+							<h2 class="left push-top20px no-document"> @Messages("uploaddocument.nodocumentavailable")</h2>
+						}
+					</div>
+	 			</div>
+		</div>
+  	}
+  @*<div class="width_full push-top15px">
+  	<a href="/programs" class=" content-box-content width_full" style="width:97%"><span class="back-to-programs"></span><span class="back-to">Back to Program List</span></a>
+  </div>*@
+  </div>
+ </div>
+    @frontend.footer()
+    <div class="loader"><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>
+  </section>
+   <div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"> 
+  	</div>
+   
+	<div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span><div class="dialog-content">
+	</div>
+	</div>
+	<div class="tooltip"></div>		
+</div>	 
+@frontend.headerScripts()	
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script src="@routes.Assets.at("frontend/js/highcharts.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/documents.css")">
+<script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<script type="text/javascript">
+	$(document).ready( function() {
+	
+	
+	$(".show-project-details").data('powertip',function() {
+		var _this= $(this);
+		var id= _this.attr("id").split("_")[1];
+		var context = $("#show_pr_"+id).text();
+		return context;
+	});
+
+	$(".show-project-details").powerTip({
+		placement : 'n', 
+		mouseOnToPopup : true
+	});
+					programSubtaskPagination();
+						
+					$('.estimated_cost_program').mask('000.000.000', {reverse: true});
+					$(".planned_hours").keypress(function (e) {
+				     //if the letter is not digit then display error and don't type anything
+				     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+				        //display error message
+				        return false;
+				    }
+				   });
+					
+				  @if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
+							var url ="/get-spi-graph?program_id=@program.get.program_id";
+							$.get(url, function(data) {
+							 var json_var = $.parseJSON(data);
+							 
+							    if("empty_object" === json_var.empty_object){
+							         $("#container_id").hide();
+							          $("#container_2").hide();
+							          $("#container_3").hide();
+							           $("#productNm_earnedvalueanalysis").hide();
+							    }else{
+							 
+							  var json_data = json_var.spi_date_map
+							  var json_data2 = json_var.cpi_date_map
+							  var json_data6 = json_var.ecpi_date_map
+							  var json_data7 = json_var.espi_date_map
+							  
+							  var json_data3 = json_var.actual_cost_map
+							   var json_data4 = json_var.earn_value_map
+							   var json_data5 = json_var.planned_value_map
+							  
+							   var json_data8 = json_var.e_actual_cost_map
+							   var json_data9 = json_var.e_earn_value_map
+							   var json_data10 = json_var.e_planned_value_map
+							  
+							   
+							   var json_data11 = json_var.ta
+							   var json_data12 = json_var.tp
+							   
+							   var programIdMap = json_var.program_id
+							   
+							   
+							  var items = [];
+							  var items2 = [];
+							  var items3 = [];
+							  
+							  var items4 = [];
+							  var items5 = [];
+							  
+							  var items6 = [];
+							  var items7 = [];
+							  var items8 = [];
+							  
+							  var items9 = [];
+							  var items10 = [];
+							  
+							  
+							  var items11 = [];
+							  var items12 = [];
+							  
+							  var items13 = [];
+							  
+							  for (x in programIdMap) {
+									 var date = x
+									 var d = new Date(parseInt(date));
+									 items13.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),programIdMap[x]]);
+									 items13.sort(function(a, b){
+													    if (a < b) return -1;
+													    if (b < a) return 1;
+													    return 0;
+													});
+								}
+							  
+							  for (x in json_data6) {
+									 var date = x
+									 var d = new Date(parseInt(date));
+									 items6.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data6[x]]);
+									 items6.sort(function(a, b){
+													    if (a < b) return -1;
+													    if (b < a) return 1;
+													    return 0;
+													});
+								}
+							  
+							  for (x in json_data7) {
+									 var date = x
+									 var d = new Date(parseInt(date));
+									 items7.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data7[x]]);
+									 items7.sort(function(a, b){
+													    if (a < b) return -1;
+													    if (b < a) return 1;
+													    return 0;
+													});
+								}
+							  
+							  for (x in json_data8) {
+									 var date = x
+									 var d = new Date(parseInt(date));
+									 items8.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data8[x]]);
+									 items8.sort(function(a, b){
+													    if (a < b) return -1;
+													    if (b < a) return 1;
+													    return 0;
+													});
+								}
+							  
+							  for (x in json_data9) {
+									 var date = x
+									 var d = new Date(parseInt(date));
+									 items9.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data9[x]]);
+									 items9.sort(function(a, b){
+													    if (a < b) return -1;
+													    if (b < a) return 1;
+													    return 0;
+													});
+								}
+							  
+							  for (x in json_data10) {
+									 var date = x
+									 var d = new Date(parseInt(date));
+									 items10.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data10[x]]);
+									 items10.sort(function(a, b){
+													    if (a < b) return -1;
+													    if (b < a) return 1;
+													    return 0;
+													});
+								}
+							  
+				       		 for (x in json_data5) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items5.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data5[x]]);
+								 items5.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							}
+							  
+							for (x in json_data4) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items4.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data4[x]]);
+								 items4.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							} 
+							  
+							  for (x in json_data3) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items3.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data3[x]]);
+								 items3.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							  }
+							  
+							for (x in json_data2) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items2.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data2[x]]);
+								 items2.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							} 
+							  
+							 for (x in json_data) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data[x]]);
+								 items.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							}
+							
+							 
+							 for (x in json_data11) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items11.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data11[x]]);
+								 items11.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							}
+							 
+							 for (x in json_data12) {
+								 var date = x
+								 var d = new Date(parseInt(date));
+								 items12.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),json_data12[x]]);
+								 items12.sort(function(a, b){
+												    if (a < b) return -1;
+												    if (b < a) return 1;
+												    return 0;
+												});
+							}
+								Highcharts.setOptions({ // This is for all plots, change Date axis to local timezone
+									global : {
+										useUTC : false
+									},
+								
+									 chart: {
+								            backgroundColor: {
+								                linearGradient: [0, 0, 500, 500],
+								                stops: [
+								                    [0, 'rgb(255, 255, 255)'],
+								                    [1, 'rgb(240, 240, 255)'],
+								                    [2, 'rgb(68, 11, 182)'],
+								                    [3, 'rgb(11, 182, 176)']
+								                    ]
+								            },
+								           // borderWidth: 2,
+								            plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+								           // plotShadow: true,
+								            plotBorderWidth: 1
+								        }
+								});
+								var chart = new Highcharts.Chart({
+									chart : {
+										renderTo : 'container_id',
+										zoomType : 'xy'
+									},
+									title: {
+								            text: 'SPI CPI Chart'
+								    },
+									xAxis : {
+										type : 'datetime'
+									},yAxis: {
+							            title: {
+							                text: 'values'
+							            }
+							        },
+									series : [ {
+									 	name: 'SPI  ',
+										data : items
+									}, {
+						            	name: 'CPI ',
+						            	data: items2
+	       						 	},{
+							            name: 'ECPI ',
+							            data: items6
+		       					 	},{
+							            name: 'ESPI ',
+							            data: items7
+		       					 	}]
+	
+								});
+								
+								
+								var chart3 = new Highcharts.Chart({
+									chart : {
+										renderTo : 'container_3',
+										zoomType : 'xy',
+									},
+					                
+					                plotOptions: {
+					                    series: {
+					                        stickyTracking: false,
+					                        events: {
+					                            click: function(evt) {
+					                            	var index = evt.point.index;
+					                            	var programId = items13[index][1];
+					                            	var date = items13[index][0]
+					                            }                      
+					                        }
+					                        
+					                    }
+					                },
+						            
+									title: {
+								            text: 'TA/TP Chart'
+								    },
+									xAxis : {
+										type : 'datetime'
+									},
+									yAxis: {
+							            title: {
+							                text: 'values'
+							            }
+							        },
+									series : [ {
+									 	name: 'TA  ',
+										data : items11
+									}, {
+						            	name: 'TP ',
+						            	data: items12
+	       						 	}]
+	       						 	
+	
+								});
+								
+								var chart_2 = new Highcharts.Chart({
+	
+									chart : {
+										renderTo : 'container_2',
+										zoomType : 'xy'
+									},
+										   title: {
+								            text: 'Gráfico Valor Ganado'
+								        },
+	
+									xAxis : {
+										type : 'datetime'
+									},yAxis: {
+							            title: {
+							                text: 'values'
+							            }
+							        },
+									series : [ {
+										name: 'HC (100%)',
+										data : items3
+									}, {
+						            	name: 'VG (100%)',
+						            	data: items4
+	       						 	} ,{
+	       						 		name :'Horas Asignadas',
+	       						 		data: items5
+	       						 	},{
+	       						 		name :'HC (%Avance)',
+	       						 		data: items10
+	       						 	}
+	       						 ,{
+	       						 		name :'VG (% Avance)',
+	       						 		data: items9
+	       						 	}]
+	
+								});
+							 }
+								});//ajax get end
+							
+						}	
+						@if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){	
+							renderProjectGanttChart();
+						}
+						
+						//renderProgramEarnValue($("#program").val());
+						var changeSet = $("#program_changeset").val();
+						var relelaseDateChanges = "";
+						var initialPlannedDateChanges = "";
+						var clouserDateChanges = "";
+						if (changeSet != '') {
+							var jsonObj = $.parseJSON(changeSet);
+							$.each(jsonObj,function(idx, obj) {
+												if (obj.fieldName == "initiation_planned_date") {
+													initialPlannedDateChanges = initialPlannedDateChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												} else if (obj.fieldName == "closure_date") {
+													clouserDateChanges = clouserDateChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												} else if (obj.fieldName == "release_date") {
+													relelaseDateChanges = relelaseDateChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												}
+											});
+						}
+						$('.program-data')
+								.data(
+										'powertip',
+										function() {
+											if ($(this).attr('id') == "clouser_date") {
+												return clouserDateChanges;
+											} else if ($(this).attr('id') == "initial_planned_date") {
+												return initialPlannedDateChanges;
+											} else if ($(this).attr('id') == "release_date") {
+												return relelaseDateChanges;
+											}
+
+										});
+
+						$('.program-data').powerTip({
+							placement : 'ne', // north-east tooltip position
+							mouseOnToPopup : true
+						});
+
+						$(".member-action").on("click", renderProgramMember);
+						$(".member-action-external").on("click", renderProgramMemberExternal);
+							
+						$(".delete_icon-project").on("click", renderProjectSoftdelete);
+						
+						
+						$(".estimated_cost_program").keydown(function (e) {
+			 				if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+			                (e.keyCode >= 96 && e.keyCode <= 105))) {
+					        }
+					        else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+					                     e.keyCode != 9) {
+					            e.preventDefault();
+		        			}
+	    				});
+	    				$(".planned_hours").keydown(function (e) {
+			 				if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+			                (e.keyCode >= 96 && e.keyCode <= 105))) {
+					        }
+					        else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+					                     e.keyCode != 9) {
+					            e.preventDefault();
+		        			}
+	    				});
+	    
+});
+</script>
+</body>	
+</html>

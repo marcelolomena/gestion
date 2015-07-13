@@ -1,0 +1,85 @@
+@(username : String, myForm: play.api.data.Form[UserProfiles])(implicit lang:Lang)
+@import helper._
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+	   <!-- Left Navigation Bar -->
+    @leftNav()
+    <div class="content">
+        <div class="header">
+        <h1 class="page-title">@Messages("leftnav.userprofile")</h1>
+    </div>
+
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index"> @Messages("userprofile.home")</a> <span class="divider">/</span></li>
+          	<li><a href='@routes.UserProfile.userProfileList'> @Messages("userprofile.userprofilelist")</a> <span class="divider">/</span></li>
+            <li class="active">@Messages("userprofile.adduserprofile")</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+	<div class="dialog form-div">
+        <div class="block">
+            <p class="block-heading">@Messages("userprofile.adduserprofile")</p>
+            <div class="block-body">
+               @form(action = routes.UserProfile.saveUserProfile, 'id->"myUserProfile") { 
+                  	@inputText(myForm("profile_name"),'_label ->Messages("userprofile.userprofileName"),'placeholder->Messages("userprofile.placeholder.profile_name"),'class->"span4",'name -> "profile_name")
+                  	@inputText(myForm("profile_code"),'_label ->Messages("userprofile.userprofilecode"),'placeholder->Messages("userprofile.placeholder.profile_code"),'class->"span4",'name -> "profile_code",'maxlength ->"4")
+                  	@textarea(myForm("description"),'placeholder->Messages("userprofile.placeholder.description"),'_label -> Messages("userprofile.description"),'class->"span4",'name->"description",'rows->"7",'cols->"60")
+ 					<input type="hidden" value="0" id="is_deleted" name="is_deleted">              
+                   <div> <input style="margin-left:12px;margin-right:12px;" class="btn" id="userprofileSave" name="userprofileSave" value="@Messages("button.save")" type="submit"/>
+                 <a href="javascript:history.back(-1);" class="btn">@Messages("button.cancel")</a></div>
+                 <div class="clearfix"></div> 
+                    }
+            </div>
+        </div>
+    </div>
+ <!--    	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>  -->
+	<!-- Footer panel -->                    
+  	 @footer()
+    </div>
+</div>
+    </div>
+    <script>
+$(document).ready(function(){
+	 $("#profile_code").on("keypress", inputOnlySmallCapsAndNoSpace);
+	 
+	 function inputOnlySmallCapsAndNoSpace(evt){  
+		 if (evt.which == 32) { 
+			 return false;
+		 }
+		 else{
+		 this.style.textTransform = 'LOWERCASE';
+		 }
+	 }
+});
+
+
+    </script>
+   </body>
+</html>

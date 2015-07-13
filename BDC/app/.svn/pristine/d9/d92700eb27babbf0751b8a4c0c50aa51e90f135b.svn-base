@@ -1,0 +1,332 @@
+@(taskDetail: Option[models.SubTasks],isSubtaskAllocated:Boolean, baselineAvailable : Boolean, isBaselined : Boolean, programs : Seq[ProgramMaster], documents : Seq[DocumentMaster])(implicit session: play.api.mvc.Session, lang:Lang, req : play.api.mvc.RequestHeader)
+@import services._ 
+@import java.math.BigInteger;
+@import java.util.Date;
+@import java.text.DecimalFormat;
+@import org.apache.commons.lang3.StringUtils
+@import utils._
+@import java.math.BigInteger; var i=1;
+
+<div class="width_full">
+		  <div class="width_full" style="margin-bottom:10px;">
+		  		@if(utils.UserAccess.checkAccess(req,"sub_task_update")){ 
+					<a href="@controllers.Frontend.routes.SubTask.editSubTask(taskDetail.get.sub_task_id.get.toString())"> 
+						<span class="edit-sub-task"> @Messages("taskDetails.edit")</span>
+					</a>
+				}
+				
+				@if(utils.UserAccess.checkAccess(req,"sub_task_allocation")){
+					<span class="assign-sub-task">@Messages("taskDetails.assign")</span>
+				}
+				@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){
+					<a href='@controllers.Frontend.routes.Documents.uploadDocument(taskDetail.get.sub_task_id.get.toString, "SUBTASK", "ADD")'><span class="upload-document-icon">@Messages("uploaddocument.uploaddocument")</span></a>
+				}
+				@*TimesheetService.validateUserForHistoricalTimebooking(taskDetail.get.sub_task_id.get.toString,session.get("uId").get) &&*@
+				@if( utils.UserAccess.checkAccess(req,"sub_task_book_time")){
+					<a href='@controllers.Frontend.routes.TimeSheet.bookTime(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.booktime")</span></a>	
+				}
+				
+				<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.gotosubtaskdetailpage")</span></a>
+				@if(isSubtaskAllocated && utils.UserAccess.checkAccess(req,"sub_task_delete")){
+					<span id="delete-sub-task-id" class="delete-sub-task" >
+					<span id="@taskDetail.get.sub_task_id.get" class="update-sub-task" style=" margin-left: 7px;">
+						@Messages("programdetails.delete")
+						<input type="hidden" value="@SubTaskServices.validateSubTasksDependency(taskDetail.get.task_id.toString(),taskDetail.get.sub_task_id.get.toString())">	
+					</span>  
+					</span>
+				}
+					
+		  </div>
+		  <div id="docuement-overview-subtask" class="subtask-documents">
+		  	<div  class="document-right-subtask">
+		  		<div class="doc_listing_subtask">
+					@if(documents.size > 0){	
+						<h2> @Messages("document.currentsdocuments")</h2>
+						<div id="current_documents_subtask">
+							<ul class="width_full">
+								<li>
+									<span class="doc_title bold">@Messages("document.documenttitle")</span> 
+									<span class="doc_version bold"> @Messages("document.version") </span>
+									<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+									<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+									<span class="doc_action bold"> @Messages("document.action")</span>
+								</li>
+								
+									@for((doc, index) <- documents.zipWithIndex){
+										<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing-subtask}else{ search-result-datarow-odd current-doc-listing-subtask}">
+											<span class="doc_title">@doc.title</span> 
+											<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_alias</span>
+											<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
+											<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.last_name</span>
+											<span class="doc_action"> 
+												<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_notes"></span>
+												<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+												<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.get.toString(), "SUBTASK", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+												<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.get.toString())' id="Tarea_@doc.Id.get.toString()" class="delete-doc-subtask @doc.Id.get.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+											</span>
+										</li>
+									}
+							</ul>
+						</div>
+					
+						<h2 class="left push-top20px">@Messages("document.previoussdocuments")</h2>
+						<div id="previous_documents_subtasks">
+							<ul class="width_full">
+								<li>
+								<span class="doc_title bold">@Messages("document.documenttitle")</span> 
+									<span class="doc_version bold"> @Messages("document.version") </span>
+									<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+									<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+									<span class="doc_action bold"> @Messages("document.action")</span>
+								</li>
+								@for(doc <- documents){
+									@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString()).isEmpty){
+										@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString())){
+											@{i = i+1}
+											<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing-subtask prev-doc-listing-subtask-@doc.Id.toString()}else{ search-result-datarow-odd prev-doc-listing-subtask prev-doc-listing-subtask-@doc.Id.toString()}">
+												<span class="doc_title">@doc.title</span> 
+												<span class="doc_version">@version.version_alias</span>
+												<span class="doc_date"> @version.creation_date.format("dd/MM/YYYY")</span> 
+												<span class="doc_user">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name </span>
+												<span class="doc_action"> 
+													<span class="doc_info" title="@version.version_notes"></span>
+													<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
+													<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "SUBTASK", "UPDATE")' class="update-doc-subtask display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+													<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="Tarea_@doc.Id.toString()" class="delete-doc-subtask @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+												</span>
+											</li>
+										}
+									}
+								}
+							</ul>
+						</div>
+					}else {
+						<h2 class="left push-top20px no-document">  @Messages("document.nodocumentavailableforselected") @Messages("addSubTask.subtasktitle")</h2>
+					}
+				</div>
+		  	</div>
+		  </div>
+		  @*<div class="person-list">
+		  	<span class="team-title right" style="float: right;"> 
+		   			<span class="team-heading">@Messages("taskDetails.peopleworking")</span>   
+				</span>
+		  </div>*@
+		<div class="design_team_left_detail_1  padding-none width_full">
+			<input type="hidden" id="m_id" value="@taskDetail.get.task_id" />
+			<input type="hidden" id="sub_task_id" value="@taskDetail.get.sub_task_id.get" />
+			<table id="subtask-details">
+			<tbody>
+			<tr>
+				<td class="th-header">@Messages("taskDetails.title")</td>
+				<td>@taskDetail.get.task </td>
+			</tr>
+			<tr>
+				<td class="th-header">@Messages("taskDetails.description")</td>
+				<td>@taskDetail.get.task_Details </td>
+			</tr>
+			<tr>
+				<td class="th-header left">@Messages("taskDetails.plannedStartDate")</td>
+				<td class="left">@taskDetail.get.plan_start_date.format("dd-MM-yyyy") </td>
+				<td class="th-header left" style="margin-left: 400px;">Fecha de inicio real</td>
+				<td class="left">
+					@if(SubTaskServices.findActualStartDateForSubTask(taskDetail.get.sub_task_id.get.toString()) != null){@SubTaskServices.findActualStartDateForSubTask(taskDetail.get.sub_task_id.get.toString()).get.format("dd-MM-yyyy")}else{NA}
+				</td>
+				
+			</tr>
+			<tr>
+				<td class="th-header left">@Messages("taskDetails.plannedenddate")</td>
+				<td class="left">@taskDetail.get.plan_end_date.format("dd-MM-yyyy") </td>
+					<td class="th-header left" style="margin-left: 400px;">Fecha Término Real</td>
+				<td class="left" >
+					@if(SubTaskServices.findActualEndDateForSubTask(taskDetail.get.sub_task_id.get.toString()) != null){@SubTaskServices.findActualEndDateForSubTask(taskDetail.get.sub_task_id.get.toString()).get.format("dd-MM-yyyy")}else{NA}
+					@*<span style="margin-left: 10px;margin-top: 20px;" class="edit_actual_end_date_final edit-hours" id="sub_@taskDetail.get.sub_task_id.get"></span>*@
+				</td>
+			</tr>
+			
+			@*<tr>
+				<td class="th-header">@Messages("taskDetails.plannedenddate")</td>
+				<td>@taskDetail.get.plan_end_date.format("dd-MM-yyyy") </td>
+			</tr>*@
+			
+	
+			<tr>
+				<td class="th-header">@Messages("addSubTask.completionper")</td>
+				<td>
+					@if(taskDetail.get.completion_percentage.isEmpty){0}else{@taskDetail.get.completion_percentage} %
+				</td>
+			</tr>
+			
+			
+			
+			<tr class="subtask-baseline" @if(isBaselined) { style='display:block'} else {style='display:none'}>
+				<td class="th-header">@Messages("taskDetails.trackchanges")</td>
+				<td>@if(baselineAvailable){YES} else {NO} </td>
+			</tr>
+			
+			@*<tr>
+				<td class="th-header">Dependency Type  </td>
+				<td>
+						@if(!taskDetail.get.sub_task_depend.isEmpty) {
+								@{
+			  						taskDetail.get.dependencies_type.get match{
+			  							case 1 => "Finish-Start"
+			  							case 2 => "Start-Start"
+			  							case 3 => "Start-Finish"
+			  							case 4 =>"Finish-Finish"
+			  						}
+		  						}
+						}else{
+							None
+						}
+				 </td>
+			</tr>*@
+			<tr>
+				<td class="th-header left">@Messages("taskDetails.subtaskdependancy")</td>
+				<td>
+					@if(!taskDetail.get.sub_task_depend.isEmpty) {
+			 			@for(s <- taskDetail.get.sub_task_depend.get.split(",")) {
+			 				@if(!StringUtils.isBlank(s.trim())){
+			 					@if(!SubTaskServices.findSubTasksBySubTaskId(s).isEmpty){
+			 						<div class="width_full">@ProjectService.findProjectforSubTask(s).get.project_name -  @SubTaskServices.findSubTasksBySubTaskId(s).get.title</div>	
+			 					}
+								
+							}			
+						}
+					}else{
+						None
+					}
+				</td>
+			</tr>
+			<tr>
+				<td class="th-header">@Messages("addDepartment.projectworkflowstatus")</td>
+				<td>
+					@{
+						if(!taskDetail.isEmpty){
+							taskDetail.get.status match{
+								case 0 => <span class='status_0 ' style='height:20px;width:20px'></span>	
+								case 1 => <span class='status_1 ' style='height:20px;width:20px' ></span>	
+								case 2 => <span class='status_2 '  style='height:20px;width:20px'></span>	
+							}
+						}else{
+							<span class='status_0 ' style='height:20px;width:20px'></span>
+						}
+					
+					}
+				</td>
+			</tr>
+			@*<tr>
+				<td class="th-header">Actual Start Date  </td>
+				<td>@taskDetail.get.plan_start_date.format("dd-MM-yyyy") </td>
+			</tr>
+			<tr>
+				<td class="th-header">Actual End Date  </td>
+				<td>@taskDetail.get.actual_end_date.format("dd-MM-yyyy") </td>
+			</tr>
+				<tr>
+				<td class="th-header">Priority  </td>
+				<td>@if(taskDetail.get.priority==0){
+	       				Low	
+       				}else{ 
+		        		@if(taskDetail.get.priority==1){
+		        		Medium
+	   					}else{
+	        				@if(taskDetail.get.priority==2){
+	        					High
+	        				}
+  						}
+					}
+				</td>
+			</tr>*@
+			
+			</tbody>
+			</table>
+   	   </div>
+   	   <div class="team-title width_full" style="float: left;width:100%;padding:0px;margin:0px;"> 
+	   	   <h3 style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;" class="layer-title">
+				<span class="left">Las personas que est�n trabajando en esto!</span>
+				<!-- <span style="float: right;" class="team-title right"> 
+		   			<span class="team-heading"></span>   
+				</span> -->
+			</h3>
+		<div class="width_full" id="allocation_list"></div>	
+	    </div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#delete-sub-task-id").on("click", renderDeleteSubTask);
+		$(".delete-doc-subtask").on("click", deleteDocumentSubtask);
+	});
+	function renderDeleteSubTask() {
+		var _this = $(this);
+		var isValidString = _this.find("input").val();
+		var id = $('.update-sub-task').attr('id');
+		if (isValidString == "true") {
+			$("#dialog-confirm").html("¿Quieres eliminar esta tarea sub?");
+
+			var id = $('.update-sub-task').attr('id');
+
+			// Define the Dialog and its properties.
+			$("#dialog-confirm").dialog({
+				resizable : false,
+				modal : true,
+				title : "Confirmar",
+				height : 150,
+				width : 300,
+				buttons : {
+					"Yes" : function() {
+						var url = "/delete-sub-task?id=" + id;
+						$.get(url, function(data) {
+							if (data == "Success") {
+								window.location.reload();
+							}
+						});
+						$(this).dialog('close');
+						$("#pop-box-over").css("display", "none");
+						$("#dialog-confirm").css("display", "none");
+					},
+					"No" : function() {
+						$(this).dialog('close');
+						$("#pop-box-over").css("display", "none");
+						$("#dialog-confirm").css("display", "none");
+					}
+				}
+			});
+			$("#pop-box-over").css("display", "block");
+			$("#dialog-confirm").css("display", "block");
+		} else if (isValidString == "false") {
+			$("#dialog-confirm").html("Esta tarea es tarea sub sub predecesor a otra tarea sub, es lo que quieres borrarlo?");
+
+			var id = $('.update-sub-task').attr('id');
+
+			// Define the Dialog and its properties.
+			$("#dialog-confirm").dialog({
+				resizable : false,
+				modal : true,
+				title : "Confirmar",
+				height : 150,
+				width : 300,
+				buttons : {
+					"Yes" : function() {
+						var url = "/delete-sub-task?id=" + id;
+						$.get(url, function(data) {
+							if (data == "Success") {
+								window.location.reload();
+							}
+						});
+						$(this).dialog('close');
+						$("#pop-box-over").css("display", "none");
+						$("#dialog-confirm").css("display", "none");
+					},
+					"No" : function() {
+						$(this).dialog('close');
+						$("#pop-box-over").css("display", "none");
+						$("#dialog-confirm").css("display", "none");
+					}
+				}
+			});
+			$("#pop-box-over").css("display", "block");
+			$("#dialog-confirm").css("display", "block");
+		}
+	}
+</script>

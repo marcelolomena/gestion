@@ -1,0 +1,102 @@
+@(tasks:Seq[PredefinedTasks],gTasks:Seq[GenericTasks])(implicit lang:Lang)
+@import helper._
+@import services._
+<style>
+ select {
+    border: 1px solid #315663;
+    border-radius: 5px;
+    color: #315663 !important;
+    float: left;
+    font-size: 13px;
+    height: 33px;
+    margin: 0;
+    padding: 4px 2px 6px;
+    width: 84%;
+}
+</style>          
+<div class="block-body width_full" style="min-height:220px;float: left;" id="manage-predefined-tasks">
+<p style="width:96%"><span class="type">@Messages("generics.managepredefinedtask.selectgenerictask")</span><span class="close-popup-box"></span></p>
+<div class="dependency-select">
+	@if(tasks.size > 0){
+		 <ul>
+		 <li class="header">
+		 <span class="pre_title"> @Messages("maintenance.title")</span>
+		 <span class="pre_discipline">  @Messages("maintenance.taskdiscipline")</span>
+		 <span class="pre_role"> @Messages("maintenance.userrole")</span>
+		 <span class="pre_deliverable"> @Messages("maintenance.deliverable")</span>
+		 <span class="pre_depend"> @Messages("newTask.managedependancies")</span>
+		 <span class="pre_action"> @Messages("maintenance.action")</span>
+		 </li>
+		 @for(t <- tasks){
+		 	<li id="t_@t.tId.get" class="task-listing"> 
+		 		 <span class="pre_title" title="@t.task_title">@t.task_title </span>
+		 		 
+				@if(!t.task_discipline.isEmpty && !TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).isEmpty){
+		    			<span class="pre_discipline" > @TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).get.task_discipline</span> 
+		  		}else {
+		  			<span class="pre_discipline" title="">&nbsp</span>
+		  		} 
+			 
+				 
+				  @if(!t.user_role.isEmpty){
+				 	<span class="pre_role" title="@t.user_role.get">
+				 }else{
+				 	<span class="pre_role" title="">&nbsp</span>
+				 }
+	    			@if(!t.user_role.isEmpty && !UserRoleService.findUserRoleById(t.user_role.get.toString()).isEmpty){
+	    				  @UserRoleService.findUserRoleById(t.user_role.get.toString()).get.role
+	    			}else{
+	    			&nbsp;
+	    			}
+						
+				 </span>
+				 
+				 	
+				 	@if(!DeliverableService.findDeliverableById(t.deliverable.toString).isEmpty){
+				 		<span class="pre_deliverable">@DeliverableService.findDeliverableById(t.deliverable.toString).get.deliverable </span>
+				 	}else{
+				 		<span class="pre_deliverable"> &nbsp; </span>
+				 	}
+				 <span class="pre_depend">
+				
+				 	@if(gTasks.size>0){
+			 		  <select name="task_depend" id="task_depend_@t.tId" multiple="multiple" class="input-xlarge ">
+			 		  @for(ts <- gTasks){
+							@if(ts.tId.get != t.tId.get){
+								<option value="@ts.tId.get" >@if(ts.task_title.length()>20){@ts.task_title.substring(0,20)...}else{@ts.task_title} </option>	
+							}
+							
+						}				     					         
+			       	</select>	
+				 	}else{
+						 	&nbsp; 	
+				 	}  
+				 </span>	
+				 
+				 <span class="pre_action select_task" id="s_@t.tId.get"> @Messages("generics.managepredefinedtask.selecttask")</span>
+				 <span class="pre_description display-none" title="@if(!t.task_description.isEmpty()){@t.task_description.trim() }else{"NA"}">
+				 	
+				 </span>
+				 <span class="pre_stage display-none" title="@t.stage"> </span>
+				 <span class="pre_remark display-none" title="@t.remark"> </span>
+				
+				 
+			</li>	
+		 }
+		 
+		 
+		 </ul>
+	}else{
+		<span>No Task available for selection</span>
+	}
+	
+
+	
+</div>
+ <div class="width_full push-top20px">
+	<ul id="task_pagination_div"></ul>
+</div>
+
+<input type="hidden" id="myTasks" value=""/> 
+</div>
+<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>

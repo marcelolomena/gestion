@@ -1,0 +1,74 @@
+@(programs: Seq[ProgramMaster],division:Seq[Divisions],uId:String)(implicit lang:Lang)
+<div id="tab1" class="tab-content default-tab"> 
+     <div class="tabbed_1_data">
+     		  <div id="division-finance" class="width_full">
+     		  </div>
+     		  <div class="left width_full" style=" border-top: 2px solid #A1CFDE;height:10px;margin-top:20px;" ></div>
+     		  <div class="width_full dashboard-program" id="dashboard-program-id">
+     		  <span class="left width_full" >
+     		  	 <label>@Messages("dashboardFinance.division")</label>
+                  <select name="division" id="division" class="input-xlarge" >
+                  <option value="NA"> @Messages("dashboardFinance.divisionselect")</option>
+	                   @for(d <- division) {
+                  			<option value="@d.dId">@if(d.division.length>40){@d.division.toString().substring(0, 40)...}else{@d.division} </option>
+	                   }
+                  </select> 
+     		  	</span>
+     		  	<span class="left width_full" >
+     		  	 <label>@Messages("dashboardFinance.program")</label>
+                  <select name="program" id="program" class="input-xlarge" >
+                  <option value="NA">@Messages("dashboardFinance.programselect")</option>
+	                   @for(p <- programs) {
+                  			<option value="@p.program_id ">@if(p.program_name.length>40){@p.program_name.toString().substring(0, 40)...}else{@p.program_name} </option>
+	                   }
+                  </select> 
+     		  	</span>
+     		  </div>
+     		  <div>
+     		  </div>
+     		  <div class="loader" ><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>
+              <div class="tabbed_1_left" id="chart1"  style="width:100%;height:400px;position: relative">
+              	@*<img style="margin-top:5px;" width="644" height="317" alt="" src="@routes.Assets.at("frontend/images/dash_tabbed_image.jpg")">*@
+              	@*<img style="margin-top:5px;" width="644" height="317" alt="" src="@routes.Assets.at("frontend/images/dash-1-img.png")">*@
+              </div>
+     </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+		$("#division").on("change", renderProgramList);
+
+		$("#program").on("change", renderProjectList);
+		
+		renderDivisionBarChart();
+		
+			//renderBarChart("NA","NA");
+			//$("#division").attr('selectedIndex', 1);
+		var delay = 500;
+		setTimeout(function() {
+			
+			renderBarChart("division",1);
+			
+		}, delay);
+		
+		$("select#division").prop('selectedIndex', 1);
+		var division = $("#division").val();
+		
+		if(division!="NA"){
+			var url="/get-program-list?division="+division;
+			   $.get(url,  function(data) {
+					var url="/get-program-list?division="+division;
+					   $.get(url,  function(data) {
+						   $("#program").html(data);
+						   //renderBarChart("division",division);
+						   $("#program").val("NA");
+							$("#program").next().find(".customStyleSelectBoxInner").html("--Select Program--");
+						   // $("#program").on("change", renderProjectBarChart);
+					})
+			});
+		}else{
+			$("#program").html("");
+			$("#program").next().find(".customStyleSelectBoxInner").html("--Select Program--");
+		}
+});
+</script>          

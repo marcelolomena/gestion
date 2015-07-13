@@ -1,0 +1,39 @@
+@(projects:Seq[Project])(implicit session: play.api.mvc.Session) 
+@import helper._
+@import services._
+<div class="project_list"> 
+<table class="" style=" border: 1px solid #dadada; width: 100%;  border-collapse: collapse; ">
+<thead style="height:35px; background: none repeat scroll 0 0 #315663;color: #ffffff;">
+  		<td style="" class="headerCell">Project Name</td>	
+  		<td class="headerCell">Planned Start</td>
+  		<td class="headerCell">Planned Close</td>
+ 		<td  class="headerCell"> % Complete</td>
+   		<td  class="headerCell">Planned Hours</td>
+   		<td  class="headerCell">Allocated Hours</td>
+   		<td  class="headerCell">Booked Hours</td>
+  </thead>
+  <tbody>
+    	<tr class=" " id="">
+    	 @for((project,index) <- projects.zipWithIndex){
+    	@if(index%2==0){
+  		<td class="tableCells" style="text-align: left !important; padding-left: 5px; width: 310px;">@project.project_name </td>
+  		<td class="tableCells">@project.start_date</td>
+  		<td class="tableCells">@project.final_release_date </td>
+  		<td class="tableCells">@ProjectService.getCompletionPercentage(project.pId.get.toString)</td>
+ 		<td class="tableCells">@ProjectService.findAllocatedHoursForProject(project.pId.get.toString) </td>
+ 	    <td class="tableCells">@ProjectService.findSpentHoursForProject(project.pId.get.toString) </td> 
+ 	    <td class="tableCells">@ProjectService.findBookedHoursForProject(project.pId.get.toString)</td> 
+ 	    }else{
+ 	    <td class="tableCells1" style="text-align: left !important; padding-left: 5px; width: 310px;">@project.project_name </td>
+  		<td class="tableCells1">@project.start_date</td>
+  		<td class="tableCells1">@project.final_release_date </td>
+  		<td class="tableCells1">@ProjectService.getCompletionPercentage(project.pId.get.toString)</td>
+ 		<td class="tableCells1">@ProjectService.findAllocatedHoursForProject(project.pId.get.toString) </td>
+ 	    <td class="tableCells1">@ProjectService.findSpentHoursForProject(project.pId.get.toString) </td> 
+ 	    <td class="tableCells1">@ProjectService.findBookedHoursForProject(project.pId.get.toString)</td> 
+ 	    }
+   	   </tr>
+    	}
+    </tbody>
+    </table>
+</div>

@@ -1,0 +1,312 @@
+@(id: String, issueForm : Form[RiskManagementIssue],parent_id: String, parent_type: Integer,userMap:Seq[Users],start_date:java.util.Date,end_date: java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+@import utils._
+
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@*@if(UserAuthentication.IsAuthenticatedAdmin(session.get("utype").get)){
+	<div class="width_full" id="new-auth" style="border:1px solid red;">hello</div>
+}*@
+@frontend.header()
+<section class="slider" id="program-details">
+	<div class="width_full" >
+		<h3 id="productNm " class="parent-new-h3" style="width:100%; padding:0px;">
+    		<span class="parent-icon"> &#60; </span>
+	  		@{
+    			parent_type.intValue() match{
+    				case 0 =>
+    					Html("<a href='/program-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+  	  				case 1=>
+  	  					Html("<a href='/project-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				case 2=>
+    					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				case 3=>
+    					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+    				
+    			}
+   			 }
+   			 
+	  		@*<a href='@controllers.Frontend.routes.Program.issueManagement(parent_id,parent_type)' style="font-weight: bold">
+	  			<span class="left">@Messages("newmember.programdetails")</span>
+  	  		</a>*@
+   		</h3>
+   		
+   		<div id="new_program_header" class="">
+				<p> 
+					<span class="title-head"> @Messages("issuedetails.editissue")</span>
+				</p>
+			</div>
+ 	</div>
+	<div class="product_main">
+	
+		<div class="width_full" >
+		<input type="hidden" value="@start_date.format("dd-MM-yyyy")" name="start_date" id="start_date"/>
+		<input type="hidden" value="@end_date.format("dd-MM-yyyy")" name="end_date" id="end_date"/>
+			@form(action = controllers.Frontend.routes.Program.updateIssue(id), 'id->"risk-management-issue-form") {
+				<input type="hidden" value="@id" name="id" id="id"/>
+		      <input type="hidden" value="@parent_id" name="parent_id" id="parent_id"/> 
+		      <input type="hidden" value="@parent_type" name="parent_type" id="parent_type"/>
+		      	<div class="left width_full">
+		      		@inputText(
+		                issueForm("title"),
+		                'class -> "span5", 
+		                '_label -> Messages("addIssue.title"),
+		                'placeholder -> Messages("addIsse.placeholder.title")
+		                
+		            )
+		         </div>
+		         
+		      	<div class="left width_full">
+		      		 @textarea(
+		                issueForm("description"),
+		                'class -> "span5", 
+		                '_label ->  Messages("addIssue.issueDescription"),
+		                'placeholder ->  Messages("addIssue.placeholder.issueDescription"),
+					    'rows -> 7,
+					    'cols -> 60
+	            	)
+		         </div>
+		         
+		         <div class="left width_full">
+		         	<div class="left width-pr50 padding-top-3px" >
+			      		@select(
+					         issueForm("category"),
+					         options("0"->"Incidente", "1"->"Evento no planificado"),
+					         'class -> "input-xlarge ",
+					         '_label -> Messages("addIssue.issueCategory"),
+					          '_default -> Messages("addIssue.placeholder.issueCategory")
+					      )
+				      </div>
+		         </div>
+		         
+		         <div class="left width_full">
+			      	<div class="left width-pr50 padding-top-3px" >
+			      		<div class="left width_full">
+					      	<div class="left width-pr50 padding-top-3px" >
+							      	
+			<dl id="members_involved_field1" class="drop_down">
+					 <dt><label for="members_involved1">*@Messages("addissue.membersinvolved")</label></dt>
+						    <dd>
+						        <div class="mutliSelect">
+						            <ul class="width_full">
+						            @if(userMap.size>0){
+						            		@for(ts <- userMap){
+									 	          <li class="width_full">
+								                    <span class="left"><input name="user_list" id="user_list_@ts.uid.get" type="checkbox" value="@ts.uid.get" /></span> 
+								                    <span class="left issue-member" >@ts.first_name.substring(0,1) .&nbsp;@ts.last_name</span>
+								                 </li>
+							 				}
+							 		}else{
+							 		<span style="float: left;color:#666;margin:10px 0 10px;">@Messages("employeeProfile.nomembersavailable")</span>
+				    				}     
+						                
+						            </ul>
+						        </div>
+						    </dd>
+						</dl>	
+					      	
+					       <div class="left width_full newCls">	
+					      	@inputText(
+						                issueForm("members_involved"),
+						                'class -> "span5", 
+						                '_label -> "",
+						                'type -> "hidden"
+						            )
+					      	</div>
+					      		@*@select(
+							         issueForm("members_involved"),
+							         options(userMap),
+							         'class -> "input-xlarge ",
+							         '_label -> Messages("addIssue.membersInvolved"),
+							          '_default -> Messages("addIssue.placeholder.membersInvolved")
+							      )*@
+					         </div>
+		         </div>
+			         </div>
+		         </div>
+		         
+		         <div class="left width_full">
+		      		@textarea(
+		                issueForm("action_plan"),
+		                'class -> "span5", 
+		                '_label ->  Messages("addIssue.actionPlan"),
+		                'placeholder ->  Messages("addIssue.placeholder.actionPlan"),
+					    'rows -> 7,
+					    'cols -> 60
+	            	)
+		         </div>
+		         
+		         
+		          <div class="left width_full">
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@select(
+				         issueForm("priority"),
+				         options("0"->"Alto (3)", "1"->"Mediano (2)","2"->"Bajo (1)"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addIssue.issuePriority"),
+				          '_default -> Messages("addIssue.placeholder.issuePriority")
+				      )
+		            </div>
+		         </div>
+		         
+		         	@inputText(
+			             issueForm("issue_date"),
+			                'type -> "hidden",
+			                'class -> "span6 disabledClass", 
+			                '_label -> Messages("addIssue.issueDate"),
+			                'placeholder -> Messages("addIssue.placeholder.issueDate")
+		                )
+		          <div class="left width_full">
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@inputText(
+			                issueForm("issue_date1"),
+			                  'class -> "span6 disabledClass", 
+			                'disabled ->"disabled",
+			                '_label -> Messages("addIssue.issueDate"),
+			                'placeholder -> Messages("addIssue.placeholder.issueDate")
+		                )
+		            </div>
+		         </div>
+		         
+		          	
+		         
+		         <div class="left width_full">
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@select(
+				         issueForm("issue_status"),
+				         options("0"->"Abierto", "1"->"Cerrado"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("editIssue.issuestatus"),
+				          '_default -> Messages("editIssue.issuestatus.default")
+				      )
+		            </div>
+		         </div>
+
+		         <div class="left width_full">
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@inputText(
+			                issueForm("closure_date"),
+			                'class -> "span6", 
+			                '_label -> Messages("programdetails.clouserdate"),
+			                'placeholder -> Messages("addIssue.placeholder.issueDate")
+		                )
+		            </div>
+		         </div>
+		         
+		         
+		         <div class="left width_full">
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@inputText(
+			                issueForm("planned_end_date"),
+			                'class -> "span6", 
+			                '_label -> Messages("addissue.plannedenddate"),
+			                'placeholder -> Messages("addIssue.placeholder.issueDate")
+		                )
+		            </div>
+		         </div>
+		         
+		         
+		         <dl id="member_id_search_field " class=" display-none">
+	   				<dt>
+	   					<label for="member_id_search"> @Messages("newmember.member")</label>
+	   				</dt>
+		    		<dd>
+		   			 <input type="text" value="" id="member_id_search" name="member_id_search" placeholder="Search Member"/>	
+					</dd>
+		    	</dl>
+	      		<div class="width_full" style="text-align:center;">
+			       	<span class=""><input class="btn  form-button" value="@Messages("button.save")" type="submit"/></span>
+			       	<span class="" style="margin-left:30px;"> <input id="done-issue" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+	          	</div>
+			}
+		</div>
+	</div>
+	@frontend.footer()
+	<div class="loader"><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>
+</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var startDate = $("#start_date").val();
+		var endDate = $("#end_date").val();
+		var currentDate = $("#current-date").val();
+		var issue_date = $("#issue_date").val();
+       		$("#issue_date1").val(issue_date);
+       		$('#issue_date_field').addClass('display-none');
+		$('#issue_status_field #issue_status').on('change',renderStartDateAndEndDate);			
+
+
+
+        var _value=$('#issue_status_field #issue_status').val();
+		   if (_value == 1){
+				     var _d2 = Date.parse(endDate).getTime();
+					 var today = new Date().getTime();
+					if(_d2 > today){
+							$("#closure_date").datepicker({
+									buttonImageOnly : true,
+									dateFormat : "dd-mm-yy",
+									minDate : $('#issue_date').val(),
+									maxDate : currentDate,
+									changeMonth : true,
+									changeYear : true
+							});
+					}
+		        $("#closure_date_field").removeClass('display-none');
+        }else{
+         $("#closure_date_field").val("");
+         $("#closure_date_field").addClass('display-none');
+        }
+        
+		$("#planned_end_date").datepicker({
+				buttonImageOnly : true,
+				dateFormat : "dd-mm-yy",
+				minDate : startDate,
+				maxDate : endDate,
+				changeMonth : true,
+				changeYear : true
+		});
+
+		
+		
+		
+	$(".drop_down dd ul").show();
+    $('.mutliSelect').on('click', function () {
+      var ids =  ""
+      $(this).find(':checked').map(function() {
+         if(ids == "" ){
+			  	  ids=$(this).val();
+			  	}else{
+			  		ids=ids+","+$(this).val();
+			  	}
+    });
+	$("#members_involved").val(ids);
+ });
+
+      var ids = $("#members_involved").val().split(",");
+		for (var i in ids) {
+		  $("#user_list_"+ids[i]).attr("checked","checked");
+		}
+		$('#done-issue').on('click',function() {
+			   window.location.href='@controllers.Frontend.routes.Program.issueManagement(parent_id, parent_type)';
+		});
+				
+		});
+</script>

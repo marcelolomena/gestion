@@ -1,0 +1,283 @@
+@(programs: Seq[ProgramMaster])(implicit lang: Lang)
+@import services._
+@import java.util.Calendar
+@import utils._;var earn_value : Option[SpiCpiCalculations] = null;var pv: Double= 0;var planned_hour :Double =0;var comp_per : scala.math.BigDecimal = 0;
+@import java.text.DecimalFormat; var df = new DecimalFormat("00"); var df2 = new DecimalFormat("0.0");var df3 = new DecimalFormat("00.00");
+<iframe id="txtArea1" style="display:none"></iframe>
+<div id="divTableDataHolder">
+<a download="program-report.xls" class="export-excel" href="#" onclick="return fnExcelReport();">@Messages("dashboard.ExporttoExcel")</a>
+<table id="dashboard-report">
+	<tr class="header">
+		<th class="program-name">Programas</th>
+		<th class="responsible">Responsable </th>
+		<th class="initiaition-date">Fecha Inicio</th>
+		<th class="clouse-date">Fecha Comprometida</th>
+		<th class="clouse-date">% Avance</th>
+		<th class="planned-date">@Messages("dashboard.plannedpercentage")</th>
+		<th class="spi">SPI </th>
+		<th class="spi">CPI</th>
+		<th class="total-sap-invest">Inversi�n</th>
+		<th class="total-sap-invest" style="width:60px">Gasto</th>
+		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(1)">Jan-@utils.DateTime.getCurrentYear()</th>
+		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(2)">Feb-@utils.DateTime.getCurrentYear()</th>
+ 		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(3)">Mar-@utils.DateTime.getCurrentYear() </th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(4)">April-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(5)">May-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(6)">June-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(7)">July@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(8)">Aug-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(9)">Sept-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(10)">Oct-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(11)">Nov-@utils.DateTime.getCurrentYear()</th>
+  		<th class="calender-coloum" colspan="@utils.DateTime.getNumberOfDaysInMonth(12)">Dec-@utils.DateTime.getCurrentYear()</th>
+  		
+	</tr>
+	@if(programs.size >0){
+		<tr class="header-title @if(programs.size==0){display-none}" style="border:none;" >
+				<td></td>
+				<td></td>
+  				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			     <td></td>
+			     <td></td>
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(1)){
+					<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(2)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(3)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(4)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(5)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(6)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(7)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(8)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(9)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(10)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+				
+
+				}
+				
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(11)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+					
+
+				}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(12)){
+					
+						<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top">@if(a+1 > 9){@(a+1)}else{@("0" + (a+1))} </td>						
+				
+
+				}
+																																<td></td>
+		</tr>
+		@if(programs.size >0){
+			@for((p, index) <- programs.zipWithIndex){
+			<tr class="@if(index%2==0){report-even}else{report-odd}">
+				<td class="program-name show-projects"  id="p_@p.program_id" style="vertical-align: top">
+					@if(p.program_name.length() > 25){
+						@{p.program_name.substring(0, 25)} ...
+					}else{
+						@p.program_name
+					}
+				</td>
+				<td class="responsible" style="vertical-align: top">
+			 			@UserService.findUser(p.demand_manager.toString).get.first_name.substring(0, 1) &nbsp;@UserService.findUser(p.demand_manager.toString).get.last_name
+	    	  	</td>
+				<td class="initiaition-date" style="vertical-align: top">@Html(ProgramService.findInitiationDateBaslineChange(p.program_id.get.toString))</td>
+				<td class="clouse-date" style="vertical-align: top">@Html(ProgramService.findClouseDateBaslineChange(p.program_id.get.toString))</td>
+				<td class="clouse-date" style="vertical-align: top">
+					@{comp_per = ProgramService.completionPercentageForProgram(p.program_id.get.toString())}
+					@comp_per.toString()%
+				</td>
+				<td class="planned-date" style="vertical-align: top">
+					@{earn_value = SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString)}
+					@if(!earn_value.isEmpty && comp_per != 0 ){
+						@{ pv = comp_per.toDouble/ earn_value.get.spi.get}
+					}else{
+						@{ pv =0.0}
+					}
+					@{df3.format(pv)}%
+				
+				</td>
+				<td class="spi" style="vertical-align: top">
+					@if(!SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString).isEmpty){
+						@SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString).get.spi.get 
+					}else{
+						0.0
+					}
+				</td>
+				<td class="spi" style="vertical-align: top">
+					@if(!SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString).isEmpty){
+						@SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString).get.cpi.get 
+					}else{
+						0.0
+					}
+				</td>
+				<td class="total-sap-invest" style="vertical-align: top;">@FormattedOutPuts.formattedvalue(SAPServices.calculateTotalSAPInvestment(p.program_id.toString()))</td>
+				<td class="total-sap-invest" style="vertical-align: top;width: 55px !important; ">@FormattedOutPuts.formattedvalue(SAPServices.calculateTotalSAPExpenditure(p.program_id.toString()))</td>
+				
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(1)){
+					<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-01-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+        		}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(2) ){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-02-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}
+				@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(3)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-03-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(4)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-04-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(5)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-05-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(6)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-06-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(7)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-07-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(8)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-08-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(9)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-09-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(10)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-10-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(11)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-11-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+	    		@for(a <- 0 until utils.DateTime.getNumberOfDaysInMonth(12)){
+        			<td class="calender-coloum  @utils.DateTime.getCurrentYear()" style="vertical-align: top" id="@{p.program_id}-@{df.format(a+1)}-12-@{utils.DateTime.getCurrentYear()}">&nbsp; </td>
+	    		}	
+			</tr>
+			
+			}		
+		}
+		
+	
+}
+</table>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		/*$(".export-excel").on("click", function(){
+			jQuery.ajax({
+				url : ExcellentExport.excel(this, 'dashboard-report', 'Sheet Name Here'),
+				type : "GET",
+				data :"",
+				cache : false,
+				success : function(data) {
+					if (data != 'success') {
+						alert("alertSomethingWentWrong");
+					}
+				},
+				error : function() {
+					alert("alertSomethingWentWrong");
+				}
+			});
+
+		});*/
+
+		$('#dashboard-report').find('.clouse-date td').each(function() {
+
+			var obj = $(this).html();
+			var id = $(this).attr("id");
+			var color = "";
+			if ($(this).hasClass("text-strike-through")) {
+				//color = "#F25959"
+				//$("#" + id + "-" + obj).css("background", "#F25959");
+				//$("#" + id + "-" + obj).addClass("text-strike-through");
+				//$("#" + id + "-" + obj).css("text-decoration", "line-through");
+				//$("#" + id + "-" + obj).html("X");
+			} else {
+				//alert($("#" + id + "-" + obj).html())
+				//color = "#1DEF1A"
+			}
+			if($(this).parent().prev().html() != null){
+				
+				color = "#F25959"
+			}else{
+				color = "#1DEF1A"
+			}
+			if($(this).parent().next().html() == null){
+				$("#" + id + "-" + obj).css("background", color);
+				$("#" + id + "-" + obj).html("X");
+			}
+
+		});
+		
+		
+		
+	});
+	
+	function fnExcelReport() {
+		var tab_text=$('div[id$=divTableDataHolder]').html();
+        tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+        tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE"); 
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+        	txtArea1.document.open("application/CSV","replace");
+         	txtArea1.document.write(tab_text);
+         	txtArea1.document.close();
+         	txtArea1.focus(); 
+          	sa=txtArea1.document.execCommand("SaveAs",true,"dashboard.xls");
+        } else                 
+    		sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
+       return (sa);
+	}
+</script>

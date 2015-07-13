@@ -1,0 +1,46 @@
+@()(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@import com.typesafe.config._
+@import java.io.File; 
+@import play.Play;var version=Play.application().configuration().getString("app.version");
+<div class="top_part " style="background-position: left -216px;">
+   	<div class="top_part_left" >
+   		<input id="current-date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+   		<input id="current-timesheet-date" type="hidden" class="span4" value="@(new java.util.Date().format("yyyy-MM-dd"))" >
+       	<p><img style="margin-top:5px;width=17;height=17;" src="@routes.Assets.at("frontend/images/login_ico.png")" alt=""> <span style="text-transform: uppercase;"> <a href="/employee/@session.get("uId") ">@session.get("username")</a>
+       	 </span>
+       	 <a href="@controllers.Frontend.routes.Login.loggedOut">@Messages("topNav.logout")</a>
+       	 <span style="margin-left:10px;">| </span>
+       	 <span class="app-version">
+       	  	@version
+       	 </span>
+       	@*@Messages("topNav.version")*@
+       	 </p>
+     </div>
+     <div class="top_part_right">
+       	
+	       	<ul>
+				@if(utils.UserAccess.checkAccess(req,"menu_documents")){
+       				<li><p><a href="@controllers.Frontend.routes.Dashboard.getPanel()" id="reporte_id"><img style="margin:-1px 0 0 5px;" width="17" height="17" src="@routes.Assets.at("frontend/images/documents.png")" alt="reporte">Reporte</a></p></li>
+       			}
+	       		@if(utils.UserAccess.checkAccess(req,"menu_documents")){
+       				<li><p><a href="@controllers.Frontend.routes.Documents.documentOverview()" id="documents_id"><img style="margin:-1px 0 0 5px;" width="17" height="17" src="@routes.Assets.at("frontend/images/documents.png")" alt="no document">@Messages("topNav.documents")</a></p></li>
+       			}	
+	  			@if(utils.UserAccess.checkAccess(req,"timesheet")){
+	  				<li><p><a href="@controllers.Frontend.routes.TimeSheet.productsTimesheet()" id="timesheet_id"><img style="margin:-1px 0 0 5px;" width="17" height="17" src="@routes.Assets.at("frontend/images/date_icon.png")" alt="">@Messages("topNav.timesheet")</a></p></li>
+	  			}
+	  			@if(utils.UserAccess.checkAccess(req,"menu_maintenance")){
+	  				<li><a href="@controllers.Frontend.routes.Generics.overview()"  id="maintenance_id"><img width="17" height="17" src="@routes.Assets.at("frontend/images/setting_ic.png")" alt=""> @Messages("topNav.maintenance")</a></li>
+	  			}	
+	  			@if(utils.UserAccess.checkAccess(req,"menu_employee")){
+	          		<li><a href="@controllers.Frontend.routes.User.userManagement()"  id="employees_id"><img width="17" height="17" src="@routes.Assets.at("frontend/images/users.png")" alt="">@Messages("topNav.employees")  </a></li>
+	          	}
+	      		@*<li class="message_full"><a href="javascript:void(0)"><img style=" padding: 10px 7px 0 0;" width="17" height="14" src="@routes.Assets.at("frontend/images/message_ic.png")" alt="" class="message"> <span class="message">Messages</span></a> <span>2</span></li>*@
+	           	@*	<li><a href="javascript:void(0)"  class="setting"><img width="17" height="17" src="@routes.Assets.at("frontend/images/setting_ic.png")" alt="">Settings </a></li>*@
+	        	@*<li class="message_full"><a href="javascript:void(0)"><img style=" padding: 10px 7px 0 0;" width="17" height="14" src="@routes.Assets.at("frontend/images/message_ic.png")" alt="" class="message"> <span class="message">Messages</span></a> <span>2</span></li>*@
+	       		
+	        </ul>
+       
+
+     </div>
+    <div class="popup-div display-none"></div>
+</div>

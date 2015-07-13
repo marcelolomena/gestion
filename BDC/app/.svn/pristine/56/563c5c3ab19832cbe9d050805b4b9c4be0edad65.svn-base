@@ -1,0 +1,66 @@
+@(subTasks: Seq[SubTasks])
+@import services._
+@import java.util.Date
+@import org.apache.commons.lang3.StringUtils;var task : Option[Tasks] = null;var currDate = new Date();
+<ul id="sub-task-summary">
+		<li class="header">
+			<span class="sub-title">Nombre</span>
+			<span class="sub-title">Description</span>
+			<span class="sub-date">Inicio</span>
+			<span class="sub-date">Termino</span>
+			<span class="sub-hours">Assignadas HH</span>
+			<span class="sub-hours">% Avance Esperado</span>
+			<span class="sub-date">Incio Real</span>
+			<span class="sub-date">Término Real</span>
+			<span class="sub-hours">Consumidas HH</span>
+			<span class="sub-hours">% Avance Information</span>
+			<span class="sub-status">Estado</span>
+		</li>
+		@for((s,index) <- subTasks.zipWithIndex){
+			<li id="ss_@s.sub_task_id.get " class="sub-summary-data @if(index%2==0){even-row}else{odd-row}" >
+					<span class="sub-title">
+						@{task = TaskService.findTaskDetailsByTaskId(s.task_id)}
+						@if(!task.isEmpty){
+							<a href="@controllers.Frontend.routes.Task.projectTaskDetails(task.get.tId.get.toString())#@s.sub_task_id.get">
+								@s.task 
+							</a>	
+						}else{
+							@s.task
+						}
+						
+					</span>
+					<span class="sub-title">@s.task_Details </span>
+					<span class="sub-date">@s.plan_start_date.format("dd-MM-yyyy") </span>
+					<span class="sub-date">@s.plan_end_date.format("dd-MM-yyyy")</span>
+					<span class="sub-hours">@SubTaskServices.findTotalAllocatedHoursForSubTask(s.sub_task_id.get.toString())</span>
+					<span class="sub-hours">@SubTaskServices.expectedCompletionPercentage(SubTaskServices.findTotalAllocatedHoursForSubTask(s.sub_task_id.get.toString()),s.plan_start_date,s.plan_end_date) %</span>
+					<span class="sub-date">@if(SubTaskServices.findActualStartDateForSubTask(s.sub_task_id.get.toString()) != null){@SubTaskServices.findActualStartDateForSubTask(s.sub_task_id.get.toString()).get.format("dd-MM-yyyy") }else{N/A}</span>
+					<span class="sub-date">
+						@if(SubTaskServices.findActualEndDateForSubTask(s.sub_task_id.get.toString()) != null){
+							@SubTaskServices.findActualEndDateForSubTask(s.sub_task_id.get.toString()).get.format("dd-MM-yyyy") 
+						}else{
+							N/A
+						}
+					</span>
+					<span class="sub-hours">@TimesheetService.getBookedHourForSubTask(s.sub_task_id.get.toString()) </span>
+					<span class="sub-hours">@s.completion_percentage% </span>
+					<span class="sub-status">
+					@{
+					
+						if((currDate.getTime >= s.plan_end_date.getTime || currDate.getTime >= s.plan_end_date.getTime) && (SubTaskServices.findActualStartDateForSubTask(s.sub_task_id.get.toString()) == null || SubTaskServices.findActualStartDateForSubTask(s.sub_task_id.get.toString()).isEmpty) ){
+							"ATRASADA"
+						}else if((SubTaskServices.findActualStartDateForSubTask(s.sub_task_id.get.toString()) != null && SubTaskServices.findActualStartDateForSubTask(s.sub_task_id.get.toString()))){
+							"INICIADA"
+						}else{
+							"NO INICIADA"
+						}	
+					
+					}
+					@*@if(s.completion_percentage.get == 100.0){ TERMINADA  }else{  }*@</span>
+			</li>
+		
+		}
+		@if(subTasks.size==0){
+			<li><span style="color:#666">No hay un resumen de tareas sub disponibles...</span></li>
+		}
+</ul>

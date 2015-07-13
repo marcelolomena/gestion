@@ -1,0 +1,27 @@
+@(ex: String)
+<!DOCTYPE html>
+<html>
+<head>
+<title>Something Went Wrong</title>
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css/bootstrap.min.css")">
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/css/bootstrap-responsive.min.css")">
+</head>
+<body>
+<div class="container">
+<div class="hero-unit">
+<h1>Error :</h1>
+<p>
+If you see this message, @ex
+</p>
+<div class="alert alert-error" style="text-align: center; font-weight: bold;">
+
+</div>
+<p>
+Thank you very much.
+</p>
+</div>
+</div>
+</body>
+</html>
+

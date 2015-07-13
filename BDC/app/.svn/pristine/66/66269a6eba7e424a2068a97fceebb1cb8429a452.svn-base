@@ -1,0 +1,110 @@
+@(divisions: Seq[Divisions])(implicit lang: Lang)
+@import services._
+@import java.util.Calendar;
+@import java.text.SimpleDateFormat
+@import java.util.Calendar;
+@import utils._;var isValid = false; var formatDate = new SimpleDateFormat("dd-MM-yyyy");var earn_value : Option[SpiCpiCalculations] = null;var  program_risks:  Seq[RiskManagementMaster] = null;var project_risks: Seq[RiskManagementMaster]= null;var task_risks:  Seq[RiskManagementMaster]= null;var sub_task_risks: Seq[RiskManagementMaster]=null;var task_issues: Seq[RiskManagementIssue]= null;var sub_task_issues: Seq[RiskManagementIssue] = null;
+@import java.text.DecimalFormat; var df = new DecimalFormat("00"); var df2 = new DecimalFormat("0.0");var programs:Seq[ProgramMaster] = null; var projects:Seq[Project] = null; var tasks: Seq[Tasks] = null; var sub_tasks: Seq[SubTasks] = null; var user : Option[Users]= null;
+<ul class="width_full">
+	<li class="header">
+		<span class="title bold">@Messages("riskDashboard.parentName")</span> 
+		<span class="responsible title bold"> @Messages("riskDashboard.responsible")</span>
+		<span class="name title bold">@Messages("riskDashboard.name")</span> 
+		<span class="cause title bold">@Messages("riskDashboard.cause")</span> 
+		<span class="event title bold">@Messages("riskDashboard.event")</span> 
+		<span class="impact title bold">@Messages("riskDashboard.impact")</span>
+		<span class="clouser_date bold title">@Messages("riskDashboard.closerDate")</span>
+		<span class="cuantification title bold">@Messages("riskDashboard.cuantification")</span>
+		<span class="strategic_reply title bold">@Messages("riskDashboard.strategicReply")</span>
+	</li>
+	@for((d,index2) <- divisions.zipWithIndex){
+		@{isValid = false}
+		@{programs = ProgramService.findAllProgramMasterDetailsForDivision(d.dId.get.toString()) }
+		@if(programs.size>0){
+			@for((p, index) <- programs.zipWithIndex){
+				
+				@{projects = ProjectService.findProjectListForProgram(p.program_id.get.toString())}
+				@for((proj, index) <- projects.zipWithIndex){
+					@{tasks = TaskService.findTaskListByProjectId(proj.pId.get.toString())}
+					@for(t <- tasks){
+						<li class="header-title width_full @if(programs.size==0){display-none}">
+							<span class="width_full" style=" font-style: italic; font-weight: bold;line-height: 16px;">@d.division.trim() / @p.program_name / @proj.project_name / @t.task_title</span>
+						</li>
+						@{ sub_tasks = SubTaskServices.findSubTasksByTask(t.tId.get.toString()) }
+						@for(subt <- sub_tasks){
+							@{ sub_task_issues = RiskService.findIssueList(subt.sub_task_id.get.toString(), 3)}
+							@if(sub_task_issues.size>0){
+								@{isValid = true}
+								@for(r <- sub_task_issues){
+									<li class="width_full row-data">
+										<span class="title">@t.task_title</span>
+										<span class="responsible title">
+											@{user = UserService.findUser(r.user_id.get.toString())}
+									 		@if(!user.isEmpty){
+									 			@user.get.first_name.substring(0, 1) .&nbsp;@user.get.last_name	
+									 		} 
+										</span>
+										<span class="name title">@r.title</span> 
+										<span class="cause title">
+											@{
+												r.category match{
+													case 0 => "Incidente"
+													case 1 => "Evento no planificado"
+												}	
+											}	
+										</span> 
+										<span class="event title">
+											@{
+												r.priority match{
+													case 0 => "Alto (3)"
+													case 1 => "Mediano (2)"
+													case 2 => "Bajo (1)"
+												}	
+											}
+										</span> 
+										<span class="impact title">@formatDate.format(r.issue_date)</span>
+										<span class="clouser_date title">@if(!r.closure_date.isEmpty){@formatDate.format(r.closure_date.get)}else{"NA"}</span>
+										<span class="cuantification title">
+											@{
+												if(!r.issue_status.isEmpty){
+													r.issue_status.get match{
+														case 0 => "Abierto"
+														case 1 => "Cerrado"
+													}	
+												}else{
+													"NA"
+												}
+												
+											}
+										</span>
+										<span class="strategic_reply title">
+											@{
+												if(!r.planned_end_date.isEmpty){
+													formatDate.format(r.planned_end_date.get)		
+												}else{
+													"NA"
+												}	
+											}
+										</span>
+									</li>	
+								}
+							}else{
+								<li class="width_full row-data">
+									<span class="title">@subt.task</span>
+									<span class="responsible title">NA</span>
+									<span class="name title">NA</span> 
+									<span class="cause title">NA</span> 
+									<span class="event title">NA</span> 
+									<span class="impact title">NA</span>
+									<span class="clouser_date title">NA</span>
+									<span class="cuantification title">NA</span>
+									<span class="strategic_reply title">NA</span>
+								</li>
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+</ul>

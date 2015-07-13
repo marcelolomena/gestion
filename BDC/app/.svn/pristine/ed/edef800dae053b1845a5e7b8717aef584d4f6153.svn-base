@@ -1,0 +1,121 @@
+@(divisions : Seq[Divisions], programs : Seq[ProgramMaster], documents : Seq[DocumentMaster], parentType : String)(implicit session: play.api.mvc.Session,lang:Lang)
+@import play.api.i18n._ 
+@import services._
+@import helper._;var version: Option[VersionDetails] = null;var versions: Seq[VersionDetails] = null;var user: Option[Users] = null;
+@import java.math.BigInteger; var i=1;
+<div id="search-result" style="float:left; width:100%;">
+	<div id="document-overview-result">
+		<div class="document-left">
+				<h3 style="width:294px;font-size:14px;height:26px;padding-left: 5px;">@Messages("header.divisions") </h3>
+				@for( (d,index) <- divisions.zipWithIndex){
+					<div id="div_@d.dId"  class="data_row_for_highlight @if( index%2==0 ){ data-row-even }else{ data-row-odd }">
+						<span class="left division_icon"></span><span class="left division_title">@d.division</span>
+					</div>
+					<div id="d_p_@d.dId" class="display-none">
+						@for( (p, pIndex) <- ProgramService.findAllProgramMasterDetailsForDivision(d.dId.get.toString()).zipWithIndex ){
+							<div  id="pro_@p.program_id.get" class="program-list @if( pIndex%2==0 ){ program-data-row-even }else{ program-data-row-odd }">
+								<span class="left program_icon"></span><span class="left program_title">@p.program_name</span>
+							</div>
+							<div id="p_pr_@p.program_id.get" class="display-none">
+								@for( (pr, tIndex ) <- ProjectService.findProjectListForProgram(p.program_id.get.toString).zipWithIndex){
+									<div  id="pr_@pr.pId.get" class="project-list @if( tIndex%2==0 ){ project-data-row-even }else{ project-data-row-odd }">
+										<span class="left project_icon"></span><span class="left project_title">@pr.project_name</span>
+									</div>
+									<div id="t_@pr.pId.get" class=" display-none">
+											@for( (task, sIndex) <- TaskService.findTaskListByProjectId(pr.pId.get.toString).zipWithIndex ){
+												<div  id="ts_@task.tId.get" class=" task_list @if( sIndex%2==0 ){ task-data-row-even }else{ task-data-row-odd }">
+													<span class="left task_icon"></span><span class="left task_title">@task.task_title</span>
+												</div>
+												<div id="s_@task.tId.get" class=" display-none">
+													@for( (subtask, sIndex) <- SubTaskServices.findSubTasksByTask(task.tId.get.toString).zipWithIndex ){
+														<div  id="st_@subtask.sub_task_id.get" class=" sub_task_list @if( sIndex%2==0 ){ data-row-even }else{ data-row-odd }">
+															<span class="left sub_task_icon"></span><span class="left sub_task_title">@subtask.task</span>
+														</div>
+													}
+												</div>
+											}
+									</div>
+								}
+							</div>
+						}
+					</div>
+				}	
+			</div >
+			<div  class="document-right">
+							<div class="doc_listing">
+								@if(documents.size > 0){	
+									<h2>@Messages("document.currentsdocuments") </h2>
+									<div id="current_documents">
+										<ul class="width_full">
+											<li>
+											       <span class="doc_title bold">@Messages("document.documenttitle")</span> 
+													<span class="doc_version bold"> @Messages("document.version") </span>
+													<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+													<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+													<span class="doc_action bold"> @Messages("document.action")</span>
+											</li>
+											
+												@for((doc, index) <- documents.zipWithIndex){
+													@{version = DocumentService.findAllCurrentVersions(doc.Id.toString())}
+													@{user = UserService.findUserDetailsById(version.get.user_id.toLong)}
+													
+													<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}">
+														<span class="doc_title">@doc.title</span> 
+														<span class="doc_version">@version.get.version_alias</span>
+														<span class="doc_date"> @version.get.creation_date.format("dd/MM/YYYY")</span> 
+														<span class="doc_user"> @user.get.first_name &nbsp; @user.get.last_name</span>
+														<span class="doc_action"> 
+															<span class="doc_info" title="@version.get.version_notes"></span>
+															<a href='/documents/@version.get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+															<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), parentType, "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+															<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id='@{parentType}_@{doc.Id.toString()}' class="delete-doc @doc.Id.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+														</span>
+													</li>
+												}
+										</ul>
+									</div>
+								
+									<h2 class="left push-top20px">@Messages("document.previoussdocuments")</h2>
+									<div id="previous_documents">
+										<ul class="width_full">
+											<li>
+												       <span class="doc_title bold">@Messages("document.documenttitle")</span> 
+													<span class="doc_version bold"> @Messages("document.version") </span>
+													<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+													<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+													<span class="doc_action bold"> @Messages("document.action")</span>
+											</li>
+											@for(doc <- documents){
+												@{ versions = DocumentService.findAllPreviousVersionDocuments(doc.Id.toString())}
+												
+													
+												@if(!versions.isEmpty){
+													@for(ver <- versions){
+														
+														@{user = UserService.findUserDetailsById(ver.user_id.toLong)}
+														
+														@{i = i+1}
+														<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.toString()}">
+															<span class="doc_title">@doc.title</span>
+															<span class="doc_version">@ver.version_alias</span> 
+															<span class="doc_date"> @ver.creation_date.format("dd/MM/YYYY")</span> 
+															<span class="doc_user">@user.get.first_name &nbsp; @user.get.last_name </span>
+															<span class="doc_action"> 
+																<span class="doc_info" title="@ver.version_notes"></span>
+																<a href='/documents/@ver.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
+																<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), parentType, "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+																<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id='@{parentType}_@{doc.Id.toString()}' class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+															</span>
+														</li>
+													}
+												}
+											}
+										</ul>
+									</div>
+							}else {
+								<h2 class="left push-top20px no-document"> @Messages("document.nodocumentavailableforselected") @parentType</h2>
+							}
+						</div>
+					</div>
+	</div>
+</div>

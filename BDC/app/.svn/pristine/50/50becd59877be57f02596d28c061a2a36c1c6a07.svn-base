@@ -1,0 +1,385 @@
+@(programForm: Form[Programs],id:String, userMap: java.util.HashMap[String,String],divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap: java.util.HashMap[String,String], programSubType: java.util.HashMap[String,String], programType: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import java.util.Date._
+@import play.api.i18n._
+@import play.api._
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+			<div id="new_program_header" class="">
+				<p> 
+					<span class="title-head"> @Messages("editProgram.title")  </span>
+					<span class="title-head-status" style="padding-right: 20px"><a href="@controllers.Frontend.routes.Program.updateProgramStatus(id.toString())">Change Status</a></span>
+				</p>
+			</div>
+    		<div>
+    			@form(action = controllers.Frontend.routes.Program.updateProgram(id),  'id->"add-new-program-form") {
+    				<input id="system_code" name="system_code" type="hidden" class="span4" value="00" >
+    				<input id="internal_number" name="internal_number" type="hidden" class="span4" value="00" >
+    				<input id="projects_numbers" name="projects_numbers" type="hidden" class="span4" value="0" >
+    				<input id="pLevel" name="pLevel" type="hidden" class="span4" value="00" >
+    				<input id="internal_state" name="internal_state" type="hidden" class="span4" value="0" >
+    				<input id="demand_management_status" name="demand_management_status" type="hidden" class="span4" value="Initiativa OK" >
+    				<input id="program_details.state_gantt" name="program_details.state_gantt" type="hidden" class="span4" value="NA" >
+    				<input id="program_dates.baseline_date" name="program_dates.baseline_date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+    				<input id="program_dates.closing_date_gantt" name="program_dates.closing_date_gantt" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+    				<input id="program_dates.actual_release_date" name="program_dates.actual_release_date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+    				
+    				<!-- Program Manager, Business Line, Impact type, SAP Code, Total SAP fields are no longer required at the create new program screen.  -->
+           			<!-- However these fields are mandatory as per existing validation , to avoid comlications we are setting default values to these fields - Abhijeet  -->
+           			<input type="hidden" name="work_flow_status" value="1"/>
+           			<input type="hidden" name="program_details.business_line" value="Not Needed"/>
+           			@*<input type="hidden" name="program_details.sap_code" value="99999"/>*@
+           			<input type="hidden" name="program_details.total_sap" value="100"/>
+           			<input type="hidden" name="program_details.impact_type" value="1"/>
+           			<input type="hidden" id="program_code" name="program_code" value="@programForm.data.get("program_code")"/>
+    				<input type="hidden" name="program_manager" value="1"/>  
+    				
+    				<div class="left width_full">
+	    				<div class="left width-pr50 padding-top-3px" >
+	    					 @select(
+						         programForm("program_type"),
+						         options(programType),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.programType"),
+						          '_default -> Messages("addNewProgram.placeholder.program_type")
+						      )
+	           			</div>
+	           		
+	           			<div class="right width-pr50 padding-top-3px " >
+	           				@inputText(
+				                programForm("program_name"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.programName"),
+				                'placeholder -> Messages("addNewProgram.placeholder.program_name")
+				                
+				            )
+	           			</div>
+           			</div>
+           			<div class="left width_full">
+	           			<div class="left width-pr50 padding-top-3px" >
+	           			<span class="left width_full">
+	           				 @select(
+						         programForm("program_sub_type"),
+						         options(programSubType),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.programSubType"),
+						          '_default -> Messages("addNewProgram.placeholder.program_sub_type")
+						     
+						      )
+					      </span>
+					      <span class="left width_full padding-top-3px">
+						      	@select(
+								         programForm("demand_manager"),
+								         options(userMap),
+								         'class -> "input-xlarge ",
+								         '_label -> Messages("addNewProgram.DemandManager"),
+								         '_default -> Messages("addNewProgram.placeholder.demand_manager")
+						      	)
+					      </span>
+					       <span class="left width_full padding-top-3px">
+					       		@select(
+							         programForm("program_details.devison"),
+							         options(divisionMap),
+							         'class -> "input-xlarge ",
+							         '_label -> Messages("addNewProgram.requestingDivision"),
+							         '_default -> Messages("addNewProgram.placeholder.devison")  
+							      )
+					       </span>
+	           			</div>
+	           			<div class="right width-pr50 padding-top-3px" >
+	           				<span class="left width_full ">
+	           				@textarea(
+				                programForm("program_description"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.description"),
+				                'placeholder -> Messages("addNewProgram.placeholder.program_description"),
+							    'rows -> 7,
+							    'cols -> 60
+				            )
+				            </span>
+	           			</div>
+           			</div>
+           			
+           			<div class="left width_full">
+	           			<div class="left width-pr50 padding-top-3px" >
+							 
+						      <span class="left width_full padding-top-3px">
+							      @select(
+							         programForm("program_details.management"),
+							         options(gerenciasMap),
+							         'class -> "input-xlarge ",
+							         '_label -> Messages("addNewProgram.requestingGerencia"),
+							         '_default -> Messages("addNewProgram.placeholder.management")
+							      )
+						      </span>
+						      
+	           			</div>
+	           			
+	           			<div class="right width-pr50 padding-top-3px" >
+	           					@inputText(
+				                programForm("program_dates.initiation_planned_date"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.programInitiation"),
+				                'placeholder -> Messages("addNewProgram.placeholder.initiation_planned_date")
+				            )
+				           	
+	           			</div>
+           			</div>
+           		
+           			<div class="left width_full">
+	           			<div class="left width-pr50 padding-top-3px" >
+	           			 <span class="left width_full ">
+							       	@select(
+							         programForm("program_details.department"),
+							         options(departmentsMap),
+							         'class -> "input-xlarge ",
+							         '_label -> Messages("addNewProgram.requestingDepartment"),
+							          '_default -> Messages("addNewProgram.placeholder.department")
+							      )
+						      </span>
+	           				
+	           				
+	           			</div>
+	           				<div class="right width-pr50 padding-top-3px >
+	           			@inputText(
+				                programForm("program_dates.release_date"),
+				                'class -> "span4", 
+				                 '_label -> Messages("addNewProgram.expectedreleasedate"),
+				                'placeholder ->Messages("addNewProgram.placeholder.release_date")
+				            )
+	           			</div>
+	           			
+	           			
+           			</div>
+           		@*	<div class="left width_full display-none">
+	          			<div class="left width-pr50 padding-top-3px" >
+	           				@inputText(
+				                programForm("program_dates.creation_date"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.programCreation"),
+				                'placeholder -> Messages("addNewProgram.placeholder.end_planned_date")
+				            )
+	           			</div>
+	           			<div class="left width-pr50 padding-top-3px" >
+	           				@inputText(
+				                programForm("program_dates.closure_date"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.estimatedClosureDate"),
+				                'placeholder -> Messages("addNewProgram.placeholder.closure_date"),
+				                'style->"width: 380px;"
+				            )
+	           			</div>
+	           			
+           			</div>*@
+           			<div class="left width_full">
+           			<div class="left width-pr50 padding-top-3px">
+	           			@inputText(
+				                programForm("planned_hours"),
+				                '_label -> Messages("addNewProgram.plannedhours"),
+				                'class -> "span4", 
+				                'maxlength ->"9",
+				                'placeholder ->Messages("addNewProgram.Enterplannedhours")
+				            )
+	           			</div>
+	         
+	           			
+	           				<div class="left width-pr50 padding-top-3px" >
+	           				@inputText(
+				                programForm("program_dates.closure_date"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.estimatedClosureDate"),
+				                'placeholder -> Messages("addNewProgram.placeholder.closure_date"),
+				                'style->"width: 380px;"
+				            )
+	           			</div>
+                       </div>
+	            @* 	<div class="right width-pr50 padding-top-3px">
+	         			@inputText(
+				                programForm("estimated_cost"),
+				                'class -> "span4", 
+				                'type -> "readonly",
+				                'disabled ->"disabled",
+				                'maxlength ->"9",
+				                '_label -> Messages("addNewProgram.estimatedCost"),
+				                'placeholder ->Messages("addNewProgram.placeholder.estimatedCost")
+				            ) 
+				            
+	           			</div>  *@
+       <div class="left width_full ">
+	          			<div class="left width-pr50 padding-top-3px display-none" >
+	           				@inputText(
+				                programForm("program_dates.creation_date"),
+				                'class -> "span4", 
+				                '_label -> Messages("addNewProgram.programCreation"),
+				                'placeholder -> Messages("addNewProgram.placeholder.end_planned_date")
+				            )
+	           			</div>
+	           		
+	           			
+           			</div>
+           			<div class="left width_full ">
+           				<div class="left width-pr50 padding-top-3px display-none" >
+	           				@select(
+						         programForm("is_active"),
+						         options("1"->"Yes","0"->"No"),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.isActive"),
+						          '_default -> Messages("addNewProgram.placeholder.isActive")
+						      )
+	           			</div>
+	           		<div class="left width-pr50 padding-top-3px">
+	           			@inputText(
+				                programForm("program_details.sap_code"),
+				                '_label -> "PPM Number",
+				                'class -> "span4", 
+				                'maxlength ->"7",
+				                'type -> "text",
+				                'placeholder -> "Por favor, introduzca el número de PPM" 
+				            )
+	           			</div>
+           			</div>
+					
+           			<div class="left width_full padding-top-3px">
+           				<label style="width:100%; text-align:center;">@Messages("artform.mandatorynote")</label>
+           			</div>
+           			<div class="width_full" style="margin-top:26px;">
+				       		<span class="left" style="margin-left:312px;"><input class="btn form-button" value="@Messages("button.save")" type="submit"/></span>
+				       		<span  class="left" style="margin-left:30px;"><input id="cancel-program" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+		          	</div>
+          
+    			}
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	      	  $("#estimated_cost").keydown(function (e) {
+		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+	                (e.keyCode >= 96 && e.keyCode <= 105))) {
+	          }
+	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+	                       e.keyCode != 9) {
+	              e.preventDefault();
+	          }
+	    });
+ 		$("#program_details_sap_code").keydown(function (e) {
+ 		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+ 	                (e.keyCode >= 96 && e.keyCode <= 105))) {
+ 	          }
+ 	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+ 	                       e.keyCode != 9) {
+ 	              e.preventDefault();
+ 	          }
+	 	    });
+			 	    
+			 	    
+	       $("#planned_hours").keydown(function (e) {
+		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+	                (e.keyCode >= 96 && e.keyCode <= 105))) {
+	          }
+	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+	                       e.keyCode != 9) {
+	              e.preventDefault();
+	          }
+	    });
+	      
+
+	   $('#cancel-program').on('click',function() {
+		   window.location.href='/program-details/@id';
+	   });
+
+
+	});
+	
+
+ 
+
+	var currentDate = $("#current-date").val();
+	$("#program_dates_initiation_planned_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true
+	});
+	
+	$("#program_dates_creation_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		maxDate: currentDate,
+		changeMonth: true,
+		  changeYear: true
+	});
+
+	$("#program_dates_release_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		minDate: currentDate,
+		changeMonth: true,
+		  changeYear: true
+	});
+	
+	$("#program_dates_baseline_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true
+	});
+	
+	$("#program_dates_closing_date_gantt").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true
+	});
+	
+	$("#program_dates_closure_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true
+	});
+
+	@*var url="/get-genrencia-list?devision="+$("#program_details_devison").val();
+	   $.get(url,  function(data) {
+		   $("#program_details_management").html(data);
+	});*@
+		
+	@*$("#program_details_devison").live("change", renderGerenciaList);*@
+
+	$("#program_details_management").live("change", renderDepartmentList);
+	
+</script>
+</body>
+</html>

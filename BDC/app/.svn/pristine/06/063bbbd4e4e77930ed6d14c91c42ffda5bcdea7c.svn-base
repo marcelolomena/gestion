@@ -1,0 +1,38 @@
+@()(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+<header>
+	<div class="logo_part_main">
+		<div class="logo_new">
+			@if(Integer.parseInt(session.get("utype").get) != 0){			
+				<a href="/road-map"><img src="@routes.Assets.at("frontend/images/new_logo.png")" alt=""></a>
+			}else{
+				<a href="javascript:void(0)"><img src="@routes.Assets.at("frontend/images/new_logo.png")" alt=""></a>
+			}
+		</div>
+		<div class="header-right">		
+	      
+			<div class="navigate-menu">
+				<ul>
+					@if(utils.UserAccess.checkAccess(req,"tab_profile")){
+						<li><a id="profile" href="/employee/@session.get("uId").get">@Messages("header.profile")</a></li>
+					}
+					@if(utils.UserAccess.checkAccess(req,"tab_dashboard")){				
+						<li><a id="dash" href="/dashboard"> @Messages("header.dashboard")</a></li>
+					}
+					@*@if(utils.UserAccess.checkAccess(req,"tab_roadmap")){
+						<li><a id="roadmap" href="/road-map" > @Messages("header.roadmap")</a></li>
+					}*@
+						 @*<li><a id="projects" href="/projects" >Projects</a></li>*@
+					@if(utils.UserAccess.checkAccess(req,"tab_program")){
+						<li><a id="programs" href="/programs" > @Messages("header.programs")</a></li>
+					}
+					<input type="hidden" value="@utils.UserAccess.checkAccess(req,"tab_admin")" id="test-val">
+					@if(utils.UserAccess.checkAccess(req,"tab_admin")){
+					 	<li><a id="projects" href="/division-list">@Messages("header.admin")</a></li>
+					 }
+				
+				</ul>
+			</div>
+			
+		</div>
+	</div>
+</header>

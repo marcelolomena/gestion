@@ -1,0 +1,361 @@
+@(divisions : Seq[Divisions], programs : Seq[ProgramMaster], documents : Seq[DocumentMaster], parentType : String, searchForm : Form[SearchMaster], documentType :java.util.HashMap[String, String], projects : Seq[Project], tasks : Seq[Tasks], subtasks : Seq[SubTasks], users : Seq[Users])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@import play.api.i18n._ 
+@import services._
+@import helper._
+@frontend.layout()
+@import java.math.BigInteger; var i=1;
+<link href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")" rel="stylesheet">
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider" id="document_overview_section">
+<div class="product_main">
+  <div class="product_detail_1" style="width:100%">
+ 			<ul id="document_overview_tab" class="content-box-tabs" style="width:100%; padding:0  !important;">
+ 				<li style="margin:0;"><a class="documentOverview current" href='javascript:void(0)'>@Messages("generics.overview.documentoverview")</a></li>
+	    		<li style="margin:0; float:right;"><a class="searchForm" href='javascript:void(0)'> @Messages("generics.overview.searchdocument")</a></li>
+	    	</ul>	
+ 			<div style="width:100%; margin-top: 0px; float:left;" class="content-box-content"></div>	
+ 			
+ 			<div class="focus_on width_full" style="padding:10px 0; margin:0;display:none;">
+				 	<div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
+				 	<div class="search-form-wrapper" style="padding: 10px 40px;">
+					@form(action = controllers.Frontend.routes.Documents.searchResult, 'id->"search-document-form") {
+					
+						<div class="width_full">
+							
+					      		 @inputText(
+					                searchForm("search_filter"),
+					                'class -> "", 
+					                 'placeholder -> Messages("searchtext.placeholder"),
+					                '_label -> Messages("searchtext.title")
+					            )
+				            
+			            </div>
+			            
+			            		 	<div class="field-wrapper">
+				            <dl id="program_field" class=" ">
+							    <dt><label for="program">Divisions</label></dt>
+							    <dd>
+								    <select class="input-xlarge " name="division" id="division">
+								            <option value="" class="blank">@Messages("documentoverview.choosedivision")</option>
+								           @for(division <- divisions) {
+					                  			<option value="@division.dId.get">@if(division.division.length>50){@division.division.toString().substring(0, 50)...}else{@division.division} </option>
+						                   }
+								    </select>
+								</dd>
+							</dl>	 	
+			            </div>
+			            
+			             <div class="field-wrapper"> 
+				      		 		<dl id="subtask_field" class=" ">
+							    <dt><label for="sub_task">@Messages("addSubTask.subtasktitle")</label></dt>
+							    <dd>
+								    <select class="input-xlarge " name="sub_task" id="sub_task">
+								            <option value="" class="blank">@Messages("documentoverview.choosesubtask")</option>
+								           @for(subtask <- subtasks) {
+					                  			<option value="@subtask.sub_task_id" >@if(subtask.task.length>50){@subtask.task.substring(0, 50) ...}else{@subtask.task}</option>
+						                   }
+								    </select>
+								</dd>
+							</dl>
+			            </div>
+			            
+			            
+			            
+					 	<div class="field-wrapper">
+				            <dl id="program_field" class=" ">
+							    <dt><label for="program">@Messages("header.programs")</label></dt>
+							    <dd>
+								    <select class="input-xlarge " name="program" id="program">
+								            <option value="" class="blank">@Messages("documentoverview.chooseprogram")</option>
+								           @for(p <- programs) {
+					                  			<option value="@p.program_id">@if(p.program_name.length>50){@p.program_name.toString().substring(0, 50)...}else{@p.program_name} </option>
+						                   }
+								    </select>
+								</dd>
+							</dl>	 	
+			            </div>
+			            
+			             <div class="field-wrapper"> 
+				      		 	@select(
+					            	searchForm("document_type"),
+					       			options(documentType),
+									'class -> "input-xlarge ",
+									'_label -> Messages("documenttype.documenttype"),
+									'_default -> Messages("uploaddocument.placeholder.documenttype"))
+			            </div>
+			            
+			            <div class="field-wrapper"> 
+			            	<dl id="project_field" class=" ">
+							    <dt><label for="project">@Messages("timesheet.project")</label></dt>
+							    <dd>
+								    <select class="input-xlarge " name="project" id="project">
+								            <option value="" class="blank">@Messages("documentoverview.chooseproject")</option>
+								           @for(project <- projects) {
+					                  			<option value="@project.pId" >@if(project.project_name.length>50){@project.project_name.substring(0,50) ...}else{@project.project_name}</option>
+						                   }
+								    </select>
+								</dd>
+							</dl>
+			            </div>
+			            
+			           
+			           
+			            <div class="field-wrapper" > 
+			            	<dl id="user_field" class=" ">
+							    <dt><label for="user">@Messages("programdetails.responsible")</label></dt>
+							    <dd>
+								    <select class="input-xlarge " name="user" id="user">
+								            <option value="" class="blank">@Messages("documentoverview.chooseresponsible")</option>
+								           @for(user <- users) {
+					                  			<option value="@user.uid" >@user.first_name  @user.last_name </option>
+						                   }
+								    </select>
+								</dd>
+							</dl>
+			            </div>
+			            
+			            
+			            <div class="field-wrapper"> 
+			            	<dl id="tasks_field" class=" ">
+							    <dt><label for="task">@Messages("programDetails.task")</label></dt>
+							    <dd>
+								    <select class="input-xlarge " name="task" id="task">
+								            <option value="" class="blank">@Messages("documentoverview.choosetask")</option>
+								           @for(task <- tasks) {
+					                  			<option value="@task.tId" >@if(task.task_title.length>50){@task.task_title.substring(0, 50) ...}else{@task.task_title}</option>
+						                   }
+								    </select>
+								</dd>
+							</dl>
+			            </div>
+			            
+			            <div class="field-wrapper white-border" style="width: 390px;">
+			            	<dl id="search_scope" class=" ">
+							    <dt><label for="search_scope">Search Scope</label></dt>
+							    <dd>
+							    	<div style="width:100%;float: left;">
+								    	<input style ="width:18px;float: left; margin: 5px 0 0;" type="radio" name="search_scope" value="0" checked="checked" id="search_scope1"/><label for="search_scope1" style="font-family: Helvetica; font-size: 13px; margin: 3px 0 0 8px; min-height: 21px; font-weight: normal; float:left; width:90%;">@Messages("documentoverview.currentdocuments")</label>
+								    </div>
+								    <div style="width:100%;float: left;">
+													<input style ="width:18px;float: left; margin: 5px 0 0;" type="radio" name="search_scope" value="1" checked="checked" id="search_scope2"/><label for="search_scope2" style="font-family: Helvetica; font-size: 13px; margin: 3px 0 0 8px; min-height: 21px; font-weight: normal; float:left; width:90%;">@Messages("documentoverview.historicaldocuments")</label>
+									</div>
+									<div style="width:100%;float: left;">
+										<input style ="width:18px;float: left; margin: 5px 0 0;" type="radio" name="search_scope" value="2" checked="checked" id="search_scope3"/><label for="search_scope3" style="font-family: Helvetica; font-size: 13px; margin: 3px 0 0 8px; min-height: 21px; font-weight: normal; float:left; width:90%;">@Messages("documentoverview.currentandhistoricaldocuments")</label>
+									</div>
+								</dd>
+								<dd class="info">Numeric</dd>
+							</dl>
+			            </div>
+			            
+			             
+			            <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
+			            	<span class="left" style="margin-top: 15px;"><input class="btn form-button" value="@Messages("button.search")" type="submit"/></span>
+       						<span class="left" style="margin-left: 29px; margin-top: 15px;"> <input id="cancel-document-search" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+			            </div>
+			           
+			           
+			        }	
+			        </div>
+			  </div>
+		 
+		 	@if(divisions.size > 0){
+		 		<div class="new-division-doc" id="new-division-doc-upload">
+		 			<span><a href='@controllers.Frontend.routes.Documents.uploadDocument(divisions(0).dId.get.toString, "DIVISION", "ADD")' id="upload-division-doc"> @Messages("uploaddocument.uploaddocument")</a></span>
+				</div>
+			}
+		 
+ 			<div id="docuement-overview">
+ 				<div id="search-result" style="margin-top: 10px; float:left; width:100%;">
+ 					<div id="document-overview-result">
+						<div class="document-left">
+							<h3 style="width:294px;font-size:14px;height:26px;padding-left: 5px;">@Messages("header.divisions") </h3>
+							@for( (d,index) <- divisions.zipWithIndex){
+								<div id="div_@d.dId"  class="data_row_for_highlight @if( index%2==0 ){ data-row-even }else{ data-row-odd }">
+									<span class="left division_icon"></span><span class="left division_title">@d.division</span>
+								</div>
+								<div id="d_p_@d.dId" class="display-none">
+									@for( (p, pIndex) <- ProgramService.findAllProgramMasterDetailsForDivision(d.dId.get.toString()).zipWithIndex ){
+										<div  id="pro_@p.program_id.get" class="program-list @if( pIndex%2==0 ){ program-data-row-even }else{ program-data-row-odd }">
+											<span class="left program_icon"></span><span class="left program_title">@p.program_name</span>
+										</div>
+										<div id="p_pr_@p.program_id.get" class="display-none">
+											@for( (pr, tIndex ) <- ProjectService.findProjectListForProgram(p.program_id.get.toString).zipWithIndex){
+												<div  id="pr_@pr.pId.get" class="project-list @if( tIndex%2==0 ){ project-data-row-even }else{ project-data-row-odd }">
+													<span class="left project_icon"></span><span class="left project_title">@pr.project_name</span>
+												</div>
+												<div id="t_@pr.pId.get" class=" display-none">
+														@for( (task, sIndex) <- TaskService.findTaskListByProjectId(pr.pId.get.toString).zipWithIndex ){
+															<div  id="ts_@task.tId.get" class=" task_list @if( sIndex%2==0 ){ task-data-row-even }else{ task-data-row-odd }">
+																<span class="left task_icon"></span><span class="left task_title">@task.task_title</span>
+															</div>
+															<div id="s_@task.tId.get" class=" display-none">
+																@for( (subtask, sIndex) <- SubTaskServices.findSubTasksByTask(task.tId.get.toString).zipWithIndex ){
+																	<div  id="st_@subtask.sub_task_id.get" class=" sub_task_list @if( sIndex%2==0 ){ data-row-even }else{ data-row-odd }">
+																		<span class="left sub_task_icon"></span><span class="left sub_task_title">@subtask.task</span>
+																	</div>
+																}
+															</div>
+														}
+												</div>
+											}
+										</div>
+									}
+								</div>
+							}	
+						</div >
+						<div  class="document-right">
+							<div class="doc_listing">
+								@if(documents.size > 0){	
+									<h2> @Messages("document.currentsdocuments") </h2>
+									<div id="current_documents">
+										<ul class="width_full">
+											<li>
+												  <span class="doc_title bold">@Messages("document.documenttitle")</span> 
+													<span class="doc_version bold"> @Messages("document.version") </span>
+													<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+													<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+													<span class="doc_action bold"> @Messages("document.action")</span>
+											</li>
+											
+												@for((doc, index) <- documents.zipWithIndex){
+													<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}">
+														<span class="doc_title">@doc.title</span> 
+														<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_alias</span>
+														<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
+														<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.last_name</span>
+														<span class="doc_action"> 
+															<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_notes"></span>
+															<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+															<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "DIVISION", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+															<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id='@{parentType}_@{doc.Id.toString()}' class=" delete-doc @doc.Id.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+														</span>
+													</li>
+												}
+										</ul>
+									</div>
+								
+									<h2 class="left push-top20px">@Messages("document.previoussdocuments")</h2>
+									<div id="previous_documents">
+										<ul class="width_full">
+											<li>
+								                    <span class="doc_title bold">@Messages("document.documenttitle")</span> 
+													<span class="doc_version bold"> @Messages("document.version") </span>
+													<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+													<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+													<span class="doc_action bold"> @Messages("document.action")</span>
+											</li>
+											@for(doc <- documents){
+												@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.toString()).isEmpty){
+													@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.toString())){
+														@{i = i+1}
+														<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.toString()}">
+															<span class="doc_title">@doc.title</span>
+															<span class="doc_version">@version.version_alias</span> 
+															<span class="doc_date"> @version.creation_date.format("dd/MM/YYYY")</span> 
+															<span class="doc_user">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name  @UserService.findUserDetailsById(version.user_id.toLong).get.last_name</span>
+															<span class="doc_action"> 
+																<span class="doc_info" title="@version.version_notes"></span>
+																<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
+																<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "DIVISION", "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+																<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id='@{parentType}_@{doc.Id.toString()}' class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+															</span>
+														</li>
+													}
+												}
+											}
+										</ul>
+									</div>
+							}else {
+								<h2 class="left push-top20px no-document">@Messages("document.nodocumentavailableforselected") @parentType</h2>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+			  <div id="dialog-confirm"></div>
+		</div>
+		</div>
+		</div>
+ 	@frontend.footer()
+</section>
+	   	 <div id="pop-box-over" class="display-none"></div>
+   
+  	<div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span>
+  		<div class="dialog-content">
+		</div>
+	</div>
+ 
+ 
+	<div class="tooltip"></div>	
+</div>
+@frontend.headerScripts()
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/documents.css")">
+<script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//$(".doc_delete").on("click", renderDeleteDocument);
+	
+	var url = window.location.href;
+			
+	
+		var splitUrl = url.split("?");
+		
+		if(splitUrl.length > 0){
+		var id= splitUrl[1];
+		if(typeof id != "undefined"){
+		  renderDocumentDisplay(id, "DIVISION");
+		  $('.data_row_for_highlight').removeClass("selected_doc_highlighting");
+		  $("#div_"+id).addClass("selected_doc_highlighting");
+		  $("#d_p_"+id).toggle();
+		}
+	}
+	
+		$('.data_row_for_highlight:first').addClass("selected_doc_highlighting");
+	$('.data_row_for_highlight').on('click',function(){
+		$('.data_row_for_highlight').removeClass("selected_doc_highlighting");
+		if($(this).hasClass("selected_doc_highlighting")){
+			$(this).removeClass("selected_doc_highlighting");
+		}else{
+			$(this).addClass("selected_doc_highlighting");
+		}
+	});
+});
+function renderDeleteDocument(){
+	var id = $('.doc_delete').attr('id');
+	$("#dialog-confirm").html("Do you want to delete this Document?");
+			// Define the Dialog and its properties.
+			$("#dialog-confirm").dialog({
+				resizable : false,
+				modal : true,
+				title : "Confirmar",
+				height : 150,
+				width : 300,
+				buttons : {
+					"Yes" : function() {
+						var url = "/document-delete?id=" + id;
+						$.get(url, function(data) {
+							if (data == "Success") {
+								window.location.reload();
+							}
+						});
+						$(this).dialog('close');
+						$("#pop-box-over").css("display", "none");
+						$("#dialog-confirm").css("display", "none");
+					},
+					"No" : function() {
+						$(this).dialog('close');
+						$("#pop-box-over").css("display", "none");
+						$("#dialog-confirm").css("display", "none");
+					}
+				}
+			});
+			$("#pop-box-over").css("display", "block");
+			$("#dialog-confirm").css("display", "block");
+		}
+</script>
+</body>
+</html>

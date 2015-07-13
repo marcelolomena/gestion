@@ -1,0 +1,433 @@
+@(taskForm: Form[TaskMaster],milestone: Option[models.Tasks], project: Option[Project], username: String, users: Seq[Users],  desipline :java.util.HashMap[String, String], userMap: java.util.HashMap[String, String],id:String,baselineAvailable : Boolean,stages: java.util.HashMap[String, String],isValidDependency: Boolean,userRoleMap:java.util.HashMap[String, String],deliverables:java.util.HashMap[String, String], maxSubtaskEndDate : java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import util.Random
+@import services._
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+			<div id="new_program_header" class="">
+				<p> 
+					<span class="title-head">@Messages("task.editTask.updatetask")</span>
+					<span class="title-head-status" style="padding-right: 20px"><a href="@controllers.Frontend.routes.Task.updateTaskStatus(milestone.get.tId.get.toString)">@Messages("editsubtask.changestatus")</a></span>
+				</p>
+			</div>
+   		<div class="width_full">
+   		 <input type="hidden" id="project_start" name="project_start" value="@project.get.start_date.format("yyyy-MM-dd")" />
+   		  <input type="hidden" id="task_id" name="task_id" value="@milestone.get.tId.get" />
+   		  
+      	<input type="hidden" id="project_end" name="project_end" value="@project.get.final_release_date.format("yyyy-MM-dd")" />
+    			@form(action = controllers.Frontend.routes.Task.updateTask(milestone.get.tId.get.toString()),  'id->"new-task-form") { 
+				      <input type="hidden" id="mode" name="mode" value="add" />
+				      <input type="hidden" id="mId" name="mId" value="@milestone.get.tId.get" />
+				      <input type="hidden" id="pId" name="pId" value="@project.get.pId" />
+				      <input type="hidden" id="status" name="status" value="1" />
+				      <input type="hidden" id="task_details.task_type" name="task_details.task_type" value='@taskForm.data.get("task_details.task_type").get' />
+				      <input type="hidden" id="task_id" name="task_id" value="@milestone.get.tId.get" />
+				      <input type="hidden" id="max_subtask_end_date" name="max_subtask_end_date" value="@maxSubtaskEndDate" />
+   		
+				      @*<label>Project Name</label>
+				       <input id="project_name" name="project_name" type="text" class="span4" value="@project.get.project_name" readonly="readonly"> 
+				      *@
+				
+				
+				      @*<label>Task Code</label>*@      
+				      <input id="task_details.task_code" name="task_details.task_code" type="text" class="span4 display-none" value="@taskForm.data.get("task_details.task_code").get" readonly="readonly" style="background:#E3EAED;"> 
+				        
+				      @inputText(
+			               taskForm("title"),
+			               'class -> "span4", 
+			                'placeholder -> Messages("newTask.placeholder.title"),
+			               '_label ->Messages("task.editTask.tasktitle"),
+			               'maxlength -> "60"
+			         )
+								            
+				      @*<label>Title</label>
+				        <input id="title" name="title" type="text" class="span4"> 
+				     
+				           
+				            
+					<label class="display-none">Country</label>
+					 <input id="country" name="country" type="text" class="span4 display-none" value="Chile"> 
+				  	
+				           
+				      <label class="display-none">State</label>
+				       <input id="state" name="state" type="text" class="span4 display-none" value="Maule"> 
+				       
+				        
+				      <label class="display-none">City</label>
+				       <input id="city" name="city" type="text" class="span4 display-none" value="Rancagua">
+				       *@
+				      
+				      
+				       @*@select(
+				            	taskForm("task_depend"),
+				       			options(dependentTasks),
+								'class -> "input-xlarge ",
+								'_label -> "Dependencies",
+								'_default -> "--- No Dependencies ---")
+								*@
+				       @inputText(
+				               taskForm("plan_start_date"),
+				               'class -> "span4", 
+				                'placeholder ->  Messages("newTask.placeholder.plan_start_date"),
+				               '_label ->  Messages("task.editTask.plan_start_date")
+				            )
+								
+					  @inputText(
+			               taskForm("plan_end_date"),
+			               'class -> "span4", 
+			                'placeholder -> Messages("newTask.placeholder.plan_end_date"),
+			               '_label -> Messages("task.editTask.plan_end_date")
+			            )
+				              
+				     @* <label>Planned Start Date (Approx)( dd-mm-yyyy )</label>
+				       <input id="plan_start_date" name="plan_start_date" value="" type="text" class="span4 datepicker" />
+				        
+				       <label>Planned End Date (Approx)( dd-mm-yyyy )</label>
+				       <input id="plan_end_date" name="plan_end_date" value="" type="text" class="span4 datepicker"/>*@ 
+				
+				        @*
+				       <label>Completion Date (Approx)( dd - MM - yyyy )</label>
+				       <input id="milestone_release_date" name="milestone_release_date" value="" type="text" class="span4 datepicker" readonly="readonly" /> 
+				        *@ 
+				      
+				      	@textarea(
+				               taskForm("description"),
+				               'class -> "span4", 
+				               '_label -> Messages("task.editTask.description"),
+				               'placeholder ->  Messages("newTask.placeholder.description"),
+							    'rows -> 5,
+							    'cols -> 60
+				           )
+								            
+				       @*<label>Task Description</label>
+				       <textarea id="description" name="description" value="Smith" rows="3" class="input-xlarge span6"></textarea>*@ 
+				        
+				       @*<label >Plan Time (In Hours)</label>
+				       <input id="plan_time" name="plan_time" type="number" class="span4 " value=""  maxlength="5">*@  
+				        @inputText(
+				               taskForm("plan_time"),
+				               'class -> "span4", 
+				                'placeholder -> Messages("newTask.placeholder.plan_time"),
+				               '_label ->Messages("task.editTask.plan_time") ,
+				               'maxlength ->"8"
+				            )
+				            
+				        
+				        
+				         @select(
+					         taskForm("task_status"),
+					         options("0"->Messages("colorname.green"), "1"->Messages("colorname.amber"),"2"->Messages("colorname.red")),
+					         'class -> "input-xlarge ",
+					         '_label -> Messages("task.editTask.milestone_status")
+					      )
+					      
+				       @*<span class="width_full" style="   margin-top: 9px;">
+				       <label>Status</label>
+				       <select name="milestone_status" id="milestone_status" class="input-xlarge ">
+				     	  <option value="0" selected="selected" >Green</option>
+				     	  <option value="1">Amber</option>
+				           <option value="2">Red</option>
+				         
+				       </select> 
+				       
+				       </span>*@
+				           @inputText(
+					               taskForm("remark"),
+					               'class -> "span4 ", 
+					               '_label -> Messages("task.editTask.remark"),
+					               'placeholder ->  Messages("newTask.placeholder.remark"),
+							       'maxlength -> "100"
+				           )
+				     
+				     
+				            @select(
+				            	taskForm("task_discipline"),
+				       			options(desipline),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("task.editTask.task_discipline"),
+								'_default -> Messages("newTask.placeholder.task_discipline")
+							)
+							
+							<div style="display:none;">
+				            @inputText(
+				               taskForm("completion_percentage"),
+				               'class -> "span4", 
+				                'placeholder ->Messages("newTask.placeholder.completion_percentage"),
+				               '_label -> Messages("task.editTask.completion_percentage")
+				            )
+				            </div>
+				            
+				        @*<label>Task Owner</label>
+				    	<select name="task_owner" id="task_owner" class="input-xlarge ">
+				       		<option value="" >select owner</option>
+				       		@for(user<-users){
+				       			<option class="dep-user" value="@user.uid" @{if(user.uid.toString() == project.get.project_manager.toString()) "selected='selected'"}>@user.first_name&nbsp;@user.last_name</option>
+				       		}
+				   		</select>*@
+				   		
+					      
+					    @select(
+					           	taskForm("task_details.stage"),
+					       		options(stages),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("task.editTask.task_details.stage"),
+								'_default -> Messages("newTask.placeholder.stage")
+								)
+								
+						 @select(
+					           	taskForm("task_details.user_role"),
+					       		options(userRoleMap),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("task.editTask.task_details.user_role"),
+								'_default -> Messages("newTask.placeholder.user_role")
+								)
+							
+							
+							
+						@select(
+					           	taskForm("task_details.deliverable"),
+					       		options(deliverables),
+								'class -> "input-xlarge ",
+								'_label -> Messages("newTask.deliverable"),
+								'_default -> Messages("newTask.placeholder.deliverable")
+								)
+							
+						@select(
+					         taskForm("task_owner"),
+					         options(userMap),
+					         'class -> "input-xlarge ",
+					         '_label ->  Messages("task.editTask.task_owner"),
+					           '_default -> Messages("newTask.placeholder.task_owner")
+					      )	
+				        <input type="text" id="search-user" name="search-user" class="left" style="height:22px; margin-top: 20px" placeholder="@Messages("addNewProject.searchuser")">
+				          	<span class="search-user-icon push-top20px"></span>
+				              
+				                 @* @select(
+				            	taskForm("dependencies_type"),
+				       			options("1"->"Finish-Start","2"->"Start-Start","3"->"Start-Finish","4"->"Finish-Finish"),
+								'class -> "input-xlarge ",
+								'_label -> "Dependency Type")*@
+				       
+				      <span class="task-dependency"> @Messages("task.editTask.managedependencies")</span>
+				        
+				   	<div class="left width_full padding-top-3px" >
+           					<label style="width:100%;margin-left: 233px;">@Messages("artform.mandatorynote")</label>
+           				</div>
+				              
+				              <div class="width_full" style="margin-top:29px;">
+				       		<span class="left" style="margin-left:211px;"><input class="btn form-button" value="@Messages("button.save")" type="submit"/></span>
+				       		<span  class="left" style="margin-left:10px;"><input id="cancel-task" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+				     		@if(baselineAvailable && ProjectService.findProject(milestone.get.pId).get.baseline){
+		       				<span> 	<a class="showBaselineForTask"  href="/show-baseline/@milestone.get.tId.get/Task"> @Messages("task.editTask.showbaseline")</a>
+		       				}
+		       			
+		       			@inputText(
+				               taskForm("task_depend"),
+				               'class -> "span4", 
+				                'placeholder -> "",
+				               '_label -> "",
+				               'type -> "hidden"
+				              
+				            )
+				            
+					      @inputText(
+				              taskForm("dependencies_type"),
+				              'class -> "span4", 
+				               'placeholder -> "",
+				              '_label -> "",
+				              'type -> "hidden"
+				             
+				           )   
+		       				
+				          </div>
+        		}
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+	<div id="pop-box" class="display-none"> 
+	<div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"></div>
+     <div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+     	<span class="dialog-close"></span><div class="dialog-content"></div>
+	</div>
+	
+  </div>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")" id="jquery-ui" rel="stylesheet">
+
+<script type="text/javascript">
+$(document).ready(function(){
+		$("#jquery-ui").attr("disabled", "disabled");
+	   $('#cancel-task').on('click',function() {
+		 window.location.href='/project-task-details/@milestone.get.tId.get.toString()';
+	   });
+	   
+	   var errorText = $("#plan_end_date_field").find("dd.error").html();
+	   var newText = "Task end date can not be before subtask end date.";
+	   
+	   if(errorText==newText){
+	   	var task_id = $("#mId").val();
+		var end_date = $("#plan_end_date").val();
+	   	if(typeof task_id != 'undefined'){
+	   		validateTaskEdit(task_id,end_date)
+   		}
+	   }
+	   
+	   var errorText = $("#plan_start_date_field").find("dd.error").html();
+	   var newText = "Task start date can not be after subtask start date.";
+	   
+	   if(errorText==newText){
+	   	var task_id = $("#mId").val();
+		var start_date = $("#plan_start_date").val();
+	   	if(typeof task_id != 'undefined'){
+	   		validateTaskStartDate(task_id,start_date)
+   		}
+	   }
+	   
+	});
+	
+		  
+	if(@isValidDependency == false){
+		//document.getElementById('dependencies_type').disabled = true;
+		//document.getElementById('task_depend').disabled = true;
+		$(".task-dependency").addClass("display-none"); 
+	}else{
+	 	$(".task-dependency").on("click", rederEditTaskDependency);
+	 	
+	 }
+	var minD = $("#project_start").val().replace(/-/g, '/');
+	var maxD = $("#project_end").val().replace(/-/g, '/');
+	var minTaskEndDt = new Date(maxD);
+	if($("#max_subtask_end_date").val() != null && $("#max_subtask_end_date").val() != ""){
+		var maxSubTaskEndDate = $("#max_subtask_end_date").val().replace(/-/g, '/');
+		var maxSubtaslDt = new Date(maxSubTaskEndDate);
+		if (minTaskEndDt.getTime() < maxSubtaslDt.getTime()) {
+			minTaskEndDt = maxSubtaslDt;
+		}
+	}
+	var tasks=  $("#task_depend").val();
+	if(tasks!=""){
+		var url="/get-dependent-task-dates?tasks="+tasks;
+	 	$.get(url, function(data) {
+	 		var obj = JSON.parse(data);
+	 		if(obj.minDate){
+	 			
+	 			$("#plan_start_date").datepicker("destroy");
+	 			$("#plan_end_date").datepicker("destroy");
+	 			 //$('#plan_start_date').datepicker('option', 'minValue', obj.start.replace(/-/g, '/'));
+	 			 var maxD = $("#project_end").val().replace(/-/g, '/');
+	 			 var minD =obj.maxDate.replace(/-/g, '/');
+	 			
+	 			 //alert("min "+new Date(minD) +" maxD "+new Date(maxD) +" - "+"min "+ minD +" maxD "+ maxD )
+	 			 //alert("This Task should be scheduled between "+minD +" & "+maxD)
+	 			 //alert( new Date(obj.start.replace(/-/g, '/'))+ " - "+new Date(obj.end.replace(/-/g, '/')));
+	 			 $("#plan_start_date").datepicker({
+	 					buttonImageOnly : true,
+	 					minDate : new Date(minD),
+	 					maxDate : new Date(maxD),
+	 					dateFormat : "dd-mm-yy",
+	 					changeMonth: true,
+	 					changeYear: true,
+	 					onSelect : function(d, inst) {
+	 						var dt = $.datepicker.parseDate('dd-mm-yy',d);
+	 						$('#plan_end_date').datepicker('option','minDate', dt);
+	 						$('#plan_end_date').datepicker("refresh");
+	 					}
+	 				});
+	 				
+	 			 $("#plan_end_date").datepicker({
+	 					buttonImageOnly : true,
+	 					changeMonth: true,
+	 					  changeYear: true,
+	 					minDate : new Date(minD),
+	 					maxDate : new Date(maxD),
+	 					dateFormat : "dd-mm-yy"
+	 				}); 	
+	 			
+	 		}else{
+	 		
+	 			var minD = $("#project_start").val().replace(/-/g, '/');
+				var maxD = $("#project_end").val().replace(/-/g, '/');
+		 		$("#plan_start_date").datepicker({
+				buttonImageOnly : true,
+				minDate : new Date(minD),
+				maxDate : new Date(maxD),
+				dateFormat : "dd-mm-yy",
+				changeMonth: true,
+				  changeYear: true,
+				onSelect : function(d, inst) {
+						var dt = $.datepicker.parseDate('dd-mm-yy',d);
+						$('#plan_end_date').datepicker('option','minDate', dt);
+						$('#plan_end_date').datepicker("refresh");
+					}
+				});
+				
+				$("#plan_end_date").datepicker({
+					buttonImageOnly : true,
+					changeMonth: true,
+					  changeYear: true,
+					minDate : new Date($("#project_start").val().replace(/-/g, '/')),
+					maxDate : new Date($("#project_end").val().replace(/-/g, '/')),
+					dateFormat : "dd-mm-yy"
+				});
+	 		}
+	 		
+	 		//alert(d.format("dd-MMM-yyyy") );
+	 	});
+ 	}else{
+ 	
+		$("#plan_start_date").datepicker({
+			buttonImageOnly : true,
+			minDate : new Date(minD),
+			maxDate : new Date(maxD),
+			dateFormat : "dd-mm-yy",
+			changeMonth: true,
+			  changeYear: true,
+			onSelect : function(d, inst) {
+				var dt = $.datepicker.parseDate('dd-mm-yy',d);
+				$('#plan_end_date').datepicker('option','minDate', dt);
+				$('#plan_end_date').datepicker("refresh");
+			}
+		});
+		$("#plan_end_date").datepicker({
+			buttonImageOnly : true,
+			changeMonth: true,
+			  changeYear: true,
+			minDate : new Date($("#project_start").val().replace(/-/g, '/')),
+			maxDate : new Date($("#project_end").val().replace(/-/g, '/')),
+			dateFormat : "dd-mm-yy"
+		});
+	}
+	autocompleteOwnerSearch();
+</script>
+</body>
+</html>

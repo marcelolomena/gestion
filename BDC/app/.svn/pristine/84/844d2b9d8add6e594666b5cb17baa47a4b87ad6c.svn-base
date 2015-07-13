@@ -1,0 +1,138 @@
+@(program:Option[ProgramMaster], node: org.json.JSONObject)(implicit session: play.api.mvc.Session, lang:Lang, req : play.api.mvc.RequestHeader) 
+@import services._
+@import java.util.Date
+@import play.Logger 
+@frontend.layout()
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider" id="pDetail_page">
+<div class="product_main">
+  <div class="product_detail_1">
+ <!--<h3 class="title">Project List</h3>-->
+ 		<h3 id="productNm" class="parent-new-h3">
+    	<span class="parent-icon"> &#60; </span>
+	  	<a href="/program-details/@program.get.program_id">
+	  		<span class="left">@program.get.program_name</span>
+  	  	</a>
+  	  		@*<a href="/edit-program/@program.get.program_id" style="float:right;margin-right: 0px"> 
+			 		<span class="edit-project edit-icon edit-text">Edit</span>
+			 	</a>*@
+   </h3>
+  @* <h3 id="productNm">
+	    <span class="left font13px" style="width:930px;   word-wrap: break-word;">@program.get.program_name </span>
+			     
+   </h3>*@
+   <div class="width_full " id="earn-value"  >
+		 <h3 id="productNm">
+			    <span class="left">@Messages("programDetails.earnedvalueanalysis")</span>
+		    </h3>
+		   
+	    <table id="subtask-details">
+			<tbody>
+			<tr>
+				<td class="th-header">@Messages("programDetails.earnedvalue") </td>
+				<td class="earn-data"><span id="ev">@node.get("EV")</span> </td>
+				<td class="th-header">@Messages("programDetails.scheduledperformanceindex")</td>
+				<td class="earn-data"><span id="spi">@node.get("SPI")</span></td>
+			</tr>
+			<tr>
+				<td class="th-header">@Messages("programDetails.plannedvalue")</td>
+				<td class="earn-data"><span id="pv">@node.get("PV")</span>  </td>
+				<td class="th-header">@Messages("programDetails.costperformanceindex")</td>
+				<td class="earn-data"><span id="cpi">@node.get("CPI")</span></td>
+			</tr>
+			<tr>
+				<td class="th-header">@Messages("programDetails.actualcost")</td>
+				<td class="earn-data"><span id="ac">@node.get("AC")</span></td>
+				<td class="th-header">@Messages("programDetails.estimetcopmletion")</td>
+				<td class="earn-data"><span id="eac">@node.get("EAC")</span></td>
+			</tr>
+			<tr>
+				<td class="th-header">@Messages("programDetails.costvariance")  </td>
+				<td class="earn-data"><span id="cv">@node.get("CV")</span></td>
+				<td class="th-header">@Messages("programDetails.estimatetocomplete")</td>
+				<td class="earn-data"><span id="etc">@node.get("ETC")</span></td>
+			</tr>
+			<tr>
+				<td class="th-header">@Messages("programDetails.scheduledvar") </td>
+				<td class="earn-data"><span id="sv">@node.get("SV")</span></td>
+				<td class="th-header">@Messages("newTask.completionper")</td>
+				<td class="earn-data"><span id="cp">@node.get("cp")</span></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	
+	<div style="height: 300px; width: 650px; position: relative;" id="chart2" class="jqplot-target"></div>
+	
+	<div class="width_full">
+		
+		@for(pr <- ProjectService.findProjectListForProgram(program.get.program_id.toString) ){
+		@pr.project_name
+		}
+			@{
+				<div class="left"></div>
+				
+				val todays = new Date().getTime();
+				val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+				val currentDate = format.parse(format.format(todays))
+				var finalEV = 0
+				var finalPV = 0
+				var finalAC = 0
+				var finalPR = 0
+				var finalSV = 0
+				var finalCV = 0
+				var finalSPI = 0
+				var finalCPI = 0
+				var finalEAC = 0
+				var finalETC = 0
+				ProjectService.findProjectListForProgram(program.get.program_id.toString).size
+				if(ProjectService.findProjectListForProgram(program.get.program_id.toString).size > 0) {
+					
+					for(pr <- ProjectService.findProjectListForProgram(program.get.program_id.toString) ){
+					finalEV = 0
+					finalPV = 0
+					finalAC = 0
+					finalPR = 0
+					finalSV = 0
+					finalCV = 0
+					finalSPI = 0
+					finalCPI = 0
+					finalEAC = 0
+					finalETC = 0
+				
+					
+					<span class="left" style="border:1px solid 2px;">@pr.project_name</span>	
+						
+					}	
+				}
+					
+			}
+		
+	
+		
+	</div>
+
+</div>
+</div>
+  @frontend.footer()
+</section>
+	
+	
+</div>
+@frontend.headerScripts()
+</body>

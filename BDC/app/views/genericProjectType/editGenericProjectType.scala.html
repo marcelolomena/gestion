@@ -1,0 +1,71 @@
+@(username:String, myForm :play.api.data.Form[GenericProjectTypes])(implicit lang:Lang)
+@import helper._
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+	 
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav("Admin")
+
+   <!-- Left Navigation Bar -->
+    @leftNav()
+    <div class="content">
+       	<div class="header">
+        	<h1 class="page-title">@Messages("genericprojecttype.genericprojecttype")</h1>
+        </div>
+           <ul class="breadcrumb">
+            <li><a href="@routes.Application.index">@Messages("genericprojecttype.home") </a> <span class="divider">/</span></li>
+          	 <li><a href="@routes.GenericProjectType.genericProjectTypeList">@Messages("genericprojecttype.genericprojecttypelist")</a> <span class="divider">/</span></li>
+            <li class="active">@Messages("genericprojecttype.editgenericprojecttype")</li>
+        </ul>
+
+ <div class="container-fluid">
+ 	
+	<div class="row-fluid">
+
+        <div class="block">
+            <p class="block-heading">@Messages("genericprojecttype.editgenericprojecttype")</p>
+             <div class="block-body">
+               @form(action = routes.GenericProjectType.updateGenericProjectType, 'id->"myGenericProjectTypeEdit") {
+	              
+	                @inputText(myForm("generic_project_type"),'_label ->Messages("genericprojecttype.label"),'placeholder->Messages("genericprojecttype.placeholder.genericprojecttype"),'class->"span4",'name ->"generic_project_type")
+	               	@textarea(myForm("description"),'placeholder->Messages("genericprojecttype.placeholder.description"),'_label -> Messages("stage.description"),'class->"span4",'name->"description",'rows->"7",'cols->"60")
+	                <input type="hidden" name="is_deleted" value="0">
+	                <input type="hidden" name="id" value="@myForm.data.get("id").get">
+	                <div> <input style="margin-left:12px;margin-right:12px;" class="btn" value="@Messages("button.save")" type="submit"/><a href="javascript:history.back(-1);" class="btn">@Messages("button.cancel")</a></div>
+	                <div class="clearfix"></div> 
+             }
+            </div>
+        </div>
+
+	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+	        <h3 id="myModalLabel">Delete Confirmation</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete the user?</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>
+	<!-- Footer panel -->                    
+  	 @footer()
+    </div>
+</div>
+    </div>
+   </body>
+</html>

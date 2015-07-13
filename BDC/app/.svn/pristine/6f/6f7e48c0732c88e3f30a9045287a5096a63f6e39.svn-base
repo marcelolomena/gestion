@@ -1,0 +1,60 @@
+@(users: Seq[Users])(implicit session: play.api.mvc.Session, req : play.api.mvc.RequestHeader) 
+@import services._
+@frontend.layout()
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider" id="pDetail_page">
+<div class="product_main">
+  <div class="product_detail_1">
+ <!--<h3 class="title">Project List</h3>-->
+ <a href="/add-new-program" class="new-program-a">
+ 	<div class="program-div" id="new-program">
+    	<span>  @Messages("users.newemployee")</span>
+	</div>
+</a>
+@if(users!=null){
+	
+<div class="project_list">
+
+  <h3 class="title">
+  		<span style="margin-left:14px"> @Messages("users.employee")</span>	
+  		<span style="margin-left:215px"> @Messages("users.rut")</span>
+  		<span style="margin-left:120px"> @Messages("users.email")</span>
+ 		<span style="margin-left:240px">@Messages("users.contactNo")</span>
+ 		<span style="margin-left:55px"> @Messages("users.action")</span> 
+  </h3>
+  	<div class="project_list_1  padding-none">
+  		
+    	<div class="design_team_left_detail_1_left width_full" id="program_container">
+   		    @for( (u, index) <- users.zipWithIndex){
+		    		<div class="@if( index%2==0 ){ program_list_1 }else{ program_list_2 } program_list ">
+		    			<a href="/program-details/@u.uid">	
+			    			<span class="left width270px">@u.first_name&nbsp;@u.last_name</span>
+			    			<span class="left width145px">@u.rut_number</span>
+			    			<span class="left width275px">@u.email </span>
+			    			<span class="left width120px">@u.contact_number </span>
+		    			</a>
+	        			@*<a href="/edit-program/@p.program_id"><span class="edit-icon" ></span></a>*@
+	        			<span class="delete_icon" ></span></a>
+		      		</div>
+	      	}
+   	   </div>
+    </div>
+ </div>
+}else{
+<div class="design_team_left_detail_1_data_12 width411px">
+	<p>User List Not Available...</p>
+</div>
+}
+</div>
+</div>
+  @frontend.footer()
+</section>
+	
+	
+</div>
+@frontend.headerScripts()
+</body>

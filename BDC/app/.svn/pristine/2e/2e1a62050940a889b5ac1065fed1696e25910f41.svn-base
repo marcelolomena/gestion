@@ -1,0 +1,51 @@
+@(issue:Option[RiskManagementIssue],parent_id:String)(implicit lang:Lang)
+@import services._;
+<div class="width_full" id="risk-master-data">
+	<span class="listing-header"><span>@Messages("issuedetails.details")</span><span style="float: right;cursor: pointer;"><a style="color: #ffffff !important;" href="@controllers.Frontend.routes.Program.editIssue(issue.get.id.get.toString())" title="Edit Issue">@Messages("issuedetails.editissue")</a>  </span>  </span>
+	<span class="header even_row ">@Messages("issuedetails.title")</span><span class="infos">@issue.get.title</span>
+	<span class="header odd_row ">@Messages("issuedetails.description")</span><span class="infos">@issue.get.description</span>
+	<span class="header even_row" >@Messages("issuedetails.category")</span><span class="infos">
+	@{
+		issue.get.category match{
+			case 0=>"Incident"
+			case 1=>"Unplanned Event"
+		}
+	}</span>
+	<span class="header odd_row">@Messages("addissue.membersinvolved")</span><span class="infos">
+	@if(!issue.get.members_involved.isEmpty){
+		@for(pm <- issue.get.members_involved.get.split(",")){
+			<span class="width_full">@UserService.findUserDetails(pm.toString().toInt).get.first_name.substring(0,1)&nbsp;.@UserService.findUserDetails(pm.toString().toInt).get.last_name</span>
+		}
+		@*@UserService.findUserDetails(issue.get.members_involved.get.toInt).get.first_name.substring(0,1)&nbsp;.@UserService.findUserDetails(issue.get.members_involved.get.toInt).get.last_name*@	
+	}else{
+		&nbsp;
+	}
+	 
+	</span>
+	<span class="header even_row">@Messages("issuedetails.actionplan")</span><span class="infos">
+	@if(!issue.get.action_plan.isEmpty){
+		@issue.get.action_plan.get
+	}else{
+		&nbsp;
+	}
+		
+	</span>
+	
+	<span class="header odd_row ">@Messages("issuedetails.priority")</span><span class="infos">
+		@{
+			issue.get.priority match{
+				case 0=> "Alto (3)"
+				case 1=> "Mediano (2)"
+				case 2=> "Bajo (1)"
+			}
+		}
+	
+	</span>
+	<span class="header even_row">@Messages("issuedetails.issuedate")</span><span class="infos">
+		@issue.get.issue_date.format("dd/MM/YYYY")
+	</span>
+	<span class="header odd_row"> &nbsp; </span><span class="infos">&nbsp;</span>
+	
+	
+</div>
+

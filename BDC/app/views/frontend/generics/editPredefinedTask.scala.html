@@ -1,0 +1,150 @@
+@(taskForm: Form[PredefinedTasks],serviceCatalogueMap :java.util.HashMap[String, String], desipline :java.util.HashMap[String, String], stages :java.util.HashMap[String, String], userroles :java.util.HashMap[String, String], deliverables :java.util.HashMap[String, String],id:String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import util.Random
+@import java.util.Date
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+			<div id="new_program_header" class="">
+				<p> @Messages("maintenance.editpredefinedgenerictask")</p>
+			</div>
+   		<div class="width_full">
+   		 
+    			@form(action = controllers.Frontend.routes.Generics.updatePredefinedTask(id),  'id->"new-task-form") { 
+		    	        <input type="hidden" id="is_active" name="is_active" value="1" />
+				    	@inputText(
+				               taskForm("title"),
+				               'class -> "span4", 
+				                'placeholder -> Messages("maintenance.entertasktitle"),
+				               '_label ->  Messages("maintenance.title"),
+				               'maxlength -> "60"
+				            )
+				      
+				      	@textarea(
+				               taskForm("description"),
+				               'class -> "span4", 
+				               '_label ->  Messages("maintenance.description"),
+				               'placeholder -> Messages("maintenance.enterdescription"),
+							    'rows -> 5,
+							    'cols -> 60
+				           )
+								            
+			           @inputText(
+					               taskForm("remark"),
+					               'class -> "span4 ", 
+					               '_label ->  Messages("maintenance.remark"),
+					               'placeholder -> Messages("maintenance.enterremark"),
+							       'maxlength -> "100"
+				           )
+				     
+							
+				        @select(
+					           	taskForm("stage"),
+					       		options(stages),
+								'class -> "input-xlarge ",
+								'_label -> Messages("maintenance.stage"),
+								'_default -> Messages("maintenance.selectstage") 
+								)
+								
+								
+						 @select(
+					           	taskForm("user_role"),
+					       		options(userroles),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("maintenance.userrole"),
+								'_default -> Messages("maintenance.selectuserrole")
+								)
+							
+							
+							
+						@select(
+					           	taskForm("deliverable"),
+					       		options(deliverables),
+								'class -> "input-xlarge ",
+								'_label ->Messages("maintenance.deliverable"),
+								'_default -> Messages("maintenance.selectdeliverable")
+								)
+								
+								
+				    	@select(
+			            	taskForm("task_discipline"),
+			       			options(desipline),
+							'class -> "input-xlarge ",
+							'_label ->  Messages("maintenance.taskdiscipline"),
+							'_default -> Messages("maintenance.selecttaskdiscipline")
+							) 
+						@select(
+					           	taskForm("catalogue_service"),
+					       		options(serviceCatalogueMap),
+								'class -> "input-xlarge ",
+								'_label ->Messages("maintenance.servicecatlogue"),
+								'_default -> Messages("maintenance.selectservicecatalogue")
+								)
+								
+			
+				       		<input type="hidden" id="project_start" name="project_start" value="" />
+      						<input type="hidden" id="project_end" name="project_end" value="" />
+      						<input type="hidden" id="task_type" name="task_type" value="@taskForm.data.get("task_type").get" />
+      		
+      		
+			          	<div class="width_full" style="margin-top:30px;">
+				       		<span class="left" style="margin-left:211px;"><input class="btn form-button" value="@Messages("button.save")" type="submit"/></span>
+				       		<span  class="left" style="margin-left:10px;"><input id="cancel-task" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+		          		</div>
+        		}
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+	<div id="pop-box" class="display-none"> 
+  </div>
+</div>
+
+  
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/generics.js")"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	autocompleteOwnerSearch();
+//var selected_id=$("#task_discipline").val();
+$("#task_discipline").on("change",function(){
+    var task_discipline_id=$(this).val();
+    if(task_discipline_id!=""){
+    	var url="/service-catalogue-list-by-descipline?descipline_id="+task_discipline_id;
+		$.get(url, function(data){
+		    $("#catalogue_service").html(data);
+		});
+		}
+	});
+
+   $(".task-dependency").on("click", rederGenericTaskDependency);
+   
+	$('#cancel-task').on('click',function() {
+		 window.location.href='@controllers.Frontend.routes.Generics.overview';
+	   });
+});
+
+</script>
+
+
+
+
+	

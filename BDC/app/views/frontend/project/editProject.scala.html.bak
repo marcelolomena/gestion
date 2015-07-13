@@ -1,0 +1,203 @@
+@(projectForm: Form[ProjectMasters],pId: Integer,pmMap:java.util.HashMap[String, String],work_flow: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import util.Random
+
+<style type="text/css">
+@@media screen and (max-width: 1024px){
+		.main{
+		margin: 0px 0 0 200px;
+		}
+}
+ #flot-placeholder{width:650px;height:auto;}       
+</style>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
+
+</head>
+<body>
+@frontend.topLayout()
+
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+			<div id="new_program_header" class="">
+				<p> 
+					<span class="title-head">@Messages("addNewProject.editProject") </span>
+					<span class="title-head-status" style="padding-right: 20px"><a href="@controllers.Frontend.routes.ProjectMaster.updateProjectStatus(pId.toString())">@Messages("editsubtask.changestatus")</a></span>
+				</p>
+				
+			</div>
+    		<div>
+    			@form(action = controllers.Frontend.routes.ProjectMaster.updateProject(pId.toString()),  'id->"add-new-project-form") { 
+    				<div class="left ">
+    			      	<input id="project_id" name="project_id" type="hidden" class="span4" value="ART@Random.nextInt(9999)" >
+    			        
+    			        <input id="program" name="program" type="hidden" class="span4" value="@projectForm.data.get("program")" >
+    			         <input id="project_mode" name="project_mode" type="hidden" class="span4" value="@projectForm.data.get("project_mode")" >
+    			        <input id="baseline1" name="baseline" type="checkbox" class="span4 display-none" value="" >
+	    				<input id="sap_code" name="sap_code" type="hidden" class="span4" value="0" >
+	    				 <input id="total_sap" name="total_sap" type="hidden" class="span4" value="0" >
+	    				 <input id="budget_approved_staff" name="budget_approved_staff" type="hidden" class="span4" value="0" >
+	    				 <input id="budget_approved_contractor" name="budget_approved_contractor" type="hidden" class="span4" value="0" >
+	    				 <input id="budget_approved_hardware" name="budget_approved_hardware" type="hidden" class="span4" value="0" >
+	    				 <input id="budget_approved_software" name="budget_approved_software" type="hidden" class="span4" value="0" >
+	    				  <input id="ppm_number" name="ppm_number" type="hidden" class="span4" value="0" >
+	    				  <input id="program_start_date" name="program_start_date" type="hidden"  value='@ProgramService.findProgramDateDetailsById((ProjectService.findProjectDetails(pId).get.program).toString()).get.initiation_planned_date.format("dd/MM/yy")' >
+    			         <input id="program_final_release_date" name="program_final_release_date" type="hidden"  value='@ProgramService.findProgramDateDetailsById((ProjectService.findProjectDetails(pId).get.program).toString()).get.release_date.format("dd/MM/yy")' >
+	    				 
+	           			<div class="left width_full padding-top-3px" >
+	    					@inputText(
+				                projectForm("project_name"),
+				                'class -> "span4", 
+				                'placeholder -> Messages("addNewProject.placeholder.project_name"),
+				                '_label -> Messages("addNewProject.editProject")
+				            )
+	           			</div>
+	           			
+	           			<div class="left width_full" style="padding-bottom: 5px; padding-top: 4px;">
+	    					@textarea(
+				                projectForm("description"),
+				                'class -> "span4", 
+				                '_label ->  Messages("addNewProject.description"),
+				                'placeholder -> Messages("addNewProject.placeholder.description"),
+							    'rows -> 5,
+							    'cols -> 60
+				            )
+	           			</div>
+	           			<div class="left width_full padding-top-3px" >
+	    					 @select(
+						         projectForm("project_manager"),
+						         options(pmMap),
+						         'class -> "input-xlarge ",
+						         '_label ->  Messages("addNewProject.projectmanager"),
+						          '_default -> Messages("addNewProject.placeholder.projectmanager")
+						      )
+						      <span class="left" style="margin-left: 10px; display:none;">
+							      	<input type="text" id="search-user" name="search-user" style="margin-top:0px;" class="left heightInpx" placeholder="@Messages("addNewProject.searchuser")">
+			            			<span class="search-user-icon"></span>
+		            		  </span>
+	           			</div>
+	           			
+	           			<div class="left width_full " style="margin-bottom: 3px;" >
+	    					@inputText(
+				                projectForm("start_date"),
+				                'class -> "span4", 
+				                 'placeholder -> Messages("addNewProject.placeholder.start_date"),
+				                '_label ->  Messages("addNewProject.startDate")
+				            )
+	           			</div>
+	           			<div class="left width_full padding-top-3px" >
+	    					@inputText(
+				                projectForm("final_release_date"),
+				                'class -> "span4", 
+				                 'placeholder ->  Messages("addNewProject.placeholder.final_release_date"),
+				                '_label ->  Messages("addNewProject.enddate")
+				                
+				            )
+	           			</div>
+	           			
+	           			<div class="left width_full padding-top-3px" >
+	    					@select(
+						         projectForm("budget_approved"),
+						         options("1"->"Si", "0"->"No"),
+						         'class -> "input-xlarge ",
+						         '_label ->  Messages("addNewProject.budgetApproved")
+						      )
+	    					
+	    				</div>
+	    			
+	           		
+	           			
+	           			<div class="left width_full padding-top-3px" >
+	    					@select(
+						         projectForm("work_flow_status"),
+						         options(work_flow),
+						         'class -> "input-xlarge",
+						         '_label -> Messages("addNewProject.placeholder.work_flow_status"),
+						           '_default -> "Seleccione estado de flujo de trabajo"
+						      )
+	    					
+	    				</div>
+	           		
+           			</div>
+          
+          			<div class="left width_full padding-top-3px" >
+           				<label style="width:100%; text-align:center;">@Messages("artform.mandatorynote")</label>
+           			</div>
+          			<div class="width_full" style="margin-top:16px;">
+				       	<span class="left push-left189px"><input class="btn  form-button" value="@Messages("button.save")" type="submit"/></span>
+				       	<span class="left" style="margin-left:30px;"> <input id="cancel-project" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+		          	</div>
+          			
+    			}
+    		</div>
+		</div>
+  		@frontend.footer()
+	</section>
+</div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="dialog-box" class="product-detail-dialog" style="width:190px;">
+	<span class="dialog-close"></span>
+	<div class="dialog-content"></div>
+</div> 
+<div class="tooltip"></div>
+@frontend.headerScripts()
+@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	   $('#cancel-project').on('click',function() {
+		 window.location.href='/project-details/@pId';
+	   });
+	});
+function replaceAll(find, replace, str) {
+	  return str.replace(new RegExp(find, 'g'), replace);
+	}
+	
+	var programStartDate = $("#program_start_date").val();
+	programStartDate = replaceAll("/", "-", programStartDate) 
+	
+	var programEndDate = $("#program_final_release_date").val();
+	programEndDate = replaceAll("/", "-", programEndDate) 
+	
+	
+	$("#start_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		changeYear: true,
+		minDate : programStartDate,
+		maxDate : programEndDate,
+		onSelect: function(d,inst){
+			var dt= $.datepicker.parseDate('dd-mm-yy',d);
+	         $('#final_release_date').datepicker('option','minDate',dt);
+	         /*	var programstartDate =$("#program_start_date").val();
+	         	var date = Date.parseExact(programstartDate, "dd/mm/yy")
+	         	var dt2= $.datepicker.parseDate('dd-mm-yy',date);
+	           $('#start_date').datepicker('option','minDate',dt2); */
+	        }
+	});
+	//$("#start_date").datepicker( 'option', 'minDate', programStartDate);
+	//$("#start_date").datepicker( 'option', 'maxDate', programEndDate);
+	$("#final_release_date").datepicker({
+		buttonImageOnly : true,
+		dateFormat : "dd-mm-yy",
+		changeMonth: true,
+		  changeYear: true,
+		  minDate: programStartDate,
+		  maxDate: programEndDate
+	});
+
+	autocompletePMSearch();
+</script>
+
+
+
+
+	

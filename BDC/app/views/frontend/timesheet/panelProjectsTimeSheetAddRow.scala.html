@@ -1,0 +1,121 @@
+@(projects:Seq[Project])(implicit lang:Lang)
+<tr>
+<td></td>
+<td></td>
+<td>
+	<span class="cancel-timesheet" style="float:right;"></span>
+</td>
+</tr>
+<tr>
+	<td style="width:10%" ></td>
+	<td style="width:10%" ><label>Activity</label></td>
+	<td style="width:44%">
+		<select name="timesheet_activity" id="timesheet_activity" class="">
+			<option value="0" >--Select Activity--</option>
+			<option value="1" >Project</option>
+			<option value="2" >Non Project</option>
+		</select>
+	</td>
+</tr>
+<tr id="tr_id_1">
+	<td style="width:10%" ></td>
+	<td style="width:10%" ><label>Sub Task </label></td>
+	<td style="width:44%">
+		<select name="sub_task" id="sub_task" class="">
+		<option value="" >--Select Activity--</option>
+		</select>
+	</td>
+</tr>
+<tr id="tr_id_2">
+	<td style="width:10%" ></td>
+	<td style="width:10%;"><label>Hours</label></td>
+	<td style="width:44%"><input type="text" id="hours" class="width30px" name="hours"  max="24" maxlength="5" /></td>
+</tr>
+<tr id="tr_id_3">
+	<td style="width:10%" ></td>
+	<td style="width:10%;"><label>Note</label></td>
+	<td style="width:44%"><input type="text" id="notes"  name="notes" maxlength="20" /></td>
+</tr>
+<tr id="tr_id_4">
+	<td style="width:10%" ></td>
+	<td style="width:10%;"></td>
+	
+	
+	<td style="width:44% ;float: left; margin-bottom: 20px; ">
+		<span><input type="submit" value="Save" class="left fo-btn-timesheet btn" id="save-timesheet" ></span>
+		<span><input class="cancel-form btn" value="Cancel" type="button" style="margin-left:11px;"/></span>
+	</td>
+	
+</tr>
+
+<tr id="tr_id_5">
+	<td style="width:10%" ></td>
+	<td style="width:10%;"><label>&nbsp; </label></td>
+	<td style="width:44%">&nbsp;</td>
+</tr>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery.validator.addMethod("mynumber", function (value, element) {
+	    return this.optional(element) || ( (/^[\d]{1,11}(.[\d]{1,2})?$/).test(value) );
+	}, "Please specify the correct number format");
+
+
+	
+	$('#timesheet-form').validate({
+ 		errorElement:'span',
+ 		submitHandler: function(form) {
+ 			
+ 			saveTimesheet();
+ 			
+        },
+ 		rules:{
+ 			hours:{
+ 				required: true,
+ 				mynumber:true,
+ 				max:function() {
+ 	 				if($("#timesheet_activity").val()==1){
+ 	 	 				return parseFloat($('#time_available').val());
+ 	 				}else{
+ 	 					return parseFloat("24")	
+ 	 				}
+ 		        }
+ 			},
+ 			timesheet_activity:{
+ 				required: true
+ 			},
+ 			sub_task:{
+ 				required: true
+ 			},
+ 			notes:{
+ 				maxlength: 20
+ 			}
+ 	 			
+ 		},
+ 		messages:{
+ 			hours:{
+ 				required: "Please enter the hours.",
+ 				max:"Booked hours Should be less than Available hours."
+ 			},
+ 			timesheet_activity:{
+ 				required: "Please select activity."
+ 			},
+ 			sub_task:{
+ 				required: "Please select the project sub task."
+ 			},
+ 			notes:{
+ 				maxlength: "Note should be less than 20 character."
+ 			}
+ 		}
+ 	});
+	
+
+	$( "#task_milesotne").change(function() {
+		var milestone_id = $('#task_milesotne').val();
+		var url="/get-task-list?milestone_id="+milestone_id;
+		   $.get(url,  function(data) {
+			   $("#tasks").html(data);
+	    });
+	});
+	
+});
+</script>

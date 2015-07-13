@@ -1,0 +1,70 @@
+@(documents : Seq[DocumentMaster], parentType : String)(implicit lang:Lang)
+@import services._
+@import java.math.BigInteger; var i=1;
+<div class="doc_listing">
+	@if(documents.size > 0){	
+		<h2>@Messages("document.currentsdocuments")</h2>
+		<div id="current_documents">
+			<ul class="width_full">
+				<li>
+						       <span class="doc_title bold">@Messages("document.documenttitle")</span> 
+													<span class="doc_version bold"> @Messages("document.version") </span>
+													<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+													<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+													<span class="doc_action bold"> @Messages("document.action")</span>
+				</li>
+				
+				
+				
+					@for((doc, index) <- documents.zipWithIndex){
+						<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}">
+							<span class="doc_title">@doc.title</span> 
+							<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_alias</span>
+							<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
+							<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.last_name</span>
+							<span class="doc_action"> 
+								<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_notes"></span>
+								<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+								<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), parentType, "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+								<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id='@{parentType}_@{doc.Id.toString()}' class="delete-doc @doc.Id.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+							</span>
+						</li>
+					}
+			</ul>
+		</div>
+	
+		<h2 class="left push-top20px">@Messages("document.previoussdocuments") </h2>
+		<div id="previous_documents">
+			<ul class="width_full">
+				<li>
+					       <span class="doc_title bold">@Messages("document.documenttitle")</span> 
+													<span class="doc_version bold"> @Messages("document.version") </span>
+													<span class="doc_date bold">@Messages("document.dateofupload") </span> 
+													<span class="doc_user bold">  @Messages("document.uploadedby")</span> 
+													<span class="doc_action bold"> @Messages("document.action")</span>
+				</li>
+				@for(doc <- documents){
+					@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString()).isEmpty){
+						@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString())){
+							@{i = i+1}
+							<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.toString()}">
+								<span class="doc_title">@doc.title</span> 
+								<span class="doc_version">@version.version_alias</span>
+								<span class="doc_date"> @version.creation_date.format("dd/MM/YYYY")</span> 
+								<span class="doc_user">@UserService.findUserDetailsById(version.user_id.toLong).get.first_name @UserService.findUserDetailsById(version.user_id.toLong).get.last_name</span>
+								<span class="doc_action"> 
+									<span class="doc_info" title="@version.version_notes"></span>
+									<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
+									<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), parentType, "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+									<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id='@{parentType}_@{doc.Id.toString()}'class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+								</span>
+							</li>
+						}
+					}
+				}
+			</ul>
+		</div>
+	}else {
+		<h2 class="left push-top20px no-document"> No hay documentos disponibles para  @parentType seleccionado</h2>
+	}
+</div>

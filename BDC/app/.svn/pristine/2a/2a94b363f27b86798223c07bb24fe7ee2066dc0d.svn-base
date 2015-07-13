@@ -1,0 +1,88 @@
+	@(username : String,containerMap :java.util.HashMap[String, java.util.HashMap[String, String]],gerenciaForm :play.api.data.Form[Genrencias])(implicit lang:Lang)
+	@import helper._
+
+  
+	<!-- 
+	Header panel 
+	 -->
+	@header()
+	
+  </head>
+
+  <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+  <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+  <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+  <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> 
+  <body class=""> 
+  <!--<![endif]-->
+    
+    <!-- Top Navigation bar -->
+    @topNav(username)
+	   <!-- Left Navigation Bar -->
+    @leftNav()
+    
+    <div class="content">
+        <div class="header">
+        <h1 class="page-title">  @Messages("leftnav.gerenciamanagement")</h1>
+        </div>
+
+        <ul class="breadcrumb">
+            <li><a href="@routes.Application.index"> @Messages("gerencia.home")</a> <span class="divider">/</span></li>
+            <li><a href="@routes.Genrencia.genrenciaList()"> @Messages("gerencia.gerencialist")</a> <span class="divider">/</span></li>
+            <li class="active">@Messages("gerencia.addnewgerencia")</li>
+        </ul>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+                    
+	<div class="dialog form-div">
+        <div class="block">
+            <p class="block-heading">  @Messages("gerencia.addnewgerencia")</p>
+            <div class="block-body">
+               @form(action = routes.Genrencia.saveGenrencia, 'id->"myGenrencia") { 
+
+               	<input type="hidden" value="0" name="organization_depth" id="organization_depth" />
+                  @inputText(gerenciaForm("genrencia"),'name->"genrencia",'class->"span4",'_label->Messages("gerencia.gerencia"))
+                  @select(gerenciaForm("user_id"),options(containerMap.get("usersMap")),'name->"user_id",'class->"input-xlarge",'_label->Messages("gerencia.gerenciahead"),'default->"--User--")
+                  @select(gerenciaForm("report_type"),options(containerMap.get("reportTypeMap")),'name->"report_type",'class->"input-xlarge",'_label->Messages("gerencia.reporttotype"),'default->"Select Report Type")
+                  @select(gerenciaForm("report_to"),options(containerMap.get("reportToMap")),'name->"report_to",'class->"input-xlarge",'_label->Messages("gerencia.reportto"),'default->"Select Report To")
+                  <input type="hidden" value="0" name="is_deleted" id="is_deleted" />
+                 <div> <input class="btn pull-left primary" id="projectSave" name="projectSave" value="@Messages("button.save")" type="submit"/>
+          
+                 <a href="javascript:history.back(-1);" class="btn push-left20px pull-left ">@Messages("button.cancel")</a></div>
+                 <div class="clearfix"></div> 
+                    }
+               
+            </div>
+        </div>
+     
+    </div>
+	
+<!-- 	<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">���</button>
+	        <h3 id="myModalLabel">@Messages("addDepartment.deleteconfirmation")</h3>
+	    </div>
+	    <div class="modal-body">
+	        <p class="error-text"><i class="icon-warning-sign modal-icon"></i>@Messages("addDepartment.deleteuser")</p>
+	    </div>
+	    <div class="modal-footer">
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button class="btn btn-danger" data-dismiss="modal">Delete</button>
+	    </div>
+	</div>  -->
+	<!-- Footer panel -->                    
+  	 @footer()
+    </div>
+</div>
+
+
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function(){
+    	
+    });
+    </script>
+   </body>
+</html>

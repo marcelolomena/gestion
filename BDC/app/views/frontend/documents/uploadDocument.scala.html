@@ -1,0 +1,237 @@
+@(documentForm: Form[Documents], documentType :java.util.HashMap[String, String], title : String, parent_id : String, parentType : String, uploadType : String, parentVersionNo : String, flash: Flash)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import helper._
+@import services._
+@import util.Random
+@import play.api.i18n._
+@import org.apache.commons.lang3.StringUtils
+@import play.api._;var subtask : Option[SubTaskMaster] = null;var p_id:String="";var id : String= "" ;var doc :Option[DocumentMaster] = null 
+</head>
+<body>
+	@frontend.topLayout()
+	<div class="main">
+	
+	@if(StringUtils.equals(uploadType,"UPDATE")){
+		@{doc =  DocumentService.findDocumentById(parent_id)}
+		@if(!doc.isEmpty){
+			@{p_id = doc.get.parent_id.toString()} 
+		}else{
+		 @{p_id = parent_id}
+		}
+	}else{
+		@{id = parent_id}
+	}
+	
+		@frontend.header()
+		<section class="slider" id="pDetail_page">
+		<div class="width_full" >
+			<h3 id="productNm" class="parent-new-h3">
+		    	<span class="parent-icon"> &#60;</span>
+		    	@if(StringUtils.equals(uploadType,"UPDATE")){
+			    	   @if(parentType == "PROGRAM"){
+			    	   		<a href="@controllers.Frontend.routes.Program.programDetails(p_id)" style="font-weight: bold">
+					  			<span class="left">@Messages("newmember.programdetails")</span>
+				  	  		</a>
+			  	  		}
+			  	  		
+			  	  		@if(parentType == "PROJECT"){
+			   				<a href="@controllers.Frontend.routes.ProjectMaster.projectDetails(p_id)" style="font-weight: bold">
+					  			<span class="left">@Messages("uploaddocument.projectdetails")</span>
+				  	  		</a>
+			   			}
+			   			@if(parentType == "TASK"){
+			   				<a href="@controllers.Frontend.routes.Task.projectTaskDetails(p_id)" style="font-weight: bold">
+					  			<span class="left">@Messages("uploaddocument.taskdetails")</span>
+				  	  		</a>
+			   			}
+			   			@if(parentType == "SUBTASK"){
+			   				@{subtask = SubTaskServices.findSubTasksBySubTaskId(p_id)}
+			   					@if(!subtask.isEmpty){
+			   						<a href="@controllers.Frontend.routes.Task.projectTaskDetails(subtask.get.task_id.toString())" style="font-weight: bold">
+					  					<span class="left">@Messages("uploaddocument.taskdetails")</span>
+				  	  				</a>		
+			   					}
+			   				
+			   			}
+			   			@if(parentType != "PROGRAM" && parentType != "PROJECT" && parentType != "TASK" && parentType != "SUBTASK"){
+			   		    	<a href="@controllers.Frontend.routes.Documents.documentOverview" style="font-weight: bold">
+				  				<span class="left">Volver al inicio</span>
+			  	  			</a>
+			   			}
+		   		}else{
+		   			@if(parentType == "PROGRAM"){
+			    	   		<a href="@controllers.Frontend.routes.Program.programDetails(parent_id)" style="font-weight: bold">
+					  			<span class="left">@Messages("newmember.programdetails")</span>
+				  	  		</a>
+			  	  		}
+			  	  		
+			  	  		@if(parentType == "PROJECT"){
+			   				<a href="@controllers.Frontend.routes.ProjectMaster.projectDetails(parent_id)" style="font-weight: bold">
+					  			<span class="left">@Messages("uploaddocument.projectdetails")</span>
+				  	  		</a>
+			   			}
+			   			@if(parentType == "TASK"){
+			   				<a href="@controllers.Frontend.routes.Task.projectTaskDetails(parent_id)" style="font-weight: bold">
+					  			<span class="left">@Messages("uploaddocument.taskdetails")</span>
+				  	  		</a>
+			   			}
+			   			@if(parentType == "SUBTASK"){
+			   				@{subtask = SubTaskServices.findSubTasksBySubTaskId(parent_id)}
+			   					@if(!subtask.isEmpty){
+			   						<a href="@controllers.Frontend.routes.Task.projectTaskDetails(subtask.get.task_id.toString())" style="font-weight: bold">
+					  					<span class="left">@Messages("uploaddocument.taskdetails")</span>
+				  	  				</a>		
+			   					}
+			   				
+			   			}
+			   			@if(parentType != "PROGRAM" && parentType != "PROJECT" && parentType != "TASK" && parentType != "SUBTASK"){
+			   		    	<a href="@controllers.Frontend.routes.Documents.documentOverview" style="font-weight: bold">
+				  				<span class="left">Volver al inicio</span>
+			  	  			</a>
+			   			}
+		   		}
+			  
+		   </h3>
+		 </div>
+			<div class="product_main" style="margin-top:0px">
+		  		<div class="product_detail_1">
+					<div id="new_program_header" class="">
+						<p> @Messages("uploaddocument.uploadnewdocument")</p>
+					</div>
+				</div>
+				
+				<div>
+    			@form(action = controllers.Frontend.routes.Documents.uploadNewDocument(parent_id, parentType, uploadType),  'id->"upload-document-form", 'enctype -> "multipart/form-data") { 
+    				<div class="container ">
+   						<div class="form-wrapper">
+   						
+   							@if(!documentForm.data.get("Id").isEmpty){
+   								<input id="Id" name="Id" type="hidden" value="@documentForm.data.get("Id").get" >	
+   							}
+   						 	
+	    			        <input id="parent_type" name="parent_type" type="hidden" value="@parentType" >
+	    			        <input id="parent_id" name="parent_id" type="hidden" value="@parent_id" >
+	    			        <input id="parent_version_id" name="parent_version_id" type="hidden" value="@parentVersionNo" >
+	    			        <div class="field-wrapper">
+		           			@if(uploadType.equals("ADD")){
+		           			
+		    					@inputText(
+					                documentForm("title"),
+					                'class -> "span4", 
+					                 'placeholder ->  Messages("uploaddocument.placeholder.title"),
+					                '_label ->  Messages("uploaddocument.title")
+					            )
+		           			
+		           			}else {
+		           				<input id="title" name="title" type="hidden" value="@title" >
+		           				<dl id="title">
+    								<dt><label for="title"> @Messages("uploaddocument.uploaddocument")</label></dt>
+    								<span class="upload-document-title">@title</span>
+								</dl>
+		           			}
+		           			</div>
+		           			<div class="field-wrapper">
+		    					@select(
+				            	documentForm("document_type"),
+				       			options(documentType),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("uploaddocument.documenttype"),
+								'_default ->  Messages("uploaddocument.placeholder.documenttype"))
+		           			</div>
+		           			<div class="field-wrapper">
+		    					@inputText(
+					                documentForm("version_alias"),
+					                'class -> "span4", 
+					                 'placeholder -> Messages("uploaddocument.placeholder.versionalias"),
+					                '_label -> Messages("uploaddocument.versionalias")
+					            )
+		           			</div>
+		           			
+		           			<div class="field-wrapper">
+		    					@textarea(
+					                documentForm("version_notes"),
+					                'class -> "span4", 
+					                '_label ->  Messages("uploaddocument.versionnotes"),
+					                'placeholder ->  Messages("uploaddocument.placeholder.versionnotes"),
+								    'rows -> 7,
+								    'cols -> 60
+				            	)
+		           			</div>
+		           			
+		           			<div class="field-wrapper">
+		           				<dl id="upload-document">
+    								<dt><label for="title"> @Messages("uploaddocument.uploaddocument")</label></dt>
+    								<dd>
+    									<input id="upload_document" name="upload_document" type="file">
+									</dd>
+									@if(flash.get("error")){ 
+    									<dd class="error"> @Messages("uploaddocument.message")</dd>
+									}								
+								</dl>		           			
+		           			</div>
+		           			<div class="width_full" style="margin-top:16px;">
+				       	<span class="left push-left210px">
+				       	<input class="btn  form-button" value="@Messages("button.save")" type="submit"/>
+				       	</span>
+				       	<span class="left" style="margin-left:30px;"> 
+				       	<input id="cancel-document" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
+				       	</span>
+		          	</div>
+	           			</div>
+           			</div>
+    			}
+    		</div>
+			</div>
+		  	@frontend.footer()	
+		  	 <div class="loader"><img src="@routes.Assets.at("frontend/images/loading.gif")" alt="" /></div>	  	
+		</section>
+	</div>
+	@frontend.headerScripts()
+	 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/documents.css")">
+	 <script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
+	 <script>
+	 $(document).ready(function(){
+		
+		@* $('#cancel-document').on('click',function() {
+			   $('.loader').css("display","block");
+			   
+			   if(@parentType == "PROGRAM"){
+			   			window.location.href='@controllers.Frontend.routes.Program.programDetails(parent_id)';
+			   }else if(@parentType == "PROJECT"){
+			   			window.location.href='@controllers.Frontend.routes.ProjectMaster.projectDetails(parent_id)';
+			   }else  if(@parentType == "TASK"){
+			   			window.location.href='@controllers.Frontend.routes.Task.projectTaskDetails(parent_id)';
+			   }else if(@parentType == "SUBTASK"){
+			  		@{subtask = SubTaskServices.findSubTasksBySubTaskId(id)}
+		   			@if(!subtask.isEmpty){
+		   					window.location.href='@controllers.Frontend.routes.Task.projectTaskDetails(subtask.get.task_id.toString())';
+	   				}
+			   				
+			    }else if(@parentType == "DIVISION"){
+			    	window.location.href='@controllers.Frontend.routes.Documents.documentOverview';
+			    }else{
+			   		window.location.href='@controllers.Frontend.routes.Documents.documentOverview';
+			   	}
+				 
+				    var delay = 200;
+					 setTimeout(function() {
+					     $(".loader").css("display","none"); }, delay);
+	   });*@
+			
+		   
+	});
+	 
+	 $("#version_alias").on("keypress", inputOnlyNumbers);
+	 
+	 function inputOnlyNumbers(evt){  
+		    var e = window.event || evt; // for trans-browser compatibility  
+		    var charCode = e.which || e.keyCode;  
+		    if ((charCode > 45 && charCode < 58) || charCode == 8){  
+		        return true;  
+		    }  
+		    return false;  
+		}
+
+	 </script>
+</body>
+</html>

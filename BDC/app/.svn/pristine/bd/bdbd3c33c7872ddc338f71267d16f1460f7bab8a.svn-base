@@ -1,0 +1,78 @@
+@(projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import services._
+@import java.text.SimpleDateFormat
+
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="pDetail_page">
+	<div class="product_main">
+		<div class="width_full">
+			<h3 id="productNm" style="width: 99.4%;margin-top: 10px">
+	    		<span class="left"> @Messages("generics.overview.genericprojecttypemaintenance") </span>
+   			</h3>
+		  	
+		  	<div class="historic-generic-project-type-div" id="new-document">
+			
+			 <a href="@controllers.Frontend.routes.Generics.overview()"><span  style="float: right;">@Messages("generics.overview.showcurrentprojecttypes") </span></a>
+			</div>
+			
+			@frontend.generics.historicProjectTypesListing(projectTypes)
+			
+		</div>
+		
+	</div>	
+	  @frontend.footer()
+</section>
+  	 <div id="pop-box-over" class="display-none"> 
+  	 </div>
+   
+  	<div id="dialog-box" class="product-detail-dialog" style="width:190px;"><span class="dialog-close"></span>
+  		<div class="dialog-content">
+		</div>
+	</div>
+ 
+<div class="tooltip"></div>		
+</div>	 
+@frontend.headerScripts()	
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/generics.css")">
+<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<script>
+	$(document).ready(function(){
+	var items = $("#program_container .historic-project-type-data");
+	var numItems = items.length;
+	if(numItems > 10){
+		$('#historic_id').addClass('page-for-predefined-task');
+		$('#program_container').css('height','350px');
+	var perPage =10;
+	items.slice(perPage).hide();
+	$("#historic_id").pagination({
+		items : numItems,
+		itemsOnPage : perPage,
+		cssStyle : "light-theme",
+		onPageClick : function(pageNumber) { // this is where the magic happens
+			// someone changed page, lets hide/show trs appropriately
+	
+			var showFrom = perPage * (pageNumber - 1);
+			var showTo = showFrom + perPage;
+	
+			items.hide() // first hide everything, then show for the new page
+			.slice(showFrom, showTo).show();
+		}
+	});
+	}
+	if(numItems <= 10){
+		$('#historic_id').css('display', 'none');
+	}
+	
+	});
+
+</script>
+
+</body>	
+</html>

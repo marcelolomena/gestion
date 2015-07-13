@@ -1,0 +1,710 @@
+@(employee :Option[Users],employeeOffice:Option[Office] ,projects:Seq[Project],profileImgForm :Form[ProfileImage], programs:Seq[ProgramMaster],alerts:String,availability:Seq[UserAvailability])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@frontend.layout()
+@import services._
+@import helper._
+@import utils._
+<style>
+
+.emp_img_container {
+    padding: 10px 10px 10px 0 !important;
+    width: 70px !important;
+}
+
+</style>
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+
+<section class="slider" id="home_page">
+	<div class="left map border-top"></div>
+	<div class="width_full emp_detail_description">
+		<input type="hidden" id="uId" name="uId" value="@employee.get.uid" />
+		@for(a <- availability){
+			<input type="hidden" id="busy" name="busy" value="@a.busy" />
+			<input type="hidden" id="free" name="free" value="@a.free" />
+		}
+		<div style="height:auto;border:1px soild;">
+				<div style="float:right;width:100% ">
+				
+					<span class="emp_l_name">
+						@employee.get.last_name
+					</span>
+						<span class="emp_l_name">
+						@employee.get.first_name 
+					</span>
+				</div>
+				<div class="emp_hr">
+				
+				</div>
+				
+				<div class="emp_detail_discription">
+					<div class="left">
+					<div class="dash_detail_1_right " id="employee_project_list">
+						<h3 style="width:277px;font-size:13px;height:26px;padding-left: 5px;">@Messages("employeeProfile.myprogram")</h3>
+						@for(p <- programs){
+							
+							<div class="dash_right_data_2">
+							<span class="employee_project"  id="task_@p.program_id">@if(p.program_name.length()> 35){@p.program_name.substring(0, 35)&nbsp;...}else{@p.program_name}		 </span>
+								<span class="show_tasks"  id="subtask_@p.program_id"></span>
+								<div class="width_full task_list_div" id="task_list_@p.program_id">
+									@for(s <- SubTaskServices.findSubTasksListForProgram(session.get("uId").get, p.program_id.get.toString())){
+										<span class="left">&raquo;</span>
+										<span class="employee_task_title" id="@s.sub_task_id"><a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())"> @s.task</a> </span>
+									}
+								</div>
+							</div>
+						}
+						<div class="dash_right_data_2">
+							<div id=container></div>
+						</div>
+						@*@for(project <- projects){	
+							<div class="dash_right_data_2">
+								@if(Integer.parseInt(session.get("utype").get) != 0){			
+									<a href="/project-details/@project.pId" class="employee_project">@project.project_name</a>
+								}else{
+									<a href="javascript:void(0)" class="employee_project" >@project.project_name</a>
+								}
+								<span class="show_tasks @if(TaskService.findTaskListByProjectId(project.pId.get.toString).size==0){display-none}"  id="task_@project.project_id"></span>
+								<div class="width_full task_list_div @if(TaskService.findTaskListByProjectId(project.pId.get.toString).size==0){display-none}" id="task_list_@project.project_id"> 
+									@for(m <- TaskService.findTaskListByProjectId(project.pId.get.toString)){
+										<div class="width_full task_item">
+											@if(Integer.parseInt(session.get("utype").get) != 0){	
+												<span class="left">&raquo;</span><span class="employee_task_title"> <a href="/project-details/@project.pId#@m.tId">@m.task_title</a></span>
+											}else{
+												<span class="left">&raquo; </span><span class="employee_task_title"><a href="javascript:void(0)">@m.task_title</a></span>
+											}
+											<span class="show_sub_task @if(TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size==0){display-none}" id="sub_task_@m.tId"></span> 
+											<div class="sub_task_list_div" id="sub_task_list_@m.tId">
+												<div class="width_full sub_task_item">
+													@for(s <- TaskService.findSubTaskListByTaskId(m.tId.get.toString())){
+														<span class="width_full"><span class="left">&ndash;</span> <span  class="left employee_sub_task_title">@s.task</span></span>	
+													}
+												</div>
+											</div>
+											
+										</div>
+											
+									}
+									
+								</div>
+							</div>
+						}*@
+					</div>
+						@*<img width="300" height="250px" src="@routes.Assets.at("frontend/images/employee/skils.png")" alt=""/>*@
+						
+					</div>
+				 <div class="skill-list" style="width:38%; float:left;">
+						 @if(UserService.findAllSkillsByUserId(employee.get.uid.get).size > 0){
+							 <div class="dash_detail_1_right" style="margin:0 0 0 20px;float:left">
+							  <h3 style='width:280px;font-size:13px;height:26px;'>@Messages("employee.skills")
+							  @if(session.get("uId").get.trim().equals(employee.get.uid.get.toString().trim())){
+							  	<a href='/edit-users-skills/@employee.get.uid.get' id='edit-skills' style='float:right;margin-right:5px; color: #ffffff; font-size: 13px;font-weight: bold;line-height: 27px;' > @Messages("employee.edit") </a>
+							  }
+							      
+							  </h3>
+								@for(s <- UserService.findAllSkillsByUserId(employee.get.uid.get)){
+									<div class="dash_right_data_main">
+										<div class="dash_right_data_2 " style="width:288px">
+											<div class="dash_right_data_left" style="width:180px"> 
+												@UserService.findSkillBySkillId(s.sId).get.skill
+											</div>
+											<div class="dash_right_data_right skill_not_endorsed" style="width:90px;font-weight: bold;font-size: 12px;"> 
+											@{
+												(s.rating.toString()) match{
+													case "1" => Messages("editUsersSkills.bad")
+													case "2" =>  Messages("editUsersSkills.medium")
+													case "3" =>  Messages("editUsersSkills.ok")
+													case "4" =>  Messages("editUsersSkills.quitegood")
+													case "5" => Messages("editUsersSkills.awesome")
+												}
+											}					
+																	
+											</div>
+										</div>
+									</div>
+								}
+								</div>     
+						}else{
+					
+							 <div class="dash_detail_1_right" style="margin:0 0 0 20px;float:left;width:289px">
+							  <h3 style='width:280px;font-size:14px;height:26px;'>@Messages("employee.skills")
+							    @if(session.get("uId").get.trim().equals(employee.get.uid.get.toString().trim())){
+							    	<a href='/edit-users-skills/@employee.get.uid.get' id='edit-skills' style='float:right;margin-right:5px; color: #ffffff; font-size: 14px;font-weight: bold;line-height: 27px;' > @Messages("employee.add") </a>  
+							    	} </h3>
+							  <div class="dash_right_data_main" style="width:289px">
+										<div class="dash_right_data_2 " style="width:289px">
+											<div class="dash_right_data_left" style="width:200px;">
+										  @Messages("employee.noskillsavailable")
+											</div>
+											<div class="dash_right_data_right " style="width:90px;font-weight: bold;font-size: 12px;">
+											</div>
+										</div>
+							 </div>
+							  </div>
+						}
+				
+					<div class="width_full dash_detail_1_right border-none risk-alerts-header"> 
+						<h3>@Messages("employeeProfile.myalerts")</h3>
+						<div class="width_full">
+						@for((id,index) <- alerts.split(",").zipWithIndex){
+							<div id="rsk_@id" class=" width290px @if(index%2==0){dash_right_data_2_odd}else{dash_right_data_2}">
+       					 		
+       					 			@if(RiskService.findRiskAlertsById(id) != null){
+       					 				<div class="width_full" >	
+		       					 		<span class="left alert-title">
+		       					 				@RiskService.findRiskAlertsById(id).get.event_title
+		       					 		</span>
+		       					 		<span id="alert_@id" class="show-alert"></span>
+		       					 		</div>
+       					 			}else{
+       					 			<div style="width:282px;padding: 4px;background: #e7edef" class="dash_right_data_left">No hay alertas disponibles</div>
+       					 			}
+       					 		
+       					 		<div class="width_full display-none" id="ad_@id">
+       					 		@frontend.risks.riskalertDetails(id)</div>
+       					 	</div>	
+     					}
+     					</div>
+					</div>
+				</div>
+						@*@controllers.routes.Application.changeProfileImage(employee.get.uid.get.toString())*@
+			<div class="emp_img_div">
+			<div style="float:left;">
+					<span class="left" style="height: 200px; width: 200px; border: solid black 1px;"><img  width="200" height="200" src="@if(!employee.get.profile_image.isEmpty){/documents/@employee.get.profile_image}else{/assets/frontend/images/male_l.jpg}" alt="no image"></span>
+					@if(Integer.parseInt(session.get("uId").get) ==  Integer.parseInt(employee.get.uid.get.toString()) ){
+						<span class="left emp_edit" > <a href="/edit-users-profile/@employee.get.uid.get.toString()"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" alt="" class="edit-profile">@Messages("employee.editProfile")</a></span>
+					   <span class="left emp_edit" > <a id="edit-profile-image"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">@Messages("employee.editImage") </a></span>
+					   <span class="left emp_edit" style="width: 170px;"> <a href="/reset-password"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">@Messages("resetpassword.resetPassword")</a></span>
+					   
+					   @*<span class="left emp_edit" > <a id="upload-programs-document"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">Upload Programs Document </a></span>*@
+					}
+						@*<span class="left"><img width="160" style="margin-left:30px;margin-top:10px" height="160" src="/assets/frontend/images/employee/awards.png" alt=""></span>*@
+					@{/*
+					@if(Integer.parseInt(session.get("utype").get) ==  2 ){
+					<span class="left edit-skills" ><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/skills-edit.png")" alt="" class="edit-skills">Endorse skills </a></span>
+					}*/}
+			</div>
+			<div class="emp_details">
+					<div class="emp_div_email">
+						<div class="emp_img_container">@Messages("employee.email")</div>
+						<span class="emp_email" style="width: 225px;margin-top: 5px;">@employee.get.email</span>
+					</div>
+					<div class="emp_div_rut">
+                        <div class="emp_img_container">@Messages("employee.division") </div>
+						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							@if(!employeeOffice.isEmpty){
+								@if(!DivisionService.findDivisionById(employeeOffice.get.division).isEmpty){
+									@DivisionService.findDivisionById(employeeOffice.get.division).get.division	
+								}else{
+								NA
+								}
+							}else{
+							NA
+							}
+						</span>
+					</div>
+					<div class="emp_div_rut">
+                        <div class="emp_img_container">@Messages("employee.gerencia") </div>
+						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							@if(!employeeOffice.get.gerencia.isEmpty && !GenrenciaService.findGenrenciaById(employeeOffice.get.gerencia.get).isEmpty){
+								@GenrenciaService.findGenrenciaById(employeeOffice.get.gerencia.get).get.genrencia		
+							}else{
+								NA
+							}
+						</span>
+					</div>
+					<div class="emp_div_rut">
+                        <div class="emp_img_container">@Messages("employee.department") </div>
+						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							@if(!employeeOffice.get.department.isEmpty && !DepartmentService.findDepartmentById(employeeOffice.get.department.get).isEmpty){
+								@DepartmentService.findDepartmentById(employeeOffice.get.department.get).get.department		
+							}else{
+							NA
+							}
+						</span>
+					</div>
+				</div>
+		</div>
+				</div>
+		</div>
+
+	</div>
+	<div  id="pop-box-profile_image" class="display-none" >
+			<div id="profile_image_id" style="min-height:150px;float: left; background-color: #E3EAED;" class="block-body width_full">
+			<p style="width:98%;"><span class="type">@Messages("employee.uploadProfileImage")</span><span class="close-popup-box"></span></p>
+			<div>
+				<span style="float:left; font-weight:bold; width:100%; margin-top: 10px; margin-bottom: 10px;">@Messages("employee.selectImageUpload")</span> 
+			</div>
+			<div style="border:solid 1px #dadada; font-size: 13px;"> @Messages("employee.imageUploadingMessage")</div>
+					@form(action = routes.Application.uploadImage(employee.get.uid.get.toLong),'class->"normalForm",'method-> "POST", 'enctype -> "multipart/form-data", 'id -> "select-profile-image") {
+		    				<div  class="left">
+		    				<input id="profile_image" name="profile_image" type="file">
+		    				</div>
+		    				<div  style=" float: right;">
+				            <input type="submit" id="uploadId" value="@Messages("button.upload")" class="btnUpload" >
+				            </div>
+						}
+			</div>
+	</div>
+	
+		<div  id="pop-box-upload_doc" class="display-none" >
+			<div id="upload_doc_id" style="min-height:150px;float: left; background-color: #E3EAED;" class="block-body width_full">
+			<p style="width:98%;"><span class="type"></span><span class="close-popup-box"></span></p>
+			<div>
+				<span style="float:left; font-weight:bold; width:100%; margin-top: 10px; margin-bottom: 10px;">Upload Document</span> 
+			</div>
+			<div style="border:solid 1px #dadada; font-size: 13px;"> </div>
+					@form(action = controllers.Frontend.routes.Documents.uploadProgramFromFile(),'class->"normalForm",'method-> "POST", 'enctype -> "multipart/form-data", 'id -> "select-upload_doc") {
+		    				<div  class="left">
+		    				<input id="upload_doc" name="upload_doc" type="file">
+		    				</div>
+		    				<div  style=" float: right;">
+				            <input type="submit" id="upload_doc_Id" value="@Messages("button.upload")" class="btnUpload" >
+				            </div>
+						}
+			</div>
+	</div>
+	@frontend.footer()
+</section>
+	</div>
+<div class="emp-edit-info display-none"></div>
+<div id="pop-box-over" class="display-none"></div>
+<div id="pop-box-over_doc" class="display-none"></div>
+
+<div class="tooltip"></div>
+@frontend.headerScripts()	
+<script src="@routes.Assets.at("frontend/js/highcharts.js")"></script>
+<script type="text/javascript">
+	$(document)
+			.ready(
+					
+					function() {
+
+						 $('input[type="checkbox"]').click(function(){
+					         if($(this).prop("checked") == true){
+						     var  risk_alert_id = $(this).val();
+					        var url ="/delete-risk-alert?risk_alert_id="+risk_alert_id;
+					        $.get(url, function(data) {
+						       if(data=="Success"){
+							       $("#rsk_"+risk_alert_id).remove();
+						    	   $("#alert-listing_"+risk_alert_id).remove();
+						       }
+						        });
+					         }
+					        
+					     });
+						 Highcharts.theme = {
+								   colors: ["#DDDF0D", "#55BF3B", "#DF5353", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
+								      "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+								   chart: {
+								      backgroundColor: {
+								         linearGradient: [0, 0, 250, 500],
+								         stops: [
+								            [0, 'rgb(48, 96, 48)'],
+								            [1, 'rgb(0, 0, 0)']
+								         ]
+								      },
+								      borderColor: '#000000',
+								      borderWidth: 2,
+								      className: 'dark-container',
+								      plotBackgroundColor: 'rgba(255, 255, 255, .1)',
+								      plotBorderColor: '#CCCCCC',
+								      plotBorderWidth: 1
+								   },
+								   title: {
+								      style: {
+								         color: '#C0C0C0',
+								         font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+								      }
+								   },
+								   subtitle: {
+								      style: {
+								         color: '#666666',
+								         font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+								      }
+								   },
+								   xAxis: {
+								      gridLineColor: '#333333',
+								      gridLineWidth: 1,
+								      labels: {
+								         style: {
+								            color: '#A0A0A0'
+								         }
+								      },
+								      lineColor: '#A0A0A0',
+								      tickColor: '#A0A0A0',
+								      title: {
+								         style: {
+								            color: '#CCC',
+								            fontWeight: 'bold',
+								            fontSize: '12px',
+								            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+								         }
+								      }
+								   },
+								   yAxis: {
+								      gridLineColor: '#333333',
+								      labels: {
+								         style: {
+								            color: '#A0A0A0'
+								         }
+								      },
+								      lineColor: '#A0A0A0',
+								      minorTickInterval: null,
+								      tickColor: '#A0A0A0',
+								      tickWidth: 1,
+								      title: {
+								         style: {
+								            color: '#CCC',
+								            fontWeight: 'bold',
+								            fontSize: '12px',
+								            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+								         }
+								      }
+								   },
+								   tooltip: {
+								      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+								      style: {
+								         color: '#F0F0F0'
+								      }
+								   },
+								   toolbar: {
+								      itemStyle: {
+								         color: 'silver'
+								      }
+								   },
+								   plotOptions: {
+								      line: {
+								         dataLabels: {
+								            color: '#CCC'
+								         },
+								         marker: {
+								            lineColor: '#333'
+								         }
+								      },
+								      spline: {
+								         marker: {
+								            lineColor: '#333'
+								         }
+								      },
+								      scatter: {
+								         marker: {
+								            lineColor: '#333'
+								         }
+								      },
+								      candlestick: {
+								         lineColor: 'white'
+								      }
+								   },
+								   legend: {
+								      itemStyle: {
+								         font: '9pt Trebuchet MS, Verdana, sans-serif',
+								         color: '#A0A0A0'
+								      },
+								      itemHoverStyle: {
+								         color: '#FFF'
+								      },
+								      itemHiddenStyle: {
+								         color: '#444'
+								      }
+								   },
+								   credits: {
+								      style: {
+								         color: '#666'
+								      }
+								   },
+								   labels: {
+								      style: {
+								         color: '#CCC'
+								      }
+								   },
+
+
+								   navigation: {
+								      buttonOptions: {
+								         symbolStroke: '#DDDDDD',
+								         hoverSymbolStroke: '#FFFFFF',
+								         theme: {
+								            fill: {
+								               linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								               stops: [
+								                  [0.4, '#606060'],
+								                  [0.6, '#333333']
+								               ]
+								            },
+								            stroke: '#000000'
+								         }
+								      }
+								   },
+
+								   // scroll charts
+								   rangeSelector: {
+								      buttonTheme: {
+								         fill: {
+								            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								            stops: [
+								               [0.4, '#888'],
+								               [0.6, '#555']
+								            ]
+								         },
+								         stroke: '#000000',
+								         style: {
+								            color: '#CCC',
+								            fontWeight: 'bold'
+								         },
+								         states: {
+								            hover: {
+								               fill: {
+								                  linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								                  stops: [
+								                     [0.4, '#BBB'],
+								                     [0.6, '#888']
+								                  ]
+								               },
+								               stroke: '#000000',
+								               style: {
+								                  color: 'white'
+								               }
+								            },
+								            select: {
+								               fill: {
+								                  linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								                  stops: [
+								                     [0.1, '#000'],
+								                     [0.3, '#333']
+								                  ]
+								               },
+								               stroke: '#000000',
+								               style: {
+								                  color: 'yellow'
+								               }
+								            }
+								         }
+								      },
+								      inputStyle: {
+								         backgroundColor: '#333',
+								         color: 'silver'
+								      },
+								      labelStyle: {
+								         color: 'silver'
+								      }
+								   },
+
+								   navigator: {
+								      handles: {
+								         backgroundColor: '#666',
+								         borderColor: '#AAA'
+								      },
+								      outlineColor: '#CCC',
+								      maskFill: 'rgba(16, 16, 16, 0.5)',
+								      series: {
+								         color: '#7798BF',
+								         lineColor: '#A6C7ED'
+								      }
+								   },
+
+								   scrollbar: {
+								      barBackgroundColor: {
+								            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								            stops: [
+								               [0.4, '#888'],
+								               [0.6, '#555']
+								            ]
+								         },
+								      barBorderColor: '#CCC',
+								      buttonArrowColor: '#CCC',
+								      buttonBackgroundColor: {
+								            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								            stops: [
+								               [0.4, '#888'],
+								               [0.6, '#555']
+								            ]
+								         },
+								      buttonBorderColor: '#CCC',
+								      rifleColor: '#FFF',
+								      trackBackgroundColor: {
+								         linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+								         stops: [
+								            [0, '#000'],
+								            [1, '#333']
+								         ]
+								      },
+								      trackBorderColor: '#666'
+								   },
+
+								   // special colors for some of the
+								   legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+								   background2: 'rgb(35, 35, 70)',
+								   dataLabelsColor: '#444',
+								   textColor: '#C0C0C0',
+								   maskColor: 'rgba(255,255,255,0.3)'
+								};
+
+								// Apply the theme
+								var highchartsOptions = Highcharts.setOptions(Highcharts.theme);					     
+						 Highcharts.setOptions({
+						     colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263',      '#6AF9C4']
+						    });
+						 $('#container').highcharts({
+						        chart: {
+						            type: 'pie'
+						        },
+						        title: {
+						            text: 'Consumo<br>horas',
+						            align: 'center',
+						            verticalAlign: 'middle',
+						            y: 40
+						        },
+						        tooltip: {
+						            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						        },
+						        plotOptions: {
+						            pie: {
+						                dataLabels: {
+						                    enabled: true,
+						                    distance: -50,
+						                    style: {
+						                        fontWeight: 'bold',
+						                        color: 'white',
+						                        textShadow: '0px 1px 2px black'
+						                    }
+						                },
+						                startAngle: -90,
+						                endAngle: 90,
+						                center: ['50%', '75%']
+						            }
+						        },
+						        series: [{
+						            colorByPoint: true,
+						            data: [{
+						                name: "Sin Informar",
+						                y: parseFloat($("#free").val())
+						            }, {
+						                name: "Consumidas",
+						                y: parseFloat($("#busy").val())
+						            }]
+						        }]
+						    });
+						    					     
+
+						$('dt label').hide();
+						$('#uploadId')
+								.on(
+										'click',
+										function() {
+											var file = $('#profile_image')
+													.val();
+											var exts = [ 'png', 'jpg', 'jpeg',
+													'bmp' ];
+											// first check if file field has any value
+											if (file.length === 0) {
+												alert('Please select the image file!');
+												return false;
+											} else {
+												// split file name at dot
+												var get_ext = file.split('.');
+												// reverse name to check extension
+												get_ext = get_ext.reverse();
+												// check file type is valid as given in 'exts' array
+
+												if (!($.inArray(get_ext[0]
+														.toLowerCase(), exts) > -1)) {
+													alert('Please select the Image with extension. png,jpg,jpeg,bmp');
+													return false;
+												}
+											}
+										});
+						$('#edit-profile-image').on(
+								'click',
+								function() {
+									$('#profile_image').val('');
+									$('#pop-box-profile_image').removeClass(
+											'display-none');
+									$('#pop-box-over').removeClass(
+											'display-none');
+									$('#pop-box-profile_image').css('display',
+											'block');
+									$("#profile_image_id").removeClass(
+											"display-none");
+									$('#profile_image').css('width', '550px')
+								});
+
+						$(".close-popup-box")
+								.off("click")
+								.on(
+										"click",
+										function() {
+											$("#pop-box-profile_image").css(
+													"position", "fixed");
+											$("#pop-box-profile_image").css(
+													"top", "10%");
+											$("#pop-box-profile_image")
+													.addClass("display-none");
+											$("#profile_image_id").addClass(
+													"display-none");
+											$("#pop-box-over").addClass(
+													"display-none");
+											$(".leftPanel").css("z-index", "2");
+
+											$("#pop-box-upload_doc").css(
+													"position", "fixed");
+											$("#pop-box-upload_doc").css("top",
+													"10%");
+											$("#pop-box-upload_doc").addClass(
+													"display-none");
+											$("#upload_doc_id").addClass(
+													"display-none");
+											$("#pop-box-over_doc").addClass(
+													"display-none");
+											$(".leftPanel").css("z-index", "2");
+
+										});
+
+						$('#upload_doc_Id')
+								.on(
+										'click',
+										function() {
+											var file = $('#upload_doc').val();
+
+											var exts = [ 'xls' ];
+											// first check if file field has any value
+											if (file.length === 0) {
+												alert('Please select the .xls file!');
+												return false;
+											} else {
+												// split file name at dot
+												var get_ext = file.split('.');
+												// reverse name to check extension
+												get_ext = get_ext.reverse();
+												// check file type is valid as given in 'exts' array
+
+												if (!($.inArray(get_ext[0]
+														.toLowerCase(), exts) > -1)) {
+													alert('Please select the file with extension .xls');
+													return false;
+												}
+											}
+										});
+
+						$('#upload-programs-document').on(
+								'click',
+								function() {
+									$('#upload_doc').val('');
+									$('#pop-box-upload_doc').removeClass(
+											'display-none');
+									$('#pop-box-over_doc').removeClass(
+											'display-none');
+									$('#pop-box-upload_doc').css('display',
+											'block');
+									$("#upload_doc_id").removeClass(
+											"display-none");
+									$('#upload_doc').css('width', '550px')
+								});
+
+					});
+</script>
+</body>
+</html>
