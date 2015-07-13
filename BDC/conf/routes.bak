@@ -1,0 +1,533 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET    /admin                                                                                         controllers.Application.index
+
+
+
+# Login
+GET    /admin-login                                                                                   controllers.Application.login				
+POST   /loginCheck                                                                                    controllers.Application.loginForm
+GET    /signout                                                                                       controllers.Application.signout
+GET    /reset-password                                                                                controllers.Application.resetPassword
+POST   /reset-password                                                                                controllers.Application.confirmPasswordUpdate
+GET    /change-profile-image/:id                                                                      controllers.Application.changeProfileImage(id:Long)
+POST   /change-profile-image/:id                                                                      controllers.Application.uploadImage(id:Long)
+POST   /crop-image/:id                                                                                controllers.Application.cropImage(id:Long)
+GET    /crop-image/:id                                                                                controllers.Application.changeProfileImage(id:Long)
+
+
+GET    /delete-user                                                                                   controllers.User.userDelete(id :String)
+GET    /activate-account                                                                              controllers.User.activateUser(code:String)
+GET    /check-user                                                                                    controllers.User.checkUser
+GET    /check-user-name                                                                               controllers.User.checkUserName
+GET    /check-email                                                                                   controllers.User.checkEmail
+GET    /user-calculation                                                                              controllers.User.getUserCaculations
+GET    /get-user-by-department                                                                        controllers.User.getUserByDepartment
+
+
+
+#Department
+GET    /department-list                                                                               controllers.Department.departmentList	
+GET    /add-department                                                                                controllers.Department.addDepartment
+POST   /add-department                                                                                controllers.Department.saveDepartment
+GET    /edit-department                                                                               controllers.Department.editDepartment(id :String)
+POST   /edit-department                                                                               controllers.Department.updateDepartment()
+POST   /update-department                                                                             controllers.Department.updateDepartmentStatus(id :String,status:Boolean)
+GET    /get-report_to-list                                                                            controllers.Department.getDepartmentReportTo
+
+#Division
+GET    /division-list                                                                                 controllers.Division.divisionList	
+GET    /create-division                                                                               controllers.Division.createDivision
+POST   /save-division                                                                                 controllers.Division.saveDivision
+GET    /edit-division                                                                                 controllers.Division.editDivision(id :String)
+POST   /edit-division                                                                                 controllers.Division.updateDivision()
+POST   /update-division                                                                               controllers.Division.divisionUpdateStatus(id :String,status:Boolean)
+
+
+#Genrencia
+GET    /genrencia-list                                                                                controllers.Genrencia.genrenciaList	
+GET    /create-genrencia                                                                              controllers.Genrencia.createGenrencia
+POST   /save-genrencia                                                                                controllers.Genrencia.saveGenrencia
+GET    /edit-genrencia                                                                                controllers.Genrencia.editGenrencia(id :String)
+POST   /edit-genrencia                                                                                controllers.Genrencia.updateGenrencia
+POST   /update-genrencia                                                                              controllers.Genrencia.genrenciaUpdateStatus(id :String,status:Boolean)
+GET    /get-genrencia-report-to-types                                                                 controllers.Genrencia.getDenrenciaReportTo
+
+
+#PROGRAM-subType
+GET    /program-subtype-list                                                                          controllers.SubType.subTypeList	
+GET    /add-sub-type                                                                                  controllers.SubType.createSubType
+POST   /add-sub-type                                                                                  controllers.SubType.saveSubType
+GET    /edit-sub-type                                                                                 controllers.SubType.editSubType(id :String)
+POST   /edit-sub-type                                                                                 controllers.SubType.updateSubType	
+POST   /update-subtype                                                                                controllers.SubType.updateSubTypeStatus(id :String,status:Boolean)
+		
+
+#PROGRAM-Type
+GET    /program-type-list                                                                             controllers.ProgramType.programTypeList	
+GET    /add-program-type                                                                              controllers.ProgramType.createProgramType
+POST   /add-program-type                                                                              controllers.ProgramType.saveProgramType
+GET    /edit-program-type                                                                             controllers.ProgramType.editProgramType(id :String)
+POST   /edit-program-type                                                                             controllers.ProgramType.updateProgramType	
+POST   /update-programtype                                                                            controllers.ProgramType.updateProgramTypeStatus(id :String,status:Boolean)
+
+		
+#PROGRAM-impact-Type		
+GET    /impact-type-list                                                                              controllers.ImpactType.impactTypeList
+GET    /add-impact-type                                                                               controllers.ImpactType.createImpactType	
+POST   /add-impact-type                                                                               controllers.ImpactType.saveImpactType
+GET    /edit-impact-type                                                                              controllers.ImpactType.editImpactType(id :String)	
+POST   /edit-impact-type                                                                              controllers.ImpactType.updateImpactType
+GET    /delete-impact-type                                                                            controllers.ImpactType.deleteImpactType(id :String)
+
+#PROGRAM-Discipline-Type		
+GET    /task-descipline-list                                                                          controllers.TaskDescipline.taskDesciplineList
+GET    /add-task-descipline                                                                           controllers.TaskDescipline.createTaskDescipline	
+POST   /add-task-descipline                                                                           controllers.TaskDescipline.saveTaskDescipline
+GET    /edit-task-descipline                                                                          controllers.TaskDescipline.editTaskDescipline(id :String)	
+POST   /edit-task-descipline                                                                          controllers.TaskDescipline.updateTaskDescipline
+POST   /update-task-descipline                                                                        controllers.TaskDescipline.updateTaskDesciplineStatus(id :String,status:Boolean)
+
+#PROGRAM-workFlow-Staus
+GET    /workflow-list                                                                                 controllers.WorkflowStatus.workflowList
+GET    /add-workflow-status                                                                           controllers.WorkflowStatus.addWorkflowStatus
+POST   /add-workflow-status                                                                           controllers.WorkflowStatus.saveWorkFlowStatus
+GET    /edit-workflow-status                                                                          controllers.WorkflowStatus.editWorkflowStatus(id :String)
+POST   /edit-workflow-status                                                                          controllers.WorkflowStatus.updateWorkflowStatus
+GET    /delete-workflow-status                                                                        controllers.WorkflowStatus.deleteWorkflowStatus(id :String)
+
+#Timesheet
+
+#PROJECT-workFlow-Staus
+GET    /project-workflow-list                                                                         controllers.ProjectWorkflowStatus.projectWorkflowList
+GET    /add-projectworkflow-status                                                                    controllers.ProjectWorkflowStatus.addProjectWorkFlowStatus
+POST   /add-projectworkflow-status                                                                    controllers.ProjectWorkflowStatus.saveProjectWorkFlowStatus
+GET    /edit-projectworkflow-status                                                                   controllers.ProjectWorkflowStatus.editProjectWorkflowStatus(id :String)
+POST   /edit-projectworkflow-status                                                                   controllers.ProjectWorkflowStatus.updateProjectWorkflowStatus
+POST   /update-projectworkflow-status                                                                 controllers.ProjectWorkflowStatus.updatesProjectWorkflowStatus(id :String,status:Boolean)
+
+GET    /user-profile-roles/:id                                                                        controllers.Frontend.User.editUserRoles(id: String)
+POST   /user-profile-roles                                                                            controllers.Frontend.User.updateUserRoles(user_id: String,role_id:String)
+POST   /remove-profile-roles                                                                          controllers.Frontend.User.removeUserRoles(id: String)
+
+
+GET    /edit-users-skills/:id                                                                         controllers.Frontend.User.editUsersSkills(id: String)
+POST   /update-profile-skills                                                                         controllers.Frontend.User.updateSkills(id: String)
+GET    /get-skill-by-id                                                                               controllers.Frontend.User.getSkillsByskillId(id: String)
+GET    /delete-skill/:id/:uId                                                                         controllers.Frontend.User.deleteSkill(id:String,uId:String)
+ 
+GET    /edit-users-profile/:id                                                                        controllers.Frontend.User.editUsersProfile(id: String)
+POST   /edit-users-profile/:id                                                                        controllers.Frontend.User.updateUsersProfile(id: String)
+# Map static resources from the /public folder to the /assets URL path
+
+GET    /assets/*file                                                                                  controllers.Assets.at(path="/public", file)
+
+
+
+#Stage
+GET    /stage-list                                                                                    controllers.Stage.stageList	
+GET    /add-stage                                                                                     controllers.Stage.createStage
+POST   /add-stage                                                                                     controllers.Stage.saveStage
+GET    /edit-stage                                                                                    controllers.Stage.editStage(id :String)
+POST   /edit-stage                                                                                    controllers.Stage.updateStage	
+POST   /update-stage-status                                                                           controllers.Stage.updateStageStatus(id :String,status:Boolean)
+
+
+#deliverable
+GET    /deliverable-list                                                                              controllers.Deliverable.deliverableList	
+GET    /add-deliverable                                                                               controllers.Deliverable.createDeliverable
+POST   /add-deliverable                                                                               controllers.Deliverable.saveDeliverable
+GET    /edit-deliverable                                                                              controllers.Deliverable.editDeliverable(id :String)
+POST   /edit-deliverable                                                                              controllers.Deliverable.updateDeliverable	
+POST   /update-deliverable-status                                                                     controllers.Deliverable.updateDeliverableStatus(id :String,status:Boolean)
+
+#Service Catalogue
+#GET    /add-service-catalogue                                 controllers.ServiceCatalogue.addServiceCatalogue
+#POST   /add-service-catalogue                                 controllers.ServiceCatalogue.saveCatalogue
+
+#Generic-project-type
+GET    /generic-project-type-list                                                                     controllers.GenericProjectType.genericProjectTypeList	
+GET    /add-generic-project-type                                                                      controllers.GenericProjectType.createGenericProjectType
+POST   /add-generic-project-type                                                                      controllers.GenericProjectType.saveGenericProjectType
+GET    /edit-generic-project-type                                                                     controllers.GenericProjectType.editGenericProjectType(id :String)
+POST   /edit-generic-project-type                                                                     controllers.GenericProjectType.updateGenericProjectType	
+GET    /delete-generic-project-type                                                                   controllers.GenericProjectType.deleteGenericProjectType(id :String)
+
+
+
+#Document-type
+GET    /document-type-list                                                                            controllers.DocumentType.documentTypeList	
+GET    /add-document-type                                                                             controllers.DocumentType.createDocumentType
+POST   /add-document-type                                                                             controllers.DocumentType.saveDocumentType
+GET    /edit-document-type                                                                            controllers.DocumentType.editDocumentType(id :String)
+POST   /edit-document-type                                                                            controllers.DocumentType.updateDocumentType	
+POST   /update-document-type-status                                                                   controllers.DocumentType.updateDocumentTypeStatus(id :String,status:Boolean)
+
+#Budget-type
+GET    /budget-type-list                                                                              controllers.BudgetType.budgetTypeList	
+GET    /add-budget-type                                                                               controllers.BudgetType.createBudgetType
+POST   /add-budget-type                                                                               controllers.BudgetType.saveBudgetType
+GET    /edit-budget-type                                                                              controllers.BudgetType.editBudgetType(id :String)
+POST   /edit-budget-type                                                                              controllers.BudgetType.updateBudgetType	
+POST   /update-budget-type-status                                                                     controllers.BudgetType.updateBudgetTypeStatus(id :String,status:Boolean)
+
+#Service Catalogue
+GET    /add-service-catalogue                                                                         controllers.ServiceCatalogue.addServiceCatalogue
+POST   /add-service-catalogue                                                                         controllers.ServiceCatalogue.saveCatalogue
+GET    /service-catalogue-list                                                                        controllers.ServiceCatalogue.serviceCatalogueList
+GET    /edit-service-catalogue                                                                        controllers.ServiceCatalogue.editServiceCatalogue(id:String)
+POST   /edit-service-catalogue                                                                        controllers.ServiceCatalogue.updateServiceCatalogue()
+POST   /update-service-catalogue-status                                                               controllers.ServiceCatalogue.updateCatalogueServiseStatus(id :String,status:Boolean)
+GET    /service-catalogue-list-new                                                                    controllers.ServiceCatalogue.serviceCatalogueListNew(id:String)
+GET    /service-catalogue-list-by-descipline                                                          controllers.ServiceCatalogue.serviceCatalogueListByDesciplineId(descipline_id:String)
+#User Profile
+
+GET    /user-profile-list                                                                             controllers.UserProfile.userProfileList
+GET    /add-user-profile                                                                              controllers.UserProfile.addUserProfile
+POST   /add-user-profile                                                                              controllers.UserProfile.saveUserProfile
+GET    /edit-user-profile                                                                             controllers.UserProfile.editUserProfile(id :String)
+POST   /edit-user-profile                                                                             controllers.UserProfile.updateUserProfile	
+GET    /delete-user-profile                                                                           controllers.UserProfile.deleteUserProfile(id :String)
+################################## Front End ########################################################
+
+
+
+
+# Home page
+GET    /                                                                                              controllers.Frontend.Application.index
+
+#GET    /service-post                                                                                  controllers.Frontend.Application.serviceAction
+#GET    /employee-service                                                                              controllers.Frontend.Application.employeeServiceAction
+
+GET    /get-spi-graph                                                                                 controllers.Frontend.Program.getSpiGraph(program_id:String)		
+GET    /get-spi-graph-project                                                                         controllers.Frontend.ProjectMaster.getProjectSpiGraph(project_id :String)
+GET    /get-spi-graph-task                                                                             controllers.Frontend.Task.getTaskSpiGraph(task_id:String)	
+GET    /get-spi-graph-subtask                                                                          controllers.Frontend.SubTask.getSubtaskSpiGraph(subtask_id:String)		
+
+GET    /export-to-excel/:id                                                                           controllers.Frontend.Program.exportToExcel(id:String)
+#POST   /password-reset                                controllers.Application.passwordReset
+GET    /forgot-password                                                                               controllers.Frontend.User.forgotPassword
+POST   /forgot-password                                                                               controllers.Frontend.User.submitUserName
+GET    /resend-activation/:userName                                                                   controllers.Frontend.User.resendActivation(userName:String)
+GET    /password-recovery/:id                                                                         controllers.Frontend.User.passwordRecovery(id:String)
+POST   /password-recovery/:id                                                                         controllers.Frontend.User.passwordUpdate(id:String)
+
+#Reports
+GET    /report-tool                                                                                   controllers.Frontend.ReportTool.getReportTool() 
+GET    /program-list                                                                                  controllers.Frontend.ReportTool.getProgramList() 
+GET    /project-list                                                                                  controllers.Frontend.ReportTool.getProjectList() 
+GET    /baseline-change-view                                                                          controllers.Frontend.ReportTool.getBaselineChangeView() 
+GET    /employees-list                                                                                controllers.Frontend.ReportTool.getEmployeeList() 
+GET    /program-status-report                                                                         controllers.Frontend.ReportTool.getProgramStatus() 
+GET    /project-status-report                                                                         controllers.Frontend.ReportTool.getProjectStatus() 
+GET    /hours-booked-per-month                                                                        controllers.Frontend.ReportTool.getHoursBookedPerMonth() 
+
+
+#Programs
+GET    /program-list/:pagenumber                                                                      controllers.Frontend.Program.programsListing(pagenumber:Integer)
+GET    /programs                                                                                      controllers.Frontend.Program.programs								
+GET    /program-details/$programid<[A-Za-z0-9_-]+>                                                    controllers.Frontend.Program.programDetails(programid:String)
+GET    /get-genrencia-list                                                                            controllers.Frontend.Program.getGenrenciaList
+GET    /get-genrencia-and-department-list                                                             controllers.Frontend.Program.getGenrenciaAndDepartmentList
+GET    /get-department-list                                                                           controllers.Frontend.Program.getDepartmentList
+GET    /get-program-list                                                                              controllers.Frontend.Program.getProgramListForDivision(division:String)
+GET    /add-new-program                                                                               controllers.Frontend.Program.addNewProgram()
+POST   /add-new-program                                                                               controllers.Frontend.Program.saveNewProgram()
+GET    /edit-program/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.Program.editProgram(id:String)
+POST   /edit-program/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.Program.updateProgram(id:String)
+POST   /delete-program                                                                                controllers.Frontend.Program.deleteProgram(id:String)
+GET    /program-earn-value                                                                            controllers.Frontend.Program.calculateProgramEarnValueAction(id:String)
+GET    /track-program/$programid<[A-Za-z0-9_-]+>                                                      controllers.Frontend.Program.trackProgram(programid:String)
+POST   /project-gantt-chart                                                                           controllers.Frontend.Program.projectGanttChart
+GET    /new-member/$id<[A-Za-z0-9_-]+>                                                                controllers.Frontend.Program.newMembers(id:String)
+POST   /new-member/$id<[A-Za-z0-9_-]+>                                                                controllers.Frontend.Program.saveMembers(id:String)
+POST   /update-member                                                                                 controllers.Frontend.Program.updateMember(id:String)
+POST   /update-external-member                                                                        controllers.Frontend.Program.updateMemberExternal(id:String)
+
+POST   /add-software-factory                                                                          controllers.Frontend.Program.addSoftwareFactory()
+POST   /add-external-contractor                                                                       controllers.Frontend.Program.addExternalContractor()
+
+#Risk Management
+GET    /risk-management/$id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.riskManagement(id:String,parent_type:Integer)
+GET    /issue-management/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                       controllers.Frontend.Program.issueManagement(parent_id:String,parent_type:Integer)
+GET    /add-risk/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.addRisk(parent_id:String, parent_type:Integer)
+POST   /add-risk/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.saveRisk(parent_id:String, parent_type:Integer)
+GET    /edit-risk/$id<[A-Za-z0-9_-]+>                                                                 controllers.Frontend.Risks.editRisk(id:String)
+POST   /edit-risk/$id<[A-Za-z0-9_-]+>                                                                 controllers.Frontend.Risks.updateRisk(id:String)
+GET    /delete-risk/$id<[A-Za-z0-9_-]+>                                                               controllers.Frontend.Risks.deleteRisk(id:String)
+GET    /risk-details                                                                                  controllers.Frontend.Risks.riskDetails(id:String)
+GET    /new-alert                                                                                     controllers.Frontend.Risks.newAlerts(risk_id: String)
+POST   /save-alert                                                                                    controllers.Frontend.Risks.saveRiskAlert(risk_id: String)
+GET    /delete-risk-alert                                                                             controllers.Frontend.Risks.deleteRiskAlert(risk_alert_id:String)
+
+
+GET    /risk-sub-category/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Risks.getRiskSubCategory(id: String)
+GET    /issue-sub-category                                                                            controllers.Frontend.Program.getIssueSubCategory(id: String)
+
+GET    /add-issue/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                              controllers.Frontend.Program.addIssue(parent_id: String,parent_type:Integer)
+POST   /add-issue/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                              controllers.Frontend.Program.saveIssue(parent_id: String,parent_type:Integer)
+GET    /edit-issue/$id<[A-Za-z0-9_-]+>                                                                controllers.Frontend.Program.editIssue(id:String)
+POST   /edit-issue/$id<[A-Za-z0-9_-]+>                                                                controllers.Frontend.Program.updateIssue(id:String)
+GET    /issue-details                                                                                 controllers.Frontend.Program.issueDetails(id:String)
+GET    /delete-issue/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.Program.deleteIssue(id:String)
+
+
+
+GET    /get-members-from-role/$id<[A-Za-z0-9_-]+>                                                     controllers.Frontend.Program.getMembersFromRole(id:String)
+
+
+GET    /update-program-status/$program_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.Program.updateProgramStatus(program_id:String)
+POST   /update-program-status/$program_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.Program.updateStatus(program_id:String)
+POST   /update-program-estimated-cost                                                                 controllers.Frontend.Program.updateProgramEstimatedCost(program:String,estimated_cost:String)
+POST   /update-program-details-status-field                                                           controllers.Frontend.Program.updateProgramDetailsStatus(program:String,status:String)
+
+POST   /update-program-hours                                                                          controllers.Frontend.Program.updateProgramHours(program:String,hours:String)
+POST   /update-project-hours                                                                          controllers.Frontend.Program.updateProjectHours(project:String,hours:String)
+
+GET    /program-search                                                                                controllers.Frontend.Program.programSearch
+POST   /program-search                                                                                controllers.Frontend.Program.searchResult
+GET    /program-listing                                                                               controllers.Frontend.Program.programListing
+
+
+#SAP
+GET    /new-sap/$id<[A-Za-z0-9_-]+>                                                                   controllers.Frontend.Program.newSAP(id:String)
+POST   /new-sap/$id<[A-Za-z0-9_-]+>                                                                   controllers.Frontend.Program.saveSAP(id:String)
+GET    /edit-sap/$id<[A-Za-z0-9_-]+>                                                                  controllers.Frontend.Program.editSAP(id:String)
+POST   /edit-sap/$id<[A-Za-z0-9_-]+>                                                                  controllers.Frontend.Program.updateSAP(id:String)
+POST   /update-sap                                                                                    controllers.Frontend.Program.updateSAPStatus(id:String)
+
+GET    /new-project-sap/$id<[A-Za-z0-9_-]+>                                                           controllers.Frontend.ProjectMaster.newProjectSAP(id:String)
+POST   /new-project-sap/$id<[A-Za-z0-9_-]+>                                                           controllers.Frontend.ProjectMaster.saveProjectSAP(id:String)
+GET    /project-sap-details                                                                           controllers.Frontend.ProjectMaster.projectSapDetails(id:String,project_id:String)
+GET    /edit-project-sap/$id<[A-Za-z0-9_-]+>                                                          controllers.Frontend.ProjectMaster.editProjectSAP(id:String)
+POST   /edit-project-sap/$id<[A-Za-z0-9_-]+>                                                          controllers.Frontend.ProjectMaster.updateProjectSAP(id:String)
+POST   /update-project-sap                                                                            controllers.Frontend.ProjectMaster.updateProjectSAPStatus(id:String)
+
+#Project
+GET    /project-details/$projectid<[A-Za-z0-9_-]+>                                                    controllers.Frontend.ProjectMaster.projectDetails(projectid:String)
+GET    /add-new-project/$pIndex<[A-Za-z0-9_-]+>                                                       controllers.Frontend.ProjectMaster.addNewProject(pIndex)
+POST   /add-new-project/$pIndex<[A-Za-z0-9_-]+>                                                       controllers.Frontend.ProjectMaster.saveProjectDetails(pIndex)
+GET    /edit-project/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.ProjectMaster.editProject(id:String)
+POST   /edit-project/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.ProjectMaster.updateProject(id:String)
+POST   /delete-project                                                                                controllers.Frontend.ProjectMaster.deleteProject(id :String)
+GET    /project-earn-value                                                                            controllers.Frontend.ProjectMaster.calculateProjectEarnValueAction(id:String)
+POST   /update-baseline                                                                               controllers.Frontend.ProjectMaster.updateBaseLine()
+GET    /get-project-list                                                                              controllers.Frontend.ProjectMaster.getProjectListForProgram(programid:String)
+GET    /get-roadmap-project-list                                                                      controllers.Frontend.ProjectMaster.getRoadmapProjectListForProgram(programid:String)
+
+GET    /update-project-status/$project_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.ProjectMaster.updateProjectStatus(project_id:String)
+POST   /update-project-status/$project_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.ProjectMaster.updateStatus(project_id:String)
+GET    /update-project-end-dates                                                                      controllers.Frontend.ProjectMaster.updateProjectEndDates(project_id:String,end_date:String)
+GET    /update-project-start-dates                                                                    controllers.Frontend.ProjectMaster.updateProjectStartDates(project_id:String,start_date:String)
+
+
+# Raodmap
+GET    /road-map                                                                                      controllers.Frontend.Roadmap.roadmapDisplay
+POST   /roadmapProductDetails                                                                         controllers.Frontend.Roadmap.roadmapProductDetails
+
+#user
+GET    /user-login                                                                                    controllers.Frontend.Login.loginUser
+POST   /user-login                                                                                    controllers.Frontend.Login.loggedIn
+POST   /update-user-setting                                                                           controllers.Frontend.Login.updateUserProjectManagementSetting 
+GET    /user-logout                                                                                   controllers.Frontend.Login.loggedOut
+GET    /user-setting                                                                                  controllers.Frontend.Login.userSetting
+
+#Dashboard....
+GET    /dashboard                                                                                     controllers.Frontend.Dashboard.dashboard
+GET    /bar-finance                                                                                   controllers.Frontend.Dashboard.barChart(mode:String,id:String)
+GET    /bar-division-finace                                                                           controllers.Frontend.Dashboard.barChartDivision
+GET    /bar-timesheet                                                                                 controllers.Frontend.Dashboard.barChartTimesheet
+GET    /bar-timesheet-projects                                                                        controllers.Frontend.Dashboard.barChartTimesheetPerProjects(from:String,to:String)
+GET    /pie-timesheet                                                                                 controllers.Frontend.Dashboard.pieChartTimesheet
+GET    /pie-show-programs-list                                                                        controllers.Frontend.Dashboard.showProgramListForPie(program_id_list :String)
+GET    /employee-list                                                                                 controllers.Frontend.Dashboard.employeeList(department:String)
+GET    /latestUpdate                                                                                  controllers.Frontend.Dashboard.latestUpdate
+GET    /tab-finance                                                                                   controllers.Frontend.Dashboard.tabFinance
+GET    /tab-employee                                                                                  controllers.Frontend.Dashboard.tabEmployee
+GET    /tab-other                                                                                     controllers.Frontend.Dashboard.tabOther
+GET    /tab-report                                                                                    controllers.Frontend.Dashboard.tabReport
+GET    /tab-report-export                                                                             controllers.Frontend.Dashboard.tabReportExport
+GET    /tab-pi-chart                                                                                  controllers.Frontend.Dashboard.tabPIGraph
+GET    /tab-project-report                                                                            controllers.Frontend.Dashboard.tabProjectReport(id:String)
+GET    /dashboard-search                                                                              controllers.Frontend.Dashboard.dashboardSearch
+POST   /dashboard-search                                                                              controllers.Frontend.Dashboard.searchResult
+GET    /dashboard-risk-report                                                                         controllers.Frontend.Dashboard.dashboardRiskReport
+GET    /risk-report-programs                                                                          controllers.Frontend.Dashboard.riskReportForPrograms
+GET    /risk-report-projects                                                                          controllers.Frontend.Dashboard.riskReportForProjects
+GET    /risk-report-tasks                                                                             controllers.Frontend.Dashboard.riskReportForTasks
+GET    /risk-report-subtasks                                                                          controllers.Frontend.Dashboard.riskReportForSubtasks
+GET    /dashboard-issue-report                                                                        controllers.Frontend.Dashboard.dashboardIssueReport
+GET    /issue-report-tasks                                                                            controllers.Frontend.Dashboard.issueReportForTasks
+GET    /issue-report-subtasks                                                                         controllers.Frontend.Dashboard.issueReportForSubtasks
+
+GET    /search-projects                                                                               controllers.Frontend.Login.userSearchSetting
+
+
+#timesheet
+GET    /timesheet                                                                                     controllers.Frontend.TimeSheet.productsTimesheet
+POST   /addrow                                                                                        controllers.Frontend.TimeSheet.addRow
+GET    /getUserTimeSheetList                                                                          controllers.Frontend.TimeSheet.getUserTasks
+GET    /daleteTimesheet                                                                               controllers.Frontend.TimeSheet.daleteTimesheet
+POST   /saveTimesheet                                                                                 controllers.Frontend.TimeSheet.saveTaskPlan
+POST   /save-hours-for-subtask                                                                        controllers.Frontend.TimeSheet.saveHoursForSubtask(sd:String)
+#GET    /get-project-tasks-list                                                                       controllers.Frontend.TimeSheet.getProjectTasks(user_id:String)
+GET    /get-non-project-tasks                                                                         controllers.Frontend.TimeSheet.getNonProjectTasks
+GET    /validate-subtask-timesheet                                                                    controllers.Frontend.TimeSheet.getSubTaskValidation(subtask:String,tDate:String)
+GET    /book-time/:subtask_id                                                                         controllers.Frontend.TimeSheet.bookTime(subtask_id :String)
+GET    /time-booked                                                                                   controllers.Frontend.TimeSheet.timeBooked(sub_task :String,user:String,user_hour:String)
+
+GET    /book-time-timesheet                                                                           controllers.Frontend.TimeSheet.bookedTimeTimeSheet(sub_task :String,user:String,user_type:String)				
+GET    /daleteTimesheetBookTime                                                                       controllers.Frontend.TimeSheet.daleteTimesheetBookTime
+GET    /updateTimesheetBookTime                                                                       controllers.Frontend.TimeSheet.updateTimesheetBookTime
+GET    /new-book-time-timesheet                                                                       controllers.Frontend.TimeSheet.newBookedTimeTimeSheet(sub_task :String,user:String,user_type:String,start_date:String,end_date:String)
+POST   /new-book-time-timesheet                                                                       controllers.Frontend.TimeSheet.submitNewBookedTimeTimeSheet
+
+GET    /time-booked-external                                                                          controllers.Frontend.TimeSheet.timeBookedExternal(sub_task :String,user:String,user_hour:String)
+GET    /get-subtask-document-listing                                                                  controllers.Frontend.TimeSheet.getDocumentListForSubtask(subtask:String)   
+GET    /get-project-tasks-list                                                                        controllers.Frontend.TimeSheet.getProjectSubtaskList(user_id:String)
+POST   /allocation-time-update                                                                        controllers.Frontend.TimeSheet.updateAllocationHours(sub_task_allocation:String,input_hours:String,allocation_type:String)
+
+#Front end task...
+GET    /milestone-other-details                                                                       controllers.Frontend.Task.otherDetails(id:String)
+GET    /get-task-details                                                                              controllers.Frontend.Task.taskDetails
+GET    /show-baseline/:id/:object_type                                                                controllers.Frontend.Task.showBaseline(id : String, object_type : String)
+POST   /task-gantt-chart                                                                              controllers.Frontend.Task.taskGanttChart
+POST   /task-critical-task-gantt-chart                                                                controllers.Frontend.Task.taskCriticalPathGanttChart
+GET    /new-task/:id                                                                                  controllers.Frontend.Task.newTask(id :String)
+POST   /new-task/:id                                                                                  controllers.Frontend.Task.saveTaskDetails(id :String)
+GET    /task-edit/:id                                                                                 controllers.Frontend.Task.editTaskDetails(id :String)
+POST   /task-edit/:id                                                                                 controllers.Frontend.Task.updateTask(id :String)
+GET    /task-dependency                                                                               controllers.Frontend.Task.taskDependency(id :String)
+GET    /get-tasks                                                                                     controllers.Frontend.Task.getTaskForProjects(project_id :String,selected_task:String)
+GET    /get-edit-tasks                                                                                controllers.Frontend.Task.getEditTaskForProjects(predessor_task:String,project_id :String,tasks:String)
+GET    /get-dependent-tasks-list                                                                      controllers.Frontend.Task.getDependentTaskList(tasks :String)
+GET    /get-dependent-task-dates                                                                      controllers.Frontend.Task.setDependentTaskDate(tasks :String)
+GET    /earn-value                                                                                    controllers.Frontend.Task.calculateEarnValue(id:String)
+GET    /project-task-details/$taskid<[A-Za-z0-9_-]+>                                                  controllers.Frontend.Task.projectTaskDetails(taskid:String)
+GET    /get-updated-tasks                                                                             controllers.Frontend.Task.updatedTaskList(project_id:String)
+GET    /delete-task                                                                                   controllers.Frontend.Task.deleteTask(id:String)
+
+GET    /update-task-status/$task_id<[A-Za-z0-9_-]+>                                                   controllers.Frontend.Task.updateTaskStatus(task_id:String)
+POST   /update-task-status/$task_id<[A-Za-z0-9_-]+>                                                   controllers.Frontend.Task.updateStatus(task_id:String)
+
+#Sub task..
+GET    /assign-sub-task                                                                               controllers.Frontend.SubTask.assignSubTask(id :String)
+POST   /assign-sub-task-fo                                                                            controllers.Frontend.SubTask.saveSubTaskAllocation
+POST   /assign-sub-task-external                                                                      controllers.Frontend.SubTask.saveSubTaskAllocationExternal
+GET    /allocation-list                                                                               controllers.Frontend.SubTask.allocationList(id :String)
+GET    /update-hours                                                                                  controllers.Frontend.SubTask.updateHours(id :String,hours:String)
+GET    /delete-allocation                                                                             controllers.Frontend.SubTask.deleteAllocation(id :String)
+GET    /delete-external-allocation                                                                    controllers.Frontend.SubTask.deleteExternalAllocation(id :String)
+GET    /delete-sub-task                                                                               controllers.Frontend.SubTask.deleteSubtask(id :String)
+GET    /get-sub-tasks                                                                                 controllers.Frontend.SubTask.getSubTasksForTask(task_id:String,selected_sub_task:String)
+GET    /get-edit-sub-tasks                                                                            controllers.Frontend.SubTask.getEditSubTasksForTask(currentSub:String,task_id:String,sub_tasks:String)
+GET    /get-dependent-sub-tasks-list                                                                  controllers.Frontend.SubTask.getDependentSubTaskList(sub_tasks :String)
+GET    /get-dependent-subtask-dates                                                                   controllers.Frontend.SubTask.setDependentSubTaskDate(sub_tasks :String)
+POST   /sub-task-graph                                                                                controllers.Frontend.SubTask.subTaskGanttChart
+POST   /sub-task-critical-graph                                                                       controllers.Frontend.SubTask.subTaskCriticalPathGanttChart
+GET    /new-subtask/:id                                                                               controllers.Frontend.SubTask.newSubTask(id :String)
+POST   /save-subTask/:id                                                                              controllers.Frontend.SubTask.saveSubTask(id :String)
+GET    /save-subTask/:id                                                                              controllers.Frontend.SubTask.newSubTask(id :String)
+GET    /edit-subtask/:id                                                                              controllers.Frontend.SubTask.editSubTask(id :String) 
+POST   /edit-subtask/:id                                                                              controllers.Frontend.SubTask.updateSubTask(id :String)
+GET    /validate-sub-task-date                                                                        controllers.Frontend.SubTask.validateSubTaskDate(task:String,sub_task:String,current_sub_task:String,selected_sub_tasks:String)
+
+GET    /update-sub-task-status/$task_id<[A-Za-z0-9_-]+>                                               controllers.Frontend.SubTask.updateSubTaskStatus(task_id:String)
+POST   /update-sub-task-status/$task_id<[A-Za-z0-9_-]+>                                               controllers.Frontend.SubTask.updateStatus(task_id:String)
+GET    /search-dependency-subtask-list                                                                controllers.Frontend.SubTask.getDependencySubtaskListByTask(taskId:String)
+POST   /update-actual-end-date-final                                                                  controllers.Frontend.SubTask.updateActualEndDateFinal(id:String, date_string:String)
+GET    /sub-task-details/:subtaskId                                                                   controllers.Frontend.SubTask.subTaskDetails(subtaskId:String)
+GET    /get-program-members-from-role/$role_id<[A-Za-z0-9_-]+>/$project_id<[A-Za-z0-9_-]+>            controllers.Frontend.SubTask.getProgramMembersFromRole(role_id:String, project_id:String)
+GET    /get-program-members-external-from-role/$role_id<[A-Za-z0-9_-]+>/$project_id<[A-Za-z0-9_-]+>   controllers.Frontend.SubTask.getProgramMembersExternalFromRole(role_id:String, project_id:String)
+GET    /get-service-catalog/:id                                                                       controllers.Frontend.SubTask.getServiceCatalog(id:String)
+GET    /get-service-catalog-discipline/:id                                                            controllers.Frontend.SubTask.getServiceCatalogDiscipline(id:String)
+
+#User
+GET    /add-new-user                                                                                  controllers.Frontend.User.addNewUser
+POST   /add-new-user                                                                                  controllers.Frontend.User.saveUser
+GET    /users-list                                                                                    controllers.Frontend.User.usersList
+GET    /edit-user/:id                                                                                 controllers.Frontend.User.editUser(id : String)
+POST   /edit-user/:id                                                                                 controllers.Frontend.User.updateUser(id : String)
+GET    /employee/$employeeid<[A-Za-z0-9_-]+>                                                          controllers.Frontend.User.employeeDetails(employeeid:Long)
+GET    /logs                                                                                          controllers.Frontend.User.artLog
+GET    /user-management                                                                               controllers.Frontend.User.userManagement
+GET    /get-employee-list/:parentId/:parentType/:isSelfRef/:pagenumber                                controllers.Frontend.User.getEmployeeList(parentId: String, parentType : String, isSelfRef : Boolean,pagenumber:Integer)
+GET    /employee-overview                                                                             controllers.Frontend.User.employeeOverview()
+POST   /employee-search                                                                               controllers.Frontend.User.searchEmployeeResult()
+GET    /get-gerencia-by-division/:divisionId                                                          controllers.Frontend.User.getGerenciaForDivision(divisionId : String)
+GET    /get-department-by-gerencia/:gerenciaId                                                        controllers.Frontend.User.getDepartmentForGerencia(gerenciaId : String)
+  
+#Documents
+
+GET    /document-overview                                                                             controllers.Frontend.Documents.documentOverview
+GET    /document-overview-listing                                                                     controllers.Frontend.Documents.documentOverviewListing
+GET    /delete-document/:document_id                                                                  controllers.Frontend.Documents.documentDelete(document_id: String)
+GET    /search-document                                                                               controllers.Frontend.Documents.searchDocument
+POST   /search-document                                                                               controllers.Frontend.Documents.searchResult
+GET    /upload-document/:parent_id/:parentType/:uploadType                                            controllers.Frontend.Documents.uploadDocument(parent_id: String, parentType: String, uploadType : String)
+POST   /upload-document/:parent_id/:parentType/:uploadType                                            controllers.Frontend.Documents.uploadNewDocument(parent_id: String, parentType: String, uploadType : String)
+GET    /document-listing/:parent_id/:parentType                                                       controllers.Frontend.Documents.documentListing(parent_id:String, parentType:String)
+GET    /search-task-list                                                                              controllers.Frontend.Documents.getTaskByProject(projectId : String)
+GET    /search-subtask-list                                                                           controllers.Frontend.Documents.getSubtaskByTask(taskId:String)
+POST   /get-documents/:requestedDocumentType                                                          controllers.Frontend.Documents.getDocuments(requestedDocumentType : String)
+
+POST   /uploadProgramFromFile                                                                         controllers.Frontend.Documents.uploadProgramFromFile()
+
+
+#Generic Templates
+
+GET    /add-project-type                                                                              controllers.Frontend.Generics.addProjectType() 
+POST   /add-project-type                                                                              controllers.Frontend.Generics.saveProjectTypeDetails()
+GET    /edit-project-type/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Generics.editProjectType(id:String)
+POST   /edit-project-type/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Generics.updateProjectType(id:String)
+GET    /edit-historic-project-type/$id<[A-Za-z0-9_-]+>                                                controllers.Frontend.Generics.editHistoricProjectType(id:String)
+POST   /edit-historic-project-type/$id<[A-Za-z0-9_-]+>                                                controllers.Frontend.Generics.updateHistoricProjectType(id:String)
+
+
+#GET    /add-generic-project                            controllers.Frontend.Generics.addGenericProject() 
+#POST   /add-generic-project                            controllers.Frontend.Generics.saveGenericProject()
+#GET    /edit-generic-project/$id<[A-Za-z0-9_-]+>       controllers.Frontend.Generics.editGenericProject(id:String)
+#POST   /edit-generic-project/$id<[A-Za-z0-9_-]+>       controllers.Frontend.Generics.updateGenericProject(id:String)
+
+GET    /overview                                                                                      controllers.Frontend.Generics.overview
+GET    /historic-overview                                                                             controllers.Frontend.Generics.historicOverview
+GET    /new-generic-task/:id                                                                          controllers.Frontend.Generics.newGenericTask(id:String)
+POST   /new-generic-task/:id                                                                          controllers.Frontend.Generics.saveTaskDetails(id:String)
+GET    /project-type-template/$id<[A-Za-z0-9_-]+>                                                     controllers.Frontend.Generics.projectTypeDetailTempalte(id:String)
+GET    /edit-generic-task/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Generics.editGenericTask(id:String)
+POST   /edit-generic-task/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Generics.updateGenericTask(id:String)
+GET    /delete-generic-task-for-project/$id<[A-Za-z0-9_-]+>                                           controllers.Frontend.Generics.deleteGenericTaskFromProjectType(id:String)
+GET    /get-generic-tasks                                                                             controllers.Frontend.Generics.getGenericTask(task_mode :String,selected_task:String)
+GET    /get-generic-dependent-tasks-list                                                              controllers.Frontend.Generics.getGenericDependentTaskList(tasks :String)
+GET    /add-predefined-task                                                                           controllers.Frontend.Generics.addPredefinedTask()
+POST   /add-predefined-task                                                                           controllers.Frontend.Generics.savePredefinedTask()  
+GET    /edit-predefined-task/$id<[A-Za-z0-9_-]+>                                                      controllers.Frontend.Generics.editPredefinedTask(id:String)
+POST   /edit-predefined-task/$id<[A-Za-z0-9_-]+>                                                      controllers.Frontend.Generics.updatePredefinedTask(id:String)
+GET    /delete-predefined-task/$id<[A-Za-z0-9_-]+>                                                    controllers.Frontend.Generics.deletePredefinedTask(id:String)
+GET    /get-predefined-tasks                                                                          controllers.Frontend.Generics.getPredefinedTask(task_mode : String)
+POST   /add-predefined-task-to-project                                                                controllers.Frontend.Generics.addPredefinedTaskToProject(id: String, task_mode : String,task_depend: String)
+GET    /delete-predefined-task/:task_id                                                               controllers.Frontend.Generics.deletedPredefinedTask(task_id : String)
+GET    /add-generic-tasks                                                                             controllers.Frontend.Generics.addGenericTask(task_mode : String)
+GET    /edit-tasks-dependency                                                                         controllers.Frontend.Generics.editTaskDependency(task_id:String,task_mode : String)
+POST   /update-tasks-dependency                                                                       controllers.Frontend.Generics.updateTaskDependency(task_id:String,selected_task : String)
+
+#User Role
+
+GET    /user-role-list                                                                                controllers.UserRole.userRoleList()
+GET    /add-user-role                                                                                 controllers.UserRole.addUserRole()
+POST   /add-user-role                                                                                 controllers.UserRole.saveUserRole()
+GET    /edit-user-role                                                                                controllers.UserRole.editUserRole(id:String)
+POST   /edit-user-role                                                                                controllers.UserRole.updateUserRole()
+POST   /update-user-role                                                                              controllers.UserRole.updateUserRoleStatus(id :String,status:Boolean)
+
+
+GET    /documents/:file                                                                               controllers.CustomAssets.at(file)
+
+#Pert
+GET    /generatePert                                                                             	  controllers.Frontend.Pert.generatePert
+POST   /resultPert                                                                                	  controllers.Frontend.Pert.resultPert
+
+

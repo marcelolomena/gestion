@@ -1,0 +1,1401 @@
+error.program.program_name.MinMax=Tipo de programa debe tener 4 min y max 140 caracteres.
+error.program.program_code.MinMax=Código del programa debe ser un número positivo.
+error.program.projects_numbers.numericValidation=Número de proyecto debe ser numérico.
+error.program.program_code.unique=Por favor, introduzca el código de programa único.
+error.program.pLevel.MinMax=Nivel de proyecto debe tener min 4 y un máximo de 20 caracteres.
+error.program.program_description.MinMax=Descripción del proyecto debe tener mínimo 4 y máximo 500 caracteres.
+error.program.work_flow_status.MinMax=Estado de flujo de trabajo debe tener mínimo 4 y máximo de 20 caracteres.
+error.program.internal_state.MinMax=Interior del Estado debe tener mínimo 4 y máximo de 20 caracteres.
+error.program.demand_management_status.MinMax=Demanda Gestión Estado debería tener 4 min y max 20 caracteres.
+error.program.program_details_management_representative.MinMax=Representante de la Dirección debe tener mínimo 2 y máximo 20 caracteres.
+error.program.program_details_department_representative.MinMax=Departamento Representante debe tener mínimo 2 y máximo 20 caracteres.
+error.program.program_details_devison.MinMax=División debe tener mínimo 2 y máximo 20 caracteres.
+error.program.program_details_management.MinMax=La administración debe tener mínimo 2 y máximo 20 caracteres.
+error.program.program_details_department.MinMax=Departamento debe tener mínimo 2 y máximo 20 caracteres.
+error.program.program_details_impact_type.MinMax=Tipo de impacto debe tener mínimo 2 y máximo 20 caracteres.
+error.program.program_details_business_line.MinMax=Línea de negocio debe tener mínimo 2 y máximo de 60 caracteres.
+error.program.program_details_state_gantt.MinMax=Estado de Gantt debe tener mínimo 2 y máximo 20 caracteres.
+error.program.division=Por favor, elija división
+error.program.completion_per=Por favor ingrese porcentaje de finalización válida
+error.program.creation_date=Fecha de creación del programa no debe ser el futuro
+
+artform.mandatorynote=Los campos marcados con (*) son obligatorios
+
+program_type.createdBy=Creado por
+error.date=Por favor, introduzca la fecha
+error.real=Por favor, introduzca el valor numérico.
+error.number=Por favor, seleccione valor válido.
+error.program.internal_number.numericValidation=Número interno debe ser mayor que cero y menor que 999999999
+error.program.total_sap.MinMax=SAP total debe tener mínimo 0 y máximo de 999999
+error.program.sap_code.MinMax=Código SAP debe tener min 0 y máximo 999999
+error.project.projectId=Id del proyecto debe tener un máximo de 6 caracteres
+error.project.programType=Por favor, seleccione el programa
+error.project.division=Por favor, seleccione división
+error.project.genrencia=Por favor, seleccione Gerencia
+error.project.department=Por favor, seleccione departamento
+error.project.projectName=Por favor ingrese el nombre del proyecto
+error.project.projectDescription=Descripción debe tener mínimo 5 y máximo de 160 caracteres
+error.project.projectManager=Por favor, seleccione gerente de proyecto
+error.project.budgetValue=Por favor, valores del presupuesto deben tener mínimo 0 y máximo 999999999
+error.project.ppm_number=Número PPM debe tener min 0 y máximo 999999999
+error.project.total_sap=SAP total de Dębe Ser El Número positivo
+
+program_type.alreadyexist=Tipo de programa ya existe. 
+
+error.description.minmax=Descripción debería ser menos más de 4 caracteres y menos de 500 caracteres.
+
+error.task.projectId=Por favor, seleccione proyecto
+error.task.milestone_title=Título de la tarea debe tener mínimo 4 y máximo de 60 caracteres.
+error.task.description=Descripción de la tarea debe tener como máximo 160 caracteres.
+error.task.plan_time=Tiempo Plan debería min 0 y max 99999 horas
+error.task.milestone_status=Por favor, seleccione el estado de la tarea.
+error.task.owner=Por favor, seleccione el propietario.
+
+generics.overview.showcurrentprojecttypes=Mostrar Tipos de proyecto actual
+generics.overview.showhistoricprojecttypes=Mostrar Tipos de proyecto históricos 
+generics.overview.documentoverview=Documentos Visión General
+generics.overview.searchdocument=Buscar documento 
+
+
+error.login.password.required=Contraseña es un campo obligatorio.
+error.login.username.required=Nombre de usuario es un campo obligatorio.
+forgotPassword.forgotPassword=Olvidado de la contraseña
+forgotPassword.text=Introduzca la Nombre de Usuario asociada a su cuenta para restablecer la contraseña.
+forgotPassword.emailaddress=Nombre de Usuario
+error.user.email.activationlink=Un vínculo de activación ya ha sido enviada.
+error.user.email.clickhere=Haga clic aquí
+error.user.email.resendLink=para volver a enviar el enlace de activación.
+forgotPassword.enteremailaddress=Introduzca la Nombre de Usuario
+login.username=Nombre de usuario
+login.password=Contraseña
+login.forgotpassword=Olvidé mi contraseña
+login.enterusername=Ingrese Nombre de usuario
+login.enterpassword=Introduzca Contraseña
+
+forgotPassword.usernameempty=Nombre de usuario no puede estar vacío.
+forgotPassword.emailnotinformat=Correo electrónico asociada con su cuenta no está en formato o vacío.
+forgotpassword.newpassword.empty=Por favor introduzca una nueva Contraseña.
+forgotpassword.confirmpassword.empty=Por favor ingrese Confirmar Contraseña.
+forgotpassword.newpassword.enter=Introduzca la nueva Contraseña
+forgotpassword.confirmpassword.enter=Ingrese confirmar Contraseña
+forgotpassword.confirmpassword.label=Confirmar Contraseña
+forgotpassword.newpassword.label=Nueva Contraseña
+
+forgotpassword.confirmpassword.notmatch=Confirme-Contraseña campo no hace partidos
+resetpassword.wrongpasswordentered=La contraseña que ha proporcionado no es válida
+
+
+error.user.username.minmax=Nombre de usuario debe tener mínimo 5 y máximo 15 caracteres.
+error.user.first.minmax=Nombre debe tener mínimo 4 y máximo 30 caracteres.
+error.user.last.minmax=Apellidos debe tener min 4 y máximo 30 caracteres.
+error.user.password.minmax=La contraseña debe tener mínimo 5 y máximo 10 caracteres.
+error.user.rut.minmax=RUT debe tener mínimo 5 y máximo 10 caracteres.
+error.user.conatct.minmax=Introduzca el número de contacto.
+error.user.email.empty=Introduzca la Nombre de Usuario.
+error.user.division.minmax=Seleccione división.
+error.user.unique=Nombre de usuario debe ser único.
+error.user.email.unique=Dirección de correo electrónico debe ser único.
+error.user.email.notfound=No existe dirección de correo electrónico.
+error.user.rut.unique=Número de RUT debe ser único.
+
+topNav.logout=Salir
+topNav.timesheet=Parte de horas
+topNav.maintenance=Mantenimiento
+header.admin=Administración
+topNav.documents=Documentos
+topNav.employees=Empleados
+topNav.version=Aplicación Versión-
+topNav.pert=Pert
+
+confirmPassword.resetPassword=Restablecer su contraseña
+confirmPassword.newPassword=Nueva contraseña
+confirmPassword.confirmPassword=Confirmar Contraseña
+confirmPassword.signin=Accede a tu cuenta
+
+resetpassword.resetPassword=Restablecer Contraseña
+resetpassword.newPassword=Nueva Contraseña
+resetpassword.oldPassword=Contraseña Anterior
+resetpassword.confirmPassword=Confirmar Contraseña
+
+
+login.username=Nombre de usuario
+login.password=Contraseña
+login.signin=Registrarse
+login.login=Iniciar sesión
+login.rememberme=Acuérdate de mí
+login.forgotPassword=¿Olvidaste tu contraseña?
+
+addDepartment.title=Departamento
+addDepartment.home=Home
+
+addDepartment.listOfDepartment=Lista de Departamentos
+addDepartment.addnewproject=Agregar Departamentos
+
+addDepartment.newdepartdetails=Detalle Departamento
+addDepartment.projectworkflowstatus=Estado
+addDepartment.addprojectworkflowstatus=Agregar flujo de trabajo Proyecto Estado
+addDepartment.projectWorkflowStatusList=Proyecto de flujo de trabajo Lista de Estado
+
+program.newprogram=Nuevo Programa
+program.action=Acción
+program.project=Proyectos
+program.program=Programa
+program.programcode=Código del programa
+program.typeprogram=Tipo de Programa
+program.programList=Lista de programas
+
+programDetails.proogramlist=Lista de programas
+programDetails.edit=Editar
+programDetails.programmanager=Gerente Programa
+programDetails.demandmanager=Gestor de Demanda
+programDetails.workflowstatus=Flujo trabajo Estado
+programDetails.proogramsubtype=Foco Strategico
+programDetails.division=División
+programDetails.gerencia=Gerencia
+programDetails.description=Descripción del Programa
+programDetails.department=Departamento
+programDetails.plannedhours=Horas planificadas
+programDetails.allocatedhours=Horas asignadas
+programDetails.bookedhours=Horas Consumidas
+programDetails.impacttype=Tipo de impacto
+programDetails.initiationdate=Fecha de Inicio
+programDetails.closuredate=Clausura Fecha
+programDetails.completionpercentage=% Avance Informado
+programDetails.expectedcompletionpercentage=% de Avance Esperado
+
+programDetails.sapcode=Código SAP
+programDetails.totalsap=SAP total
+programDetails.projects=Proyectos
+programDetails.newproject=Nuevo proyecto
+programDetails.nameofproject=Nombre del proyecto
+programDetails.duration=Duración
+programDetails.task=Tareas
+programDetails.action=Acción
+programDetails.nameofproject=Nombre del proyecto
+
+programDetails.earnedvalueanalysis=Análisis del Valor Ganado
+programDetails.earnedvalue=Valor Ganado (VG)
+programDetails.scheduledperformanceindex=Índice de Rendimiento del Cronograma (IRC)
+programDetails.plannedvalue=Valor Planificado (VP)
+programDetails.costperformanceindex=Índice de Rendimiento Costo (CPI)
+programDetails.actualcost=Horas consumidos (HC)
+programDetails.estimetcopmletion=Estimación a la conclusión (EAC)
+programDetails.costvariance=Porcentaje del anticipo previsto (AVE %)
+programDetails.estimatetocomplete=Estimación hasta la conclusión (ETC)
+programDetails.scheduledvar=Porcentaje del anticipo Informado (AVI %)
+programDetails.scheduleperformanceindex=Índice de Rendimiento del Cronograma (SPI)
+programDetails.noprojectsavailable=No hay proyectos disponibles ...
+programDetails.notasksavailable=No hay Tarea disponibles ...
+programDetails.releaseDate=Fecha de lanzamiento
+programDetails.creationDate=Fecha de creación
+programDetails.nomemeber=Miembros No Disponible...
+
+editProgram.title=Edición de programa
+addNewProgram.title=Crear Nuevo Programa
+addNewProgram.programTypedetail=Tipo de Programa
+addNewProgram.programType=*Tipo de Programa
+addNewProgram.programCode=Código de Programa
+addNewProgram.programSubType=Foco Strategico
+addNewProgram.programName=*Nombre del programa
+addNewProgram.programManager=Gerente del Programa de
+addNewProgram.DemandManager=*Gestor de Demanda
+addNewProgram.description=Descripción
+addNewProgram.workFlowStatus=Flujo de trabajo Estado
+addNewProgram.businessLine=Línea de Negocios
+addNewProgram.requestingDivision=*División Solicitante
+addNewProgram.sapCode=Código SAP
+addNewProgram.requestingGerencia=Gerencia DIVOT
+addNewProgram.totalSAP=SAP total
+addNewProgram.requestingDepartment=Departamento DIVOT
+addNewProgram.completionPercentage=Finalización Porcentaje
+addNewProgram.impactType=Tipo de impacto
+addNewProgram.programInitiation=*Fecha Inicio Programa
+addNewProgram.estimatedClosureDate=*Fecha Cierre
+addNewProgram.detailedClosureDate=Fecha Cierre
+addNewProgram.programCreation=Creación del Programa Fecha
+addNewProgram.expectedreleasedate=*Fecha Producción Relase Esperado
+addNewProgram.plannedhours=Horas Planeadas
+addNewProgram.estimatedCost=Costo Estimado (UF)
+addNewProgram.placeholder.estimatedCost=Introduzca estimated cost
+addNewProgram.Enterplannedhours=Introduzca horas planificadas
+addNewProgram.isActive=Activo
+
+addNewProject.editProject=*Editar tipo de proyecto
+addNewProject.newproject=Nuevo proyecto para
+addNewProject.projectname=*Nombre del proyecto
+addNewProject.description=*Descripción
+addNewProject.projectmanager=*Gerente de proyecto
+addNewProject.placeholder.projectmanager=Seleccione Gerente de proyecto
+addNewProject.startDate=*Fecha de inicio
+addNewProject.enddate=*Fecha de finalización
+addNewProject.budgetApproved=Presupuesto aprobado
+addNewProject.SAPCode=Código SAP
+addNewProject.totalSAP=SAP total
+addNewProject.budgetforStaff=Presupuesto para el Personal
+addNewProject.budgetforContractor=Presupuesto para Contratista
+addNewProject.budgetforHardware=Presupuesto para Hardware
+addNewProject.budgetforSoftware=Presupuesto para Software
+addNewProject.enterPPMNumber=Introduzca el número de PPM
+addNewProject.workflowStatus=Flujo de trabajo Estado
+addNewProject.searchuser=Buscar usuario
+
+newProjectDeatils.startdate.validation=Proyecto fecha de inicio debe ser más que la fecha de inicio del programa.
+newProjectDeatils.startdate.enddatevalidation=Proyecto fecha de inicio no debe ser mayor que la fecha de finalización del programa
+newProjectDeatils.enddate.validation=Proyecto fecha final debe ser menor que la fecha de cierre del programa.
+newProjectDeatils.enddate.startdatevalidation=Proyecto fecha de lanzamiento debe ser mayor que la fecha de inicio del programa.
+newProjectDeatils.enddate.startdatemorevalidation=Proyecto fecha de lanzamiento debe ser mayor que la fecha de inicio del proyecto.
+
+newProjectDeatils.manager=Gerente
+newProjectDeatils.trackchanges=Control
+newProjectDeatils.sapcode=Código SAP
+newProjectDeatils.saptotal=SAP total
+newProjectDeatils.startdate=Fecha de inicio
+newProjectDeatils.enddate=Fecha de lanzamiento
+newProjectDeatils.plannedhours=Horas planificadas
+newProjectDeatils.bookedhours=Horas Reservados
+newProjectDeatils.actualBudgetspent=Presupuesto real dedicado
+newProjectDeatils.allocatedhrs=Horas asignadas
+newProjectDeatils.allocatedbudget=Presupuesto asignado
+newProjectDeatils.tasks=Tareas
+newProjectDeatils.task=Tarea
+newProjectDeatils.newtask=Nueva Tarea
+newProjectDeatils.totaltasks=Tareas totales
+newProjectDeatils.taskowner=Propietario
+newProjectDeatils.plannedstartdate=Fecha de inicio
+newProjectDeatils.plannedenddate=Fecha de finalización
+newProjectDeatils.assignedhrs=Horas asignadas
+newProjectDeatils.subtasks= Sub Tareas
+newProjectDeatils.action=Acción
+newProjectDeatils.notaskavailable=No hay Tareas avaialble ...
+newProjectDeatils.ganttchartview=Vista Diagrama de Gantt de las tareas
+newProjectDeatils.criticalpath=Camino Crítico
+
+newTask.title=*Tarea Título
+newTask.addnewtask=Agregar Nueva Tarea
+newTask.plannedStartdate=*Fecha de inicio planificada
+newTask.plannedEnddate=*Fecha Término Planificado
+newTask.description=*Descripción de la tarea
+newTask.plantimeInhrs=*Tiempo del Plan (en horas)
+newTask.status=*Estado
+newTask.remark=Observación
+newTask.taskDescipline=*Grupo de Disciplina
+newTask.completionper=Finalización %
+newTask.taskowner=*Propietario de la Tarea
+newTask.serviceCatalogue=Service Catalogue
+newTask.serviceCatalogueSelect=Seleccione Catálogo de Servicios
+newTask.managedependancies=Administrar dependencias
+newTask.stage=*Etapa
+newTask.user_role=*Función de usuario
+newTask.deliverable=Entregable
+
+programDetails.nosap=No cuenta con detalle de SAP disponible
+programdetails.saplisting=SAP Ficha
+
+projectTaskDetails.description=Descripción
+projectTaskDetails.plannedstartdate=Fecha de inicio planificada
+projectTaskDetails.plannedenddate=Fecha Término Planificado
+projectTaskDetails.allocatedhrs=Horas asignadas
+projectTaskDetails.taskcode=Código de tareas
+projectTaskDetails.taskdiscipline=Disciplina
+projectTaskDetails.owner=Propietario
+projectTaskDetails.taskdependancy=Tarea de Dependencia
+projectTaskDetails.dependencytype=Tipo de Dependencia
+projectTaskDetails.subtasks= Sub Tareas
+projectTaskDetails.newsubtasks=Nuevas  Sub Tareas
+projectTaskDetails.criticalpath=Camino Crítico
+projectTaskDetails.nosubTaskAvailable=No hay  Sub Tareas Disponible...
+
+taskDetails.edit=Editar
+taskDetails.assign=Asignar
+taskDetails.peopleworking=Las personas que están trabajando en esto!
+taskDetails.title=Título
+taskDetails.description=Descripción
+taskDetails.plannedStartDate=Fecha de inicio planificada
+taskDetails.plannedenddate=Fecha Término Planificado
+taskDetails.actualenddate=Actual Fecha de finalización
+taskDetails.finalactualenddate=Final efectivo Fecha de finalización
+taskDetails.trackchanges=Control de cambios
+taskDetails.subtaskdependancy=Dependencia
+
+addSubTask.addnewsubtask=Agregar Nueva subtarea
+addSubTask.subtasktitle=Sub Tarea
+addSubTask.subtask=*Sub Tarea
+addSubTask.description=*Descripción
+addSubTask.plannedstartdate=*Fecha de inicio planificada
+addSubTask.plannedenddate=*Fecha Término Planificado
+addSubTask.completionper=Finalización%
+addSubTask.status=Estado
+addSubTask.taskcomplete=Tarea completa
+addSubTask.editsubtask=Editar subtarea
+addSubTask.showbaseline=Mostrar línea de base
+addSubTask.srviceCatalogue=Catálogo de Servicios
+
+assignsubtask.subtaskallocation=Asignación de tareas para la Sub
+assignsubtask.userRole=Role
+assignsubtask.assignuser=Asignado usuario
+assignsubtask.estimatedtime=Tiempo estimado (en horas)
+assignsubtask.hrsallocation=Horas disponibles
+
+roadmap.division=División
+roadmap.program=Programa
+roadmap.project=Proyecto
+roadmap.selectProgram=--Seleccionar Programa--
+roadmap.selectDivision=--Seleccionar División--
+roadmap.selectProject=--Seleccionar Proyecto--
+
+button.update=Actualización
+button.add=Agregar
+button.cancel=Cancelar
+button.cropImage=Recortar
+button.upload=Subir
+button.save=Guardar
+button.search=Búsqueda
+button.login=Login
+button.continue=Continuar
+button.done=Decho
+button.reset=Cancelar
+
+buttontext.done=Completo
+
+employee.uploadProfileImage=Sube Imagen del perfil 
+employee.selectImageUpload=Seleccionar Imagen para cargar
+employee.imageUploadingMessage=Sube tu foto a tu perfil. Esto hará que sea más fácil para que la gente reconozca usted. Está estrictamente prohibido subir una imagen de fantasía logotipo de la empresa o. Sólo cargue su foto si tiene uno disponible y si usted es dueño de los derechos a la imagen.
+employee.email=Email
+employee.telNo=Número TELÉFONO
+employee.rut=RUT
+employee.division=División
+employee.gerencia=Gerencia
+employee.department=Departamento
+
+employee.projects=Proyectos 
+employee.skills=Habilidades
+employee.edit=Editar
+employee.editProfile=Editar Perfil
+employee.add=Agregar
+employee.noskillsavailable=No hay datos disponibles Habilidad
+employee.editImage=Cambiar imagen
+
+editUsersProfile.update=Actualizar datos del perfil
+editUsersProfile.division=División
+editUsersProfile.gerencia=Gerencia
+editUsersProfile.department=Departamento
+editUsersProfile.firstname=Nombre de pila
+editUsersProfile.lastname=Apellido
+editUsersProfile.username=Nombre de Usuario
+editUsersProfile.rutnumber=Número RUT
+editUsersProfile.contactno=Teléfono de contacto
+editUsersProfile.email=Email
+editUsersProfile.dob=Fecha de nacimiento (dd-mm-yyyy)
+editUsersProfile.officeno=Anexo (con extensión)
+editUsersProfile.joiningdate=Unirse a la fecha (dd-mm-yyyy)
+
+editUsersSkills.upgradeskills=Habilidades del Empleado
+editUsersSkills.upgrade=Aceptar
+editUsersSkills.cancel=Cancelar
+editUsersSkills.skills=Habilidades
+editUsersSkills.profilerolemapping=Perfil Correlación de roles
+employee.editskills.rating=Nivel
+employee.editskills.default=---Elija A Habilidades---
+
+editUsersSkills.bad=Mala
+editUsersSkills.ok=Bien
+editUsersSkills.awesome=Sobresaliente
+editUsersSkills.medium=Mediocre
+editUsersSkills.quitegood=Bastante Bien
+
+dashboard.financials=FINANZAS
+dashboard.employees=EMPLEADOS
+dashboard.timesheet=Parte de horas
+dashboard.searchdashboard=Búsqueda  
+dashboard.reportlink=Enlace Herramienta de informe
+dashboardemp.employee=Empleado
+dashboardemp.department=Departamento
+dashboardemp.timesheetForTask=Parte de horas para las tareas
+dashboardemp.timesheetForProject=Parte de horas para Proyectos
+
+dashboardFinance.division=División
+dashboardFinance.program=Programa
+dashboardFinance.divisionselect=--Seleccionar División--
+dashboardFinance.programselect=--Seleccionar Programa--
+
+addDepartment.department=Departamento
+addDepartment.home=Home
+
+addDepartment.departmentlist=Lista Departamentos
+addDepartment.addnewproject=Agregar Departamentos
+addDepartment.newdepartmentdetail=Detalle departamento
+addDepartment.departmenthead=Jefe de Departamento
+addDepartment.reporttotype=Reporta al Nivel
+addDepartment.reportto=Reporta a
+
+addDepartment.deleteconfirmation=Eliminar confirmación
+addDepartment.deleteuser=¿Seguro que quieres eliminar el usuario?
+addDepartment.newDepartment=Agregar Departamento
+addDepartment.id=Id
+addDepartment.action=Acción
+addDepartment.noofrecordsperpage=No de Registros por Página
+addDepartment.updatedepartment=Detalle Departamento Actualización
+
+addDepartment.editdepartment=Editar detalles del Departamento
+
+addDepartment.employee=Empleado
+addDepartment.rut=RUT
+
+
+addDivison.division=División
+divison.division=Divisiónes
+addDivison.divisiondetails=Nueva División Detalles
+addDivison.newdivision=Nueva División
+addDivison.department=Departamento
+addDivison.id=Id
+addDivison.updatedivision=Detalle División Actualización
+addDivison.editdivision=Editar detalles División
+addDivison.departmenthead=Gerente de División
+addDivison.divisionlist=Lista División
+addDivison.adddivision=Agregar División
+divison.divisionexist=División ya existe.
+
+gerencia.gerenciaexist=Gerencia ya existe.
+department.departmentexist=Departamento already exist.
+
+editDivison.gerencia=Gerencia 
+editDivison.numberofdepartaments=Número de Departamentos
+editDivison.managername=Gerente Nombre
+header.profile=Perfil
+header.dashboard=Dashboard
+header.roadmap=Hoja de ruta
+header.programs=Programas
+header.admin=Administración
+
+addProjectWorkflowStatus.projectworkflowstatus=Estado
+addProjectWorkflowStatus.home=Home
+addProjectWorkflowStatus.projectWorkflowStatusList=Estados
+addProjectWorkflowStatus.addprojectworkflowstatus=Agregar Estado
+addProjectWorkflowStatus.editprojectworkflowstatus=Editar Estado
+addProjectWorkflowStatus.newprojectworkflowstatus=Agregar Estado
+
+addnewprojecttype.addNewProjectType=Agregar Tipo Proyecto
+addnewprojecttype.newProjectType=Agregar Tipo de Proyecto
+addnewprojecttype.description=Descripción
+addnewprojecttype.status=Estado
+addnewprojecttype.isactive=Está activo
+
+
+
+servcieCatalogue.serviceCatalogueTitle=Catálogo de Servicios
+servcieCatalogue.catalogueList=Lista de catálogos
+servcieCatalogue.addNewCatalogue=Añada nuevo Catálogo
+servcieCatalogue.catalogueDetails=Nuevo Catálogo detalles
+servcieCatalogue.discipline=Disciplina Servicio
+servcieCatalogue.serviceCode=Código de Servicio
+servcieCatalogue.serviceName=Nombre del servicio
+servcieCatalogue.serviceDescription=Descripción del Servicio
+servcieCatalogue.serviceScope=Ámbito del Servicio
+servcieCatalogue.serviceScopeRequirement=Requerimientos
+servcieCatalogue.serviceScopePlanning=Planificación y Seguimiento del Proyecto
+servcieCatalogue.serviceScopeDevelopment=Desarrollo
+servcieCatalogue.serviceScopeStabilization=Estabilización
+servcieCatalogue.serviceScopeContinuity=Continuidad
+servcieCatalogue.serviceRequestorRole=Servicio Solicitante Rol
+servcieCatalogue.primaryExecutiveRole=Rol Ejecutivo Primario
+servcieCatalogue.secondaryExecutiveRole=Rol Secundario Ejecutivo
+servcieCatalogue.slaValue=SLA Valor
+servcieCatalogue.slaUnit=SLA Unidad
+servcieCatalogue.serviceCodeValidationEmpty=Código de servicio no debe estar vacío.
+servcieCatalogue.serviceCodeValidationUnique=Código de servicio ya está siendo utilizado. Por favor, introduzca el código de servicio único.
+servcieCatalogue.serviceNameValidationEmpty=Nombre del servicio no debe estar vacío.
+servcieCatalogue.serviceScopeValidationEmpty=Al menos un ámbito debe ser seleccionado.
+addUserRole.addUserRole=Añadir Rol de Usuario
+addUserRole.userRoleList=Lista de Roles
+addUserRole.userRole=Rol de Usuario
+addUserRole.editUserRole=Editar Rol de Usuario
+addUserRole.addNewUserRole=Agregar Rol de Usuario
+
+addUser.addNewEmpDetails=Agregar Detalles del Empleado
+addUser.division=División
+addUser.bonus_app=Las horas extraordinarias aplicable
+addUser.gerencia=Gerencia
+addUser.department=Departamento
+addUser.first_name=Nombre de pila
+addUser.last_name=Apellido
+addUser.uname=Nombre de Usuario
+addUser.password=Contraseña
+addUser.rut_number=Número RUT
+addUser.contact_number=Teléfono de contacto
+addUser.email=Email
+addUser.birth_date=Fecha de nacimiento (dd - mm -yyyy)
+addUser.office_number=Anexo (con extensión)
+addUser.joining_date=Fecha de incorporación (dd - mm -yyyy)
+addUser.rate_hour=Tarifa por Hora
+addUser.isAdmin=Tipo de usuario
+addUser.user_type=Tipo de membresía
+addUser.work_hours=Horas de trabajo (HH.mm) / día
+addUser.bonus_app=Las horas extraordinarias aplicable
+
+admin.newemployee=Nuevos Empleados
+admin.employee=Empleado
+admin.rut=RUT
+admin.email=Email
+admin.contactNo=Teléfono de contacto
+admin.action=Acción
+admin.userRole=Rol de Usuario
+admin.userType=Tipo de Usuario
+
+users.newemployee=Nuevos Empleados
+users.employee=Empleado
+users.rut=RUT
+users.email=Email
+users.contactNo=Teléfono de contacto
+users.action=Acción
+
+gerencia.gerencia=Gerencia
+gerencia.home=Home
+gerencia.gerencialist=Lista Gerencia
+
+
+gerencia.newgerencia=Agregar Gerencia
+
+gerencia.gerenciahead=Gerente
+gerencia.action=Acción
+gerencia.id=Id
+gerencia.addnewgerencia=Agregar Gerencia
+gerencia.newgerenciadetail=Detalle Nueva Gerencia
+
+gerencia.reporttotype=Reporta al Nivel
+
+gerencia.reportto=Reporta a
+
+gerencia.editgerencia=Editar detalles Gerencia
+gerencia.updategerencia=Detalle Actualización Gerencia
+gerencia.department=Departamento
+gerencia.numberofemployee=Número de Empleados
+gerencia.headofdepartment=Jefe de Departamento
+
+impacttype.programimpacttype=Programa Tipo de Impacto
+impacttype.programimpacttypelist=Impacto Tipo-Programa de Lista
+impacttype.Addprogramimpacttype=Agregar programa Impacto-Tipo
+impacttype.home=Home
+impacttype.impacttype=Tipo de Impacto
+impacttype.editprogramimpacttype=Editar Programa Impacto-Type Detalles
+impacttype.id=Id
+impacttype.action=Acción
+impacttype.newprogramimpacttype=Programa de Impacto-Tipo
+
+subtype.progtamsubtype=Foco Strategico
+subtype.home=Home
+subtype.id=Id
+subtype.action=Acción
+subtype.description=Descripción
+subtype.active=Activo
+subtype.uploadedBy=Actualizado por
+subtype.newprogtamsubtype=Foco Strategico
+subtype.progtamsubtypelist=Lista de Foco Strategico
+subtype.addprogtamsubtype=Agregar Foco Strategico
+subtype.editprogtamsubtype=Editar Foco Strategico
+
+stage.home=Home
+stage.id=Id
+stage.newstage=Agregar Etapa
+stage.stagelist=Lista Etapa
+stage.addstage=Agregar etapa
+stage.editstage=Editar Etapa
+stage.stage=Etapa
+stage.placeholder.description=Introduzca Descripción
+stage.placeholder.stage=Ingrese nombre Etapa
+stage.description=Descripción
+stage.alreadyexist=Nombre artístico ya existe
+discipline.alreadyexist=Disciplina Nombre ya existe
+stage.empty=Nombre artístico no puede estar vacío
+sequencing.empty=Secuenciación no puede estar vacío
+stage.updatedby=Actualizado por
+stage.createddate=Fecha de Creación
+stage.updateddate=Actualizado Fecha
+stage.active=Activo
+
+genericprojecttype.home=Home
+genericprojecttype.id=Id
+genericprojecttype.newgenericprojecttype=Agregar Plantilla por Tipo de Proyecto
+genericprojecttype.genericprojecttypelist=Lista Plantillas por Tipo de Proyecto
+genericprojecttype.label= Nombre de Plantilla
+genericprojecttype.editgenericprojecttype=Editar Plantilla por Tipo de Proyecto
+genericprojecttype.genericprojecttype=Plantillas por Tipo de Proyecto
+genericprojecttype.description=Descripción
+genericprojecttype.placeholder.description=Introduzca Descripción
+genericprojecttype.placeholder.genericprojecttype=Introduzca Plantillas por Tipo de Proyecto
+genericprojecttype.alreadyexist=Plantillas por Tipo de Proyecto Nombre ya existe
+genericprojecttype.empty=Plantillas por Tipo de Proyecto Nombre no puede estar vacío
+genericprojecttype.updatedby=Actualizado por
+genericprojecttype.createddate=Fecha de Creación
+genericprojecttype.updateddate=Actualizado Fecha
+genericprojecttype.active=Activo
+
+documenttype.home=Home
+documenttype.id=Id
+documenttype.newdocumenttype=Agregar Tipo de Documento
+documenttype.documenttypelist=Lista Tipos de Documentos
+documenttype.adddocumenttype=Agregar Tipo de Documento
+documenttype.editdocumenttype=Editar Tipo de Documento
+documenttype.documenttype=Tipo de Documento
+documenttype.description=Descripción
+documenttype.placeholder.description=Introduzca Descripción
+documenttype.placeholder.documenttype=Ingrese Tipo de documento Nombre
+documenttype.alreadyexist=Tipo de documento ya existe
+documenttype.empty=Tipo de documento El nombre no puede estar vacío
+documenttype.updatedby=Actualizado por
+documenttype.createddate=Fecha de Creación
+documenttype.updateddate=Actualizado Fecha
+documenttype.active=Activo
+
+budgettype.home=Home
+budgettype.id=Id
+budgettype.newbudgettype=Agregar Categoría Presupuestaria
+budgettype.budgettypelist=Lista de Categorias Presupuestarias
+budgettype.addbudgettype=Agregar Categoría Presupuestaria
+budgettype.editbudgettype=Editar Categoría Presupuestaria
+budgettype.budgettype=Categoría Presupuestaria
+budgettype.description=Descripción
+budgettype.placeholder.description=Introduzca Descripción
+budgettype.placeholder.budgettype=Introduzca presupuestaria Tipo Nombre.
+budgettype.alreadyexist=Categoría Presupuestaria ya existe.
+budgettype.empty=Tipo Presupuesto Nombre no puede estar vacío.
+budgettype.updatedby=Actualizado por
+budgettype.createddate=Fecha de Creación
+budgettype.updateddate=Actualizado Fecha
+budgettype.active=Activo
+
+deliverable.home=Home
+deliverable.id=Id
+deliverable.newdeliverable=Agregar Entregable
+deliverable.deliverablelist=Lista de Entregables
+deliverable.adddeliverable=Agregar Entregable
+deliverable.editdeliverable=Editar Entregable
+deliverable.deliverable=Entregables
+deliverable.deliverabletext=Entregable
+deliverable.action=Acción
+deliverable.alreadyexist=Entregable Nombre ya existe
+deliverable.empty=Entregable Nombre no puede estar vacío
+deliverable.placeholder.deliverable=Introducir nombre del entregable
+deliverable.isactive=Activo
+deliverable.updatedby=Actualizado por
+deliverable.createddate=Fecha de Creación
+deliverable.updateddate=Actualizado Fecha
+deliverable.active=Activo
+
+taskDescipline.programtaskdiscipline=Disciplinas
+taskDescipline.programtaskdisc=Disciplina
+taskDescipline.home=Home
+taskDescipline.action=Acción
+taskDescipline.addnewdescipline=Agregar Disciplina
+taskDescipline.id=Id
+taskDescipline.addprogramtaskdiscipline=Agregar Disciplina
+taskDescipline.editprogramtaskdiscipline=Editar Disciplina
+taskDescipline.programtaskdisciplinelist=Lista de Disciplinas
+taskDescipline.description=Descripción
+taskDescipline.descriptionplace=Introduzca Descripción
+
+task.baseline.type=Type
+task.baseline.changedby=Cambiado Por
+task.baseline.changedate=Cambiar fecha
+task.editTask.updatetask=Tarea de Actualización
+task.editTask.tasktitle=*Tarea Título
+task.editTask.plan_start_date=*Fecha de inicio planificada
+task.editTask.plan_end_date= *Fecha Término Planificado
+task.editTask.description=*Descripción de la tarea
+task.editTask.plan_time=*Tiempo del Plan (en horas)
+task.editTask.milestone_status=*Estado
+task.editTask.remark=Observación
+task.editTask.task_discipline=*Grupo de Disciplina
+task.editTask.completion_percentage=Ingrese porcentaje de finalización
+task.editTask.task_details.stage=*Etapa
+task.editTask.task_details.user_role=*Rol de usuario
+task.editTask.deliverable=Entregable
+task.editTask.task_owner=*Propietario de la Tarea
+task.editTask.managedependencies=Administrar Dependencias
+task.editTask.showbaseline=Mostrar línea de base
+task.manageTask.selecttasks=Seleccione Tareas
+task.manageTask.nodependencies=No hay dependencias
+task.manageTask.finishstart=Acabado-Start
+task.manageTask.startstart=Start-Start
+task.manageTask.startfinish=Puesta en Finalizar
+
+generics.projecttypelist.projecttype=Tipo de Proyecto
+generics.projecttypelist.description=Descripción
+generics.projecttypelist.responsible=Responsable
+generics.projecttypelist.creationdate=Fecha de Creación
+generics.projecttypelist.lastupdate=Última actualización
+generics.projecttypelist.action=Acción
+generics.managepredefinedtask.selectgenerictask=Seleccione Tarea Genérico
+generics.managepredefinedtask.selecttask=Seleccionar Tarea
+
+task.manageTask.finishfinish=Finalizar Finalizar-
+task.manageTask.selecteddependencytasks=Tareas de dependencia seleccionados
+task.updatedTaskList.task=Tarea
+task.updatedTaskList.taskowner=Propietario de la Tarea
+task.updatedTaskList.plannedstartdate=Fecha de inicio Planificada
+task.updatedTaskList.plannedenddate=Fecha Término Planificado
+task.updatedTaskList.allocatedhours=Horas Asignadas
+task.updatedTaskList.status=Estado
+task.updatedTaskList.trackchanges=Control de Cambios
+task.updatedTaskList.action=Acción
+
+addNewProgram.placeholder.program_type=--- Elija tipo de programa ---
+addNewProgram.placeholder.program_code=Introduzca el código de programa
+addNewProgram.placeholder.program_sub_type=--- Elegir programa Tipo Sub ---
+addNewProgram.placeholder.program_name=Ingrese Nombre del programa
+addNewProgram.placeholder.program_manager=--- Elegir programa Administrador ---
+addNewProgram.placeholder.demand_manager=--- Elija demanda Gerente ---
+addNewProgram.placeholder.program_description=Introduzca Descripción del Programa
+addNewProgram.placeholder.work_flow_status=--- Elija Work Flow Estado ---
+addNewProgram.placeholder.business_line=Introduzca Business Line
+addNewProgram.placeholder.devison=--- Elija División ---
+addNewProgram.placeholder.sap_code=Introduzca el código SAP
+addNewProgram.placeholder.management=--- Elija una Gerencia ---
+addNewProgram.placeholder.total_sap=Introduzca SAP total
+addNewProgram.placeholder.department=--- Elija un Departamento ---
+addNewProgram.placeholder.completion_percentage=Introduzca Finalización Porcentaje
+addNewProgram.placeholder.impact_type=---- Elija el tipo de impacto ---
+addNewProgram.placeholder.initiation_planned_date=Entran en el Fecha Inicio Programa
+addNewProgram.placeholder.closure_date=Introduzca Fecha Cierre
+addNewProgram.placeholder.release_date=Por favor, seleccione producción fecha de lanzamiento
+addNewProgram.placeholder.isActive=--- Elegir Activo ---
+addNewProject.project_mode=*Tipo de Proyecto
+addNewProject.placeholder.project_mode=Seleccione Tipo de Proyecto
+addNewProject.placeholder.project_name=Ingrese Nombre del proyecto
+addNewProject.placeholder.description=Introduzca Descripción del Proyecto
+addNewProject.placeholder.search_user=Búsqueda de usuarios
+addNewProject.placeholder.start_date=Seleccione Proyecto Fecha de Inicio
+addNewProject.placeholder.final_release_date=Seleccione Proyecto Fin Fecha
+addNewProject.placeholder.sap_code=Introduzca el código SAP
+addNewProject.placeholder.total_sap=Introduzca SAP total
+addNewProject.placeholder.budget_approved_staff=Introduzca Presupuesto Para el Personal
+addNewProject.placeholder.budget_approved_contractor=Introduzca Presupuesto Para Contratista
+addNewProject.placeholder.budget_approved_hardware=Introduzca Presupuesto para Hardware
+addNewProject.placeholder.budget_approved_software=Introduzca Presupuesto Para el Software
+addNewProject.placeholder.ppm_number=Introducir número de PPM
+addNewProject.placeholder.work_flow_status=Estado de flujo
+
+risk.name=Por favor ingrese el nombre
+risk.imapct=Por favor ingrese imapct riesgo
+risk.cause=Por favor ingrese causa del riesgo
+risk.event=Por favor ingrese evento de riesgo
+addNewRisk.nameHint=Ingresar Nombre del Riesgo
+addNewRisk.causeHint=Ingresar Causa del Riesgo
+addNewRisk.eventHint=Ingresar Evento del Riesgo
+addNewRisk.impactHint=Ingresar Impacto del Riesgo
+addNewRisk.riskCategoryHint=Selecion Categoria del Riesgo
+addNewRisk.variableImpactHint=Selecion del variables impactados
+addNewRisk.occurenceProbabilityHint=Selecion del probalidad de Ocurrencia
+addNewRisk.quantificationHint=Selecion del Cuantificacion del Impacto
+addNewRisk.strategicReplyHint=Selecion Estrategia del Respuesta
+addNewRisk.responsibleHint=Lista del Miembros del Programa
+addNewRisk.riskStateHint=Selecion del Estado Riesgo
+addNewRisk.documentCategoryHint=Selecion document del contenfencia
+addNewRisk.name=*Nombre del Riesgo
+addNewRisk.cause=*Causa
+addNewRisk.event=*Evento
+addNewRisk.impact=*Impacto
+addNewRisk.riskCategory=*Categoria del Riesgo
+addNewRisk.variableImpact=*Variables impactados
+addNewRisk.occurenceProbability=*Probalidad de Ocurrencia
+addNewRisk.quantification=*Cuantificacion del Impacto
+addNewRisk.strategicReply=*Estrategia del Respuesta
+addNewRisk.responsible=*Responsable
+addNewRisk.riskState=Estado Riesgo
+addNewRisk.documentCategory=Document Contengencia
+addNewRisk.clouserDate=*Fecha Control Respuesta
+addNewRisk.clouserDateHint=Ingresar Fecha Control Respuesta
+addNewRisk.configurationPlan=Plan del Contingencia
+addNewRisk.configurationPlanHint=Ingresar Plan del Contingencia
+addNewRisk.replyAction=Accion/Plan del Respuesta
+addNewRisk.replyActionHint=Ingresar Accion Plan del Respuesta
+
+
+addIssue.placeholder.issueDescription=Por favor Descripción tema de entrada.
+addIssue.placeholder.issueCategory=Elije categoría tema.
+addIssue.placeholder.membersInvolved=Por favor, seleccione los miembros involucrados.
+addIssue.placeholder.actionPlan=Por favor, plan de acción de entrada.
+addIssue.placeholder.issuePriority=Por favor, seleccione la prioridad número.
+addIssue.placeholder.issueDate=Por favor, la fecha de emisión de entrada.
+addIsse.placeholder.title=Por favor, ingrese el título.
+
+addIssue.title=*Título
+addIssue.issueDescription=*Descripción del Emisión
+addIssue.issueCategory=*Emisión Categoría
+addIssue.membersInvolved=Members Involved
+addIssue.actionPlan=Plan de Acción
+addIssue.issuePriority=*Tema Prioridad
+addIssue.issueDate=*Fecha De Asunto
+
+newTask.placeholder.title=Tarea Título
+newTask.placeholder.plan_start_date=Ingrese Fecha de Inicio
+newTask.placeholder.plan_end_date=Especifique fecha de Finalización
+newTask.placeholder.description=Introduzca Tarea Descripción
+newTask.placeholder.plan_time=Ingrese Hora del Plan (en horas)
+newTask.placeholder.remark=Introduzca Observación de Tareas
+newTask.placeholder.task_discipline=--- Elegir Tarea Disciplina ---
+newTask.placeholder.completion_percentage=Introduzca Finalización Porcentaje
+newTask.placeholder.stage=--- Elija Etapa ---
+newTask.placeholder.user_role=--- Elija rol de Usuario ---
+newTask.placeholder.deliverable=--- Elija Entregable ---
+newTask.placeholder.task_owner=--- Elegir Propietario de la Tarea ---
+
+addSubTask.placeholder.subtask=Introducir nombre subtarea
+addSubTask.placeholder.description=Introduzca Descripción
+addSubTask.placeholder.plannedstartdate=Ingrese Fecha de inicio planificada(dd-mm-yyyy)
+addSubTask.placeholder.plannedenddate=Introduzca Planeada Fecha de finalización(dd-mm-yyyy)
+addSubTask.placeholder.completionper=Introduzca completetion %
+
+assignsubtask.placeholder.searchuser=Búsqueda de usuarios
+assignsubtask.placeholder.userRoles=--Todos User Roles--
+assignsubtask.placeholder.assignuser=--Seleccione User--
+assignsubtask.placeholder.estimated_time=Tiempo estimado
+
+addUser.placeholder.division=--- Elija una División ---
+addUser.placeholder.gerencia=--- Elija una Gerencia ---
+addUser.placeholder.department=--- Elige un Departamento ---
+addUser.placeholder.first_name=Ingrese Nombre
+addUser.placeholder.last_name=Ingrese el apellido
+addUser.placeholder.uname=Ingrese Nombre de Usuario
+addUser.placeholder.password=Introduzca la contraseña
+addUser.placeholder.rut_number=Introducir número de RUT
+addUser.placeholder.contact_number=Ingrese número de contacto
+addUser.placeholder.email=Ingresar email
+addUser.placeholder.birth_date=Ingrese Fecha de Nacimiento(dd - mm -yyyy)
+addUser.placeholder.office_number=Introducir Anexo(Con extensión)
+addUser.placeholder.joining_date=Ingrese Fecha de incorporación(dd - mm -yyyy)
+addUser.placeholder.rate_hour=Introduzca Tasa por Hora
+addUser.placeholder.work_hours=Introduzca las horas de trabajo (HH.mm) / día
+addUser.placeholder.bonus_app=Las horas extraordinarias aplicable
+
+maintenance.genericprojetcttypemaintenance=Tipo de Proyecto Genérico Mantenimiento
+maintenance.newprojecttype=Agregar Tipo de Proyecto
+maintenance.listofgenerictask=Lista de tareas Genérico
+maintenance.newgenerictask=Agregar Tarea genérica
+maintenance.title=Título
+maintenance.description=Descripción
+maintenance.task=Tarea 
+maintenance.discipline=Disciplina
+maintenance.deliverable=Entregable 
+maintenance.servicecatlogue=Catálogo de Servicios
+maintenance.action=Acción
+maintenance.nopredefinedtasks=No hay tareas predefinidas Disponible ...
+
+maintenance.editpredefinedgenerictask=Editar predefinidas tarea genérica
+maintenance.addnewpredefinedgenerictask=Agregar Nueva Tarea predefinidas Genérico
+maintenance.tasktitle=Tarea Título
+maintenance.taskdescription=Descripción de la tarea
+maintenance.remark=Observación
+maintenance.taskdiscipline=Grupo de Disciplina
+maintenance.stage=Etapa 
+maintenance.userrole=Función de usuario
+maintenance.addtask=Agregar tarea
+maintenance.entertasktitle=Introduzca Tarea Título
+maintenance.entertaskdescription=Introduzca Tarea Descripción
+maintenance.enterremark=Introduzca Observación
+maintenance.selecttaskdiscipline=--Seleccione Tarea Discipline--
+maintenance.selectstage=--Elija Stage--
+maintenance.selectuserrole=--Elija Usuario Role--
+maintenance.selectdeliverable=--Elija Deliverable--
+maintenance.selectservicecatalogue=--Elija Catálogo de Servicios--
+maintenance.editgenerictask=Editar tarea genérica
+maintenance.entertasktitle=Introduzca Tarea Título
+maintenance.entertaskdescription=Introduzca Tarea Descripción
+maintenance.enterremark=Introduzca Observación
+maintenance.selecttaskdiscipline=--Seleccione Tarea Discipline--
+maintenance.selectstage=--Elija Stage--
+maintenance.selectuserrole=--Elija Usuario Role--
+maintenance.selectdeliverable=--Elija Deliverable--
+
+projecttype.projecttypealereadyexists=Ya existe Tipo de proyecto actual.
+projecttype.description.empty=Por favor, Introduzca la descripción
+
+documenttype.isactive=Activo
+
+maintenance.overview=Visión de conjunto
+maintenance.projecttypedetails=Tipo de Proyecto Detalles
+maintenance.creationdate=Fecha de Creación
+maintenance.responsible=Responsable
+maintenance.generictasks=Tareas Genéricas
+maintenance.newtask=Nueva Tarea
+maintenance.tasktype=Tipo de Tarea
+
+maintenance.selecttasks=Seleccione Tareas
+maintenance.selecteddependencytasks=Tareas de Dependencia seleccionados
+maintenance.nodependencies=No hay Dependencias
+maintenance.selecttasktype=--Elegir tipo de Tareas-- 
+maintenance.noprojecttypeavailable=No Proyecto-tipo ...
+maintenance.currentProjecttypeexists=Ya existe Tipo de proyecto actual.
+
+generics.overview.genericprojecttypemaintenance=Tipo de Proyecto Genérico Mantenimiento
+generics.overview.newprojecttype=Agregar Tipo de Proyecto
+generics.overview.initiativaprojecttypemaintenance=Proyecto Tipo Tareas de mantenimiento
+generics.overview.newtask=Agregar tarea
+generics.overview.task=Tarea
+generics.overview.taskowner=Propietario de la Tarea
+generics.overview.description=Descripción
+generics.overview.deliverable=Entregable
+generics.overview.remark=Observación
+generics.overview.action=Acción
+generics.overview.userrole=Función de usuario
+generics.overview.listofpredefinedtask=Lista de tareas predefinidas
+generics.overview.newpredefinedtask=Nueva predefinidas de tareas
+maintenance.enterdescription=Introduzca la descripción
+maintenance.entertaskremark=Introduzca Observación de tareas
+sap.validPer= (CUI1 + CUI2) debe menos que o igual a 100.
+sap.validSAPValue=Se debe llenar al menos un valor no cero de entrada para la inversión o gasto.
+sap.plann_hour=Hora del plan no válidos
+maintenance.title=Título
+sap.sap_number.range=SAP valor de número no debe más de 10 dígitos.
+sap.cui1.range=Valor CUI1 SAP no debe más de 999999999.
+sap.cui2.range=Valor CUI2 SAP no debe más de 999999999.
+sap.budget_type.empty=Por favor, seleccione presupuestaria Tipo
+
+
+programStatus.description.empty=Por favor Ingresa razón para cambiar el estado.
+newmember.programdetails=Detalles del Programa
+newmember.selectroles=Seleccionar Funciones
+newmember.role=Rol
+newmember.member=Miembro
+newmember.action=Acción
+newmember.chooserole=--Elija Role--
+newmember.choosemember=--Elija Miembro--
+
+newsap.sapforprogram=SAP para un Programa
+newsap.budgettype=Categoría
+newsap.sapnumber=Número SAP
+newsap.placeholder.budgettype=--- Elija presupuestaria Tipo ---
+newsap.placeholder.sapnumber=Introducir número de SAP
+newsap.placeholder.cui1=Introduzca CUI1
+newsap.cui1=CUI1
+newsap.placeholder.cui1_per=Introduzca Porcentaje CUI1
+newsap.placeholder.cui2=Introduzca CUI2
+newsap.cui2=CUI2
+newsap.placeholder.cui2_per=Introduzca Porcentaje CUI2
+newsap.amountofexpenditure=Importe del gasto
+newsap.placeholder.amountofexpenditure=Ingrese monto del gasto
+newsap.placeholder.amountofinvestment=Ingrese monto
+newsap.amountofinvestment=Monto de Inversión
+newsap.hardware=Hardware
+newsap.software=Software
+newsap.telecommunication=Telecommunication
+newsap.development=Desarrollo
+newsap.other=Otros Servicios
+newsap.qa=QA
+newsap.improvement=Imprevisto
+newsap.investment_recurring_first=Recurrente primero año
+newsap.sapnumber.empty=Por favor, introduzca el válida número de Sap.
+newsap.cui1.empty=Por favor Ingresa valor CUI1.
+newsap.cui2.empty=Por favor Ingresa valor CUI2.
+newsap.cui1_per.empty=Por favor Ingresa CUI1% valor.
+newsap.cui2_per.empty=Por favor Ingresa CUI2% valor.
+
+uploaddocument.uploadnewdocument=Sube Nuevo Documento
+uploaddocument.uploaddocument=Cargar Documento
+uploaddocument.message=Adjunte el Documento.
+
+uploaddocument.title=Título
+uploaddocument.placeholder.title=Introduzca Título
+uploaddocument.documenttype=Tipo de Documento
+uploaddocument.placeholder.documenttype=--Seleccione Documento Type--
+
+uploaddocument.currentdocuments=Documentos Actuales
+uploaddocument.documenttitle=Título del Documento
+uploaddocument.version=Versión
+uploaddocument.dateofupload=Fecha de Upload
+uploaddocument.uploadedby=Cargado por
+uploaddocument.action=Acción
+uploaddocument.nodocumentavailable=No hay documentos disponibles para PROGRAM seleccionado
+uploaddocument.versionnotes=Versión Notas
+uploaddocument.placeholder.versionnotes=Introduzca Versión Notas
+uploaddocument.versionalias=Número de versión
+uploaddocument.placeholder.versionalias=Introduce el número de versión
+uploaddocument.placeholder.uploaddocument=--- Elegir tipo de documento ---
+uploaddocument.uploaddocument=Cargar Documento
+uploaddocument.documents=Documentos
+programdetails.programmembers=Miembros del Programa
+programdetails.newmember=Miembro Nuevo
+programdetails.sapdetails=SAP Detalles
+programdetails.addsap=Agregar SAP
+uploaddocument.program=Programa
+programdetails.sapdetails.date=Fecha
+programdetails.sapdetails.sapno=Número SAP
+programdetails.sapdetails.budgettype=Categoría
+programdetails.sapdetails.investment=Presupuesto Inversión
+programdetails.sapdetails.expenditure=Presupuesto Gasto
+programdetails.availableinvestment=Inversión Asignada
+programdetails.availableexpenditure=Gasto Asignado
+programdetails.action=Acción
+programdetails.programmembers=Miembros del Programa
+programdetails.newmember=Miembro Nuevo
+programdetails.sapdetails=SAP Detalles
+programdetails.addsap=Agregar SAP
+programdetails.ganttchartview=Gantt Chart Ver para Proyectos
+uploaddocument.previousdocuments=Documentos anteriores
+programdetails.saplisting=SAP Ficha
+dashboard.report=Informe
+budgettype.isactive=Activo
+
+leftnav.divmanagement=Divisiones 
+leftnav.gerenciamanagement=Gerencias
+leftnav.departmentmanagement=Departamentos
+leftnav.programtype=Tipo de Programa
+leftnav.programsubtype=Foco Strategico
+leftnav.programtaskdiscipline=Disciplinas
+leftnav.projectworkflowstatus=Estados
+leftnav.adduserrole=Roles
+leftnav.Stage=Etapas
+leftnav.deliverable=Entregables
+leftnav.genericprojecttype=Tipos de Proyectos
+leftnav.documenttype=Tipos de Documentos
+leftnav.budgettype=Tipo de Presupuesto
+leftnav.servciecatalogue=Catálogo de Servicios
+leftnav.userprofile=Perfil del Usuario
+
+
+servicecatalogue.servicecatalogue=Catálogo de Servicios
+servicecatalogue.home=Home
+servicecatalogue.servicecataloguelist=Servicio Lista Catálogo
+servicecatalogue.addNewServiceCatalogue=Añadir Catálogo de servicios
+
+
+
+programtype.progtamtype=Tipo de Programa
+programtype.description=Descripción
+programtype.uploadedBy=Actualizado por
+programtype.home=Home
+programtype.id=Id
+programtype.newprogramtype=Agregar Tipo de Programa
+programtype.programtypelist=Lista de Tipos de Programas
+programtype.addprogramtype=Agregar Tipo de Programa
+programtype.editprogramtype=Editar Tipo de Programa
+programtype.programtype=Tipo de programa
+programtype.action=Acción
+programtype.isactive=Activo
+
+document.previoussdocuments=Documentos Anteriores
+document.currentsdocuments=Documentos Recientes
+document.documenttitle=Título del Documento
+document.version=Versión
+document.dateofupload=Fecha de actualización
+document.uploadedby=Actualizado por
+document.action=Acción
+document.nodocumentavailableforselected=No existen documentos seleccionado para
+document.parentname=Nombre Ubicación
+document.nodocumentavailableforselectedcriteria=No hay documentos disponibles para los criterios de búsqueda seleccionados
+
+error.addnewprogram.closuredatereleasedatecompare=Fecha de cierre no debe ser anterior a la fecha de lanzamiento.
+error.addnewprogram.closuredatecreationdatecompare=Fecha de cierre no debe ser anterior a la creación del programa o de la fecha de inicio del programa.
+error.addnewprogram.creationdatetodaycompare=Fecha de creación debe ser menor que la actual.
+error.addnewprogram.invalidReleaseDate=Fecha de lanzamiento no es válido.
+
+
+delete.confirm.divmanagement=¿Quieres actualizar el estado de esta división?
+delete.confirm.gerenciamanagement=¿Quieres eliminar este Gerencia?
+delete.confirm.departmentmanagement=¿Quieres eliminar este Departamento?
+delete.confirm.programtype=¿Quieres eliminar este Tipo de Programa?
+delete.confirm.programsubtype=¿Quieres eliminar este Subtipo de Programa?
+delete.confirm.programtaskdiscipline=¿Quieres eliminar esta Disciplina?
+delete.confirm.projectworkflowstatus=¿Quieres eliminar Estado?
+delete.confirm.adduserrole=¿Quieres eliminar este Rol de usuario?
+delete.confirm.Stage=¿Quieres eliminar esta Etapa?
+delete.confirm.deliverable=¿Quieres eliminar este Entregable?
+delete.confirm.genericprojecttype=¿Quieres eliminar este Tipo de Proyecto?
+delete.confirm.documenttype=¿Quieres eliminar este Tipo de Documento?
+delete.confirm.budgettype=¿Quieres eliminar este Tipo de Presupuesto?
+delete.confirm.userprofile=¿Quieres eliminar este Perfil del Usuario?
+delete.confirm.title=Confirmar
+
+
+userprofile.home=Home
+userprofile.id=Id
+userprofile.newuserprofile=Agregar Perfil del Usuario
+userprofile.userprofilelist=Lista Perfil del Usuario
+userprofile.adduserprofile=Agregar Perfil del Usuario
+userprofile.edituserprofile=Editar Perfil del Usuario
+userprofile.userprofile=Perfil del Usuario
+userprofile.placeholder.description=Introduzca Descripción
+userprofile.placeholder.profile_name=Ingrese Perfil del Usuario Nombre
+userprofile.placeholder.profile_code=Introduzca perfil de usuario Código
+userprofile.description=Descripción
+userprofile.alreadyexist=Nombre artístico ya existe
+userprofile.empty=Nombre artístico no puede estar vacío
+userprofile.updatedby=Actualizado por
+userprofile.createddate=Fecha de Creación
+userprofile.updateddate=Actualizado Fecha
+userprofile.active=Activo
+userprofile.userprofilecode=Perfil de Usuario Código
+userprofile.userprofileName=Perfil de usuario Nombre
+userprofile.userprofilecode=Perfil de Usuario Código
+userprofile.errormsg.description=Descripción no debe estar vacío.
+userprofile.errormsg.profile_name=Nombre de perfil no debe estar vacío.
+userprofile.errormsg.profile_code=Código Perfil no debe estar vacío.
+
+sequence=Secuenciación
+placeholder.sequence=Por favor, Introduzca el número de secuenciación.
+sequence.alreadyexist=Ya existe el número de secuenciación.
+placeholder.taskDescipline=Por favor, introduzca el nombre de Disciplina.
+
+
+taskstartdate.validation.error=Tarea fecha de inicio no debe ser mayor que la fecha de inicio del proyecto
+taskenddate.validation.error=Tarea fecha de finalización no debe ser mayor que la fecha de finalización del proyecto
+
+
+editIssue.issuestatus=la cuestión del status
+editIssue.issuestatus.default=-- Seleccione Estado de emisión --
+sub_type.alreadyexist=Sub Tipo ya existe.
+project_workflow_status.alreadyexist=Estado de flujo de trabajo del proyecto ya existe.
+role.alreadyexist=Ya existe la función del usuario.
+document_type.alreadyexist=Ya existe tipo de documento.
+
+servcieCatalogue.serviceCodeValidationUnique=Servicio de nombres ya se utiliza. Por favor ingrese un nombre exclusivo servicio.
+
+
+booktime.provider=Proveedor
+booktime.member=Miembro
+booktime.bookedhours=Horas 
+booktime.startdate=Fecha de Inicio
+booktime.enddate=Fecha de Termino
+booktime.action=Acción
+booktime.externalresourcesbooktime=Agregar Tiempo - Externos
+booktime.cancel=Cancelar
+booktime.book=Agregar
+booktime.date=Fecha
+booktime.bookedby=Agregado Por
+booktime.hours=Horas
+booktime.pleaseentervaliddaterange=Por favor ingrese intervalo de fechas válido
+booktime.externalresource=Recursos Externos
+booktime.previousbookedhours=Anteriormente Agregado Horas
+booktime.bookhours=Horas Agregado
+
+subtask.addissue=Agregar Issue
+subtask.issuelisting=Lista de Issues
+subtask.noissueavailable=No hay Issues
+
+addissue.membersinvolved=Miembros Implicado
+addissue.plannedenddate=Fecha de Inicio Planificado
+
+issuedetails.details=Detalles
+issuedetails.editissue=Editar Issue
+issuedetails.title=Titulo
+issuedetails.description=Descripcion
+issuedetails.category=Categoria
+issuedetails.actionplan=Plan de Accion
+issuedetails.priority=Prioridad
+issuedetails.issuedate=Fecha de Issue
+
+dashboard.KEYIndicator=Indicadores Criticos
+dashboard.ExporttoExcel=Exportar a Excel
+
+programdetails.riskmanagement=Gestión de Riesgos
+programdetails.name=Nombre
+programdetails.cause=Causa
+programdetails.event=Evento
+programdetails.impact=Impacto
+programdetails.responsible=Responsable
+
+issuedetails.subcategory=Subcategoria
+programdetails.variableimpact=Variables Impactados
+programdetails.probablityofoccurance=Probabilidad de Ocurrencia
+programdetails.quantification=Quantificacion Impacto
+programdetails.strategicreply=Estrategia de Respuesta
+programdetails.replyaction=Plan de Respuesta
+programdetails.configurationplan=Plan de Contingencia
+programdetails.documentcategory=Documento Contingencia
+programdetails.clouserdate=Fecha de Control
+programdetails.addrisk=Agregar Riesgo
+
+taskdetails.taskissuemanagement=Gestión de Issues
+taskdetails.subtaskissuemanagement=Gestión de Issues
+editsubtask.changestatus=Cambiar Estado
+editsubtask.updatesubtaskstatus=Cambiar Estado de Sub Tarea
+editsubtask.reasonforchangestatus=Razon Para Cambiar Estado
+editsubtask.enterreasonforchangestatus=Ingresar Razon Para Cambiar Estado
+editsubtask.status=Estado
+editsubtask.choosestatus=--- Seleccione Estado ---
+error.login.addsubtask.title=Esta Campo es Obligatorio.
+programdetails.booktime=Agregar Tiempo
+programdetails.gotosubtaskdetailpage=Sub Tarea Detalles
+programdetails.delete=Eliminar
+
+uploaddocument.projectdetails=Detalles del Proyecto
+uploaddocument.taskdetails=Detalles del Tarea
+subtaskdetail.programrisk=Programa Riesgos
+subtaskdetail.taskrisk=Tarea Riesgos
+subtaskdetail.taskissue=Tarea Issues
+subtaskdetail.subtaskrisk=Sub Tarea Riesgos
+subtaskdetail.subtaskissue=Sub Tarea Issues
+subtaskdetail.noriskavailable=No hay Riesgos
+
+projectdetails.workflow=Flujo de trabajo
+projectdetails.project=Proyecto
+projectdetails.projectSAPlisting=Lista SAP de Proyecto
+projectdetails.projectrisk=Proyecto Riesgo
+projectdetails.SAPforaproject=SAP por Proyecto
+projectdetails.SAPnumbers=Numeros de SAP
+projectdetails.chooseSAP=--- Seleccione SAP ---
+projectdetails.sapnumber=Numero SAP
+
+addsap.amountofinvestment=Monto de Inversion
+addsap.amountofexpenditure=Monto de Gastos
+addsap.enteramount=Entrar Monto
+addsap.availableinvestment=Monto Inversion Disponible
+addsap.availableexpenditure=Monto Gastos Disponible
+addsap.hardware=Hardware
+addsap.software=Software
+addsap.telecommunication=Telecommunication
+addsap.development=Desarollo
+addsap.other=Otras
+addsap.QA=QA
+addsap.improvement=Imprevistors
+addsap.recurring1styear=Recurrente primero año
+
+programlisting.deliverydate=Fecha de Entrega
+
+programsearch.delaylevel=Nivel de Retardo
+programsearch.selectdelaylevel=--- Seleccione Nivel de Retardo ---
+programsearch.projectclassification=Clasificación del Proyecto
+programsearch.selectprojectclassification=--- Seleccione Clasificación del Proyecto ---
+programsearch.programtype=Tipo de Programa
+programsearch.selectprogramtype=--- Seleccione Tipo de Programa ---
+programsearch.division=División
+programsearch.selectdivision=--- Seleccione División ---
+programsearch.budgettype=Tipo de Presupuesto
+programsearch.selectbudgettype=--- Seleccione Tipo de Presupuesto ---
+programsearch.programsubtype=Strategic focus
+programsearch.selectprogramsubtype=--- Seleccione Strategic focus ---
+programsearch.programrole=Gerentes de Programas
+programsearch.selectprogramrole=--- Seleccione Gerentes de Programas ---
+programsearch.sorttype=Ordenar Tipo
+programsearch.selectsorttype=--- Seleccione Ordenar Tipo ---
+
+addNewProgram.ppmnumber=Numero PPM
+
+programDetails.programcode=Codigo del Programa
+
+employeeProfile.myprogram=Mis Programas
+employeeProfile.myalerts=Mis Alertas
+employeeProfile.back=Volver
+employeeProfile.nomembersavailable=No Members Available...
+employeeProfile.projectlistnotavailable=Project List Not Available...
+employeeProfile.updateprogramstatus=Update Program Status
+
+newmember.providername=Proveedor Nombre
+newmember.nameofprovider=Proveedor Nombre
+newmember.numberofresources=Number Of Resources
+newmember.nameofresource=Name Of Resource
+risklisting.riskstate=Risk State
+
+updateprojectstatus.title=Update Project Status
+updateprojectstatus.change=Cambiar
+
+addrisk.subcategoryrisk=*Riesgos Sub Categoria
+addrisk.selectsubcategoryrisk=Selecion Riesgos Sub Categoria
+editrisk.title=Editar Riesgo
+
+optionvalue.yes=Si
+optionvalue.no=No
+optionvalue.historic=Históricos
+optionvalue.current=Actual
+
+searchtext.title=Texto de búsqueda
+searchtext.placeholder=Introduzca Texto de búsqueda
+
+employee.employeelisting=Listado empleado
+employeesearch.title=Búsqueda empleado
+employeesearch.choosegerencia=--- Seleccione Gerencia ---
+employeesearch.choosedepartment=--- Seleccione Departamento ---
+
+timesheet.project=Proyecto
+timesheet.nonprojectTask=No de Proyectos Tareas
+timesheet.total=Totalizar
+timesheet.minutes=Acta
+
+
+documentoverview.choosedivision=---seleccione división ---
+documentoverview.chooseprogram=--- Seleccione programa ---
+documentoverview.chooseproject=--- Seleccione Proyecto ---
+documentoverview.chooseresponsible=--- Seleccione Responsable ---
+documentoverview.choosetask=--- Seleccione Tareas ---
+documentoverview.choosesubtask=--- Seleccione Sub Tarea ---
+documentoverview.currentdocuments=Actual Documentos
+documentoverview.historicaldocuments=Históricos Documentos
+documentoverview.currentandhistoricaldocuments=Documentos actuales e históricos
+
+dashboard.risk=Riesgos
+dashboard.plannedpercentage=% Planificado
+
+profile.riskeventType=Tipo de Evento
+profile.riskalertType=Tipo de Alertas
+profile.eventcode=Código de evento
+profile.eventdetails=Evento Detalles
+profile.criticality=Criticidad
+
+editTask.updatetaskstatus=Cambiar Estado de Tarea
+colorname.green=Verde
+colorname.amber=Amarillo
+colorname.red=Rojo
+service.catelogue.id=Servicio Id
+service.catelogue.action=Acción
+service.catelogue.status=Estado
+service.catelogue.updated_by=Actualizado por
+service.catelogue.service_name=Nombre del servicio
+service.catelogue.updated_date=Actualizado Fecha
+delete.confirm1.catelogue=¿Quieres actualizar el estado del Catálogo de Servicios?
+delete.confirm1.budgettype=¿Quieres actualizar el estado de la clase de presupuesto?
+delete.confirm1.documenttype=¿Quieres actualizar el estado de Tipo de documento?
+delete.confirm1.deliverable=¿Quieres actualizar el estado del Entregable?
+delete.confirm1.stage=¿Quieres actualizar el estado de la etapa?
+delete.confirm1.discipline=¿Quieres actualizar el estado de las tareas de la disciplina?
+delete.confirm1.programsubtype=¿Quieres actualizar el estado del Programa Subtipo?
+delete.confirm1.programtype=¿Quieres actualizar el estado del tipo de programa?
+delete.confirm1.department=¿Quieres actualizar el estado del Departamento?
+delete.confirm1.gerencia=¿Quieres actualizar el estado de la Gerencia?
+delete.confirm1.division=¿Quieres actualizar el estado de la división?
+delete.confirm1.statusproject=¿Quieres actualizar el estado del proyecto de flujo de trabajo de estado?
+header.divisions=Divisions
+riskDashboard.parentName=Parent Name
+riskDashboard.responsible=Responsible
+riskDashboard.name=Name
+riskDashboard.cause=Cause
+riskDashboard.event=Event
+riskDashboard.impact=Impact
+riskDashboard.cuantification=Cuantification
+riskDashboard.strategicReply=Strategic Reply
+riskDashboard.closerDate=Clouser Date
+issueDashboard.parentName=Parent Name
+issueDashboard.responsible=Responsible
+issueDashboard.name=Title
+issueDashboard.category=Category
+issueDashboard.priority=Priority
+issueDashboard.issueDate=Issue Date
+issueDashboard.clouserDate=Clouser Date
+issueDashboard.status=Status
+issueDashboard.plannedDate=Planned Date
+projectdetails.noofrecords=No de los Récords
+projectTaskDetails.startdated=Fecha Inicio real
+projectTaskDetails.enddated=Fecha Término real
+projectdetails.noofrecords=No de los Récords
+projecttaskdetail.realend=Fecha Término Real
+projecttaskdetail.realstart=Fecha de inicio real	
+addIssue.issuesubCategory=*Categoría Sub
+addIssue.placeholder.issuesubCategory=Seleccionar Categoría Sub
+saplisting.projectedinvestment=Proyectado Inversión
+saplisting.projectedexpenses=Proyectado Gasto
+taskdetails.issuesubCategory=Categoría Sub
+programsearch.department=Departamento
+programsearch.selectdepartment=--- Elija Departamento ---
+programsearch.gerencia=Gerencia
+programsearch.selectgerencia=--- Elija Gerencia ---
+
+newsap.approveddateplaceholder=Entrar Fecha de Aprobación
+newsap.approveddate=Fecha de Aprobación
+newsap.comitteddateplaceholder=Entrar Fecha de Paso a Producción
+newsap.comitteddate=Fecha de Paso a Producción
+
+newpert.programa=Programa
+newpert.proyecto=Proyecto
+newpert.lider=Lider
+newpert.plantilla=Plantilla
+newpert.cajero=Cajero
+newpert.direccion=Dirección
+newpert.fecha=Fecha
