@@ -79,13 +79,6 @@ object ProgramMemberService extends CustomColumns {
   }
 
   def findActiveProgramMember(program_id: String): Seq[ProgramInternalMembers] = {
-    /*
-    var sqlString = ""
-    sqlString = "SELECT  * from art_program_members where is_active=0 AND program_id=" + program_id
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).as(ProgramMembers.program_members *)
-    }
-    */
     var sqlString = "EXEC programa.asignacion_interna {pId}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('pId -> program_id.toInt).executeQuery() as (ProgramInternalMembers.program_internal_members *)
@@ -286,5 +279,12 @@ object ProgramMemberService extends CustomColumns {
       SQL("EXEC programa.disponibilidad  {pId},{uid}").on(
         'pId -> pid.toInt,'uid -> uid.toInt).executeQuery().as(UserAvailibity.userAvailibity *)
     }
-  }   
+  } 
+  
+  def listMemberAvailability(mid: Integer): Seq[MemberCapacity] = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC programa.member_capacity {mid}").on(
+        'mid -> mid.toInt).executeQuery().as(MemberCapacity.memberCapacity *)
+    }
+  }  
 }

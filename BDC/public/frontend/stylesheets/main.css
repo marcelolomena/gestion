@@ -4162,7 +4162,7 @@ form button {
 
 #member_list .active {
 	float: left;
-    width: 50px;
+    width: 25px;
 }
 
 #member_list .even_row {
@@ -4197,6 +4197,13 @@ form button {
 
 .disabled_member {
 	background: url("../images/close_icon.png") no-repeat;
+	height: 22px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.edit_member {
+	background: url("../images/Pen.png") no-repeat;
 	height: 22px;
 	margin-left: 5px;
 	cursor: pointer;

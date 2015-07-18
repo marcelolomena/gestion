@@ -341,11 +341,14 @@
 								<span class="provider">@UserService.findUserDetails(p.member_id).get.first_name&nbsp;@UserService.findUserDetails(p.member_id).get.last_name</span>
 								<span class="asignacion">@p.estimated_time</span>
 								<span class="consumo">@p.hours</span>
-								<span class="diferencia">@p.diferencia</span>
+								<span class="diferencia">@p.diferencia</span></a>
 								@if(utils.UserAccess.checkAccess(req,"program_member_delete")){
 									<span class="active member-action @if(p.is_active==0){enabled_member}else{disabled_member}" id="m_@p.id"></span>
 								}
-							</li></a> 
+								@if(utils.UserAccess.checkAccess(req,"program_member_delete")){
+									<span class="active @if(p.is_active==0){edit_member}else{edit_member}" id="m_@p.id"></span>
+								}								
+							</li> 
 							}else{
 							<li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(p.role_id.toString).isEmpty){
@@ -361,6 +364,9 @@
 								@if(utils.UserAccess.checkAccess(req,"program_member_delete")){
 									<span class="active member-action @if(p.is_active==0){enabled_member}else{disabled_member}" id="m_@p.id"></span>
 								}
+								@if(utils.UserAccess.checkAccess(req,"program_member_delete")){
+									<span class="active @if(p.is_active==0){edit_member}else{edit_member}" id="m_@p.id"></span>
+								}								
 							</li> 							
 							}
 						}
@@ -395,9 +401,9 @@
 								}
 								<span class="asignacion">@e.estimated_time</span>
 								<span class="consumo">@e.hours</span>
-								<span class="diferencia">@e.diferencia</span>
+								<span class="diferencia">@e.diferencia</span></a>
 								<span class="active member-action-external @if(e.is_deleted==0){enabled_member}else{disabled_member}" id="m_@e.id"></span>
-							</li></a>
+							</li>
 							}else{
 							<li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(e.provider_type.toString).isEmpty){
@@ -722,7 +728,7 @@
 	</div>
 	</div>
 	<div class="tooltip"></div>	
-	<div id="distribution" title="Distribución de ingreso horas" style="display:none;"></div>
+	<div id="distribution" title="Distribuciï¿½n de ingreso horas" style="display:none;"></div>
 </div>	 
 @frontend.headerScripts()	
 @*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
@@ -740,7 +746,7 @@
 		lang: {
 			months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],	
 			shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul','Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-			weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+			weekdays: ['Domingo', 'Lunes', 'Martes', 'Miï¿½rcoles', 'Jueves', 'Viernes', 'Sï¿½bado']
 		}
 	});
 	
@@ -1213,7 +1219,7 @@
 							placement : 'ne', // north-east tooltip position
 							mouseOnToPopup : true
 						});
-
+						$(".edit_member").on("click", editProgramMember);	
 						$(".member-action").on("click", renderProgramMember);
 						$(".member-action-external").on("click", renderProgramMemberExternal);
 							

@@ -151,15 +151,73 @@
 		</ul>
 	</div>
 	<div id="dialog-confirm"></div>	
+	<div id="dialog-programs"><table id="scroll37"></table></div>
 </section>
 <div id="pop-box-over" class="display-none"></div>
 </div>
 
 @frontend.headerScripts()
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
+<script src="@routes.Assets.at("frontend/jqgrid/js/i18n/grid.locale-es.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
+	function goDist(obj){
+		var purl=obj.id;
+		var parser = document.createElement('a');
+		parser.href=obj.href;
+		console.log('pico:' + parser.pathname);
+		jQuery.ajax({
+			url : purl,
+			type : "GET",
+			cache : false,
+				success : function(resultado) {
+				
+					$("#scroll37").jqGrid('setGridParam', { data: resultado});
+
+					$("#scroll37")[0].grid.endReq();
+
+					$("#scroll37").trigger('reloadGrid');
+						
+				},
+				error : function() {
+					alert("alertSomethingWentWrong");
+				}
+		});	
+						
+
+	    $("#dialog-programs").dialog("open");		
+		return false;	
+	}
 	
+	$(document).ready(function() {
+		$("#scroll37").jqGrid({
+			   		datatype: "local",
+			        colModel: [
+			            { label: 'Programa', name: 'program_name', key: true, width: 200 },
+			            { label: 'Porcentaje', name: 'porcentaje', width: 50 }             
+			        ],
+					viewrecords: true,
+					regional : "es",
+			        width: 600,
+			        height: 300
+		});		
+		$("#dialog-programs").dialog({
+					autoOpen: false,
+		            modal: true,
+		            width: 600,
+		            height: 300,
+		            position: 'center',
+			         show: {
+		              effect: "blind",
+		              duration: 1000
+		          },
+		          hide: {
+		              effect: "explode",
+		              duration: 1000
+		          }
+		});		
 		var text = $("#member_id_field dd.error").html();
 		var element = $("#member_id_field dd.error");
 		if(text!=""){
@@ -203,7 +261,8 @@
 				});
 			}
 		});
-		
+	
+
 		$("#member_id").on("change", function(){
 			var selectedUser = $(this).val()
 			var divDisp="";
@@ -220,7 +279,7 @@
 									divDisp+="<dl style=\"display: block;\">";
 						    		divDisp+="<dt><label for=\"periods_" + element.periodo  + "\" name=\"periods_" + element.periodo + "\">" + meses[parseInt(element.periodo.substring(4,6))-1] + ", " + element.periodo.substring(0,4)+ "</label></dt>";
 						    		divDisp+="<dd>";
-						    		divDisp+="<input type=\"text\" name=\"periods_" + element.periodo + "\" id=\"" + element.periodo + "\" style=\"margin: 0 0 5px;width: 20px;\"> [ " + element.disponible + " % ]";
+						    		divDisp+="<input type=\"text\" name=\"periods_" + element.periodo + "\" id=\"" + element.periodo + "\" style=\"margin: 0 0 5px;width: 20px;\"><a id=\"/get-program-distribution/"+selectedUser+"/"+element.periodo+"\" onClick=\"return goDist(this)\" href=\"" + element.disponible + "\"> [ " + element.disponible + " % ]</a>";
 									divDisp+="</dd>";
 									divDisp+="</dl>";
 							    });									
@@ -318,6 +377,24 @@
 	            e.preventDefault();
 	        }
 	    });
+	    
+		$(".gpd").click(function(e) {
+			e.preventDefault();
+			alert($(this).attr('href'))
+			var purl = $(this).attr('href');
+			console.log(purl);
+			jQuery.ajax({
+				url : purl,
+				type : "GET",
+				cache : false,
+				success : function(data) {
+					console.log(data)
+				},
+				error : function() {
+					alert("alertSomethingWentWrong");
+				}
+			});	       
+		});	    
 	});
 </script>
 </body>

@@ -3796,11 +3796,17 @@ function autocompleteMemberSearch() {
 	});
 }
 
+function editProgramMember() {
+	var _this = $(this);
+	var mid = _this.attr("id").split("_")[1];
+	alert(mid);
+}
+
 function renderProgramMember() {
 	var _this = $(this);
 	var mid = _this.attr("id").split("_")[1];
 
-	$("#dialog-confirm").html("ï¿½ï¿½Quiere eliminar?"); // /Do you want
+	$("#dialog-confirm").html("Quiere eliminar?"); // /Do you want
 	// to change the
 	// status?
 	// Define the Dialog and its properties.
@@ -6570,7 +6576,7 @@ function renderDistributionGraph(url) {
 	            type: 'column'
 	        },
 	        title: {
-	            text: 'Distribución ingreso horas'
+	            text: 'Distribuciï¿½n ingreso horas'
 	        },
 	        xAxis: {
 	            type: 'datetime',

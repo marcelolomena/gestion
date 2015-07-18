@@ -541,4 +541,5 @@ POST   /resultPert                                                              
 GET    /program-distribucion-interno                                                                  controllers.Frontend.Program.graphDistributionInternalAction(id:String)
 GET    /program-distribucion-externo                                                                  controllers.Frontend.Program.graphDistributionExternalAction(id:String)
 POST   /request-user-availability                                                                     controllers.Frontend.Program.getUserProgramAvailability()
-
+GET    /get-program-distribution/$uid<[A-Za-z0-9_-]+>/$period<[A-Za-z0-9_-]+>   					  controllers.Frontend.Program.getProgramDistribution(uid:Integer, period:Integer)
+GET    /member_capacity/$mid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Program.editMembersCapacity(mid:Integer)

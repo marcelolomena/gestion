@@ -1623,4 +1623,10 @@ ON A.sub_task_id=B.sub_task_id
     }
   }
 
+  def getProgramUserCapacity(uid: Integer, periodo: Integer): Seq[ProgramUserCapacity] = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC programa.porcentaje_participacion  {uid},{periodo}").on(
+        'uid -> uid.toInt, 'periodo -> periodo.toInt).executeQuery().as(ProgramUserCapacity.programUserCapacity *)
+    }
+  }
 }

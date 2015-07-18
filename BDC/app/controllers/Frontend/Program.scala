@@ -3,8 +3,8 @@ package controllers.Frontend
 import anorm.NotAssigned
 import java.util.Date
 import java.text.SimpleDateFormat
-import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
+//import org.joda.time.DateTime
+//import org.joda.time.DateTimeConstants
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import art_forms.ARTForms
@@ -649,7 +649,7 @@ object Program extends Controller {
             UserService.saveUserSetting(projectmapping)
 
             //val pms = ProgramMembers(None, last_program.toInt, 7, dm, 0,"")
-            val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0,"")
+            val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
             //println("program member -------" + pms)
             val lastsaved = ProgramMemberService.insertProgramMemberDetails(pms)
 
@@ -660,7 +660,7 @@ object Program extends Controller {
               UserService.saveUserSetting(projectmapping)
 
               //val newpms = ProgramMembers(None, last_program.toInt, 8, user_id, 0,"")
-              val newpms = ProgramMembers(None, last_program.toInt, user_id, 8, 0,"")
+              val newpms = ProgramMembers(None, last_program.toInt, user_id, 8, 0, "")
               //println("program member -------" + newpms)
               val lastsaved = ProgramMemberService.insertProgramMemberDetails(newpms)
 
@@ -1181,7 +1181,6 @@ object Program extends Controller {
    */
   def calculateProgramEarnValueAction(id: String) = Action { implicit request =>
 
-
     var node = new JSONObject()
     var calculos = SpiCpiCalculationsService.findIndicators(id, 2)
     for (s <- calculos) {
@@ -1325,16 +1324,23 @@ object Program extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-  
-   def getUserProgramAvailability() = Action { implicit request =>
+
+  def getUserProgramAvailability() = Action { implicit request =>
     request.session.get("username").map { user =>
       val program_id = request.body.asFormUrlEncoded.get("program_id")(0).toString().trim()
-      val member_id= request.body.asFormUrlEncoded.get("member_id")(0).toString().trim()
-      val availability = 	ProgramMemberService.findProgramUserAvailability(program_id,member_id)	
+      val member_id = request.body.asFormUrlEncoded.get("member_id")(0).toString().trim()
+      val availability = ProgramMemberService.findProgramUserAvailability(program_id, member_id)
       Ok(play.api.libs.json.Json.toJson(availability));
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
+  }
+
+  def editMembersCapacity(mid: Int) = Action { implicit request =>
+
+    val member_capacity = ProgramMemberService.listMemberAvailability(id)
+
+    Ok(play.api.libs.json.Json.toJson(member_capacity))
   }
 
   def saveMembers(program_id: String) = Action { implicit request =>
@@ -1355,7 +1361,7 @@ object Program extends Controller {
           val externalEmployees = ProgramMemberExternalService.findProgramMemberExternalByProgramId(program_id);
           //val user_periods = 	ProgramMemberService.findPeriods(program_id)
           BadRequest(views.html.frontend.program.newMember(program_id, errors, programRoles, userMap, progrma_members, externalEmployees)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-        },  
+        },
         program_member => {
           val theForm = ProgramMemberService.validateProgramMember(ARTForms.program_members.fill(program_member))
           if (theForm.hasErrors) {
@@ -1374,7 +1380,7 @@ object Program extends Controller {
             //val pms = ProgramMembers(None, program_member.program_id, program_member.role_id, program_member.member_id, program_member.is_active,program_member.pData)
             println("program_member.role_id : " + program_member.role_id)
             println("program_member.member_id : " + program_member.member_id)
-            val pms = ProgramMembers(None, program_member.program_id, program_member.member_id, program_member.role_id, program_member.is_active,program_member.pData)
+            val pms = ProgramMembers(None, program_member.program_id, program_member.member_id, program_member.role_id, program_member.is_active, program_member.pData)
             val last = ProgramMemberService.insertProgramMemberDetails(pms)
             /**
              * Activity log
@@ -2922,8 +2928,6 @@ object Program extends Controller {
       val user_id = Integer.parseInt(request.session.get("uId").get)
       var test = null;
 
-
-
       var newExternalContractor = ProgramMembersExternal(null, Integer.parseInt(program_id), Integer.parseInt(role_id), provider_name, Option(name_of_resource), Option(0), Option("Test"), Option("Test"), user_id, new Date, new Date, 0);
       ProgramMemberExternalService.saveProgramMemberExternal(newExternalContractor);
       Ok("success");
@@ -2947,4 +2951,14 @@ object Program extends Controller {
     }
   }
 
+  def getProgramDistribution(uid: Integer, period: Integer) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      //println("uid:" + uid)
+      //println("period:" + period)
+      val capaciyt = ProgramService.getProgramUserCapacity(uid, period)
+      Ok(play.api.libs.json.Json.toJson(capaciyt));
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
 }

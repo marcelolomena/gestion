@@ -54,3 +54,15 @@ object UserAvailibity extends CustomColumns{
   }
   implicit val avaWrites = Json.writes[UserAvailibity]
 }
+
+case class MemberCapacity(id: Option[Int], id_program_members: Int, periodo: Int, porcentaje: Double, horas: Double)
+
+object MemberCapacity extends CustomColumns{
+
+  val memberCapacity = {
+    get[Option[Int]]("id") ~ get[Int]("id_program_members") ~ get[Int]("periodo") ~ get[Double]("porcentaje") ~ get[Double]("horas") map {
+        case id ~ id_program_members ~ periodo ~ porcentaje ~ horas => MemberCapacity(id,id_program_members,periodo,porcentaje,horas)
+      }
+  }
+  implicit val avaWrites = Json.writes[MemberCapacity]
+}
