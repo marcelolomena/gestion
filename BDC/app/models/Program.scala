@@ -672,3 +672,17 @@ object ProgramCombo {
   }
 
 }
+
+case class ProgramUserCapacity(program_name: String, porcentaje: Double)
+
+object ProgramUserCapacity {
+
+  val programUserCapacity = {
+    get[String]("program_name") ~ get[Double]("porcentaje") map {
+      case program_name ~ porcentaje =>
+        ProgramUserCapacity(program_name, porcentaje)
+
+    }
+  }
+  implicit val capacityWrites = Json.writes[ProgramUserCapacity]
+}
