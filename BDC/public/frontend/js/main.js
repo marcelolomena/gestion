@@ -3796,12 +3796,6 @@ function autocompleteMemberSearch() {
 	});
 }
 
-function editProgramMember() {
-	var _this = $(this);
-	var mid = _this.attr("id").split("_")[1];
-	alert(mid);
-}
-
 function renderProgramMember() {
 	var _this = $(this);
 	var mid = _this.attr("id").split("_")[1];
@@ -3897,7 +3891,7 @@ function renderProgramMemberExternal() {
 	var _this = $(this);
 	var mid = _this.attr("id").split("_")[1];
 
-	$("#dialog-confirm").html("��Quiere eliminar?"); // /Do you want
+	$("#dialog-confirm").html("Quiere eliminar?"); // /Do you want
 	// to change the
 	// status?
 	// Define the Dialog and its properties.

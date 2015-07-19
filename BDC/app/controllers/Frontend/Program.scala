@@ -1337,10 +1337,24 @@ object Program extends Controller {
   }
 
   def editMembersCapacity(mid: Int) = Action { implicit request =>
-
-    val member_capacity = ProgramMemberService.listMemberAvailability(id)
+    
+    val member_capacity = ProgramMemberService.listMemberAvailability(mid)
 
     Ok(play.api.libs.json.Json.toJson(member_capacity))
+  }
+
+  def updateMembersCapacity = Action { implicit request =>
+      request.session.get("username").map { user =>
+      val id = request.getQueryString("id").get.toString()
+      val oper= request.getQueryString("oper").get.toString()
+      val porcentaje= request.getQueryString("porcentaje").get.toString()
+
+      val member_capacity = ProgramMemberService.updateMemberAvailability(id,porcentaje)
+
+    Ok("")
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
   }
 
   def saveMembers(program_id: String) = Action { implicit request =>

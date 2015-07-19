@@ -543,3 +543,4 @@ GET    /program-distribucion-externo                                            
 POST   /request-user-availability                                                                     controllers.Frontend.Program.getUserProgramAvailability()
 GET    /get-program-distribution/$uid<[A-Za-z0-9_-]+>/$period<[A-Za-z0-9_-]+>   					  controllers.Frontend.Program.getProgramDistribution(uid:Integer, period:Integer)
 GET    /member_capacity/$mid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Program.editMembersCapacity(mid:Integer)
+GET    /update-member_capacity							  		  									  controllers.Frontend.Program.updateMembersCapacity

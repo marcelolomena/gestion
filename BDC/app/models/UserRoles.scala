@@ -64,5 +64,5 @@ object MemberCapacity extends CustomColumns{
         case id ~ id_program_members ~ periodo ~ porcentaje ~ horas => MemberCapacity(id,id_program_members,periodo,porcentaje,horas)
       }
   }
-  implicit val avaWrites = Json.writes[MemberCapacity]
+  implicit val capWrites = Json.writes[MemberCapacity]
 }

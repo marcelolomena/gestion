@@ -1,4 +1,5 @@
 package services
+
 import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
@@ -281,10 +282,18 @@ object ProgramMemberService extends CustomColumns {
     }
   } 
   
-  def listMemberAvailability(mid: Integer): Seq[MemberCapacity] = {
+  def listMemberAvailability(mid: Int): Seq[MemberCapacity] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC programa.member_capacity {mid}").on(
         'mid -> mid.toInt).executeQuery().as(MemberCapacity.memberCapacity *)
     }
   }  
+ 
+  def updateMemberAvailability(id: String,porcentaje: String): Int = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC programa.update_member_capacity {id},{porcentaje}").on(
+        'id -> id.toInt,'porcentaje -> porcentaje.toInt).executeQuery().as(scalar[Int].single)
+    }
+  } 
+  
 }
