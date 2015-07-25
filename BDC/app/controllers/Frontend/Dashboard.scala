@@ -176,6 +176,99 @@ object Dashboard extends Controller {
       }
 
   }
+  
+    def getProgramExcel(pid: String) = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val file = new File("programa.xlsx")
+        val fileOut = new FileOutputStream(file);
+        val wb = new XSSFWorkbook
+        val sheet = wb.createSheet("PROGRAMA")
+        var j = 0
+        var rNum = 1
+        var cNum = 0
+        var a = 0
+        
+        var rowhead = sheet.createRow(0);
+        val style = wb.createCellStyle();
+        val font = wb.createFont();
+        font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL);
+        font.setFontHeightInPoints(10);
+        font.setBold(true);
+        style.setFont(font);
+        rowhead.createCell(0).setCellValue("Id")
+        rowhead.createCell(1).setCellValue("Nivel")
+        rowhead.createCell(2).setCellValue("Codigo")
+        rowhead.createCell(3).setCellValue("Nombre")
+        rowhead.createCell(4).setCellValue("Responsable")
+        rowhead.createCell(5).setCellValue("Fecha Inico Plan")
+        rowhead.createCell(6).setCellValue("Fecha Termino Plan")
+        rowhead.createCell(7).setCellValue("Fecha Inicio Real")
+        rowhead.createCell(8).setCellValue("Fecha Termino Real")
+        rowhead.createCell(9).setCellValue("% Avance Informado")
+        rowhead.createCell(10).setCellValue("% Avance Esperado")
+        
+        for (j <- 0 to 10)
+          rowhead.getCell(j).setCellStyle(style);
+
+        val panel = DashboardService.getProgramExcel(pid)        
+
+        for (s <- panel) {
+          var row = sheet.createRow(rNum)
+
+          val cel0 = row.createCell(cNum)
+          cel0.setCellValue(s.id)
+
+          val cel1 = row.createCell(cNum + 1)
+          cel1.setCellValue(s.nivel)
+
+          val cel2 = row.createCell(cNum + 2)
+          cel2.setCellValue(s.codigo)
+
+          val cel3 = row.createCell(cNum + 3)
+          cel3.setCellValue(s.nombre)
+
+          val cel4 = row.createCell(cNum + 4)
+          cel4.setCellValue(s.responsable)
+
+          val cel5 = row.createCell(cNum + 5)
+          cel5.setCellValue(s.pini)
+
+          val cel6 = row.createCell(cNum + 6)
+          cel6.setCellValue(s.pter)
+
+          val cel7 = row.createCell(cNum + 7)
+          cel7.setCellValue(s.rini)
+
+          val cel8 = row.createCell(cNum + 8)
+          cel8.setCellValue(s.rter)
+
+          val cel9 = row.createCell(cNum + 9)
+          cel9.setCellValue(s.pai)
+
+          val cel10 = row.createCell(cNum + 10)
+          cel10.setCellValue(s.pae)
+
+          rNum = rNum + 1
+          cNum = 0
+
+        }
+        
+
+        for (a <- 0 to 10) {
+          sheet.autoSizeColumn((a.toInt));
+        }
+
+        wb.write(fileOut);
+        fileOut.close();
+        Ok.sendFile(content = file, fileName = _ => "programa.xlsx")
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+    
   def getPanel = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -186,6 +279,17 @@ object Dashboard extends Controller {
       }
 
   }
+  def getATM = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        Ok(views.html.frontend.dashboard.atmReport()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }  
+  
   def panel = Action { implicit request =>
     request.session.get("username").map { user =>
       val rows = request.getQueryString("rows").get.toString()
@@ -219,6 +323,146 @@ object Dashboard extends Controller {
      
       
       Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+  
+  /*
+    def atm = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val rows = request.getQueryString("rows").get.toString()
+      val page= request.getQueryString("page").get.toString()
+      
+      val atm = DashboardService.reportATM
+      
+      Ok(play.api.libs.json.Json.toJson(atm)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+ */   
+  def reportProgram() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      
+      
+      val rows = request.getQueryString("rows").get.toString()
+      val page= request.getQueryString("page").get.toString()
+      var node = new JSONObject()
+      val records = DashboardService.programCount
+      val panel = DashboardService.reportProgram(rows,page)
+       
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("id",p.id)
+        campo.put("nivel",p.nivel)
+        campo.put("codigo",p.codigo)
+        campo.put("nombre",p.nombre)
+        campo.put("responsable",p.responsable)
+        campo.put("pini",p.pini.getOrElse(""))
+        campo.put("pter",p.pter.getOrElse(""))
+        campo.put("rini",p.rini.getOrElse(""))
+        campo.put("rter",p.rter.getOrElse(""))
+        campo.put("pai",p.pai)
+        campo.put("pae",p.pae)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", Integer.parseInt(page))
+      node.put("total",pagedisplay)
+      node.put("records",records)
+      node.put("rows", registro)      
+      
+    
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+ 
+  def reportProyect(pid: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val rows = request.getQueryString("rows").get.toString()
+      val page= request.getQueryString("page").get.toString()
+      var node = new JSONObject()
+      val records = DashboardService.projectCount(pid)
+      //println("FILAS(*):" + records)
+      val panel = DashboardService.reportProject(pid,rows,page)
+       
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("id",p.id)
+        campo.put("nivel",p.nivel)
+        campo.put("codigo",p.codigo)
+        campo.put("nombre",p.nombre)
+        campo.put("responsable",p.responsable)
+        campo.put("pini",p.pini.getOrElse(""))
+        campo.put("pter",p.pter.getOrElse(""))
+        campo.put("rini",p.rini.getOrElse(""))
+        campo.put("rter",p.rter.getOrElse(""))
+        campo.put("pai",p.pai)
+        campo.put("pae",p.pae)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", Integer.parseInt(page))
+      node.put("total",pagedisplay)
+      node.put("records",records)
+      node.put("rows", registro)      
+      
+    
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+  
+  def reportSubTarea(pid: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val rows = request.getQueryString("rows").get.toString()
+      val page= request.getQueryString("page").get.toString()
+      var node = new JSONObject()
+      val records = DashboardService.subtaskCount(pid)
+      //println("FILAS(*):" + records)
+      val panel = DashboardService.reportSubTask(pid,rows,page)
+       
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("id",p.id)
+        campo.put("nivel",p.nivel)
+        campo.put("codigo",p.codigo)
+        campo.put("nombre",p.nombre)
+        campo.put("responsable",p.responsable)
+        campo.put("pini",p.pini.getOrElse(""))
+        campo.put("pter",p.pter.getOrElse(""))
+        campo.put("rini",p.rini.getOrElse(""))
+        campo.put("rter",p.rter.getOrElse(""))
+        campo.put("pai",p.pai)
+        campo.put("pae",p.pae)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", Integer.parseInt(page))
+      node.put("total",pagedisplay)
+      node.put("records",records)
+      node.put("rows", registro)      
+      
+    
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+ 
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession

@@ -102,3 +102,90 @@ object Panel {
   }
   implicit val panelWrites = Json.writes[Panel]
 }
+
+case class ATM(id: Int, 
+    nivel: String, 
+    codigo: Int, 
+    nombre: String, 
+    responsable: String, 
+    pini: Option[Date], 
+    pter: Option[Date], 
+    rini: Option[Date],
+    rter: Option[Date],
+    pai: Double,
+    pae: Double
+    )
+
+object ATM {
+  val atm = {
+    get[Int]("id") ~
+      get[String]("nivel") ~
+      get[Int]("codigo") ~
+      get[String]("nombre") ~
+      get[String]("responsable") ~
+      get[Option[Date]]("pini") ~
+      get[Option[Date]]("pter") ~
+      get[Option[Date]]("rini") ~
+      get[Option[Date]]("rter") ~
+      get[Double]("pai") ~
+      get[Double]("pae") map {
+        case id ~ 
+        nivel ~ 
+        codigo ~ 
+        nombre ~ 
+        responsable ~ 
+        pini ~ 
+        pter ~ 
+        rini ~ 
+        rter ~ 
+        pai ~
+        pae => ATM(id, nivel, codigo, nombre, responsable, pini, pter, rini, rter, pai,pae)
+      }
+    
+  }
+  implicit val atmWrites = Json.writes[ATM]
+}
+
+
+case class ATMExcel(id: Int, 
+    nivel: String, 
+    codigo: Int, 
+    nombre: String, 
+    responsable: String, 
+    pini: String, 
+    pter: String, 
+    rini: String,
+    rter: String,
+    pai: Double,
+    pae: Double
+    )
+
+object ATMExcel {
+  val atmExcel = {
+    get[Int]("id") ~
+      get[String]("nivel") ~
+      get[Int]("codigo") ~
+      get[String]("nombre") ~
+      get[String]("responsable") ~
+      get[String]("pini") ~
+      get[String]("pter") ~
+      get[String]("rini") ~
+      get[String]("rter") ~
+      get[Double]("pai") ~
+      get[Double]("pae") map {
+        case id ~ 
+        nivel ~ 
+        codigo ~ 
+        nombre ~ 
+        responsable ~ 
+        pini ~ 
+        pter ~ 
+        rini ~ 
+        rter ~ 
+        pai ~
+        pae => ATMExcel(id, nivel, codigo, nombre, responsable, pini, pter, rini, rter, pai,pae)
+      }
+    
+  }
+  implicit val atmWrites = Json.writes[ATMExcel]
+}

@@ -20,6 +20,9 @@
        	
 	       	<ul>
 				@if(utils.UserAccess.checkAccess(req,"menu_documents")){
+       				<li><p><a href="@controllers.Frontend.routes.Dashboard.getATM()" id="reporte_atm"><img style="margin:-1px 0 0 5px;" width="17" height="17" src="@routes.Assets.at("frontend/images/documents.png")" alt="reporte ATM">ATM</a></p></li>
+       			}	       	
+				@if(utils.UserAccess.checkAccess(req,"menu_documents")){
        				<li><p><a href="@controllers.Frontend.routes.Dashboard.getPanel()" id="reporte_id"><img style="margin:-1px 0 0 5px;" width="17" height="17" src="@routes.Assets.at("frontend/images/documents.png")" alt="reporte">Reportes</a></p></li>
        			}
 	       		@if(utils.UserAccess.checkAccess(req,"menu_documents")){

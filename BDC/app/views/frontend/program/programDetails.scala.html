@@ -728,7 +728,7 @@
 	</div>
 	</div>
 	<div class="tooltip"></div>	
-	<div id="distribution" title="Distribuci�n de ingreso horas" style="display:none;"></div>
+	<div id="distribution" style="display:none;"></div>
 <div id="dialog-edit-member-capacity"><table id="scroll38"></table><div id="jqGridPager"></div></div>
 </div>	 
 @frontend.headerScripts()	
@@ -746,59 +746,64 @@
 <script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
 <script type="text/javascript">
-	function editProgramMember() {
-		var _this = $(this);
-		var mid = _this.attr("id").split("_")[1];
-		var purl = "/member_capacity/"  + mid;
-		console.log(purl);
-		$.ajax({
-			url : purl,
-			type : "GET",
-			cache : false,
-				success : function(res) {
-					
-					$("#scroll38").jqGrid('clearGridData').jqGrid('setGridParam', { data: res }).trigger('reloadGrid', [{ page: 1}]);
-					
-					$("#dialog-edit-member-capacity").dialog("open");
-				},
-				error : function() {
-					alert("alertSomethingWentWrong");
-				}
-		});	
-	}
+	function validatePositive(value, column) {
+		if ( isNaN(value) && value < 0)
+			return [false, "Por favor ingrese un valor positivo."];
+        else
+            return [true, ""];
+    }
+
 	$(document).ready( function() {
+		function editProgramMember() {
+			var _this = $(this);
+			var mid = _this.attr("id").split("_")[1];
+			var purl = "/member_capacity/"  + mid;
+
+			$.ajax({
+				url : purl,
+				type : "GET",
+				cache : false,
+					success : function(res) {
+						$("#scroll38").jqGrid('clearGridData').jqGrid('setGridParam', { data: res }).trigger('reloadGrid', [{ page: 1}]);
+		
+
+						$("#dialog-edit-member-capacity").dialog("open");
+				},error : function() {
+						alert("alertSomethingWentWrong");
+					}
+			});	
+
+		}
+
 		$("#scroll38").jqGrid({
 			   		datatype: "local",
 			        colModel: [
 			            { label: 'id', name: 'id', key: true, editable: false,width: 10 },
 			            { label: 'Periodo', name: 'periodo', editable: false,width: 50 },
-			            { label: 'Porcentaje', name: 'porcentaje', editable: true,width: 50 }, 
+			            { label: 'Porcentaje', name: 'porcentaje', editable: true,editrules:{custom_func:validatePositive,custom: true,required: true},width: 50 }, 
 			        ],
 			        pager: "#jqGridPager",
 					viewrecords: true,
 					regional : "es",
 			        width: 600,
 			        height: 100,
+			        loadonce: true,
             		editurl: "/update-member_capacity"
 		});		
-		$('#scroll38').navGrid('#jqGridPager',
-                { edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
-                {   editCaption: "Cambiar Porcentaje",
-                    recreateForm: true,
-                    mtype:"GET",
-					checkOnUpdate : true,
-					checkOnSubmit : true,
-                    closeAfterEdit: true,
-                    reloadAfterSubmit: true,
-                    errorTextFormat: function (data) {
-                        return 'Error: ' + data.responseText
-                    },afterSubmit: function () {
-    					$(this).jqGrid("setGridParam", {datatype: 'json'});
-    					return [true];
-					}
-                }
-		);
-		
+						$("#scroll38").navGrid('#jqGridPager',
+			                { edit: true, add: false, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false },
+			                {   editCaption: "Cambiar Porcentaje",
+			                    recreateForm: true,
+			                    mtype:"GET",
+								checkOnUpdate : true,
+								checkOnSubmit : true,
+			                    closeAfterEdit: true,
+			                    reloadAfterSubmit: true,
+			                    errorTextFormat: function (data) {
+			                        return 'Error: ' + data.responseText
+			                    }
+			                }
+						);
 		$("#dialog-edit-member-capacity").dialog({
 					autoOpen: false,
 		            modal: true,
@@ -835,12 +840,7 @@
 	          hide: {
 	              effect: "explode",
 	              duration: 1000
-	          },
-            buttons: {
-                "Cerrar": function () {
-                    $(this).dialog("close");
-                }
-                }
+	          }
 	});	
 	$('a.interno').click(function(event) { 
 		event.preventDefault();

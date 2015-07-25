@@ -6548,72 +6548,26 @@ function validateSubTaskEdit(sub_task_id,end_date){
 function renderDistributionGraph(url) {
 
 	$(".loader").css("display", "block");
-
 	var dist = [];
 	var total = 0;
-	
+
 	$.get(url, function(datos) {
-		
-		//console.log("largo : " + datos.length);
-		//console.log("min : " + datos[0].task_for_date);
-		//console.log("max : " + datos[datos.length-1].task_for_date);
-		//var minDate  =new Date(datos[0].task_for_date);
-		//var maxDate  =new Date(datos[datos.length-1].task_for_date);
 
 		$.each(datos, function(index, element) {
 			dist.push([element.task_for_date,element.hours]);
 			total += element.hours;
 	    });		
-		/*
-		$("#distribution").highcharts({
-	        chart: {
-	            type: 'column'
-	        },
-	        title: {
-	            text: 'Distribuci�n ingreso horas'
-	        },
-	        xAxis: {
-	            type: 'datetime',
-	            labels: {
-	            	rotation: -45,
-	                style: {
-	                    fontSize: '13px',
-	                    fontFamily: 'Verdana, sans-serif'
-	                }
-	            }
-	        },	        
-	        yAxis: {
-	            min: 0,
-	            allowDecimals:true,
-	            title: {
-	                text: 'horas'
-	            }
-	        },
-	        legend: {
-	            enabled: false
-	        },
-	        tooltip: {
-	            pointFormat: 'Horas ingresadas: <b>{point.y:.1f} horas</b>'
-	        },
-	        series: [{
-	            data: dist
-	        }]        
-	    });
-		*/
 
 		$('#distribution').highcharts('StockChart', {
             chart: {
                 alignTicks: false
             },
-
             rangeSelector: {
                 selected: 1
             },
-
             title: {
                 text: 'Total de horas ' + total.toFixed(2)
             },
-
             series: [{
                 type: 'column',
                 name: 'Horas',

@@ -60,6 +60,8 @@ object Global extends GlobalSettings {
   }*/
 
   override def onStart(app: Application) {
+    
+    /*
     var filePath = ""
     val filename = Play.application().configuration().getString("bdc.global.aclfile")
     println(filename + "------------filename")
@@ -72,7 +74,7 @@ object Global extends GlobalSettings {
       case ex: IOException => println("Had an IOException trying to read that file")
     }
     models.MyGlobalObject.aclString = filePath
-
+*/
     //you could add initial data here
     //val e = new CronExpression("0 00 9 ? * *")
     //val nextValidTimeAfter = e.getNextValidTimeAfter(new Date())

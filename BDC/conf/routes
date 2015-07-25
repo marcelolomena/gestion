@@ -536,7 +536,9 @@ GET    /documents/:file                                                         
 #Pert
 GET    /generatePert                                                                             	  controllers.Frontend.Pert.generatePert
 GET    /getPanel                                                                            	      controllers.Frontend.Dashboard.getPanel
+GET    /getATM                                                                            	      	  controllers.Frontend.Dashboard.getATM
 GET    /getExcel                                                                            	      controllers.Frontend.Dashboard.getExcel
+GET    /getProgramExcel/$pid<[A-Za-z0-9_-]+>                                                       	  controllers.Frontend.Dashboard.getProgramExcel(pid:String)
 POST   /resultPert                                                                                	  controllers.Frontend.Pert.resultPert
 GET    /program-distribucion-interno                                                                  controllers.Frontend.Program.graphDistributionInternalAction(id:String)
 GET    /program-distribucion-externo                                                                  controllers.Frontend.Program.graphDistributionExternalAction(id:String)
@@ -544,3 +546,8 @@ POST   /request-user-availability                                               
 GET    /get-program-distribution/$uid<[A-Za-z0-9_-]+>/$period<[A-Za-z0-9_-]+>   					  controllers.Frontend.Program.getProgramDistribution(uid:Integer, period:Integer)
 GET    /member_capacity/$mid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Program.editMembersCapacity(mid:Integer)
 GET    /update-member_capacity							  		  									  controllers.Frontend.Program.updateMembersCapacity
+GET    /reportProgram                                                                             	  controllers.Frontend.Dashboard.reportProgram
+GET    /reportProyect/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Dashboard.reportProyect(pid:String)
+#GET    /reportSubTask/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Dashboard.reportSubTask(pid:String)
+GET    /reportSubTarea/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Dashboard.reportSubTarea(pid:String)
+
