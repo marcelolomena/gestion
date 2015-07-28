@@ -186,7 +186,7 @@
 		$("#scroll37").jqGrid({
 			   		datatype: "local",
 			        colModel: [
-			            { label: 'Programa', name: 'program_name', key: true, width: 200 },
+			            { label: 'Programa', name: 'program_name', key: true, width: 250 },
 			            { label: 'Porcentaje', name: 'porcentaje', width: 100 }             
 			        ],
 					viewrecords: true,
@@ -265,7 +265,7 @@
 			var selectedUser = $(this).val()
 			var divDisp="";
 			var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-			console.log('selectedUser :' + selectedUser)
+			//console.log('selectedUser :' + selectedUser)
 					jQuery.ajax({
 						url : "/request-user-availability",
 						type : "POST",
@@ -378,25 +378,7 @@
 	            e.preventDefault();
 	        }
 	    });
-	/*    
-		$(".gpd").click(function(e) {
-			e.preventDefault();
-			alert($(this).attr('href'))
-			var purl = $(this).attr('href');
-			console.log(purl);
-			jQuery.ajax({
-				url : purl,
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					console.log(data)
-				},
-				error : function() {
-					alert("alertSomethingWentWrong");
-				}
-			});	       
-		});	
-	*/    
+    
 	});
 </script>
 </body>
