@@ -1,0 +1,320 @@
+@()(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+
+@frontend.layout()
+<style type="text/css" media="screen">
+    th.ui-th-column div{
+        white-space:normal !important;
+        height:auto !important;
+        padding:2px;
+    }
+    
+    /* set the size of the datepicker search control for Order Date*/
+    #ui-datepicker-div { font-size:11px; }
+        
+    /* set the size of the autocomplete search control*/
+    .ui-menu-item {
+        font-size: 11px;
+    }
+
+    .ui-autocomplete {
+        font-size: 11px;
+    }     
+</style>
+</head>
+<body>
+@frontend.topLayout()
+<div class="main">
+	@frontend.header()
+	<section class="slider" id="panel_page">
+
+		<div class="product_main">
+		  	<div class="product_detail_1">
+
+				<table id="jqGrid"></table>
+				<div id="jqGridPager"></div>
+				
+			</div>
+		</div>
+	  	@frontend.footer()
+	</section>
+		
+		
+</div>
+@frontend.headerScripts()
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
+<script src="@routes.Assets.at("frontend/jqgrid/js/i18n/grid.locale-es.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+// the event handler on expanding parent row receives two parameters
+// the ID of the grid tow  and the primary key of the row
+function showChildGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/reportProyect/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'Codigo',
+                      name: 'codigo',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Nivel',
+                     name: 'nivel',
+                     width: 100,
+                   },
+                   { label: 'Nombre', name: 'nombre', width: 250 },
+                   { label: 'Responsable', name: 'responsable', width: 150 },
+                   { label: 'Fecha Inicio Planeada',
+                     name: 'pini',
+                     width: 120,
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                   },
+                   { label: 'Fecha Termino Planeada',
+                     name: 'pter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Inicio Real',
+                     name: 'rini',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Termino Real',
+                     name: 'rter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
+                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+		//loadonce: true,
+        //width: 500,
+        rowNum: 20,
+		height: 'auto',
+        autowidth:true,
+        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        subGridRowExpanded: showThirdLevelChildGrid, // javascript function that will take care of showing the child grid
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+
+}
+
+// the event handler on expanding parent row receives two parameters
+// the ID of the grid tow  and the primary key of the row
+function showThirdLevelChildGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/reportSubTarea/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'Codigo',
+                      name: 'codigo',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Nivel',
+                     name: 'nivel',
+                     width: 100,
+                   },
+                   { label: 'Nombre', name: 'nombre', width: 250 },
+                   { label: 'Responsable', name: 'responsable', width: 150 },
+                   { label: 'Fecha Inicio Planeada',
+                     name: 'pini',
+                     width: 120,
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                   },
+                   { label: 'Fecha Termino Planeada',
+                     name: 'pter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Inicio Real',
+                     name: 'rini',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Termino Real',
+                     name: 'rter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
+                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+		//loadonce: true,
+        //width: 300,
+        //height: '100%',
+        rowNum: 10,
+ 		height: 'auto',
+        autowidth:true,       
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+
+}
+
+$(document).ready(function(){
+	/*
+	 $.datepicker.regional['es'] = {
+		        closeText: 'Cerrar',
+		        prevText: '<Ant',
+		        nextText: 'Sig>',
+		        currentText: 'Hoy',
+		        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		        weekHeader: 'Sm',
+		        dateFormat: 'dd/mm/yy',
+		        firstDay: 1,
+		        isRTL: false,
+		        showMonthAfterYear: false,
+		        yearSuffix: ''
+	};
+	$.datepicker.setDefaults({
+		  showOn: 'both',
+		  buttonImageOnly: true,
+		  buttonText: 'Calendario',
+		  changeMonth: true,
+		  changeYear: true
+	});
+	$.datepicker.setDefaults($.datepicker.regional['es']);
+   */
+	$("#jqGrid").jqGrid({
+        url: '/reportProgram',
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+            { label: 'Codigo',
+               name: 'codigo',
+               width: 100,
+               key: true,
+               hidden:true
+            },                   
+            { label: 'Nivel',
+              name: 'nivel',
+              width: 100,
+            },
+            { label: 'Nombre', name: 'nombre', width: 250 },
+            { label: 'Responsable', name: 'responsable', width: 150 },
+            { label: 'Fecha Inicio Planeada',
+              name: 'pini',
+              width: 120,
+              formatter: 'date',
+              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+            },
+            { label: 'Fecha Termino Planeada',
+              name: 'pter',
+              width: 120,
+              sorttype:'date',
+              formatter: 'date',
+              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+              
+            },
+            { label: 'Fecha Inicio Real',
+              name: 'rini',
+              width: 120,
+              sorttype:'date',
+              formatter: 'date',
+              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+              
+            },
+            { label: 'Fecha Termino Real',
+              name: 'rter',
+              width: 120,
+              sorttype:'date',
+              formatter: 'date',
+              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+              
+            },
+            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
+            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+		//loadonce: true,
+        //width: 780,
+        //height: 250,
+        rowNum: 20,
+        regional : 'es',
+        height: 'auto',
+        autowidth:true,        
+        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+        pager: "#jqGridPager"
+    });	
+	$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search: false});
+	$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
+	       caption:"",
+	       title: "Exportar a Excel", 
+	       onClickButton : function () { 
+	    	   var grid = $("#jqGrid");
+	           var rowKey = grid.getGridParam("selrow");
+	           if(rowKey === null && typeof rowKey === "object"){
+		           alert('debe seleccionar una fila');
+	           }else{
+		           console.log('rowKey:' + rowKey);
+		           var url = 'getProgramExcel/' + rowKey;
+		    	   $("#jqGrid").jqGrid('excelExport',{"url":url});
+	           }
+	       } 
+	});
+
+
+	
+});
+
+
+</script>
+</body>
+</html>
