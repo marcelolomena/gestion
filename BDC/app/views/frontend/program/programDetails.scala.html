@@ -8,7 +8,25 @@
 @import utils._;var programtypes: Option[ProgramTypeMaster] = ProgramTypeService.findProgramTypeById(program.get.program_type.toString);var subtypes: Option[SubTypes] = null; var genrenciaDetails :Option[Genrencias] =  null;var departmentDetails : Option[Departments]= null;
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")">
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+<style type="text/css" media="screen">
+    th.ui-th-column div{
+        white-space:normal !important;
+        height:auto !important;
+        padding:2px;
+    }
+    
+    /* set the size of the datepicker search control for Order Date*/
+    #ui-datepicker-div { font-size:11px; }
+        
+    /* set the size of the autocomplete search control*/
+    .ui-menu-item {
+        font-size: 11px;
+    }
 
+    .ui-autocomplete {
+        font-size: 11px;
+    }     
+</style>
 </head>
 <body>
 @frontend.topLayout()
@@ -758,19 +776,16 @@
 			var _this = $(this);
 			var mid = _this.attr("id").split("_")[1];
 			var purl = "/member_capacity/"  + mid;
-
 			$.ajax({
 				url : purl,
 				type : "GET",
 				cache : false,
-					success : function(res) {
+				success : function(res) {
 						$("#scroll38").jqGrid('clearGridData').jqGrid('setGridParam', { data: res }).trigger('reloadGrid', [{ page: 1}]);
-		
-
 						$("#dialog-edit-member-capacity").dialog("open");
 				},error : function() {
 						alert("alertSomethingWentWrong");
-					}
+				}
 			});	
 
 		}
@@ -778,16 +793,23 @@
 		$("#scroll38").jqGrid({
 			   		datatype: "local",
 			        colModel: [
-			            { label: 'id', name: 'id', key: true, editable: false,width: 10 },
-			            { label: 'Periodo', name: 'periodo', editable: false,width: 50 },
-			            { label: 'Porcentaje', name: 'porcentaje', editable: true,editrules:{custom_func:validatePositive,custom: true,required: true},width: 50 }, 
+			            { label: 'id', name: 'id', hidden:true,key: true, editable: false,width: 10 },
+			            { label: 'Periodo', name: 'periodo', editable: false,width: 100,formatter: 'date',formatoptions: { srcformat: 'U/1000', newformat: 'M,Y' } },
+			            { label: 'Porcentaje', name: 'porcentaje', editable: true,editrules:{custom_func:validatePositive,custom: true,required: true},width: 100 }, 
+			            { label: 'Porcentaje Otros Programas', name: 'total', editable: false,width: 100}
 			        ],
 			        pager: "#jqGridPager",
 					viewrecords: true,
 					regional : "es",
-			        width: 600,
-			        height: 100,
 			        loadonce: true,
+			        height: 'auto',
+			        autowidth:true,
+			        page:1,
+			        shrinkToFit: false,
+					rowList: [],        // disable page size dropdown
+    				pgbuttons: false,     // disable page control like next, back button
+    				pgtext: null,         // disable pager text like 'Page 0 of 10'
+    				viewrecords: false,    // disable current view record text like 'View 1-10 of 100' 
             		editurl: "/update-member_capacity"
 		});		
 						$("#scroll38").navGrid('#jqGridPager',
@@ -804,20 +826,26 @@
 			                    }
 			                }
 						);
+						
 		$("#dialog-edit-member-capacity").dialog({
 					autoOpen: false,
 		            modal: true,
-		            width: 600,
-		            height: 300,
-		            position: 'center',
-			         show: {
+		            resizable: true,
+		            open: function(event, ui) {
+			        	$("#scroll38").setGridHeight($(this).height()-54); 
+			        	$("#scroll38").setGridWidth($(this).width(), true);
+			    	},resizeStop: function(event, ui) {
+        				$("#scroll38").setGridWidth($locDialog.width(), true);
+       					 $("#scroll38").setGridHeight($locDialog.height()-54);
+    				}, position: 'center',
+					show: {
 		              effect: "blind",
 		              duration: 1000
-		          },
-		          hide: {
+		          	},
+					hide: {
 		              effect: "explode",
 		              duration: 1000
-		          }
+					}
 		});		
 	Highcharts.setOptions({
 		lang: {

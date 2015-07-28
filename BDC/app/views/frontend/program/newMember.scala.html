@@ -164,33 +164,21 @@
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 <script type="text/javascript">
 	function goDist(obj){
-	
 		var purl=obj.id;
-		//var parser = document.createElement('a');
-		
-		//parser.href=obj.href;
-		console.log("URL :" + purl);
-		
 		jQuery.ajax({
 			url : purl,
 			type : "GET",
 			cache : false,
 				success : function(resultado) {
-				
 					$("#scroll37").jqGrid('setGridParam', { data: resultado});
-
 					$("#scroll37")[0].grid.endReq();
-
 					$("#scroll37").trigger('reloadGrid');
-						
+				    $("#dialog-programs").dialog("open");	
 				},
 				error : function() {
 					alert("alertSomethingWentWrong");
 				}
 		});	
-						
-
-	    $("#dialog-programs").dialog("open");		
 		return false;	
 	}
 	
@@ -199,19 +187,26 @@
 			   		datatype: "local",
 			        colModel: [
 			            { label: 'Programa', name: 'program_name', key: true, width: 200 },
-			            { label: 'Porcentaje', name: 'porcentaje', width: 50 }             
+			            { label: 'Porcentaje', name: 'porcentaje', width: 100 }             
 			        ],
 					viewrecords: true,
 					regional : "es",
-			        width: 600,
-			        height: 300
+					rowList: [],        // disable page size dropdown
+    				pgbuttons: false,     // disable page control like next, back button
+    				pgtext: null,         // disable pager text like 'Page 0 of 10'
+    				viewrecords: false    // disable current view record text like 'View 1-10 of 100' 
 		});		
 		$("#dialog-programs").dialog({
 					autoOpen: false,
 		            modal: true,
-		            width: 600,
-		            height: 300,
-		            position: 'center',
+		            resizable: true,
+		            open: function(event, ui) {
+			        	$("#scroll37").setGridHeight($(this).height()-54); 
+			        	$("#scroll37").setGridWidth($(this).width(), true);
+			    	},resizeStop: function(event, ui) {
+        				$("#scroll37").setGridWidth($locDialog.width(), true);
+       					 $("#scroll37").setGridHeight($locDialog.height()-54);
+    				}, position: 'center',
 			         show: {
 		              effect: "blind",
 		              duration: 1000
@@ -282,10 +277,10 @@
 									divDisp+="<dl style=\"display: block;\">";
 						    		divDisp+="<dt><label for=\"periods_" + element.periodo  + "\" name=\"periods_" + element.periodo + "\">" + meses[parseInt(element.periodo.substring(4,6))-1] + ", " + element.periodo.substring(0,4)+ "</label></dt>";
 						    		divDisp+="<dd>";
-						    		if (element.disponible!=0)
-						    			divDisp+="<input type=\"text\" name=\"periods_" + element.periodo + "\" id=\"" + element.periodo + "\" style=\"margin: 0 0 5px;width: 20px;\"><a id=\"/get-program-distribution/"+selectedUser+"/"+element.periodo+"\" onClick=\"return goDist(this)\" href=\"" + element.disponible + "\"> [ " + element.disponible + " % ]</a>";
+						    		if (element.porcentaje!=0)
+						    			divDisp+="<input type=\"text\" name=\"periods_" + element.periodo + "\" id=\"" + element.periodo + "\" style=\"margin: 0 0 5px;width: 20px;\"><a id=\"/get-program-distribution/"+selectedUser+"/"+element.periodo+"\" onClick=\"return goDist(this)\" href=\"" + element.porcentaje + "\"> [ " + element.porcentaje + " % ]</a>";
 						    		else
-						    			divDisp+="<input type=\"text\" name=\"periods_" + element.periodo + "\" id=\"" + element.periodo + "\" style=\"margin: 0 0 5px;width: 20px;\"> [ " + element.disponible + " % ]";
+						    			divDisp+="<input type=\"text\" name=\"periods_" + element.periodo + "\" id=\"" + element.periodo + "\" style=\"margin: 0 0 5px;width: 20px;\"> [ " + element.porcentaje + " % ]";
 									divDisp+="</dd>";
 									divDisp+="</dl>";
 							    });									

@@ -43,25 +43,30 @@ object UserPeriods extends CustomColumns{
   }
 }
 
-case class UserAvailibity(periodo: String, disponible: Double)
+case class UserAvailibity(periodo: String, porcentaje: Double,horas: Double)
 
 object UserAvailibity extends CustomColumns{
 
   val userAvailibity = {
-    get[String]("periodo") ~  get[Double]("disponible") map {
-        case periodo ~ disponible => UserAvailibity(periodo,disponible)
+    get[String]("periodo") ~  get[Double]("porcentaje") ~  get[Double]("horas") map {
+        case periodo ~ porcentaje ~ horas => UserAvailibity(periodo,porcentaje,horas)
       }
   }
   implicit val avaWrites = Json.writes[UserAvailibity]
 }
 
-case class MemberCapacity(id: Option[Int], id_program_members: Int, periodo: Int, porcentaje: Double, horas: Double)
+case class MemberCapacity(id: Option[Int], id_program_members: Int, periodo: Date, porcentaje: Double, horas: Double,total: Double)
 
 object MemberCapacity extends CustomColumns{
 
   val memberCapacity = {
-    get[Option[Int]]("id") ~ get[Int]("id_program_members") ~ get[Int]("periodo") ~ get[Double]("porcentaje") ~ get[Double]("horas") map {
-        case id ~ id_program_members ~ periodo ~ porcentaje ~ horas => MemberCapacity(id,id_program_members,periodo,porcentaje,horas)
+    get[Option[Int]]("id") ~ 
+    get[Int]("id_program_members") ~ 
+    get[Date]("periodo") ~ 
+    get[Double]("porcentaje") ~ 
+    get[Double]("horas") ~ 
+    get[Double]("total") map {
+        case id ~ id_program_members ~ periodo ~ porcentaje ~ horas ~ total => MemberCapacity(id,id_program_members,periodo,porcentaje,horas,total)
       }
   }
   implicit val capWrites = Json.writes[MemberCapacity]
