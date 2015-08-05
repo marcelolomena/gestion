@@ -82,6 +82,7 @@ import models.ServiceCatalogues
 import models.ProgramHours
 import models.ProgramSearch
 import models.RiskManagement
+import models.RiskState
 import models.RiskManagementIssue
 import models.UserProfiles
 import models.GenericProjectType
@@ -99,7 +100,7 @@ import models.AvailableExpenditure
 object ARTForms {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
-
+  
   /**
    * add/edit project form FRONT end.
    */
@@ -869,8 +870,10 @@ object ARTForms {
 
   val searchProgram: Form[ProgramSearch] = Form(
     mapping(
-      "delay_level" -> optional(text),
-      "project_classification" -> optional(text),
+      //"delay_level" -> optional(text),
+      //"project_classification" -> optional(text),
+      "work_flow_status" -> optional(text), 
+      "program_name" -> optional(text),
       "program_type" -> optional(text),
       "program_sub_type" -> optional(text),
       "division" -> optional(text),
@@ -906,7 +909,10 @@ object ARTForms {
    * *
    * backend form to add/edit
    */
-  val riskManagementForm: play.api.data.Form[RiskManagement] = play.api.data.Form(
+
+
+      
+  val riskManagementForm: Form[RiskManagement] = Form(
     mapping(
       "parent_id" -> optional(number),
       "parent_type" -> optional(number),
@@ -927,31 +933,7 @@ object ARTForms {
       "risk_clouser_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
       "is_active" -> optional(number))(RiskManagement.apply)(RiskManagement.unapply))
 
-  /**
-   * *
-   * backend form to add/edit
-   */
-  /*  val addIssueForm: play.api.data.Form[RiskManagementIssue] = play.api.data.Form(
-    mapping(
-      "id" -> optional(number),
-      "parent_id" -> optional(number),
-      "parent_type" -> optional(number),
-      "title" -> text.verifying(Messages.get(langObj, "addIsse.placeholder.title"), title => (title.trim().length() > 0)),
-      "description" -> text.verifying(Messages.get(langObj, "addIssue.placeholder.issueDescription"), description => (description.trim().length() > 0)),
-      "category" -> number,
-      "members_involved" -> optional(text),
-      "action_plan" -> optional(text),
-      "priority" -> number,
-      "issue_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
-      "user_id" -> optional(number),
-      "closure_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "planned_end_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "actual_end_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "creation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "updation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "issue_status" -> optional(number),
-      "is_active" -> optional(number))(RiskManagementIssue.apply)(RiskManagementIssue.unapply))*/
-
+      
   val addIssueForm: Form[models.RiskManagementIssueMain] = Form(
     mapping(
       "id" -> optional(number),

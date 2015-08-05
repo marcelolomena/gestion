@@ -5,7 +5,7 @@ import play.api.db.DB
 import anorm.SqlParser._
 import models._
 import anorm._
-import com.typesafe.plugin._
+//import com.typesafe.plugin._
 import org.apache.commons.lang3.StringUtils
 import play.api.data.Form
 import play.i18n._
@@ -113,6 +113,27 @@ object ProgramTypeService extends CustomColumns {
     }
   }
 
+  /**
+   * All program type list
+   */
+  def findAllWorkflowStatus(): Seq[ProgramWorkflowStatus] = {
+    var sqlString = ""
+
+    sqlString = "SELECT * from art_program_workflow_status"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProgramWorkflowStatus.programWorkflowStatus *)
+    }
+  }
+  
+  def findWorkflowByProgramId(id: String): Option[ProgramWorkflowStatus] = {
+    var sqlString = ""
+
+    sqlString = "SELECT b.* FROM art_program a, art_program_workflow_status b WhERE a.work_flow_status=b.id AND a.program_id=" + id
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProgramWorkflowStatus.programWorkflowStatus.singleOpt)
+    }
+  }    
+  
   /**
    * All program type list
    */

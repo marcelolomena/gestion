@@ -146,6 +146,27 @@ object ATM {
   implicit val atmWrites = Json.writes[ATM]
 }
 
+case class Bubble(x: Double, 
+    y: Double, 
+    z: Double, 
+    programa: String
+    )
+    
+object Bubble {
+  val bubble = {
+    get[Double]("x") ~
+      get[Double]("y") ~
+      get[Double]("z") ~
+      get[String]("programa")  map {
+        case x ~ 
+        y ~ 
+        z ~ 
+        programa  => Bubble(x, y, z, programa)
+      }
+    
+  }
+  implicit val bubbleWrites = Json.writes[Bubble]
+}
 
 case class ATMExcel(id: Int, 
     nivel: String, 

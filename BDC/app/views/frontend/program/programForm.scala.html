@@ -1,4 +1,4 @@
-@(delayLevelValues: java.util.HashMap[String, String], projectClassificationValues : java.util.HashMap[String, String],modelManagementValues : java.util.HashMap[String, String], divisionValues : java.util.HashMap[String, String], programSubTypeValues : java.util.HashMap[String, String], budgetTypeValues: java.util.HashMap[String, String], programManagerValues : java.util.HashMap[String, String], sortValues : java.util.HashMap[String, String],searchProgram : Form[ProgramSearch])(implicit session: play.api.mvc.Session,lang: Lang)
+@(workflowStatusValues : java.util.HashMap[String,String],modelManagementValues : java.util.HashMap[String, String], divisionValues : java.util.HashMap[String, String], programSubTypeValues : java.util.HashMap[String, String], budgetTypeValues: java.util.HashMap[String, String], programManagerValues : java.util.HashMap[String, String], sortValues : java.util.HashMap[String, String],searchProgram : Form[ProgramSearch])(implicit session: play.api.mvc.Session,lang: Lang)
 @import play.api.i18n._
 @import play.api._
 @import services._
@@ -7,24 +7,27 @@
 	 	<div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
 	 	<div class="search-form-wrapper" style="padding: 10px 40px;">
 		@form(action = controllers.Frontend.routes.Program.searchResult, 'id->"search-program-form") {
-		 	<div class="field-wrapper">
-	        	@select(
-            		searchProgram("delay_level"),
-       				options(delayLevelValues),
-					'class -> "input-xlarge ",
-					'_label -> Messages("programsearch.delaylevel"),
-					'_default -> Messages("programsearch.selectdelaylevel")
-				)
-            </div>
-            <div class="field-wrapper"> 
-            	 @select(
-		            	searchProgram("project_classification"),
-		       			options(projectClassificationValues),
+			
+			<div class="left width_full">
+			 	<div class="left width-pr50 padding-top-3px">
+					@inputText(
+			                searchProgram("program_name"),
+			                'class -> "span5", 
+			                '_label -> Messages("addNewProgram.programName"),
+			                'placeholder -> Messages("addNewProgram.placeholder.program_name")
+				    )
+	            </div>
+	            <div class="right width-pr50 padding-top-3px" >
+					@select(
+	            		searchProgram("work_flow_status"),
+	       				options(workflowStatusValues),
 						'class -> "input-xlarge ",
-						'_label -> Messages("programsearch.projectclassification"),
-						'_default -> Messages("programsearch.selectprojectclassification"))
-            </div>
-            
+						'_label -> Messages("addNewProgram.workFlowStatus"),
+						'_default -> Messages("addNewProgram.placeholder.work_flow_status")
+					)
+				</div>
+			</div>
+			
             <div class="field-wrapper" > 
             	@select(
 		            	searchProgram("program_type"),
@@ -61,8 +64,8 @@
 		            	searchProgram("program_role"),
 		       			options(programManagerValues),
 						'class -> "input-xlarge ",
-						'_label -> Messages("programsearch.programrole"),
-						'_default -> Messages("programsearch.selectprogramrole"))
+						'_label -> Messages("programsearch.programmember"),
+						'_default -> Messages("programsearch.selectprogrammember"))
               
             	@*<dl id="tasks_field" class=" ">
 				    <dt><label for="program_role">Program Managers</label></dt>

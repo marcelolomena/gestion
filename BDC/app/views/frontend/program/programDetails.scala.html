@@ -1,4 +1,4 @@
-@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramInternalMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternalAllocation])(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramInternalMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternalAllocation],programWorkflowStatus:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import utils._
@@ -151,23 +151,11 @@
 		*@
 		
          <li>
-			<span class="header"> Estado </span>
+			<span class="header">Estado </span>
 			<span style="float: left;width:143px;">
-					<select  disabled="disabled" readonly="readonly" class="workflow_status_program" >
-						<option value="1" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==1){selected="selected"}}>  En Curso</option>
-						<option value="2" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==2){selected="selected"}}>Finalizado</option>
-						<option value="3" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==3){selected="selected"}}> Suspendido</option>
-						<option value="4" @if(!program.get.work_flow_status.isEmpty){@if(program.get.work_flow_status.get==4){selected="selected"}}> Cancelado</option>
-					</select>
-				</span>
-				@if(!program.get.work_flow_status.isEmpty){
-				@if(!utils.UserAccess.checkAccessSession(session,"program_status_update") && program.get.work_flow_status.get<=2){
-				<span class="edit-status" style="cursor: pointer;"></span>
-				}
-				@if(utils.UserAccess.checkAccessSession(session,"program_status_update")){
-				<span class="edit-status" style="cursor: pointer;"></span>
-				}
-				}
+				@programWorkflowStatus
+			</span>
+
 		</li>
   	</ul>
   	<ul style="width: 310px;float:left;margin-left: 10px;  min-height:215px;">

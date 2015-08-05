@@ -10,7 +10,17 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.libs.json.Json
 
-case class ProgramSearch(delay_level: Option[String], project_classification: Option[String], program_type: Option[String], program_sub_type: Option[String], division: Option[String], program_role: Option[String], item_budget: Option[String], sort_type: Option[String])
+case class ProgramSearch(
+    //delay_level: Option[String],
+    //project_classification: Option[String],
+    work_flow_status: Option[String],
+    program_name: Option[String],
+    program_type: Option[String],
+    program_sub_type: Option[String],
+    division: Option[String],
+    program_role: Option[String],
+    item_budget: Option[String],
+    sort_type: Option[String])
 
 case class ProgramMaster(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int],
   program_name: String, program_code: Long, program_description: Option[String],
@@ -18,15 +28,17 @@ case class ProgramMaster(program_id: Option[Int], program_type: Int, program_sub
 
 object ProgramSearch {
   val programSearch = {
-    get[Option[String]]("delay_level") ~
-      get[Option[String]]("project_classification") ~
+    //get[Option[String]]("delay_level") ~
+      //get[Option[String]]("project_classification") ~
+      get[Option[String]]("work_flow_status") ~
+      get[Option[String]]("program_name") ~
       get[Option[String]]("program_type") ~
       get[Option[String]]("program_sub_type") ~
       get[Option[String]]("division") ~
       get[Option[String]]("program_role") ~
       get[Option[String]]("item_budget") ~
       get[Option[String]]("sort_type") map {
-        case delay_level ~ project_classification ~ program_type ~ program_sub_type ~ division ~ program_role ~ item_budget ~ sort_type => ProgramSearch(delay_level, project_classification, program_type, program_sub_type, division, program_role, item_budget, sort_type)
+        case /*delay_level ~ project_classification*/work_flow_status ~ program_name ~ program_type ~ program_sub_type ~ division ~ program_role ~ item_budget ~ sort_type => ProgramSearch(/*delay_level, project_classification, */work_flow_status,program_name,program_type, program_sub_type, division, program_role, item_budget, sort_type)
       }
   }
 }

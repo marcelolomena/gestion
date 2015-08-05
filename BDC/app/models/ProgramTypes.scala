@@ -39,3 +39,16 @@ object ProgramTypeCase {
       }
   }
 }
+
+
+case class ProgramWorkflowStatus (id: Option[Int],workflow_status: String)
+
+object ProgramWorkflowStatus {
+
+  val programWorkflowStatus = {
+    get[Option[Int]]("id") ~
+      get[String]("workflow_status") map {
+        case id ~ workflow_status => ProgramWorkflowStatus(id, workflow_status)
+      }
+  }
+}

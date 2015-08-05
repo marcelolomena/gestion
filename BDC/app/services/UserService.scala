@@ -1301,6 +1301,12 @@ object UserService extends CustomColumns {
       SQL("select * from art_user where uid  IN (" + user_list + ")").as(Users.user *)
     }
   }
+  
+  def findAllProgramMember(): Seq[Users] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT * FROM art_user a JOIN (SELECT DISTINCT member_id FROM art_program_members WHERE is_active=0) b ON a.uid=b.member_id ORDER BY a.last_name").as(Users.user *)
+    }
+  }  
 
   def findProgramListForUser(employee_id: String): Seq[ProgramMaster] = {
     val sqlString = "select * from art_program where is_active=1 AND program_id IN(select DISTINCT(program) from art_project_master where is_active=1 AND pId IN ( select DISTINCT(pId) from art_task where is_active=1 AND tId IN ( select DISTINCT(task_id) from art_sub_task where (completion_percentage<100 OR completion_percentage Is Null) AND is_active=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where user_id =" + employee_id + " AND is_deleted = 1) )))"

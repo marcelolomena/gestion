@@ -833,18 +833,26 @@ object ProgramService extends CustomColumns {
     }
   }
 
-  def searchDashboardReport(delay_level: String, project_classification: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
-    var sqlString = ""
-    var stment1 = ""
-    var stment2 = ""
-    var stment3 = ""
-    var stment4 = ""
-    var stment5 = ""
-    var stment6 = ""
-    var stment7 = ""
-    var tstx = "OR"
-    sqlString = "SELECT * from art_program where   "
-
+  def searchDashboardReport(work_flow_status:String, program_name: String,program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
+    //var sqlString = ""
+    //var stment1 = ""
+    //var stment2 = ""
+    //var stment3 = ""
+    //var stment4 = ""
+    //var stment5 = ""
+    //var stment6 = ""
+    //var stment7 = ""
+    //var tstx = "OR"
+    var sqlString = "SELECT * from art_program where "
+ 
+    if (!StringUtils.isEmpty(work_flow_status)) {
+      sqlString = sqlString + " work_flow_status = " + work_flow_status + " AND"
+    }
+    
+    if (!StringUtils.isEmpty(program_name)) {
+      sqlString = sqlString + " program_name like '%" + program_name + "%' AND"
+    }
+    
     if (!StringUtils.isEmpty(program_type)) {
       sqlString = sqlString + " program_type=" + program_type + " AND"
     }
@@ -858,13 +866,15 @@ object ProgramService extends CustomColumns {
     }
 
     if (!StringUtils.isEmpty(program_role)) {
-      sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where role_id=6 AND member_id=" + program_role + " ) AND"
+      sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where member_id=" + program_role + " ) AND"
+      //sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where role_id=6 AND member_id=" + program_role + " ) AND"
     }
 
     if (!StringUtils.isEmpty(item_budget)) {
       sqlString = sqlString + " program_id IN (select DISTINCT(program_id) from art_program_sap_master where budget_type=" + item_budget + " and is_active=1) AND"
     }
 
+    /*
     if (!StringUtils.isEmpty(delay_level)) {
       var minVal: Double = 0
       var maxVal: Double = 0
@@ -885,7 +895,8 @@ object ProgramService extends CustomColumns {
           minVal = 1
           maxVal = 1000000
       }
-
+      */
+/*
       val programs = ProgramService.findActivePrograms()
       for (p <- programs) {
         val earn = SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString())
@@ -917,8 +928,9 @@ object ProgramService extends CustomColumns {
         sqlString = sqlString + " program_id NOT IN (" + nonProgramIds + ") AND"
       }
     }
-
+*/
     //println("---------------------"+sqlString)
+/*
     if (!StringUtils.isEmpty(project_classification)) {
       var minVal: Double = 0
       var maxVal: Double = 0
@@ -983,7 +995,7 @@ object ProgramService extends CustomColumns {
       }
 
     }
-
+*/
     if (sqlString.contains("AND")) {
       sqlString = rtrim(sqlString).toString()
 
@@ -1001,6 +1013,7 @@ object ProgramService extends CustomColumns {
       }
     }
 
+    //println("la super query:" + sqlString)
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProgramMaster.pMaster *)
     }
@@ -1625,7 +1638,7 @@ ON A.sub_task_id=B.sub_task_id
 
   def getProgramUserCapacity(uid: Integer, periodo: Integer): Seq[ProgramUserCapacity] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC programa.porcentaje_participacion  {uid},{periodo}").on(
+      SQL("EXEC capacidad.list_member_program  {uid},{periodo}").on(
         'uid -> uid.toInt, 'periodo -> periodo.toInt).executeQuery().as(ProgramUserCapacity.programUserCapacity *)
     }
   }

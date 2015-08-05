@@ -15,6 +15,7 @@ import services.ProjectService
 import services.SubTaskServices
 import services.TimesheetService
 import services.UserService
+import services.RiskStateService
 import java.util.Calendar
 import java.util.Date
 import models.Baseline
@@ -110,6 +111,13 @@ object Risks extends Controller {
       for (categ <- categories) {
         riskCategoryMap.put(categ.id.get.toString(), categ.category_name)
       }
+      
+      val riskStateMap = new java.util.LinkedHashMap[String, String]()
+
+      val states = RiskStateService.findActiveRiskState()
+      for (state <- states) {
+        riskStateMap.put(state.id.get.toString(), state.state_name)
+      }      
 
       val subCategoryMap = new java.util.LinkedHashMap[String, String]()
 
@@ -128,6 +136,7 @@ object Risks extends Controller {
     request.session.get("username").map { user =>
       val subCategoryMap = new java.util.LinkedHashMap[String, String]()
       val riskCategoryMap = new java.util.LinkedHashMap[String, String]()
+      val riskStateMap = new java.util.LinkedHashMap[String, String]()
       var progrm: Option[ProgramDates] = null
       parent_type.intValue() match {
 

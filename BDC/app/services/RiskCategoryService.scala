@@ -9,12 +9,13 @@ import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
 import anorm._
-import com.typesafe.plugin._
+//import com.typesafe.plugin._
 import play.api.data.Form
 import play.i18n._
 import play.mvc._
 import models.RiskSubCategory
 import models.RiskCategoryNew
+
 
 object RiskCategoryService {
 
@@ -161,14 +162,14 @@ object RiskCategoryService {
     }
   }
 
- 
-
   def findActiveRiskCategory(): Seq[RiskCategoryNew] = {
     var sqlString = "SELECT * FROM  art_risk_category where is_deleted = 0"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskCategoryNew.riskCategoryNew   *)
     }
   }
+  
+  
   
   def findActiveRiskSubCategory(): Seq[RiskSubCategory] = {
     var sqlString = "SELECT * FROM  art_risk_sub_category where is_deleted = 0"

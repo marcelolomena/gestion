@@ -1,4 +1,4 @@
-@(programForm: Form[Programs],program_code:String,  userMap: java.util.HashMap[String,String],divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap: java.util.HashMap[String,String], programSubType: java.util.HashMap[String,String], programType: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
+@(programForm: Form[Programs],program_code:String,  userMap: java.util.HashMap[String,String],divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap: java.util.HashMap[String,String], programSubType: java.util.HashMap[String,String], programType: java.util.HashMap[String,String],workflowStatus: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
 @import services._
@@ -36,7 +36,7 @@
     				
     					<!-- Program Manager, Business Line, Impact type, SAP Code, Total SAP fields are no longer required at the create new program screen.  -->
            			<!-- However these fields are mandatory as per existing validation , to avoid comlications we are setting default values to these fields - Abhijeet  -->
-           			<input type="hidden" name="work_flow_status" value="1"/>
+           			@*<input type="hidden" name="work_flow_status" value="1"/>*@
            			<input type="hidden" name="program_details.business_line" value="Not Needed"/>
            			@*<input type="hidden" name="program_details.sap_code" value="99999"/>*@
            			<input type="hidden" name="program_details.total_sap" value="100"/>
@@ -214,9 +214,9 @@
 	           			
            			</div>
            			
-           							<div class="left width_full">
-	           		<div class="left width-pr50 padding-top-3px">
-	           			@inputText(
+           			<div class="left width_full">
+	           			<div class="left width-pr50 padding-top-3px">
+	           				@inputText(
 				                programForm("program_details.sap_code"),
 				                '_label -> Messages("addNewProgram.ppmnumber"),
 				                'class -> "span4", 
@@ -226,11 +226,18 @@
 				            )
 	           			</div>
 	           			
-	           			
+           				<div class="right width-pr50 padding-top-3px" >
+	    				 @select(
+						        programForm("work_flow_status"),
+						         options(workflowStatus),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.workFlowStatus"),
+						          '_default -> Messages("addNewProgram.placeholder.work_flow_status")
+					      )
+	          			</div>	           			
 	           			
            			</div>
-           			
-				
+  				
            			<div class="left width_full padding-top-3px" >
            				<label style="width:100%; text-align:center;">@Messages("artform.mandatorynote")</label>
            			</div>

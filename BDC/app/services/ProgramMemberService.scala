@@ -6,7 +6,7 @@ import anorm.SqlParser._
 import models._
 import anorm._
 import java.util.Date
-import com.typesafe.plugin._
+//import com.typesafe.plugin._
 import org.apache.commons.lang3.StringUtils
 import SqlParser._
 import scala.util.control.Exception._
@@ -40,7 +40,13 @@ object ProgramMemberService extends CustomColumns {
   
   def insertProgramMemberDetails(pm: ProgramMembers) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC programa.save_member_capacity {program_id},{role_id},{member_id},{is_active},{pdata}").on(
+      println("program_id:" +pm.program_id)
+      println("role_id:" +pm.role_id)
+      println("member_id:" +pm.member_id)
+      println("is_active:" +pm.is_active)
+      println("pdata:" +pm.pData)      
+      
+      SQL("EXEC capacidad.save_member_capacity {program_id},{role_id},{member_id},{is_active},{pdata}").on(
         'program_id -> pm.program_id, 'role_id -> pm.role_id,'member_id -> pm.member_id,'is_active -> pm.is_active,'pdata ->pm.pData).executeQuery().as(scalar[Int].single)
     }
   }  
@@ -268,30 +274,32 @@ object ProgramMemberService extends CustomColumns {
       SQL("Delete  art_user_profile_mapping where id=" + id).executeUpdate()
     }
   }
-  
+  /*
   def findPeriods(pid: String): Seq[UserPeriods] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC programa.periodos  {pId}").on(
         'pId -> pid.toInt).executeQuery().as(UserPeriods.userPeriods *)
     }
-  }   
+  }
+  */   
+
   def findProgramUserAvailability(pid: String,uid: String): Seq[UserAvailibity] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC programa.disponibilidad  {pId},{uid}").on(
+      SQL("EXEC capacidad.list_member_capacity  {pId},{uid}").on(
         'pId -> pid.toInt,'uid -> uid.toInt).executeQuery().as(UserAvailibity.userAvailibity *)
     }
   } 
   
   def listMemberAvailability(mid: Int): Seq[MemberCapacity] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC programa.member_capacity {mid}").on(
+      SQL("EXEC capacidad.list_member_capacity_acum {mid}").on(
         'mid -> mid.toInt).executeQuery().as(MemberCapacity.memberCapacity *)
     }
   }  
  
   def updateMemberAvailability(id: String,porcentaje: String): Int = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC programa.update_member_capacity {id},{porcentaje}").on(
+      SQL("EXEC capacidad.update_member_capacity {id},{porcentaje}").on(
         'id -> id.toInt,'porcentaje -> porcentaje.toInt).executeQuery().as(scalar[Int].single)
     }
   } 

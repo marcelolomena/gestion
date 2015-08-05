@@ -29,15 +29,15 @@ object DashboardService {
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (Panel.panel *)
     }
   }
-/*
-  def reportATM(): Seq[ATM] = {
 
-    var sqlString = "EXEC reporte.atm"
+  def reportBubble(): Seq[Bubble] = {
+
+    var sqlString = "EXEC dashboard.bubble"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (ATM.atm *)
+      SQL(sqlString).executeQuery() as (Bubble.bubble *)
     }
   }
-*/
+
   def getProgramExcel(pid: String): Seq[ATMExcel] = {
 
     var sqlString = "EXEC reporte.excel {pid}"
