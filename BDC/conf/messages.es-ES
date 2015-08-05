@@ -191,7 +191,7 @@ programDetails.creationDate=Fecha de creación
 programDetails.nomemeber=Miembros No Disponible...
 programDetails.pae=% Avance Esperado
 programDetails.hp=Total de Horas Estimadas
-programDetails.ha=Total de Horas Planificadas
+programDetails.ha=Total de Horas Asignadas
 
 editProgram.title=Edición de programa
 addNewProgram.title=Crear Nuevo Programa
@@ -1267,6 +1267,8 @@ programsearch.selectbudgettype=--- Seleccione Tipo de Presupuesto ---
 programsearch.programsubtype=Strategic focus
 programsearch.selectprogramsubtype=--- Seleccione Strategic focus ---
 programsearch.programrole=Gerentes de Programas
+programsearch.programmember=Miembros de Programas
+programsearch.selectprogrammember=--- Seleccione Miembros de Programas ---
 programsearch.selectprogramrole=--- Seleccione Gerentes de Programas ---
 programsearch.sorttype=Ordenar Tipo
 programsearch.selectsorttype=--- Seleccione Ordenar Tipo ---
