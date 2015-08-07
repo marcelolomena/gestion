@@ -60,11 +60,55 @@ object itemBudgetValue extends Enumeration {
   val MinorProjects = Value("Minor Projects")
 }
 
-case class Panel(division: String, 
+/**/
+case class PanelExcel(division: String, 
     programa: String, 
     responsable: String, 
     fecini: String, 
     feccom: String, 
+    pai: String, 
+    pae: String, 
+    spi: String,
+    cpi: String,
+    inversion: String,
+    gasto: String
+    )
+
+object PanelExcel {
+  val panelexcel = {
+    get[String]("division") ~
+      get[String]("programa") ~
+      get[String]("responsable") ~
+      get[String]("fecini") ~
+      get[String]("feccom") ~
+      get[String]("pai") ~
+      get[String]("pae") ~
+      get[String]("spi") ~
+      get[String]("cpi") ~
+      get[String]("inversion") ~
+      get[String]("gasto") map {
+        case division ~ 
+        programa ~ 
+        responsable ~ 
+        fecini ~ 
+        feccom ~ 
+        pai ~ 
+        pae ~ 
+        spi ~ 
+        cpi ~ 
+        inversion ~
+        gasto => PanelExcel(division, programa, responsable, fecini, feccom, pai, pae, spi, cpi, inversion,gasto)
+      }
+    
+  }
+  implicit val panelWrites = Json.writes[PanelExcel]
+}
+/**/
+case class Panel(division: String, 
+    programa: String, 
+    responsable: String, 
+    fecini: Option[Date], 
+    feccom: Option[Date], 
     pai: String, 
     pae: String, 
     spi: String,
@@ -78,8 +122,8 @@ object Panel {
     get[String]("division") ~
       get[String]("programa") ~
       get[String]("responsable") ~
-      get[String]("fecini") ~
-      get[String]("feccom") ~
+      get[Option[Date]]("fecini") ~
+      get[Option[Date]]("feccom") ~
       get[String]("pai") ~
       get[String]("pae") ~
       get[String]("spi") ~

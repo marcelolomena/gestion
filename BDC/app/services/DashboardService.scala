@@ -8,25 +8,42 @@ import anorm._
 
 object DashboardService {
 
+  /*
   def cuentaRegistros(): Int = {
     DB.withConnection { implicit connection =>
       SQL("EXEC programa.panel_principal_count").executeQuery().as(scalar[Int].single)
     }
   }
+  */
+  def reportPanel(): Seq[PanelExcel] = {
 
-  def reportPanel(): Seq[Panel] = {
-
-    var sqlString = "EXEC programa.panel_principal"
+    var sqlString = "EXEC dashboard.reporte_excel"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Panel.panel *)
+      SQL(sqlString).executeQuery() as (PanelExcel.panelexcel *)
     }
   }
 
   def reportPanelPaginado(pageSize: String, pageNumber: String): Seq[Panel] = {
 
-    var sqlString = "EXEC programa.panel_principal_paginado {PageSize},{PageNumber}"
+    var sqlString = "EXEC dashboard.programas_por_division {PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (Panel.panel *)
+    }
+  }
+
+  def reporteProgramaFiltrado(pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
+
+    var sqlString = "EXEC dashboard.programas_por_division_filtrado {PageSize},{PageNumber},{Json}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
+    }
+  }
+
+  def cantidadProgramaFiltrado(Json: String): Int = {
+
+    var sqlString = "EXEC dashboard.cantidad_programas_por_division_filtrado {Json}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
     }
   }
 
@@ -58,7 +75,7 @@ object DashboardService {
 
     var sqlString = "EXEC reporte.proyecto {pid},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('pid -> pid.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+      SQL(sqlString).on('pid -> pid.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
     }
   }
 
@@ -66,7 +83,7 @@ object DashboardService {
 
     var sqlString = "EXEC reporte.sub_tarea {pid},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('pid -> pid.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+      SQL(sqlString).on('pid -> pid.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
     }
   }
 
@@ -86,7 +103,7 @@ object DashboardService {
       count
     }
   }
-  
+
   def subtaskCount(pid: String): Int = {
     DB.withConnection { implicit connection =>
       var sqlString = ""
@@ -94,5 +111,5 @@ object DashboardService {
       val count: Int = SQL(sqlString).on('pid -> pid.toInt).as(scalar[Int].single)
       count
     }
-  }  
+  }
 }

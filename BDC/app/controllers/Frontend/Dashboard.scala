@@ -39,7 +39,7 @@ import services.SpiCpiCalculationsService
 import models.ProgramDetails
 import models.EarnValue
 import services.RiskService
-
+import models.Panel;
 import java.io.File
 import java.io.FileOutputStream
 import org.apache.poi.xssf.usermodel._
@@ -294,7 +294,7 @@ object Dashboard extends Controller {
       val bubble = DashboardService.reportBubble
 
       var node = new JSONObject()
-      
+
       node.put("showInLegend", false)
       node.put("name", "Indicadores de Programa")
       var puntos = new JSONArray()
@@ -309,7 +309,6 @@ object Dashboard extends Controller {
       }
 
       node.put("data", puntos)
-      
 
       //println(node.toString())
 
@@ -327,32 +326,110 @@ object Dashboard extends Controller {
     request.session.get("username").map { user =>
       val rows = request.getQueryString("rows").get.toString()
       val page = request.getQueryString("page").get.toString()
+      val filters = request.getQueryString("filters").getOrElse("").toString()
       var node = new JSONObject()
-      val records = DashboardService.cuentaRegistros
-      val panel = DashboardService.reportPanelPaginado(rows, page)
+      var tieneJson = true
 
-      var registro = new JSONArray()
-      for (p <- panel) {
-        var campo = new JSONObject()
-        campo.put("division", p.division)
-        campo.put("programa", p.programa)
-        campo.put("responsable", p.responsable)
-        campo.put("fecini", p.fecini)
-        campo.put("feccom", p.feccom)
-        campo.put("pai", p.pai)
-        campo.put("pae", p.pae)
-        campo.put("spi", p.spi)
-        campo.put("cpi", p.cpi)
-        campo.put("inversion", p.inversion)
-        campo.put("gasto", p.gasto)
-        registro.put(campo)
+      if (!StringUtils.isEmpty(filters)) {
+        val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+        if (!jObject.\\("rules").isEmpty) {
+          val jList = jObject.\\("rules")
+          var jElement = ""
+          for (j <- jList) {
+            jElement = j.toString()
+            if (jElement.equals("[]"))
+              tieneJson = false
+          }
+
+          if (tieneJson) {
+
+            val strjson = play.api.libs.json.Json.toJson(jList).toString()
+            println(strjson)
+
+            val cantidad = DashboardService.cantidadProgramaFiltrado(strjson)
+            val filas = DashboardService.reporteProgramaFiltrado(rows, page, strjson)
+
+            var registro = new JSONArray()
+            for (f <- filas) {
+              var campo = new JSONObject()
+              campo.put("division", f.division)
+              campo.put("programa", f.programa)
+              campo.put("responsable", f.responsable)
+              campo.put("fecini", f.fecini.get)
+              campo.put("feccom", f.feccom.get)
+              campo.put("pai", f.pai)
+              campo.put("pae", f.pae)
+              campo.put("spi", f.spi)
+              campo.put("cpi", f.cpi)
+              campo.put("inversion", f.inversion)
+              campo.put("gasto", f.gasto)
+              registro.put(campo)
+            }
+            var pagedisplay = Math.ceil(cantidad.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+            node.put("page", page)
+            node.put("total", pagedisplay)
+            node.put("records", cantidad)
+            node.put("rows", registro)
+
+          } else {
+            val records = DashboardService.programCount
+            val panel = DashboardService.reportPanelPaginado(rows, page)
+
+            var registro = new JSONArray()
+            for (p <- panel) {
+              var campo = new JSONObject()
+              campo.put("division", p.division)
+              campo.put("programa", p.programa)
+              campo.put("responsable", p.responsable)
+              campo.put("fecini", p.fecini.get)
+              campo.put("feccom", p.feccom.get)
+              campo.put("pai", p.pai)
+              campo.put("pae", p.pae)
+              campo.put("spi", p.spi)
+              campo.put("cpi", p.cpi)
+              campo.put("inversion", p.inversion)
+              campo.put("gasto", p.gasto)
+              registro.put(campo)
+            }
+            var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+            node.put("page", page)
+            node.put("total", pagedisplay)
+            node.put("records", records)
+            node.put("rows", registro)
+
+          }
+        }
+      } else {
+
+        val records = DashboardService.programCount
+        val panel = DashboardService.reportPanelPaginado(rows, page)
+
+        var registro = new JSONArray()
+        for (p <- panel) {
+          var campo = new JSONObject()
+          campo.put("division", p.division)
+          campo.put("programa", p.programa)
+          campo.put("responsable", p.responsable)
+          campo.put("fecini", p.fecini.get)
+          campo.put("feccom", p.feccom.get)
+          campo.put("pai", p.pai)
+          campo.put("pae", p.pae)
+          campo.put("spi", p.spi)
+          campo.put("cpi", p.cpi)
+          campo.put("inversion", p.inversion)
+          campo.put("gasto", p.gasto)
+          registro.put(campo)
+        }
+        var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+        node.put("page", page)
+        node.put("total", pagedisplay)
+        node.put("records", records)
+        node.put("rows", registro)
+
       }
-      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
-
-      node.put("page", page)
-      node.put("total", pagedisplay)
-      node.put("records", records)
-      node.put("rows", registro)
 
       Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
