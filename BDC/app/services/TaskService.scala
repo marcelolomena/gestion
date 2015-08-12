@@ -565,7 +565,7 @@ object TaskService extends CustomColumns {
       else
         program_ids = program_ids + "," + id.toString()
     }
-
+    
     //  println(program_ids + "------------")
     var result: Seq[SubTasks] = null;
     if (StringUtils.isNotEmpty(program_ids)) {
