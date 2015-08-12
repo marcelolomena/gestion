@@ -7,7 +7,7 @@ import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
 import anorm._
-import com.typesafe.plugin._
+//import com.typesafe.plugin._
 import com.sun.xml.internal.ws.wsdl.writer.document.Import
 import java.util._
 
@@ -103,12 +103,12 @@ object UserProfileServices {
       SQL(sqlString).as(UserProfiles.userprofile *)
     }
   }
-  
+
   def findAvailability(uid: Integer): Seq[UserAvailability] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC usuario.disponibilidad  {uid}").on(
         'uid -> uid.toInt).executeQuery().as(UserAvailability.useravailabity *)
-        //'uid -> uid.toInt).executeQuery().as(UserAvailability.useravailabity.single)
+      //'uid -> uid.toInt).executeQuery().as(UserAvailability.useravailabity.single)
     }
-  }   
+  }
 }
