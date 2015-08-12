@@ -66,7 +66,7 @@ object User extends Controller {
 
       // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts,availability)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, availability)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -153,7 +153,7 @@ object User extends Controller {
     for (division <- divisionList) {
       if (StringUtils.isEmpty(divisionId))
         divisionId = division.dId.get.toString;
-      println("division id -- " + division.dId.get.toString);
+      //println("division id -- " + division.dId.get.toString);
       var genrenciaDivisionWise = GenrenciaService.findAllGenrenciaListByDivision(division.dId.get.toString)
       for (genrencia <- genrenciaDivisionWise) {
         var departmentGenerenciaWise = DepartmentService.findAllDepartmentListByGenrencia(genrencia.dId.get.toString);
@@ -257,7 +257,7 @@ object User extends Controller {
           //if (!searchCriteria.department.isEmpty) searchCriteria.department.get else "";
           userList = UserService.searchUser(searchText, division, gerencia, department, start, end);
           val count = UserService.searchUserCount(searchText, division, gerencia, department)
-          println("Count Of Employee List -- " + count)
+          //println("Count Of Employee List -- " + count)
           //println("User List Size -- " + userList.size);
           Ok(views.html.frontend.user.employeeList(userList, parentId, parentType, count, pageNumber)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         });
@@ -313,13 +313,17 @@ object User extends Controller {
             val data = ForgotPasswordMaster(None, emailFromUserName, success.user_name, newUuid, Option(new Date()), null, Option(isverify))
             val recordInsert = UserService.saveForgotPasswordDetails(ForgotPasswordMaster(None, emailFromUserName, success.user_name, newUuid, Option(new Date()), null, Option(isverify)))
             // val recordInsert = 1;
-            if (recordInsert == 1) {
+            
+            
+            if (recordInsert.get >= 1) {
               val resetEmail = emailFromUserName
               val message = "Please reset your password. Please follow the following Link"
+              //println("newUuid:" + newUuid)
               val url = "http://" + request.host + "/password-recovery/" + newUuid;
               val fromEmail = Play.application().configuration().getString("smtp.user")
               SendEmail.sendEmailVerification(message, resetEmail, url, fromEmail)
             }
+            
             Redirect(routes.Login.loginUser())
           }
         })
@@ -337,11 +341,14 @@ object User extends Controller {
       val newUuid = java.util.UUID.randomUUID().toString()
       val data = ForgotPasswordMaster(None, email, userName, newUuid, Option(new Date()), null, Option(isverify))
       val recordInsert = UserService.saveForgotPasswordDetails(ForgotPasswordMaster(None, email, userName, newUuid, Option(new Date()), null, Option(isverify)))
-      if (recordInsert == 1) {
+      if (recordInsert.get >= 1) {
+        //println("email : " + email)
         val resendEmail = email
         val message = "Please reset your password. Please follow the following Link"
-        val url = "http://" + request.host + "/password-recovery/" + newUuid;
+        val url = "http://" + request.host + "/password-recovery/" + newUuid
+        //println("url : " + url)
         val fromEmail = Play.application().configuration().getString("smtp.user")
+        //println("fromEmail : " + fromEmail)
         SendEmail.sendEmailVerification(message, resendEmail, url, fromEmail)
       }
       Redirect(routes.Login.loginUser())
@@ -364,16 +371,20 @@ object User extends Controller {
 
       ARTForms.recoverPasswordForm.bindFromRequest.fold(
         hasErrors => {
+
           Ok(views.html.recoverPassword(hasErrors, id))
         },
         success => {
+
           val theForm: Form[PasswordRecoverMaster] = UserService.validateRecoverForm(ARTForms.recoverPasswordForm.fill(success), id)
           if (theForm.hasErrors) {
+
             BadRequest(views.html.recoverPassword(theForm, id))
           } else {
+
             val email = UserService.getEmailByVerificationId(id)
             var users = UserService.findUserDetailsByEmail(email)
-
+             
             if (!users.isEmpty) {
               val resetPassword = PasswordMaster(users.get.uid, "", success.new_password, success.confirm_password)
               UserService.updateUserPassword(resetPassword)
@@ -826,7 +837,7 @@ object User extends Controller {
             success.office.user_type, success.office.work_hours, success.office.bonus_app, success.office.user_profile)
 
           val userMatser = UserMaster(success.uid, success.uname, success.profile_image, success.first_name, success.last_name, success.email, success.password, success.birth_date, success.rut_number, success.contact_number, success.isverify, success.verify_code, success.verify_date, success.status, success.added_date, officemaster)
-          UserService.updateUser(userMatser, id)
+          UserService.updateUserProfile(userMatser, id)
 
           /**
            * Activity log
@@ -840,7 +851,7 @@ object User extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-/*
+  /*
   def artLog() = Action { implicit request =>
     request.session.get("username").map { user =>
       val allActivities = ActivityLogServices.findPaginationActivityLog(10, 1)
