@@ -5,7 +5,7 @@ import anorm.SqlParser._
 import models._
 import anorm._
 import java.util.Date
-import com.typesafe.plugin._
+//import com.typesafe.plugin._
 import org.apache.commons.lang3.StringUtils
 import java.util.UUID
 import play.api.data.Form
@@ -100,9 +100,9 @@ object UserService extends CustomColumns {
   /**
    * save Forgot Password
    */
-  def saveForgotPasswordDetails(obj: ForgotPasswordMaster): Int = {
+  def saveForgotPasswordDetails(obj: ForgotPasswordMaster): Option[Long] = {
     DB.withConnection { implicit connection =>
-      val result = SQL(
+      val result : Option[Long] = SQL(
         """
 					insert into art_forgot_password_master(email,user_name,verification_code,added_date,updated_date,isverify)
 					values({email},{user_name},{verification_code},{added_date},{updated_date},{isverify}
@@ -113,8 +113,8 @@ object UserService extends CustomColumns {
           'verification_code -> obj.verification_code,
           'added_date -> obj.creation_date.get,
           'updated_date -> obj.creation_date.get,
-          'isverify -> obj.isverify.get)
-      result.executeUpdate()
+          'isverify -> obj.isverify.get).executeInsert()
+      result
     }
   }
 
@@ -125,6 +125,7 @@ object UserService extends CustomColumns {
   def getEmailByVerificationId(id: String): String = {
     DB.withConnection { implicit connection =>
       val sql = "select * from art_forgot_password_master where verification_code='" + id + "' and isverify= 0 "
+      println(sql)
       val emailObj = SQL(sql).as(EmailMaster.emailMaster.singleOpt)
       if (!emailObj.isEmpty) {
         emailObj.get.email
@@ -761,7 +762,9 @@ object UserService extends CustomColumns {
    * update user information
    */
   def updateUser(user: UserMaster, id: String): Int = {
+
     val user_role = user.office.isadmin
+
     val profile = UserProfileServices.findUserProfileById(user_role.toString())
     var uProfile = ""
     if (!profile.isEmpty) {
@@ -769,6 +772,9 @@ object UserService extends CustomColumns {
     } else {
       uProfile = user.office.user_profile
     }
+
+    //var i=1 :Int
+
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -825,8 +831,77 @@ object UserService extends CustomColumns {
           'bonus_app -> user.office.bonus_app,
           'user_profile -> uProfile).executeUpdate()
     }
+
   }
 
+  def updateUserProfile(user: UserMaster, id: String): Int = {
+    /*
+    val user_role = user.office.isadmin
+
+    val profile = UserProfileServices.findUserProfileById(user_role.toString())
+    var uProfile = ""
+    if (!profile.isEmpty) {
+      uProfile = profile.get.profile_code
+    } else {
+      uProfile = user.office.user_profile
+    }
+    */
+    //var i=1 :Int
+
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update art_user
+          set 
+          uname= {uname},
+          first_name= {first_name},
+          last_name = {last_name},
+          division =  {division}, 
+          gerencia = {gerencia}, 
+          department = {department},
+          email = {email},
+          birth_date = {birth_date},
+          office_number = {office_number},
+          joining_date = {joining_date},
+          isadmin = {isadmin},
+          isverify = {isverify},
+          verify_code = {verify_code},
+          verify_date = {verify_date},
+          status ={status},   
+          rut_number ={rut_number},
+          rate_hour ={rate_hour},
+          contact_number = {contact_number},
+          user_type = {user_type},
+          work_hours = {work_hours}, 
+          bonus_app = {bonus_app}
+          where uid = {uid}
+          
+      """).on(
+          'uid -> id,
+          'uname -> user.uname,
+          'first_name -> user.first_name,
+          'last_name -> user.last_name,
+          'division -> user.office.division,
+          'gerencia -> user.office.gerencia,
+          'department -> user.office.department,
+          'email -> user.email,
+          'birth_date -> user.birth_date,
+          'office_number -> user.office.office_number,
+          'joining_date -> user.office.joining_date,
+          'isadmin -> user.office.isadmin,
+          'isverify -> user.isverify,
+          'verify_code -> user.verify_code,
+          'verify_date -> user.verify_date,
+          'status -> user.status,
+          'rut_number -> user.rut_number,
+          'rate_hour -> user.office.rate_hour,
+          'contact_number -> user.contact_number,
+          'user_type -> user.office.user_type,
+          'work_hours -> user.office.work_hours.bigDecimal,
+          'bonus_app -> user.office.bonus_app).executeUpdate()
+    }
+
+  }
   /**
    *  delete user by id
    */
@@ -987,9 +1062,11 @@ object UserService extends CustomColumns {
     if (!(StringUtils.equals(form.data.get("new_password").get, form.data.get("confirm_password").get))) {
       newform = form.withError("confirm_password", Messages.get(langObj, "forgotpassword.confirmpassword.notmatch"))
     }
-
+    println(id)
     val email = UserService.getEmailByVerificationId(id)
+    println(email)
     var users = UserService.findUserDetailsByEmail(email)
+    println(users)
     if (users == null) {
       newform = form.withError("confirm_password", "You are using invalid verification link.")
     }
@@ -1301,12 +1378,12 @@ object UserService extends CustomColumns {
       SQL("select * from art_user where uid  IN (" + user_list + ")").as(Users.user *)
     }
   }
-  
+
   def findAllProgramMember(): Seq[Users] = {
     DB.withConnection { implicit connection =>
       SQL("SELECT * FROM art_user a JOIN (SELECT DISTINCT member_id FROM art_program_members WHERE is_active=0) b ON a.uid=b.member_id ORDER BY a.last_name").as(Users.user *)
     }
-  }  
+  }
 
   def findProgramListForUser(employee_id: String): Seq[ProgramMaster] = {
     val sqlString = "select * from art_program where is_active=1 AND program_id IN(select DISTINCT(program) from art_project_master where is_active=1 AND pId IN ( select DISTINCT(pId) from art_task where is_active=1 AND tId IN ( select DISTINCT(task_id) from art_sub_task where (completion_percentage<100 OR completion_percentage Is Null) AND is_active=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where user_id =" + employee_id + " AND is_deleted = 1) )))"
