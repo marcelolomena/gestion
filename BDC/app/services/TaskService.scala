@@ -556,6 +556,11 @@ object TaskService extends CustomColumns {
     }
   }*/
   def getAllAllocatedSubTask(user_id: String): Seq[SubTasks] = {
+      var sqlString ="EXEC timesheet.list_subtask {uid}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('uid -> user_id).executeQuery()as(SubTasks.subTask *)
+    }
+    /*
     var sql = ""
     val ids = findProgramIdListForUserId(user_id)
     var program_ids = ""
@@ -572,6 +577,8 @@ object TaskService extends CustomColumns {
       result = SubTaskServices.findSubTasksListForProgramIds(user_id, program_ids)
     }
     result
+    * 
+    */
   }
 
   def findProgramIdListForUserId(user_id: String): Seq[Long] = {
