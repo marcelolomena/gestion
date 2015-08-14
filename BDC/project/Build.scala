@@ -25,6 +25,7 @@ object ApplicationBuild extends Build {
     "org.apache.poi" % "poi-ooxml" % "3.9",
     "net.sourceforge" % "mpxj" % "4.5.0-rc1",
     "com.google.code.gson" % "gson" % "2.2.4",
+    "com.typesafe.play" %% "play-mailer" % "2.4.1",
     "com.typesafe" %% "play-plugins-mailer" % "2.1.0",
     "org.apache.commons" % "commons-email" % "1.3")
 
