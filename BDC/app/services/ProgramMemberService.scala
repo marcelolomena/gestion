@@ -40,12 +40,13 @@ object ProgramMemberService extends CustomColumns {
   
   def insertProgramMemberDetails(pm: ProgramMembers) = {
     DB.withConnection { implicit connection =>
+      /*
       println("program_id:" +pm.program_id)
       println("role_id:" +pm.role_id)
       println("member_id:" +pm.member_id)
       println("is_active:" +pm.is_active)
       println("pdata:" +pm.pData)      
-      
+      */
       SQL("EXEC capacidad.save_member_capacity {program_id},{role_id},{member_id},{is_active},{pdata}").on(
         'program_id -> pm.program_id, 'role_id -> pm.role_id,'member_id -> pm.member_id,'is_active -> pm.is_active,'pdata ->pm.pData).executeQuery().as(scalar[Int].single)
     }
