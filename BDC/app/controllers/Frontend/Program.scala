@@ -1449,8 +1449,8 @@ object Program extends Controller {
           } else {
             println("program_member.pData : " + program_member.pData)
             //val pms = ProgramMembers(None, program_member.program_id, program_member.role_id, program_member.member_id, program_member.is_active,program_member.pData)
-            println("program_member.role_id : " + program_member.role_id)
-            println("program_member.member_id : " + program_member.member_id)
+            //println("program_member.role_id : " + program_member.role_id)
+            //println("program_member.member_id : " + program_member.member_id)
             val pms = ProgramMembers(None, program_member.program_id, program_member.member_id, program_member.role_id, program_member.is_active, program_member.pData)
             val last = ProgramMemberService.insertProgramMemberDetails(pms)
             /**
