@@ -4,7 +4,7 @@
 @import services._
 @import helper._
 
-@frontend.layout()
+@frontend.simpleLayout()
 <style type="text/css" media="screen">
     th.ui-th-column div{
         white-space:normal !important;
@@ -24,27 +24,32 @@
 
 		<div class="product_main">
 		  	<div class="product_detail_1">
-		  	
-			<div id="accordion"> 
-				<h3><a id="burbujas" href="#">Gráfico SPI/CPI</a></h3> 
-				<div> 
-						<div id="container"></div>
-				</div> 
-				<h3><a id="panel" href="#">Reporte de Programas</a></h3> 
-				<div> 
-						<table id="jqGrid"></table>
-						<div id="jqGridPager"></div>
-				</div> 
-			</div> 		  	
-				
+				<div id="accordion"> 
+					<h3><a id="burbujas" href="#">Gráfico SPI/CPI</a></h3> 
+					<div> 
+							<div id="container"></div>
+					</div> 
+					<h3><a id="panel" href="#">Reporte de Programas por División</a></h3> 
+					<div> 
+							<table id="jqGrid"></table>
+							<div id="jqGridPager"></div>
+					</div> 
+					<h3><a id="sub" href="#">Reporte de Programas y Sub Tareas</a></h3> 
+					<div> 
+							<table id="jqGrid2"></table>
+							<div id="jqGridPager2"></div>
+					</div> 					
+				</div> 		  	
 			</div>
 		</div>
 	  	@frontend.footer()
 	</section>
 </div>
-@frontend.headerScripts()
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.min.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
+
+<script src="@routes.Assets.at("javascripts/jquery-1.11.3.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/jqgrid/js/i18n/grid.locale-es.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/jqgrid/plugins/jquery.highlight-5.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
@@ -52,7 +57,190 @@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script type="text/javascript">
+// the event handler on expanding parent row receives two parameters
+// the ID of the grid tow  and the primary key of the row
+function showChildGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/reportProyect/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'Codigo',
+                      name: 'codigo',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Nivel',
+                     name: 'nivel',
+                     width: 100,
+                   },
+                   { label: 'Nombre', name: 'nombre', width: 250 },
+                   { label: 'Responsable', name: 'responsable', width: 150 },
+                   { label: 'Fecha Inicio Planeada',
+                     name: 'pini',
+                     width: 120,
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                   },
+                   { label: 'Fecha Termino Planeada',
+                     name: 'pter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Inicio Real',
+                     name: 'rini',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Termino Real',
+                     name: 'rter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
+                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+        rowNum: 20,
+		height: 'auto',
+        autowidth:true,
+        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        subGridRowExpanded: showThirdLevelChildGrid, // javascript function that will take care of showing the child grid
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+
+    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+	//$("#" + childGridID).jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch: 'cn'});
+	$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
+	       caption:"",
+	       buttonicon : "ui-icon-gear",
+	       title: "Exportar a Excel", 
+	       onClickButton : function () { 
+	    	   var grid = $("#" + childGridID);
+	           var rowKey = grid.getGridParam("selrow");
+	           if(rowKey === null && typeof rowKey === "object"){
+		           alert('debe seleccionar una fila');
+	           }else{
+		           alert(rowKey);
+		           //var url = 'getProgramExcel/' + rowKey;
+		    	   //$("#jqGrid2").jqGrid('excelExport',{"url":url});
+	           }
+	       } 
+	});    
+}
+
+// the event handler on expanding parent row receives two parameters
+// the ID of the grid tow  and the primary key of the row
+function showThirdLevelChildGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/reportSubTarea/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'Codigo',
+                      name: 'codigo',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Nivel',
+                     name: 'nivel',
+                     width: 100,
+                   },
+                   { label: 'Nombre', name: 'nombre', width: 250 },
+                   { label: 'Responsable', name: 'responsable', width: 150 },
+                   { label: 'Fecha Inicio Planeada',
+                     name: 'pini',
+                     width: 120,
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                   },
+                   { label: 'Fecha Termino Planeada',
+                     name: 'pter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Inicio Real',
+                     name: 'rini',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Fecha Termino Real',
+                     name: 'rter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+                     
+                   },
+                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
+                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+        rowNum: 10,
+ 		height: 'auto',
+        autowidth:true,       
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+
+}
+
 $(document).ready(function(){
+	 $.datepicker.regional['es'] = {
+		        closeText: 'Cerrar',
+		        prevText: '<Ant',
+		        nextText: 'Sig>',
+		        currentText: 'Hoy',
+		        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		        weekHeader: 'Sm',
+		        dateFormat: 'dd/mm/yy',
+		        firstDay: 1,
+		        isRTL: false,
+		        showMonthAfterYear: false,
+		        yearSuffix: ''
+	};
+
+	$.datepicker.setDefaults($.datepicker.regional['es']);
 	var getColumnIndexByName = function (grid, columnName) {
         var cm = grid.jqGrid('getGridParam', 'colModel'), i, l = cm.length;
         for (i = 0; i < l; i += 1) {
@@ -122,13 +310,11 @@ $(document).ready(function(){
 	};
 
 	$( "#accordion" ).accordion({
-		collapsible:true,
-		active:false,
-		navigation:true,
-		autoHeight:false,
-		change:function(event, ui){
-			var currentHeaderID = ui.newHeader.find("a").attr("id");
-			//alert(currentHeaderHREF);
+		collapsible: true,
+        active: false,
+        heightStyle: "content",
+		activate: function (e, ui) {
+	        var currentHeaderID = ui.newHeader.find("a").attr("id");
 			if(currentHeaderID=='burbujas'){
 				if($('#container').html() == "") {
 					$.ajax({
@@ -155,8 +341,50 @@ $(document).ready(function(){
 				            { label: 'División', name: 'division', key: true, width: 300 },
 				            { label: 'Programa', name: 'programa', width: 250 },
 				            { label: 'Responsable', name: 'responsable', width: 200 },
-				            { label: 'Fecha Inicio', name: 'fecini', width: 180,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' } },
-				            { label: 'Fecha Comprometida', name: 'feccom', width: 180,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' } },
+				            { label: 'Fecha Inicio',
+					          name: 'fecini',
+					          width: 180,
+					          formatter: 'date',
+					          formatoptions: { 
+						          srcformat: 'Y-m-d',
+						          newformat: 'd/m/Y'
+							  },searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["ge","le","eq"]
+				                  }
+				            },
+				            { label: 'Fecha Comprometida',
+					             name: 'feccom',
+					             width: 180,
+					             formatter: 'date',
+					             formatoptions: { 
+						             srcformat: 'Y-m-d',
+						              newformat: 'd/m/Y' 
+				            	 },searchoptions:{
+						              dataInit:function(el){
+							              	$(el).datepicker({
+								              	dateFormat:'dd/mm/yy',
+								              	changeYear: true,
+						                        changeMonth: true,                            
+						                        onSelect: function (dateText, inst) {
+						                            setTimeout(function () {
+						                                $('#jqGrid')[0].triggerToolbar();
+						                            }, 100);
+						                        }
+									        });
+							              },sopt: ["ge","le","eq"]
+					             }
+				            },
 				            { label: '% Avance', name: 'pai', width: 120 },
 				            { label: '% Plan', name: 'pae', width: 120 },
 				            { label: 'SPI', name: 'spi', width: 100 },
@@ -168,8 +396,6 @@ $(document).ready(function(){
 						regional : "es",
 						height: 'auto',
 				        autowidth:true,
-				        //width: 1050,
-				        //height: 450,
 				        rowNum: 20,
 				        pager: "#jqGridPager",
 				        grouping: true,
@@ -204,7 +430,7 @@ $(document).ready(function(){
 		                }
 				    });	
 				
-					$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch: 'cn'});
+					$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true,searchOnEnter: false, defaultSearch: 'cn'});
 					$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search:false});
 					$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
 					       caption:"",
@@ -214,8 +440,139 @@ $(document).ready(function(){
 					       } 
 					});	
 				}			
+			}else if(currentHeaderID=='sub'){
+
+				$("#jqGrid2").jqGrid({
+			        url: '/reportProgram',
+			        mtype: "GET",
+			        datatype: "json",
+			        page: 1,
+			        colModel: [
+			            { label: 'Codigo',
+			               name: 'codigo',
+			               width: 100,
+			               key: true,
+			               hidden:true
+			            },                   
+			            { label: 'Nivel',
+			              name: 'nivel',
+			              width: 100,
+			            },
+			            { label: 'Nombre', name: 'nombre', width: 250 },
+			            { label: 'Responsable', name: 'responsable', width: 150 },
+			            { label: 'Fecha Inicio Planeada',
+			              name: 'pini',
+			              width: 120,
+			              formatter: 'date',
+			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+			              searchoptions:{
+				              dataInit:function(el){
+					              	$(el).datepicker({
+						              	dateFormat:'dd/mm/yy',
+						              	changeYear: true,
+				                        changeMonth: true,                            
+				                        onSelect: function (dateText, inst) {
+				                            setTimeout(function () {
+				                                $('#jqGrid')[0].triggerToolbar();
+				                            }, 100);
+				                        }
+							        });
+					              },sopt: ["ge","le","eq"]
+			             }
+			            },
+			            { label: 'Fecha Termino Planeada',
+			              name: 'pter',
+			              width: 120,
+			              sorttype:'date',
+			              formatter: 'date',
+			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+			              searchoptions:{
+				              dataInit:function(el){
+					              	$(el).datepicker({
+						              	dateFormat:'dd/mm/yy',
+						              	changeYear: true,
+				                        changeMonth: true,                            
+				                        onSelect: function (dateText, inst) {
+				                            setTimeout(function () {
+				                                $('#jqGrid')[0].triggerToolbar();
+				                            }, 100);
+				                        }
+							        });
+					              },sopt: ["ge","le","eq"]
+			             }
+			            },
+			            { label: 'Fecha Inicio Real',
+			              name: 'rini',
+			              width: 120,
+			              sorttype:'date',
+			              formatter: 'date',
+			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+			              searchoptions:{
+				              dataInit:function(el){
+					              	$(el).datepicker({
+						              	dateFormat:'dd/mm/yy',
+						              	changeYear: true,
+				                        changeMonth: true,                            
+				                        onSelect: function (dateText, inst) {
+				                            setTimeout(function () {
+				                                $('#jqGrid')[0].triggerToolbar();
+				                            }, 100);
+				                        }
+							        });
+					              },sopt: ["ge","le","eq"]
+			             }
+			            },
+			            { label: 'Fecha Termino Real',
+			              name: 'rter',
+			              width: 120,
+			              sorttype:'date',
+			              formatter: 'date',
+			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+			              searchoptions:{
+				              dataInit:function(el){
+					              	$(el).datepicker({
+						              	dateFormat:'dd/mm/yy',
+						              	changeYear: true,
+				                        changeMonth: true,                            
+				                        onSelect: function (dateText, inst) {
+				                            setTimeout(function () {
+				                                $('#jqGrid')[0].triggerToolbar();
+				                            }, 100);
+				                        }
+							        });
+					              },sopt: ["ge","le","eq"]
+			             }
+			            },
+			            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
+			            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+			        ],
+			        rowNum: 20,
+			        regional : 'es',
+			        height: 'auto',
+			        autowidth:true,        
+			        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+			        subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+			        pager: "#jqGridPager2"
+			    });	
+				$("#jqGrid2").jqGrid('navGrid','#jqGridPager2',{add:false,edit:false,del:false,search: false});
+				$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch: 'cn'});
+				$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
+				       caption:"",
+				       title: "Exportar a Excel", 
+				       onClickButton : function () { 
+				    	   var grid = $("#jqGrid2");
+				           var rowKey = grid.getGridParam("selrow");
+				           if(rowKey === null && typeof rowKey === "object"){
+					           alert('debe seleccionar una fila');
+				           }else{
+					           var url = 'getProgramExcel/' + rowKey;
+					    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
+				           }
+				       } 
+				});
+				
 			}
- 		}
+	    }
 	});	
 
 });
