@@ -42,6 +42,7 @@
 				</div> 		  	
 			</div>
 		</div>
+		<div id="chart_box" style="display:none;"></div>
 	  	@frontend.footer()
 	</section>
 </div>
@@ -134,7 +135,7 @@ function showChildGrid(parentRowID, parentRowKey) {
 	$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
 	       caption:"",
 	       buttonicon : "ui-icon-gear",
-	       title: "Exportar a Excel", 
+	       title: "Gráficos", 
 	       onClickButton : function () { 
 	    	   var grid = $("#" + childGridID);
 	           var rowKey = grid.getGridParam("selrow");
@@ -142,8 +143,78 @@ function showChildGrid(parentRowID, parentRowKey) {
 		           alert('debe seleccionar una fila');
 	           }else{
 		           //alert(rowKey);
-		           var url = 'getPyChart/' + rowKey;
+		           var curl = 'getPyChart/' + rowKey;
 		    	   //$("#jqGrid2").jqGrid('excelExport',{"url":url});
+		           $.ajax({
+						  url: curl,
+						  type: 'GET',
+						  success: function(data) {
+							  	var items6 = [];
+							  	var items7 = [];
+								$.each(data, function(index, element) {
+									var d = new Date(parseInt(element.fecha));
+									items6.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),element.ecpi]);
+									items7.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),element.espi]);
+							    });	
+								var now = new Date;
+								var chart = new Highcharts.Chart({
+									chart : {
+										renderTo : 'chart_box',
+										zoomType : 'xy'
+									},
+									title: {
+								            text: 'Gráfico Porcentaje de Avance'
+								    },
+									xAxis : {
+										type : 'datetime',
+										plotLines: [{
+														value: Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate()),
+														width: 1,
+														color: 'red',
+														dashStyle: 'dash',
+														label: {
+															text: 'Hoy',
+															align: 'right',
+															y: 12,
+															x: 0
+														}
+													}]										
+									},yAxis: {
+							            title: {
+							                text: 'Porcentaje'
+							            }
+							        },
+									series : [ {
+							            name: '% Avance Informado',
+							            data: items6
+		       					 	},{
+							            name: '% Avance Esperado',
+							            data: items7
+		       					 	}]
+	
+								});
+								$("#chart_box").dialog({
+									autoOpen: false,
+							        modal: true,
+							        width: 800,
+							        height: 600,
+							        position: 'center',
+							          show: {
+							              effect: "blind",
+							              duration: 1000
+							          },
+							          hide: {
+							              effect: "explode",
+							              duration: 1000
+							          }
+								});	
+								
+								$("#chart_box").dialog("open");
+						  },
+						  error: function(e) {
+
+						  }
+					}); 
 	           }
 	       } 
 	});    
@@ -222,7 +293,8 @@ function showThirdLevelChildGrid(parentRowID, parentRowKey) {
 }
 
 $(document).ready(function(){
-	 $.datepicker.regional['es'] = {
+
+	$.datepicker.regional['es'] = {
 		        closeText: 'Cerrar',
 		        prevText: '<Ant',
 		        nextText: 'Sig>',
