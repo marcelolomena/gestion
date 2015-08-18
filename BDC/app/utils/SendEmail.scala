@@ -27,7 +27,7 @@ object SendEmail {
     mail.addFrom(fromEmail.toString())
     mail.addRecipient(recipientEmail.toString())
     try {
-      mail.sendHtml("<html><div> Hello,<br/>" + message.toString() + "</br><a href=" + url.toString() + ">" + url.toString() + " </a></div></html>")
+      mail.sendHtml("<html><div> Hola,<br/>" + message.toString() + "</br><a href=" + url.toString() + ">" + url.toString() + " </a></div></html>")
     } catch {
       case ex: Exception => return "Check SMTP Details"
     }
