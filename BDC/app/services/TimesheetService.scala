@@ -126,7 +126,7 @@ object TimesheetService extends CustomColumns {
 
   def getUserTimesheetsList(user_id: String, sub_task_id: String): Seq[Timesheet] = {
     val sql = "select DISTINCT(at.id), at.* from art_timesheet at where at.sub_task_id=" + sub_task_id + " AND at.user_id = " + user_id + " ORDER BY at.task_for_date asc";
-
+    println(sql)
     DB.withConnection { implicit connection =>
       val result = SQL(sql).as(Timesheet.timesheetLists *)
       result
@@ -376,7 +376,7 @@ object TimesheetService extends CustomColumns {
     //println(hours + ":" + remainMinute + "=========------7777777")
     //val result = String.format("%02d", hours) + ":" + String.format("%02d", remainMinute);
     final_hour = totalHours.toDouble
-    val temp_string = df.format(final_hour).replace(".", ":").split(":")
+    val temp_string = df.format(final_hour).replace(".", ":").split(":")//una tontera lo arregle poniendo una , en vez de un punto
 
     if (temp_string.size > 0) {
       var hours = temp_string(0).toInt
@@ -722,7 +722,10 @@ println(final_new_hour)*/
 
     var df = new DecimalFormat("00.00");
     var final_new_hour = "00.00"
-    val temp_string = df.format(hour).replace(".", ":").split(":")
+    println("hour:"+hour)
+    println("format:"+df.format(hour))
+    val temp_string = df.format(hour).replace(".", ":").split(":")//una tontera lo arregle poniendo una , en vez de un punto
+    println("temp_string:"+temp_string.toString())
     if (temp_string.size > 0) {
       var hours = temp_string(0).toInt
       var min = temp_string(1).toInt
@@ -753,7 +756,8 @@ println(final_new_hour)*/
     
      val tmp = (hours2 + "." + remainMinute).toDouble
       final_new_hour = df.format(tmp)*/
-    final_new_hour.replace(".", ":")
+    println("final_new_hour:" + final_new_hour)
+    final_new_hour.replace(".", ":")//otra tontera una coma en vez del punto
   }
 
 }

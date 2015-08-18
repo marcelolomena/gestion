@@ -16,6 +16,7 @@ import scala.util.control.Exception._
 import play.i18n.Lang
 import play.i18n.Messages
 import models.SpiCpiCalculations
+import models.SpiCpiPyCalculations
 import models.Indicators
 
 object SpiCpiCalculationsService extends CustomColumns {
@@ -24,19 +25,27 @@ object SpiCpiCalculationsService extends CustomColumns {
 
   def findCalculationsById(id: String): Seq[SpiCpiCalculations] = {
 
-	var sqlString ="EXEC indicadores.grafico {programId}"
+    var sqlString = "EXEC indicadores.grafico {programId}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('programId -> id).executeQuery()as(SpiCpiCalculations.spiCpiCalculations *)
+      SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiCalculations.spiCpiCalculations *)
     }
   }
   
-  def findIndicators(id: String,nivel: Int): Seq[Indicators] = {
+  def graficoPorProyecto(id: String): Seq[SpiCpiPyCalculations] = {
 
-	var sqlString ="EXEC indicadores.calc_task {id},{nivel}"
+    var sqlString = "EXEC indicadores.proyectos {programId}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('id -> id.toInt,'nivel -> nivel).executeQuery()as(Indicators.indicators *)
+      SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiPyCalculations.spiCpiPyCalculations *)
     }
   }  
+
+  def findIndicators(id: String, nivel: Int): Seq[Indicators] = {
+
+    var sqlString = "EXEC indicadores.calc_task {id},{nivel}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt, 'nivel -> nivel).executeQuery() as (Indicators.indicators *)
+    }
+  }
 
   def findCalculationsForDashboard(program_id: String): Option[SpiCpiCalculations] = {
     DB.withConnection { implicit connection =>
