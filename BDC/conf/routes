@@ -550,3 +550,4 @@ GET    /reportProgram                                                           
 GET    /reportProyect/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Dashboard.reportProyect(pid:String)
 GET    /reportSubTarea/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Dashboard.reportSubTarea(pid:String)
 GET    /burbujas                                                                            	      controllers.Frontend.Dashboard.burbujas
+GET    /getPyChart/$pid<[A-Za-z0-9_-]+>                                                       	      controllers.Frontend.Dashboard.chartProject(pid:String)
