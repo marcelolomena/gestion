@@ -320,7 +320,7 @@ object User extends Controller {
               val message = "Please reset your password. Please follow the following Link"
               //println("newUuid:" + newUuid)
               val url = "http://" + request.host + "/password-recovery/" + newUuid;
-              val fromEmail = Play.application().configuration().getString("smtp.user")
+              val fromEmail = Play.application().configuration().getString("mail.from")
               SendEmail.sendEmailVerification(message, resetEmail, url, fromEmail)
             }
             
@@ -344,10 +344,10 @@ object User extends Controller {
       if (recordInsert.get >= 1) {
         //println("email : " + email)
         val resendEmail = email
-        val message = "Please reset your password. Please follow the following Link"
+        val message = "Por favor cambie su clave, siguendo el siguiente Link"
         val url = "http://" + request.host + "/password-recovery/" + newUuid
         //println("url : " + url)
-        val fromEmail = Play.application().configuration().getString("smtp.user")
+        val fromEmail = Play.application().configuration().getString("mail.from")
         //println("fromEmail : " + fromEmail)
         SendEmail.sendEmailVerification(message, resendEmail, url, fromEmail)
       }

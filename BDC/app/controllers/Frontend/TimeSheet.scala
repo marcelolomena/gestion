@@ -651,6 +651,7 @@ object TimeSheet extends Controller {
         //println(benefit_bid.get(key))
         //}
         if (user_type.equals("0")) {
+
           subtaskEX = TimesheetService.getUserTimesheetsListExternal(user_id, sub_task_id)
           Ok(views.html.frontend.timesheet.newBookTimeTimesheet(sub_task_id, user_id, user_type, dateMap))
         } else {

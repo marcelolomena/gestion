@@ -176,6 +176,21 @@ object Dashboard extends Controller {
 
   }
 
+  /**
+   * Chart project details...
+   * id : Project id
+   */
+  def chartProject(id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val chart = SpiCpiCalculationsService.graficoPorProyecto(id)
+      Ok(play.api.libs.json.Json.toJson(chart)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
   def getProgramExcel(pid: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
