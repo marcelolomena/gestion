@@ -2334,8 +2334,9 @@ object Program extends Controller {
   def updateProgramStatus(program_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
-      Ok(views.html.frontend.program.updateProgramStatus(ARTForms.programStatusForm, program_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val programStatus=ProgramService.findAllProgramStatus(program_id)
+      Ok(views.html.frontend.program.updateProgramStatus(ARTForms.programStatusForm, program_id, programStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -2344,11 +2345,12 @@ object Program extends Controller {
   def updateStatus(program_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val programStatus=ProgramService.findAllProgramStatus(program_id)
       ARTForms.programStatusForm.bindFromRequest.fold(
         errors => {
           println(errors.errors);
-          BadRequest(views.html.frontend.program.updateProgramStatus(errors, program_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.updateProgramStatus(errors, program_id, programStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         program_status => {
           val lastIndex = ProgramService.insertProgramStatus(program_status)

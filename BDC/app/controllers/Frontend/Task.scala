@@ -701,8 +701,9 @@ object Task extends Controller {
   def updateTaskStatus(task_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
-      Ok(views.html.frontend.task.updateTaskStatus(ARTForms.taskStatusForm, task_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val taskStatus=TaskService.findAllTaskStatus(task_id)
+      Ok(views.html.frontend.task.updateTaskStatus(ARTForms.taskStatusForm, task_id,taskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -711,10 +712,11 @@ object Task extends Controller {
   def updateStatus(task_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val taskStatus=TaskService.findAllTaskStatus(task_id)
       ARTForms.taskStatusForm.bindFromRequest.fold(
         errors => {
-          BadRequest(views.html.frontend.task.updateTaskStatus(errors, task_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.task.updateTaskStatus(errors, task_id, taskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         task_status => {
           val lastIndex = TaskService.insertTaskStatus(task_status)

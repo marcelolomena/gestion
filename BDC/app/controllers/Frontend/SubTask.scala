@@ -746,13 +746,14 @@ object SubTask extends Controller {
   def updateSubTaskStatus(sub_task_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val subTaskStatus=SubTaskServices.findAllSubTaskStatus(sub_task_id)
       var task_id = ""
       val sub_task = SubTaskServices.findSubTaskDetailsBySubtaskId(sub_task_id)
       if (!sub_task.isEmpty) {
         task_id = sub_task.get.task_id.toString
       }
-      Ok(views.html.frontend.subTask.updateSubTaskStatus(ARTForms.subTaskStatusForm, sub_task_id, task_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.subTask.updateSubTaskStatus(ARTForms.subTaskStatusForm, sub_task_id, task_id, subTaskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -761,7 +762,8 @@ object SubTask extends Controller {
   def updateStatus(sub_task_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val subTaskStatus=SubTaskServices.findAllSubTaskStatus(sub_task_id)
       var task_id = ""
       val sub_task = SubTaskServices.findSubTaskDetailsBySubtaskId(sub_task_id)
       if (!sub_task.isEmpty) {
@@ -770,7 +772,7 @@ object SubTask extends Controller {
       ARTForms.subTaskStatusForm.bindFromRequest.fold(
         errors => {
           println(errors.errors);
-          BadRequest(views.html.frontend.subTask.updateSubTaskStatus(errors, sub_task_id, task_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.subTask.updateSubTaskStatus(errors, sub_task_id, task_id, subTaskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         sub_task_status => {
           val status = sub_task_status.status

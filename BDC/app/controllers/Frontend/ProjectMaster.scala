@@ -1455,8 +1455,9 @@ object ProjectMaster extends Controller {
   def updateProjectStatus(project_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
-      Ok(views.html.frontend.project.updateProjectStatus(ARTForms.projectStatusForm, project_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val projectStatus=ProjectService.findAllProjectStatus(project_id)
+      Ok(views.html.frontend.project.updateProjectStatus(ARTForms.projectStatusForm, project_id, projectStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -1465,11 +1466,12 @@ object ProjectMaster extends Controller {
   def updateStatus(project_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
-      var today = FormattedDATE.format(new Date().getTime()).toString();
+      var today = FormattedDATE.format(new Date().getTime()).toString()
+      val projectStatus=ProjectService.findAllProjectStatus(project_id)
       ARTForms.projectStatusForm.bindFromRequest.fold(
         errors => {
           println(errors.errors);
-          BadRequest(views.html.frontend.project.updateProjectStatus(errors, project_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.project.updateProjectStatus(errors, project_id, projectStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         project_status => {
           val lastIndex = ProjectService.insertProjectStatus(project_status)
