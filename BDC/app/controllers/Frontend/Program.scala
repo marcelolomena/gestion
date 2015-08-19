@@ -192,8 +192,8 @@ object Program extends Controller {
     */
     var workflowStatusValues = new java.util.HashMap[String, String]()
     for (d <- ProgramTypeService.findAllWorkflowStatus) {
-        workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
-    } 
+      workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
+    }
     var modelManagementValues = new java.util.HashMap[String, String]()
     for (d <- ProgramTypeService.findAllProgramType) {
       modelManagementValues.put(d.id.get.toString, d.program_type.toString())
@@ -214,7 +214,7 @@ object Program extends Controller {
     for (b <- budgetTypes) {
       budgetTypeValues.put(b.id.get.toString(), b.budget_type.toString())
     }
-/*
+    /*
     val prgramMembers = ProgramMemberService.findProgramManagers("8")
     var userIds = ""
     for (p <- prgramMembers) {
@@ -227,26 +227,26 @@ object Program extends Controller {
 */
     var programManagerValues = new java.util.LinkedHashMap[String, String]()
     //if (!StringUtils.isEmpty(userIds)) {
-      //val users = UserService.findProgramManagersDetails(userIds)
-      val users = UserService.findAllProgramMember
-      if (users.size > 0) {
-        for (u <- users) {
-          programManagerValues.put(u.uid.get.toString(), u.first_name.substring(0, 1) + " " + u.last_name)
-        }
+    //val users = UserService.findProgramManagersDetails(userIds)
+    val users = UserService.findAllProgramMember
+    if (users.size > 0) {
+      for (u <- users) {
+        programManagerValues.put(u.uid.get.toString(), u.first_name.substring(0, 1) + " " + u.last_name)
       }
+    }
     //}
-    
+
     var sortValues = new java.util.HashMap[String, String]()
     sortValues.put("1", "Alphabetically");
     sortValues.put("2", "Release Date");
 
-    Ok(views.html.frontend.program.programForm(/*delayLevelValues, projectClassificationValues,*/workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/ workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
   }
 
   def searchResult() = Action { implicit request =>
 
     request.session.get("username").map { user =>
-/*
+      /*
       var delayLevelValues = new java.util.HashMap[String, String]()
       for (d <- models.delayLevelValues.values) {
         delayLevelValues.put(d.id.toString, d.toString())
@@ -262,7 +262,7 @@ object Program extends Controller {
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
         workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
       }
-          
+
       var modelManagementValues = new java.util.HashMap[String, String]()
       for (d <- ProgramTypeService.findAllProgramType) {
         modelManagementValues.put(d.id.get.toString, d.program_type.toString())
@@ -295,28 +295,28 @@ object Program extends Controller {
         }
       }
       */
-      
+
       var programManagerValues = new java.util.LinkedHashMap[String, String]()
       //if (!StringUtils.isEmpty(userIds)) {
-        //val users = UserService.findProgramManagersDetails(userIds)
-        val users = UserService.findAllProgramMember
-        if (users.size > 0) {
-          for (u <- users) {
-            programManagerValues.put(u.uid.get.toString(), u.first_name.substring(0, 1) + " " + u.last_name)
-          }
+      //val users = UserService.findProgramManagersDetails(userIds)
+      val users = UserService.findAllProgramMember
+      if (users.size > 0) {
+        for (u <- users) {
+          programManagerValues.put(u.uid.get.toString(), u.first_name.substring(0, 1) + " " + u.last_name)
         }
+      }
       //}
       var sortValues = new java.util.HashMap[String, String]()
       sortValues.put("1", "Alphabetically");
       sortValues.put("2", "Release Date");
       ARTForms.searchProgram.bindFromRequest.fold(
         errors => {
-          Ok(views.html.frontend.program.programForm(/*delayLevelValues, projectClassificationValues,*/workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/ workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         searchForm => {
           //var delay_level = ""
           //var project_classification = ""
-          var work_flow_status=""
+          var work_flow_status = ""
           var program_name = ""
           var program_type = ""
           var program_sub_type = ""
@@ -326,14 +326,14 @@ object Program extends Controller {
           var sort_type = ""
           var gerencia = ""
           var department = ""
-          
+
           if (!searchForm.work_flow_status.isEmpty) {
             work_flow_status = searchForm.work_flow_status.get.trim()
           }
-          
+
           if (!searchForm.program_name.isEmpty) {
             program_name = searchForm.program_name.get.trim()
-          }          
+          }
           if (!searchForm.program_type.isEmpty) {
             program_type = searchForm.program_type.get.trim()
           }
@@ -348,7 +348,7 @@ object Program extends Controller {
             project_classification = searchForm.project_classification.get.trim()
           }
           */
-          
+
           if (!searchForm.program_role.isEmpty) {
             program_role = searchForm.program_role.get.trim()
           }
@@ -376,7 +376,7 @@ object Program extends Controller {
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(work_flow_status,program_name, program_type, program_sub_type, division, program_role, item_budget, "")
+            val programs = ProgramService.searchDashboardReport(work_flow_status, program_name, program_type, program_sub_type, division, program_role, item_budget, "")
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
             //Ok("SUCCESS");
@@ -412,8 +412,8 @@ object Program extends Controller {
       val uId = Integer.parseInt(request.session.get("uId").get)
       val utype = Integer.parseInt(request.session.get("utype").get)
       val program = ProgramService.findProgramMasterDetailsById(programId)
-      val statusWorkflow=ProgramTypeService.findWorkflowByProgramId(programId)
-      var statusWF=statusWorkflow.get.workflow_status.toString()
+      val statusWorkflow = ProgramTypeService.findWorkflowByProgramId(programId)
+      var statusWF = statusWorkflow.get.workflow_status.toString()
       val programDetail = ProgramService.findProgramOtherDetailsById(programId)
       val programDates = ProgramService.findProgramDateDetailsById(programId)
       val projectList = UserService.findProjectListForUserAndProgram(uId, programId)
@@ -478,10 +478,10 @@ object Program extends Controller {
 
       if (plan_time_for_program.!=(0)) {
         val completion_percentage_forProgram = ProgramService.completionPercentageForProgram(programId)
-        Ok(views.html.frontend.program.programDetails(expected_completion_percentage.toString(), completion_percentage_forProgram.toString(), program, programDetail, programDates, projectList, documents, changeSet, progrma_members, saps, externalEmployees,statusWF)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.program.programDetails(expected_completion_percentage.toString(), completion_percentage_forProgram.toString(), program, programDetail, programDates, projectList, documents, changeSet, progrma_members, saps, externalEmployees, statusWF)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       } else {
 
-        Ok(views.html.frontend.program.programDetails(expected_completion_percentage.toString(), plan_time_for_program.toString(), program, programDetail, programDates, projectList, documents, changeSet, progrma_members, saps, externalEmployees,statusWF)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.program.programDetails(expected_completion_percentage.toString(), plan_time_for_program.toString(), program, programDetail, programDates, projectList, documents, changeSet, progrma_members, saps, externalEmployees, statusWF)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }
 
     }.getOrElse {
@@ -499,8 +499,8 @@ object Program extends Controller {
       var workflowStatusValues = new java.util.HashMap[String, String]()
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
         workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
-      } 
-      
+      }
+
       val count = ProgramService.findAllProgramList.size
       val today = Calendar.getInstance()
       today.setTime(new Date())
@@ -571,14 +571,12 @@ object Program extends Controller {
     val today = Calendar.getInstance()
     today.setTime(new Date())
     val program_code = "20150101"
-    
+
     var workflowStatusValues = new java.util.HashMap[String, String]()
-      for (d <- ProgramTypeService.findAllWorkflowStatus) {
-        workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
-    } 
- 
-    
-    
+    for (d <- ProgramTypeService.findAllWorkflowStatus) {
+      workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
+    }
+
     var programSubType = new java.util.HashMap[String, String]()
     var subtype = SubTypeService.findAllSubTypeList();
     for (s <- subtype) {
@@ -647,7 +645,7 @@ object Program extends Controller {
           }
         }
 
-        BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType,workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       },
       program => {
@@ -661,7 +659,7 @@ object Program extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType,workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
         } else {
 
@@ -835,12 +833,12 @@ object Program extends Controller {
    */
   def editProgram(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      
+
       var workflowStatusValues = new java.util.HashMap[String, String]()
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
         workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
-      } 
-      
+      }
+
       var programSubType = new java.util.HashMap[String, String]()
       var subtype = SubTypeService.findAllSubTypeList();
       for (s <- subtype) {
@@ -916,7 +914,7 @@ object Program extends Controller {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
 
-      Ok(views.html.frontend.program.editProgram(ARTForms.programFormEdit.fill(progrm), id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType,workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.editProgram(ARTForms.programFormEdit.fill(progrm), id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -928,11 +926,11 @@ object Program extends Controller {
    * id - program id
    */
   def updateProgram(id: String) = Action { implicit request =>
-    
+
     var workflowStatusValues = new java.util.HashMap[String, String]()
-      for (d <- ProgramTypeService.findAllWorkflowStatus) {
-        workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
-    } 
+    for (d <- ProgramTypeService.findAllWorkflowStatus) {
+      workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
+    }
 
     var programSubType = new java.util.HashMap[String, String]()
     var subtype = SubTypeService.findAllSubTypeList();
@@ -1015,7 +1013,7 @@ object Program extends Controller {
             departmentsMap.put(d.dId.get.toString(), d.department)
           }
         }
-        BadRequest(views.html.frontend.program.editProgram(errors, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType,workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.editProgram(errors, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       },
       program => {
         val theForm = ProgramService.validateForm(ARTForms.programFormEdit.fill(program), id)
@@ -2335,7 +2333,7 @@ object Program extends Controller {
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
       var today = FormattedDATE.format(new Date().getTime()).toString()
-      val programStatus=ProgramService.findAllProgramStatus(program_id)
+      val programStatus = ProgramService.findAllProgramStatus(program_id)
       Ok(views.html.frontend.program.updateProgramStatus(ARTForms.programStatusForm, program_id, programStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -2346,7 +2344,7 @@ object Program extends Controller {
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
       var today = FormattedDATE.format(new Date().getTime()).toString()
-      val programStatus=ProgramService.findAllProgramStatus(program_id)
+      val programStatus = ProgramService.findAllProgramStatus(program_id)
       ARTForms.programStatusForm.bindFromRequest.fold(
         errors => {
           println(errors.errors);
