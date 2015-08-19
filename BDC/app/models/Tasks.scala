@@ -7,8 +7,8 @@ import play.api.db.DB
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import org.apache.commons.lang3.StringUtils
-
 import services.ProjectService
+import play.api.libs.json.Json
 
 /*case class TaskMaster(tId: Option[Int], project: Int, task_title: String, task_code: String,
 	plan_start_date: Date, plan_end_date: Date, task_description: String, plan_time: BigDecimal, task_status: Int,
@@ -56,6 +56,7 @@ object TaskStatus {
       }
 
   }
+  implicit val statusWrites = Json.writes[TaskStatus]
 }
 
 case class Tasks(tId: Option[Int]=None, pId: Int, task_title: String, task_code: String,

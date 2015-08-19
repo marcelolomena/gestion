@@ -268,6 +268,7 @@ object ProgramStatus {
           ProgramStatus(id, program_id, status_for_date, reason_for_change, status)
       }
   }
+  implicit val statusWrites = Json.writes[ProgramStatus]
 }
 
 case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,

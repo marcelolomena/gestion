@@ -4,6 +4,7 @@ import play.api.Play.current
 import java.util.Date
 import anorm._
 import play.api.db.DB
+import play.api.libs.json.Json
 
 case class SubTaskAllocation(id: Option[Int], sub_task_id: Long, task_id: Long, pId: Int, user_id: Long,
   estimated_time: Double, status: Integer)
@@ -166,7 +167,7 @@ object SubTaskStatus {
       }
 
   }
-
+  implicit val statusWrites = Json.writes[SubTaskStatus]
 }
 
 case class SubTaskDetail(program_id: Option[Int], project_id: Option[Int], task_id: Option[Int],

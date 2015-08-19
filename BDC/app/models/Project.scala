@@ -6,6 +6,7 @@ import anorm._
 import play.api.db.DB
 import play.api.data.Forms._
 import play.api.data._
+import play.api.libs.json.Json
 
 case class Project(pId: Option[Int], project_id: String, program: Int, project_mode: Int, project_name: String, description: String,
   project_manager: Int, start_date: Date, final_release_date: Date, completion_percentage: Option[Double],
@@ -142,7 +143,7 @@ object ProjectStatus {
       }
 
   }
-
+  implicit val statusWrites = Json.writes[ProjectStatus]
 }
 
 case class ProjectMasters(project_id: String, program: Int, project_mode: Int, project_name: String, description: String,
