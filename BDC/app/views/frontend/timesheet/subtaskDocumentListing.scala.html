@@ -4,10 +4,13 @@
 <div style="margin-top:20px;" class="width_full">
 				
 				@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){
-					<a href='@controllers.Frontend.routes.Documents.uploadDocument(subtask_id, "TIME", "ADD")'><span class="upload-document-icon">Upload Document</span></a>
+					<a id="updoc" href='@controllers.Frontend.routes.Documents.uploadDocument(subtask_id, "TIME", "ADD")'><span class="upload-document-icon">Upload Document</span></a>
 				}
 				
-					<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(subtask_id)'><span class="upload-document-icon">Go To Sub-Task Detail Page</span></a>
+					@*<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(subtask_id)'><span class="upload-document-icon">Go To Sub-Task Detail Page</span></a>*@
+
+					<a href="@controllers.Frontend.routes.Program.issueManagement(subtask_id,riskParentType.SubTask.id)"><span class="upload-document-icon">@Messages("subtask.addissue")</span></a>
+
 		  </div>
 <div style="float: left; height: auto; overflow: hidden;" class="product_main" id="timesheet_doc_list_id">
 		  <div id="p_page" class="subtask_doc_list">
@@ -84,3 +87,15 @@
 		  </div>
 		  </div>
 		  </div>
+<script type="text/javascript">
+$(document).ready(function(){
+/*
+	$('#updoc').click(function(){   
+		   var url = $(this).attr('href');
+		   $("#subtask_div_change_id").load(url);
+		   $("#subtask_div_change_id").dialog("open"); 
+		   return false;
+	});
+*/
+});
+</script>

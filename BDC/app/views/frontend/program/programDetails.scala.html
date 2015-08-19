@@ -823,8 +823,8 @@
 			        	$("#scroll38").setGridHeight($(this).height()-54); 
 			        	$("#scroll38").setGridWidth($(this).width(), true);
 			    	},resizeStop: function(event, ui) {
-        				$("#scroll38").setGridWidth($locDialog.width(), true);
-       					 $("#scroll38").setGridHeight($locDialog.height()-54);
+			        	$("#scroll38").setGridHeight($(this).height()-54); 
+			        	$("#scroll38").setGridWidth($(this).width(), true);
     				}, position: 'center',
 					show: {
 		              effect: "blind",
