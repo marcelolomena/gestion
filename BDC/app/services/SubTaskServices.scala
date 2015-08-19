@@ -58,7 +58,8 @@ object SubTaskServices extends CustomColumns {
 
   def updateSubTask(task: SubTaskMaster): Int = {
     var actual_end_date: Date = null
-    if (!task.actual_end_date.isEmpty) {
+    //if (!task.actual_end_date.isEmpty) {
+    if (!task.actual_end_date.getOrElse("").toString().isEmpty()) {
       actual_end_date = task.actual_end_date.get
     } else {
       actual_end_date = task.plan_end_date
@@ -1076,7 +1077,14 @@ object SubTaskServices extends CustomColumns {
       SQL(sqlString).as(SubTaskStatus.stStatus.singleOpt)
     }
   }
-
+  
+  def findAllSubTaskStatus(sub_task_id: String): Seq[SubTaskStatus] = {
+    var sqlString = ""
+    sqlString = "SELECT * from  art_sub_task_status where sub_task_id=" + sub_task_id + " order by status_for_date DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(SubTaskStatus.stStatus *)
+    }
+  }
   def findAllocatedSubTaskIdsByTask(task_id: String): Seq[Long] = {
     var sql = "select sub_task_id from  art_sub_task  where task_id = " + task_id
     DB.withConnection { implicit connection =>

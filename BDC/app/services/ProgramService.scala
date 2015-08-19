@@ -810,6 +810,14 @@ object ProgramService extends CustomColumns {
       SQL(sqlString).as(ProgramStatus.pStatus.singleOpt)
     }
   }
+  
+  def findAllProgramStatus(program_id: String): Seq[ProgramStatus] = {
+    var sqlString = ""
+    sqlString = "SELECT * from art_program_status where program_id=" + program_id + "  order by status_for_date DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProgramStatus.pStatus *)
+    }
+  }  
 
   def findActivePrograms(): Seq[ProgramMaster] = {
     var sqlString = ""

@@ -586,6 +586,15 @@ object ProjectService extends CustomColumns {
       SQL(sqlString).as(ProjectStatus.pStatus.singleOpt)
     }
   }
+  
+  def findAllProjectStatus(project_id: String): Seq[ProjectStatus] = {
+    var sqlString = ""
+    sqlString = "SELECT * from  art_project_status where project_id=" + project_id + " order by status_for_date DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProjectStatus.pStatus *)
+    }
+  }
+  
   def updateStartEndDate(pId: Option[Int], start_date: Date, final_release_date: Date): Int = {
     DB.withConnection { implicit connection =>
       SQL(

@@ -1223,6 +1223,14 @@ object TaskService extends CustomColumns {
       SQL(sqlString).as(TaskStatus.tStatus.singleOpt)
     }
   }
+  
+  def findAllTaskStatus(task_id: String): Seq[TaskStatus] = {
+    var sqlString = ""
+    sqlString = "SELECT * from  art_task_status where task_id=" + task_id + " order by status_for_date DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(TaskStatus.tStatus *)
+    }
+  }  
 
   def changeDependentTaskDates(task_id: String, hours_change: Integer) = {
     if (StringUtils.isEmpty(task_id)) {
