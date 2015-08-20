@@ -212,7 +212,7 @@ object ProjectMaster extends Controller {
   def addNewProject(program: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val pIndex = Integer.parseInt(program)
-      val projectmanagers = UserService.findAllUsers
+      //val projectmanagers = UserService.findAllUsers
       var pTypes = new java.util.LinkedHashMap[String, String]()
       var workFlow = new java.util.LinkedHashMap[String, String]()
       val work_flows = ProjectWorkflowStatusService.findAllProjectWorkflowList
