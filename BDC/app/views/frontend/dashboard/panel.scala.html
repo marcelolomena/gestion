@@ -696,6 +696,7 @@ $(document).ready(function(){
 					$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search:false});
 					$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
 					       caption:"",
+					       buttonicon : "silk-icon-page-excel",
 					       title: "Exportar a Excel", 
 					       onClickButton : function () { 
 					    	   $("#jqGrid").jqGrid('excelExport',{"url":"getExcel"});
@@ -820,6 +821,7 @@ $(document).ready(function(){
 				$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch: 'cn'});
 				$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
 				       caption:"",
+				       buttonicon : "silk-icon-page-excel",
 				       title: "Exportar a Excel", 
 				       onClickButton : function () { 
 				    	   var grid = $("#jqGrid2");
