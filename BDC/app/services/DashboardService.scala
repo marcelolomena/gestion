@@ -14,7 +14,7 @@ object DashboardService {
       SQL("EXEC programa.panel_principal_count").executeQuery().as(scalar[Int].single)
     }
   }
-  */
+  
   def reportPanel(): Seq[PanelExcel] = {
 
     var sqlString = "EXEC dashboard.reporte_excel"
@@ -22,15 +22,7 @@ object DashboardService {
       SQL(sqlString).executeQuery() as (PanelExcel.panelexcel *)
     }
   }
-
-  def reportPanelPaginado(pageSize: String, pageNumber: String): Seq[Panel] = {
-
-    var sqlString = "EXEC dashboard.programas_por_division {PageSize},{PageNumber}"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (Panel.panel *)
-    }
-  }
-
+  */
   def reporteProgramaFiltrado(pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
 
     var sqlString = "EXEC dashboard.programas_por_division_filtrado {PageSize},{PageNumber},{Json}"
