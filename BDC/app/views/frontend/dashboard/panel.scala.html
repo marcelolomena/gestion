@@ -647,12 +647,12 @@ $(document).ready(function(){
 							              },sopt: ["ge","le","eq"]
 					             }
 				            },
-				            { label: '% Avance', name: 'pai', width: 120 },
-				            { label: '% Plan', name: 'pae', width: 120 },
-				            { label: 'SPI', name: 'spi', width: 100 },
-				            { label: 'CPI', name: 'cpi', width: 100 },
-				            { label: 'Inversión', name: 'inversion', width: 150 },  
-				            { label: 'Gasto', name: 'gasto', width: 150 }                      
+				            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
+				            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
+				            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
+				            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
+				            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["ge","le","eq"] } },  
+				            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["ge","le","eq"] } }                      
 				        ],
 						viewrecords: true,
 						regional : "es",
@@ -704,137 +704,157 @@ $(document).ready(function(){
 					});	
 				}			
 			}else if(currentHeaderID=='sub'){
-
-				$("#jqGrid2").jqGrid({
-			        url: '/reportProgram',
-			        mtype: "GET",
-			        datatype: "json",
-			        page: 1,
-			        colModel: [
-			            { label: 'Codigo',
-			               name: 'codigo',
-			               width: 100,
-			               key: true,
-			               hidden:true
-			            },                   
-			            { label: 'Nivel',
-			              name: 'nivel',
-			              width: 100,
-			            },
-			            { label: 'Nombre', name: 'nombre', width: 250 },
-			            { label: 'Responsable', name: 'responsable', width: 150 },
-			            { label: 'Fecha Inicio Planeada',
-			              name: 'pini',
-			              width: 120,
-			              formatter: 'date',
-			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
-			              searchoptions:{
-				              dataInit:function(el){
-					              	$(el).datepicker({
-						              	dateFormat:'dd/mm/yy',
-						              	changeYear: true,
-				                        changeMonth: true,                            
-				                        onSelect: function (dateText, inst) {
-				                            setTimeout(function () {
-				                                $('#jqGrid')[0].triggerToolbar();
-				                            }, 100);
-				                        }
-							        });
-					              },sopt: ["ge","le","eq"]
-			             }
-			            },
-			            { label: 'Fecha Termino Planeada',
-			              name: 'pter',
-			              width: 120,
-			              sorttype:'date',
-			              formatter: 'date',
-			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
-			              searchoptions:{
-				              dataInit:function(el){
-					              	$(el).datepicker({
-						              	dateFormat:'dd/mm/yy',
-						              	changeYear: true,
-				                        changeMonth: true,                            
-				                        onSelect: function (dateText, inst) {
-				                            setTimeout(function () {
-				                                $('#jqGrid')[0].triggerToolbar();
-				                            }, 100);
-				                        }
-							        });
-					              },sopt: ["ge","le","eq"]
-			             }
-			            },
-			            { label: 'Fecha Inicio Real',
-			              name: 'rini',
-			              width: 120,
-			              sorttype:'date',
-			              formatter: 'date',
-			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
-			              searchoptions:{
-				              dataInit:function(el){
-					              	$(el).datepicker({
-						              	dateFormat:'dd/mm/yy',
-						              	changeYear: true,
-				                        changeMonth: true,                            
-				                        onSelect: function (dateText, inst) {
-				                            setTimeout(function () {
-				                                $('#jqGrid')[0].triggerToolbar();
-				                            }, 100);
-				                        }
-							        });
-					              },sopt: ["ge","le","eq"]
-			             }
-			            },
-			            { label: 'Fecha Termino Real',
-			              name: 'rter',
-			              width: 120,
-			              sorttype:'date',
-			              formatter: 'date',
-			              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
-			              searchoptions:{
-				              dataInit:function(el){
-					              	$(el).datepicker({
-						              	dateFormat:'dd/mm/yy',
-						              	changeYear: true,
-				                        changeMonth: true,                            
-				                        onSelect: function (dateText, inst) {
-				                            setTimeout(function () {
-				                                $('#jqGrid')[0].triggerToolbar();
-				                            }, 100);
-				                        }
-							        });
-					              },sopt: ["ge","le","eq"]
-			             }
-			            },
-			            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
-			            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
-			        ],
-			        rowNum: 20,
-			        regional : 'es',
-			        height: 'auto',
-			        autowidth:true,        
-			        subGrid: true, // set the subGrid property to true to show expand buttons for each row
-			        subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
-			        pager: "#jqGridPager2"
-			    });	
-				$("#jqGrid2").jqGrid('navGrid','#jqGridPager2',{add:false,edit:false,del:false,search: false});
-				$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch: 'cn'});
-				$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
-				       caption:"",
-				       buttonicon : "silk-icon-page-excel",
-				       title: "Exportar a Excel", 
-				       onClickButton : function () { 
-				    	   var grid = $("#jqGrid2");
-				           var rowKey = grid.getGridParam("selrow");
-				           if(rowKey === null && typeof rowKey === "object"){
-					           alert('debe seleccionar una fila');
-				           }else{
-					           var url = 'getProgramExcel/' + rowKey;
-					    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
-				           }
-				       } 
-				});
-				
+				if($('#jqGrid2').html() == "") {
+					$("#jqGrid2").jqGrid({
+				        url: '/reportProgram',
+				        mtype: "GET",
+				        datatype: "json",
+				        page: 1,
+				        colModel: [
+				            { label: 'Codigo',
+				               name: 'codigo',
+				               width: 100,
+				               key: true,
+				               hidden:true
+				            },                   
+				            { label: 'Nivel',
+				              name: 'nivel',
+				              width: 100,
+				            },
+				            { label: 'Nombre', name: 'nombre', width: 250 },
+				            { label: 'Responsable', name: 'responsable', width: 150 },
+				            { label: 'Fecha Inicio Planeada',
+				              name: 'pini',
+				              width: 120,
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["ge","le","eq"]
+				             }
+				            },
+				            { label: 'Fecha Termino Planeada',
+				              name: 'pter',
+				              width: 120,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["ge","le","eq"]
+				             }
+				            },
+				            { label: 'Fecha Inicio Real',
+				              name: 'rini',
+				              width: 120,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["ge","le","eq"]
+				             }
+				            },
+				            { label: 'Fecha Termino Real',
+				              name: 'rter',
+				              width: 120,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["ge","le","eq"]
+				             }
+				            },
+				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100,searchoptions: {sopt:["ge","le","eq"] } },
+				            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100,searchoptions: {sopt:["ge","le","eq"] } }              
+				        ],
+				        rowNum: 20,
+				        regional : 'es',
+				        height: 'auto',
+				        autowidth:true,        
+				        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+				        subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+				        pager: "#jqGridPager2",
+				        loadComplete: function () {
+		                    var filters, i, l, rules, rule, iCol, $this = $(this);
+		                    if (this.p.search === true) {
+		                        filters = $.parseJSON(this.p.postData.filters);
+		                        if (filters !== null && typeof filters.rules !== 'undefined' &&
+		                                filters.rules.length > 0) {
+		                            rules = filters.rules;
+		                            l = rules.length;
+		                            for (i = 0; i < l; i++) {
+		                                rule = rules[i];
+		                                iCol = getColumnIndexByName($this, rule.field);
+		                                if (iCol >=0) {
+		                                    $('>tbody>tr.jqgrow>td:nth-child(' + (iCol + 1) +
+		                                        ')', this).highlight(rule.data);
+		                                }
+		                            }
+		                        }
+		                    }
+		                    return;
+		                }
+				    });	
+					$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+					$("#jqGrid2").jqGrid('navGrid','#jqGridPager2',{add:false,edit:false,del:false,search: false});
+					$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
+					       caption:"",
+					       buttonicon : "silk-icon-page-excel",
+					       title: "Exportar a Excel", 
+					       onClickButton : function () { 
+					    	   var grid = $("#jqGrid2");
+					           var rowKey = grid.getGridParam("selrow");
+					           if(rowKey === null && typeof rowKey === "object"){
+						           alert('debe seleccionar un programa');
+					           }else{
+						           var url = 'getProgramExcel/' + rowKey;
+						    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
+					           }
+					       } 
+					});
+				}
 			}
 	    }
 	});	
