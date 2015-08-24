@@ -120,7 +120,8 @@ object Dashboard extends Controller {
         for (j <- 0 to 10)
           rowhead.getCell(j).setCellStyle(style);
 
-        val panel = DashboardService.reportPanel
+        //val panel = DashboardService.reportPanel
+        val panel = DashboardService.reporteProgramaFiltrado("0", "0", "")
 
         for (s <- panel) {
           var row = sheet.createRow(rNum)
@@ -135,10 +136,10 @@ object Dashboard extends Controller {
           cel2.setCellValue(s.responsable)
 
           val cel3 = row.createCell(cNum + 3)
-          cel3.setCellValue(s.fecini)
+          cel3.setCellValue(s.fecini.get)
 
           val cel4 = row.createCell(cNum + 4)
-          cel4.setCellValue(s.feccom)
+          cel4.setCellValue(s.feccom.get)
 
           val cel5 = row.createCell(cNum + 5)
           cel5.setCellValue(s.pai)
@@ -388,8 +389,8 @@ object Dashboard extends Controller {
             node.put("rows", registro)
 
           } else {
-            val records = DashboardService.programCount
-            val panel = DashboardService.reportPanelPaginado(rows, page)
+            val records = DashboardService.cantidadProgramaFiltrado("")
+            val panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
 
             var registro = new JSONArray()
             for (p <- panel) {
@@ -418,8 +419,8 @@ object Dashboard extends Controller {
         }
       } else {
 
-        val records = DashboardService.programCount
-        val panel = DashboardService.reportPanelPaginado(rows, page)
+        val records = DashboardService.cantidadProgramaFiltrado("")
+        val panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
 
         var registro = new JSONArray()
         for (p <- panel) {
@@ -453,21 +454,6 @@ object Dashboard extends Controller {
     }
   }
 
-  /*
-    def atm = Action { implicit request =>
-    request.session.get("username").map { user =>
-      val rows = request.getQueryString("rows").get.toString()
-      val page= request.getQueryString("page").get.toString()
-      
-      val atm = DashboardService.reportATM
-      
-      Ok(play.api.libs.json.Json.toJson(atm)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
- */
   def reportProgram() = Action { implicit request =>
     request.session.get("username").map { user =>
 
