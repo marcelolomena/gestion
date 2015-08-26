@@ -408,6 +408,13 @@ object ProgramService extends CustomColumns {
 
     }
   }
+  
+  def programas_sin_avance_en_tareas(uid: String): Seq[ProgramMaster] = {
+    var sqlString = "EXEC programa.sin_avance {uid}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('uid -> uid.toInt).executeQuery() as (ProgramMaster.pMaster *)
+    }
+  }  
 
   def findProgramMasterDetailsById(pId: String) = {
     DB.withConnection { implicit connection =>
