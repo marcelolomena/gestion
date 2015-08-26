@@ -28,6 +28,7 @@ import services.DepartmentService
 import services.DivisionService
 import services.GenrenciaService
 import services.UserService
+import services.ProgramService
 //import com.mongodb.casbah.Imports._
 //import com.mongodb.casbah.MongoCollection
 //import com.mongodb.DBObject
@@ -63,10 +64,10 @@ object User extends Controller {
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
       val alerts = RiskService.findUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
-
+      val program_task=ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
       // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, availability)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, availability, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
