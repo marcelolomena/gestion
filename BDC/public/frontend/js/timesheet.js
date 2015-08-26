@@ -316,6 +316,18 @@ var timesheetCalendar = {
 };
 
 $(document).ready(function(){
+	$('#subtask_div_change_id').dialog({
+        autoOpen: false,
+        modal: true,
+        height:'auto',
+        width:'auto',
+        buttons: {
+            "Cerrar": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+	
 	var oldselectedDate = "";
 	 var today =  Date.parse($("#current-timesheet-date").val());
 	today.addDays(-3);
@@ -419,6 +431,7 @@ $(document).ready(function(){
 	jQuery(".cancel-timesheet,.cancel-form ").live("click", renderCancelTimesheet);
 	
 	jQuery(".subtask_name").live("click",renderValidateSubTaskFromList);
+	//jQuery("#todalafila").live("click",renderValidateSubTaskFromList);
 	
 
 	
@@ -670,7 +683,7 @@ function renderValidateSubTaskFromList(){
 				$('#timesheet_doc_list_id').removeClass('display-none');
 				$('#timesheet_doc_list_id').html(data);
 			});
-	
+			$('#subtask_div_change_id').dialog('open');
 	}else {
 		$('#subtask_div_change_id').addClass('display-none');
 	}

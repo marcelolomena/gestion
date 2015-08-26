@@ -1,13 +1,28 @@
-New log file opened at Fri Aug 07 13:11:00 CLT 2015 by 900@zrismart
-Taking next connection to: 53405
-New client attempting to connect on port: 53406-53405
-  Address = /192.168.56.1:53405
-This client on port 53406 has uuid 1bd9f909-431c-4604-a942-7bffeff0cdad configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
-Connected Clients: play-fork-run-1bd9f909-431c-4604-a942-7bffeff0cdad
-Taking next connection to: 53405
+New log file opened at Tue Aug 25 18:24:38 CLT 2015 by 5420@zrismart
+Taking next connection to: 57385
+New client attempting to connect on port: 57386-57385
+  Address = /192.168.56.1:57385
+This client on port 57386 has uuid 5b8728cb-3c56-4850-9954-136dfc2f616a configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-5b8728cb-3c56-4850-9954-136dfc2f616a
+Taking next connection to: 57385
 Checking to see if clients are empty...
-No non-daemon clients connected after 3 min. Shutting down.
-Server socket thread exiting.
-0 clients open, will close them...
-All client sockets have been closed.
-Closing the 900@zrismart logs at Fri Aug 07 13:14:00 CLT 2015, goodbye.
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 57385
