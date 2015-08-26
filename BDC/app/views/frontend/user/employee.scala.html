@@ -62,12 +62,12 @@
 						@for(pt <- programTask){
 							
 							<div class="dash_right_data_2">
-							<span class="employee_project"  id="task_@pt.program_id">@if(pt.program_name.length()> 35){@pt.program_name.substring(0, 35)&nbsp;...}else{@pt.program_name}		 </span>
-								<span class="show_tasks"  id="subtask_@pt.program_id"></span>
-								<div class="width_full task_list_div" id="task_list_@pt.program_id">
+							<span class="employee_project"  id="xtask_@pt.program_id">@if(pt.program_name.length()> 35){@pt.program_name.substring(0, 35)&nbsp;...}else{@pt.program_name}		 </span>
+								<span class="xshow_tasks"  id="xsubtask_@pt.program_id"></span>
+								<div class="width_full task_list_div" id="xtask_list_@pt.program_id">
 									@for(st <- SubTaskServices.sin_avance_en_tareas(session.get("uId").get, pt.program_id.get.toString())){
 										<span class="left">&raquo;</span>
-										<span class="employee_task_title" id="@st.sub_task_id"><a href="@controllers.Frontend.routes.SubTask.subTaskDetails(st.sub_task_id.get.toString())"> @st.task</a> </span>
+										<span class="employee_task_title" id="st_@st.sub_task_id"><a class="openbox" href="@controllers.Frontend.routes.SubTask.subTaskDetails(st.sub_task_id.get.toString())"> @st.task</a> </span>
 									}
 								</div>
 							</div>
