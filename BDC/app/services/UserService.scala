@@ -1393,7 +1393,7 @@ object UserService extends CustomColumns {
   }
 
   def findUsersFromRole(role_id: String): Seq[Users] = {
-    val sqlString = "select * from art_user where uid IN ( select user_id from art_user_profile_mapping where user_role = " + role_id + ")"
+    val sqlString = "select * from art_user where uid IN ( select user_id from art_user_profile_mapping where user_role = " + role_id + ") order by first_name"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Users.user *)
     }

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils
 import SqlParser._
 import scala.util.control.Exception._
 import java.text.DecimalFormat
+import java.util.Locale;
 import java.util.concurrent.TimeUnit
 
 /**
@@ -134,7 +135,7 @@ object TimesheetService extends CustomColumns {
   }
   def getUserTimesheetsListExternal(user_id: String, sub_task_id: String): Seq[TimesheetExternal] = {
     val sql = "select DISTINCT(at.id), at.* from art_timesheet_external at where at.sub_task_id=" + sub_task_id + " AND at.resource_id = " + user_id + " ORDER BY at.task_for_date asc";
-
+    println(sql)
     DB.withConnection { implicit connection =>
       val result = SQL(sql).as(TimesheetExternal.timesheetLists *)
       result
@@ -719,7 +720,7 @@ println(final_new_hour)*/
   }
 
   def formatTimesheetHour2(hour: Double): String = {
-
+//Locale.setDefault(Locale.US);
     var df = new DecimalFormat("00.00");
     var final_new_hour = "00.00"
     println("hour:"+hour)
