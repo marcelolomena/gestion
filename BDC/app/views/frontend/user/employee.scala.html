@@ -18,6 +18,14 @@
 @frontend.header()
 
 <section class="slider" id="home_page">
+	<div id="divMyForm" style="display:none">
+		<form id="myForm" method="get" action="/save_advance_rate">
+			<input type="hidden" id="sub_task_id" name="sub_task_id" value="0" />
+			<label for="advance_rate">Porcentaje de Avance:</label>
+			<input type="text" id="advance_rate" name="advance_rate">
+			<button type="submit">Guardar</button>
+		</form>
+	</div>
 	<div class="left map border-top"></div>
 	<div class="width_full emp_detail_description">
 		<input type="hidden" id="uId" name="uId" value="@employee.get.uid" />
@@ -67,7 +75,7 @@
 								<div class="width_full task_list_div" id="xtask_list_@pt.program_id">
 									@for(st <- SubTaskServices.sin_avance_en_tareas(session.get("uId").get, pt.program_id.get.toString())){
 										<span class="left">&raquo;</span>
-										<span class="employee_task_title" id="st_@st.sub_task_id"><a class="openbox" href="@controllers.Frontend.routes.SubTask.subTaskDetails(st.sub_task_id.get.toString())"> @st.task</a> </span>
+										<span class="employee_task_title" id="st_@st.sub_task_id"><a class="openbox" id="openbox_@st.sub_task_id.get.toString()" href="#"> @st.task</a> </span>
 									}
 								</div>
 							</div>
@@ -293,14 +301,44 @@
 <div id="pop-box-over_doc" class="display-none"></div>
 
 <div class="tooltip"></div>
-@frontend.headerScripts()	
-<script src="@routes.Assets.at("frontend/js/highcharts.js")"></script>
+@frontend.newHeaderScript()	
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.min.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/alert.css")">
+<script src="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/alert.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/highcharts/highcharts.js")"></script>
+<script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
+<script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script type="text/javascript">
 	$(document)
 			.ready(
 					
 					function() {
 
+						$.ui.dialog.prototype._focusTabbable = $.noop;
+
+						$( "#divMyForm" ).dialog({
+							autoOpen: false,
+							open: function() {
+								// On open, hide the original submit button
+								$( this ).find( "[type=submit]" ).hide();
+							},
+							buttons: [
+								{
+									text: "Guardar",
+									click: $.noop,
+									type: "submit",
+									form: "myForm"
+								},
+								{
+									text: "Cerrar",
+									click: function() {
+										$( this ).dialog( "close" );
+									}
+								}
+							]
+						});
+						
 						 $('input[type="checkbox"]').click(function(){
 					         if($(this).prop("checked") == true){
 						     var  risk_alert_id = $(this).val();
