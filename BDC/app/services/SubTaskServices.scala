@@ -208,6 +208,21 @@ object SubTaskServices extends CustomColumns {
           'status -> subtask.status).executeUpdate()
     }
   }
+  
+    def updateSubTaskAdvanceRate(sub_task_id: String,completion_percentage: String): Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update art_sub_task
+          set 
+          completion_percentage = {completion_percentage}
+          where sub_task_id = {sub_task_id}
+          """).on(
+          'completion_percentage -> completion_percentage.toFloat,
+          'sub_task_id -> sub_task_id.toInt).executeUpdate()
+    }
+  }
 
   def updateSubTaskAllocationExternal(subtask: SubTaskAllocationExternal): Int = {
 
