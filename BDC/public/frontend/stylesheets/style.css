@@ -3217,6 +3217,15 @@ padding: 6px 20px 6px 8px;
     width: 15px;
     cursor: pointer;
 }
+#employee_project_list .xshow_tasks{
+	background-image: url("../images/arrow-down.png");
+    float: right;
+    height: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    width: 15px;
+    cursor: pointer;
+}
 #employee_project_list .show_tasks_up{
 	background-image: url("../images/arrow-up.png");
 }

@@ -198,12 +198,34 @@ $(document).ready(function() {
 	$(".setting").off("click").on("click", renderSetting);
 
 	$(".show_tasks").off("click").on("click", renderShowTasks);
+	
+	$(".xshow_tasks").off("click").on("click", xrenderShowTasks);
+	
+	$(".openbox").off("click").on("click", openbox);
 
 	$(".show_sub_task ").off("click").on("click", renderShowSubTasks);
 	
 	$(".show-alert").on("click",renderAlertDetails)
 
 });
+
+function openbox(){
+	var _this = $(this);
+	var p_id = _this.attr("id").split("_")[1];
+	$("#sub_task_id").val(p_id);
+	$("#divMyForm").dialog("open");
+}
+function xrenderShowTasks() {
+	var _this = $(this);
+	var p_id = _this.attr("id").split("_")[1];
+	if ($("#xtask_list_" + p_id).is(':visible')) {
+		$("#xtask_" + p_id).removeClass("show_tasks_up");
+	} else {
+		//$("#task_" + p_id).addClass("show_tasks_up");
+	}
+	$("#xtask_list_" + p_id).slideToggle();
+
+}
 
 function renderShowTasks() {
 	var _this = $(this);
