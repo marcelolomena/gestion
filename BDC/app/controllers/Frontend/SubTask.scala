@@ -186,6 +186,8 @@ object SubTask extends Controller {
       println("advance_rate:" + advance_rate)
       //Ok("OK")
       
+      SubTaskServices.updateSubTaskAdvanceRate(sub_task_id,advance_rate)
+      
       
       val employee = UserService.findUserDetails(Integer.parseInt(employeeid.toString()))
       val employeeOffice = UserService.findUserOfficeDetails(Integer.parseInt(employeeid.toString()))
