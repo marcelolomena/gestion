@@ -35,11 +35,11 @@
 	  		   		</h3>
  	</div>
  	<div class="program-div push-top10px" id="new-program-member">
- 	@if(RiskService.validateIssueFunction(parent_id,parent_type)){
+ 	@*@if(RiskService.validateIssueFunction(parent_id,parent_type)){*@
 	   	<span><a href="@controllers.Frontend.routes.Program.addIssue(parent_id,parent_type)"> @Messages("subtask.addissue")</a></span>
-	   	}else{
+	   	@*}else{
  				<span><a href="javascript:void(0);"> You can not add Issue here</a></span>
- 		}
+ 		}*@
 	</div>
 	
 	
