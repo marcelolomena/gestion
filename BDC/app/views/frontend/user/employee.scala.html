@@ -22,7 +22,7 @@
 		<form id="myForm" method="get" action="/save_advance_rate">
 			<input type="hidden" id="sub_task_id" name="sub_task_id" value="0" />
 			<label for="advance_rate">Porcentaje de Avance:</label>
-			<input type="text" id="advance_rate" name="advance_rate">
+			<input type="text" id="advance_rate" name="advance_rate" required>
 			<button type="submit">Guardar</button>
 		</form>
 	</div>
@@ -312,9 +312,15 @@
 <script type="text/javascript">
 	$(document)
 			.ready(
-					
 					function() {
-
+						$( "#myform" ).validate({
+							  rules: {
+							    field: {
+							      required: true,
+							      number: true
+							    }
+							  }
+						});
 						$.ui.dialog.prototype._focusTabbable = $.noop;
 
 						$( "#divMyForm" ).dialog({
