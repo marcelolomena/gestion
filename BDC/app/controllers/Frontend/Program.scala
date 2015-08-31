@@ -2627,6 +2627,16 @@ object Program extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
+  
+  def issueManagementfortimesheet(parent_id: String, parent_type: Integer) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      Ok(views.html.frontend.task.issueManagementForTimesheet(parent_id, parent_type)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+    }.getOrElse {
+
+      Redirect(routes.Login.loginUser())
+    }
+  }  
 
   def issueDetails(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
