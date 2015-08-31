@@ -152,8 +152,9 @@ object SubTasks extends CustomColumns {
             dependencies_type,
             catalogue_id)
       }
-  }
 
+  }
+  implicit val subtaskWrites = Json.writes[SubTasks]
 }
 case class SubTaskStatus(id: Option[Int], sub_task_id: Int, status_for_date: Date, reason_for_change: String, status: Int)
 
