@@ -151,7 +151,7 @@ object RiskManagementIssueDate extends CustomColumns {
 
 object riskParentType extends Enumeration {
   type riskParentTypeValues = Value
-  val Program, Project, Task, SubTask = Value
+  val Program, Project, Task, SubTask,TimeSheet = Value
 }
 
 object riskCategory1 extends Enumeration {
