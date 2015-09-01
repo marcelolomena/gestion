@@ -316,6 +316,7 @@ var timesheetCalendar = {
 };
 
 $(document).ready(function(){
+	
 	$('#subtask_div_change_id').dialog({
         autoOpen: false,
         modal: true,
@@ -378,7 +379,7 @@ $(document).ready(function(){
 		removeNext();
 	});
 	
-	jQuery(".clander-prev-weer").live("click",function(){
+	jQuery(".clander-prev-weer").live("click",function(){//on por live
 		$('#project_type_id').addClass("display-none");
 		$('.estimated_cost_program').removeClass('text-box-hours');
 		$('.estimated_cost_program').val('');
@@ -399,7 +400,7 @@ $(document).ready(function(){
 		removeNext();
 	});
 	
-	jQuery(".calanderCell").live("click",function(){
+	jQuery(".calanderCell").live("click",function(){//on por live
 		$('.estimated_cost_program').removeClass('text-box-hours');
 		$('.estimated_cost_program').val('');
 		$('#project_type_id').addClass("display-none");
@@ -426,11 +427,11 @@ $(document).ready(function(){
 	
 	});
 	
-	jQuery("#timesheet_activity").live("change",renderTimesheetActivity);
+	jQuery("#timesheet_activity").live("change",renderTimesheetActivity);//on por live
 	
-	jQuery(".cancel-timesheet,.cancel-form ").live("click", renderCancelTimesheet);
+	jQuery(".cancel-timesheet,.cancel-form ").live("click", renderCancelTimesheet);//on por live
 	
-	jQuery(".subtask_name").live("click",renderValidateSubTaskFromList);
+	jQuery(".subtask_name").live("click",renderValidateSubTaskFromList);//on por live
 	//jQuery("#todalafila").live("click",renderValidateSubTaskFromList);
 	
 
