@@ -912,6 +912,28 @@ object SubTask extends Controller {
       Redirect(routes.Login.loginUser());
     }
   }
+  
+  def subTaskDetailsFromTimesheet(subtask_id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val documents = DocumentService.findAllDocuments(subtask_id, "SUBTASK", "", "", "")
+      var isSubtaskAllocated: Boolean = false;
+      val subTaskDetail = SubTaskServices.findSubTaskDetailsBySubtaskId(subtask_id)
+
+      val subtaskAlloc = SubTaskServices.findSubTasksAllocationBySubTask(subtask_id)
+      if (subtaskAlloc.isEmpty) {
+        isSubtaskAllocated = true
+      }
+      val baselineCount = Baseline.getBaselineCount(subtask_id.toInt, "subtask")
+      var baselineAvailable: Boolean = false;
+      if (baselineCount > 0) {
+        baselineAvailable = true;
+      }
+
+      Ok(views.html.frontend.subTask.subTaskDetailsFromTimesheet(documents, subTaskDetail, baselineAvailable)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser());
+    }
+  }  
 
   def getProgramMembersFromRole(role_id: String, project_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
