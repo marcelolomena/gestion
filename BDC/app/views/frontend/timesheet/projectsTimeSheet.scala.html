@@ -216,31 +216,7 @@
    	   </div>
 		<div id="timesheet_doc_list_id">
 		</div>
-@*	
-<h3 class="layer-title" style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;">
-    <span class="left">@Messages("subtaskdetail.subtaskrisk")</span>
-</h3>
-<div class="program-div" id="new-risk">
-	<span><a href="@controllers.Frontend.routes.Risks.riskManagement(taskDetails.,riskParentType.SubTask.id.toInt)"> @Messages("programdetails.addrisk")</a></span>
-</div>
 
-<div class="width_full">
-	@frontend.risks.riskListing(subtask.sub_task_id.get.toString,riskParentType.SubTask.id.toInt)
-</div> 
-	
-
-<h3 class="layer-title" style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;">
-    <span class="left">@Messages("subtaskdetail.subtaskissue")</span>
-</h3>
-<div class="program-div" id="new-issue">
-	<span><a href="@controllers.Frontend.routes.Program.issueManagement(subtask.sub_task_id.get.toString,riskParentType.SubTask.id.toInt)"> @Messages("subtask.addissue")</a></span>
-</div>
-
-<div class="width_full">
-	@frontend.task.issueListing(subtask.sub_task_id.get.toString,riskParentType.SubTask.id.toInt)
-</div> 		
-*@		
-	
 	</div>
 	
 	</div>
