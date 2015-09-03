@@ -20,9 +20,9 @@ import models.RiskManagement
 import models.Programs
 import models.ProgramDates
 import org.apache.commons.lang3.StringUtils
-import net.sf.mpxj.planner.schema.Calendar
+//import net.sf.mpxj.planner.schema.Calendar
 import java.util.Calendar
-import org.joda.time.DateTime
+//import org.joda.time.DateTime
 import models.RiskAlerts
 import models.Users
 import models.SpiCpiCalculations
@@ -288,7 +288,7 @@ object RiskService extends CustomColumns {
   }
 
   def findIssueList(parent_id: String, parent_type: Int): Seq[RiskManagementIssue] = {
-    val sqlString = "SELECT *  FROM art_issue where is_active = 1 AND parent_id=" + parent_id + " AND parent_type=" + parent_type + ""
+    val sqlString = "SELECT * FROM art_issue where is_active = 1 AND parent_id=" + parent_id + " AND parent_type=" + parent_type + ""
     //println(sqlString)
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskManagementIssue.riskManagementIssue *)
