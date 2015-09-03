@@ -3,7 +3,7 @@
 @import services._
 @import play.api.i18n._
 @import play.api._
-@import java.math.BigInteger; var i=1;var issues= RiskService.findIssueList(parent_id, parent_type);
+@import java.math.BigInteger; var i=1;var issues=RiskService.findIssueList(parent_id, parent_type-1)
 @import utils._
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
 </head>
@@ -28,7 +28,8 @@
     					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
     				case 3=>
     					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
-    				
+    				case 4=>
+    					Html("<a href='/timesheet' style='font-weight: bold'><span class='left'>Volver</span></a>")    				
     			}
    			 }
     		
