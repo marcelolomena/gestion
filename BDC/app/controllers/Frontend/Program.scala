@@ -1254,16 +1254,16 @@ object Program extends Controller {
     Ok(node.toString())
   }
 
-  def graphDistributionInternalAction(id: String) = Action { implicit request =>
+  def graphDistributionInternalAction(id: String,pid: String) = Action { implicit request =>
 
-    val calculos = DistributionTimeSheetService.distributionInternalTimeSheet(id)
+    val calculos = DistributionTimeSheetService.distributionInternalTimeSheet(id,pid)
 
     Ok(play.api.libs.json.Json.toJson(calculos))
   }
 
-  def graphDistributionExternalAction(id: String) = Action { implicit request =>
+  def graphDistributionExternalAction(id: String,pid: String) = Action { implicit request =>
 
-    val calculos = DistributionTimeSheetService.distributionExternalTimeSheet(id)
+    val calculos = DistributionTimeSheetService.distributionExternalTimeSheet(id,pid)
 
     Ok(play.api.libs.json.Json.toJson(calculos))
   }
