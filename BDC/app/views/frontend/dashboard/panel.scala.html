@@ -92,16 +92,16 @@ $(document).ready(function(){
 	                     name: 'nivel',
 	                     width: 100,
 	                   },
-	                   { label: 'Nombre', name: 'nombre', width: 250 },
+	                   { label: 'Nombre', name: 'programa', width: 250 },
 	                   { label: 'Responsable', name: 'responsable', width: 150 },
 	                   { label: 'Fecha Inicio Planeada',
-	                     name: 'pini',
+	                     name: 'pfecini',
 	                     width: 120,
 	                     formatter: 'date',
 	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
 	                   },
 	                   { label: 'Fecha Termino Planeada',
-	                     name: 'pter',
+	                     name: 'pfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
@@ -109,7 +109,7 @@ $(document).ready(function(){
 	                     
 	                   },
 	                   { label: 'Fecha Inicio Real',
-	                     name: 'rini',
+	                     name: 'rfecini',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
@@ -117,7 +117,7 @@ $(document).ready(function(){
 	                     
 	                   },
 	                   { label: 'Fecha Termino Real',
-	                     name: 'rter',
+	                     name: 'rfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
@@ -440,16 +440,16 @@ $(document).ready(function(){
 	                     name: 'nivel',
 	                     width: 100,
 	                   },
-	                   { label: 'Nombre', name: 'nombre', width: 250 },
+	                   { label: 'Nombre', name: 'programa', width: 250 },
 	                   { label: 'Responsable', name: 'responsable', width: 150 },
 	                   { label: 'Fecha Inicio Planeada',
-	                     name: 'pini',
+	                     name: 'pfecini',
 	                     width: 120,
 	                     formatter: 'date',
 	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
 	                   },
 	                   { label: 'Fecha Termino Planeada',
-	                     name: 'pter',
+	                     name: 'pfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
@@ -457,7 +457,7 @@ $(document).ready(function(){
 	                     
 	                   },
 	                   { label: 'Fecha Inicio Real',
-	                     name: 'rini',
+	                     name: 'rfecini',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
@@ -465,7 +465,7 @@ $(document).ready(function(){
 	                     
 	                   },
 	                   { label: 'Fecha Termino Real',
-	                     name: 'rter',
+	                     name: 'rfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
@@ -622,7 +622,7 @@ $(document).ready(function(){
 					                            }, 100);
 					                        }
 								        });
-						              },sopt: ["ge","le","eq"]
+						              },sopt: ["gt","lt","eq"]
 				                  }
 				            },
 				            { label: 'Fecha Comprometida',
@@ -644,15 +644,15 @@ $(document).ready(function(){
 						                            }, 100);
 						                        }
 									        });
-							              },sopt: ["ge","le","eq"]
+							              },sopt: ["gt","lt","eq"]
 					             }
 				            },
-				            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
-				            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
-				            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
-				            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["ge","le","eq"] } },
-				            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["ge","le","eq"] } },  
-				            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["ge","le","eq"] } }                      
+				            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },  
+				            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["gt","lt","eq"] } }                      
 				        ],
 						viewrecords: true,
 						regional : "es",
@@ -721,10 +721,10 @@ $(document).ready(function(){
 				              name: 'nivel',
 				              width: 100,
 				            },
-				            { label: 'Nombre', name: 'nombre', width: 250 },
+				            { label: 'Nombre', name: 'programa', width: 250 },
 				            { label: 'Responsable', name: 'responsable', width: 150 },
 				            { label: 'Fecha Inicio Planeada',
-				              name: 'pini',
+				              name: 'pfecini',
 				              width: 120,
 				              formatter: 'date',
 				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
@@ -740,11 +740,11 @@ $(document).ready(function(){
 					                            }, 100);
 					                        }
 								        });
-						              },sopt: ["ge","le","eq"]
+						              },sopt: ["gt","lt","eq"]
 				             }
 				            },
 				            { label: 'Fecha Termino Planeada',
-				              name: 'pter',
+				              name: 'pfecter',
 				              width: 120,
 				              sorttype:'date',
 				              formatter: 'date',
@@ -761,11 +761,11 @@ $(document).ready(function(){
 					                            }, 100);
 					                        }
 								        });
-						              },sopt: ["ge","le","eq"]
+						              },sopt: ["gt","lt","eq"]
 				             }
 				            },
 				            { label: 'Fecha Inicio Real',
-				              name: 'rini',
+				              name: 'rfecini',
 				              width: 120,
 				              sorttype:'date',
 				              formatter: 'date',
@@ -782,11 +782,11 @@ $(document).ready(function(){
 					                            }, 100);
 					                        }
 								        });
-						              },sopt: ["ge","le","eq"]
+						              },sopt: ["gt","lt","eq"]
 				             }
 				            },
 				            { label: 'Fecha Termino Real',
-				              name: 'rter',
+				              name: 'rfecter',
 				              width: 120,
 				              sorttype:'date',
 				              formatter: 'date',
@@ -803,11 +803,11 @@ $(document).ready(function(){
 					                            }, 100);
 					                        }
 								        });
-						              },sopt: ["ge","le","eq"]
+						              },sopt: ["gt","lt","eq"]
 				             }
 				            },
-				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100,searchoptions: {sopt:["ge","le","eq"] } },
-				            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100,searchoptions: {sopt:["ge","le","eq"] } }              
+				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
 				        ],
 				        rowNum: 20,
 				        regional : 'es',

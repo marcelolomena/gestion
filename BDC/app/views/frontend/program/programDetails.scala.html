@@ -337,7 +337,7 @@
 					@if(progrma_members.size>0){
 						@for( (p,index) <- progrma_members.zipWithIndex){
 							@if(p.hours!=0){
-							<a href="/program-distribucion-interno?id=@p.member_id" class="interno"><li class="@if(index%2==0){even_row}else{odd_row}">	
+							<a href="/program-distribucion-interno?id=@p.member_id&pid=@p.program_id" class="interno"><li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(p.role_id.toString).isEmpty){
 									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >&nbsp</span>
 								}else{
@@ -382,7 +382,7 @@
 					@if(external_resource.size > 0){
 						@for( (e,index) <- external_resource.zipWithIndex){
 							@if(e.hours!=0){
-							<a href="/program-distribucion-externo?id=@e.id" class="externo"><li class="@if(index%2==0){even_row}else{odd_row}">	
+							<a href="/program-distribucion-externo?id=@e.id&pid=@e.program_id" class="externo"><li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(e.provider_type.toString).isEmpty){
 									<span id="r_@e.id" class="role @if(e.is_deleted==0){active-sap}else{in-active-sap}" >&nbsp</span>
 								}else{
@@ -734,14 +734,17 @@
 	</div>
 	</div>
 	<div class="tooltip"></div>	
-	<div id="distribution" style="display:none;"></div>
+	<div id="distribution"></div>
 <div id="dialog-edit-member-capacity"><table id="scroll38"></table><div id="jqGridPager"></div></div>
 </div>	 
 @frontend.headerScripts()	
 @*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
 @*<script src="@routes.Assets.at("frontend/js/highcharts.js")"></script>*@
-<script src="@routes.Assets.at("frontend/js/highstock.js")"></script>
+<script src="@routes.Assets.at("frontend/highcharts/highcharts.js")"></script>
+<script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
+<script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
+@*<script src="@routes.Assets.at("frontend/js/highstock.js")"></script>*@
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
@@ -845,7 +848,6 @@
 	
 	$("#distribution").dialog({
 			autoOpen: false,
-            modal: true,
             width: 800,
             height: 600,
             position: 'center',
@@ -860,13 +862,14 @@
 	});	
 	$('a.interno').click(function(event) { 
 		event.preventDefault();
-		renderDistributionGraph(this.href)
+		//console.log($(this).parent().find('.provider').text());
+		renderDistributionGraph(this.href,$(this).parent().find('.provider').text())
         //alert(this.href);
     }); 
     
    	$('a.externo').click(function(event) { 
    		event.preventDefault();
-		renderDistributionGraph(this.href)
+		renderDistributionGraph(this.href,$(this).parent().find('.provider').text())
         //alert(this.href);
     });  
 	
