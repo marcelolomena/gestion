@@ -6545,6 +6545,86 @@ function validateSubTaskEdit(sub_task_id,end_date){
 
 }
 
+function renderDistributionGraph(url,nombre) {
+
+	//$(".loader").css("display", "block");
+	var dist = [];
+	var total = 0;
+
+	$.get(url, function(datos) {
+
+		$.each(datos, function(index, element) {
+			dist.push([parseInt(element.task_for_date),parseFloat(element.hours)]);
+			total += element.hours;
+	    });		
+		$("#distribution").dialog("open");
+		var graph = new Highcharts.Chart( {
+            chart: {
+            	renderTo:'distribution',
+                type: 'column'
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+                title: {
+                    text: 'Fecha'
+                },
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Horas (hrs)'
+                },
+                min: 0
+            },
+            title: {
+                text: nombre + ' total de horas ' + total.toFixed(2)
+            },
+            tooltip: {
+                pointFormat: 'Avance acumulado: <b>{point.y:.1f} horas</b>'
+            },
+            plotOptions: {
+                series: {
+                    pointWidth: 20,
+                    groupPadding: 0
+                }
+            },
+            series: [{
+                name: 'Horas',
+                data: dist,
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}', // one decimal
+                    y: 10, // 10 pixels down from the top
+                    style: {
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            }]
+        });		
+		
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+/*
 function renderDistributionGraph(url) {
 
 	$(".loader").css("display", "block");
@@ -6554,7 +6634,7 @@ function renderDistributionGraph(url) {
 	$.get(url, function(datos) {
 
 		$.each(datos, function(index, element) {
-			dist.push([element.task_for_date,element.hours]);
+			dist.push([parseInt(element.task_for_date),parseFloat(element.hours)]);
 			total += element.hours;
 	    });		
 
@@ -6581,3 +6661,4 @@ function renderDistributionGraph(url) {
 		$(".loader").css("display", "none");
 	}, delay);
 }
+*/

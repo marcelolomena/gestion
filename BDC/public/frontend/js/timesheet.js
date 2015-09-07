@@ -659,6 +659,7 @@ function renderValidateSubTaskFromList(){
 	$(this).parent().parent().addClass('highlight-class');
 	var today_date = $(".calendarTitle").text();
 	if(subtask!=''){
+			/*
 			var url = "/validate-subtask-timesheet?subtask=" + subtask +"&tDate="+today_date;
 			$.get(url, function(data) {
 				var obj = JSON.parse(data);
@@ -685,6 +686,9 @@ function renderValidateSubTaskFromList(){
 				$('#timesheet_doc_list_id').html(data);
 			});
 			$('#subtask_div_change_id').dialog('open');
+			*/
+			var url="/sub-task-details-from-timesheet/" + subtask;
+			$(location).attr('href',url);
 	}else {
 		$('#subtask_div_change_id').addClass('display-none');
 	}
