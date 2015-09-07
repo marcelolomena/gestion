@@ -24,16 +24,18 @@ object DashboardService {
   }
   */
   def reporteProgramaFiltrado(pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
-
+    //println(Json)
     var sqlString = "EXEC dashboard.programas_por_division_filtrado {PageSize},{PageNumber},{Json}"
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
     }
   }
 
   def cantidadProgramaFiltrado(Json: String): Int = {
-
+    //println(Json)
     var sqlString = "EXEC dashboard.cantidad_programas_por_division_filtrado {Json}"
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
     }
@@ -55,11 +57,11 @@ object DashboardService {
     }
   }
 
-  def reportProgram(pageSize: String, pageNumber: String): Seq[ATM] = {
+  def reportProgram(pageSize: String, pageNumber: String, Json: String): Seq[ATM] = {
 
-    var sqlString = "EXEC reporte.programa {PageSize},{PageNumber}"
+    var sqlString = "EXEC reporte.programa_dash {PageSize},{PageNumber},{Json}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (ATM.atm *)
     }
   }
 
@@ -79,14 +81,15 @@ object DashboardService {
     }
   }
 
-  def programCount(): Int = {
+  def programCount(Json: String): Int = {
+
+    var sqlString = "EXEC reporte.cantidad_programa_dash {Json}"
+
     DB.withConnection { implicit connection =>
-      var sqlString = ""
-      sqlString = "SELECT count(*) FROM art_program WHERE is_active=1"
-      val count: Int = SQL(sqlString).as(scalar[Int].single)
-      count
+      SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
     }
   }
+
   def projectCount(pid: String): Int = {
     DB.withConnection { implicit connection =>
       var sqlString = ""
