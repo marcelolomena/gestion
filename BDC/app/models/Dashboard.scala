@@ -1,6 +1,5 @@
 package models
 
-import anorm.Pk
 import java.util.Date
 import anorm.SqlParser._
 import play.api.Play.current
@@ -150,12 +149,12 @@ object Panel {
 case class ATM(id: Int, 
     nivel: String, 
     codigo: Int, 
-    nombre: String, 
+    programa: String, 
     responsable: String, 
-    pini: Option[Date], 
-    pter: Option[Date], 
-    rini: Option[Date],
-    rter: Option[Date],
+    pfecini: Option[Date], 
+    pfecter: Option[Date], 
+    rfecini: Option[Date],
+    rfecter: Option[Date],
     pai: Double,
     pae: Double
     )
@@ -165,25 +164,25 @@ object ATM {
     get[Int]("id") ~
       get[String]("nivel") ~
       get[Int]("codigo") ~
-      get[String]("nombre") ~
+      get[String]("programa") ~
       get[String]("responsable") ~
-      get[Option[Date]]("pini") ~
-      get[Option[Date]]("pter") ~
-      get[Option[Date]]("rini") ~
-      get[Option[Date]]("rter") ~
+      get[Option[Date]]("pfecini") ~
+      get[Option[Date]]("pfecter") ~
+      get[Option[Date]]("rfecini") ~
+      get[Option[Date]]("rfecter") ~
       get[Double]("pai") ~
       get[Double]("pae") map {
         case id ~ 
         nivel ~ 
         codigo ~ 
-        nombre ~ 
+        programa ~ 
         responsable ~ 
-        pini ~ 
-        pter ~ 
-        rini ~ 
-        rter ~ 
+        pfecini ~ 
+        pfecter ~ 
+        rfecini ~ 
+        rfecter ~ 
         pai ~
-        pae => ATM(id, nivel, codigo, nombre, responsable, pini, pter, rini, rter, pai,pae)
+        pae => ATM(id, nivel, codigo, programa, responsable, pfecini, pfecter, rfecini, rfecter, pai,pae)
       }
     
   }
