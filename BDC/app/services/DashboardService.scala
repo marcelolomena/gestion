@@ -4,25 +4,9 @@ import play.api.db.DB;
 import anorm.SqlParser._;
 import models._;
 import anorm._
-//import com.typesafe.plugin._;
 
 object DashboardService {
 
-  /*
-  def cuentaRegistros(): Int = {
-    DB.withConnection { implicit connection =>
-      SQL("EXEC programa.panel_principal_count").executeQuery().as(scalar[Int].single)
-    }
-  }
-  
-  def reportPanel(): Seq[PanelExcel] = {
-
-    var sqlString = "EXEC dashboard.reporte_excel"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (PanelExcel.panelexcel *)
-    }
-  }
-  */
   def reporteProgramaFiltrado(pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
     //println(Json)
     var sqlString = "EXEC dashboard.programas_por_division_filtrado {PageSize},{PageNumber},{Json}"
@@ -49,17 +33,17 @@ object DashboardService {
     }
   }
 
-  def getProgramExcel(pid: String): Seq[ATMExcel] = {
+  def getProgramExcel(pid: String): Seq[ATM] = {
 
     var sqlString = "EXEC reporte.excel {pid}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('pid -> pid.toInt).executeQuery() as (ATMExcel.atmExcel *)
+      SQL(sqlString).on('pid -> pid.toInt).executeQuery() as (ATM.atm *)
     }
   }
 
   def reportProgram(pageSize: String, pageNumber: String, Json: String): Seq[ATM] = {
 
-    var sqlString = "EXEC reporte.programa_dash {PageSize},{PageNumber},{Json}"
+    var sqlString = "EXEC reporte.programa {PageSize},{PageNumber},{Json}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (ATM.atm *)
     }
@@ -83,7 +67,7 @@ object DashboardService {
 
   def programCount(Json: String): Int = {
 
-    var sqlString = "EXEC reporte.cantidad_programa_dash {Json}"
+    var sqlString = "EXEC reporte.cantidad_programa {Json}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
