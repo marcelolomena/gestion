@@ -40,10 +40,14 @@ import models.ProgramDetails
 import models.EarnValue
 import services.RiskService
 import models.Panel;
+import models.DBFilter;
 import java.io.File
 import java.io.FileOutputStream
 import org.apache.poi.xssf.usermodel._
-
+//import net.liftweb.json.DefaultFormats
+import net.liftweb.json._
+import net.liftweb.json.JsonParser._
+import models.ATM
 object Dashboard extends Controller {
 
   /**
@@ -326,16 +330,49 @@ object Dashboard extends Controller {
 
       node.put("data", puntos)
 
-      //println(node.toString())
-
       Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-
-      //println(play.api.libs.json.Json.toJson(bubble))
-      //Ok(play.api.libs.json.Json.toJson(bubble)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
+  }
+
+  def fromPredicate(choice: String): String = choice match {
+    case "eq" => " = "
+    case "gt" => " > "
+    case "lt" => " < "
+    case "ge" => " >= "
+    case "le" => " =< "
+    case "cn" => " like "
+    case _    => "error"
+  }
+
+  def fromName(choice: String, value: String): String = choice match {
+    case "division"    => " '%" + value + "%' "
+    case "programa"    => " '%" + value + "%' "
+    case "responsable" => " '%" + value + "%' "
+    case "fecini"      => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "feccom"      => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "pai"         => value
+    case "pae"         => value
+    case "spi"         => value
+    case "cpi"         => value
+    case "inversion"   => value
+    case "gasto"       => value
+    case _             => "error"
+  }
+
+  def fromNameProgram(choice: String, value: String): String = choice match {
+    case "nivel"       => " '%" + value + "%' "
+    case "programa"    => " '%" + value + "%' "
+    case "responsable" => " '%" + value + "%' "
+    case "pfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "pfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "rfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "rfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "pai"         => value
+    case "pae"         => value
+    case _             => "error"
   }
 
   def panel = Action { implicit request =>
@@ -343,109 +380,78 @@ object Dashboard extends Controller {
       val rows = request.getQueryString("rows").get.toString()
       val page = request.getQueryString("page").get.toString()
       val filters = request.getQueryString("filters").getOrElse("").toString()
+
+      var panel: Seq[Panel] = null
+      var records: Int = 0
+
       var node = new JSONObject()
       var tieneJson = true
+      var qrystr = ""
 
       if (!StringUtils.isEmpty(filters)) {
+
         val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
         if (!jObject.\\("rules").isEmpty) {
+
           val jList = jObject.\\("rules")
           var jElement = ""
           for (j <- jList) {
             jElement = j.toString()
-            if (jElement.equals("[]"))
+            if (jElement.equals("[]")) {
               tieneJson = false
+            } else {
+
+              implicit val formats = DefaultFormats
+              val json = net.liftweb.json.JsonParser.parse(filters)
+              val elements = (json \\ "rules").children
+              for (acct <- elements) {
+                val m = acct.extract[DBFilter]
+                qrystr += m.field + fromPredicate(m.op) + fromName(m.field, m.data) + " AND "
+              }
+
+            }
           }
 
           if (tieneJson) {
 
-            val strjson = play.api.libs.json.Json.toJson(jList).toString()
-            println(strjson)
-
-            val cantidad = DashboardService.cantidadProgramaFiltrado(strjson)
-            val filas = DashboardService.reporteProgramaFiltrado(rows, page, strjson)
-
-            var registro = new JSONArray()
-            for (f <- filas) {
-              var campo = new JSONObject()
-              campo.put("division", f.division)
-              campo.put("programa", f.programa)
-              campo.put("responsable", f.responsable)
-              campo.put("fecini", f.fecini.get)
-              campo.put("feccom", f.feccom.get)
-              campo.put("pai", f.pai)
-              campo.put("pae", f.pae)
-              campo.put("spi", f.spi)
-              campo.put("cpi", f.cpi)
-              campo.put("inversion", f.inversion)
-              campo.put("gasto", f.gasto)
-              registro.put(campo)
-            }
-            var pagedisplay = Math.ceil(cantidad.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
-
-            node.put("page", page)
-            node.put("total", pagedisplay)
-            node.put("records", cantidad)
-            node.put("rows", registro)
+            records = DashboardService.cantidadProgramaFiltrado(qrystr)
+            panel = DashboardService.reporteProgramaFiltrado(rows, page, qrystr)
 
           } else {
-            val records = DashboardService.cantidadProgramaFiltrado("")
-            val panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
-
-            var registro = new JSONArray()
-            for (p <- panel) {
-              var campo = new JSONObject()
-              campo.put("division", p.division)
-              campo.put("programa", p.programa)
-              campo.put("responsable", p.responsable)
-              campo.put("fecini", p.fecini.get)
-              campo.put("feccom", p.feccom.get)
-              campo.put("pai", p.pai)
-              campo.put("pae", p.pae)
-              campo.put("spi", p.spi)
-              campo.put("cpi", p.cpi)
-              campo.put("inversion", p.inversion)
-              campo.put("gasto", p.gasto)
-              registro.put(campo)
-            }
-            var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
-
-            node.put("page", page)
-            node.put("total", pagedisplay)
-            node.put("records", records)
-            node.put("rows", registro)
+            records = DashboardService.cantidadProgramaFiltrado("")
+            panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
 
           }
         }
       } else {
-
-        val records = DashboardService.cantidadProgramaFiltrado("")
-        val panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
-
-        var registro = new JSONArray()
-        for (p <- panel) {
-          var campo = new JSONObject()
-          campo.put("division", p.division)
-          campo.put("programa", p.programa)
-          campo.put("responsable", p.responsable)
-          campo.put("fecini", p.fecini.get)
-          campo.put("feccom", p.feccom.get)
-          campo.put("pai", p.pai)
-          campo.put("pae", p.pae)
-          campo.put("spi", p.spi)
-          campo.put("cpi", p.cpi)
-          campo.put("inversion", p.inversion)
-          campo.put("gasto", p.gasto)
-          registro.put(campo)
-        }
-        var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
-
-        node.put("page", page)
-        node.put("total", pagedisplay)
-        node.put("records", records)
-        node.put("rows", registro)
+        records = DashboardService.cantidadProgramaFiltrado("")
+        panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
 
       }
+
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("division", p.division)
+        campo.put("programa", p.programa)
+        campo.put("responsable", p.responsable)
+        campo.put("fecini", p.fecini.get)
+        campo.put("feccom", p.feccom.get)
+        campo.put("pai", p.pai)
+        campo.put("pae", p.pae)
+        campo.put("spi", p.spi)
+        campo.put("cpi", p.cpi)
+        campo.put("inversion", p.inversion)
+        campo.put("gasto", p.gasto)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", page)
+      node.put("total", pagedisplay)
+      node.put("records", records)
+      node.put("rows", registro)
 
       Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
@@ -456,12 +462,53 @@ object Dashboard extends Controller {
 
   def reportProgram() = Action { implicit request =>
     request.session.get("username").map { user =>
-
+      var panel: Seq[ATM] = null
+      var records: Int = 0
       val rows = request.getQueryString("rows").get.toString()
       val page = request.getQueryString("page").get.toString()
+      val filters = request.getQueryString("filters").getOrElse("").toString()
       var node = new JSONObject()
-      val records = DashboardService.programCount
-      val panel = DashboardService.reportProgram(rows, page)
+      var tieneJson = true
+      var qrystr = ""
+
+      if (!StringUtils.isEmpty(filters)) {
+
+        val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+        if (!jObject.\\("rules").isEmpty) {
+
+          val jList = jObject.\\("rules")
+          var jElement = ""
+          for (j <- jList) {
+            jElement = j.toString()
+            if (jElement.equals("[]")) {
+              tieneJson = false
+            } else {
+
+              implicit val formats = DefaultFormats
+              val json = net.liftweb.json.JsonParser.parse(filters)
+              val elements = (json \\ "rules").children
+              for (acct <- elements) {
+                val m = acct.extract[DBFilter]
+                qrystr += m.field + fromPredicate(m.op) + fromNameProgram(m.field, m.data) + " AND "
+              }
+
+            }
+          }
+
+        }
+
+        if (tieneJson) {
+          //println(qrystr)
+          records = DashboardService.programCount(qrystr)
+          panel = DashboardService.reportProgram(rows, page, qrystr)
+        }
+
+      } else {
+        records = DashboardService.programCount("")
+        panel = DashboardService.reportProgram(rows, page, "")
+
+      }
 
       var registro = new JSONArray()
       for (p <- panel) {
@@ -469,12 +516,12 @@ object Dashboard extends Controller {
         campo.put("id", p.id)
         campo.put("nivel", p.nivel)
         campo.put("codigo", p.codigo)
-        campo.put("nombre", p.nombre)
+        campo.put("programa", p.programa)
         campo.put("responsable", p.responsable)
-        campo.put("pini", p.pini.getOrElse(""))
-        campo.put("pter", p.pter.getOrElse(""))
-        campo.put("rini", p.rini.getOrElse(""))
-        campo.put("rter", p.rter.getOrElse(""))
+        campo.put("pfecini", p.pfecini.getOrElse(""))
+        campo.put("pfecter", p.pfecter.getOrElse(""))
+        campo.put("rfecini", p.rfecini.getOrElse(""))
+        campo.put("rfecter", p.rfecter.getOrElse(""))
         campo.put("pai", p.pai)
         campo.put("pae", p.pae)
         registro.put(campo)
@@ -500,7 +547,6 @@ object Dashboard extends Controller {
       val page = request.getQueryString("page").get.toString()
       var node = new JSONObject()
       val records = DashboardService.projectCount(pid)
-      //println("FILAS(*):" + records)
       val panel = DashboardService.reportProject(pid, rows, page)
 
       var registro = new JSONArray()
@@ -509,12 +555,12 @@ object Dashboard extends Controller {
         campo.put("id", p.id)
         campo.put("nivel", p.nivel)
         campo.put("codigo", p.codigo)
-        campo.put("nombre", p.nombre)
+        campo.put("nombre", p.programa)
         campo.put("responsable", p.responsable)
-        campo.put("pini", p.pini.getOrElse(""))
-        campo.put("pter", p.pter.getOrElse(""))
-        campo.put("rini", p.rini.getOrElse(""))
-        campo.put("rter", p.rter.getOrElse(""))
+        campo.put("pfecini", p.pfecini.getOrElse(""))
+        campo.put("pfecter", p.pfecter.getOrElse(""))
+        campo.put("rfecini", p.rfecini.getOrElse(""))
+        campo.put("rfecter", p.rfecter.getOrElse(""))
         campo.put("pai", p.pai)
         campo.put("pae", p.pae)
         registro.put(campo)
@@ -540,7 +586,6 @@ object Dashboard extends Controller {
       val page = request.getQueryString("page").get.toString()
       var node = new JSONObject()
       val records = DashboardService.subtaskCount(pid)
-      //println("FILAS(*):" + records)
       val panel = DashboardService.reportSubTask(pid, rows, page)
 
       var registro = new JSONArray()
@@ -549,12 +594,12 @@ object Dashboard extends Controller {
         campo.put("id", p.id)
         campo.put("nivel", p.nivel)
         campo.put("codigo", p.codigo)
-        campo.put("nombre", p.nombre)
+        campo.put("nombre", p.programa)
         campo.put("responsable", p.responsable)
-        campo.put("pini", p.pini.getOrElse(""))
-        campo.put("pter", p.pter.getOrElse(""))
-        campo.put("rini", p.rini.getOrElse(""))
-        campo.put("rter", p.rter.getOrElse(""))
+        campo.put("pfecini", p.pfecini.getOrElse(""))
+        campo.put("pfecter", p.pfecter.getOrElse(""))
+        campo.put("rfecini", p.rfecini.getOrElse(""))
+        campo.put("rfecter", p.rfecter.getOrElse(""))
         campo.put("pai", p.pai)
         campo.put("pae", p.pae)
         registro.put(campo)
@@ -838,7 +883,8 @@ object Dashboard extends Controller {
     node.put("json_for_spi", nodeSPI)
     node.put("json_for_cpi", nodeCPI)
 
-    Ok(views.html.frontend.dashboard.dashboardSPI(nodeSPI.toString(), nodeCPI.toString()))
+    //Ok(views.html.frontend.dashboard.dashboardSPI(nodeSPI.toString(), nodeCPI.toString()))//deprecated
+    Ok("OK")//deprecated
   }
 
   def showProgramListForPie(program_id_list: String) = Action { implicit request =>
