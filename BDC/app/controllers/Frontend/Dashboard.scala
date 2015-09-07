@@ -246,22 +246,22 @@ object Dashboard extends Controller {
           cel2.setCellValue(s.codigo)
 
           val cel3 = row.createCell(cNum + 3)
-          cel3.setCellValue(s.nombre)
+          cel3.setCellValue(s.programa)
 
           val cel4 = row.createCell(cNum + 4)
           cel4.setCellValue(s.responsable)
 
           val cel5 = row.createCell(cNum + 5)
-          cel5.setCellValue(s.pini)
+          cel5.setCellValue(s.pfecini.getOrElse("").toString())
 
           val cel6 = row.createCell(cNum + 6)
-          cel6.setCellValue(s.pter)
+          cel6.setCellValue(s.pfecter.getOrElse("").toString())
 
           val cel7 = row.createCell(cNum + 7)
-          cel7.setCellValue(s.rini)
+          cel7.setCellValue(s.rfecini.getOrElse("").toString())
 
           val cel8 = row.createCell(cNum + 8)
-          cel8.setCellValue(s.rter)
+          cel8.setCellValue(s.rfecter.getOrElse("").toString())
 
           val cel9 = row.createCell(cNum + 9)
           cel9.setCellValue(s.pai)
