@@ -25,7 +25,14 @@
 
     .ui-autocomplete {
         font-size: 11px;
-    }     
+    } 
+    
+    .ui-dialog .ui-dialog-title {
+    float: left;
+    margin: .1em 16px .1em 0;
+    text-align: center;
+    width: 100%;
+}    
 </style>
 </head>
 <body>
@@ -337,7 +344,7 @@
 					@if(progrma_members.size>0){
 						@for( (p,index) <- progrma_members.zipWithIndex){
 							@if(p.hours!=0){
-							<a href="/program-distribucion-interno?id=@p.member_id&pid=@p.program_id" class="interno"><li class="@if(index%2==0){even_row}else{odd_row}">	
+							<a href="/program-distribucion-interno?id=@p.member_id&pid=@p.program_id" class="interno" id="h_@p.member_id"><li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(p.role_id.toString).isEmpty){
 									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >&nbsp</span>
 								}else{
@@ -358,9 +365,9 @@
 							}else{
 							<li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(p.role_id.toString).isEmpty){
-									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >&nbsp</span>
+									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}">&nbsp</span>
 								}else{
-									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}" >@UserRoleService.findUserRoleById(p.role_id.toString).get.role </span>
+									<span id="r_@p.id" class="role @if(p.is_active==0){active-sap}else{in-active-sap}">@UserRoleService.findUserRoleById(p.role_id.toString).get.role </span>
 								}
 								<span class="member">BCH</span>
 								<span class="provider">@UserService.findUserDetails(p.member_id).get.first_name&nbsp;@UserService.findUserDetails(p.member_id).get.last_name</span>
@@ -382,7 +389,7 @@
 					@if(external_resource.size > 0){
 						@for( (e,index) <- external_resource.zipWithIndex){
 							@if(e.hours!=0){
-							<a href="/program-distribucion-externo?id=@e.id&pid=@e.program_id" class="externo"><li class="@if(index%2==0){even_row}else{odd_row}">	
+							<a href="/program-distribucion-externo?id=@e.id&pid=@e.program_id" class="externo" id="h_@e.id"><li class="@if(index%2==0){even_row}else{odd_row}">	
 								@if(UserRoleService.findUserRoleById(e.provider_type.toString).isEmpty){
 									<span id="r_@e.id" class="role @if(e.is_deleted==0){active-sap}else{in-active-sap}" >&nbsp</span>
 								}else{
@@ -766,6 +773,11 @@
 		function editProgramMember() {
 			var _this = $(this);
 			var mid = _this.attr("id").split("_")[1];
+			var nombre = ""
+			$.get("/name-member-user/" + mid, function(res){
+   				nombre=res;
+			})
+			
 			var purl = "/member_capacity/"  + mid;
 			$.ajax({
 				url : purl,
@@ -773,7 +785,7 @@
 				cache : false,
 				success : function(res) {
 						$("#scroll38").jqGrid('clearGridData').jqGrid('setGridParam', { data: res }).trigger('reloadGrid', [{ page: 1}]);
-						$("#dialog-edit-member-capacity").dialog("open");
+						$("#dialog-edit-member-capacity").dialog({title:nombre}).dialog("open");
 				},error : function() {
 						alert("alertSomethingWentWrong");
 				}
@@ -862,15 +874,13 @@
 	});	
 	$('a.interno').click(function(event) { 
 		event.preventDefault();
-		//console.log($(this).parent().find('.provider').text());
-		renderDistributionGraph(this.href,$(this).parent().find('.provider').text())
-        //alert(this.href);
+		renderDistributionGraph(this.href,this.id)
     }); 
     
    	$('a.externo').click(function(event) { 
    		event.preventDefault();
-		renderDistributionGraph(this.href,$(this).parent().find('.provider').text())
-        //alert(this.href);
+		//renderDistributionGraph(this.href,$(this).parent().find('.provider').text());
+		renderDistributionGraph(this.href,this.id)
     });  
 	
 	$(".show-project-details").data('powertip',function() {
