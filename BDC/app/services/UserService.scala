@@ -946,6 +946,19 @@ object UserService extends CustomColumns {
       result
     }
   }
+  
+    /**
+   * get user derails by Id
+   */
+  def findUserByMemberId(uId: Integer) = {
+    DB.withConnection { implicit connection =>
+      val result = SQL(
+        "select b.* from art_program_members a, art_user b where b.uid=a.member_id and a.id={uId}").on(
+          'uId -> uId).as(
+            Users.user.singleOpt)
+      result
+    }
+  }
 
   def findUserOfficeDetails(uId: Integer) = {
     DB.withConnection { implicit connection =>
