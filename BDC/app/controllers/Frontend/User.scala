@@ -64,7 +64,7 @@ object User extends Controller {
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
       val alerts = RiskService.findUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
-      val program_task=ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
+      val program_task = ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
       // EarnValueService.calculateSubTaskEarnValue()
 
       Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, availability, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
@@ -314,8 +314,7 @@ object User extends Controller {
             val data = ForgotPasswordMaster(None, emailFromUserName, success.user_name, newUuid, Option(new Date()), null, Option(isverify))
             val recordInsert = UserService.saveForgotPasswordDetails(ForgotPasswordMaster(None, emailFromUserName, success.user_name, newUuid, Option(new Date()), null, Option(isverify)))
             // val recordInsert = 1;
-            
-            
+
             if (recordInsert.get >= 1) {
               val resetEmail = emailFromUserName
               val message = "Please reset your password. Please follow the following Link"
@@ -324,7 +323,7 @@ object User extends Controller {
               val fromEmail = Play.application().configuration().getString("mail.from")
               SendEmail.sendEmailVerification(message, resetEmail, url, fromEmail)
             }
-            
+
             Redirect(routes.Login.loginUser())
           }
         })
@@ -385,7 +384,7 @@ object User extends Controller {
 
             val email = UserService.getEmailByVerificationId(id)
             var users = UserService.findUserDetailsByEmail(email)
-             
+
             if (!users.isEmpty) {
               val resetPassword = PasswordMaster(users.get.uid, "", success.new_password, success.confirm_password)
               UserService.updateUserPassword(resetPassword)
@@ -492,6 +491,34 @@ object User extends Controller {
 
       })
   }
+
+  def nameMemberUser(id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val result = request.session.get("username")
+
+      val user = UserService.findUserByMemberId(Integer.parseInt(id))
+      val name = user.get.first_name + " " + user.get.last_name
+
+      Ok(name.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+  
+  def nameUser(id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val result = request.session.get("username")
+
+      val user = UserService.findUser(id)
+      val name = user.get.first_name + " " + user.get.last_name
+
+      Ok(name.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }  
 
   def editUser(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
