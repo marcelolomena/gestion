@@ -1,28 +1,19 @@
-New log file opened at Tue Aug 25 18:24:38 CLT 2015 by 5420@zrismart
-Taking next connection to: 57385
-New client attempting to connect on port: 57386-57385
-  Address = /192.168.56.1:57385
-This client on port 57386 has uuid 5b8728cb-3c56-4850-9954-136dfc2f616a configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
-Connected Clients: play-fork-run-5b8728cb-3c56-4850-9954-136dfc2f616a
-Taking next connection to: 57385
+New log file opened at Tue Sep 08 09:35:40 CLT 2015 by 6532@zrismart
+Taking next connection to: 65016
+New client attempting to connect on port: 65017-65016
+  Address = /192.168.56.1:65016
+This client on port 65017 has uuid aa117f2f-0462-4581-a1d8-b616dbd2b626 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-aa117f2f-0462-4581-a1d8-b616dbd2b626
+Taking next connection to: 65016
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
+Taking next connection to: 65016
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
+Taking next connection to: 65016
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
+Taking next connection to: 65016
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 57385
+Taking next connection to: 65016

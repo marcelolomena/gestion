@@ -145,5 +145,6 @@
 	<classpathentry kind="src" path="target/scala-2.10/src_managed/main"/>
 	<classpathentry excluding="views/" kind="src" path="target/scala-2.10/twirl/main"/>
 	<classpathentry kind="lib" path="C:/Users/marcelo/.ivy2/cache/com.typesafe.play/play-mailer_2.10/jars/play-mailer_2.10-2.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/marcelo/.ivy2/cache/net.liftweb/lift-json_2.10/jars/lift-json_2.10-2.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

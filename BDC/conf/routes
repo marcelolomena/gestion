@@ -253,6 +253,7 @@ POST   /add-external-contractor                                                 
 #Risk Management
 GET    /risk-management/$id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.riskManagement(id:String,parent_type:Integer)
 GET    /issue-management/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                       controllers.Frontend.Program.issueManagement(parent_id:String,parent_type:Integer)
+GET    /issue-management-for-timesheet/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>         controllers.Frontend.Program.issueManagementForTimesheet(parent_id:String,parent_type:Integer)
 GET    /add-risk/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.addRisk(parent_id:String, parent_type:Integer)
 POST   /add-risk/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.saveRisk(parent_id:String, parent_type:Integer)
 GET    /edit-risk/$id<[A-Za-z0-9_-]+>                                                                 controllers.Frontend.Risks.editRisk(id:String)
@@ -444,6 +445,7 @@ POST   /update-sub-task-status/$task_id<[A-Za-z0-9_-]+>                         
 GET    /search-dependency-subtask-list                                                                controllers.Frontend.SubTask.getDependencySubtaskListByTask(taskId:String)
 POST   /update-actual-end-date-final                                                                  controllers.Frontend.SubTask.updateActualEndDateFinal(id:String, date_string:String)
 GET    /sub-task-details/:subtaskId                                                                   controllers.Frontend.SubTask.subTaskDetails(subtaskId:String)
+GET    /sub-task-details-from-timesheet/:subtaskId                                                    controllers.Frontend.SubTask.subTaskDetailsFromTimesheet(subtaskId:String)
 GET    /get-program-members-from-role/$role_id<[A-Za-z0-9_-]+>/$project_id<[A-Za-z0-9_-]+>            controllers.Frontend.SubTask.getProgramMembersFromRole(role_id:String, project_id:String)
 GET    /get-program-members-external-from-role/$role_id<[A-Za-z0-9_-]+>/$project_id<[A-Za-z0-9_-]+>   controllers.Frontend.SubTask.getProgramMembersExternalFromRole(role_id:String, project_id:String)
 GET    /get-service-catalog/:id                                                                       controllers.Frontend.SubTask.getServiceCatalog(id:String)
@@ -540,8 +542,8 @@ GET    /getATM                                                                  
 GET    /getExcel                                                                            	      controllers.Frontend.Dashboard.getExcel
 GET    /getProgramExcel/$pid<[A-Za-z0-9_-]+>                                                       	  controllers.Frontend.Dashboard.getProgramExcel(pid:String)
 POST   /resultPert                                                                                	  controllers.Frontend.Pert.resultPert
-GET    /program-distribucion-interno                                                                  controllers.Frontend.Program.graphDistributionInternalAction(id:String)
-GET    /program-distribucion-externo                                                                  controllers.Frontend.Program.graphDistributionExternalAction(id:String)
+GET    /program-distribucion-interno                                                                  controllers.Frontend.Program.graphDistributionInternalAction(id:String, pid:String)
+GET    /program-distribucion-externo                                                                  controllers.Frontend.Program.graphDistributionExternalAction(id:String, pid:String)
 POST   /request-user-availability                                                                     controllers.Frontend.Program.getUserProgramAvailability()
 GET    /get-program-distribution/$uid<[A-Za-z0-9_-]+>/$period<[A-Za-z0-9_-]+>   					  controllers.Frontend.Program.getProgramDistribution(uid:Integer, period:Integer)
 GET    /member_capacity/$mid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Program.editMembersCapacity(mid:Integer)

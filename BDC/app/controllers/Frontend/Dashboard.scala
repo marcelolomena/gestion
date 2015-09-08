@@ -502,6 +502,9 @@ object Dashboard extends Controller {
           //println(qrystr)
           records = DashboardService.programCount(qrystr)
           panel = DashboardService.reportProgram(rows, page, qrystr)
+        } else {
+          records = DashboardService.programCount("")
+          panel = DashboardService.reportProgram(rows, page, "")
         }
 
       } else {
@@ -884,7 +887,7 @@ object Dashboard extends Controller {
     node.put("json_for_cpi", nodeCPI)
 
     //Ok(views.html.frontend.dashboard.dashboardSPI(nodeSPI.toString(), nodeCPI.toString()))//deprecated
-    Ok("OK")//deprecated
+    Ok("OK") //deprecated
   }
 
   def showProgramListForPie(program_id_list: String) = Action { implicit request =>
