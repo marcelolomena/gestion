@@ -826,7 +826,11 @@
 			                    reloadAfterSubmit: true,
 			                    errorTextFormat: function (data) {
 			                        return 'Error: ' + data.responseText
-			                    }
+			                    }/*,afterSubmit: function() {
+			                    	console.log('pico');
+                        			$("#scroll38").jqGrid('setGridParam',{datatype:'json'}).trigger('reloadGrid');
+                          			return [true,'',false]; // no error and no new rowid
+                         		}*/
 			                }
 						);
 						
