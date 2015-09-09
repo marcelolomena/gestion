@@ -6545,19 +6545,22 @@ function validateSubTaskEdit(sub_task_id,end_date){
 
 }
 
-function renderDistributionGraph(url,nombre) {
+function renderDistributionGraph(url,id) {
 
-	//$(".loader").css("display", "block");
 	var dist = [];
 	var total = 0;
-
+	var nombre = "";
+	var uid = id.split("_")[1];
+	$.get("/name-user/" + uid, function(res){
+		nombre=res;
+	});
 	$.get(url, function(datos) {
 
 		$.each(datos, function(index, element) {
 			dist.push([parseInt(element.task_for_date),parseFloat(element.hours)]);
 			total += element.hours;
-	    });		
-		$("#distribution").dialog("open");
+	    });	
+		$("#distribution").dialog({title:nombre}).dialog("open");
 		var graph = new Highcharts.Chart( {
             chart: {
             	renderTo:'distribution',
@@ -6587,7 +6590,7 @@ function renderDistributionGraph(url,nombre) {
                 min: 0
             },
             title: {
-                text: nombre + ' total de horas ' + total.toFixed(2)
+                text: 'total de horas ' + total.toFixed(2)
             },
             tooltip: {
                 pointFormat: 'Avance acumulado: <b>{point.y:.1f} horas</b>'
@@ -6619,10 +6622,12 @@ function renderDistributionGraph(url,nombre) {
 		
 
 	});
+	/*
 	var delay = 200;
 	setTimeout(function() {
 		$(".loader").css("display", "none");
 	}, delay);
+	*/
 }
 /*
 function renderDistributionGraph(url) {
