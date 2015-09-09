@@ -458,6 +458,8 @@ GET    /update-task-start-dates                                                 
 GET    /add-new-user                                                                                  controllers.Frontend.User.addNewUser
 POST   /add-new-user                                                                                  controllers.Frontend.User.saveUser
 GET    /users-list                                                                                    controllers.Frontend.User.usersList
+GET    /name-member-user/:id                                                                          controllers.Frontend.User.nameMemberUser(id : String)
+GET    /name-user/:id                                                                          		  controllers.Frontend.User.nameUser(id : String)
 GET    /edit-user/:id                                                                                 controllers.Frontend.User.editUser(id : String)
 POST   /edit-user/:id                                                                                 controllers.Frontend.User.updateUser(id : String)
 GET    /employee/$employeeid<[A-Za-z0-9_-]+>                                                          controllers.Frontend.User.employeeDetails(employeeid:Long)
