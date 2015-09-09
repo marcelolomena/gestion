@@ -773,28 +773,13 @@
 		function editProgramMember() {
 			var _this = $(this);
 			var mid = _this.attr("id").split("_")[1];
-			var nombre = ""
-			$.get("/name-member-user/" + mid, function(res){
-   				nombre=res;
-			})
 			
 			var purl = "/member_capacity/"  + mid;
-			$.ajax({
-				url : purl,
-				type : "GET",
-				cache : false,
-				success : function(res) {
-						$("#scroll38").jqGrid('clearGridData').jqGrid('setGridParam', { data: res }).trigger('reloadGrid', [{ page: 1}]);
-						$("#dialog-edit-member-capacity").dialog({title:nombre}).dialog("open");
-				},error : function() {
-						alert("alertSomethingWentWrong");
-				}
-			});	
 
-		}
-
-		$("#scroll38").jqGrid({
-			   		datatype: "local",
+			$("#scroll38").jqGrid({
+					url: purl,
+				    mtype: "GET",
+				    datatype: "json",
 			        colModel: [
 			            { label: 'id', name: 'id', hidden:true,key: true, editable: false,width: 10 },
 			            { label: 'Periodo', name: 'periodo', editable: false,width: 100,formatter: 'date',formatoptions: { srcformat: 'U/1000', newformat: 'M,Y' } },
@@ -804,7 +789,7 @@
 			        pager: "#jqGridPager",
 					viewrecords: true,
 					regional : "es",
-			        loadonce: true,
+			        loadonce: false,
 			        height: 'auto',
 			        autowidth:true,
 			        page:1,
@@ -814,10 +799,10 @@
     				pgtext: null,         // disable pager text like 'Page 0 of 10'
     				viewrecords: false,    // disable current view record text like 'View 1-10 of 100' 
             		editurl: "/update-member_capacity"
-		});		
-						$("#scroll38").navGrid('#jqGridPager',
+			});		
+			$("#scroll38").navGrid('#jqGridPager',
 			                { edit: true, add: false, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false },
-			                {   editCaption: "Cambiar Porcentaje",
+			                {   editCaption: "",
 			                    recreateForm: true,
 			                    mtype:"GET",
 								checkOnUpdate : true,
@@ -826,23 +811,31 @@
 			                    reloadAfterSubmit: true,
 			                    errorTextFormat: function (data) {
 			                        return 'Error: ' + data.responseText
-			                    }/*,afterSubmit: function() {
-			                    	console.log('pico');
-                        			$("#scroll38").jqGrid('setGridParam',{datatype:'json'}).trigger('reloadGrid');
-                          			return [true,'',false]; // no error and no new rowid
-                         		}*/
+			                    }
 			                }
-						);
+			);	
+			//var nombre = "";
+			$.get("/name-member-user/" + mid, function(res){
+   				//nombre=res;
+   				//console.log(res);
+   				$("#dialog-edit-member-capacity").dialog({title:res}).dialog("open");
+			});
+			//console.log('nombre : ' + nombre);		
+			
+		}
+
 						
 		$("#dialog-edit-member-capacity").dialog({
 					autoOpen: false,
 		            modal: true,
 		            resizable: true,
 		            open: function(event, ui) {
-			        	$("#scroll38").setGridHeight($(this).height()-54); 
+			        	//$("#scroll38").setGridHeight($(this).height()-54);
+			        	$("#scroll38").setGridHeight($(this).height()); 
 			        	$("#scroll38").setGridWidth($(this).width(), true);
 			    	},resizeStop: function(event, ui) {
-			        	$("#scroll38").setGridHeight($(this).height()-54); 
+			        	//$("#scroll38").setGridHeight($(this).height()-54);
+			        	$("#scroll38").setGridHeight($(this).height()); 
 			        	$("#scroll38").setGridWidth($(this).width(), true);
     				}, position: 'center',
 					show: {
