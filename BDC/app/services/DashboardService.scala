@@ -65,6 +65,31 @@ object DashboardService {
     }
   }
 
+  def reportProgramSubTask(pid: String, pageSize: String, pageNumber: String): Seq[ATM] = {
+
+    var sqlString = "EXEC reporte.programa_sub_tarea {pid},{PageSize},{PageNumber}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('pid -> pid.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+    }
+  }
+  
+  def reportResource(stid: String, pageSize: String, pageNumber: String): Seq[ATM] = {
+
+    var sqlString = "EXEC reporte.recurso {stid},{PageSize},{PageNumber}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('stid -> stid.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+    }
+  }  
+  
+  def resourceCount(stid: String): Int = {
+    DB.withConnection { implicit connection =>
+      var sqlString = ""
+      sqlString = "SELECT count(*) FROM art_sub_task a JOIN (SELECT * FROM art_sub_task_allocation) b ON a.sub_task_id=b.sub_task_id JOIN (SELECT * FROM art_user) c ON b.user_id = c.uid WHERE a.is_deleted=1 AND b.is_deleted=1 AND a.sub_task_id={stid}"
+      val count: Int = SQL(sqlString).on('stid -> stid.toInt).as(scalar[Int].single)
+      count
+    }
+  }  
+
   def programCount(Json: String): Int = {
 
     var sqlString = "EXEC reporte.cantidad_programa {Json}"
@@ -73,6 +98,8 @@ object DashboardService {
       SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
     }
   }
+  
+  
 
   def projectCount(pid: String): Int = {
     DB.withConnection { implicit connection =>
@@ -87,6 +114,15 @@ object DashboardService {
     DB.withConnection { implicit connection =>
       var sqlString = ""
       sqlString = "SELECT count(*) FROM art_sub_task a JOIN (SELECT * FROM art_task) b ON a.task_id=b.tId WHERE a.is_deleted=1 AND b.is_active=1 AND b.pId={pid}"
+      val count: Int = SQL(sqlString).on('pid -> pid.toInt).as(scalar[Int].single)
+      count
+    }
+  }
+
+  def programSubtaskCount(pid: String): Int = {
+    DB.withConnection { implicit connection =>
+      var sqlString = ""
+      sqlString = "SELECT count(*) FROM art_program a JOIN (SELECT * FROM art_project_master) b ON a.program_id=b.program JOIN (SELECT * FROM art_task) c ON b.pId=c.pId JOIN (SELECT * FROM art_sub_task) d ON d.task_id=c.tId WHERE a.is_active = 1 AND b.is_active = 1 AND c.is_active = 1 AND d.is_deleted = 1 AND  a.program_id={pid}"
       val count: Int = SQL(sqlString).on('pid -> pid.toInt).as(scalar[Int].single)
       count
     }
