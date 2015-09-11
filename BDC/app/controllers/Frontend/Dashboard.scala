@@ -620,6 +620,84 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
+  
+  def reportProgramSubTarea(pid: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val rows = request.getQueryString("rows").get.toString()
+      val page = request.getQueryString("page").get.toString()
+      var node = new JSONObject()
+      val records = DashboardService.programSubtaskCount(pid)
+      val panel = DashboardService.reportProgramSubTask(pid, rows, page)
+
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("id", p.id)
+        campo.put("nivel", p.nivel)
+        campo.put("codigo", p.codigo)
+        campo.put("programa", p.programa)
+        campo.put("responsable", p.responsable)
+        campo.put("pfecini", p.pfecini.getOrElse(""))
+        campo.put("pfecter", p.pfecter.getOrElse(""))
+        campo.put("rfecini", p.rfecini.getOrElse(""))
+        campo.put("rfecter", p.rfecter.getOrElse(""))
+        campo.put("pai", p.pai)
+        campo.put("pae", p.pae)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", Integer.parseInt(page))
+      node.put("total", pagedisplay)
+      node.put("records", records)
+      node.put("rows", registro)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  } 
+  
+    def reportResource(pid: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val rows = request.getQueryString("rows").get.toString()
+      val page = request.getQueryString("page").get.toString()
+      var node = new JSONObject()
+      val records = DashboardService.resourceCount(pid)
+      val panel = DashboardService.reportResource(pid, rows, page)
+
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("id", p.id)
+        campo.put("nivel", p.nivel)
+        campo.put("codigo", p.codigo)
+        campo.put("programa", p.programa)
+        campo.put("responsable", p.responsable)
+        campo.put("pfecini", p.pfecini.getOrElse(""))
+        campo.put("pfecter", p.pfecter.getOrElse(""))
+        campo.put("rfecini", p.rfecini.getOrElse(""))
+        campo.put("rfecter", p.rfecter.getOrElse(""))
+        campo.put("pai", p.pai)
+        campo.put("pae", p.pae)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", Integer.parseInt(page))
+      node.put("total", pagedisplay)
+      node.put("records", records)
+      node.put("rows", registro)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }  
 
   /**
    * latest update dummy page
