@@ -48,9 +48,9 @@
 				  		<tr>
 				  			
 				  			<td class="table_header">@Messages("projectTaskDetails.description")</strong></td>
-				  			<td  class="p_values width380px"> @taskDetail.get.task_description </td>
+				  			<td class="p_values width380px"> @taskDetail.get.task_description </td>
 				  			<td class="table_header">@Messages("projectTaskDetails.plannedstartdate") </strong></td>
-				  			<td  class="p_values">@taskDetail.get.plan_start_date.format("dd-MM-yyyy") </td>
+				  			<td class="p_values">@taskDetail.get.plan_start_date.format("dd-MM-yyyy") </td>
 				  		</tr>	
 				
 				  		<tr>
@@ -75,9 +75,9 @@
 				  			</td>
 							
 				  		</tr>	
-				  		<tr style="border:none;">
-				  			<td class="table_header left">@Messages("projectTaskDetails.taskdependancy")</strong></td>
-							<td  class="p_values width380px;" style="text-align: left; vertical-align: middle;">
+				  		<tr>
+				  			<td class="table_header">@Messages("projectTaskDetails.taskdependancy")</strong></td>
+							<td  class="p_values width380px;">
 							@if(!taskDetail.get.task_depend.isEmpty){
 								@for(t <- taskDetail.get.task_depend.get.split(",")){
 									@if(!StringUtils.isEmpty(t.trim())){
