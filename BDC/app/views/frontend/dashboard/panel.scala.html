@@ -18,11 +18,12 @@
 </head>
 <body>
 @frontend.topLayout()
-<div class="main">
+@*<div class="main">
 	@frontend.header()
 	<section class="slider" id="panel_page">
 		<div class="product_main">
 		  	<div class="product_detail_1">
+*@
 				<div id="accordion"> 
 					<h3><a id="burbujas" href="#">Gráfico SPI/CPI</a></h3> 
 					<div> 
@@ -44,14 +45,14 @@
 							<div id="jqGridPager3"></div>
 					</div> 											
 				</div> 		  	
-			</div>
-		</div>
+			@*</div>
+		</div>*@
 		<div id="chart_box" style="display:none;">
 			<div id="chart1"></div>
 		</div>
-	  	@frontend.footer()
+	  	@*@frontend.footer()
 	</section>
-</div>
+</div>*@
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.min.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-silk-icons.css")">
