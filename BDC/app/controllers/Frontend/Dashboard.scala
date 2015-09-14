@@ -726,46 +726,109 @@ object Dashboard extends Controller {
     }
   } 
 
-  /*
-    def reportResource(pid: String) = Action { implicit request =>
-    request.session.get("username").map { user =>
+  def getStatusSubTaskExcel() = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
 
-      val rows = request.getQueryString("rows").get.toString()
-      val page = request.getQueryString("page").get.toString()
-      var node = new JSONObject()
-      val records = DashboardService.resourceCount(pid)
-      val panel = DashboardService.reportResource(pid, rows, page)
+        val file = new File("subtask.xlsx")
+        val fileOut = new FileOutputStream(file);
+        val wb = new XSSFWorkbook
+        val sheet = wb.createSheet("SUBTAREA")
+        var j = 0
+        var rNum = 1
+        var cNum = 0
+        var a = 0
 
-      var registro = new JSONArray()
-      for (p <- panel) {
-        var campo = new JSONObject()
-        campo.put("id", p.id)
-        campo.put("nivel", p.nivel)
-        campo.put("codigo", p.codigo)
-        campo.put("programa", p.programa)
-        campo.put("responsable", p.responsable)
-        campo.put("pfecini", p.pfecini.getOrElse(""))
-        campo.put("pfecter", p.pfecter.getOrElse(""))
-        campo.put("rfecini", p.rfecini.getOrElse(""))
-        campo.put("rfecter", p.rfecter.getOrElse(""))
-        campo.put("pai", p.pai)
-        campo.put("pae", p.pae)
-        registro.put(campo)
+        var rowhead = sheet.createRow(0);
+        val style = wb.createCellStyle();
+        val font = wb.createFont();
+        font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL);
+        font.setFontHeightInPoints(10);
+        font.setBold(true);
+        style.setFont(font);
+        rowhead.createCell(0).setCellValue("Id")
+        rowhead.createCell(1).setCellValue("Programa")
+        rowhead.createCell(2).setCellValue("Proyecto")
+        rowhead.createCell(3).setCellValue("SubTarea")
+        rowhead.createCell(4).setCellValue("Lider")        
+        rowhead.createCell(5).setCellValue("Responsable")
+        rowhead.createCell(6).setCellValue("Asignadas")        
+        rowhead.createCell(7).setCellValue("Consumidas")        
+        rowhead.createCell(8).setCellValue("Fecha Inico Plan")
+        rowhead.createCell(9).setCellValue("Fecha Termino Plan")
+        rowhead.createCell(10).setCellValue("Fecha Inicio Real")
+        rowhead.createCell(11).setCellValue("Fecha Termino Real")
+        rowhead.createCell(12).setCellValue("% Avance Informado")
+        rowhead.createCell(13).setCellValue("Estado")
+        //rowhead.createCell(13).setCellValue("% Avance Esperado")
+
+        for (j <- 0 to 13)
+          rowhead.getCell(j).setCellStyle(style);
+
+        val panel = DashboardService.reportStateSubTask("0", "0", "")
+
+        for (s <- panel) {
+          var row = sheet.createRow(rNum)
+
+          val cel0 = row.createCell(cNum)
+          cel0.setCellValue(s.sub_task_id)
+
+          val cel1 = row.createCell(cNum + 1)
+          cel1.setCellValue(s.programa)
+
+          val cel2 = row.createCell(cNum + 2)
+          cel2.setCellValue(s.proyecto)
+
+          val cel3 = row.createCell(cNum + 3)
+          cel3.setCellValue(s.subtarea)
+
+          val cel4 = row.createCell(cNum + 4)
+          cel4.setCellValue(s.lider)
+          
+          val cel5 = row.createCell(cNum + 5)
+          cel5.setCellValue(s.responsable)
+          
+          val cel6 = row.createCell(cNum + 6)
+          cel6.setCellValue(s.asignadas)
+          
+          val cel7 = row.createCell(cNum + 7)
+          cel7.setCellValue(s.consumidas)          
+
+          val cel8 = row.createCell(cNum + 8)
+          cel8.setCellValue(s.pfecini.getOrElse("").toString())
+
+          val cel9 = row.createCell(cNum + 9)
+          cel6.setCellValue(s.pfecter.getOrElse("").toString())
+
+          val cel10 = row.createCell(cNum + 10)
+          cel10.setCellValue(s.rfecini.getOrElse("").toString())
+
+          val cel11 = row.createCell(cNum + 11)
+          cel11.setCellValue(s.rfecter.getOrElse("").toString())
+
+          val cel12 = row.createCell(cNum + 12)
+          cel12.setCellValue(s.pai)
+
+          val cel13 = row.createCell(cNum + 13)
+          cel13.setCellValue(s.estado)
+
+          rNum = rNum + 1
+          cNum = 0
+
+        }
+
+        for (a <- 0 to 10) {
+          sheet.autoSizeColumn((a.toInt));
+        }
+
+        wb.write(fileOut);
+        fileOut.close();
+        Ok.sendFile(content = file, fileName = _ => "subtask.xlsx")
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
       }
-      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
 
-      node.put("page", Integer.parseInt(page))
-      node.put("total", pagedisplay)
-      node.put("records", records)
-      node.put("rows", registro)
-
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }  
-*/
+  }
   /**
    * latest update dummy page
    */
