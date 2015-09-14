@@ -48,6 +48,7 @@ import org.apache.poi.xssf.usermodel._
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
 import models.ATM
+import models.StateSubTarea
 object Dashboard extends Controller {
 
   /**
@@ -374,6 +375,23 @@ object Dashboard extends Controller {
     case "pae"         => value
     case _             => "error"
   }
+  
+  def fromStateSubTask(choice: String, value: String): String = choice match {
+    case "programa"    => " '%" + value + "%' "
+    case "proyecto"    => " '%" + value + "%' "
+    case "subtarea"    => " '%" + value + "%' "
+    case "lider"       => " '%" + value + "%' "    
+    case "responsable" => " '%" + value + "%' "
+    case "asignadas"   => value
+    case "consumidas"  => value    
+    case "pfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "pfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "rfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "rfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "pai"         => value
+    case "estado"      => " '%" + value + "%' "
+    case _             => "error"
+  }  
 
   def panel = Action { implicit request =>
     request.session.get("username").map { user =>
@@ -620,30 +638,78 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  
-  def reportProgramSubTarea(pid: String) = Action { implicit request =>
-    request.session.get("username").map { user =>
 
+  def reportStateSubTask() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var panel: Seq[StateSubTarea] = null
+      var records: Int = 0
       val rows = request.getQueryString("rows").get.toString()
       val page = request.getQueryString("page").get.toString()
+      val filters = request.getQueryString("filters").getOrElse("").toString()
       var node = new JSONObject()
-      val records = DashboardService.programSubtaskCount(pid)
-      val panel = DashboardService.reportProgramSubTask(pid, rows, page)
+      var tieneJson = true
+      var qrystr = ""
+
+      if (!StringUtils.isEmpty(filters)) {
+
+        val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+        if (!jObject.\\("rules").isEmpty) {
+
+          val jList = jObject.\\("rules")
+          var jElement = ""
+          for (j <- jList) {
+            jElement = j.toString()
+            if (jElement.equals("[]")) {
+              tieneJson = false
+            } else {
+
+              implicit val formats = DefaultFormats
+              val json = net.liftweb.json.JsonParser.parse(filters)
+              val elements = (json \\ "rules").children
+              for (acct <- elements) {
+                val m = acct.extract[DBFilter]
+                qrystr += "Z." + m.field + fromPredicate(m.op) + fromStateSubTask(m.field, m.data) + " AND "
+              }
+
+            }
+          }
+
+        }
+
+        if (tieneJson) {
+          //println(qrystr)
+          records = DashboardService.reportStateSubTaskCount(qrystr)
+          panel = DashboardService.reportStateSubTask(rows, page, qrystr)
+        } else {
+          records = DashboardService.reportStateSubTaskCount("")
+          panel = DashboardService.reportStateSubTask(rows, page, "")
+        }
+
+      } else {
+        records = DashboardService.reportStateSubTaskCount("")
+        panel = DashboardService.reportStateSubTask(rows, page, "")
+
+      }
 
       var registro = new JSONArray()
       for (p <- panel) {
         var campo = new JSONObject()
-        campo.put("id", p.id)
-        campo.put("nivel", p.nivel)
-        campo.put("codigo", p.codigo)
+        campo.put("sub_task_id", p.sub_task_id)
         campo.put("programa", p.programa)
+        campo.put("proyecto", p.proyecto)
+        campo.put("subtarea", p.subtarea)
+        campo.put("lider", p.lider)        
         campo.put("responsable", p.responsable)
+        campo.put("asignadas", p.asignadas)        
+        campo.put("consumidas", p.consumidas)        
         campo.put("pfecini", p.pfecini.getOrElse(""))
         campo.put("pfecter", p.pfecter.getOrElse(""))
         campo.put("rfecini", p.rfecini.getOrElse(""))
         campo.put("rfecter", p.rfecter.getOrElse(""))
         campo.put("pai", p.pai)
-        campo.put("pae", p.pae)
+        campo.put("estado", p.estado)
+
         registro.put(campo)
       }
       var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
@@ -659,7 +725,8 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   } 
-  
+
+  /*
     def reportResource(pid: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 
@@ -698,7 +765,7 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }  
-
+*/
   /**
    * latest update dummy page
    */
