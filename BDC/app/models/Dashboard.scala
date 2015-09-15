@@ -189,6 +189,64 @@ object ATM {
   implicit val atmWrites = Json.writes[ATM]
 }
 
+case class StateSubTarea(
+    sub_task_id: Int, 
+    programa: String, 
+    proyecto: String, 
+    subtarea: String,
+    lider: String, 
+    responsable: String, 
+    asignadas: Double,
+    consumidas: Double,
+    pfecini: Option[Date], 
+    pfecter: Option[Date], 
+    rfecini: Option[Date],
+    rfecter: Option[Date],
+    pai: Double,
+    estado: String
+    )
+
+object StateSubTarea {
+  val state = {
+    get[Int]("sub_task_id") ~
+      get[String]("programa") ~
+      get[String]("proyecto") ~
+      get[String]("subtarea") ~
+      get[String]("lider") ~
+      get[String]("responsable") ~
+      get[Double]("asignadas") ~
+      get[Double]("consumidas") ~      
+      get[Option[Date]]("pfecini") ~
+      get[Option[Date]]("pfecter") ~
+      get[Option[Date]]("rfecini") ~
+      get[Option[Date]]("rfecter") ~
+      get[Double]("pai") ~
+      get[String]("estado") map {
+        case sub_task_id ~ 
+        programa ~ 
+        proyecto ~ 
+        subtarea ~ 
+        lider ~         
+        responsable ~ 
+        asignadas ~         
+        consumidas ~        
+        pfecini ~ 
+        pfecter ~ 
+        rfecini ~ 
+        rfecter ~ 
+        pai ~
+        estado => StateSubTarea(
+            sub_task_id,
+            programa,
+            proyecto,
+            subtarea,lider,
+            responsable, asignadas, consumidas, pfecini, pfecter, rfecini, rfecter, pai,estado)
+      }
+    
+  }
+  implicit val estadosubtareaWrites = Json.writes[StateSubTarea]
+}
+
 case class Bubble(x: Double, 
     y: Double, 
     z: Double, 
