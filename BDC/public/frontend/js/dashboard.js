@@ -1,5 +1,5 @@
 /**
- * ZRISMART S.A.
+ * 2015 - ZRISMART S.A.
  */
 $(document).ready(function(){
 	// the event handler on expanding parent row receives two parameters
@@ -75,7 +75,7 @@ $(document).ready(function(){
 	    });
 
 	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
-		//$("#" + childGridID).jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch: 'cn'});
+
 		$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
 		       caption:"",
 		       buttonicon : "silk-icon-chart-bar",
@@ -154,7 +154,6 @@ $(document).ready(function(){
 		       } 
 		}); 
 
-		/**/
 		$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
 		       caption:"",
 		       buttonicon : "silk-icon-chart-curve",
@@ -251,7 +250,7 @@ $(document).ready(function(){
 		           }
 		       } 
 		});   		
-		/**/
+
 		$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
 		       caption:"",
 		       buttonicon : "silk-icon-chart-line",
@@ -347,8 +346,152 @@ $(document).ready(function(){
 		           }
 		       } 
 		}); 
-		/**/   
+ 
 	}
+	
+	/*INI PICO*/
+	function mostrarSegundoNivel(parentRowID, parentRowKey) {
+	    var childGridID = parentRowID + "_table";
+	    var childGridPagerID = parentRowID + "_pager";
+
+	    // send the parent row primary key to the server so that we know which grid to show
+	    var childGridURL = "/reportProgramSubTarea/" + parentRowKey;
+
+	    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+	    $("#" + childGridID).jqGrid({
+	        url: childGridURL,
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: [
+	                   { label: 'Codigo',
+	                      name: 'codigo',
+	                      width: 100,
+	                      key: true,
+	                      hidden:true
+	                   },                   
+	                   { label: 'Nivel',
+	                     name: 'nivel',
+	                     width: 100,
+	                   },
+	                   { label: 'Nombre', name: 'programa', width: 250 },
+	                   { label: 'Responsable', name: 'responsable', width: 150 },
+	                   { label: 'Fecha Inicio Planeada',
+	                     name: 'pfecini',
+	                     width: 120,
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                   },
+	                   { label: 'Fecha Termino Planeada',
+	                     name: 'pfecter',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     
+	                   },
+	                   { label: 'Fecha Inicio Real',
+	                     name: 'rfecini',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     
+	                   },
+	                   { label: 'Fecha Termino Real',
+	                     name: 'rfecter',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     
+	                   },
+	                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
+	                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+	        ],
+	        rowNum: 20,
+			height: 'auto',
+	        autowidth:true,
+	        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+	        subGridRowExpanded: mostrarTercerNivel, // javascript function that will take care of showing the child grid
+	        regional : "es",
+	        pager: "#" + childGridPagerID
+	    });
+	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+	}	
+	
+	function mostrarTercerNivel(parentRowID, parentRowKey) {
+	    var childGridID = parentRowID + "_table";
+	    var childGridPagerID = parentRowID + "_pager";
+
+	    // send the parent row primary key to the server so that we know which grid to show
+	    var childGridURL = "/reportRecurso/" + parentRowKey;
+
+	    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+	    $("#" + childGridID).jqGrid({
+	        url: childGridURL,
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: [
+	                   { label: 'Codigo',
+	                      name: 'codigo',
+	                      width: 100,
+	                      key: true,
+	                      hidden:true
+	                   },                   
+	                   { label: 'Nivel',
+	                     name: 'nivel',
+	                     width: 100,
+	                   },
+	                   { label: 'Nombre', name: 'programa', width: 250,hidden:true },
+	                   { label: 'Responsable', name: 'responsable', width: 150 },
+	                   { label: 'Fecha Inicio Planeada',
+	                     name: 'pfecini',
+	                     width: 120,
+	                     formatter: 'date',hidden:true,
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                   },
+	                   { label: 'Fecha Termino Planeada',
+	                     name: 'pfecter',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',hidden:true,
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     
+	                   },
+	                   { label: 'Fecha Inicio Real',
+	                     name: 'rfecini',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',hidden:true,
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     
+	                   },
+	                   { label: 'Fecha Termino Real',
+	                     name: 'rfecter',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',hidden:true,
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     
+	                   },
+	                   { label: 'Horas Asignadas', name: 'pai', width: 100 },
+	                   { label: 'Horas Consumidas', name: 'pae', width: 100 }              
+	        ],
+	        rowNum: 10,
+	 		height: 'auto',
+	        autowidth:true,       
+	        regional : "es",
+	        pager: "#" + childGridPagerID
+	    });
+
+	}	
+	/*FIN PICO*/
 
 	// the event handler on expanding parent row receives two parameters
 	// the ID of the grid tow  and the primary key of the row
@@ -790,6 +933,158 @@ $(document).ready(function(){
 						           var url = 'getProgramExcel/' + rowKey;
 						    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
 					           }
+					       } 
+					});
+				}
+			}else if(currentHeaderID=='ter'){
+				if($('#jqGrid3').html() == "") {
+					$("#jqGrid3").jqGrid({
+				        url: '/reportStateSubTask',
+				        mtype: "GET",
+				        datatype: "json",
+				        page: 1,
+				        colModel: [
+				            { label: 'sub_task_id',
+				               name: 'sub_task_id',
+				               width: 100,
+				               key: true,
+				               hidden:true
+				            },                   
+				            { label: 'Programa',
+				              name: 'programa',
+				              width: 250,
+				            },
+				            { label: 'Proyecto', name: 'proyecto', width: 250 },
+				            { label: 'Sub Tarea', name: 'subtarea', width: 250 },
+				            { label: 'Lider', name: 'lider', width: 150 },
+				            { label: 'Responsable', name: 'responsable', width: 150 },
+				            { label: 'Asignadas', name: 'asignadas', width: 50 },
+				            { label: 'Consumidas', name: 'consumidas', width: 50 },				            
+				            { label: 'Fecha Inicio Planeada',
+				              name: 'pfecini',
+				              width: 100,
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid3')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Fecha Termino Planeada',
+				              name: 'pfecter',
+				              width: 100,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid3')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Fecha Inicio Real',
+				              name: 'rfecini',
+				              width: 100,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid3')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Fecha Termino Real',
+				              name: 'rfecter',
+				              width: 100,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'dd/mm/yy',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid3')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 50,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'Estado', name: 'estado', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
+				        ],
+				        rowNum: 20,
+				        regional : 'es',
+				        height: 'auto',
+				        autowidth:true,        
+				        //subGrid: true, // set the subGrid property to true to show expand buttons for each row
+				        //subGridRowExpanded: mostrarSegundoNivel, // javascript function that will take care of showing the child grid
+				        pager: "#jqGridPager3",
+				        loadComplete: function () {
+		                    var filters, i, l, rules, rule, iCol, $this = $(this);
+		                    if (this.p.search === true) {
+		                        filters = $.parseJSON(this.p.postData.filters);
+		                        if (filters !== null && typeof filters.rules !== 'undefined' &&
+		                                filters.rules.length > 0) {
+		                            rules = filters.rules;
+		                            l = rules.length;
+		                            for (i = 0; i < l; i++) {
+		                                rule = rules[i];
+		                                iCol = getColumnIndexByName($this, rule.field);
+		                                if (iCol >=0) {
+		                                    $('>tbody>tr.jqgrow>td:nth-child(' + (iCol + 1) +
+		                                        ')', this).highlight(rule.data);
+		                                }
+		                            }
+		                        }
+		                    }
+		                    return;
+		                }
+				    });	
+					$("#jqGrid3").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+					$("#jqGrid3").jqGrid('navGrid','#jqGridPager3',{add:false,edit:false,del:false,search: false});
+					$("#jqGrid3").jqGrid('navButtonAdd','#jqGridPager3',{
+					       caption:"",
+					       buttonicon : "silk-icon-page-excel",
+					       title: "Exportar a Excel", 
+					       onClickButton : function () { 
+					    	   var grid = $("#jqGrid3");
+					           var rowKey = grid.getGridParam("selrow");
+					           var url = 'status-subtask';
+					    	   $("#jqGrid3").jqGrid('excelExport',{"url":url});
 					       } 
 					});
 				}

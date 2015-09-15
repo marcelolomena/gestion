@@ -74,6 +74,11 @@ body {
 	margin: 0 auto;
 	padding: 37px 0 0;
 }
+.report {
+	width: 1200px;
+	margin: 0 auto;
+	padding: 50px 0 0;
+}
 /***********  Header Part   *************/
 header {
 	width: 936px;
