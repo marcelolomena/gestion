@@ -65,31 +65,23 @@ object DashboardService {
     }
   }
 
-  def reportProgramSubTask(pid: String, pageSize: String, pageNumber: String): Seq[ATM] = {
 
-    var sqlString = "EXEC reporte.programa_sub_tarea {pid},{PageSize},{PageNumber}"
+  def reportStateSubTaskCount(Json: String): Int = {
+
+    var sqlString = "EXEC reporte.cantidad_estado_sub_tarea {Json}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('pid -> pid.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+      SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
     }
   }
-  
-  def reportResource(stid: String, pageSize: String, pageNumber: String): Seq[ATM] = {
 
-    var sqlString = "EXEC reporte.recurso {stid},{PageSize},{PageNumber}"
+  def reportStateSubTask(pageSize: String, pageNumber: String, Json: String): Seq[StateSubTarea] = {
+
+    var sqlString = "EXEC reporte.estado_sub_tarea {PageSize},{PageNumber},{Json}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('stid -> stid.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ATM.atm *)
+      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (StateSubTarea.state *)
     }
   }  
   
-  def resourceCount(stid: String): Int = {
-    DB.withConnection { implicit connection =>
-      var sqlString = ""
-      sqlString = "SELECT count(*) FROM art_sub_task a JOIN (SELECT * FROM art_sub_task_allocation) b ON a.sub_task_id=b.sub_task_id JOIN (SELECT * FROM art_user) c ON b.user_id = c.uid WHERE a.is_deleted=1 AND b.is_deleted=1 AND a.sub_task_id={stid}"
-      val count: Int = SQL(sqlString).on('stid -> stid.toInt).as(scalar[Int].single)
-      count
-    }
-  }  
-
   def programCount(Json: String): Int = {
 
     var sqlString = "EXEC reporte.cantidad_programa {Json}"
