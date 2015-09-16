@@ -106,9 +106,8 @@ object UserProfileServices {
 
   def findAvailability(uid: Integer): Seq[UserAvailability] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC usuario.disponibilidad  {uid}").on(
+      SQL("EXEC art.disponibilidad  {uid}").on(
         'uid -> uid.toInt).executeQuery().as(UserAvailability.useravailabity *)
-      //'uid -> uid.toInt).executeQuery().as(UserAvailability.useravailabity.single)
     }
   }
 }

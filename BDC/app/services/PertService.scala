@@ -23,7 +23,7 @@ object PertService {
 
    def pert(fecha: String,plantilla: Int, tipo: Int,cajero: Int,programa: Int,direccion: String, usuario: Int) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC xpert {fecha_inicio},{id_platilla},{tipo},{cajero},{id_programa},{direccion},{uid}").on(
+      SQL("EXEC art.xpert {fecha_inicio},{id_platilla},{tipo},{cajero},{id_programa},{direccion},{uid}").on(
         'fecha_inicio -> fecha, 'id_platilla -> plantilla,'tipo -> tipo,'cajero -> cajero,'id_programa -> programa,'direccion -> direccion,'uid -> usuario).executeQuery().as(XPert.pert *)
     }
   } 

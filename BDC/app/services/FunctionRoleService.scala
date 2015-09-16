@@ -12,7 +12,7 @@ object FunctionRoleService {
 
   def checkDBAccess(role: String, function: String) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC usuario.acceso {user_role},{user_function}").on(
+      SQL("EXEC art.acceso {user_role},{user_function}").on(
         'user_role -> role, 'user_function -> function).executeQuery().as(scalar[Int].single)
     }
   }

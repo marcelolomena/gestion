@@ -410,7 +410,7 @@ object ProgramService extends CustomColumns {
   }
   
   def programas_sin_avance_en_tareas(uid: String): Seq[ProgramMaster] = {
-    var sqlString = "EXEC programa.sin_avance {uid}"
+    var sqlString = "EXEC art.sin_avance {uid}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('uid -> uid.toInt).executeQuery() as (ProgramMaster.pMaster *)
     }
@@ -1653,7 +1653,7 @@ ON A.sub_task_id=B.sub_task_id
 
   def getProgramUserCapacity(uid: Integer, periodo: Integer): Seq[ProgramUserCapacity] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC capacidad.list_member_program  {uid},{periodo}").on(
+      SQL("EXEC art.list_member_program  {uid},{periodo}").on(
         'uid -> uid.toInt, 'periodo -> periodo.toInt).executeQuery().as(ProgramUserCapacity.programUserCapacity *)
     }
   }

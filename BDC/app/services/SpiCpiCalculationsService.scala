@@ -25,7 +25,7 @@ object SpiCpiCalculationsService extends CustomColumns {
 
   def findCalculationsById(id: String): Seq[SpiCpiCalculations] = {
 
-    var sqlString = "EXEC indicadores.grafico {programId}"
+    var sqlString = "EXEC art.grafico {programId}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiCalculations.spiCpiCalculations *)
     }
@@ -33,7 +33,7 @@ object SpiCpiCalculationsService extends CustomColumns {
   
   def graficoPorProyecto(id: String): Seq[SpiCpiPyCalculations] = {
 
-    var sqlString = "EXEC indicadores.proyectos {programId}"
+    var sqlString = "EXEC art.proyectos {programId}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiPyCalculations.spiCpiPyCalculations *)
     }
@@ -41,7 +41,7 @@ object SpiCpiCalculationsService extends CustomColumns {
 
   def findIndicators(id: String, nivel: Int): Seq[Indicators] = {
 
-    var sqlString = "EXEC indicadores.calc_task {id},{nivel}"
+    var sqlString = "EXEC art.calc_task {id},{nivel}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt, 'nivel -> nivel).executeQuery() as (Indicators.indicators *)
     }

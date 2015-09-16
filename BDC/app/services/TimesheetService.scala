@@ -567,7 +567,7 @@ object TimesheetService extends CustomColumns {
 
   def getBookedHourForSubTask(sub_task: String): String = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC programa.getTimeSheetToHH {stid}").on(
+      SQL("EXEC art.getTimeSheetToHH {stid}").on(
         'stid -> sub_task.toInt).executeQuery().as(scalar[String].single)
     }
   }

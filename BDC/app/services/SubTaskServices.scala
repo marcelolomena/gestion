@@ -830,7 +830,7 @@ object SubTaskServices extends CustomColumns {
   }
   
   def sin_avance_en_tareas(uid: String, pid: String): Seq[SubTasks] = {
-    var sqlString = "EXEC programa.subtarea_sin_avance {uid},{pid}"
+    var sqlString = "EXEC art.subtarea_sin_avance {uid},{pid}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('uid -> uid.toInt,'pid -> pid.toInt).executeQuery() as (SubTasks.subTask *)
     }
