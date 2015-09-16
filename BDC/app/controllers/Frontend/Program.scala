@@ -1392,7 +1392,7 @@ object Program extends Controller {
   def editMembersCapacity(mid: Int) = Action { implicit request =>
 
     val member_capacity = ProgramMemberService.listMemberAvailability(mid)
-
+    //println("RT: " + member_capacity)
     Ok(play.api.libs.json.Json.toJson(member_capacity))
   }
 
