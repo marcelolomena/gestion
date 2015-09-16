@@ -773,11 +773,18 @@
 		function editProgramMember() {
 			var _this = $(this);
 			var mid = _this.attr("id").split("_")[1];
-			
 			var purl = "/member_capacity/"  + mid;
 
-			$("#scroll38").jqGrid({
-					url: purl,
+			$("#scroll38").jqGrid().setGridParam({url : purl}).trigger("reloadGrid")
+
+			$.get("/name-member-user/" + mid, function(res){
+   				$("#dialog-edit-member-capacity").dialog({title:res}).dialog("open");
+			});
+			$("#scroll38").parents('div.ui-jqgrid-bdiv').css("max-height","300px");		
+		}
+
+		$("#scroll38").jqGrid({
+					url: "",
 				    mtype: "GET",
 				    datatype: "json",
 			        colModel: [
@@ -787,11 +794,10 @@
 			            { label: 'Porcentaje Otros Programas', name: 'total', editable: false,width: 100}
 			        ],
 			        pager: "#jqGridPager",
+					height:"auto",
 					viewrecords: true,
 					regional : "es",
 			        loadonce: false,
-			        height: 'auto',
-			        autowidth:true,
 			        page:1,
 			        shrinkToFit: false,
 					rowList: [],        // disable page size dropdown
@@ -814,17 +820,8 @@
 			                    }
 			                }
 			);	
-			//var nombre = "";
-			$.get("/name-member-user/" + mid, function(res){
-   				//nombre=res;
-   				//console.log(res);
-   				$("#dialog-edit-member-capacity").dialog({title:res}).dialog("open");
-			});
-			//console.log('nombre : ' + nombre);		
-			
-		}
-
-						
+	
+								
 		$("#dialog-edit-member-capacity").dialog({
 					autoOpen: false,
 		            modal: true,
