@@ -217,7 +217,7 @@ $(document).ready(function(){
 	var data = JSON.stringify('@Json.toJson(subtasks)');
 	data = data.replace(/&quot;/g,'\\"');
 	var jsonList = JSON.parse(data);
-	console.log('jsonList:' + jsonList)
+	//console.log('jsonList:' + jsonList)
 	$("#grilla").jqGrid({
 		datatype: "jsonstring",
         datastr: jsonList,
