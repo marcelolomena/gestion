@@ -2,6 +2,13 @@
  * 2015 - ZRISMART S.A.
  */
 $(document).ready(function(){
+	$( "button" )
+    .button()
+    .click(function( event ) {
+      event.preventDefault();
+      var volver = "programs";
+      $(location).attr('href',volver);
+    });
 	// the event handler on expanding parent row receives two parameters
 	// the ID of the grid tow  and the primary key of the row
 	function showChildGrid(parentRowID, parentRowKey) {
