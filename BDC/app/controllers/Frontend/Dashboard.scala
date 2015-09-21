@@ -517,7 +517,7 @@ object Dashboard extends Controller {
         }
 
         if (tieneJson) {
-          //println(qrystr)
+          println(qrystr)
           records = DashboardService.programCount(qrystr)
           panel = DashboardService.reportProgram(rows, page, qrystr)
         } else {
