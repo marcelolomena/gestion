@@ -356,7 +356,6 @@ $(document).ready(function(){
  
 	}
 	
-	/*INI PICO*/
 	function mostrarSegundoNivel(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
 	    var childGridPagerID = parentRowID + "_pager";
@@ -498,7 +497,6 @@ $(document).ready(function(){
 	    });
 
 	}	
-	/*FIN PICO*/
 
 	// the event handler on expanding parent row receives two parameters
 	// the ID of the grid tow  and the primary key of the row
