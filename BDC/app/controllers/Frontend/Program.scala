@@ -663,12 +663,18 @@ object Program extends Controller {
 
         } else {
 
-          val last_program = ProgramService.insertProgramDetails(program);
+          val last_program = ProgramService.insertProgramDetails(program)
+          
+            val dm = program.demand_manager
+            val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
+            //println("program member -------" + pms)
+            val lastsaved = ProgramMemberService.insertProgramMemberDetails(pms)
+          
 
           /**
            * Default project of type Initiative and its tasks...
            */
-
+/*
           val projectTypes = GenericProjectService.findProjectTypeDetailsByType(1);
           if (!projectTypes.isEmpty) {
             val pm = program.program_manager
@@ -815,7 +821,7 @@ object Program extends Controller {
 
             }
           }
-
+*/
           /**
            * Activity log
            */

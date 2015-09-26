@@ -521,7 +521,7 @@ object Documents extends Controller {
       } else {
         pr_name = task.task_title
       }
-      finalString = finalString + " <option value='" + task.tId + "'>" + pr_name + "</option>"
+      finalString = finalString + " <option value='" + task.tId.get + "'>" + pr_name + "</option>"
     }
     Ok(finalString)
   }

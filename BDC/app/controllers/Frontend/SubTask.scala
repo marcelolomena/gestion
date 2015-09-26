@@ -105,6 +105,7 @@ object SubTask extends Controller {
           val milestone = TaskService.findTaskDetailsByTaskId(_id)
           val projectDetails = ProjectService.findProject(milestone.get.pId)
           val programDetails = ProgramService.findProgramMasterDetailsById(projectDetails.get.program.toString)
+          
           BadRequest(views.html.frontend.subTask.addSubTask(milestone, projectDetails, programDetails, hasErrors, catalougeMap, disciplineMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         success => {
@@ -119,6 +120,7 @@ object SubTask extends Controller {
             if (!milestone.get.completion_percentage.isEmpty) {
               comp_per_task = milestone.get.completion_percentage.get.toDouble
             }
+
             BadRequest(views.html.frontend.subTask.addSubTask(milestone, projectDetails, programDetails, theForm, catalougeMap, disciplineMap))
 
           } else {
