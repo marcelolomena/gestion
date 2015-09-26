@@ -50,7 +50,7 @@
 		  </div>
      <input id="task_start_date" name="task_start" type="hidden" value="@task.get.plan_start_date.format("yyyy-MM-dd")">
      <input id="task_end_date" name="task_end" type="hidden" value="@task.get.plan_end_date.format("yyyy-MM-dd")" >
-	 @form(action = controllers.Frontend.routes.SubTask.saveSubTask(task.get.tId.toString()), 'id->"add-sub-task-form",'method->"POST") { 
+	 @form(action = controllers.Frontend.routes.SubTask.saveSubTask(task.get.tId.get.toString()), 'id->"add-sub-task-form",'method->"POST") { 
 	  	 <input id="task_id" name="task_id" type="hidden" value="@task.get.tId" >
 	  	 <input id="actual_start_date" name="actual_start_date" type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
 	  	 <input id="actual_end_date" name="actual_end_date" type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" >

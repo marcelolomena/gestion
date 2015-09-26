@@ -291,7 +291,14 @@
 		});
 	
 		$('#done-risk').on('click',function() {
-			   window.location.href='@controllers.Frontend.routes.Risks.riskManagement(parent_id, parent_type)';
+			   //window.location.href='@controllers.Frontend.routes.Risks.riskManagement(parent_id, parent_type)';
+			   if(@parent_type==0)
+			   	window.location.href='/program-details/' + @parent_id;
+			   else if(@parent_type==1)
+			   	window.location.href='/project-details/' + @parent_id;
+			   else if(@parent_type==2)
+			   	window.location.href='/project-task-details/' + @parent_id;
+			   
 		});
 		
 		var alreadySelectedSubCategory = $("#selectedSubCategory").val();

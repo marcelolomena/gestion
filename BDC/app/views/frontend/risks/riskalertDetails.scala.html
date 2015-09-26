@@ -1,14 +1,37 @@
-@(id:String)(implicit lang:Lang)
+@(id:String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @import services._
 @import play.api.i18n._
-@import play.api._;var alert=RiskService.findRiskAlertsById(id); 
+@import play.api._;var alert=RiskService.findRiskAlertsIncreasedById(id); 
 <div id="alert-listing_@id" class="width_full alert-details-listing">
 @if(alert != null){
 	 <ul>
-	 <li>
-	 		 <span class="right "><input type="checkbox" id="alert_disable_@alert.get.id.get" name="alert_disable" class="right alert_disable input-hide-label" value="@alert.get.id.get" style="margin-right: 10px;"></span>
-	 		 <span class="right hide_label"> Hide :</span>
-	 </li>
+	 @if(utils.UserAccess.checkAccess(req,"alert_close")){
+		 <li>
+		 		 <span class="right "><input type="checkbox" id="alert_disable_@alert.get.id.get" name="alert_disable" class="right alert_disable input-hide-label" value="@alert.get.id.get" style="margin-right: 10px;"></span>
+		 		 <span class="right hide_label"> Hide :</span>
+		 </li>
+	 }
+	 	<li>
+	 	<span class="alert-label">Programa</span>
+	 	<span class="alert-text">
+	 		@alert.get.program_name
+	 	</span>
+	 	</li>	
+	 	 
+	 	<li>
+	 	<span class="alert-label">Nivel</span>
+	 	<span class="alert-text">
+	 		@alert.get.level
+	 	</span>
+	 	</li>
+	 		 
+	 	<li>
+	 	<span class="alert-label">Nombre</span>
+	 	<span class="alert-text">
+	 		@alert.get.title
+	 	</span>
+	 	</li>	 
+	 
 	 	<li>
 	 	<span class="alert-label">@Messages("profile.riskeventType")</span>
 	 	<span class="alert-text">

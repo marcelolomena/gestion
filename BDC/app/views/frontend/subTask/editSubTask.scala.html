@@ -90,7 +90,7 @@
 			'class -> "input-xlarge ",
 			'_label -> "Dependency Type")
 			*@	       
-	      <span class="task-dependency">@Messages("addSubTask.subtaskdependancy")</span>
+	      <span class="task-dependency">@Messages("editsubtask.subtaskdependancy")</span>
 				        
 	    
           <div class="width_full" style="margin-top:3px;">
@@ -268,7 +268,7 @@
 		 			
 		 			var maxD = $("#task_end_date").val().replace(/-/g, '/');
 		 			var minD =$("#task_start_date").val().replace(/-/g, '/');
-		 			
+		 			console.log(minD);
 		        	$("#planned_start_date").datepicker("destroy");
 		 			$("#planned_end_date").datepicker("destroy");
 		 			//alert("This Sub Task should be scheduled between "+ new Date(minD) +" & "+new Date(maxD))
