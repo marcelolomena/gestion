@@ -131,6 +131,50 @@ object RiskManagementMaster extends CustomColumns {
   }
 }
 
+/*
+case class RiskManagementIncreased(id: Option[Int], parent_id: Option[Int], parent_type: Option[Int], name: String, cause: String,
+  event: String, imapct: String, risk_category: Int, variable_imapact: String,
+  probablity_of_occurence: Int, quantification: Int, strategic_reply: Int, responsible: Int,
+  reply_action: Option[String], configuration_plan: Option[String],
+  document_category: Option[String], risk_clouser_date: Date, user_id: Option[Int], creation_date: Option[Date], updation_date: Option[Date],
+  is_active: Option[Int], sub_category: Int, level: String, title: String, program_name: String)
+
+object RiskManagementIncreased extends CustomColumns {
+
+  val riskManagementIncreased = {
+    get[Option[Int]]("id") ~
+      get[Option[Int]]("parent_id") ~
+      get[Option[Int]]("parent_type") ~
+      get[String]("name") ~
+      get[String]("cause") ~
+      get[String]("event") ~
+      get[String]("imapct") ~
+      get[Int]("risk_category") ~
+      get[String]("variable_imapact") ~
+      get[Int]("probablity_of_occurence") ~
+      get[Int]("quantification") ~
+      get[Int]("strategic_reply") ~
+      get[Int]("responsible") ~
+      get[Option[String]]("reply_action") ~
+      get[Option[String]]("configuration_plan") ~
+      get[Option[String]]("document_category") ~
+      get[Date]("risk_clouser_date") ~
+      get[Option[Int]]("user_id") ~
+      get[Option[Date]]("creation_date") ~
+      get[Option[Date]]("updation_date") ~
+      get[Option[Int]]("is_active") ~
+      get[Int]("sub_category") ~ get[String]("level") ~ get[String]("title") ~ get[String]("program_name") map {
+        case id ~ parent_id ~ parent_type ~ name ~ cause ~ event ~ imapct ~ risk_category ~ variable_imapact ~ probablity_of_occurence ~ quantification ~ strategic_reply ~ responsible
+          ~ reply_action ~ configuration_plan ~ document_category ~ risk_clouser_date ~ user_id ~ 
+          creation_date ~ updation_date ~ is_active ~ sub_category ~ level ~ title ~ program_name=>
+          RiskManagementIncreased(id, parent_id, parent_type, name, cause, event, imapct, risk_category, variable_imapact, probablity_of_occurence, quantification, strategic_reply, responsible,
+            reply_action, configuration_plan, document_category, risk_clouser_date,
+            user_id, creation_date, updation_date, is_active, sub_category,level,title,program_name)
+      }
+  }
+}
+*/
+
 case class RiskManagementIssueMain(id: Option[Int], parent_id: Option[Int], parent_type: Option[Int],
   title: String, description: String,
   category: Int, sub_category: Int, members_involved: Option[String], action_plan: Option[String],
