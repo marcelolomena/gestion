@@ -1214,6 +1214,7 @@ editsubtask.updatesubtaskstatus=Cambiar Estado de Sub Tarea
 editsubtask.reasonforchangestatus=Razon Para Cambiar Estado
 editsubtask.enterreasonforchangestatus=Ingresar Razon Para Cambiar Estado
 editsubtask.status=Estado
+editsubtask.subtaskdependancy=Editar Dependencia
 editsubtask.choosestatus=--- Seleccione Estado ---
 error.login.addsubtask.title=Esta Campo es Obligatorio.
 programdetails.booktime=Agregar Tiempo
