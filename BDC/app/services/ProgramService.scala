@@ -58,7 +58,7 @@ object ProgramService extends CustomColumns {
           'program_description -> pm.program_description,
           'work_flow_status -> pm.work_flow_status,
           'demand_manager -> pm.demand_manager,
-          'program_manager -> pm.program_manager,
+          'program_manager -> pm.demand_manager,//pm.program_manager,
           'devison -> pm.program_details.devison,
           'management -> pm.program_details.management,
           'department -> pm.program_details.department,

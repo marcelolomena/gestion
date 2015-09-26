@@ -30,7 +30,7 @@ import views.html.frontend.task.issueDetails
 import models.UserSetting
 import play.Play
 import models.RiskManagementIssueMain
-import models.RiskManagementIssueMain
+import models.RiskAlertsIncreased
 
 object RiskService extends CustomColumns {
 
@@ -931,6 +931,20 @@ object RiskService extends CustomColumns {
       }
     } else {
       val result: Option[RiskAlerts] = null
+      result
+    }
+
+  }
+
+  def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
+    if (!StringUtils.isEmpty(id)) {
+      var sqlString = "EXEC art.risk_alert_details {id}"
+
+      DB.withConnection { implicit connection =>
+        SQL(sqlString).on('id -> id.toInt).executeQuery() as (RiskAlertsIncreased.alertsIncreased.singleOpt)
+      }
+    } else {
+      val result: Option[RiskAlertsIncreased] = null
       result
     }
 

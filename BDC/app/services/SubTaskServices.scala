@@ -894,6 +894,7 @@ object SubTaskServices extends CustomColumns {
 
   def checkSubTaskValidDependency(sub_task_id: String): Boolean = {
     var isValid = true
+/*
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_timesheet where  (sub_task_id={sub_task_id} AND task_type=1)").on(
@@ -916,6 +917,8 @@ object SubTaskServices extends CustomColumns {
       }
 
     }
+
+*/
     isValid
   }
 
@@ -1006,7 +1009,7 @@ object SubTaskServices extends CustomColumns {
 
     var plan_end_date = format.parse(form.data.get("planned_end_date").get)
     if (plan_end_date.getTime() > milestone.get.plan_end_date.getTime() || plan_end_date.getTime() < milestone.get.plan_start_date.getTime() || plan_start_date.getTime() > plan_end_date.getTime()) {
-      println("m here...")
+      //println("m here...")
       newform = form.withError("planned_end_date", "Subtask end date can not be greater than Task end date.")
       newform.fill(form.get)
     }
@@ -1017,13 +1020,18 @@ object SubTaskServices extends CustomColumns {
       val ids = task_depend.get.split(",")
       for (id <- ids) {
         if (!StringUtils.isEmpty(id.trim())) {
+          //println("id que busca : " + id.trim())
           val subtask = SubTaskServices.findSubTasksBySubTaskId(id.trim())
           if (!subtask.isEmpty) {
             val minD = subtask.get.plan_start_date.getTime()
             val maxD = subtask.get.plan_end_date.getTime()
-
-            if ((maxD - 86400) >= (plan_start_date.getTime())) {
-              newform = form.withError("planned_start_date", "Enter valid start date")
+             //println("subtask.get.plan_start_date : " + subtask.get.plan_start_date)
+             //println("subtask.get.plan_end_date : " + subtask.get.plan_end_date)
+             //println("compara con : " + plan_start_date)
+            //if ((maxD - 86400) >= (plan_start_date.getTime())) {
+              if ((minD - 86400) >= (plan_start_date.getTime())) {
+              //newform = form.withError("planned_start_date", "Enter valid start date")
+              newform = form.withError("planned_start_date", "No puede iniciar antes que sub tarea dependiente ")
               newform.fill(form.get)
               newform
             }
