@@ -452,6 +452,7 @@ object Dashboard extends Controller {
       for (p <- panel) {
         var campo = new JSONObject()
         campo.put("division", p.division)
+        campo.put("program_id", p.program_id)
         campo.put("programa", p.programa)
         campo.put("responsable", p.responsable)
         campo.put("fecini", p.fecini.get)
