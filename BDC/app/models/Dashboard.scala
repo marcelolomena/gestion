@@ -104,6 +104,7 @@ object PanelExcel {
 }
 /**/
 case class Panel(division: String, 
+    program_id: Int,
     programa: String, 
     responsable: String, 
     fecini: Option[Date], 
@@ -119,6 +120,7 @@ case class Panel(division: String,
 object Panel {
   val panel = {
     get[String]("division") ~
+      get[Int]("program_id") ~
       get[String]("programa") ~
       get[String]("responsable") ~
       get[Option[Date]]("fecini") ~
@@ -130,6 +132,7 @@ object Panel {
       get[String]("inversion") ~
       get[String]("gasto") map {
         case division ~ 
+        program_id ~ 
         programa ~ 
         responsable ~ 
         fecini ~ 
@@ -139,7 +142,7 @@ object Panel {
         spi ~ 
         cpi ~ 
         inversion ~
-        gasto => Panel(division, programa, responsable, fecini, feccom, pai, pae, spi, cpi, inversion,gasto)
+        gasto => Panel(division, program_id, programa, responsable, fecini, feccom, pai, pae, spi, cpi, inversion,gasto)
       }
     
   }
