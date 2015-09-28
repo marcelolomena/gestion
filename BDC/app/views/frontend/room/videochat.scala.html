@@ -1,0 +1,63 @@
+@()(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+
+@frontend.simpleLayout()
+  <meta charset="utf-8">
+  <meta name="description" content="WebRTC code samples">
+  <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+  <meta itemprop="description" content="Client-side WebRTC code samples">
+  <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
+  <meta itemprop="name" content="WebRTC code samples">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta id="theme-color" name="theme-color" content="#ffffff">
+
+  <base target="_blank">
+
+  <title>Peer connection</title>
+
+  <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/webrtc/main.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/webrtc/peer.css")">
+</head>
+<body>
+@frontend.topLayout()
+<div class="report">
+<div class="main">
+	@frontend.header()
+
+
+
+
+				  <div id="container">
+				
+				
+				    <video id="localVideo" autoplay muted></video>
+				    <video id="remoteVideo" autoplay></video>
+				
+				    <div>
+				      <button id="startButton">Empezar</button>
+				      <button id="callButton">Llamar</button>
+				      <button id="hangupButton">Colgar</button>
+				    </div>
+				
+				  </div>
+				  
+  
+  		  	
+
+
+
+	  	@frontend.footer()
+
+	<button>Volver</button>
+</div>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/webrtc/main.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/webrtc/peer.css")">
+<script src="@routes.Assets.at("frontend/js/webrtc/adapter.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/webrtc/main.js")" type="text/javascript"></script>
+</body>
+</html>
