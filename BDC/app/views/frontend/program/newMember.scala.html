@@ -4,6 +4,32 @@
 @import services._
 @import java.util.Date._
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")">
+<style type="text/css" media="screen">
+    th.ui-th-column div{
+        white-space:normal !important;
+        height:auto !important;
+        padding:2px;
+    }
+    
+    /* set the size of the datepicker search control for Order Date*/
+    #ui-datepicker-div { font-size:11px; }
+        
+    /* set the size of the autocomplete search control*/
+    .ui-menu-item {
+        font-size: 11px;
+    }
+
+    .ui-autocomplete {
+        font-size: 11px;
+    } 
+    
+    .ui-dialog .ui-dialog-title {
+    float: left;
+    margin: .1em 16px .1em 0;
+    text-align: center;
+    width: 100%;
+}    
+</style>
 </head>
 <body>
 @frontend.topLayout()
@@ -163,8 +189,18 @@
 <script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 <script type="text/javascript">
+	var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
 	function goDist(obj){
 		var purl=obj.id;
+		var parts=purl.split('/');
+		var nombre = "";
+		var datetitle = meses[parseInt(parts[3].substring(4,6))-1] + ", " + parts[3].substring(0,4)
+		
+		$.get("/name-user/" + parts[2], function(res){
+			nombre=res + " / " + datetitle;
+		});
+		
 		jQuery.ajax({
 			url : purl,
 			type : "GET",
@@ -173,7 +209,7 @@
 					$("#scroll37").jqGrid('setGridParam', { data: resultado});
 					$("#scroll37")[0].grid.endReq();
 					$("#scroll37").trigger('reloadGrid');
-				    $("#dialog-programs").dialog("open");	
+				    $("#dialog-programs").dialog({title:nombre}).dialog("open");	
 				},
 				error : function() {
 					alert("alertSomethingWentWrong");
@@ -264,7 +300,6 @@
 		$("#member_id").on("change", function(){
 			var selectedUser = $(this).val()
 			var divDisp="";
-			var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 			//console.log('selectedUser :' + selectedUser)
 					jQuery.ajax({
 						url : "/request-user-availability",
