@@ -9,6 +9,12 @@ $(document).ready(function(){
       var volver = "programs";
       $(location).attr('href',volver);
     });
+	
+	function returnProgramLink(cellValue, options, rowdata, action) 
+	{
+	    return "<a href='/program-details/" + options.rowId + "' >" + cellValue +"</a>";
+	}  
+	
 	// the event handler on expanding parent row receives two parameters
 	// the ID of the grid tow  and the primary key of the row
 	function showChildGrid(parentRowID, parentRowKey) {
@@ -37,7 +43,7 @@ $(document).ready(function(){
 	                     name: 'nivel',
 	                     width: 100,
 	                   },
-	                   { label: 'Nombre', name: 'programa', width: 250 },
+	                   { label: 'Nombre', name: 'programa', width: 250,formatter: returnProjectLink },
 	                   { label: 'Responsable', name: 'responsable', width: 150 },
 	                   { label: 'Fecha Inicio Planeada',
 	                     name: 'pfecini',
@@ -80,6 +86,11 @@ $(document).ready(function(){
 	        regional : "es",
 	        pager: "#" + childGridPagerID
 	    });
+	    
+		function returnProjectLink(cellValue, options, rowdata, action) 
+		{
+		    return "<a href='/project-details/" + options.rowId + "' >" + cellValue +"</a>";
+		} 
 
 	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
 
@@ -526,7 +537,7 @@ $(document).ready(function(){
 	                     name: 'nivel',
 	                     width: 100,
 	                   },
-	                   { label: 'Nombre', name: 'programa', width: 250 },
+	                   { label: 'Nombre', name: 'programa', width: 250,formatter: returnSubTaskLink },
 	                   { label: 'Responsable', name: 'responsable', width: 150 },
 	                   { label: 'Fecha Inicio Planeada',
 	                     name: 'pfecini',
@@ -567,7 +578,10 @@ $(document).ready(function(){
 	        regional : "es",
 	        pager: "#" + childGridPagerID
 	    });
-
+		function returnSubTaskLink(cellValue, options, rowdata, action) 
+		{
+		    return "<a href='/sub-task-details/" + options.rowId + "' >" + cellValue +"</a>";
+		} 
 	}
 	
 	$.datepicker.regional['es'] = {
@@ -686,8 +700,9 @@ $(document).ready(function(){
 				        datatype: "json",
 				        page: 1,
 				        colModel: [
-				            { label: 'División', name: 'division', key: true, width: 300 },
-				            { label: 'Programa', name: 'programa', width: 250 },
+				            { label: 'División', name: 'division', width: 300 },
+				            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+				            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
 				            { label: 'Responsable', name: 'responsable', width: 200 },
 				            { label: 'Fecha Inicio',
 					          name: 'fecini',
@@ -807,7 +822,7 @@ $(document).ready(function(){
 				              name: 'nivel',
 				              width: 100,
 				            },
-				            { label: 'Nombre', name: 'programa', width: 250 },
+				            { label: 'Nombre', name: 'programa', width: 250,formatter: returnProgramLink },
 				            { label: 'Responsable', name: 'responsable', width: 150 },
 				            { label: 'Fecha Inicio Planeada',
 				              name: 'pfecini',
@@ -923,6 +938,7 @@ $(document).ready(function(){
 		                    return;
 		                }
 				    });	
+ 
 					$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 					$("#jqGrid2").jqGrid('navGrid','#jqGridPager2',{add:false,edit:false,del:false,search: false});
 					$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
@@ -1049,7 +1065,7 @@ $(document).ready(function(){
 				             }
 				            },
 				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 50,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: 'Estado', name: 'estado', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
+				            { label: 'Estado', name: 'estado', width: 100 }              
 				        ],
 				        rowNum: 20,
 				        regional : 'es',
