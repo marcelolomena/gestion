@@ -200,7 +200,7 @@
 		$.get("/name-user/" + parts[2], function(res){
 			nombre=res + " / " + datetitle;
 		});
-		
+
 		jQuery.ajax({
 			url : purl,
 			type : "GET",
@@ -215,6 +215,7 @@
 					alert("alertSomethingWentWrong");
 				}
 		});	
+     	
 		return false;	
 	}
 	
@@ -237,11 +238,11 @@
 		            modal: true,
 		            resizable: true,
 		            open: function(event, ui) {
+		               	$("#scroll37").setGridWidth($(this).width(), true);
 			        	$("#scroll37").setGridHeight($(this).height()-54); 
-			        	$("#scroll37").setGridWidth($(this).width(), true);
 			    	},resizeStop: function(event, ui) {
-        				$("#scroll37").setGridWidth($locDialog.width(), true);
-       					 $("#scroll37").setGridHeight($locDialog.height()-54);
+        				$("#scroll37").setGridWidth($(this).width(), true);
+       					 $("#scroll37").setGridHeight($(this).height()-54);
     				}, position: 'center',
 			         show: {
 		              effect: "blind",
