@@ -7,21 +7,21 @@ import anorm._
 
 object DashboardService {
 
-  def reporteProgramaFiltrado(pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
+  def reporteProgramaFiltrado(did:String,pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
     //println(Json)
-    var sqlString = "EXEC art.programas_por_division_filtrado {PageSize},{PageNumber},{Json}"
+    var sqlString = "EXEC art.programas_por_division_filtrado {did},{PageSize},{PageNumber},{Json}"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
+      SQL(sqlString).on('did -> did.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
     }
   }
 
-  def cantidadProgramaFiltrado(Json: String): Int = {
+  def cantidadProgramaFiltrado(did:String,Json: String): Int = {
     //println(Json)
-    var sqlString = "EXEC art.cantidad_programas_por_division_filtrado {Json}"
+    var sqlString = "EXEC art.cantidad_programas_por_division_filtrado {did},{Json}"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
+      SQL(sqlString).on('did -> did.toInt,'Json -> Json).executeQuery() as (scalar[Int].single)
     }
   }
 
@@ -33,6 +33,14 @@ object DashboardService {
     }
   }
 
+   def reportPie(): Seq[Pie] = {
+
+    var sqlString = "EXEC art.porcentaje_programas_for_division"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).executeQuery() as (Pie.pie *)
+    }
+  } 
+ 
   def getProgramExcel(pid: String): Seq[ATM] = {
 
     var sqlString = "EXEC art.excel {pid}"
