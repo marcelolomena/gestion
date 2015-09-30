@@ -1979,10 +1979,10 @@ object Program extends Controller {
 
           available = 0
           if (current_i_other >= 0) {
-            println(current_i_other)
-            println(other.get.paid_investment_other.getOrElse("0").toString())
-            println(other.get.committed_investment_other.getOrElse("0"))
-            println(other.get.non_committed_investment_other.getOrElse("0").toString())
+            //println(current_i_other)
+            //println(other.get.paid_investment_other.getOrElse("0").toString())
+            //println(other.get.committed_investment_other.getOrElse("0"))
+            //println(other.get.non_committed_investment_other.getOrElse("0").toString())
             available = current_i_other - (other.get.paid_investment_other.getOrElse("0").toString().toLong + other.get.committed_investment_other.getOrElse("0").toString().toLong + other.get.non_committed_investment_other.getOrElse("0").toString().toLong)
           }
           valueMap.put("available_investment_other", available.toString())
@@ -2061,7 +2061,7 @@ object Program extends Controller {
           }
           valueMap.put("available_investment_telecommunication", available.toString())
         }
-
+        //println("user_profile : " + request.session.get("user_profile").get)
         Ok(views.html.frontend.program.editSAP(sapMaster.get.program_id.toString, sap_id, ARTForms.sap_form.fill(objSAP), bts, planned_value, valueMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       } else {
         Redirect(routes.Login.loginUser())
