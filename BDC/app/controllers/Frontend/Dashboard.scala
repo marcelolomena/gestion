@@ -90,7 +90,7 @@ object Dashboard extends Controller {
       }
 
   }
-  def getExcel = Action {
+  def getExcel(did:String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
 
@@ -126,7 +126,7 @@ object Dashboard extends Controller {
           rowhead.getCell(j).setCellStyle(style);
 
         //val panel = DashboardService.reportPanel
-        val panel = DashboardService.reporteProgramaFiltrado("0", "0", "")
+        val panel = DashboardService.reporteProgramaFiltrado(did,"0", "0", "")
 
         for (s <- panel) {
           var row = sheet.createRow(rNum)
@@ -338,6 +338,37 @@ object Dashboard extends Controller {
     }
   }
 
+  //
+
+  def pie = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val pie = DashboardService.reportPie
+
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por División")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division)
+        punto.put("y", p.cantidad)
+        punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
   def fromPredicate(choice: String): String = choice match {
     case "eq" => " = "
     case "gt" => " > "
@@ -352,8 +383,8 @@ object Dashboard extends Controller {
     case "division"    => " '%" + value + "%' "
     case "programa"    => " '%" + value + "%' "
     case "responsable" => " '%" + value + "%' "
-    case "fecini"      => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "feccom"      => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "fecini"      => " '" + value + "'"
+    case "feccom"      => " '" + value + "'"
     case "pai"         => value
     case "pae"         => value
     case "spi"         => value
@@ -367,34 +398,35 @@ object Dashboard extends Controller {
     case "nivel"       => " '%" + value + "%' "
     case "programa"    => " '%" + value + "%' "
     case "responsable" => " '%" + value + "%' "
-    case "pfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "pfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "rfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "rfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "pfecini"     => " '" + value + "' "
+    case "pfecter"     => " '" + value + "' "
+    case "rfecini"     => " '" + value + "' "
+    case "rfecter"     => " '" + value + "' "
     case "pai"         => value
     case "pae"         => value
     case _             => "error"
   }
-  
+
   def fromStateSubTask(choice: String, value: String): String = choice match {
     case "programa"    => " '%" + value + "%' "
     case "proyecto"    => " '%" + value + "%' "
     case "subtarea"    => " '%" + value + "%' "
-    case "lider"       => " '%" + value + "%' "    
+    case "lider"       => " '%" + value + "%' "
     case "responsable" => " '%" + value + "%' "
     case "asignadas"   => value
-    case "consumidas"  => value    
-    case "pfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "pfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "rfecini"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
-    case "rfecter"     => " CONVERT(VARCHAR(10),'" + value + "', 103)"
+    case "consumidas"  => value
+    case "pfecini"     => " '" + value + "' "
+    case "pfecter"     => " '" + value + "' "
+    case "rfecini"     => " '" + value + "' "
+    case "rfecter"     => " '" + value + "' "
     case "pai"         => value
     case "estado"      => " '%" + value + "%' "
     case _             => "error"
-  }  
+  }
 
-  def panel = Action { implicit request =>
+  def panel() = Action { implicit request =>
     request.session.get("username").map { user =>
+      val did = request.getQueryString("did").get.toString()
       val rows = request.getQueryString("rows").get.toString()
       val page = request.getQueryString("page").get.toString()
       val filters = request.getQueryString("filters").getOrElse("").toString()
@@ -433,18 +465,18 @@ object Dashboard extends Controller {
 
           if (tieneJson) {
 
-            records = DashboardService.cantidadProgramaFiltrado(qrystr)
-            panel = DashboardService.reporteProgramaFiltrado(rows, page, qrystr)
+            records = DashboardService.cantidadProgramaFiltrado(did,qrystr)
+            panel = DashboardService.reporteProgramaFiltrado(did,rows, page, qrystr)
 
           } else {
-            records = DashboardService.cantidadProgramaFiltrado("")
-            panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
+            records = DashboardService.cantidadProgramaFiltrado(did,"")
+            panel = DashboardService.reporteProgramaFiltrado(did,rows, page, "")
 
           }
         }
       } else {
-        records = DashboardService.cantidadProgramaFiltrado("")
-        panel = DashboardService.reporteProgramaFiltrado(rows, page, "")
+        records = DashboardService.cantidadProgramaFiltrado(did,"")
+        panel = DashboardService.reporteProgramaFiltrado(did,rows, page, "")
 
       }
 
@@ -679,7 +711,7 @@ object Dashboard extends Controller {
         }
 
         if (tieneJson) {
-          //println(qrystr)
+
           records = DashboardService.reportStateSubTaskCount(qrystr)
           panel = DashboardService.reportStateSubTask(rows, page, qrystr)
         } else {
@@ -700,10 +732,10 @@ object Dashboard extends Controller {
         campo.put("programa", p.programa)
         campo.put("proyecto", p.proyecto)
         campo.put("subtarea", p.subtarea)
-        campo.put("lider", p.lider)        
+        campo.put("lider", p.lider)
         campo.put("responsable", p.responsable)
-        campo.put("asignadas", p.asignadas)        
-        campo.put("consumidas", p.consumidas)        
+        campo.put("asignadas", p.asignadas)
+        campo.put("consumidas", p.consumidas)
         campo.put("pfecini", p.pfecini.getOrElse(""))
         campo.put("pfecter", p.pfecter.getOrElse(""))
         campo.put("rfecini", p.rfecini.getOrElse(""))
@@ -725,7 +757,7 @@ object Dashboard extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  } 
+  }
 
   def getStatusSubTaskExcel() = Action {
     implicit request =>
@@ -751,10 +783,10 @@ object Dashboard extends Controller {
         rowhead.createCell(1).setCellValue("Programa")
         rowhead.createCell(2).setCellValue("Proyecto")
         rowhead.createCell(3).setCellValue("SubTarea")
-        rowhead.createCell(4).setCellValue("Lider")        
+        rowhead.createCell(4).setCellValue("Lider")
         rowhead.createCell(5).setCellValue("Responsable")
-        rowhead.createCell(6).setCellValue("Asignadas")        
-        rowhead.createCell(7).setCellValue("Consumidas")        
+        rowhead.createCell(6).setCellValue("Asignadas")
+        rowhead.createCell(7).setCellValue("Consumidas")
         rowhead.createCell(8).setCellValue("Fecha Inico Plan")
         rowhead.createCell(9).setCellValue("Fecha Termino Plan")
         rowhead.createCell(10).setCellValue("Fecha Inicio Real")
@@ -785,15 +817,15 @@ object Dashboard extends Controller {
 
           val cel4 = row.createCell(cNum + 4)
           cel4.setCellValue(s.lider)
-          
+
           val cel5 = row.createCell(cNum + 5)
           cel5.setCellValue(s.responsable)
-          
+
           val cel6 = row.createCell(cNum + 6)
           cel6.setCellValue(s.asignadas)
-          
+
           val cel7 = row.createCell(cNum + 7)
-          cel7.setCellValue(s.consumidas)          
+          cel7.setCellValue(s.consumidas)
 
           val cel8 = row.createCell(cNum + 8)
           cel8.setCellValue(s.pfecini.getOrElse("").toString())
