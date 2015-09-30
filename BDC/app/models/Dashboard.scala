@@ -272,6 +272,30 @@ object Bubble {
   implicit val bubbleWrites = Json.writes[Bubble]
 }
 
+//
+case class Pie(dId: Int, 
+    division: String, 
+    cantidad: Int, 
+    porcentaje: Double
+    )
+    
+object Pie {
+  val pie = {
+    get[Int]("dId") ~
+      get[String]("division") ~
+      get[Int]("cantidad") ~
+      get[Double]("porcentaje")  map {
+        case dId ~ 
+        division ~ 
+        cantidad ~ 
+        porcentaje  => Pie(dId, division, cantidad, porcentaje)
+      }
+    
+  }
+  implicit val pieWrites = Json.writes[Pie]
+}
+//
+
 case class ATMExcel(id: Int, 
     nivel: String, 
     codigo: Int, 
