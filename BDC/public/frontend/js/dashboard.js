@@ -9,6 +9,111 @@ $(document).ready(function(){
       var volver = "programs";
       $(location).attr('href',volver);
     });
+
+	function grillaPrograma(did){
+		console.log("codigo de div: " + did);
+		$("#jqGrid").jqGrid({
+	        url: '/panel?did=' + did,
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: [
+	            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+	            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
+	            { label: 'Responsable', name: 'responsable', width: 200 },
+	            { label: 'Fecha Inicio',
+		          name: 'fecini',
+		          width: 180,
+		          formatter: 'date',
+		          formatoptions: { 
+			          srcformat: 'Y-m-d',
+			          newformat: 'Y-m-d'
+				  },searchoptions:{
+		              dataInit:function(el){
+			              	$(el).datepicker({
+				              	dateFormat:'yy-mm-dd',
+				              	changeYear: true,
+		                        changeMonth: true,                            
+		                        onSelect: function (dateText, inst) {
+		                            setTimeout(function () {
+		                                $('#jqGrid')[0].triggerToolbar();
+		                            }, 100);
+		                        }
+					        });
+			              },sopt: ["gt","lt","eq"]
+	                  }
+	            },
+	            { label: 'Fecha Comprometida',
+		             name: 'feccom',
+		             width: 180,
+		             formatter: 'date',
+		             formatoptions: { 
+			             srcformat: 'Y-m-d',
+			              newformat: 'Y-m-d' 
+	            	 },searchoptions:{
+			              dataInit:function(el){
+				              	$(el).datepicker({
+					              	dateFormat:'yy-mm-dd',
+					              	changeYear: true,
+			                        changeMonth: true,                            
+			                        onSelect: function (dateText, inst) {
+			                            setTimeout(function () {
+			                                $('#jqGrid')[0].triggerToolbar();
+			                            }, 100);
+			                        }
+						        });
+				              },sopt: ["gt","lt","eq"]
+		             }
+	            },
+	            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+	            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+	            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+	            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+	            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },  
+	            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["gt","lt","eq"] } }                      
+	        ],
+			viewrecords: true,
+			regional : "es",
+			height: 'auto',
+	        autowidth:true,
+	        rowNum: 20,
+	        pager: "#jqGridPager",
+	        grouping: true,
+	        loadonce: false,
+	        ignoreCase: true,
+			loadComplete: function () {
+                var filters, i, l, rules, rule, iCol, $this = $(this);
+                if (this.p.search === true) {
+                    filters = $.parseJSON(this.p.postData.filters);
+                    if (filters !== null && typeof filters.rules !== 'undefined' &&
+                            filters.rules.length > 0) {
+                        rules = filters.rules;
+                        l = rules.length;
+                        for (i = 0; i < l; i++) {
+                            rule = rules[i];
+                            iCol = getColumnIndexByName($this, rule.field);
+                            if (iCol >=0) {
+                                $('>tbody>tr.jqgrow>td:nth-child(' + (iCol + 1) +
+                                    ')', this).highlight(rule.data);
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+	    });	
+	
+		$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true,searchOnEnter: false, defaultSearch: 'cn'});
+		$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search:false});
+		$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
+		       caption:"",
+		       buttonicon : "silk-icon-page-excel",
+		       title: "Exportar a Excel", 
+		       onClickButton : function () { 
+		    	   $("#jqGrid").jqGrid('excelExport',{"url":"getExcel"});
+		       } 
+		});				
+	}	
 	
 	function returnProgramLink(cellValue, options, rowdata, action) 
 	{
@@ -49,14 +154,14 @@ $(document).ready(function(){
 	                     name: 'pfecini',
 	                     width: 120,
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                   },
 	                   { label: 'Fecha Termino Planeada',
 	                     name: 'pfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Inicio Real',
@@ -64,7 +169,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Termino Real',
@@ -72,7 +177,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
@@ -91,6 +196,8 @@ $(document).ready(function(){
 		{
 		    return "<a href='/project-details/" + options.rowId + "' >" + cellValue +"</a>";
 		} 
+		
+
 
 	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
 
@@ -255,7 +362,6 @@ $(document).ready(function(){
 		
 									});
 									
-									
 									$("#chart_box").dialog({modal: true,height:'auto',width:'auto'});
 									}else{
 										alert('no hay datos');
@@ -399,14 +505,14 @@ $(document).ready(function(){
 	                     name: 'pfecini',
 	                     width: 120,
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                   },
 	                   { label: 'Fecha Termino Planeada',
 	                     name: 'pfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Inicio Real',
@@ -414,7 +520,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Termino Real',
@@ -422,7 +528,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
@@ -471,14 +577,14 @@ $(document).ready(function(){
 	                     name: 'pfecini',
 	                     width: 120,
 	                     formatter: 'date',hidden:true,
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                   },
 	                   { label: 'Fecha Termino Planeada',
 	                     name: 'pfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',hidden:true,
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Inicio Real',
@@ -486,7 +592,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',hidden:true,
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Termino Real',
@@ -494,7 +600,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',hidden:true,
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Horas Asignadas', name: 'pai', width: 100 },
@@ -509,16 +615,12 @@ $(document).ready(function(){
 
 	}	
 
-	// the event handler on expanding parent row receives two parameters
-	// the ID of the grid tow  and the primary key of the row
 	function showThirdLevelChildGrid(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
 	    var childGridPagerID = parentRowID + "_pager";
 
-	    // send the parent row primary key to the server so that we know which grid to show
 	    var childGridURL = "/reportSubTarea/" + parentRowKey;
 
-	    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
 	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
 	    $("#" + childGridID).jqGrid({
@@ -543,14 +645,14 @@ $(document).ready(function(){
 	                     name: 'pfecini',
 	                     width: 120,
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                   },
 	                   { label: 'Fecha Termino Planeada',
 	                     name: 'pfecter',
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Inicio Real',
@@ -558,7 +660,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Fecha Termino Real',
@@ -566,7 +668,7 @@ $(document).ready(function(){
 	                     width: 120,
 	                     sorttype:'date',
 	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	                     
 	                   },
 	                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
@@ -595,7 +697,7 @@ $(document).ready(function(){
 		        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
 		        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
 		        weekHeader: 'Sm',
-		        dateFormat: 'dd/mm/yy',
+		        dateFormat: 'yy-mm-dd',
 		        firstDay: 1,
 		        isRTL: false,
 		        showMonthAfterYear: false,
@@ -670,6 +772,45 @@ $(document).ready(function(){
 	        },
 		    series: []
 	};
+	
+	var optionsPie ={
+			chart: {
+				renderTo: 'container2',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },
+	        title: {
+	            text: 'Programas por División'
+	        },
+	        tooltip: {
+	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                          //alert('Person who like' + this.options.name + ' ' + this.options.y);
+	                    	   grillaPrograma(this.options.dId);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },
+	        series: []			
+	};
 
 	$( "#accordion" ).accordion({
 		collapsible: true,
@@ -693,116 +834,34 @@ $(document).ready(function(){
 				}
 
 			}else if(currentHeaderID=='panel'){
-				if($('#jqGrid').html() == "") {
-					$("#jqGrid").jqGrid({
-				        url: '/panel',
-				        mtype: "GET",
-				        datatype: "json",
-				        page: 1,
-				        colModel: [
-				            { label: 'División', name: 'division', width: 300 },
-				            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
-				            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
-				            { label: 'Responsable', name: 'responsable', width: 200 },
-				            { label: 'Fecha Inicio',
-					          name: 'fecini',
-					          width: 180,
-					          formatter: 'date',
-					          formatoptions: { 
-						          srcformat: 'Y-m-d',
-						          newformat: 'd/m/Y'
-							  },searchoptions:{
-					              dataInit:function(el){
-						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
-							              	changeYear: true,
-					                        changeMonth: true,                            
-					                        onSelect: function (dateText, inst) {
-					                            setTimeout(function () {
-					                                $('#jqGrid')[0].triggerToolbar();
-					                            }, 100);
-					                        }
-								        });
-						              },sopt: ["gt","lt","eq"]
-				                  }
-				            },
-				            { label: 'Fecha Comprometida',
-					             name: 'feccom',
-					             width: 180,
-					             formatter: 'date',
-					             formatoptions: { 
-						             srcformat: 'Y-m-d',
-						              newformat: 'd/m/Y' 
-				            	 },searchoptions:{
-						              dataInit:function(el){
-							              	$(el).datepicker({
-								              	dateFormat:'dd/mm/yy',
-								              	changeYear: true,
-						                        changeMonth: true,                            
-						                        onSelect: function (dateText, inst) {
-						                            setTimeout(function () {
-						                                $('#jqGrid')[0].triggerToolbar();
-						                            }, 100);
-						                        }
-									        });
-							              },sopt: ["gt","lt","eq"]
-					             }
-				            },
-				            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },  
-				            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["gt","lt","eq"] } }                      
-				        ],
-						viewrecords: true,
-						regional : "es",
-						height: 'auto',
-				        autowidth:true,
-				        rowNum: 20,
-				        pager: "#jqGridPager",
-				        grouping: true,
-				        loadonce: false,
-				        ignoreCase: true,
-				        groupingView: {
-				            groupField: ['division'],
-				            groupColumnShow: [true],
-				            groupText: ['<b>{0}</b>'],
-				            groupOrder: ['asc'],
-				            groupSummary: [false],
-				            groupCollapse: false
-				        },loadComplete: function () {
-		                    var filters, i, l, rules, rule, iCol, $this = $(this);
-		                    if (this.p.search === true) {
-		                        filters = $.parseJSON(this.p.postData.filters);
-		                        if (filters !== null && typeof filters.rules !== 'undefined' &&
-		                                filters.rules.length > 0) {
-		                            rules = filters.rules;
-		                            l = rules.length;
-		                            for (i = 0; i < l; i++) {
-		                                rule = rules[i];
-		                                iCol = getColumnIndexByName($this, rule.field);
-		                                if (iCol >=0) {
-		                                    $('>tbody>tr.jqgrow>td:nth-child(' + (iCol + 1) +
-		                                        ')', this).highlight(rule.data);
-		                                }
-		                            }
-		                        }
-		                    }
-		                    return;
-		                }
-				    });	
-				
-					$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true,searchOnEnter: false, defaultSearch: 'cn'});
-					$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search:false});
-					$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
-					       caption:"",
-					       buttonicon : "silk-icon-page-excel",
-					       title: "Exportar a Excel", 
-					       onClickButton : function () { 
-					    	   $("#jqGrid").jqGrid('excelExport',{"url":"getExcel"});
-					       } 
-					});	
+				if($('#container2').html() == "") {
+				    
+					$.ajax({
+						  url: '/pie',
+						  type: 'GET',
+						  success: function(data) {
+							  Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+							        return {
+							            radialGradient: {
+							                cx: 0.5,
+							                cy: 0.3,
+							                r: 0.7
+							            },
+							            stops: [
+							                [0, color],
+							                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] 
+							            ]
+							        };
+							    });
+							  optionsPie.series.push(JSON.parse(data));
+								var chartPie = new Highcharts.Chart(optionsPie);
+
+						  },
+						  error: function(e) {
+
+						  }
+					}); 
+					
 				}			
 			}else if(currentHeaderID=='sub'){
 				if($('#jqGrid2').html() == "") {
@@ -828,11 +887,11 @@ $(document).ready(function(){
 				              name: 'pfecini',
 				              width: 120,
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -849,11 +908,11 @@ $(document).ready(function(){
 				              width: 120,
 				              sorttype:'date',
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -870,11 +929,11 @@ $(document).ready(function(){
 				              width: 120,
 				              sorttype:'date',
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -891,11 +950,11 @@ $(document).ready(function(){
 				              width: 120,
 				              sorttype:'date',
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -985,11 +1044,11 @@ $(document).ready(function(){
 				              name: 'pfecini',
 				              width: 100,
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -1006,11 +1065,11 @@ $(document).ready(function(){
 				              width: 100,
 				              sorttype:'date',
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -1027,11 +1086,11 @@ $(document).ready(function(){
 				              width: 100,
 				              sorttype:'date',
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
@@ -1048,11 +1107,11 @@ $(document).ready(function(){
 				              width: 100,
 				              sorttype:'date',
 				              formatter: 'date',
-				              formatoptions: { srcformat: 'Y-m-d', newformat: 'd/m/Y' },
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 				              searchoptions:{
 					              dataInit:function(el){
 						              	$(el).datepicker({
-							              	dateFormat:'dd/mm/yy',
+							              	dateFormat:'yy-mm-dd',
 							              	changeYear: true,
 					                        changeMonth: true,                            
 					                        onSelect: function (dateText, inst) {
