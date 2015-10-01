@@ -1,6 +1,13 @@
 /**
  * 2015 - ZRISMART S.A.
  */
+	function returnProgramLink(cellValue, options, rowdata, action) 
+	{
+	    return "<a href='/program-details/" + options.rowId + "' >" + cellValue +"</a>";
+	}  
+	
+
+	
 $(document).ready(function(){
 	$( "button" )
     .button()
@@ -10,25 +17,50 @@ $(document).ready(function(){
       $(location).attr('href',volver);
     });
 
-	function grillaPrograma(did){
-		console.log("codigo de div: " + did);
-		$("#jqGrid").jqGrid({
-	        url: '/panel?did=' + did,
-	        mtype: "GET",
-	        datatype: "json",
-	        page: 1,
-	        colModel: [
-	            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
-	            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
-	            { label: 'Responsable', name: 'responsable', width: 200 },
-	            { label: 'Fecha Inicio',
-		          name: 'fecini',
-		          width: 180,
-		          formatter: 'date',
-		          formatoptions: { 
-			          srcformat: 'Y-m-d',
-			          newformat: 'Y-m-d'
-				  },searchoptions:{
+	function grillaPrograma(did,name){
+		//console.log("codigo de div: " + did);
+		var chuurl='/panel?did=' + did;
+
+	$("#jqGrid").jqGrid({
+        //url: '/panel?did=' + did,
+        mtype: "GET",
+        datatype: "json",
+		//datatype: "local",
+        page: 1,
+        colModel: [
+            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
+            { label: 'Responsable', name: 'responsable', width: 200 },
+            { label: 'Fecha Inicio',
+	          name: 'fecini',
+	          width: 180,
+	          formatter: 'date',
+	          formatoptions: { 
+		          srcformat: 'Y-m-d',
+		          newformat: 'Y-m-d'
+			  },searchoptions:{
+	              dataInit:function(el){
+		              	$(el).datepicker({
+			              	dateFormat:'yy-mm-dd',
+			              	changeYear: true,
+	                        changeMonth: true,                            
+	                        onSelect: function (dateText, inst) {
+	                            setTimeout(function () {
+	                                $('#jqGrid')[0].triggerToolbar();
+	                            }, 100);
+	                        }
+				        });
+		              },sopt: ["gt","lt","eq"]
+                  }
+            },
+            { label: 'Fecha Comprometida',
+	             name: 'feccom',
+	             width: 180,
+	             formatter: 'date',
+	             formatoptions: { 
+		             srcformat: 'Y-m-d',
+		              newformat: 'Y-m-d' 
+            	 },searchoptions:{
 		              dataInit:function(el){
 			              	$(el).datepicker({
 				              	dateFormat:'yy-mm-dd',
@@ -41,68 +73,29 @@ $(document).ready(function(){
 		                        }
 					        });
 			              },sopt: ["gt","lt","eq"]
-	                  }
-	            },
-	            { label: 'Fecha Comprometida',
-		             name: 'feccom',
-		             width: 180,
-		             formatter: 'date',
-		             formatoptions: { 
-			             srcformat: 'Y-m-d',
-			              newformat: 'Y-m-d' 
-	            	 },searchoptions:{
-			              dataInit:function(el){
-				              	$(el).datepicker({
-					              	dateFormat:'yy-mm-dd',
-					              	changeYear: true,
-			                        changeMonth: true,                            
-			                        onSelect: function (dateText, inst) {
-			                            setTimeout(function () {
-			                                $('#jqGrid')[0].triggerToolbar();
-			                            }, 100);
-			                        }
-						        });
-				              },sopt: ["gt","lt","eq"]
-		             }
-	            },
-	            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-	            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-	            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-	            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
-	            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },  
-	            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["gt","lt","eq"] } }                      
-	        ],
-			viewrecords: true,
-			regional : "es",
-			height: 'auto',
-	        autowidth:true,
-	        rowNum: 20,
-	        pager: "#jqGridPager",
-	        grouping: true,
-	        loadonce: false,
-	        ignoreCase: true,
-			loadComplete: function () {
-                var filters, i, l, rules, rule, iCol, $this = $(this);
-                if (this.p.search === true) {
-                    filters = $.parseJSON(this.p.postData.filters);
-                    if (filters !== null && typeof filters.rules !== 'undefined' &&
-                            filters.rules.length > 0) {
-                        rules = filters.rules;
-                        l = rules.length;
-                        for (i = 0; i < l; i++) {
-                            rule = rules[i];
-                            iCol = getColumnIndexByName($this, rule.field);
-                            if (iCol >=0) {
-                                $('>tbody>tr.jqgrow>td:nth-child(' + (iCol + 1) +
-                                    ')', this).highlight(rule.data);
-                            }
-                        }
-                    }
-                }
-                return;
-            }
-	    });	
-	
+	             }
+            },
+            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },  
+            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["gt","lt","eq"] } }                      
+        ],
+		viewrecords: true,
+		regional : "es",
+		height: 'auto',
+        autowidth:true,
+        rowNum: 20,
+        pager: "#jqGridPager",
+        ignoreCase: true
+    });	
+	$("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}		
+
+		/*
+		
+		
 		$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true,searchOnEnter: false, defaultSearch: 'cn'});
 		$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search:false});
 		$("#jqGrid").jqGrid('navButtonAdd','#jqGridPager',{
@@ -112,13 +105,11 @@ $(document).ready(function(){
 		       onClickButton : function () { 
 		    	   $("#jqGrid").jqGrid('excelExport',{"url":"getExcel"});
 		       } 
-		});				
-	}	
+		});	
+		*/
 	
-	function returnProgramLink(cellValue, options, rowdata, action) 
-	{
-	    return "<a href='/program-details/" + options.rowId + "' >" + cellValue +"</a>";
-	}  
+	
+
 	
 	// the event handler on expanding parent row receives two parameters
 	// the ID of the grid tow  and the primary key of the row
@@ -795,7 +786,7 @@ $(document).ready(function(){
 	                    events: {
 	                       click: function(event) {
 	                          //alert('Person who like' + this.options.name + ' ' + this.options.y);
-	                    	   grillaPrograma(this.options.dId);
+	                    	   grillaPrograma(this.options.dId,this.options.name);
 	                       }
 	                    }
 	                 },
