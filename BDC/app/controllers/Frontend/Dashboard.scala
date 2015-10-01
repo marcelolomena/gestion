@@ -427,8 +427,8 @@ object Dashboard extends Controller {
   def panel() = Action { implicit request =>
     request.session.get("username").map { user =>
       val did = request.getQueryString("did").get.toString()
-      val rows = request.getQueryString("rows").get.toString()
-      val page = request.getQueryString("page").get.toString()
+      val rows = request.getQueryString("rows").getOrElse("20").toString()
+      val page = request.getQueryString("page").getOrElse("1").toString()
       val filters = request.getQueryString("filters").getOrElse("").toString()
 
       var panel: Seq[Panel] = null
