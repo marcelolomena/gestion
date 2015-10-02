@@ -353,7 +353,7 @@ object Dashboard extends Controller {
       for (p <- pie) {
         var punto = new JSONObject()
         punto.put("dId", p.dId)
-        punto.put("name", p.division)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
         punto.put("y", p.cantidad)
         punto.put("porcentaje", p.porcentaje)
 
