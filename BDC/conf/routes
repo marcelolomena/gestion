@@ -338,7 +338,7 @@ GET    /user-setting                                                            
 
 #Dashboard....
 GET    /dashboard                                                                                     controllers.Frontend.Dashboard.dashboard
-GET    /panel                                                                                    	  controllers.Frontend.Dashboard.panel
+GET    /panel		                                                                                  controllers.Frontend.Dashboard.panel
 GET    /bar-finance                                                                                   controllers.Frontend.Dashboard.barChart(mode:String,id:String)
 GET    /bar-division-finace                                                                           controllers.Frontend.Dashboard.barChartDivision
 GET    /bar-timesheet                                                                                 controllers.Frontend.Dashboard.barChartTimesheet
@@ -541,7 +541,7 @@ GET    /documents/:file                                                         
 GET    /generatePert                                                                             	  controllers.Frontend.Pert.generatePert
 GET    /getPanel                                                                            	      controllers.Frontend.Dashboard.getPanel
 GET    /getATM                                                                            	      	  controllers.Frontend.Dashboard.getATM
-GET    /getExcel                                                                            	      controllers.Frontend.Dashboard.getExcel
+GET    /getExcel/:did                                                                            	  controllers.Frontend.Dashboard.getExcel(did:String)
 GET    /status-subtask 			                                                                      controllers.Frontend.Dashboard.getStatusSubTaskExcel
 GET    /getProgramExcel/$pid<[A-Za-z0-9_-]+>                                                       	  controllers.Frontend.Dashboard.getProgramExcel(pid:String)
 POST   /resultPert                                                                                	  controllers.Frontend.Pert.resultPert
@@ -556,6 +556,7 @@ GET    /reportProyect/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Front
 GET    /reportSubTarea/$pid<[A-Za-z0-9_-]+>   					  									  controllers.Frontend.Dashboard.reportSubTarea(pid:String)
 GET    /reportStateSubTask   					  							  					      controllers.Frontend.Dashboard.reportStateSubTask
 GET    /burbujas                                                                            	      controllers.Frontend.Dashboard.burbujas
+GET    /pie                                                                            	      		  controllers.Frontend.Dashboard.pie
 GET    /getPyChart/$pid<[A-Za-z0-9_-]+>                                                       	      controllers.Frontend.Dashboard.chartProject(pid:String)
 GET    /save_advance_rate																	          controllers.Frontend.SubTask.saveAdvanceRate(sub_task_id: String, advance_rate: String)
 GET    /chat/$id<[A-Za-z0-9_-]+>                                                     				  controllers.Frontend.Room.chat(id:String)
