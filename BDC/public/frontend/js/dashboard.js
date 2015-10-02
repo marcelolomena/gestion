@@ -776,7 +776,9 @@ $(document).ready(function(){
 	            text: 'Programas por División'
 	        },
 	        tooltip: {
-	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}	        	
 	        },
 	        plotOptions: {
 	            pie: {
@@ -785,7 +787,6 @@ $(document).ready(function(){
 	                point: {
 	                    events: {
 	                       click: function(event) {
-	                          //alert('Person who like' + this.options.name + ' ' + this.options.y);
 	                    	   grillaPrograma(this.options.dId,this.options.name);
 	                       }
 	                    }
@@ -846,6 +847,77 @@ $(document).ready(function(){
 							    });
 							  optionsPie.series.push(JSON.parse(data));
 								var chartPie = new Highcharts.Chart(optionsPie);
+								
+								
+								$("#jqGrid").jqGrid({
+							        url: '/panel?did=1',
+							        mtype: "GET",
+							        datatype: "json",
+							        page: 1,
+							        colModel: [
+							            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+							            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
+							            { label: 'Responsable', name: 'responsable', width: 200 },
+							            { label: 'Fecha Inicio',
+								          name: 'fecini',
+								          width: 180,
+								          formatter: 'date',
+								          formatoptions: { 
+									          srcformat: 'Y-m-d',
+									          newformat: 'Y-m-d'
+										  },searchoptions:{
+								              dataInit:function(el){
+									              	$(el).datepicker({
+										              	dateFormat:'yy-mm-dd',
+										              	changeYear: true,
+								                        changeMonth: true,                            
+								                        onSelect: function (dateText, inst) {
+								                            setTimeout(function () {
+								                                $('#jqGrid')[0].triggerToolbar();
+								                            }, 100);
+								                        }
+											        });
+									              },sopt: ["gt","lt","eq"]
+							                  }
+							            },
+							            { label: 'Fecha Comprometida',
+								             name: 'feccom',
+								             width: 180,
+								             formatter: 'date',
+								             formatoptions: { 
+									             srcformat: 'Y-m-d',
+									              newformat: 'Y-m-d' 
+							            	 },searchoptions:{
+									              dataInit:function(el){
+										              	$(el).datepicker({
+											              	dateFormat:'yy-mm-dd',
+											              	changeYear: true,
+									                        changeMonth: true,                            
+									                        onSelect: function (dateText, inst) {
+									                            setTimeout(function () {
+									                                $('#jqGrid')[0].triggerToolbar();
+									                            }, 100);
+									                        }
+												        });
+										              },sopt: ["gt","lt","eq"]
+								             }
+							            },
+							            { label: '% Avance', name: 'pai', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+							            { label: '% Plan', name: 'pae', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+							            { label: 'SPI', name: 'spi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+							            { label: 'CPI', name: 'cpi', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },
+							            { label: 'Inversión', name: 'inversion', width: 150,searchoptions: {sopt:["gt","lt","eq"] } },  
+							            { label: 'Gasto', name: 'gasto', width: 150,searchoptions: {sopt:["gt","lt","eq"] } }                      
+							        ],
+									viewrecords: true,
+									regional : "es",
+									height: 'auto',
+							        autowidth:true,
+							        rowNum: 20,
+							        pager: "#jqGridPager",
+							        ignoreCase: true,
+							        caption:'Division Operaciones y Tecnologia'
+							    });									
 
 						  },
 						  error: function(e) {
