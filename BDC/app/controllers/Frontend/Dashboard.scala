@@ -653,7 +653,7 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  
+
   def panelSubType() = Action { implicit request =>
     request.session.get("username").map { user =>
       val did = request.getQueryString("did").get.toString()
@@ -739,7 +739,7 @@ object Dashboard extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  }  
+  }
 
   def reportProgram() = Action { implicit request =>
     request.session.get("username").map { user =>
@@ -989,26 +989,67 @@ object Dashboard extends Controller {
     }
   }
 
-  def getStatusSubTaskExcel() = Action {
+  def getStatusSubTaskExcel() = Action { /*pico*/
     implicit request =>
       request.session.get("username").map { user =>
-
+        var panel: Seq[StateSubTarea] = null
         val file = new File("subtask.xlsx")
         val fileOut = new FileOutputStream(file);
         val wb = new XSSFWorkbook
         val sheet = wb.createSheet("SUBTAREA")
+        val filters = request.getQueryString("filters").getOrElse("").toString()
         var j = 0
         var rNum = 1
         var cNum = 0
         var a = 0
+        var tieneJson = true
+        var qrystr = ""
 
-        var rowhead = sheet.createRow(0);
-        val style = wb.createCellStyle();
-        val font = wb.createFont();
-        font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL);
-        font.setFontHeightInPoints(10);
-        font.setBold(true);
-        style.setFont(font);
+        if (!StringUtils.isEmpty(filters)) {
+
+          val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+          if (!jObject.\\("rules").isEmpty) {
+
+            val jList = jObject.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (jElement.equals("[]")) {
+                tieneJson = false
+              } else {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filters)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+                  qrystr += "Z." + m.field + fromPredicate(m.op) + fromStateSubTask(m.field, m.data) + " AND "
+                }
+
+              }
+            }
+
+          }
+
+          if (tieneJson) {
+            panel = DashboardService.reportStateSubTask("0", "0", qrystr)
+          } else {
+            panel = DashboardService.reportStateSubTask("0", "0", "")
+          }
+
+        } else {
+          panel = DashboardService.reportStateSubTask("0", "0", "")
+
+        }
+
+        var rowhead = sheet.createRow(0)
+        val style = wb.createCellStyle()
+        val font = wb.createFont()
+        font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+        font.setFontHeightInPoints(10)
+        font.setBold(true)
+        style.setFont(font)
         rowhead.createCell(0).setCellValue("Id")
         rowhead.createCell(1).setCellValue("Programa")
         rowhead.createCell(2).setCellValue("Proyecto")
@@ -1028,7 +1069,7 @@ object Dashboard extends Controller {
         for (j <- 0 to 13)
           rowhead.getCell(j).setCellStyle(style);
 
-        val panel = DashboardService.reportStateSubTask("0", "0", "")
+        //val panel = DashboardService.reportStateSubTask("0", "0", "")
 
         for (s <- panel) {
           var row = sheet.createRow(rNum)
