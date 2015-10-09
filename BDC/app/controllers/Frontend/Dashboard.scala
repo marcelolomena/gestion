@@ -453,6 +453,35 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
+  
+    def pieSap = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val pie = DashboardService.reportSap()
+
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas con SAP")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
 
   def fromPredicate(choice: String): String = choice match {
     case "eq" => " = "
@@ -823,6 +852,94 @@ object Dashboard extends Controller {
       } else {
         records = DashboardService.cantidadProgramaPorEstadoFiltrado(did, "")
         panel = DashboardService.reporteProgramaPorEstadoFiltrado(did, rows, page, "")
+
+      }
+
+      var registro = new JSONArray()
+      for (p <- panel) {
+        var campo = new JSONObject()
+        campo.put("division", p.division)
+        campo.put("program_id", p.program_id)
+        campo.put("programa", p.programa)
+        campo.put("responsable", p.responsable)
+        campo.put("fecini", p.fecini.get)
+        campo.put("feccom", p.feccom.get)
+        campo.put("pai", p.pai)
+        campo.put("pae", p.pae)
+        campo.put("spi", p.spi)
+        campo.put("cpi", p.cpi)
+        campo.put("inversion", p.inversion)
+        campo.put("gasto", p.gasto)
+        registro.put(campo)
+      }
+      var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+      node.put("page", page)
+      node.put("total", pagedisplay)
+      node.put("records", records)
+      node.put("rows", registro)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+  
+//
+  def panelSap() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val did = request.getQueryString("did").get.toString()
+      val rows = request.getQueryString("rows").getOrElse("20").toString()
+      val page = request.getQueryString("page").getOrElse("1").toString()
+      val filters = request.getQueryString("filters").getOrElse("").toString()
+
+      var panel: Seq[Panel] = null
+      var records: Int = 0
+
+      var node = new JSONObject()
+      var tieneJson = true
+      var qrystr = ""
+
+      if (!StringUtils.isEmpty(filters)) {
+
+        val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+        if (!jObject.\\("rules").isEmpty) {
+
+          val jList = jObject.\\("rules")
+          var jElement = ""
+          for (j <- jList) {
+            jElement = j.toString()
+            if (jElement.equals("[]")) {
+              tieneJson = false
+            } else {
+
+              implicit val formats = DefaultFormats
+              val json = net.liftweb.json.JsonParser.parse(filters)
+              val elements = (json \\ "rules").children
+              for (acct <- elements) {
+                val m = acct.extract[DBFilter]
+                qrystr += m.field + fromPredicate(m.op) + fromName(m.field, m.data) + " AND "
+              }
+
+            }
+          }
+
+          if (tieneJson) {
+
+            records = DashboardService.cantidadProgramaPorSapFiltrado(did, qrystr)
+            panel = DashboardService.reporteProgramaPorSapFiltrado(did, rows, page, qrystr)
+
+          } else {
+            records = DashboardService.cantidadProgramaPorSapFiltrado(did, "")
+            panel = DashboardService.reporteProgramaPorSapFiltrado(did, rows, page, "")
+
+          }
+        }
+      } else {
+        records = DashboardService.cantidadProgramaPorSapFiltrado(did, "")
+        panel = DashboardService.reporteProgramaPorSapFiltrado(did, rows, page, "")
 
       }
 

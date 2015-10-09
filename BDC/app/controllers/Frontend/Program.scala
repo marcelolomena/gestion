@@ -532,7 +532,7 @@ object Program extends Controller {
 
       var users = UserService.findAllDemandManager();
 
-      var usersMap = new java.util.HashMap[String, String]()
+      var usersMap = new java.util.LinkedHashMap[String, String]()
       for (u <- users) {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
@@ -915,7 +915,7 @@ object Program extends Controller {
 
       var users = UserService.findAllDemandManager();
 
-      var usersMap = new java.util.HashMap[String, String]()
+      var usersMap = new java.util.LinkedHashMap[String, String]()
       for (u <- users) {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
