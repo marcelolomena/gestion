@@ -37,7 +37,11 @@ object IncidentService {
           user_creation_id: String
           ): Seq[Incident] = {
 
-    var sqlString = "EXEC art.list_incident {configuration_id},{program_id},{date_creation},{ir_number},{user_sponsor_id},{brief_description},{extended_description},{severity_id},{date_end},{task_owner_id},{user_creation_id}"
+    var sqlString = """
+      EXEC art.list_incident {configuration_id},{program_id},
+      {date_creation},{ir_number},{user_sponsor_id},{brief_description},
+      {extended_description},{severity_id},{date_end},{task_owner_id},{user_creation_id}
+      """
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('configuration_id -> configuration_id.toInt,
