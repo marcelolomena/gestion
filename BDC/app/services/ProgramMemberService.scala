@@ -37,7 +37,7 @@ object ProgramMemberService extends CustomColumns {
     }
   }
   */
-  
+
   def insertProgramMemberDetails(pm: ProgramMembers) = {
     DB.withConnection { implicit connection =>
       /*
@@ -48,9 +48,9 @@ object ProgramMemberService extends CustomColumns {
       println("pdata:" +pm.pData)      
       */
       SQL("EXEC art.save_member_capacity {program_id},{role_id},{member_id},{is_active},{pdata}").on(
-        'program_id -> pm.program_id, 'role_id -> pm.role_id,'member_id -> pm.member_id,'is_active -> pm.is_active,'pdata ->pm.pData).executeQuery().as(scalar[Int].single)
+        'program_id -> pm.program_id, 'role_id -> pm.role_id, 'member_id -> pm.member_id, 'is_active -> pm.is_active, 'pdata -> pm.pData).executeQuery().as(scalar[Int].single)
     }
-  }  
+  }
 
   def updateProgramMemberDetails(obj: ProgramMembers): Int = {
 
@@ -100,6 +100,22 @@ object ProgramMemberService extends CustomColumns {
       SQL(sqlString).as(Users.user *)
     }
   }
+
+  def findBusinessMemberForIncident(program_id: String): Seq[Users] = {
+    var sqlString = ""
+    sqlString = "SELECT * FROM art_user WHERE uid IN (SELECT  member_id from art_program_members where is_active=0 AND role_id=3 AND program_id=" + program_id + ") order by first_name asc";
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Users.user *)
+    }
+  }
+  
+  def findNoBusinessMemberForIncident(program_id: String): Seq[Users] = {
+    var sqlString = ""
+    sqlString = "SELECT * FROM art_user WHERE uid IN (SELECT  member_id from art_program_members where is_active=0 AND role_id!=3 AND program_id=" + program_id + ") order by first_name asc";
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Users.user *)
+    }
+  }  
 
   def findProjectManagerForProgram(program_id: String): Seq[Users] = {
     var sqlString = ""
@@ -276,25 +292,25 @@ object ProgramMemberService extends CustomColumns {
     }
   }
 
-  def findProgramUserAvailability(pid: String,uid: String): Seq[UserAvailibity] = {
+  def findProgramUserAvailability(pid: String, uid: String): Seq[UserAvailibity] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_member_capacity  {pId},{uid}").on(
-        'pId -> pid.toInt,'uid -> uid.toInt).executeQuery().as(UserAvailibity.userAvailibity *)
+        'pId -> pid.toInt, 'uid -> uid.toInt).executeQuery().as(UserAvailibity.userAvailibity *)
     }
-  } 
-  
+  }
+
   def listMemberAvailability(mid: Int): Seq[MemberCapacity] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_member_capacity_acum {mid}").on(
         'mid -> mid.toInt).executeQuery().as(MemberCapacity.memberCapacity *)
     }
-  }  
- 
-  def updateMemberAvailability(id: String,porcentaje: String): Int = {
+  }
+
+  def updateMemberAvailability(id: String, porcentaje: String): Int = {
     DB.withConnection { implicit connection =>
       SQL("EXEC art.update_member_capacity {id},{porcentaje}").on(
-        'id -> id.toInt,'porcentaje -> porcentaje.toInt).executeQuery().as(scalar[Int].single)
+        'id -> id.toInt, 'porcentaje -> porcentaje.toInt).executeQuery().as(scalar[Int].single)
     }
-  } 
-  
+  }
+
 }
