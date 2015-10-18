@@ -3,6 +3,7 @@ package controllers.Frontend
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.IncidentService
+import services.ProgramMemberService
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -10,6 +11,7 @@ import net.liftweb.json._
 import net.liftweb.json.JsonParser._
 import models.DBFilter
 import utils.FormattedOutPuts
+import play.api.mvc.AnyContent
 
 /**
  * @author marcelo
@@ -26,6 +28,49 @@ object Incident extends Controller {
       request.session.get("username").map { user =>
 
         Ok(views.html.frontend.incident.listIncident()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
+  def save = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+
+        jsonBody.map { jsValue =>
+
+          //val incident_id = (jsValue \ "incident_id")
+          val configuration_id = (jsValue \ "configuration_id")
+          val program_id = (jsValue \ "program_id")
+          val date_creation = (jsValue \ "date_creation")
+          val ir_number = (jsValue \ "ir_number")
+          val user_sponsor_id = (jsValue \ "user_sponsor_id")
+          val brief_description = (jsValue \ "brief_description")
+          val extended_description = (jsValue \ "extended_description")
+          val severity_id = (jsValue \ "severity_id")
+          val date_end = (jsValue \ "date_end")
+          val task_owner_id = (jsValue \ "task_owner_id")
+          val user_creation_id=request.session.get("uId").get
+          
+          //println("incident_id : " + incident_id)
+          println("configuration_id : " + configuration_id)
+          println("program_id : " + program_id)
+          println("date_creation : " + date_creation)
+          println("ir_number : " + ir_number)
+          println("user_sponsor_id : " + user_sponsor_id)
+          println("brief_description : " + brief_description)
+          println("extended_description : " + extended_description)
+          println("severity_id : " + severity_id)
+          println("date_end : " + date_end)
+          println("task_owner_id : " + task_owner_id)
+          println("user_creation_id : " + user_creation_id)
+        }
+
+        Ok("OK").withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
@@ -121,4 +166,96 @@ object Incident extends Controller {
       }
 
   }
+
+  def configurationList = Action { implicit request =>
+
+    val incidents = IncidentService.selectTypeIncident
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+    for (i <- incidents) {
+      s += "<option value='" + i.configuration_id + "'>" + i.configuration_name + "</option>"
+    }
+    s += "</select>"
+
+    Ok(s)
+
+  }
+
+  def severityList = Action { implicit request =>
+
+    val incidents = IncidentService.selectSeverity
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+    for (i <- incidents) {
+      s += "<option value='" + i.severity_id + "'>" + i.severity_description + "</option>"
+    }
+    s += "</select>"
+
+    Ok(s)
+
+  }
+
+  def programDefaultList = Action { implicit request =>
+    var s = "<select><option value='0'>Seleccione un valor</option></select>"
+
+    Ok(s)
+
+  }
+
+  def programList(id: String) = Action { implicit request =>
+
+    val programs = IncidentService.selectProgramForType(id)
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+    for (i <- programs) {
+      s += "<option value='" + i.program_id.get + "'>" + i.program_name + "</option>"
+    }
+    s += "</select>"
+    //println(s)
+    Ok(s)
+
+  }
+
+  def businessMemberList(id: String) = Action { implicit request =>
+
+    val programs = ProgramMemberService.findBusinessMemberForIncident(id)
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+
+    for (i <- programs) {
+      s += "<option value='" + i.uid.get + "'>" + i.first_name + " " + i.last_name + "</option>"
+    }
+
+    s += "</select>"
+    //println(s)
+    Ok(s)
+
+  }
+
+  def noBusinessMemberList(id: String) = Action { implicit request =>
+
+    val programs = ProgramMemberService.findNoBusinessMemberForIncident(id)
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+
+    for (i <- programs) {
+      s += "<option value='" + i.uid.get + "'>" + i.first_name + " " + i.last_name + "</option>"
+    }
+
+    s += "</select>"
+    //println(s)
+    Ok(s)
+
+  }
+
+  def getConfigurationProgramType(id: String) = Action { implicit request =>
+    var tipo: Int = IncidentService.selectTypeFromId(id)
+    // tipo = IncidentService.selectTypeFromId(id)
+
+    Ok(tipo.toString())
+
+  }
+  
+  def getSeverityDays(id: String) = Action { implicit request =>
+    var days: Int = IncidentService.selectSeverityDays(id)
+    // tipo = IncidentService.selectTypeFromId(id)
+
+    Ok(days.toString())
+
+  }  
 }
