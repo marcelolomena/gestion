@@ -13,4 +13,14 @@ object FormattedOutPuts {
     val format = decimalFormat.format(finalTotal);
     format
   }
+
+  def fromPredicate(choice: String): String = choice match {
+    case "eq" => " = "
+    case "gt" => " > "
+    case "lt" => " < "
+    case "ge" => " >= "
+    case "le" => " =< "
+    case "cn" => " like "
+    case _    => "error"
+  }
 }
