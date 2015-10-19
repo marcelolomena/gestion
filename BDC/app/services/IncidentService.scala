@@ -7,6 +7,7 @@ import models.Configuration
 import models.ComboConfiguration
 import models.ProgramCombo
 import models.Severity
+import models.ErrorIncident
 import anorm._
 import anorm.SqlParser._
 
@@ -35,14 +36,16 @@ object IncidentService {
           date_end: String,
           task_owner_id: String,
           user_creation_id: String
-          ): Seq[Incident] = {
+          ): Option[ErrorIncident] = {
 
     var sqlString = """
-      EXEC art.list_incident {configuration_id},{program_id},
+      EXEC art.save_incident {configuration_id},{program_id},
       {date_creation},{ir_number},{user_sponsor_id},{brief_description},
       {extended_description},{severity_id},{date_end},{task_owner_id},{user_creation_id}
       """
 
+    println(sqlString)
+    
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('configuration_id -> configuration_id.toInt,
           'program_id -> program_id.toInt,
@@ -55,7 +58,7 @@ object IncidentService {
           'date_end -> date_end,
           'task_owner_id -> task_owner_id.toInt,
           'user_creation_id -> user_creation_id.toInt
-          ).executeQuery() as (Incident.incident *)
+          ).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }  
 
