@@ -35,5 +35,37 @@ object Activity extends CustomColumns {
 
 object ActivityTypes extends Enumeration {
   type ActivityTypes = Value
-  val Program, Project, Task, SubTask, User, Login, Allocation, Timesheet, Risk, Issue, Document, Estimation_Cost, Program_Planned_Hrs, Project_Planned_Hrs, Program_Member, Generic_Project_Type, Generic_Task_Type, Predefined_Task_Type, Division, Gerencia, Department, Program_Type, Sub_Type, Task_Discipline, User_Role, Stage, Deliverable, Document_Type, Budget_Type, Service_Catalogue, Program_Sap, Project_Sap, UserSkills, Project_Workflow_Status = Value
+  val Program,
+  Project, 
+  Task, 
+  SubTask,
+  User,
+  Login, 
+  Allocation,
+  Timesheet, 
+  Risk,
+  Issue,
+  Document,
+  Estimation_Cost, 
+  Program_Planned_Hrs,
+  Project_Planned_Hrs,
+  Program_Member, 
+  Generic_Project_Type,
+  Generic_Task_Type,
+  Predefined_Task_Type,
+  Division, Gerencia, 
+  Department,
+  Program_Type, 
+  Sub_Type,
+  Task_Discipline, 
+  User_Role, Stage,
+  Deliverable, 
+  Document_Type, 
+  Budget_Type, 
+  Service_Catalogue,
+  Program_Sap,
+  Project_Sap,
+  UserSkills, 
+  Project_Workflow_Status,
+  Incident = Value
 }
