@@ -9,9 +9,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
+import models.Activity
+import models.ActivityTypes
 import models.DBFilter
+import models.ErrorIncident
 import utils.FormattedOutPuts
 import play.api.mvc.AnyContent
+import java.util.Date
 
 /**
  * @author marcelo
@@ -40,6 +44,7 @@ object Incident extends Controller {
 
         val body: AnyContent = request.body
         val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var incident: Option[ErrorIncident] = null
 
         jsonBody.map { jsValue =>
 
@@ -54,8 +59,8 @@ object Incident extends Controller {
           val severity_id = (jsValue \ "severity_id")
           val date_end = (jsValue \ "date_end")
           val task_owner_id = (jsValue \ "task_owner_id")
-          val user_creation_id=request.session.get("uId").get
-          
+          val user_creation_id = request.session.get("uId").get
+
           //println("incident_id : " + incident_id)
           println("configuration_id : " + configuration_id)
           println("program_id : " + program_id)
@@ -68,9 +73,32 @@ object Incident extends Controller {
           println("date_end : " + date_end)
           println("task_owner_id : " + task_owner_id)
           println("user_creation_id : " + user_creation_id)
+
+          incident = IncidentService.save(
+            configuration_id.toString().replace("\"", ""),
+            program_id.toString().replace("\"", ""),
+            date_creation.toString().replace("\"", ""),
+            ir_number.toString().replace("\"", ""),
+            user_sponsor_id.toString().replace("\"", ""),
+            brief_description.toString().replace("\"", ""),
+            extended_description.toString().replace("\"", ""),
+            severity_id.toString().replace("\"", ""),
+            date_end.toString().replace("\"", ""),
+            task_owner_id.toString().replace("\"", ""),
+            user_creation_id.toString().replace("\"", ""))
+
+            println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
         }
 
-        Ok("OK").withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        
+          /**
+           * Activity log
+           */
+        
+          val act = Activity(ActivityTypes.Project.id, "New incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
+          Activity.saveLog(act)        
+        
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
@@ -250,12 +278,12 @@ object Incident extends Controller {
     Ok(tipo.toString())
 
   }
-  
+
   def getSeverityDays(id: String) = Action { implicit request =>
     var days: Int = IncidentService.selectSeverityDays(id)
     // tipo = IncidentService.selectTypeFromId(id)
 
     Ok(days.toString())
 
-  }  
+  }
 }
