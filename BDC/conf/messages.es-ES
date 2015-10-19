@@ -466,6 +466,7 @@ editDivison.numberofdepartaments=Número de Departamentos
 editDivison.managername=Gerente Nombre
 header.profile=Perfil
 header.dashboard=Reportes
+header.incident=Incidencias
 header.roadmap=Hoja de ruta
 header.programs=Programas
 header.admin=Administración
