@@ -22,7 +22,7 @@ case class Incident(incident_id: Int,
                     task_owner_id: Int,
                     user_creation_id: Int,
                     task_id: Int,
-                    is_deleted: Int)
+                    task_title: String)
 
 object Incident {
   val incident = {
@@ -39,7 +39,7 @@ object Incident {
       get[Int]("task_owner_id") ~
       get[Int]("user_creation_id") ~
       get[Int]("task_id") ~
-      get[Int]("is_deleted") map {
+      get[String]("task_title") map {
         case incident_id ~
           configuration_id ~
           program_id ~
@@ -53,7 +53,7 @@ object Incident {
           task_owner_id ~
           user_creation_id ~
           task_id ~
-          is_deleted => Incident(incident_id,
+          task_title => Incident(incident_id,
           configuration_id,
           program_id,
           date_creation,
@@ -66,7 +66,7 @@ object Incident {
           task_owner_id,
           user_creation_id,
           task_id,
-          is_deleted)
+          task_title)
       }
 
   }
