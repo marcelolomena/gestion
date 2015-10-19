@@ -179,6 +179,8 @@ object Incident extends Controller {
           campo.put("task_owner_id", p.task_owner_id)
           campo.put("user_creation_id", p.user_creation_id)
           campo.put("task_id", p.task_id)
+          campo.put("task_title", p.task_title)
+          
           registro.put(campo)
         }
         var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
