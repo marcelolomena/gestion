@@ -553,7 +553,7 @@ $(document).ready(function(){
 					});
 				}
 		}else if(!myArray.length && !bool){
-			message ="Please enter valid  Hours:Minutes.";
+			message ="Ingrese Horas:Minutos.";
 			customDialogBox(message);
 			return false;
 		}else if( bool){

@@ -1638,10 +1638,10 @@ input.span12 {
 }
 
 form {
-	background: none repeat scroll 0 0 #ADE1F4;
+	//background: none repeat scroll 0 0 #ADE1F4;
     margin-bottom: 18px;
     margin-top: 6px;
-    padding: 0 70px;
+    //padding: 0 70px;
 }
 
 fieldset {

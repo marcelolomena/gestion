@@ -650,6 +650,78 @@ $(document).ready(function(){
 	        },series: []			
 	};	
 	
+	var optionsPieState ={
+			chart: {
+				renderTo: 'containerState',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	            text: 'Programas por Estado'
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}	        	
+	        },plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   grillaProgramaPorEstado(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []			
+	};	
+	
+	var optionsPieSap ={
+			chart: {
+				renderTo: 'containerSap',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	            text: 'Programas con SAP'
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}	        	
+	        },plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   grillaProgramaConSAP(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []			
+	};			
+	
 	function grillaPrograma(did,name){
 			var chuurl='/panel?did=' + did;
 			$("#jqGrid").jqGrid({
@@ -688,6 +760,7 @@ $(document).ready(function(){
 	
 	function grillaProgramaPorSubTipo(did,name){
 		var chuurl='/panelSubType?did=' + did;
+
 		$("#jqGridSubType").jqGrid({
 	        mtype: "GET",
 	        datatype: "json",
@@ -701,8 +774,47 @@ $(document).ready(function(){
 	        pager: "#jqGridPagerSubType",
 	        ignoreCase: true
 	    });			
-		$("#jqGridType").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
-	}	
+		$("#jqGridSubType").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+	
+	function grillaProgramaPorEstado(did,name){
+		var chuurl='/panelState?did=' + did;
+
+		$("#jqGridState").jqGrid({
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: modelPie,
+			viewrecords: true,
+			regional : "es",
+			height: 'auto',
+	        autowidth:true,
+	        rowNum: 20,
+	        pager: "#jqGridPagerState",
+	        ignoreCase: true
+	    });			
+		$("#jqGridState").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+
+	function grillaProgramaConSAP(did,name){
+		var chuurl='/panelSap?did=' + did;
+
+		$("#jqGridSap").jqGrid({
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: modelPie,
+			viewrecords: true,
+			regional : "es",
+			height: 'auto',
+	        autowidth:true,
+	        rowNum: 20,
+	        pager: "#jqGridPagerSap",
+	        ignoreCase: true
+	    });			
+		$("#jqGridSap").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+	
 		/*
 		$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true,searchOnEnter: false, defaultSearch: 'cn'});
 		$("#jqGrid").jqGrid('navGrid','#jqGridPager',{add:false,edit:false,del:false,search:false});
@@ -819,7 +931,7 @@ $(document).ready(function(){
 									height: 'auto',
 							        autowidth:true,
 							        rowNum: 20,
-							        pager: "#jqGridPagerType",
+							        pager: "#jqGridPagerSubType",
 							        ignoreCase: true,
 							        caption:'Excelencia Operacional'
 							    });									
@@ -828,6 +940,66 @@ $(document).ready(function(){
 
 						  }
 					}); 						
+				}
+			}else if(currentHeaderID=='panelState'){
+				if($('#containerState').html() == "") {	
+					$.ajax({
+						  url: '/pieState',
+						  type: 'GET',
+						  success: function(data) {
+							  optionsPieState.series.push(JSON.parse(data));
+								var chartPieState = new Highcharts.Chart(optionsPieState);
+								
+								$("#jqGridState").jqGrid({
+							        url: '/panelState?did=1',
+							        mtype: "GET",
+							        datatype: "json",
+							        page: 1,
+							        colModel: modelPie,
+									viewrecords: true,
+									regional : "es",
+									height: 'auto',
+							        autowidth:true,
+							        rowNum: 20,
+							        pager: "#jqGridPagerState",
+							        ignoreCase: true,
+							        caption:'En Curso'
+							    });									
+						  },
+						  error: function(e) {
+
+						  }
+					}); 				
+				}
+			}else if(currentHeaderID=='panelSap'){
+				if($('#containerSap').html() == "") {	
+					$.ajax({
+						  url: '/pieSap',
+						  type: 'GET',
+						  success: function(data) {
+							  optionsPieSap.series.push(JSON.parse(data));
+								var charPieSap = new Highcharts.Chart(optionsPieSap);
+								
+								$("#jqGridSap").jqGrid({
+							        url: '/panelSap?did=0',
+							        mtype: "GET",
+							        datatype: "json",
+							        page: 1,
+							        colModel: modelPie,
+									viewrecords: true,
+									regional : "es",
+									height: 'auto',
+							        autowidth:true,
+							        rowNum: 20,
+							        pager: "#jqGridPagerSap",
+							        ignoreCase: true,
+							        caption:'Programas sin SAPs'
+							    });								
+						  },
+						  error: function(e) {
+
+						  }
+					});
 				}
 			}else if(currentHeaderID=='sub'){
 				if($('#jqGrid2').html() == "") {
