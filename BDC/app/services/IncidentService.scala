@@ -7,6 +7,7 @@ import models.Configuration
 import models.ComboConfiguration
 import models.ProgramCombo
 import models.Severity
+import models.ComboStatus
 import models.ErrorIncident
 import anorm._
 import anorm.SqlParser._
@@ -38,6 +39,24 @@ object IncidentService {
     sqlString = "EXEC art.delete_incident {id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(scalar[Int].single)
+    }
+  }
+
+  def update(incident_id: String,
+             status_id: String,
+             user_creation_id:String,
+             note: String): Option[ErrorIncident] = {
+
+    var sqlString = """
+      EXEC art.update_incident {incident_id},{status_id},
+      {user_creation_id},{note}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('incident_id -> incident_id.toInt,
+        'status_id -> status_id.toInt,
+        'user_creation_id -> user_creation_id.toInt,
+        'note -> note).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
 
@@ -106,6 +125,14 @@ object IncidentService {
     sqlString = "SELECT configuration_id, RTRIM(configuration_name) configuration_name from art_incident_configuration where class_id = 1"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ComboConfiguration.comboConfiguration *)
+    }
+  }
+
+  def selectStatusIncident: Seq[ComboStatus] = {
+    var sqlString = ""
+    sqlString = "SELECT status_id, RTRIM(status_name) status_name from art_incident_status where class_id = 1"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ComboStatus.comboComboStatus *)
     }
   }
 

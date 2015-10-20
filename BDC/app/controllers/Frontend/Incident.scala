@@ -114,6 +114,85 @@ object Incident extends Controller {
       }
 
   }
+  
+    def update = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var incident: Option[ErrorIncident] = null
+        //println(jsonBody)
+        jsonBody.map { jsValue =>
+
+          val incident_id = (jsValue \ "id")
+          val configuration_id = (jsValue \ "configuration_id")
+          val program_id = (jsValue \ "program_id")
+          val date_creation = (jsValue \ "date_creation")
+          val ir_number = (jsValue \ "ir_number")
+          val user_sponsor_id = (jsValue \ "user_sponsor_id")
+          val brief_description = (jsValue \ "brief_description")
+          val extended_description = (jsValue \ "extended_description")
+          val severity_id = (jsValue \ "severity_id")
+          val date_end = (jsValue \ "date_end")
+          val task_owner_id = (jsValue \ "task_owner_id")
+          val user_creation_id = request.session.get("uId").get
+          val status_id = (jsValue \ "status_id")
+          val note = (jsValue \ "note")         
+          
+          println("incident_id : " + incident_id)
+          println("configuration_id : " + configuration_id)
+          println("program_id : " + program_id)
+          println("date_creation : " + date_creation)
+          println("ir_number : " + ir_number)
+          println("user_sponsor_id : " + user_sponsor_id)
+          println("brief_description : " + brief_description)
+          println("extended_description : " + extended_description)
+          println("severity_id : " + severity_id)
+          println("date_end : " + date_end)
+          println("task_owner_id : " + task_owner_id)
+          println("user_creation_id : " + user_creation_id)
+          println("status_id : " + status_id)
+          println("note : " + note)   
+          
+          incident = IncidentService.update(
+            incident_id.toString().replace("\"", ""),
+            status_id.toString().replace("\"", ""),
+            user_creation_id.toString().replace("\"", ""),
+            note.toString().replace("\"", ""))
+          
+/*
+          incident = IncidentService.save(
+            configuration_id.toString().replace("\"", ""),
+            program_id.toString().replace("\"", ""),
+            date_creation.toString().replace("\"", ""),
+            ir_number.toString().replace("\"", ""),
+            user_sponsor_id.toString().replace("\"", ""),
+            brief_description.toString().replace("\"", ""),
+            extended_description.toString().replace("\"", ""),
+            severity_id.toString().replace("\"", ""),
+            date_end.toString().replace("\"", ""),
+            task_owner_id.toString().replace("\"", ""),
+            user_creation_id.toString().replace("\"", ""))
+
+          println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+         
+          */
+        }
+
+        /**
+         * Activity log
+         */
+
+        val act = Activity(ActivityTypes.Project.id, "Update incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
+        Activity.saveLog(act)
+
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
 
   def list = Action {
     implicit request =>
@@ -217,6 +296,19 @@ object Incident extends Controller {
     var s = "<select><option value='0'>Seleccione un valor</option>"
     for (i <- incidents) {
       s += "<option value='" + i.configuration_id + "'>" + i.configuration_name + "</option>"
+    }
+    s += "</select>"
+
+    Ok(s)
+
+  }
+
+  def statusList = Action { implicit request =>
+
+    val incidents = IncidentService.selectStatusIncident
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+    for (i <- incidents) {
+      s += "<option value='" + i.status_id + "'>" + i.status_name + "</option>"
     }
     s += "</select>"
 

@@ -26,7 +26,9 @@ case class Incident(incident_id: Int,
                     configuration_name: String,
                     program_name: String,
                     sponsor_name: String,
-                    owner_name: String)
+                    owner_name: String,
+                    status_id:Int,
+                    note:String)
 
 object Incident {
   val incident = {
@@ -47,7 +49,9 @@ object Incident {
       get[String]("configuration_name") ~
       get[String]("program_name") ~
       get[String]("sponsor_name") ~
-      get[String]("owner_name") map {
+      get[String]("owner_name") ~
+      get[Int]("status_id") ~
+      get[String]("note") map {
         case incident_id ~
           configuration_id ~
           program_id ~
@@ -65,7 +69,9 @@ object Incident {
           configuration_name ~
           program_name ~
           sponsor_name ~
-          owner_name => Incident(incident_id,
+          owner_name ~
+          status_id ~
+          note => Incident(incident_id,
           configuration_id,
           program_id,
           date_creation,
@@ -82,7 +88,9 @@ object Incident {
           configuration_name,
           program_name,
           sponsor_name,
-          owner_name)
+          owner_name,
+          status_id,
+          note)
       }
 
   }
@@ -220,3 +228,21 @@ object ErrorIncident {
   }
   implicit val errorWrites = Json.writes[ErrorIncident]
 }  
+
+case class ComboStatus(
+  status_id: Int,
+  status_name: String)
+
+object ComboStatus {
+  val comboComboStatus = {
+    get[Int]("status_id") ~
+      get[String]("status_name") map {
+        case status_id ~
+          status_name => ComboStatus(
+          status_id,
+          status_name)
+      }
+
+  }
+  implicit val configurationWrites = Json.writes[ComboConfiguration]
+}
