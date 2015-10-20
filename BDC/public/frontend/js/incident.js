@@ -168,7 +168,15 @@ $(document).ready(function(){
    	               }}
 	              },	
 	              { label: 'user_creation_id', name: 'user_creation_id', hidden:true }, 
-	              { label: 'task_id', name: 'task_id', hidden:true }
+	              { label: 'task_id', name: 'task_id', hidden:true },
+	              { label: 'Estado', name: 'status_id', 
+	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
+	            	  editoptions: {dataUrl: '/incidentStatusList',dataInit: function(elem) {
+   	                   $(elem).width(200);  
+   	               }}
+	              },
+	              { label: 'Observación', name: 'note', editable: true,hidden: true, editrules: {edithidden: true},edittype: "textarea", editoptions: { rows: "5", cols: "25"} },
+
 	          ];	
 	
 	$("#jqGridIncident").jqGrid({
@@ -190,11 +198,15 @@ $(document).ready(function(){
 	$("#jqGridIncident").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 	$("#jqGridIncident").jqGrid('navGrid','#jqGridIncidentPager',{edit: true, add: true, del: true,search: false, position: "left", cloneToTop: false },
         {
+    		mtype: 'POST',
+    		url: '/incidentUpdate',
             height: 'auto',
             width: 'auto',
-            editCaption: "Cambiar Incidencia",
+            editCaption: "Actualizar Incidencia",
             recreateForm: true,
             closeAfterEdit: true,
+            ajaxEditOptions: jsonOptions,
+            serializeEditData: createJSON,
             beforeShowForm: function($form) {
             	var form=$form;
             	$('#tr_configuration_id', form).hide();
@@ -207,13 +219,12 @@ $(document).ready(function(){
             	$('input#program_name',form).attr('readonly','readonly');
             	$('input#sponsor_name',form).attr('readonly','readonly');
             	$('input#owner_name',form).attr('readonly','readonly');
-            	
             	$('input#brief_description',form).attr('readonly','readonly');
-            	$('input#extended_description',form).attr('readonly','readonly');
-            	
+            	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');
             	$('input#ir_number',form).attr('readonly','readonly');
             	
+            	/*
             	$form.find(".FormElement[readonly]")
                 .prop("disabled", true)
                 .addClass("ui-state-disabled")
@@ -221,7 +232,16 @@ $(document).ready(function(){
                 .prev(".CaptionTD")
                 .prop("disabled", true)
                 .addClass("ui-state-disabled")
+                */
                
+            },afterSubmit : function(response,postdata){
+                var json   = response.responseText; 
+                var result = JSON.parse(json); 
+                //console.log(result);
+                if(result.error_code!=0)
+                	return [false,result.error_text,""]; 
+                else
+                	return [true,"",""]
             },errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
@@ -266,6 +286,8 @@ $(document).ready(function(){
             	$('#tr_program_name',form).hide();
             	$('#tr_sponsor_name',form).hide();
             	$('#tr_owner_name',form).hide();
+            	$('#tr_status_id', form).hide();
+            	$('#tr_note', form).hide();
             	
             },afterShowForm: function($form) {
                 $form.closest(".ui-jqdialog").closest(".ui-jqdialog").position({
