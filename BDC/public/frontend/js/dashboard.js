@@ -19,6 +19,10 @@ function returnProjectLink(cellValue, options, rowdata, action)
 {
     return "<a href='/project-details/" + options.rowId + "' >" + cellValue +"</a>";
 }
+function returnTaskLink(cellValue, options, rowdata, action) 
+{
+    return "<a href='/project-task-details/" + rowdata.task_id + "' >" + cellValue +"</a>";
+}
 function returnSubTaskLink(cellValue, options, rowdata, action) 
 {
     return "<a href='/sub-task-details/" + options.rowId + "' >" + cellValue +"</a>";
