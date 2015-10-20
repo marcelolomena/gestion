@@ -38,6 +38,16 @@ object Incident extends Controller {
 
   }
 
+  def delete(oper: String, id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val cod = IncidentService.delete(id)
+
+      Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
   def save = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -61,7 +71,7 @@ object Incident extends Controller {
           val task_owner_id = (jsValue \ "task_owner_id")
           val user_creation_id = request.session.get("uId").get
 
-          //println("incident_id : " + incident_id)
+          /*
           println("configuration_id : " + configuration_id)
           println("program_id : " + program_id)
           println("date_creation : " + date_creation)
@@ -73,6 +83,7 @@ object Incident extends Controller {
           println("date_end : " + date_end)
           println("task_owner_id : " + task_owner_id)
           println("user_creation_id : " + user_creation_id)
+          */
 
           incident = IncidentService.save(
             configuration_id.toString().replace("\"", ""),
@@ -87,17 +98,16 @@ object Incident extends Controller {
             task_owner_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""))
 
-            println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+          println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
         }
 
-        
-          /**
-           * Activity log
-           */
-        
-          val act = Activity(ActivityTypes.Project.id, "New incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
-          Activity.saveLog(act)        
-        
+        /**
+         * Activity log
+         */
+
+        val act = Activity(ActivityTypes.Project.id, "New incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
+        Activity.saveLog(act)
+
         Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
@@ -180,7 +190,11 @@ object Incident extends Controller {
           campo.put("user_creation_id", p.user_creation_id)
           campo.put("task_id", p.task_id)
           campo.put("task_title", p.task_title)
-          
+          campo.put("configuration_name", p.configuration_name)
+          campo.put("program_name", p.program_name)
+          campo.put("sponsor_name", p.sponsor_name)
+          campo.put("owner_name", p.owner_name)
+
           registro.put(campo)
         }
         var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
@@ -221,6 +235,12 @@ object Incident extends Controller {
 
     Ok(s)
 
+  }
+
+  def validateCodIR(id: String) = Action { implicit request =>
+
+    var yesno = IncidentService.validateCodIR(id)
+    Ok(yesno.toString())
   }
 
   def programDefaultList = Action { implicit request =>
