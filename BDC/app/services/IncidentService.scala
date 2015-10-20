@@ -24,19 +24,34 @@ object IncidentService {
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Incident.incident *)
     }
   }
-  
-  def save(configuration_id: String, 
-          program_id: String,
-          date_creation: String,
-          ir_number: String,
-          user_sponsor_id: String,
-          brief_description: String,
-          extended_description: String,
-          severity_id: String,
-          date_end: String,
-          task_owner_id: String,
-          user_creation_id: String
-          ): Option[ErrorIncident] = {
+
+  def validateCodIR(id: String): Int = {
+    var sqlString = ""
+    sqlString = "EXEC art.validate_incident_codir {codir}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('codir -> id).as(scalar[Int].single)
+    }
+  }
+
+  def delete(id: String): Int = {
+    var sqlString = ""
+    sqlString = "EXEC art.delete_incident {id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt).as(scalar[Int].single)
+    }
+  }
+
+  def save(configuration_id: String,
+           program_id: String,
+           date_creation: String,
+           ir_number: String,
+           user_sponsor_id: String,
+           brief_description: String,
+           extended_description: String,
+           severity_id: String,
+           date_end: String,
+           task_owner_id: String,
+           user_creation_id: String): Option[ErrorIncident] = {
 
     var sqlString = """
       EXEC art.save_incident {configuration_id},{program_id},
@@ -44,23 +59,22 @@ object IncidentService {
       {extended_description},{severity_id},{date_end},{task_owner_id},{user_creation_id}
       """
 
-    println(sqlString)
-    
+    //println(sqlString)
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('configuration_id -> configuration_id.toInt,
-          'program_id -> program_id.toInt,
-          'date_creation -> date_creation,
-          'ir_number -> ir_number,
-          'user_sponsor_id -> user_sponsor_id.toInt,
-          'brief_description -> brief_description,
-          'extended_description -> extended_description,
-          'severity_id -> severity_id.toInt,
-          'date_end -> date_end,
-          'task_owner_id -> task_owner_id.toInt,
-          'user_creation_id -> user_creation_id.toInt
-          ).executeQuery() as (ErrorIncident.error.singleOpt)
+        'program_id -> program_id.toInt,
+        'date_creation -> date_creation,
+        'ir_number -> ir_number,
+        'user_sponsor_id -> user_sponsor_id.toInt,
+        'brief_description -> brief_description,
+        'extended_description -> extended_description,
+        'severity_id -> severity_id.toInt,
+        'date_end -> date_end,
+        'task_owner_id -> task_owner_id.toInt,
+        'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
-  }  
+  }
 
   def count(Json: String): Int = {
 
@@ -71,21 +85,21 @@ object IncidentService {
     }
   }
 
-  def selectTypeFromId(id:String): Int = {
+  def selectTypeFromId(id: String): Int = {
     var sqlString = ""
     sqlString = "SELECT configuration_program_type FROM art_incident_configuration WHERE configuration_id={id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(scalar[Int].single)
     }
   }
-  
-  def selectSeverityDays(id:String): Int = {
+
+  def selectSeverityDays(id: String): Int = {
     var sqlString = ""
     sqlString = "SELECT severity_days FROM art_incident_severity WHERE severity_id={id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(scalar[Int].single)
     }
-  }  
+  }
 
   def selectTypeIncident: Seq[ComboConfiguration] = {
     var sqlString = ""
