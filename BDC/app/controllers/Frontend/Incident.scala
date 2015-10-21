@@ -9,13 +9,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
-import models.Activity
-import models.ActivityTypes
-import models.DBFilter
-import models.ErrorIncident
+import models._
 import utils.FormattedOutPuts
 import play.api.mvc.AnyContent
 import java.util.Date
+import java.io.File
+import java.io.FileOutputStream
+import org.apache.poi.xssf.usermodel._
 
 /**
  * @author marcelo
@@ -275,14 +275,13 @@ object Incident extends Controller {
           campo.put("incident_id", p.incident_id)
           campo.put("configuration_id", p.configuration_id)
           campo.put("program_id", p.program_id)
-          campo.put("date_creation", p.date_creation)
+          campo.put("date_creation", p.date_creation.getOrElse("").toString())
           campo.put("ir_number", p.ir_number)
           campo.put("user_sponsor_id", p.user_sponsor_id)
           campo.put("brief_description", p.brief_description)
           campo.put("extended_description", p.extended_description)
           campo.put("severity_id", p.severity_id)
-          campo.put("date_end", p.date_end)
-          campo.put("date_end", p.date_end)
+          campo.put("date_end", p.date_end.getOrElse("").toString())
           campo.put("task_owner_id", p.task_owner_id)
           campo.put("user_creation_id", p.user_creation_id)
           campo.put("task_id", p.task_id)
@@ -418,4 +417,135 @@ object Incident extends Controller {
     Ok(days.toString())
 
   }
+
+  def excel() = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        var panel: Seq[Incident] = null
+        val file = new File("incident.xlsx")
+        val fileOut = new FileOutputStream(file);
+        val wb = new XSSFWorkbook
+        val sheet = wb.createSheet("INCIDENCIAS")
+        val filters = request.getQueryString("filters").getOrElse("").toString()
+        var j = 0
+        var rNum = 1
+        var cNum = 0
+        var a = 0
+        var tieneJson = true
+        var qrystr = ""
+
+        if (!StringUtils.isEmpty(filters)) {
+
+          val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+          if (!jObject.\\("rules").isEmpty) {
+
+            val jList = jObject.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (jElement.equals("[]")) {
+                tieneJson = false
+              } else {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filters)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+                  qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                }
+
+              }
+            }
+
+          }
+
+          if (tieneJson) {
+            panel = IncidentService.list("0", "0", qrystr)
+          } else {
+            panel = IncidentService.list("0", "0", "")
+          }
+
+        } else {
+          panel = IncidentService.list("0", "0", "")
+
+        }
+
+        var rowhead = sheet.createRow(0)
+        val style = wb.createCellStyle()
+        val font = wb.createFont()
+        font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+        font.setFontHeightInPoints(10)
+        font.setBold(true)
+        style.setFont(font)
+        rowhead.createCell(0).setCellValue("Id")
+        rowhead.createCell(1).setCellValue("Incidencia")
+        rowhead.createCell(2).setCellValue("Sistema")
+        rowhead.createCell(3).setCellValue("Tarea")
+        rowhead.createCell(4).setCellValue("Número IR")
+        rowhead.createCell(5).setCellValue("Usuario")
+        rowhead.createCell(6).setCellValue("Responsable")
+        rowhead.createCell(7).setCellValue("Fecha Creación")
+        rowhead.createCell(8).setCellValue("Fecha Termino")
+        rowhead.createCell(9).setCellValue("Descripción Corta")
+        rowhead.createCell(10).setCellValue("Descripción Extensa")
+
+        for (j <- 0 to 10)
+          rowhead.getCell(j).setCellStyle(style);
+
+        for (s <- panel) {
+          var row = sheet.createRow(rNum)
+
+          val cel0 = row.createCell(cNum)
+          cel0.setCellValue(s.incident_id)
+
+          val cel1 = row.createCell(cNum + 1)
+          cel1.setCellValue(s.configuration_name)
+
+          val cel2 = row.createCell(cNum + 2)
+          cel2.setCellValue(s.program_name)
+
+          val cel3 = row.createCell(cNum + 3)
+          cel3.setCellValue(s.task_title)
+
+          val cel4 = row.createCell(cNum + 4)
+          cel4.setCellValue(s.ir_number)
+
+          val cel5 = row.createCell(cNum + 5)
+          cel5.setCellValue(s.sponsor_name)
+
+          val cel6 = row.createCell(cNum + 6)
+          cel6.setCellValue(s.owner_name)
+
+          val cel7 = row.createCell(cNum + 7)
+          cel7.setCellValue(s.date_creation.getOrElse("").toString())
+
+          val cel8 = row.createCell(cNum + 8)
+          cel8.setCellValue(s.date_end.getOrElse("").toString())
+
+          val cel9 = row.createCell(cNum + 9)
+          cel9.setCellValue(s.brief_description)
+
+          val cel10 = row.createCell(cNum + 10)
+          cel10.setCellValue(s.extended_description)
+
+          rNum = rNum + 1
+          cNum = 0
+
+        }
+
+        for (a <- 0 to 10) {
+          sheet.autoSizeColumn((a.toInt));
+        }
+
+        wb.write(fileOut);
+        fileOut.close();
+        Ok.sendFile(content = file, fileName = _ => "incident.xlsx")
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
 }
