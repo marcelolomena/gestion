@@ -576,3 +576,7 @@ GET	   /incidentNoBusinessMember/$id<[A-Za-z0-9_-]+>											      controllers
 GET	   /incidentSeverityList																		  controllers.Frontend.Incident.severityList
 GET	   /incidentProgramType/$id<[A-Za-z0-9_-]+>													      controllers.Frontend.Incident.getConfigurationProgramType(id:String)
 GET	   /incidentSeverityDays/$id<[A-Za-z0-9_-]+>													  controllers.Frontend.Incident.getSeverityDays(id:String)
+GET	   /incidentDelete																		          controllers.Frontend.Incident.delete(oper:String,id:String)
+GET	   /incident_valid_ir/$id<[A-Za-z0-9_-]+>											  	          controllers.Frontend.Incident.validateCodIR(id:String)
+GET	   /incidentStatusList																			  controllers.Frontend.Incident.statusList
+POST   /incidentUpdate																				  controllers.Frontend.Incident.update
