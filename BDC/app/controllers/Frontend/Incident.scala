@@ -24,9 +24,9 @@ object Incident extends Controller {
 
   def fromIncidentName(choice: String, value: String): String = choice match {
     case "brief_description" => " '%" + value + "%' "
-    case "date_creation" => " '" + value + "' "
-    case "date_end" => " '" + value + "' "
-    case "ir_number" =>  value 
+    case "date_creation"     => " '" + value + "' "
+    case "date_end"          => " '" + value + "' "
+    case "ir_number"         => value
     case _                   => "error"
   }
 
@@ -117,8 +117,23 @@ object Incident extends Controller {
       }
 
   }
-  
-    def update = Action {
+
+  def listStatus(id: String) = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val user_creation_id = request.session.get("uId").get
+
+        val log = IncidentService.selectStatus(user_creation_id, id)
+
+        Ok(play.api.libs.json.Json.toJson(log)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
+  def update = Action {
     implicit request =>
       request.session.get("username").map { user =>
 
@@ -141,8 +156,8 @@ object Incident extends Controller {
           val task_owner_id = (jsValue \ "task_owner_id")
           val user_creation_id = request.session.get("uId").get
           val status_id = (jsValue \ "status_id")
-          val note = (jsValue \ "note")         
-          
+          val note = (jsValue \ "note")
+
           println("incident_id : " + incident_id)
           println("configuration_id : " + configuration_id)
           println("program_id : " + program_id)
@@ -156,15 +171,15 @@ object Incident extends Controller {
           println("task_owner_id : " + task_owner_id)
           println("user_creation_id : " + user_creation_id)
           println("status_id : " + status_id)
-          println("note : " + note)   
-          
+          println("note : " + note)
+
           incident = IncidentService.update(
             incident_id.toString().replace("\"", ""),
             status_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""),
             note.toString().replace("\"", ""))
-          
-/*
+
+          /*
           incident = IncidentService.save(
             configuration_id.toString().replace("\"", ""),
             program_id.toString().replace("\"", ""),

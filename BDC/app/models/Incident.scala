@@ -246,3 +246,34 @@ object ComboStatus {
   }
   implicit val configurationWrites = Json.writes[ComboConfiguration]
 }
+
+
+case class Status(
+  log_id: Int,
+  incident_id: Int,
+  status_name: String,
+  log_date: Date,
+  note:String)
+
+object Status {
+  val status = {
+    get[Int]("log_id") ~
+      get[Int]("incident_id") ~
+      get[String]("status_name") ~
+      get[Date]("log_date") ~
+      get[String]("note") map {
+        case log_id ~
+          incident_id ~
+          status_name ~
+          log_date ~ 
+          note => Status(
+          log_id,
+          incident_id,
+          status_name,
+          log_date,
+          note)
+      }
+
+  }
+  implicit val statusWrites = Json.writes[Status]
+}

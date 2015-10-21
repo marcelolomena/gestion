@@ -9,6 +9,7 @@ import models.ProgramCombo
 import models.Severity
 import models.ComboStatus
 import models.ErrorIncident
+import models.Status
 import anorm._
 import anorm.SqlParser._
 
@@ -44,7 +45,7 @@ object IncidentService {
 
   def update(incident_id: String,
              status_id: String,
-             user_creation_id:String,
+             user_creation_id: String,
              note: String): Option[ErrorIncident] = {
 
     var sqlString = """
@@ -152,4 +153,11 @@ object IncidentService {
     }
   }
 
+  def selectStatus(uid: String, id: String): Seq[Status] = {
+    var sqlString = ""
+    sqlString = "SELECT a.log_id, a.incident_id, RTRIM(b.status_name) status_name, a.log_date, a.note FROM art_incident_log a, art_incident_status b WHERE a.status_id=b.status_id AND user_creation_id = {uid} AND incident_id = {id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('uid -> uid.toInt, 'id -> id.toInt).as(Status.status *)
+    }
+  }
 }
