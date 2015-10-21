@@ -580,3 +580,5 @@ GET	   /incidentDelete																		          controllers.Frontend.Incident.
 GET	   /incident_valid_ir/$id<[A-Za-z0-9_-]+>											  	          controllers.Frontend.Incident.validateCodIR(id:String)
 GET	   /incidentStatusList																			  controllers.Frontend.Incident.statusList
 POST   /incidentUpdate																				  controllers.Frontend.Incident.update
+GET	   /listStatus/$id<[A-Za-z0-9_-]+>											  	          		  controllers.Frontend.Incident.listStatus(id:String)
+GET    /incident-excel 			                                                                      controllers.Frontend.Incident.excel
