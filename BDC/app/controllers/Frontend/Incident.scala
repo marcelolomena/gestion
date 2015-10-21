@@ -24,6 +24,9 @@ object Incident extends Controller {
 
   def fromIncidentName(choice: String, value: String): String = choice match {
     case "brief_description" => " '%" + value + "%' "
+    case "date_creation" => " '" + value + "' "
+    case "date_end" => " '" + value + "' "
+    case "ir_number" =>  value 
     case _                   => "error"
   }
 
