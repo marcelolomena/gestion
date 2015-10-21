@@ -12,13 +12,13 @@ import java.util.Date
 case class Incident(incident_id: Int,
                     configuration_id: Int,
                     program_id: Int,
-                    date_creation: Date,
+                    date_creation: Option[Date],
                     ir_number: String,
                     user_sponsor_id: Int,
                     brief_description: String,
                     extended_description: String,
                     severity_id: Int,
-                    date_end: Date,
+                    date_end: Option[Date],
                     task_owner_id: Int,
                     user_creation_id: Int,
                     task_id: Int,
@@ -35,13 +35,13 @@ object Incident {
     get[Int]("incident_id") ~
       get[Int]("configuration_id") ~
       get[Int]("program_id") ~
-      get[Date]("date_creation") ~
+      get[Option[Date]]("date_creation") ~
       get[String]("ir_number") ~
       get[Int]("user_sponsor_id") ~
       get[String]("brief_description") ~
       get[String]("extended_description") ~
       get[Int]("severity_id") ~
-      get[Date]("date_end") ~
+      get[Option[Date]]("date_end") ~
       get[Int]("task_owner_id") ~
       get[Int]("user_creation_id") ~
       get[Int]("task_id") ~
