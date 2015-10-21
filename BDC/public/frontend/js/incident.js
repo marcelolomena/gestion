@@ -14,6 +14,74 @@ $(document).ready(function(){
 	template += "<hr style='width:100%;'/>";
 	template += "<div> {sData} {cData}  </div></div>";
 	*/
+	function showGridStatus(parentRowID, parentRowKey) {
+	    var childGridID = parentRowID + "_table";
+	    var childGridPagerID = parentRowID + "_pager";
+	    var childGridURL = "/reportProyect/" + parentRowKey;
+
+	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+	    $("#" + childGridID).jqGrid({
+	        url: childGridURL,
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: [
+	                   { label: 'Codigo',
+	                      name: 'codigo',
+	                      width: 100,
+	                      key: true,
+	                      hidden:true
+	                   },                   
+	                   { label: 'Nivel',
+	                     name: 'nivel',
+	                     width: 100,
+	                   },
+	                   { label: 'Nombre', name: 'programa', width: 250,formatter: returnProjectLink },
+	                   { label: 'Responsable', name: 'responsable', width: 150 },
+	                   { label: 'Fecha Inicio Planeada',
+	                     name: 'pfecini',
+	                     width: 120,
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+	                   },
+	                   { label: 'Fecha Termino Planeada',
+	                     name: 'pfecter',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+	                     
+	                   },
+	                   { label: 'Fecha Inicio Real',
+	                     name: 'rfecini',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+	                     
+	                   },
+	                   { label: 'Fecha Termino Real',
+	                     name: 'rfecter',
+	                     width: 120,
+	                     sorttype:'date',
+	                     formatter: 'date',
+	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+	                     
+	                   },
+	                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
+	                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+	        ],
+	        rowNum: 20,
+			height: 'auto',
+	        autowidth:true,
+	        regional : "es",
+	        pager: "#" + childGridPagerID
+	    });
+		
+	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});	
+	
+	
 	function ValidateCodIR(id){
 		var count;
         $.ajax({
@@ -60,7 +128,7 @@ $(document).ready(function(){
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 
 	var modelIncident=[
-	              { label: 'Tarea', name: 'task_title', width: 200,editable: false,formatter: returnTaskLink  },
+	              { label: 'Tarea', name: 'task_title', width: 200,editable: false,formatter: returnTaskLink, search:false },
 	              { label: 'incident_id', name: 'incident_id', key: true, hidden:true },
 	              { label: 'Tipo de incidencia', width: 300, name: 'configuration_name', editable: true, hidden: true, editrules: {edithidden: true} },
 	              { label: 'Tipo de incidencia', name: 'configuration_id', 
@@ -68,7 +136,6 @@ $(document).ready(function(){
 	            	  editoptions: {dataUrl: '/incident_configuration',
 	            	  				dataEvents: [{ type: 'change', fn: function(e) {
 	            	  									 var thisval= $(this).val();
-
 	            	  									 $.get('/incidentProgramType/'+thisval, 
                                                                  function(datum)
                                                                  { 
@@ -122,8 +189,27 @@ $(document).ready(function(){
 	                          var year = currentTime.getFullYear(); 
 	                          return year+"-"+month + "-"+day; 
 	                        } 
-	            	    },formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },
-	              { label: 'Número IR', name: 'ir_number', width: 100,editable: true, editrules:{required:true},editoptions: {size: 10, maxlengh: 10} },
+	            	    },formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+	            	    searchoptions:{
+				              dataInit:function(el){
+					              	$(el).datepicker({
+						              	dateFormat:'yy-mm-dd',
+						              	changeYear: true,
+				                        changeMonth: true,                            
+				                        onSelect: function (dateText, inst) {
+				                            setTimeout(function () {
+				                                $('#jqGridIncident')[0].triggerToolbar();
+				                            }, 100);
+				                        }
+							        });
+					              },sopt: ["gt","lt","eq"]
+			             }
+	              },
+	              { label: 'Número IR', name: 'ir_number', width: 100,editable: true,
+	            	  editrules:{required:true},
+	            	  editoptions: {size: 10, maxlengh: 10},
+	            	  searchoptions: {sopt:["gt","lt","eq"] }
+	              },
 	              { label: 'Usuario', width: 200, name: 'sponsor_name', editable: true, hidden: true, editrules: {edithidden: true} },
 	              { label: 'Usuario', name: 'user_sponsor_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
@@ -159,7 +245,25 @@ $(document).ready(function(){
 	            	               }
 	            		  }
 	              },	              
-	              { label: 'Fecha Término', name: 'date_end',width: 100,editable: true,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editoptions: {size: 10, readonly: "readonly" } },
+	              { label: 'Fecha Término', name: 'date_end',width: 100,editable: true,
+	            	  formatter: 'date',
+	            	  formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+	            	  editoptions: {size: 10, readonly: "readonly" },
+	            	  searchoptions:{
+			              dataInit:function(el){
+				              	$(el).datepicker({
+					              	dateFormat:'yy-mm-dd',
+					              	changeYear: true,
+			                        changeMonth: true,                            
+			                        onSelect: function (dateText, inst) {
+			                            setTimeout(function () {
+			                                $('#jqGridIncident')[0].triggerToolbar();
+			                            }, 100);
+			                        }
+						        });
+				              },sopt: ["gt","lt","eq"]
+		             }
+	              },
 	              { label: 'Responsable', width: 200, name: 'owner_name', editable: true, hidden: true, editrules: {edithidden: true} },
 	              { label: 'Responsable', name: 'task_owner_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
@@ -190,6 +294,8 @@ $(document).ready(function(){
         height: 'auto',
         autowidth:true, 
         //shrinkToFit: false,
+        subGrid: true, 
+        subGridRowExpanded: showGridStatus,
         caption:'Lista de Incidentes',
         pager: "#jqGridIncidentPager",
         loadComplete: findWithColor,
@@ -234,6 +340,12 @@ $(document).ready(function(){
                 .addClass("ui-state-disabled")
                 */
                
+            },afterShowForm: function($form) {
+                $form.closest(".ui-jqdialog").closest(".ui-jqdialog").position({
+                    my: 'center',
+                    at: 'center',
+                    of: window
+                  });
             },afterSubmit : function(response,postdata){
                 var json   = response.responseText; 
                 var result = JSON.parse(json); 
