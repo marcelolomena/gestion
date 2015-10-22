@@ -1,0 +1,356 @@
+.contenedor {
+	width: 390px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+	color: #003366;
+	font-weight: 400;
+	background-color: #eef7ff;
+	height: 100%;
+}
+#encabezado {
+	height: 40px;
+	background-color: #002464;
+	color: #FFF;
+	text-align: center;
+	line-height: 45px;
+	font-size: 14px;
+	font-weight: 600;
+}
+#incidencia {
+	width: 150px;
+	float: left;
+	line-height: 40px;
+	margin-left:15px;
+	margin-top: 20px;
+}
+#confId {
+	float: left;
+	width: 220px;
+	line-height: 40px;
+	margin-top: 20px;
+	height: 40px;
+}
+#sistema1 {
+	width: 150px;
+	float: left;
+	line-height: 40px;
+	margin-left:15px;
+}
+#program {
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+body {
+	margin: 0px;
+}
+
+#fecha{
+	line-height: 40px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#dateCre{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#usuario {
+	line-height: 40px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#userSponsor{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#numeroIR {
+	line-height: 40px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#irNumb{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#descCorta {
+	line-height: 40px;
+	float: left;	
+	width: 150px;
+	margin-left:15px;
+}
+#briefDesc{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#descExte {
+	line-height: 95px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#extDesc{
+	line-height: 95px;
+	float: left;
+	width: 220px;
+	height: 95px;
+}
+#prioridad {
+	line-height: 40px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#severityId{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#fechaTerm {
+	line-height: 40px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#dateEnd{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#responsable {
+	line-height: 40px;
+	float: left;
+	width: 150px;
+	margin-left:15px;
+}
+#taskOwner{
+	line-height: 40px;
+	float: left;
+	width: 220px;
+	height: 40px;
+}
+#confId #incidencia_combo {
+	width: 200px;
+	border: 1px solid #bcddfe;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 7px;
+	color: #002464;
+}
+#program #sistema_combo {
+	width: 200px;
+	border: 1px solid #bcddfe;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 7px;
+	color: #002464;
+}
+#dateCre input {
+	height: 30px;
+	width: 150px;
+	line-height: 30px;
+	margin-top: 5px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	border: 1px solid #bcddfe;
+}
+#irNumb input {
+	height: 30px;
+	width: 150px;
+	line-height: 30px;
+	margin-top: 5px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	border: 1px solid #bcddfe;
+}
+#userSponsor #sistema_combo {
+	width: 200px;
+	border: 1px solid #bcddfe;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 7px;
+	color: #002464;
+}
+#briefDesc input {
+	height: 30px;
+	width: 200px;
+	line-height: 30px;
+	margin-top: 5px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	border: 1px solid #bcddfe;
+}
+#extDesc #descExtensa {
+	height: 80px;
+	width: 200px;
+	margin-top: 5px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	border: 1px solid #bcddfe;
+}
+#severityId #sistema_combo {
+	width: 200px;
+	border: 1px solid #bcddfe;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 7px;
+	color: #002464;
+}
+#dateEnd input {
+	height: 30px;
+	width: 150px;
+	line-height: 30px;
+	margin-top: 5px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	border: 1px solid #bcddfe;
+}
+#taskOwner #sistema_combo {
+	width: 200px;
+	border: 1px solid #bcddfe;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:400;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 7px;
+	color: #002464;
+}
+hr {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#botonera {
+	height: 70px;
+}
+#botonera #enviar {
+	background-color: #036;
+	color: #FFF;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	height: 40px;
+	width: 90px;
+	float: left;
+}
+.btnGuardar {
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	font-size: 14px;
+	text-decoration: none;
+	text-align: center;
+	width: 60px;
+	padding-top: 8px;
+	padding-right: 18px;
+	padding-bottom: 8px;
+	padding-left: 18px;
+	font-weight: 400;
+	cursor:pointer;
+	background-color: #003366;
+	float: right;
+	margin-right: 10px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.btnCancelar {
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	font-size: 14px;
+	text-decoration: none;
+	text-align: center;
+	width: 60px;
+	padding-top: 8px;
+	padding-right: 18px;
+	padding-bottom: 8px;
+	padding-left: 18px;
+	font-weight: 400;
+	cursor:pointer;
+	background-color: #003366;
+	float: right;
+	margin-right: 25px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.btnGuardar:hover {
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	font-size: 14px;
+	text-decoration: none;
+	text-align: center;
+	width: 60px;
+	padding-top: 8px;
+	padding-right: 18px;
+	padding-bottom: 8px;
+	padding-left: 18px;
+	font-weight: 400;
+	cursor:pointer;
+	background-color: #009900;
+	float: right;
+	margin-right: 10px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.btnCancelar:hover {
+	-webkit-border-radius: 6;
+	-moz-border-radius: 6;
+	border-radius: 6px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	font-size: 14px;
+	text-decoration: none;
+	text-align: center;
+	width: 60px;
+	padding-top: 8px;
+	padding-right: 18px;
+	padding-bottom: 8px;
+	padding-left: 18px;
+	font-weight: 400;
+	cursor:pointer;
+	background-color: #660000;
+	float: right;
+	margin-right: 25px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
