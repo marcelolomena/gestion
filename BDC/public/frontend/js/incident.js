@@ -142,6 +142,32 @@ $(document).ready(function(){
 	            	               }
 	            		  }
 	              },
+	              { label: 'Prioridad', name: 'severity_id', 
+	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
+	            	  editoptions: {dataUrl: '/incidentSeverityList',
+	            		  dataEvents: [{ type: 'change', fn: function(e) {
+								 var thistid= $(this).val();
+								 		$.get('/incidentSeverityDays/'+thistid, 
+	                                      function(data)
+	                                      { 
+								 				var dateFrom = $("input#date_creation").val();
+								 				var from = dateFrom.split('-');
+								 				var to = new Date(from[0], from[1] - 1, from[2]);
+								 				to.setTime(to.getTime() +  (data * 24 * 60 * 60 * 1000));
+								 				var dd = to.getDate(); 
+								 				var mm = to.getMonth()+1; 
+								 				var yyyy = to.getFullYear(); 
+								 				if(dd<10){dd='0'+dd} 
+								 				if(mm<10){mm='0'+mm} 
+										 		$("input#date_end").val(yyyy+"-"+mm+"-"+dd);
+	                                      }); 
+									}
+	            		  			}
+	            		  		],dataInit: function(elem) {
+	            	                   $(elem).width(200);  
+	            	               }
+	            		  }
+	              },	              
 	              { label: 'Fecha Creación', name: 'date_creation',width: 100,editable: true,editrules:{required:true},
 	            	  editoptions: {
 	            	      size: 10, maxlengh: 10,
@@ -172,46 +198,6 @@ $(document).ready(function(){
 					              },sopt: ["gt","lt","eq"]
 			             }
 	              },
-	              { label: 'Número IR', name: 'ir_number', width: 100,editable: true,
-	            	  editrules:{required:true},
-	            	  editoptions: {size: 10, maxlengh: 10},
-	            	  searchoptions: {sopt:["gt","lt","eq"] }
-	              },
-	              { label: 'Usuario', width: 200, name: 'sponsor_name', editable: true, hidden: true, editrules: {edithidden: true} },
-	              { label: 'Usuario', name: 'user_sponsor_id', 
-	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
-	            	  editoptions: {dataUrl: '/incident_program_default',dataInit: function(elem) {
-   	                   $(elem).width(200);  
-   	               }}
-	              },	              
-	              { label: 'Descripción Corta', name: 'brief_description', editable: true,editrules:{required:true} },
-	              { label: 'Descripción Extensa', name: 'extended_description', editable: true,hidden: true, editrules: {edithidden: true},edittype: "textarea", editoptions: { rows: "5", cols: "25"} },
-	              { label: 'Prioridad', name: 'severity_id', 
-	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
-	            	  editoptions: {dataUrl: '/incidentSeverityList',
-	            		  dataEvents: [{ type: 'change', fn: function(e) {
-								 var thistid= $(this).val();
-								 		$.get('/incidentSeverityDays/'+thistid, 
-	                                      function(data)
-	                                      { 
-								 				var dateFrom = $("input#date_creation").val();
-								 				var from = dateFrom.split('-');
-								 				var to = new Date(from[0], from[1] - 1, from[2]);
-								 				to.setTime(to.getTime() +  (data * 24 * 60 * 60 * 1000));
-								 				var dd = to.getDate(); 
-								 				var mm = to.getMonth()+1; 
-								 				var yyyy = to.getFullYear(); 
-								 				if(dd<10){dd='0'+dd} 
-								 				if(mm<10){mm='0'+mm} 
-										 		$("input#date_end").val(yyyy+"-"+mm+"-"+dd);
-	                                      }); 
-									}
-	            		  			}
-	            		  		],dataInit: function(elem) {
-	            	                   $(elem).width(200);  
-	            	               }
-	            		  }
-	              },	              
 	              { label: 'Fecha Término', name: 'date_end',width: 100,editable: true,
 	            	  formatter: 'date',
 	            	  formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
@@ -230,7 +216,21 @@ $(document).ready(function(){
 						        });
 				              },sopt: ["gt","lt","eq"]
 		             }
+	              },	              
+	              { label: 'Número IR', name: 'ir_number', width: 100,editable: true,
+	            	  editrules:{required:true},
+	            	  editoptions: {size: 10, maxlengh: 10},
+	            	  searchoptions: {sopt:["gt","lt","eq"] }
 	              },
+	              { label: 'Usuario', width: 200, name: 'sponsor_name', editable: true, hidden: true, editrules: {edithidden: true} },
+	              { label: 'Usuario', name: 'user_sponsor_id', 
+	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
+	            	  editoptions: {dataUrl: '/incident_program_default',dataInit: function(elem) {
+   	                   $(elem).width(200);  
+   	               }}
+	              },	              
+	              { label: 'Descripción Corta', name: 'brief_description', editable: true,editrules:{required:true} },
+	              { label: 'Descripción Extensa', name: 'extended_description', editable: true,hidden: true, editrules: {edithidden: true},edittype: "textarea", editoptions: { rows: "5", cols: "25"} },
 	              { label: 'Responsable', width: 200, name: 'owner_name', editable: true, hidden: true, editrules: {edithidden: true} },
 	              { label: 'Responsable', name: 'task_owner_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
