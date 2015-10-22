@@ -1,23 +1,24 @@
 $(document).ready(function(){
 	/*
-	var template = "<div style='margin-left:15px;'>";
-	template += "<div> Tipo de incidencia <sup>*</sup>:</div><div> {configuration_id} </div>";
-	template += "<div> Sistema: </div><div>{program_id} </div>";
-	template += "<div> Fecha Creación: </div><div>{date_creation} </div>";
-	template += "<div> Número IR',: </div><div>{ir_number} </div>";
-	template += "<div> Usuario:</div><div> {user_sponsor_id} </div>";
-	template += "<div> Descripción Corta:</div><div> {brief_description} </div>";
-	template += "<div> Descripción Extensa:</div><div> {extended_description} </div>";
-	template += "<div> Prioridad:</div><div> {severity_id} </div>";
-	template += "<div> Fecha Término:</div><div> {date_end} </div>";
-	template += "<div> Responsable:</div><div> {task_owner_id} </div>";
+	var template = "<div class='contenedor'>";
+	template += "<div id='incidencia'> Tipo de incidencia </div><div id='confId'> {configuration_id} </div>";
+	template += "<div id='sistema1'> Sistema: </div><div id='program'>{program_id} </div>";
+	template += "<div id='fecha'> Fecha Creación: </div><div id='dateCre'>{date_creation} </div>";
+	template += "<div id='numeroIR'> Número IR',: </div><div id='irNumb'>{ir_number} </div>";
+	template += "<div id='usuario'> Usuario:</div><div id='userSponsor'> {user_sponsor_id} </div>";
+	template += "<div id='descCorta'> Descripción Corta:</div><div id='briefDesc'> {brief_description} </div>";
+	template += "<div id='descExte'> Descripción Extensa:</div><div id='extDesc'> {extended_description} </div>";
+	template += "<div id='prioridad'> Prioridad:</div><div id='severityId'> {severity_id} </div>";
+	template += "<div id='fechaTerm'> Fecha Término:</div><div id='dateEnd'> {date_end} </div>";
+	template += "<div id='responsable'> Responsable:</div><div id='taskOwner'> {task_owner_id} </div>";
 	template += "<hr style='width:100%;'/>";
 	template += "<div> {sData} {cData}  </div></div>";
 	*/
+	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
 	    var childGridPagerID = parentRowID + "_pager";
-	    var childGridURL = "/reportProyect/" + parentRowKey;
+	    var childGridURL = "/listStatus/" + parentRowKey;
 
 	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -25,62 +26,28 @@ $(document).ready(function(){
 	        url: childGridURL,
 	        mtype: "GET",
 	        datatype: "json",
-	        page: 1,
+	        //page: 1,
 	        colModel: [
-	                   { label: 'Codigo',
-	                      name: 'codigo',
-	                      width: 100,
-	                      key: true,
-	                      hidden:true
-	                   },                   
-	                   { label: 'Nivel',
-	                     name: 'nivel',
-	                     width: 100,
-	                   },
-	                   { label: 'Nombre', name: 'programa', width: 250,formatter: returnProjectLink },
-	                   { label: 'Responsable', name: 'responsable', width: 150 },
-	                   { label: 'Fecha Inicio Planeada',
-	                     name: 'pfecini',
-	                     width: 120,
-	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
-	                   },
-	                   { label: 'Fecha Termino Planeada',
-	                     name: 'pfecter',
-	                     width: 120,
-	                     sorttype:'date',
-	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
-	                     
-	                   },
-	                   { label: 'Fecha Inicio Real',
-	                     name: 'rfecini',
-	                     width: 120,
-	                     sorttype:'date',
-	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
-	                     
-	                   },
-	                   { label: 'Fecha Termino Real',
-	                     name: 'rfecter',
-	                     width: 120,
-	                     sorttype:'date',
-	                     formatter: 'date',
-	                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
-	                     
-	                   },
-	                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
-	                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+	                   { label: '[log_id]', name: '[log_id]', key: true, hidden:true },                   
+	                   { label: 'incident_id', name: 'incident_id', hidden:true},
+	                   { label: 'Estado', name: 'status_name', width: 150 },
+	                   { label: 'Fecha', name: 'log_date', width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' } },
+	                   { label: 'Usuario', name: 'user_creation_name', width: 150 },
+	                   { label: 'Nota', name: 'note', width: 200 }           
 	        ],
-	        rowNum: 20,
+	        //rowNum: 20,
 			height: 'auto',
 	        autowidth:true,
 	        regional : "es",
+	        rowList: [],        // disable page size dropdown
+			pgbuttons: false,     // disable page control like next, back button
+			pgtext: null,         // disable pager text like 'Page 0 of 10'
+			viewrecords: false,    // disable current view record text like 'View 1-10 of 100' 
 	        pager: "#" + childGridPagerID
 	    });
 		
 	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});	
-	
+	}
 	
 	function ValidateCodIR(id){
 		var count;
@@ -153,7 +120,7 @@ $(document).ready(function(){
 	            	  }
 	              },
 	              { label: 'Sistema', name: 'program_name', width: 400, editable: true, hidden: true, editrules: {edithidden: true} },
-	              { label: 'Sistema', name: 'program_id', 
+	              { label: 'Sistema', name: 'program_id',
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
 	            	  editoptions: {dataUrl: '/incident_program_default',
 	            		  dataEvents: [{ type: 'change', fn: function(e) {
@@ -179,7 +146,7 @@ $(document).ready(function(){
 	            	  editoptions: {
 	            	      size: 10, maxlengh: 10,
 	            	      dataInit: function(element) {
-	            	        $(element).datepicker({dateFormat: 'yy-mm-dd'})
+	            	        $(element).datepicker({dateFormat: 'yy-mm-dd', maxDate: 0})
 	            	      },defaultValue: function(){ 
 	                          var currentTime = new Date(); 
 	                          var month = parseInt(currentTime.getMonth() + 1); 
@@ -354,11 +321,20 @@ $(document).ready(function(){
                 	return [false,result.error_text,""]; 
                 else
                 	return [true,"",""]
+            },beforeSubmit : function (postdata, formid) {
+            	if( postdata.status_id == 0) {
+            		return [false,"Estado: Debe escoger un valor",""];
+            	} if( $.trim(postdata.note) == '') {//.length
+            		return [false,"Observación: Debe ingresar un texto",""];
+            	} else {
+            		return [true,"",""]
+            	}
             },errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
         },
         {
+        	//template: template,
         	addCaption: "Agregar Incidencia",
             height: 'auto',
             width: 'auto',
@@ -424,7 +400,7 @@ $(document).ready(function(){
 	       buttonicon : "silk-icon-page-excel",
 	       title: "Exportar a Excel", 
 	       onClickButton : function () { 
-	    	   var grid = $("#jqGrid3");
+	    	   var grid = $("#jqGridIncident");
 	           var rowKey = grid.getGridParam("selrow");
 	           var url = 'incident-excel';
 	    	   $("#jqGridIncident").jqGrid('excelExport',{"url":url});
