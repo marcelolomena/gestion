@@ -153,11 +153,27 @@ object IncidentService {
     }
   }
 
-  def selectStatus(uid: String, id: String): Seq[Status] = {
-    var sqlString = ""
-    sqlString = "SELECT a.log_id, a.incident_id, RTRIM(b.status_name) status_name, a.log_date, a.note FROM art_incident_log a, art_incident_status b WHERE a.status_id=b.status_id AND user_creation_id = {uid} AND incident_id = {id}"
+  def selectStatus(id: String): Seq[Status] = {
+    //var sqlString = ""
+    //sqlString = "SELECT a.log_id, a.incident_id, RTRIM(b.status_name) status_name, a.log_date, a.note FROM art_incident_log a, art_incident_status b WHERE a.status_id=b.status_id AND user_creation_id = {uid} AND incident_id = {id}"
+    var sqlString = """    
+    SELECT
+ a.log_id,
+  a.incident_id,
+   RTRIM(b.status_name) status_name,
+    a.log_date,
+   a.note,
+   c.first_name + ' ' + c.last_name user_creation_name
+    FROM 
+    art_incident_log a,
+     art_incident_status b,
+     art_user c
+      WHERE 
+    a.status_id=b.status_id AND a.user_creation_id = c.uid AND incident_id = {id}
+    """
+    
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> uid.toInt, 'id -> id.toInt).as(Status.status *)
+      SQL(sqlString).on('id -> id.toInt).as(Status.status *)
     }
   }
 }

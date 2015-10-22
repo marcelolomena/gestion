@@ -253,7 +253,8 @@ case class Status(
   incident_id: Int,
   status_name: String,
   log_date: Date,
-  note:String)
+  note:String,
+  user_creation_name: String)
 
 object Status {
   val status = {
@@ -261,17 +262,20 @@ object Status {
       get[Int]("incident_id") ~
       get[String]("status_name") ~
       get[Date]("log_date") ~
-      get[String]("note") map {
+      get[String]("note") ~
+      get[String]("user_creation_name") map {
         case log_id ~
           incident_id ~
           status_name ~
           log_date ~ 
-          note => Status(
+          note ~ 
+          user_creation_name => Status(
           log_id,
           incident_id,
           status_name,
           log_date,
-          note)
+          note,
+          user_creation_name)
       }
 
   }

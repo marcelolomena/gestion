@@ -122,9 +122,9 @@ object Incident extends Controller {
     implicit request =>
       request.session.get("username").map { user =>
 
-        val user_creation_id = request.session.get("uId").get
+        //val user_creation_id = request.session.get("uId").get
 
-        val log = IncidentService.selectStatus(user_creation_id, id)
+        val log = IncidentService.selectStatus(id)
 
         Ok(play.api.libs.json.Json.toJson(log)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
