@@ -19,9 +19,7 @@ import anorm.SqlParser._
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String): Seq[Incident] = {
-
     var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json}"
-
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Incident.incident *)
     }
@@ -43,18 +41,26 @@ object IncidentService {
     }
   }
 
-  def update(incident_id: String,
+  def update(severity_id: String,
+             date_end: String,
+             incident_id: String,
              status_id: String,
              user_creation_id: String,
              note: String): Option[ErrorIncident] = {
 
+    //println("severity_id : " + severity_id)
+    //println("date_end : " + date_end)
+    //println("incident_id : " + incident_id)
+
     var sqlString = """
-      EXEC art.update_incident {incident_id},{status_id},
+      EXEC art.update_incident {severity_id},{date_end},{incident_id},{status_id},
       {user_creation_id},{note}
       """
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('incident_id -> incident_id.toInt,
+      SQL(sqlString).on('severity_id -> severity_id.toInt,
+        'date_end -> date_end,
+        'incident_id -> incident_id.toInt,
         'status_id -> status_id.toInt,
         'user_creation_id -> user_creation_id.toInt,
         'note -> note).executeQuery() as (ErrorIncident.error.singleOpt)
@@ -171,7 +177,7 @@ object IncidentService {
       WHERE 
     a.status_id=b.status_id AND a.user_creation_id = c.uid AND incident_id = {id}
     """
-    
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(Status.status *)
     }

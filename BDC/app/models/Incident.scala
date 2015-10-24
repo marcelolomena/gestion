@@ -2,8 +2,9 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import play.api.libs.json.Json
+//import play.api.libs.json.Json
 import java.util.Date
+import play.api.libs.json._
 
 /**
  * @author marcelo
@@ -27,9 +28,11 @@ case class Incident(incident_id: Int,
                     program_name: String,
                     sponsor_name: String,
                     owner_name: String,
-                    status_id:Int,
-                    note:String,
-                    severity_description: String)
+                    note: String,
+                    severity_description: String,
+                    status_id: Int,
+                    status_name: String
+                    )
 
 object Incident {
   val incident = {
@@ -51,9 +54,10 @@ object Incident {
       get[String]("program_name") ~
       get[String]("sponsor_name") ~
       get[String]("owner_name") ~
-      get[Int]("status_id") ~
       get[String]("note") ~ 
-      get[String]("severity_description") map {
+      get[String]("severity_description") ~
+      get[Int]("status_id")  ~
+      get[String]("status_name") map {
         case incident_id ~
           configuration_id ~
           program_id ~
@@ -72,9 +76,10 @@ object Incident {
           program_name ~
           sponsor_name ~
           owner_name ~
-          status_id ~
           note ~
-          severity_description => Incident(incident_id,
+          severity_description ~
+          status_id ~
+          status_name => Incident(incident_id,
           configuration_id,
           program_id,
           date_creation,
@@ -92,13 +97,40 @@ object Incident {
           program_name,
           sponsor_name,
           owner_name,
-          status_id,
           note,
-          severity_description)
+          severity_description,
+          status_id,
+          status_name
+          )
       }
 
   }
-  implicit val incidentWrites = Json.writes[Incident]
+  //implicit val incidentWrites = Json.writes[Incident]
+  implicit val incidentWrites = new Writes[Incident] {
+    def writes(incident: Incident) = Json.obj(
+      "incident_id" -> incident.incident_id.toInt,
+      "configuration_id" -> incident.configuration_id.toInt,
+      "program_id" -> incident.program_id.toInt,
+      "date_creation" -> incident.date_creation.get,
+      "ir_number" -> incident.ir_number.toString(),
+      "user_sponsor_id" -> incident.user_sponsor_id.toInt,
+      "brief_description" -> incident.brief_description.toString(),
+      "extended_description" -> incident.extended_description.toString(),
+      "severity_id" -> incident.severity_id.toInt,
+      "date_end" -> incident.date_end.get,
+      "task_owner_id" -> incident.task_owner_id.toInt,
+      "user_creation_id" -> incident.user_creation_id.toInt,
+      "task_id" -> incident.task_id.toInt,
+      "task_title" -> incident.task_title.toString(),
+      "configuration_name" -> incident.configuration_name.toString(),
+      "program_name" -> incident.program_name.toString(),
+      "sponsor_name" -> incident.sponsor_name.toString(),
+      "owner_name" -> incident.owner_name.toString(),
+      "note" -> incident.note.toString(),
+      "severity_description" -> incident.severity_description.toString(),
+      "status_id" -> incident.status_id.toInt,
+      "status_name" -> incident.status_name.toString() )
+  }  
 }
 
 case class Configuration(

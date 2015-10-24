@@ -23,11 +23,16 @@ import org.apache.poi.xssf.usermodel._
 object Incident extends Controller {
 
   def fromIncidentName(choice: String, value: String): String = choice match {
-    case "brief_description" => " '%" + value + "%' "
-    case "date_creation"     => " '" + value + "' "
-    case "date_end"          => " '" + value + "' "
-    case "ir_number"         => value
-    case _                   => "error"
+    case "status_id"          => " '" + value + "' "
+    case "severity_id"        => " '" + value + "' "
+    case "configuration_name" => " '%" + value + "%' "
+    case "program_name"       => " '%" + value + "%' "
+    case "sponsor_name"       => " '%" + value + "%' "
+    case "brief_description"  => " '%" + value + "%' "
+    case "date_creation"      => " '" + value + "' "
+    case "date_end"           => " '" + value + "' "
+    case "ir_number"          => value
+    case _                    => "error"
   }
 
   def home = Action {
@@ -121,9 +126,6 @@ object Incident extends Controller {
   def listStatus(id: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
-
-        //val user_creation_id = request.session.get("uId").get
-
         val log = IncidentService.selectStatus(id)
 
         Ok(play.api.libs.json.Json.toJson(log)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
@@ -140,7 +142,7 @@ object Incident extends Controller {
         val body: AnyContent = request.body
         val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
         var incident: Option[ErrorIncident] = null
-        //println(jsonBody)
+
         jsonBody.map { jsValue =>
 
           val incident_id = (jsValue \ "id")
@@ -157,7 +159,7 @@ object Incident extends Controller {
           val user_creation_id = request.session.get("uId").get
           val status_id = (jsValue \ "status_id")
           val note = (jsValue \ "note")
-
+          /*
           println("incident_id : " + incident_id)
           println("configuration_id : " + configuration_id)
           println("program_id : " + program_id)
@@ -172,30 +174,15 @@ object Incident extends Controller {
           println("user_creation_id : " + user_creation_id)
           println("status_id : " + status_id)
           println("note : " + note)
-
+*/
           incident = IncidentService.update(
+            severity_id.toString().replace("\"", ""),
+            date_end.toString().replace("\"", ""),
             incident_id.toString().replace("\"", ""),
             status_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""),
             note.toString().replace("\"", ""))
 
-          /*
-          incident = IncidentService.save(
-            configuration_id.toString().replace("\"", ""),
-            program_id.toString().replace("\"", ""),
-            date_creation.toString().replace("\"", ""),
-            ir_number.toString().replace("\"", ""),
-            user_sponsor_id.toString().replace("\"", ""),
-            brief_description.toString().replace("\"", ""),
-            extended_description.toString().replace("\"", ""),
-            severity_id.toString().replace("\"", ""),
-            date_end.toString().replace("\"", ""),
-            task_owner_id.toString().replace("\"", ""),
-            user_creation_id.toString().replace("\"", ""))
-
-          println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
-         
-          */
         }
 
         /**
@@ -246,14 +233,25 @@ object Incident extends Controller {
                 val elements = (json \\ "rules").children
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
-                  qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  if (m.field.equals("owner_name")) {
+                    qrystr += "task_owner_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("sponsor_name")) {
+                    qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("severity_description")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("severity_id", m.data) + " AND "
+                  } else if (m.field.equals("status_name")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                  } else {
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
                 }
 
               }
             }
 
             if (tieneJson) {
-
               records = IncidentService.count(qrystr)
               panel = IncidentService.list(rows, page, qrystr)
 
@@ -290,6 +288,8 @@ object Incident extends Controller {
           campo.put("program_name", p.program_name)
           campo.put("sponsor_name", p.sponsor_name)
           campo.put("owner_name", p.owner_name)
+          campo.put("severity_description", p.severity_description)
+          campo.put("status_name", p.status_name)
 
           registro.put(campo)
         }
@@ -404,16 +404,12 @@ object Incident extends Controller {
 
   def getConfigurationProgramType(id: String) = Action { implicit request =>
     var tipo: Int = IncidentService.selectTypeFromId(id)
-    // tipo = IncidentService.selectTypeFromId(id)
-
     Ok(tipo.toString())
 
   }
 
   def getSeverityDays(id: String) = Action { implicit request =>
     var days: Int = IncidentService.selectSeverityDays(id)
-    // tipo = IncidentService.selectTypeFromId(id)
-
     Ok(days.toString())
 
   }
@@ -453,7 +449,8 @@ object Incident extends Controller {
                 val elements = (json \\ "rules").children
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
-                  qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  if (m.field.equals())
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
                 }
 
               }
