@@ -1,6 +1,6 @@
 window.alert = function(message){
     $(document.createElement('div'))
-        .attr({title: 'Alert', 'class': 'alert'})
+        .attr({title: 'Alerta', 'class': 'alert'})
         .html(message)
         .dialog({
             buttons: {OK: function(){$(this).dialog('close');}},
@@ -8,6 +8,10 @@ window.alert = function(message){
             draggable: true,
             modal: true,
             resizable: false,
-            width: 'auto'
+            width: 'auto',
+            open: function (event, ui) {
+            	 $('.ui-dialog').css('z-index',103);
+            	 $('.ui-widget-overlay').css('z-index',102);
+            	},
         });
 };

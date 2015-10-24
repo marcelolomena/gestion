@@ -1,19 +1,23 @@
 $(document).ready(function(){
-	/*
-	var template = "<div class='contenedor'>";
-	template += "<div id='incidencia'> Tipo de incidencia </div><div id='confId'> {configuration_id} </div>";
-	template += "<div id='sistema1'> Sistema: </div><div id='program'>{program_id} </div>";
-	template += "<div id='fecha'> Fecha Creación: </div><div id='dateCre'>{date_creation} </div>";
-	template += "<div id='numeroIR'> Número IR',: </div><div id='irNumb'>{ir_number} </div>";
-	template += "<div id='usuario'> Usuario:</div><div id='userSponsor'> {user_sponsor_id} </div>";
-	template += "<div id='descCorta'> Descripción Corta:</div><div id='briefDesc'> {brief_description} </div>";
-	template += "<div id='descExte'> Descripción Extensa:</div><div id='extDesc'> {extended_description} </div>";
-	template += "<div id='prioridad'> Prioridad:</div><div id='severityId'> {severity_id} </div>";
-	template += "<div id='fechaTerm'> Fecha Término:</div><div id='dateEnd'> {date_end} </div>";
-	template += "<div id='responsable'> Responsable:</div><div id='taskOwner'> {task_owner_id} </div>";
+
+	var template = "<div class='tablewrapper'><div class'tabla'";
+	template += "<div class='fila'>";
+	template += "<div class='columna'>Tipo de incidencia</div><div class='columna'>{configuration_id}</div>";
+	template += "<div class='columna'>Sistema</div><div class='columna'>{program_id} </div>";
+	template += "</div>";
+	template += "<div class='fila'>";
+	template += "<div class='columna'>Usuario </div><div class='columna'>{user_sponsor_id}</div>";
+	template += "<div class='columna'>Responsable </div><div class='columna'>{task_owner_id}</div>";
+	template += "</div>";
+	//template += "<div class='col'> Prioridad</div><div class='col'> {severity_id} </div>";
+	//template += "<div class='col'> Descripción Corta</div><div class='col'> {brief_description} </div>";
+	//template += "<div class='col'> Descripción Extensa</div><div class='col'> {extended_description} </div>";
+	//template += "<div class='col'> Prioridad</div><div class='col'> {severity_id} </div>";
+	//template += "<div class='col'> Fecha Término</div><div class='col'> {date_end} </div>";
+	//template += "<div class='col'> Responsable</div><div class='col'> {task_owner_id} </div>";
 	template += "<hr style='width:100%;'/>";
-	template += "<div> {sData} {cData}  </div></div>";
-	*/
+	template += "<div> {sData} {cData}  </div></div></div>";
+
 	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
@@ -95,9 +99,11 @@ $(document).ready(function(){
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 
 	var modelIncident=[
-	              { label: 'Tarea', name: 'task_title', width: 200,editable: false,formatter: returnTaskLink, search:false },
+	              { label: 'Tarea', name: 'task_title', width: 200,editable: false
+	            	  ,formatter: returnTaskLink, search:false },
 	              { label: 'incident_id', name: 'incident_id', key: true, hidden:true },
-	              { label: 'Tipo de incidencia', width: 300, name: 'configuration_name', editable: true, hidden: true, editrules: {edithidden: true} },
+	              { label: 'Tipo de incidencia', width: 200, name: 'configuration_name', editable: true,
+	            	  hidden: false, editrules: {edithidden: true},editoptions: {dataInit: function(elem) {$(elem).width(165);}} },
 	              { label: 'Tipo de incidencia', name: 'configuration_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
 	            	  editoptions: {dataUrl: '/incident_configuration',
@@ -115,11 +121,13 @@ $(document).ready(function(){
 	            	  								}
 	            	  							 }
 	            	               ],dataInit: function(elem) {
-	            	                   $(elem).width(200);  
+	            	                   $(elem).width(180);  
 	            	               }
 	            	  }
 	              },
-	              { label: 'Sistema', name: 'program_name', width: 400, editable: true, hidden: true, editrules: {edithidden: true} },
+	              { label: 'Sistema', name: 'program_name', width: 300,
+	            	  editable: true, hidden: false,editoptions: {dataInit: function(elem) {$(elem).width(165);}},
+	            	  editrules: {edithidden: true} },
 	              { label: 'Sistema', name: 'program_id',
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
 	            	  editoptions: {dataUrl: '/incident_program_default',
@@ -138,10 +146,32 @@ $(document).ready(function(){
 									}
 	            		  			}
 	            		  		],dataInit: function(elem) {
-	            	                   $(elem).width(200);  
+	            	                   $(elem).width(180);  
 	            	               }
 	            		  }
 	              },
+	              { label: 'Usuario', width: 150, name: 'sponsor_name',
+	            	  editoptions: {dataInit: function(elem) {$(elem).width(165);}},
+	            	  editable: true, hidden: false, editrules: {edithidden: true} },
+	              { label: 'Usuario', name: 'user_sponsor_id',
+	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
+	            	  editoptions: {dataUrl: '/incident_program_default',dataInit: function(elem) {
+   	                   $(elem).width(180);  
+   	               }}
+	              },	    
+	              { label: 'Responsable', name: 'owner_name', width: 150,
+	            	  editoptions: {dataInit: function(elem) {$(elem).width(165);}},
+	            	  editable: true, hidden: false, editrules: {edithidden: true} },
+	              { label: 'Responsable', name: 'task_owner_id', 
+	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
+	            	  editoptions: {dataUrl: '/incident_program_default',dataInit: function(elem) {
+   	                   $(elem).width(180);  
+   	               }}
+	              },
+	              { label: 'Prioridad', name: 'severity_description', width: 150,
+	            	  editable: false, hidden: false, editrules: {edithidden: true},
+	            	  stype: 'select',searchoptions: {dataUrl: '/incidentSeverityList'},
+	              },              
 	              { label: 'Prioridad', name: 'severity_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
 	            	  editoptions: {dataUrl: '/incidentSeverityList',
@@ -164,7 +194,7 @@ $(document).ready(function(){
 									}
 	            		  			}
 	            		  		],dataInit: function(elem) {
-	            	                   $(elem).width(200);  
+	            	                   $(elem).width(180);  
 	            	               }
 	            		  }
 	              },	              
@@ -222,32 +252,21 @@ $(document).ready(function(){
 	            	  editoptions: {size: 10, maxlengh: 10},
 	            	  searchoptions: {sopt:["gt","lt","eq"] }
 	              },
-	              { label: 'Usuario', width: 200, name: 'sponsor_name', editable: true, hidden: true, editrules: {edithidden: true} },
-	              { label: 'Usuario', name: 'user_sponsor_id', 
-	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
-	            	  editoptions: {dataUrl: '/incident_program_default',dataInit: function(elem) {
-   	                   $(elem).width(200);  
-   	               }}
-	              },	              
-	              { label: 'Descripción Corta', name: 'brief_description', editable: true,editrules:{required:true} },
+	              { label: 'Descripción Corta', name: 'brief_description', editable: true,editrules:{required:true},edittype: "textarea", editoptions: { rows: "2", cols: "25"} },
 	              { label: 'Descripción Extensa', name: 'extended_description', editable: true,hidden: true, editrules: {edithidden: true},edittype: "textarea", editoptions: { rows: "5", cols: "25"} },
-	              { label: 'Responsable', width: 200, name: 'owner_name', editable: true, hidden: true, editrules: {edithidden: true} },
-	              { label: 'Responsable', name: 'task_owner_id', 
-	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
-	            	  editoptions: {dataUrl: '/incident_program_default',dataInit: function(elem) {
-   	                   $(elem).width(200);  
-   	               }}
-	              },	
 	              { label: 'user_creation_id', name: 'user_creation_id', hidden:true }, 
 	              { label: 'task_id', name: 'task_id', hidden:true },
+	              { label: 'Estado', name: 'status_name', width: 150,
+	            	  editable: false, hidden: false, editrules: {edithidden: true},
+	            	  stype: 'select',searchoptions: {dataUrl: '/incidentStatusList'},
+	              },	              
 	              { label: 'Estado', name: 'status_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
 	            	  editoptions: {dataUrl: '/incidentStatusList',dataInit: function(elem) {
-   	                   $(elem).width(200);  
+   	                   $(elem).width(180);  
    	               }}
 	              },
 	              { label: 'Observación', name: 'note', editable: true,hidden: true, editrules: {edithidden: true},edittype: "textarea", editoptions: { rows: "5", cols: "25"} },
-
 	          ];	
 	
 	$("#jqGridIncident").jqGrid({
@@ -260,13 +279,17 @@ $(document).ready(function(){
         regional : 'es',
         height: 'auto',
         autowidth:true, 
-        //shrinkToFit: false,
+        shrinkToFit: false,
+        forceFit:true,
         subGrid: true, 
         subGridRowExpanded: showGridStatus,
         caption:'Lista de Incidentes',
         pager: "#jqGridIncidentPager",
         loadComplete: findWithColor,
-        editurl:"/incidentSave"
+        editurl:"/incidentSave",
+        viewrecords: true,
+        rowList: [5, 10, 20, 50],
+        gridview: true,
     });	
 	$("#jqGridIncident").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 	$("#jqGridIncident").jqGrid('navGrid','#jqGridIncidentPager',{edit: true, add: true, del: true,search: false, position: "left", cloneToTop: false },
@@ -280,32 +303,32 @@ $(document).ready(function(){
             closeAfterEdit: true,
             ajaxEditOptions: jsonOptions,
             serializeEditData: createJSON,
-            beforeShowForm: function($form) {
-            	var form=$form;
+            beforeInitData : function(formid) {
+
+            },
+            beforeShowForm: function(form) {
+            	//var form=$form;
             	$('#tr_configuration_id', form).hide();
             	$('#tr_program_id',form).hide();
             	$('#tr_user_sponsor_id',form).hide();
-            	$('#tr_severity_id',form).hide();
             	$('#tr_task_owner_id',form).hide();
 
             	$('input#configuration_name',form).attr('readonly','readonly');
             	$('input#program_name',form).attr('readonly','readonly');
             	$('input#sponsor_name',form).attr('readonly','readonly');
             	$('input#owner_name',form).attr('readonly','readonly');
-            	$('input#brief_description',form).attr('readonly','readonly');
+            	$('textarea#brief_description',form).attr('readonly','readonly');
             	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');
             	$('input#ir_number',form).attr('readonly','readonly');
             	
-            	/*
-            	$form.find(".FormElement[readonly]")
-                .prop("disabled", true)
-                .addClass("ui-state-disabled")
-                .closest(".DataTD")
-                .prev(".CaptionTD")
-                .prop("disabled", true)
-                .addClass("ui-state-disabled")
-                */
+            	$('input#date_creation',form).datepicker( "destroy" );
+            	
+            	$('<tr class="FormData"><td class="CaptionTD ui-widget-content" colspan="2">' +
+            	           '<div style="padding:3px" class="ui-widget-header ui-corner-all">' +
+            	           '<b>Ingreso de Estado</b></div></td></tr>')
+            	           .insertBefore('#tr_status_id');
+
                
             },afterShowForm: function($form) {
                 $form.closest(".ui-jqdialog").closest(".ui-jqdialog").position({
@@ -364,12 +387,14 @@ $(document).ready(function(){
             	} if( postdata.task_owner_id == 0) {
             		return [false,"Responsable: Debe escoger un valor",""];
             	} if( ValidateCodIR(postdata.ir_number) == 0) {
-            		return [false,"Número IR: Ya existe",""];
+            		//return [false,"Número IR: Ya existe",""];
+            		alert('El número IR : ' + postdata.ir_number + ' ya existe en el sistema. Se creo un nuevo incidente con este mismo código IR');
+            		return [true,"",""]
             	} else {
             		return [true,"",""]
             	}
-            },beforeShowForm: function($form) {
-            	var form=$form;
+            },beforeShowForm: function(form) {
+            	//var form=$form;
             	$('#tr_configuration_name', form).hide();
             	$('#tr_program_name',form).hide();
             	$('#tr_sponsor_name',form).hide();
@@ -406,4 +431,5 @@ $(document).ready(function(){
 	    	   $("#jqGridIncident").jqGrid('excelExport',{"url":url});
 	       } 
 	});
+
 });
