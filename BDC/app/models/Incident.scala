@@ -28,7 +28,8 @@ case class Incident(incident_id: Int,
                     sponsor_name: String,
                     owner_name: String,
                     status_id:Int,
-                    note:String)
+                    note:String,
+                    severity_description: String)
 
 object Incident {
   val incident = {
@@ -51,7 +52,8 @@ object Incident {
       get[String]("sponsor_name") ~
       get[String]("owner_name") ~
       get[Int]("status_id") ~
-      get[String]("note") map {
+      get[String]("note") ~ 
+      get[String]("severity_description") map {
         case incident_id ~
           configuration_id ~
           program_id ~
@@ -71,7 +73,8 @@ object Incident {
           sponsor_name ~
           owner_name ~
           status_id ~
-          note => Incident(incident_id,
+          note ~
+          severity_description => Incident(incident_id,
           configuration_id,
           program_id,
           date_creation,
@@ -90,7 +93,8 @@ object Incident {
           sponsor_name,
           owner_name,
           status_id,
-          note)
+          note,
+          severity_description)
       }
 
   }
