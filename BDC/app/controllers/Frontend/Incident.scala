@@ -55,6 +55,56 @@ object Incident extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
+  
+  def saveHours = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var incident: Option[ErrorIncident] = null
+
+        jsonBody.map { jsValue =>
+
+          val ingresadas = (jsValue \ "ingresadas")
+          val sub_task_id = (jsValue \ "sub_task_id")
+          val task_id = (jsValue \ "task_id")
+          val uid = (jsValue \ "uid")
+          val user_creation_id = request.session.get("uId").get
+
+
+          println("ingresadas : " + ingresadas)
+          println("sub_task_id : " + sub_task_id)
+          println("task_id : " + task_id)
+          println("uid : " + uid)
+          println("user_creation_id : " + user_creation_id)
+
+
+          incident = IncidentService.saveHours(
+            ingresadas.toString().replace("\"", ""),
+            sub_task_id.toString().replace("\"", ""),
+            task_id.toString().replace("\"", ""),
+            uid.toString().replace("\"", ""),
+            user_creation_id.toString().replace("\"", ""))
+
+          println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+
+
+        }
+
+        /**
+         * Activity log
+         */
+
+        val act = Activity(ActivityTypes.Project.id, "Booked by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
+        Activity.saveLog(act)
+
+        Ok(play.api.libs.json.Json.toJson("OK")).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }  
 
   def save = Action {
     implicit request =>
@@ -129,6 +179,30 @@ object Incident extends Controller {
         val log = IncidentService.selectStatus(id)
 
         Ok(play.api.libs.json.Json.toJson(log)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
+  def listWorker(id: String) = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        val hours = IncidentService.selectWorkerHours(id)
+
+        Ok(play.api.libs.json.Json.toJson(hours)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
+  def listSubTask(id: String) = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        val subtask = IncidentService.selectSubtask(id)
+
+        Ok(play.api.libs.json.Json.toJson(subtask)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
@@ -367,7 +441,6 @@ object Incident extends Controller {
       s += "<option value='" + i.program_id.get + "'>" + i.program_name + "</option>"
     }
     s += "</select>"
-    //println(s)
     Ok(s)
 
   }
@@ -382,7 +455,6 @@ object Incident extends Controller {
     }
 
     s += "</select>"
-    //println(s)
     Ok(s)
 
   }
@@ -397,7 +469,7 @@ object Incident extends Controller {
     }
 
     s += "</select>"
-    //println(s)
+
     Ok(s)
 
   }
