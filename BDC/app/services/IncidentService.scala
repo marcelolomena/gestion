@@ -10,6 +10,8 @@ import models.Severity
 import models.ComboStatus
 import models.ErrorIncident
 import models.Status
+import models.SubTasks
+import models.Hours
 import anorm._
 import anorm.SqlParser._
 
@@ -101,6 +103,30 @@ object IncidentService {
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
+  
+  
+  def saveHours(ingresadas: String,
+           sub_task_id: String,
+           task_id: String,
+           uid: String,
+           user_creation_id: String): Option[ErrorIncident] = {
+
+    var sqlString = """
+      EXEC art.save_incident_hours {ingresadas},{sub_task_id},
+      {task_id},{uid},{user_creation_id}
+      """
+
+    //println(sqlString)
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('ingresadas -> ingresadas.toInt,
+        'sub_task_id -> sub_task_id.toInt,
+        'task_id -> task_id.toInt,
+        'uid -> uid.toInt,
+        'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
+    }
+  }
+  
 
   def count(Json: String): Int = {
 
@@ -159,9 +185,15 @@ object IncidentService {
     }
   }
 
+  def selectSubtask(id: String): Seq[SubTasks] = {
+    var sqlString = ""
+    sqlString = "SELECT * FROM art_sub_task WHERE task_id = {id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt).as(SubTasks.subTask *)
+    }
+  }
+
   def selectStatus(id: String): Seq[Status] = {
-    //var sqlString = ""
-    //sqlString = "SELECT a.log_id, a.incident_id, RTRIM(b.status_name) status_name, a.log_date, a.note FROM art_incident_log a, art_incident_status b WHERE a.status_id=b.status_id AND user_creation_id = {uid} AND incident_id = {id}"
     var sqlString = """    
     SELECT
  a.log_id,
@@ -182,4 +214,31 @@ object IncidentService {
       SQL(sqlString).on('id -> id.toInt).as(Status.status *)
     }
   }
+  
+  def selectWorkerHours(id: String): Seq[Hours] = {
+    var sqlString = """    
+      SELECT
+      a.task_id,
+      a.sub_task_id,
+      c.uid,
+      c.first_name + ' ' + c.last_name nombre,
+      a.estimated_time planeadas,
+      ISNULL(b.trabajadas,0) trabajadas,
+      0 ingresadas
+      FROM art_sub_task_allocation a
+      LEFT OUTER JOIN 
+      (SELECT sub_task_id,SUM(hours) trabajadas FROM art_timesheet WHERE is_deleted=1 GROUP BY sub_task_id) b
+      ON a.sub_task_id=b.sub_task_id
+      JOIN art_user c
+      ON a.user_id=c.uid
+      WHERE
+      a.is_deleted  = 1 AND
+       a.sub_task_id={id}
+    """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt).as(Hours.hours *)
+    }
+  }  
+  
 }
