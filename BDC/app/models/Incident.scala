@@ -317,3 +317,41 @@ object Status {
   }
   implicit val statusWrites = Json.writes[Status]
 }
+
+case class Hours(
+  task_id: Int,
+  sub_task_id: Int,
+  uid: Int,
+  nombre: String,
+  planeadas:Double,
+  trabajadas: Double,
+  ingresadas: Double)
+
+object Hours {
+  val hours = {
+    get[Int]("task_id") ~
+      get[Int]("sub_task_id") ~
+      get[Int]("uid") ~
+      get[String]("nombre") ~
+      get[Double]("planeadas") ~
+      get[Double]("trabajadas") ~
+      get[Double]("ingresadas") map {
+        case task_id ~
+          sub_task_id ~
+          uid ~
+          nombre ~ 
+          planeadas ~ 
+          trabajadas ~
+          ingresadas => Hours(
+          task_id,
+          sub_task_id,
+          uid,
+          nombre,
+          planeadas,
+          trabajadas,
+          ingresadas)
+      }
+
+  }
+  implicit val hoursWrites = Json.writes[Hours]
+}
