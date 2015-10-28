@@ -66,13 +66,14 @@ object Incident extends Controller {
 
         jsonBody.map { jsValue =>
 
+          val nota = (jsValue \ "nota")
           val ingresadas = (jsValue \ "ingresadas")
           val sub_task_id = (jsValue \ "sub_task_id")
           val task_id = (jsValue \ "task_id")
           val uid = (jsValue \ "uid")
           val user_creation_id = request.session.get("uId").get
 
-
+          println("nota : " + nota)
           println("ingresadas : " + ingresadas)
           println("sub_task_id : " + sub_task_id)
           println("task_id : " + task_id)
@@ -81,6 +82,7 @@ object Incident extends Controller {
 
 
           incident = IncidentService.saveHours(
+            nota.toString().replace("\"", ""),
             ingresadas.toString().replace("\"", ""),
             sub_task_id.toString().replace("\"", ""),
             task_id.toString().replace("\"", ""),

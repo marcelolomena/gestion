@@ -50,10 +50,6 @@ object IncidentService {
              user_creation_id: String,
              note: String): Option[ErrorIncident] = {
 
-    //println("severity_id : " + severity_id)
-    //println("date_end : " + date_end)
-    //println("incident_id : " + incident_id)
-
     var sqlString = """
       EXEC art.update_incident {severity_id},{date_end},{incident_id},{status_id},
       {user_creation_id},{note}
@@ -87,8 +83,6 @@ object IncidentService {
       {extended_description},{severity_id},{date_end},{task_owner_id},{user_creation_id}
       """
 
-    //println(sqlString)
-
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('configuration_id -> configuration_id.toInt,
         'program_id -> program_id.toInt,
@@ -103,28 +97,28 @@ object IncidentService {
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
-  
-  
-  def saveHours(ingresadas: String,
-           sub_task_id: String,
-           task_id: String,
-           uid: String,
-           user_creation_id: String): Option[ErrorIncident] = {
+
+  def saveHours(nota:String,
+                ingresadas: String,
+                sub_task_id: String,
+                task_id: String,
+                uid: String,
+                user_creation_id: String): Option[ErrorIncident] = {
 
     var sqlString = """
-      EXEC art.save_incident_hours {ingresadas},{sub_task_id},
+      EXEC art.save_incident_hours {nota},{ingresadas},{sub_task_id},
       {task_id},{uid},{user_creation_id}
       """
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('ingresadas -> ingresadas.toInt,
+      SQL(sqlString).on('nota -> nota,
+        'ingresadas -> ingresadas.toInt,
         'sub_task_id -> sub_task_id.toInt,
         'task_id -> task_id.toInt,
         'uid -> uid.toInt,
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
-  
 
   def count(Json: String): Int = {
 
@@ -168,8 +162,12 @@ object IncidentService {
   }
 
   def selectProgramForType(id: String): Seq[ProgramCombo] = {
-    var sqlString = ""
-    sqlString = "SELECT a.program_id,RTRIM(a.program_name) program_name from art_program a, art_incident_configuration b WHERE a.program_type=b.configuration_program_type AND b.configuration_program_type={id} AND a.is_active=1"
+    var sqlString = """
+    SELECT a.program_id,RTRIM(a.program_name) program_name from art_program a,
+     art_incident_configuration b WHERE
+      a.program_type=b.configuration_program_type AND
+       b.configuration_program_type={id} AND a.is_active=1
+       """
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(ProgramCombo.pCombo *)
     }
@@ -212,7 +210,7 @@ object IncidentService {
       SQL(sqlString).on('id -> id.toInt).as(Status.status *)
     }
   }
-  
+
   def selectWorkerHours(id: String): Seq[Hours] = {
     var sqlString = """    
       SELECT
@@ -222,7 +220,8 @@ object IncidentService {
       c.first_name + ' ' + c.last_name nombre,
       a.estimated_time planeadas,
       ISNULL(b.trabajadas,0) trabajadas,
-      0 ingresadas
+      0 ingresadas,
+      '' nota
       FROM art_sub_task_allocation a
       LEFT OUTER JOIN 
       (SELECT sub_task_id,SUM(hours) trabajadas FROM art_timesheet WHERE is_deleted=1 GROUP BY sub_task_id) b
@@ -237,6 +236,6 @@ object IncidentService {
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(Hours.hours *)
     }
-  }  
-  
+  }
+
 }

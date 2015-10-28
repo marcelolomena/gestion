@@ -325,7 +325,8 @@ case class Hours(
   nombre: String,
   planeadas:Double,
   trabajadas: Double,
-  ingresadas: Double)
+  ingresadas: Double,
+  nota:String)
 
 object Hours {
   val hours = {
@@ -335,21 +336,24 @@ object Hours {
       get[String]("nombre") ~
       get[Double]("planeadas") ~
       get[Double]("trabajadas") ~
-      get[Double]("ingresadas") map {
+      get[Double]("ingresadas") ~
+      get[String]("nota")map {
         case task_id ~
           sub_task_id ~
           uid ~
           nombre ~ 
           planeadas ~ 
           trabajadas ~
-          ingresadas => Hours(
+          ingresadas ~
+          nota => Hours(
           task_id,
           sub_task_id,
           uid,
           nombre,
           planeadas,
           trabajadas,
-          ingresadas)
+          ingresadas,
+          nota)
       }
 
   }
