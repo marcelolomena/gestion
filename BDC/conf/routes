@@ -582,3 +582,6 @@ GET	   /incidentStatusList																			  controllers.Frontend.Incident.sta
 POST   /incidentUpdate																				  controllers.Frontend.Incident.update
 GET	   /listStatus/$id<[A-Za-z0-9_-]+>											  	          		  controllers.Frontend.Incident.listStatus(id:String)
 GET    /incident-excel 			                                                                      controllers.Frontend.Incident.excel
+GET	   /incidentSubTask/$id<[A-Za-z0-9_-]+>											  	       		  controllers.Frontend.Incident.listSubTask(id:String)
+GET	   /listWorker/$id<[A-Za-z0-9_-]+>											  	       		  	  controllers.Frontend.Incident.listWorker(id:String)
+POST   /incidentSaveHours																			  controllers.Frontend.Incident.saveHours
