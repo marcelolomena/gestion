@@ -116,8 +116,6 @@ object IncidentService {
       {task_id},{uid},{user_creation_id}
       """
 
-    //println(sqlString)
-
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('ingresadas -> ingresadas.toInt,
         'sub_task_id -> sub_task_id.toInt,
