@@ -331,7 +331,7 @@ $(document).ready(function(){
 	              },	              
 	              { label: 'Número IR', name: 'ir_number', width: 100,editable: true,
 	            	  editrules:{required:true},
-	            	  editoptions: {size: 10, maxlengh: 10},// dataInit: function (domElem) {$(domElem).addClass("ui-state-highlight"); }},
+	            	  editoptions: {size: 10, maxlengh: 10},
 	            	  searchoptions: {sopt:["gt","lt","eq"] },
 	            	  formoptions: {rowpos:5,colpos:1}
 	              },
@@ -550,7 +550,7 @@ $(document).ready(function(){
 		                datatype: "json",
 		                mtype: "GET",
 		                autowidth:true,
-		                colNames: ["sub_task_id","Tarea", "Inicio", "Término", "% Avance"],
+		                colNames: ["sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado", "% Avance"],
 		                colModel: [
 		                   { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
 		                   { name: "task", width: 200, editable:false },
