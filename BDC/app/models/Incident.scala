@@ -359,3 +359,51 @@ object Hours {
   }
   implicit val hoursWrites = Json.writes[Hours]
 }
+
+case class IncidentSubTask(
+  sub_task_id: Int,
+  title: String,
+  plan_start_date: Date,
+  plan_end_date: Date,
+  real_start_date:Option[Date],
+  real_end_date: Option[Date],
+  completion_percentage: Double,
+  hours:Double,
+  expected_percentage: Double)
+
+object IncidentSubTask {
+  val incidentsubtask = {
+    get[Int]("sub_task_id") ~
+      get[String]("title") ~
+      get[Date]("plan_start_date") ~
+      get[Date]("plan_end_date") ~
+      get[Option[Date]]("real_start_date") ~
+      get[Option[Date]]("real_end_date") ~
+      get[Double]("completion_percentage") ~
+      get[Double]("hours") ~
+      get[Double]("expected_percentage") map {
+        case sub_task_id ~
+          title ~
+          plan_start_date ~
+          plan_end_date ~
+          real_start_date ~ 
+          real_end_date ~ 
+          completion_percentage ~
+          hours ~
+          expected_percentage => IncidentSubTask(
+          sub_task_id,
+          title,
+          plan_start_date,
+          plan_end_date,
+          real_start_date,
+          real_end_date,
+          completion_percentage,
+          hours,
+          expected_percentage)
+      }
+
+  }
+  implicit val hoursWrites = Json.writes[IncidentSubTask]
+}
+
+
