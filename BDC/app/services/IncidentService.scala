@@ -12,6 +12,7 @@ import models.ErrorIncident
 import models.Status
 import models.SubTasks
 import models.Hours
+import models.IncidentSubTask
 import anorm._
 import anorm.SqlParser._
 
@@ -98,7 +99,7 @@ object IncidentService {
     }
   }
 
-  def saveHours(nota:String,
+  def saveHours(task_for_date:String,nota:String,
                 ingresadas: String,
                 sub_task_id: String,
                 task_id: String,
@@ -106,12 +107,14 @@ object IncidentService {
                 user_creation_id: String): Option[ErrorIncident] = {
 
     var sqlString = """
-      EXEC art.save_incident_hours {nota},{ingresadas},{sub_task_id},
+      EXEC art.save_incident_hours {task_for_date},{nota},{ingresadas},{sub_task_id},
       {task_id},{uid},{user_creation_id}
       """
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('nota -> nota,
+      SQL(sqlString).on(
+        'task_for_date -> task_for_date,
+        'nota -> nota,
         'ingresadas -> ingresadas.toInt,
         'sub_task_id -> sub_task_id.toInt,
         'task_id -> task_id.toInt,
@@ -181,11 +184,38 @@ object IncidentService {
     }
   }
 
-  def selectSubtask(id: String): Seq[SubTasks] = {
-    var sqlString = ""
-    sqlString = "SELECT * FROM art_sub_task WHERE task_id = {id}"
+  def selectSubtask(id: String): Seq[IncidentSubTask] = {
+    var sqlString = """
+    SELECT
+        X.sub_task_id,
+        X.title,
+        X.plan_start_date,
+        X.plan_end_date,
+        Y.real_start_date,
+        Y.real_end_date,
+        X.completion_percentage,
+        ISNULL(Y.hours,0) hours,
+    CASE WHEN DATEDIFF (day, X.plan_start_date, GETDATE()) < 0 THEN 0 
+           WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) > 0 THEN 100 
+           WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) <= 0 AND DATEDIFF (day, X.plan_start_date, GETDATE()) >= 0 THEN IIF(DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date)) > 0, 
+           ROUND(100 * CAST(DATEDIFF (day, X.plan_start_date, GETDATE()) AS FLOAT)/DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date) ),2) , 0)
+        END
+        expected_percentage
+         FROM art_sub_task X 
+        LEFT OUTER JOIN
+        (
+         SELECT SUM(hours) hours,
+         MIN(task_for_date) real_start_date,
+          MAX(task_for_date) real_end_date, 
+          sub_task_id FROM art_timesheet
+           GROUP BY sub_task_id
+        ) Y
+        ON X.sub_task_id=Y.sub_task_id
+        WHERE task_id = {id}
+      """
+    //sqlString = "SELECT * FROM art_sub_task WHERE task_id = {id}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('id -> id.toInt).as(SubTasks.subTask *)
+      SQL(sqlString).on('id -> id.toInt).as(IncidentSubTask.incidentsubtask *)
     }
   }
 
@@ -220,6 +250,7 @@ object IncidentService {
       c.first_name + ' ' + c.last_name nombre,
       a.estimated_time planeadas,
       ISNULL(b.trabajadas,0) trabajadas,
+      GETDATE() task_for_date,
       0 ingresadas,
       '' nota
       FROM art_sub_task_allocation a
