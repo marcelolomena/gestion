@@ -13,13 +13,6 @@ $(document).ready(function(){
 		    $("#jqGridSubTask").setGridHeight($(this).height()-54);
 		}
 	});
-
-	function validatePositive(value, column) {
-        if (value < 0)
-            return [false, "Please enter a positive value"];
-        else
-            return [true, ""];
-    } 
 	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
@@ -70,22 +63,34 @@ $(document).ready(function(){
 	                   { label: 'task_id', name: 'task_id', key: true, hidden:true },                   
 	                   { label: 'sub_task_id', name: 'sub_task_id', hidden:true},
 	                   { label: 'uid', name: 'uid', hidden:true },
-	                   { label: 'nombre', name: 'nombre', width: 150,editable:false },
-	                   { label: 'planeadas', name: 'planeadas', width: 50,editable:false },
-	                   { label: 'trabajadas', name: 'trabajadas', width: 50,editable:false },
-	                   { label: 'ingresadas', name: 'ingresadas', width: 50,editable: true, edittype:"text", editrules:{custom_func: validatePositive,custom: true,required: true} }
+	                   { label: 'Nombre', name: 'nombre', width: 100,editable:false },
+	                   { label: 'Asignadas', name: 'planeadas', width: 50,editable:false },
+	                   { label: 'Trabajadas', name: 'trabajadas', width: 50,editable:false },
+	                   { label: 'Fecha', name: 'task_for_date',width: 50,editable: true,editrules:{required:true},
+	 	            	  editoptions: {
+	 	            	      size: 10, maxlengh: 10,
+	 	            	      dataInit: function(element) {
+	 	            	        $(element).datepicker({dateFormat: 'yy-mm-dd', maxDate: 0})
+	 	            	      }
+	 	            	    },formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+	                   },
+	                   { label: 'Ingresadas', name: 'ingresadas', width: 50,editable: true, edittype:"text", editrules:{number: true, required: true} },
+	                   { label: 'Nota', name: 'nota', width: 50,editable: true, edittype:"text", 
+	                	   editrules:{required: true}, classes: "textInDiv" 
+	                   }
 	        ],
 			height: 'auto',
 	        autowidth:true,
+	        //shrinkToFit:false,
 	        regional : "es",
 	        rowList: [],        
 			pgbuttons: false,     
 			pgtext: null,        
 			viewrecords: false,
 			loadonce : true,
+			height: '100%',
 	        pager: "#" + childGridPagerID,
 	        onSelectRow: function (id) {
-	        	
 	        	if (id && id !== lastSelection) {
                     var subgrid = $("#" + childGridID);
 	        		subgrid.jqGrid('restoreRow',lastSelection);
@@ -94,7 +99,6 @@ $(document).ready(function(){
                 }        	
 	        },ajaxRowOptions: { contentType: "application/json" },
 	        serializeRowData: function (data) { return JSON.stringify(data); }
-	        
 	    });
 		
 	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});	
@@ -550,13 +554,17 @@ $(document).ready(function(){
 		                datatype: "json",
 		                mtype: "GET",
 		                autowidth:true,
-		                colNames: ["sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado", "% Avance"],
+		                colNames: ["sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
 		                colModel: [
 		                   { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
-		                   { name: "task", width: 200, editable:false },
+		                   { name: "title", width: 200, editable:false },
 		                   { name: "plan_start_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
 		                   { name: "plan_end_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
-		                   { name: "completion_percentage", width: 50, editable:false }
+		                   { name: "real_start_date", width: 120, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
+		                   { name: "real_end_date", width: 120, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
+		                   { name: "completion_percentage", width: 50, editable:false },
+		                   { name: "expected_percentage", width: 50, editable:false },
+		                   { name: "hours", width: 50, editable:false }
 		                ],
 		       			regional : "es",
 		       			rowList: [],        
@@ -566,6 +574,10 @@ $(document).ready(function(){
 		                loadonce: true,
 		                subGrid: true, 
 		                subGridRowExpanded: showGridWorker,
+		                //loadComplete: function() {
+		                //    $("#"+rowid+" td.sgcollapsed",grid[0]).unbind('click').html('');
+		                //}
+
 		           });
 		           $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit:false,add:false,del:false});
 
