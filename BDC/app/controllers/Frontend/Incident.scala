@@ -72,16 +72,19 @@ object Incident extends Controller {
           val task_id = (jsValue \ "task_id")
           val uid = (jsValue \ "uid")
           val user_creation_id = request.session.get("uId").get
-
+          val task_for_date = (jsValue \ "task_for_date")
+          
+/*
           println("nota : " + nota)
           println("ingresadas : " + ingresadas)
           println("sub_task_id : " + sub_task_id)
           println("task_id : " + task_id)
           println("uid : " + uid)
           println("user_creation_id : " + user_creation_id)
-
+*/
 
           incident = IncidentService.saveHours(
+            task_for_date.toString().replace("\"", ""),  
             nota.toString().replace("\"", ""),
             ingresadas.toString().replace("\"", ""),
             sub_task_id.toString().replace("\"", ""),
@@ -89,7 +92,7 @@ object Incident extends Controller {
             uid.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""))
 
-          println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+         // println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
 
 
         }
@@ -202,9 +205,11 @@ object Incident extends Controller {
   def listSubTask(id: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
+    
         val subtask = IncidentService.selectSubtask(id)
 
         Ok(play.api.libs.json.Json.toJson(subtask)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
