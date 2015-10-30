@@ -211,7 +211,7 @@ object IncidentService {
            GROUP BY sub_task_id
         ) Y
         ON X.sub_task_id=Y.sub_task_id
-        WHERE task_id = {id}
+        WHERE is_deleted=1 AND task_id = {id}
       """
     //sqlString = "SELECT * FROM art_sub_task WHERE task_id = {id}"
     DB.withConnection { implicit connection =>
@@ -255,8 +255,8 @@ object IncidentService {
       '' nota
       FROM art_sub_task_allocation a
       LEFT OUTER JOIN 
-      (SELECT sub_task_id,SUM(hours) trabajadas FROM art_timesheet WHERE is_deleted=1 GROUP BY sub_task_id) b
-      ON a.sub_task_id=b.sub_task_id
+      (SELECT sub_task_id,SUM(hours) trabajadas,user_id FROM art_timesheet WHERE is_deleted=1 GROUP BY sub_task_id,user_id) b
+      ON a.sub_task_id=b.sub_task_id AND a.user_id=b.user_id
       JOIN art_user c
       ON a.user_id=c.uid
       WHERE

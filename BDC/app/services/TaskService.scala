@@ -484,7 +484,7 @@ object TaskService extends CustomColumns {
     var sql = ""
     if (task_id != "") {
       sql = "select t.*,m.task_title as task_title from art_sub_task t,art_task m where t.is_deleted=1 AND m.is_active=1 AND (t.task_id=m.tId) AND task_id = '" + task_id + "' order by t.plan_start_date asc"
-    } else {
+    } else {//MAL
       sql = "select t.*,t.title as task_title from art_sub_task t,art_task m where t.is_deleted=1 AND m.is_active=1 AND (t.task_id=m.tId) order by t.plan_start_date asc"
     }
 
