@@ -7,12 +7,48 @@ $(document).ready(function(){
         minHeight:'auto',
         open: function(event, ui) {
            	$("#jqGridSubTask").setGridWidth($(this).width(), true);
-        	$("#jqGridSubTask").setGridHeight($(this).height()-54); 
+        	//$("#jqGridSubTask").setGridHeight($(this).height()-54); 
+        	$("#jqGridSubTask").setGridHeight($(this).height()); 
     	},resizeStop: function(event, ui) {
 		    $("#jqGridSubTask").setGridWidth($(this).width(), true);
-		    $("#jqGridSubTask").setGridHeight($(this).height()-54);
+		    $("#jqGridSubTask").setGridHeight($(this).height());
 		}
 	});
+	
+    $("#jqGridSubTask").jqGrid({
+        datatype: "json",
+        mtype: "GET",
+        autowidth:true,
+        colNames: ["sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
+        colModel: [
+           { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
+           { name: "title", width: 200, editable:false },
+           { name: "plan_start_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
+           { name: "plan_end_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
+           { name: "real_start_date", width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
+           { name: "real_end_date", width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
+           { name: "completion_percentage", width: 50, editable:false },
+           { name: "expected_percentage", width: 50, editable:false },
+           { name: "hours", width: 50, editable:false }
+        ],
+		regional : "es",
+		rowList: [],        
+		pgbuttons: false,     
+		pgtext: null,         
+		viewrecords: false, 
+		//width:'100%',
+        //height: '100%',
+        subGrid: true, 
+        subGridOptions: { 
+            "plusicon" : "ui-icon-triangle-1-e", 
+            "minusicon" : "ui-icon-triangle-1-s", 
+            "openicon" : "ui-icon-arrowreturn-1-e",
+            "reloadOnExpand" : true
+        }, 
+        subGridRowExpanded: showGridWorker,
+   });
+    
+   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit:false,add:false,del:false});
 	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
@@ -60,9 +96,9 @@ $(document).ready(function(){
 	        mtype: "GET",
 	        datatype: "json",
 	        colModel: [
-	                   { label: 'task_id', name: 'task_id', key: true, hidden:true },                   
 	                   { label: 'sub_task_id', name: 'sub_task_id', hidden:true},
-	                   { label: 'uid', name: 'uid', hidden:true },
+	                   { label: 'task_id', name: 'task_id', hidden:true },   
+	                   { label: 'uid', name: 'uid', key: true, hidden:true },
 	                   { label: 'Nombre', name: 'nombre', width: 100,editable:false },
 	                   { label: 'Asignadas', name: 'planeadas', width: 50,editable:false },
 	                   { label: 'Trabajadas', name: 'trabajadas', width: 50,editable:false },
@@ -89,6 +125,7 @@ $(document).ready(function(){
 			viewrecords: false,
 			loadonce : true,
 			height: '100%',
+			emptyDataText:'No hay datos',
 	        pager: "#" + childGridPagerID,
 	        onSelectRow: function (id) {
 	        	if (id && id !== lastSelection) {
@@ -98,16 +135,22 @@ $(document).ready(function(){
                     lastSelection = id;
                 }        	
 	        },ajaxRowOptions: { contentType: "application/json" },
-	        serializeRowData: function (data) { return JSON.stringify(data); }
+	        serializeRowData: function (data) { return JSON.stringify(data); },
+	        gridComplete: function(){
+	    	    if ($("#" + childGridID).getGridParam('records') == 0){ 
+	    	        //console.log('no hay registros');
+	    	        $("#" + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-hdiv").hide();
+	    	        $("#" + childGridID + "_save_button").hide();
+	    	    }	    	    
+	        }	
 	    });
 		
 	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});	
 	    
         $("#" + childGridID).jqGrid('navButtonAdd', '#' + childGridPagerID, {
-            caption: "Guardar", buttonicon: "ui-icon-disk",
+            caption: "Guardar", buttonicon: "ui-icon-disk",id:childGridID + "_save_button",
             onClickButton: function () {
-            	
- 	            var rowKey = $("#" + childGridID).getGridParam("selrow");
+  	            var rowKey = $("#" + childGridID).getGridParam("selrow");
 	            var rowData = $("#" + childGridID).getRowData(rowKey);
 	            var ingresadas = $("#" + childGridID).jqGrid('getCell',rowKey,'ingresadas');
 	            var usr = rowData.uid;
@@ -123,11 +166,12 @@ $(document).ready(function(){
                         "sub_task_id" : rowData.sub_task_id,  
                         "ingresadas" : $("#" + rowKey + "_ingresadas").val()
                     },
-                    "aftersavefunc":function reload(rowid, result) { $('#' + parentRowID).trigger("reloadGrid"); } 
+                    "aftersavefunc":function reload(rowid, result) { 
+                    	$("#jqGridSubTask").trigger("reloadGrid"); 
+                    } 
                 });
             }
         });
-
 	}	
 	
 	function ValidateCodIR(id){
@@ -189,15 +233,21 @@ $(document).ready(function(){
 	            	  editoptions: {dataUrl: '/incident_configuration',
 	            	  				dataEvents: [{ type: 'change', fn: function(e) {
 	            	  									 var thisval= $(this).val();
-	            	  									 $.get('/incidentProgramType/'+thisval, 
-                                                                 function(datum)
-                                                                 { 
-	       	            	  									 $.get('/incident_program/'+datum, 
-	                                                                     function(data)
-	                                                                     { 
-	    	            	  										 		$("select#program_id").html(data);
-	                                                                     }); 
-                                                                 }); 
+	            	  							        $.ajax({
+	            	  							            type: "GET",
+	            	  							            url: '/incidentProgramType/'+thisval,
+	            	  							            async:false,
+	            	  							            success: function (datum) {                            
+	    	            	  							        $.ajax({
+	    	            	  							            type: "GET",
+	    	            	  							            url: '/incident_program/'+datum,
+	    	            	  							            async:false,
+	    	            	  							            success: function (data) {                            
+	    	            	  							            	$("select#program_id").html(data);
+	    	            	  							            } 
+	    	            	  							        });
+	            	  							            } 
+	            	  							        });
 	            	  								}
 	            	  							 }
 	            	               ],dataInit: function(elem) {
@@ -214,21 +264,25 @@ $(document).ready(function(){
 	            	  editoptions: {dataUrl: '/incident_program_default',
 	            		  dataEvents: [{ type: 'change', fn: function(e) {
 								 var thispid= $(this).val();
-								 $.get('/incidentBusinessMember/'+thispid, 
-                                      function(data)
-                                      { 
-									 		$("select#user_sponsor_id").html(data);
-                                      }); 
-								 $.get('/incidentNoBusinessMember/'+thispid, 
-	                                      function(data)
-	                                      { 
-										 		$("select#task_owner_id").html(data);
-	                                      }); 
-									}
-	            		  			}
-	            		  		],dataInit: function(elem) {
+							        $.ajax({
+							            type: "GET",
+							            url: '/incidentBusinessMember/'+thispid,
+							            async:false,
+							            success: function (data) {                            
+							            	$("select#user_sponsor_id").html(data);
+							            } 
+							        });
+							        $.ajax({
+							            type: "GET",
+							            url: '/incidentNoBusinessMember/'+thispid,
+							            async:false,
+							            success: function (data) {                            
+							            	$("select#task_owner_id").html(data);
+							            } 
+							        });	
+							}}],dataInit: function(elem) {
 	            	                   $(elem).width(180);$(elem).addClass("y_program_id");  
-	            	               }
+	            	        }
 	            		  },formoptions: {rowpos:1,colpos:2,label: "<span class='x_program_id'>Sistema</span>"}
 	              },
 	              { label: 'Usuario', width: 150, name: 'sponsor_name',
@@ -549,38 +603,9 @@ $(document).ready(function(){
 	           if(rowKey === null && typeof rowKey === "object"){
 		           alert('debe seleccionar una tarea');
 	           }else{
-		           $("#jqGridSubTask").jqGrid({
-		                url: 'incidentSubTask/' + tId,
-		                datatype: "json",
-		                mtype: "GET",
-		                autowidth:true,
-		                colNames: ["sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
-		                colModel: [
-		                   { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
-		                   { name: "title", width: 200, editable:false },
-		                   { name: "plan_start_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
-		                   { name: "plan_end_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
-		                   { name: "real_start_date", width: 120, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
-		                   { name: "real_end_date", width: 120, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
-		                   { name: "completion_percentage", width: 50, editable:false },
-		                   { name: "expected_percentage", width: 50, editable:false },
-		                   { name: "hours", width: 50, editable:false }
-		                ],
-		       			regional : "es",
-		       			rowList: [],        
-		       			pgbuttons: false,     
-		       			pgtext: null,         
-		       			viewrecords: false,    
-		                loadonce: true,
-		                subGrid: true, 
-		                subGridRowExpanded: showGridWorker,
-		                //loadComplete: function() {
-		                //    $("#"+rowid+" td.sgcollapsed",grid[0]).unbind('click').html('');
-		                //}
-
-		           });
-		           $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit:false,add:false,del:false});
-
+				   $("#jqGridSubTask").jqGrid('setGridParam', { url: 'incidentSubTask/' + tId});
+				   //$("#jqGridSubTask")[0].grid.endReq();
+				   $("#jqGridSubTask").trigger('reloadGrid');
 		           $("#subtaskListDialog").dialog({title:titulo}).dialog("open");  	
 	           }
 	       } 
