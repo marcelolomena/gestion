@@ -7,27 +7,86 @@ $(document).ready(function(){
         minHeight:'auto',
         open: function(event, ui) {
            	$("#jqGridSubTask").setGridWidth($(this).width(), true);
-        	//$("#jqGridSubTask").setGridHeight($(this).height()-54); 
         	$("#jqGridSubTask").setGridHeight($(this).height()); 
     	},resizeStop: function(event, ui) {
 		    $("#jqGridSubTask").setGridWidth($(this).width(), true);
 		    $("#jqGridSubTask").setGridHeight($(this).height());
 		}
 	});
-	
+
+    var lastSel, myDelOptions = {
+                           // because I use "local" data I don't want to send the changes to the server
+                           // so I use "processing:true" setting and delete the row manually in onclickSubmit
+                           onclickSubmit: function(rp_ge, rowid) {
+                               // we can use onclickSubmit function as "onclick" on "Delete" button
+                               alert("The row with rowid="+rowid+" will be deleted");
+
+                               // delete row
+                               grid.delRowData(rowid);
+                               $("#delmod"+grid[0].id).hide();
+
+                               if (grid[0].p.lastpage > 1) {
+                                   // reload grid to make the row from the next page visable.
+                                   // TODO: deleting the last row from the last page which number is higher as 1
+                                   grid.trigger("reloadGrid", [{page:grid[0].p.page}]);
+                               }
+
+                               return true;
+                           },
+                           processing:true
+                       };
+
+    
+    
     $("#jqGridSubTask").jqGrid({
         datatype: "json",
         mtype: "GET",
         autowidth:true,
-        colNames: ["sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
+        colNames: ["Acciones","sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
         colModel: [
+			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',
+			    formatoptions:{
+			        keys: true, // we want use [Enter] key to save the row and [Esc] to cancel editing.
+			        onEdit:function(rowid) {
+			            alert("in onEdit: rowid="+rowid+"\nWe don't need return anything");
+			        },
+			        onSuccess:function(jqXHR) {
+			            // the function will be used as "succesfunc" parameter of editRow function
+			            // (see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing#editrow)
+			            alert("in onSuccess used only for remote editing:"+
+			                  "\nresponseText="+jqXHR.responseText+
+			                  "\n\nWe can verify the server response and return false in case of"+
+			                  " error response. return true confirm that the response is successful");
+			            // we can verify the server response and interpret it do as an error
+			            // in the case we should return false. In the case onError will be called
+			            return true;
+			        },
+			        onError:function(rowid, jqXHR, textStatus) {
+			            // the function will be used as "errorfunc" parameter of editRow function
+			            // (see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing#editrow)
+			            // and saveRow function
+			            // (see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing#saverow)
+			            alert("in onError used only for remote editing:"+
+			                  "\nresponseText="+jqXHR.responseText+
+			                  "\nstatus="+jqXHR.status+
+			                  "\nstatusText"+jqXHR.statusText+
+			                  "\n\nWe don't need return anything");
+			        },
+			        afterSave:function(rowid) {
+			            alert("in afterSave (Submit): rowid="+rowid+"\nWe don't need return anything");
+			        },
+			        afterRestore:function(rowid) {
+			            alert("in afterRestore (Cancel): rowid="+rowid+"\nWe don't need return anything");
+			        },
+			        delOptions: myDelOptions
+			    }},
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
            { name: "title", width: 200, editable:false },
            { name: "plan_start_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
            { name: "plan_end_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
            { name: "real_start_date", width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
            { name: "real_end_date", width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
-           { name: "completion_percentage", width: 50, editable:false },
+           { name: "completion_percentage", width: 50, editable:true, editrules:{required:false} },
            { name: "expected_percentage", width: 50, editable:false },
            { name: "hours", width: 50, editable:false }
         ],
@@ -36,8 +95,6 @@ $(document).ready(function(){
 		pgbuttons: false,     
 		pgtext: null,         
 		viewrecords: false, 
-		//width:'100%',
-        //height: '100%',
         subGrid: true, 
         subGridOptions: { 
             "plusicon" : "ui-icon-triangle-1-e", 
@@ -46,9 +103,27 @@ $(document).ready(function(){
             "reloadOnExpand" : true
         }, 
         subGridRowExpanded: showGridWorker,
+        editurl: '/picoweb',
+        ondblClickRow: function(id, ri, ci) {
+            // edit the row and save it on press "enter" key
+        	$("#jqGridSubTask").jqGrid('editRow',id,true,null,null, '/picoweb');
+        },
+        onSelectRow: function(id) {
+            if (id && id !== lastSel) {
+                // cancel editing of the previous selected row if it was in editing state.
+                // jqGrid hold intern savedRow array inside of jqGrid object,
+                // so it is safe to call restoreRow method with any id parameter
+                // if jqGrid not in editing state
+                if (typeof lastSel !== "undefined") {
+                	$("#jqGridSubTask").jqGrid('restoreRow',lastSel);
+                }
+                lastSel = id;
+            }
+        }        
    });
     
-   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit:false,add:false,del:false});
+   //$("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit:false,add:false,del:false});
+   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{add:false,edit:false},{},{},myDelOptions,{multipleSearch:true,overlay:false});
 	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
@@ -117,7 +192,6 @@ $(document).ready(function(){
 	        ],
 			height: 'auto',
 	        autowidth:true,
-	        //shrinkToFit:false,
 	        regional : "es",
 	        rowList: [],        
 			pgbuttons: false,     
@@ -138,7 +212,6 @@ $(document).ready(function(){
 	        serializeRowData: function (data) { return JSON.stringify(data); },
 	        gridComplete: function(){
 	    	    if ($("#" + childGridID).getGridParam('records') == 0){ 
-	    	        //console.log('no hay registros');
 	    	        $("#" + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-hdiv").hide();
 	    	        $("#" + childGridID + "_save_button").hide();
 	    	    }	    	    
