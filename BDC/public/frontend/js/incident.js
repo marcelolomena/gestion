@@ -19,10 +19,12 @@ $(document).ready(function(){
                            // so I use "processing:true" setting and delete the row manually in onclickSubmit
                            onclickSubmit: function(rp_ge, rowid) {
                                // we can use onclickSubmit function as "onclick" on "Delete" button
-                               alert("The row with rowid="+rowid+" will be deleted");
+                        	   var rowData = $("#jqGridSubTask").getRowData(rowid);
+                               alert("La subtarea : "+rowData.title+", sera borrada");
 
                                // delete row
-                               grid.delRowData(rowid);
+                               /*
+                               $("#jqGridSubTask").delRowData(rowid);
                                $("#delmod"+grid[0].id).hide();
 
                                if (grid[0].p.lastpage > 1) {
@@ -30,13 +32,11 @@ $(document).ready(function(){
                                    // TODO: deleting the last row from the last page which number is higher as 1
                                    grid.trigger("reloadGrid", [{page:grid[0].p.page}]);
                                }
-
+							   */
                                return true;
                            },
-                           processing:true
+                           processing:false
                        };
-
-    
     
     $("#jqGridSubTask").jqGrid({
         datatype: "json",
@@ -47,36 +47,32 @@ $(document).ready(function(){
 			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',
 			    formatoptions:{
 			        keys: true, // we want use [Enter] key to save the row and [Esc] to cancel editing.
+			        delbutton:false,
 			        onEdit:function(rowid) {
-			            alert("in onEdit: rowid="+rowid+"\nWe don't need return anything");
+			            //alert("en onEdit: rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
 			        onSuccess:function(jqXHR) {
-			            // the function will be used as "succesfunc" parameter of editRow function
-			            // (see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing#editrow)
+			        	/*
 			            alert("in onSuccess used only for remote editing:"+
 			                  "\nresponseText="+jqXHR.responseText+
 			                  "\n\nWe can verify the server response and return false in case of"+
 			                  " error response. return true confirm that the response is successful");
-			            // we can verify the server response and interpret it do as an error
-			            // in the case we should return false. In the case onError will be called
+			            */
 			            return true;
 			        },
 			        onError:function(rowid, jqXHR, textStatus) {
-			            // the function will be used as "errorfunc" parameter of editRow function
-			            // (see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing#editrow)
-			            // and saveRow function
-			            // (see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing#saverow)
 			            alert("in onError used only for remote editing:"+
 			                  "\nresponseText="+jqXHR.responseText+
 			                  "\nstatus="+jqXHR.status+
 			                  "\nstatusText"+jqXHR.statusText+
-			                  "\n\nWe don't need return anything");
+			                  "\n\nNo necesitamos devolver nada");
 			        },
 			        afterSave:function(rowid) {
-			            alert("in afterSave (Submit): rowid="+rowid+"\nWe don't need return anything");
+			        	//console.log('rowid:' + rowid);
+			            //alert("en afterSave (Submit): rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
 			        afterRestore:function(rowid) {
-			            alert("in afterRestore (Cancel): rowid="+rowid+"\nWe don't need return anything");
+			            //alert("en afterRestore (Cancel): rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
 			        delOptions: myDelOptions
 			    }},
@@ -96,6 +92,8 @@ $(document).ready(function(){
 		pgtext: null,         
 		viewrecords: false, 
         subGrid: true, 
+        ajaxRowOptions: { contentType: "application/json" },
+        serializeRowData: function (data) { return JSON.stringify(data); },        
         subGridOptions: { 
             "plusicon" : "ui-icon-triangle-1-e", 
             "minusicon" : "ui-icon-triangle-1-s", 
@@ -103,17 +101,12 @@ $(document).ready(function(){
             "reloadOnExpand" : true
         }, 
         subGridRowExpanded: showGridWorker,
-        editurl: '/picoweb',
+        editurl: '/incidentSaveSubTask',
         ondblClickRow: function(id, ri, ci) {
-            // edit the row and save it on press "enter" key
-        	$("#jqGridSubTask").jqGrid('editRow',id,true,null,null, '/picoweb');
+        	$("#jqGridSubTask").jqGrid('editRow',id,true,null,null, '/incidentSaveSubTask');
         },
         onSelectRow: function(id) {
             if (id && id !== lastSel) {
-                // cancel editing of the previous selected row if it was in editing state.
-                // jqGrid hold intern savedRow array inside of jqGrid object,
-                // so it is safe to call restoreRow method with any id parameter
-                // if jqGrid not in editing state
                 if (typeof lastSel !== "undefined") {
                 	$("#jqGridSubTask").jqGrid('restoreRow',lastSel);
                 }
@@ -122,7 +115,6 @@ $(document).ready(function(){
         }        
    });
     
-   //$("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit:false,add:false,del:false});
    $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{add:false,edit:false},{},{},myDelOptions,{multipleSearch:true,overlay:false});
 	
 	function showGridStatus(parentRowID, parentRowKey) {
@@ -201,6 +193,9 @@ $(document).ready(function(){
 			height: '100%',
 			emptyDataText:'No hay datos',
 	        pager: "#" + childGridPagerID,
+	        ondblClickRow: function(id, ri, ci) {
+	        	$("#" + childGridID).jqGrid('editRow',id,true,null,null, '/incidentSaveHours');
+	        },
 	        onSelectRow: function (id) {
 	        	if (id && id !== lastSelection) {
                     var subgrid = $("#" + childGridID);
@@ -583,7 +578,6 @@ $(document).ready(function(){
             }
         },
         {
-        	//template: template,
         	addCaption: "Agregar Incidencia",
             height: 'auto',
             width: 'auto',
@@ -677,7 +671,6 @@ $(document).ready(function(){
 		           alert('debe seleccionar una tarea');
 	           }else{
 				   $("#jqGridSubTask").jqGrid('setGridParam', { url: 'incidentSubTask/' + tId});
-				   //$("#jqGridSubTask")[0].grid.endReq();
 				   $("#jqGridSubTask").trigger('reloadGrid');
 		           $("#subtaskListDialog").dialog({title:titulo}).dialog("open");  	
 	           }
