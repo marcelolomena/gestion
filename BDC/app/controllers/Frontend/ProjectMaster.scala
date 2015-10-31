@@ -99,7 +99,7 @@ object ProjectMaster extends Controller {
                 if (!subtask.completion_percentage.isEmpty) {
                   if (subtask.completion_percentage.get != 100) {
                     isValid = false
-                    //println(isValid+"--------------------")
+                    println(isValid+"--------------------")
                   }
                   var actual_completion: Date = null
                   if (!subtask.actual_end_date.isEmpty) {
@@ -115,9 +115,9 @@ object ProjectMaster extends Controller {
                   }
                   if (actual_completion_date == null) {
                     actual_completion_date = actual_completion
-                  } else if (actual_completion.getTime > actual_completion_date.getTime) {
+                  } /*else if (actual_completion.getTime > actual_completion_date.getTime) {
                     actual_completion_date = actual_completion
-                  }
+                  }*/
 
                 }
 
@@ -126,7 +126,7 @@ object ProjectMaster extends Controller {
                 var acutal_hours_completed_for_subtask: scala.math.BigDecimal = 0
                 for (suballoc <- allocationsubtasks) {
                   hrs_allocated_to_subtask += suballoc.estimated_time.toDouble
-                  // println("hrs_allocated_to_subtask = " + suballoc.estimated_time.toDouble + "subtask completion_percentage =  " + subtask.completion_percentage.get)
+                   println("hrs_allocated_to_subtask = " + suballoc.estimated_time.toDouble + "subtask completion_percentage =  " + subtask.completion_percentage.get)
                 }
 
                 val allocationsubtasksexternal = SubTaskServices.findSubTasksAllocationExternalBySubTask(subtask.sub_task_id.get.toString())
@@ -153,14 +153,14 @@ object ProjectMaster extends Controller {
                   actual_completion_date = c.plan_end_date
                 }
               }
-              // println("actual_hours_completed_for_task = " + actual_hours_completed_for_task)
+               println("actual_hours_completed_for_task = " + actual_hours_completed_for_task)
               actual_hours_completed_for_project += actual_hours_completed_for_task
             }
-            //println(isValid)
+            println(isValid)
             if (!isValid) {
               actual_completion_date = null
             }
-            //println(actual_completion_date)
+            println(actual_completion_date)
             var countList = list.toList;
             var documents = DocumentService.findAllDocuments(projectId, "PROJECT", "", "", "");
 

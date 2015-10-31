@@ -268,7 +268,8 @@ object TaskService extends CustomColumns {
 
     var isValid = true
     for (subtask <- subtasks) {
-      if (!subtask.completion_percentage.isEmpty) {
+      //if (!subtask.completion_percentage.isEmpty) {
+      if (subtask.completion_percentage.get>0) {
         if (subtask.completion_percentage.get != 100) {
           isValid = false
         }
@@ -284,11 +285,12 @@ object TaskService extends CustomColumns {
             actual_completion = subtask.actual_end_date.get
           }
         }
+       
         if (actual_completion_date == null) {
           actual_completion_date = actual_completion
-        } else if (actual_completion.getTime > actual_completion_date.getTime) {
+        } /*else if (actual_completion.getTime > actual_completion_date.getTime) {
           actual_completion_date = actual_completion
-        }
+        }*/
 
       }
       val allocationsubtasks = SubTaskServices.findSubTasksAllocationBySubTask(subtask.sub_task_id.get.toString())
@@ -302,7 +304,8 @@ object TaskService extends CustomColumns {
       for (a <- allocationsubtasksexternal) {
         hrs_allocated_to_subtask += a.estimated_time.toDouble
       }
-      if (!subtask.completion_percentage.isEmpty) {
+      //if (!subtask.completion_percentage.isEmpty) {
+      if (subtask.completion_percentage.get>0) {        
         acutal_hours_completed_for_subtask = (hrs_allocated_to_subtask * subtask.completion_percentage.get / 100)
       } else {
         acutal_hours_completed_for_subtask = 0
