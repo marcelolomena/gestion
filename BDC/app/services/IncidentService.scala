@@ -213,7 +213,6 @@ object IncidentService {
         ON X.sub_task_id=Y.sub_task_id
         WHERE is_deleted=1 AND task_id = {id}
       """
-    //sqlString = "SELECT * FROM art_sub_task WHERE task_id = {id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(IncidentSubTask.incidentsubtask *)
     }

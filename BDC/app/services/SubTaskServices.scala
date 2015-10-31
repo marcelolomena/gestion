@@ -1395,6 +1395,22 @@ object SubTaskServices extends CustomColumns {
           'sub_task_id -> sub_task_id, 'sub_task_depend -> sub_task_depends).executeUpdate()
     }
   }
+  
+  
+  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String): Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+         update art_sub_task
+          set 
+          completion_percentage={completion_percentage}
+          where sub_task_id = {sub_task_id}
+        """).on(
+          'sub_task_id -> sub_task_id.toInt,
+          'completion_percentage -> completion_percentage.toInt).executeUpdate()
+    }
+  }    
 
   def findSubTasksforDependentTasks(tasks_ids: String): String = {
     var sql = "SELECT SUBSTRING((SELECT ',' + CONVERT(VARCHAR(12), sub_task_id) from art_sub_task where task_id IN (  " + tasks_ids + " ) AND is_deleted=1 FOR XML PATH('')),2,200000) AS CSV"

@@ -1394,7 +1394,7 @@ object TaskService extends CustomColumns {
           'plan_end_date -> end_date).executeUpdate()
     }
   }
-
+  
   def updateTaskPlannedStartDate(task_id: String, start_date: String): Int = {
 
     DB.withConnection { implicit connection =>

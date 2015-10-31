@@ -4,6 +4,7 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.IncidentService
 import services.ProgramMemberService
+import services.SubTaskServices
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -55,6 +56,50 @@ object Incident extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
+  
+  
+  def saveSubTask = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var ret: Int = 0
+        jsonBody.map { jsValue =>
+
+          val completion_percentage = (jsValue \ "completion_percentage")
+          val sub_task_id = (jsValue \ "sub_task_id")
+          val oper = (jsValue \ "oper")
+
+          
+
+          println("completion_percentage : " + completion_percentage)
+          println("sub_task_id : " + sub_task_id)
+          println("oper : " + oper)
+
+          if(oper.toString().replace("\"", "").equals("edit")){
+
+            ret=SubTaskServices.updateCompletionPercentage(
+              sub_task_id.toString().replace("\"", ""),
+              completion_percentage.toString().replace("\"", ""))
+  
+            println("ret : " + ret)
+          } else if(oper.toString().replace("\"", "").equals("del")){
+            println("borrado callampero")
+            println("ret : " + ret)
+          }
+
+                      
+        }
+
+
+
+        Ok(play.api.libs.json.Json.toJson(ret)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }    
   
   def saveHours = Action {
     implicit request =>
