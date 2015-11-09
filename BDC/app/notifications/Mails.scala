@@ -17,9 +17,11 @@ object Mails {
     val url = "http://" + domain + "/activate-account?code=" + verification_code;
     val mail = use[MailerPlugin].email
     mail.setSubject("Activate Your Account")
-    mail.addRecipient(resetEmail)
+    //mail.addRecipient(resetEmail)
+    mail.setRecipient(resetEmail)
     val fromEmail = Play.application().configuration().getString("smtp.user")
-    mail.addFrom(fromEmail)
+    //mail.addFrom(fromEmail)
+    mail.setFrom(fromEmail)
     mail.sendHtml("<html><div>Hello , <br/> Please activate your account. Please follow the following Link<br/><a href='" + url + "'>Activate</a></div><div >Account Details <br/> Username : - " + uname + "<br/> Password : - " + pass + "</div> </html>")
 
   }
