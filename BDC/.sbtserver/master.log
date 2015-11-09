@@ -1,5 +1,5 @@
-New log file opened at Tue Sep 08 09:35:40 CLT 2015 by 6532@zrismart
-jvm 6532@zrismart
+New log file opened at Mon Nov 09 20:08:17 CLT 2015 by 5336@zrismart
+jvm 5336@zrismart
 jvm vmName=Java HotSpot(TM) 64-Bit Server VM vmVendor=Oracle Corporation vmVersion=24.79-b02
 jvm specName=Java Virtual Machine Specification specVendor=Oracle Corporation specVersion=1.7
 jvm arguments: [-Xms256m, -Xmx1024m, -XX:PermSize=64m, -XX:MaxPermSize=256m]
@@ -27,7 +27,7 @@ sorting: ns: List(sbt.plugins.CorePlugin, sbt.plugins.IvyPlugin, sbt.plugins.Jvm
   :: sorted deduced result: List(sbt.plugins.CorePlugin, sbt.plugins.IvyPlugin, sbt.plugins.JvmPlugin, sbt.plugins.JUnitXmlReportPlugin)
 [Loading] Done in C:\Users\marcelo\git\BDC\project, returning: (bdc-build)
 Loading project definition from C:\Users\marcelo\git\BDC\project
-Running task... Cancel: sbt.TaskCancellationStrategy$Null$@536d5f3, check cycles: false
+Running task... Cancel: sbt.TaskCancellationStrategy$Null$@5b138286, check cycles: false
 
 Initial source changes: 
 	removed:Set()

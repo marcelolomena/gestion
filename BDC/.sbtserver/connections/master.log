@@ -1,19 +1,10 @@
-New log file opened at Tue Sep 08 09:35:40 CLT 2015 by 6532@zrismart
-Taking next connection to: 65016
-New client attempting to connect on port: 65017-65016
-  Address = /192.168.56.1:65016
-This client on port 65017 has uuid aa117f2f-0462-4581-a1d8-b616dbd2b626 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
-Connected Clients: play-fork-run-aa117f2f-0462-4581-a1d8-b616dbd2b626
-Taking next connection to: 65016
+New log file opened at Mon Nov 09 20:08:17 CLT 2015 by 5336@zrismart
+Taking next connection to: 51731
+New client attempting to connect on port: 51732-51731
+  Address = /192.168.56.1:51731
+This client on port 51732 has uuid b300fbd8-b33e-4523-8f5f-4d3c5babe4d8 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-b300fbd8-b33e-4523-8f5f-4d3c5babe4d8
+Taking next connection to: 51731
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 65016
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 65016
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 65016
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 65016
+Taking next connection to: 51731
