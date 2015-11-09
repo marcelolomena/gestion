@@ -24,8 +24,10 @@ object SendEmail {
     var mail = use[MailerPlugin].email
     mail.setSubject("Reset Your Password")
     
-    mail.addFrom(fromEmail.toString())
-    mail.addRecipient(recipientEmail.toString())
+    //mail.addFrom(fromEmail.toString())
+    mail.setFrom(fromEmail.toString())
+    //mail.addRecipient(recipientEmail.toString())
+    mail.setRecipient(recipientEmail.toString())
     try {
       mail.sendHtml("<html><div> Hola,<br/>" + message.toString() + "</br><a href=" + url.toString() + ">" + url.toString() + " </a></div></html>")
     } catch {
@@ -41,8 +43,10 @@ object SendEmail {
     val fromEmail = Play.application().configuration().getString("smtp.user")
     var mail = use[MailerPlugin].email
     mail.setSubject("Risk Alert")
-    mail.addFrom(fromEmail.toString())
-    mail.addRecipient(recipientEmail.toString())
+    //mail.addFrom(fromEmail.toString())
+    mail.setFrom(fromEmail.toString())
+    //mail.addRecipient(recipientEmail.toString())
+    mail.setRecipient(recipientEmail.toString())
     try {
       mail.sendHtml("<html><div> Hello,<br/>" + message.toString() + "</br></div></html>")
     } catch {
