@@ -10,6 +10,110 @@ import play.api.libs.json._
  * @author marcelo
  */
 
+/*
+case class IncidentA(incident_id: Int,
+                     configuration_id: Int,
+                     program_id: Int,
+                     date_creation: Option[Date],
+                     ir_number: String,
+                     user_sponsor_id: Int,
+                     brief_description: String,
+                     extended_description: String,
+                     severity_id: Int,
+                     date_end: Option[Date],
+                     task_owner_id: Int,
+                     user_creation_id: Int)
+
+object IncidentA {
+  val incidentA = {
+    get[Int]("incident_id") ~
+      get[Int]("configuration_id") ~
+      get[Int]("program_id") ~
+      get[Option[Date]]("date_creation") ~
+      get[String]("ir_number") ~
+      get[Int]("user_sponsor_id") ~
+      get[String]("brief_description") ~
+      get[String]("extended_description") ~
+      get[Int]("severity_id") ~
+      get[Option[Date]]("date_end") ~
+      get[Int]("task_owner_id") ~
+      get[Int]("user_creation_id") map {
+        case incident_id ~
+          configuration_id ~
+          program_id ~
+          date_creation ~
+          ir_number ~
+          user_sponsor_id ~
+          brief_description ~
+          extended_description ~
+          severity_id ~
+          date_end ~
+          task_owner_id ~
+          user_creation_id => IncidentA(incident_id,
+          configuration_id,
+          program_id,
+          date_creation,
+          ir_number,
+          user_sponsor_id,
+          brief_description,
+          extended_description,
+          severity_id,
+          date_end,
+          task_owner_id,
+          user_creation_id)
+      }
+  }
+}
+case class IncidentB(task_id: Int,
+                     task_title: String,
+                     configuration_name: String,
+                     program_name: String,
+                     sponsor_name: String,
+                     owner_name: String,
+                     note: String,
+                     severity_description: String,
+                     dId: Int,
+                     department: String,
+                     status_id: Int,
+                     status_name: String)
+object IncidentB extends CustomColumns {
+
+}
+
+case class Incident(a: IncidentA, b: IncidentB)
+object Incident {
+  val incident = new Incident(a,b)
+  implicit val incidentWrites = new Writes[Incident] {
+    def writes(incident: Incident) = Json.obj(
+      "incident_id" -> incident.a.incident_id.toInt,
+      "configuration_id" -> incident.a.configuration_id.toInt,
+      "program_id" -> incident.a.program_id.toInt,
+      "date_creation" -> incident.a.date_creation.get,
+      "ir_number" -> incident.a.ir_number.toString(),
+      "user_sponsor_id" -> incident.a.user_sponsor_id.toInt,
+      "brief_description" -> incident.a.brief_description.toString(),
+      "extended_description" -> incident.a.extended_description.toString(),
+      "severity_id" -> incident.a.severity_id.toInt,
+      "date_end" -> incident.a.date_end.get,
+      "task_owner_id" -> incident.a.task_owner_id.toInt,
+      "user_creation_id" -> incident.a.user_creation_id.toInt,
+      "task_id" -> incident.b.task_id.toInt,
+      "task_title" -> incident.b.task_title.toString(),
+      "configuration_name" -> incident.b.configuration_name.toString(),
+      "program_name" -> incident.b.program_name.toString(),
+      "sponsor_name" -> incident.b.sponsor_name.toString(),
+      "owner_name" -> incident.b.owner_name.toString(),
+      "note" -> incident.b.note.toString(),
+      "severity_description" -> incident.b.severity_description.toString(),
+      "dId" -> incident.b.dId.toInt,
+      "department" -> incident.b.department.toString(),
+      "status_id" -> incident.b.status_id.toInt,
+      "status_name" -> incident.b.status_name.toString())
+  }
+}
+
+*/
+
 case class Incident(incident_id: Int,
                     configuration_id: Int,
                     program_id: Int,
@@ -30,9 +134,10 @@ case class Incident(incident_id: Int,
                     owner_name: String,
                     note: String,
                     severity_description: String,
+                    dId: Int,
+                    department: String,
                     status_id: Int,
-                    status_name: String
-                    )
+                    status_name: String)
 
 object Incident {
   val incident = {
@@ -54,9 +159,11 @@ object Incident {
       get[String]("program_name") ~
       get[String]("sponsor_name") ~
       get[String]("owner_name") ~
-      get[String]("note") ~ 
+      get[String]("note") ~
       get[String]("severity_description") ~
-      get[Int]("status_id")  ~
+      get[Int]("dId") ~
+      get[String]("department") ~
+      get[Int]("status_id") ~
       get[String]("status_name") map {
         case incident_id ~
           configuration_id ~
@@ -78,6 +185,8 @@ object Incident {
           owner_name ~
           note ~
           severity_description ~
+          dId ~
+          department ~
           status_id ~
           status_name => Incident(incident_id,
           configuration_id,
@@ -99,9 +208,10 @@ object Incident {
           owner_name,
           note,
           severity_description,
+          dId,
+          department,
           status_id,
-          status_name
-          )
+          status_name)
       }
 
   }
@@ -128,9 +238,11 @@ object Incident {
       "owner_name" -> incident.owner_name.toString(),
       "note" -> incident.note.toString(),
       "severity_description" -> incident.severity_description.toString(),
+      "dId" -> incident.dId.toInt,
+      "department" -> incident.department.toString(),
       "status_id" -> incident.status_id.toInt,
-      "status_name" -> incident.status_name.toString() )
-  }  
+      "status_name" -> incident.status_name.toString())
+  }
 }
 
 case class Configuration(
@@ -263,14 +375,30 @@ object ErrorIncident {
 
   }
   implicit val errorWrites = Json.writes[ErrorIncident]
-}  
+}
+
+case class NameUsr(
+  value: String,
+  label: String)
+
+object NameUsr {
+  val name = {
+    get[String]("value") ~
+      get[String]("label") map {
+        case value ~ label => NameUsr(
+          value, label)
+      }
+
+  }
+  implicit val nameUsr = Json.writes[NameUsr]
+}
 
 case class ComboStatus(
   status_id: Int,
   status_name: String)
 
 object ComboStatus {
-  val comboComboStatus = {
+  val comboStatus = {
     get[Int]("status_id") ~
       get[String]("status_name") map {
         case status_id ~
@@ -280,16 +408,33 @@ object ComboStatus {
       }
 
   }
-  implicit val configurationWrites = Json.writes[ComboConfiguration]
+  implicit val configurationWrites = Json.writes[ComboStatus]
 }
 
+case class ComboDepartament(
+  dId: Int,
+  department: String)
+
+object ComboDepartament {
+  val comboDepartament = {
+    get[Int]("dId") ~
+      get[String]("department") map {
+        case dId ~
+          department => ComboDepartament(
+          dId,
+          department)
+      }
+
+  }
+  implicit val configurationWrites = Json.writes[ComboDepartament]
+}
 
 case class Status(
   log_id: Int,
   incident_id: Int,
   status_name: String,
   log_date: Date,
-  note:String,
+  note: String,
   user_creation_name: String)
 
 object Status {
@@ -303,8 +448,8 @@ object Status {
         case log_id ~
           incident_id ~
           status_name ~
-          log_date ~ 
-          note ~ 
+          log_date ~
+          note ~
           user_creation_name => Status(
           log_id,
           incident_id,
@@ -323,10 +468,10 @@ case class Hours(
   sub_task_id: Int,
   uid: Int,
   nombre: String,
-  planeadas:Double,
+  planeadas: Double,
   trabajadas: Double,
   ingresadas: Double,
-  nota:String)
+  nota: String)
 
 object Hours {
   val hours = {
@@ -337,12 +482,12 @@ object Hours {
       get[Double]("planeadas") ~
       get[Double]("trabajadas") ~
       get[Double]("ingresadas") ~
-      get[String]("nota")map {
+      get[String]("nota") map {
         case task_id ~
           sub_task_id ~
           uid ~
-          nombre ~ 
-          planeadas ~ 
+          nombre ~
+          planeadas ~
           trabajadas ~
           ingresadas ~
           nota => Hours(
@@ -365,10 +510,10 @@ case class IncidentSubTask(
   title: String,
   plan_start_date: Date,
   plan_end_date: Date,
-  real_start_date:Option[Date],
+  real_start_date: Option[Date],
   real_end_date: Option[Date],
   completion_percentage: Double,
-  hours:Double,
+  hours: Double,
   expected_percentage: Double)
 
 object IncidentSubTask {
@@ -386,8 +531,8 @@ object IncidentSubTask {
           title ~
           plan_start_date ~
           plan_end_date ~
-          real_start_date ~ 
-          real_end_date ~ 
+          real_start_date ~
+          real_end_date ~
           completion_percentage ~
           hours ~
           expected_percentage => IncidentSubTask(
