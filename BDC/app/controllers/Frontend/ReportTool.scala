@@ -29,7 +29,7 @@ object ReportTool extends Controller with Secured {
 
 	def getProgramList() = Action { implicit request =>
 		val programs = ProgramService.findAllPrograms("", "")
-		Ok(views.html.reports.programsList(programs))
+ 		Ok(views.html.reports.programsList(programs))
 	}
 
 	def getEmployeeList() = Action { implicit request =>

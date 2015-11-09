@@ -112,7 +112,11 @@ object Program extends Controller {
         start = ((programnumber - 1) * 10) + 1;
         end = start + 9;
       }
-
+      println("start : " + start)
+      println("end : " + end)
+      println("pagina : " + programnumber)
+      
+/*
       if (StringUtils.equals(profile.trim, "pmo") || StringUtils.equals(profile.trim, "su") || StringUtils.equals(profile.trim, "cl")) {
         val programs = ProgramService.findPaginationProgramList(start, end)
         val programCount = ProgramService.findProgramCount()
@@ -126,7 +130,12 @@ object Program extends Controller {
         val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
         Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)
       }
-
+*/
+        val programs = ProgramService.findAllUserJunior(username, programnumber)
+        val programCount = ProgramService.countAllUserJunior(username)
+        var tasksDependents = new java.util.HashMap[Integer, Long]()
+        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)      
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -147,7 +156,7 @@ object Program extends Controller {
         start = ((pagenumber - 1) * 10) + 1;
         end = start + 9;
       }
-
+/*
       if (StringUtils.equals(profile.trim, "pmo") || StringUtils.equals(profile.trim, "su") || StringUtils.equals(profile.trim, "cl")) {
         val programs = ProgramService.findAllProgramList()
 
@@ -156,12 +165,19 @@ object Program extends Controller {
         Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
       } else {
         val programs = ProgramService.findAllUserPrograms(user_id.toString())
-
         var tasksDependents = new java.util.HashMap[Integer, Long]()
         val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
         Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
       }
-
+*/
+      
+      
+        val programs = ProgramService.findAllUserJunior(username.toString())
+        println("largo weon = " + programs.length)
+        var tasksDependents = new java.util.HashMap[Integer, Long]()
+        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
+ 
       /*
        * else if (StringUtils.equals(profile.trim, "prm")) {
         
