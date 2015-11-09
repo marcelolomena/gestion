@@ -285,18 +285,14 @@ $(document).ready(function(){
 	                extraparam: {
 	                    "task_name": $("#subtaskListDialog").dialog( "option", "title" ),
 	                },
-	                onSuccess:function(jqXHR) {
-	                	//console.log("remoto : "+ jqXHR.responseText);
-			            return true;
-			        },
-	                afterSave:function(rowid) {
-			        	//console.log('rowid:' + rowid);
+		            oneditfunc: function (rowid) {
+	                    //alert("new row with rowid=" + rowid + " are added.");
+	                },
+			        aftersavefunc: function (rowid, response, options) {
+			        	//console.log('response:' + response);
 			        	$("#jqGridSubTask").trigger("reloadGrid"); 
 			        },
-	            },
-	            oneditfunc: function (rowid) {
-                    alert("new row with rowid=" + rowid + " are added.");
-                }
+	            }
 	        },	        
 	        editParams: {
 	            // the parameters of editRow
