@@ -24,6 +24,7 @@ import org.apache.poi.xssf.usermodel._
 object Incident extends Controller {
 
   def fromIncidentName(choice: String, value: String): String = choice match {
+    case "dId"                => " '" + value + "' "
     case "status_id"          => " '" + value + "' "
     case "severity_id"        => " '" + value + "' "
     case "configuration_name" => " '%" + value + "%' "
@@ -56,8 +57,7 @@ object Incident extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  
-  
+
   def saveSubTask = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -71,36 +71,52 @@ object Incident extends Controller {
           val sub_task_id = (jsValue \ "sub_task_id")
           val oper = (jsValue \ "oper")
 
-          
-
           println("completion_percentage : " + completion_percentage)
           println("sub_task_id : " + sub_task_id)
           println("oper : " + oper)
 
-          if(oper.toString().replace("\"", "").equals("edit")){
+          if (oper.toString().replace("\"", "").equals("edit")) {
 
-            ret=SubTaskServices.updateCompletionPercentage(
+            ret = SubTaskServices.updateCompletionPercentage(
               sub_task_id.toString().replace("\"", ""),
               completion_percentage.toString().replace("\"", ""))
-  
+
             println("ret : " + ret)
-          } else if(oper.toString().replace("\"", "").equals("del")){
+          } else if (oper.toString().replace("\"", "").equals("del")) {
             println("borrado callampero")
             println("ret : " + ret)
           }
 
-                      
         }
-
-
 
         Ok(play.api.libs.json.Json.toJson(ret)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
 
-  }    
-  
+  }
+
+  def addMember = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val term = request.getQueryString("term").getOrElse("").toString()
+
+        var users: Seq[NameUsr] = null
+
+        //println("term : " + term)
+
+        users = IncidentService.listUsr(term)
+
+        //println("users : " + users)
+
+        Ok(play.api.libs.json.Json.toJson(users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
   def saveHours = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -111,6 +127,7 @@ object Incident extends Controller {
 
         jsonBody.map { jsValue =>
 
+          val oper = (jsValue \ "oper")
           val nota = (jsValue \ "nota")
           val ingresadas = (jsValue \ "ingresadas")
           val sub_task_id = (jsValue \ "sub_task_id")
@@ -118,27 +135,38 @@ object Incident extends Controller {
           val uid = (jsValue \ "uid")
           val user_creation_id = request.session.get("uId").get
           val task_for_date = (jsValue \ "task_for_date")
-          
-/*
+
           println("nota : " + nota)
+
           println("ingresadas : " + ingresadas)
           println("sub_task_id : " + sub_task_id)
           println("task_id : " + task_id)
           println("uid : " + uid)
           println("user_creation_id : " + user_creation_id)
-*/
 
-          incident = IncidentService.saveHours(
-            task_for_date.toString().replace("\"", ""),  
-            nota.toString().replace("\"", ""),
-            ingresadas.toString().replace("\"", ""),
-            sub_task_id.toString().replace("\"", ""),
-            task_id.toString().replace("\"", ""),
-            uid.toString().replace("\"", ""),
-            user_creation_id.toString().replace("\"", ""))
+          if (oper.toString().replace("\"", "").equals("add")) {
+            val name = (jsValue \ "nombre")
+            println("nombre : " + name)
+            incident = IncidentService.insertMember(
+              name.toString().replace("\"", ""),
+              task_for_date.toString().replace("\"", ""),
+              nota.toString().replace("\"", ""),
+              ingresadas.toString().replace("\"", ""),
+              sub_task_id.toString().replace("\"", ""),
+              user_creation_id.toString().replace("\"", ""))
 
-         // println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+          } else if (oper.toString().replace("\"", "").equals("edit")) {
 
+            incident = IncidentService.saveHours(
+              task_for_date.toString().replace("\"", ""),
+              nota.toString().replace("\"", ""),
+              ingresadas.toString().replace("\"", ""),
+              sub_task_id.toString().replace("\"", ""),
+              task_id.toString().replace("\"", ""),
+              uid.toString().replace("\"", ""),
+              user_creation_id.toString().replace("\"", ""))
+          }
+          // println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
 
         }
 
@@ -154,7 +182,7 @@ object Incident extends Controller {
         Redirect(routes.Login.loginUser()).withNewSession
       }
 
-  }  
+  }
 
   def save = Action {
     implicit request =>
@@ -250,7 +278,7 @@ object Incident extends Controller {
   def listSubTask(id: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
-    
+
         val subtask = IncidentService.selectSubtask(id)
 
         Ok(play.api.libs.json.Json.toJson(subtask)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
@@ -369,6 +397,9 @@ object Incident extends Controller {
                   } else if (m.field.equals("status_name")) {
                     if (m.data.toInt != 0)
                       qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                  } else if (m.field.equals("department")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
                   }
@@ -396,6 +427,7 @@ object Incident extends Controller {
         var registro = new JSONArray()
         for (p <- panel) {
           var campo = new JSONObject()
+
           campo.put("incident_id", p.incident_id)
           campo.put("configuration_id", p.configuration_id)
           campo.put("program_id", p.program_id)
@@ -416,6 +448,7 @@ object Incident extends Controller {
           campo.put("owner_name", p.owner_name)
           campo.put("severity_description", p.severity_description)
           campo.put("status_name", p.status_name)
+          campo.put("department", p.department)
 
           registro.put(campo)
         }
@@ -452,6 +485,19 @@ object Incident extends Controller {
     var s = "<select><option value='0'>Seleccione un valor</option>"
     for (i <- incidents) {
       s += "<option value='" + i.status_id + "'>" + i.status_name + "</option>"
+    }
+    s += "</select>"
+
+    Ok(s)
+
+  }
+
+  def departamentList = Action { implicit request =>
+
+    val incidents = IncidentService.selectDepartamentIncident
+    var s = "<select><option value='0'>Seleccione un valor</option>"
+    for (i <- incidents) {
+      s += "<option value='" + i.dId + "'>" + i.department + "</option>"
     }
     s += "</select>"
 
@@ -532,8 +578,9 @@ object Incident extends Controller {
 
   }
 
-  def getSeverityDays(id: String) = Action { implicit request =>
-    var days: Int = IncidentService.selectSeverityDays(id)
+  def getSeverityDays(id: String, feccre: String) = Action { implicit request =>
+    //println("feccre : " + feccre)
+    var days: Int = IncidentService.selectSeverityDays(id, feccre)
     Ok(days.toString())
 
   }
@@ -573,15 +620,37 @@ object Incident extends Controller {
                 val elements = (json \\ "rules").children
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
-                  if (m.field.equals())
+                  /*
+                  if (!m.data.trim().equals("")){
+                    println(m.field + " - " + m.data.trim())
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                  * 
+                  */
+                  println(m.field + " - " + m.data.trim())
+                  if (m.field.equals("owner_name")) {
+                    qrystr += "task_owner_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("sponsor_name")) {
+                    qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("severity_description")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("severity_id", m.data) + " AND "
+                  } else if (m.field.equals("status_name")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                  } else if (m.field.equals("department")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else {
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
                 }
 
               }
             }
 
           }
-
+          println(qrystr)
           if (tieneJson) {
             panel = IncidentService.list("0", "0", qrystr)
           } else {
