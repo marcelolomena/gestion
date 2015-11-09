@@ -478,6 +478,37 @@ object ProgramService extends CustomColumns {
     }
 
   }
+  
+  def findAllUserJunior(username: String): Seq[ProgramMaster] = {
+    var email = username + "@bancochile.cl"
+
+    var sqlString = "EXEC art.list_member_junior {email}"
+    
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('email -> email).executeQuery() as (ProgramMaster.pMaster *)
+    }    
+
+  }  
+  
+  def findAllUserJunior(username: String,page:Int): Seq[ProgramMaster] = {
+    var email = username + "@bancochile.cl"
+
+    var sqlString = "EXEC art.list_program_member {email},{page}"
+    
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('email -> email,'page -> page).executeQuery() as (ProgramMaster.pMaster *)
+    }    
+  }  
+  
+  def countAllUserJunior(username: String): Int = {
+    var email = username + "@bancochile.cl"
+
+    var sqlString = "EXEC art.count_program_member {email}"
+    
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('email -> email).executeQuery() as (scalar[Int].single)
+    }    
+  }  
 
   def findProjectManagerPrograms(uId: String): Seq[ProgramMaster] = {
     var sqlString = ""
