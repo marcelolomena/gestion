@@ -8,13 +8,16 @@ import models.ComboConfiguration
 import models.ProgramCombo
 import models.Severity
 import models.ComboStatus
+import models.ComboDepartament
 import models.ErrorIncident
 import models.Status
 import models.SubTasks
 import models.Hours
 import models.IncidentSubTask
+import models.NameUsr
 import anorm._
 import anorm.SqlParser._
+import play.api.libs.json.JsObject
 
 /**
  * @author marcelo
@@ -99,7 +102,7 @@ object IncidentService {
     }
   }
 
-  def saveHours(task_for_date:String,nota:String,
+  def saveHours(task_for_date: String, nota: String,
                 ingresadas: String,
                 sub_task_id: String,
                 task_id: String,
@@ -123,6 +126,28 @@ object IncidentService {
     }
   }
 
+  def insertMember(name: String,
+                   task_for_date: String,
+                   nota: String,
+                   ingresadas: String,
+                   sub_task_id: String,
+                   user_creation_id: String): Option[ErrorIncident] = {
+
+    var sqlString = """
+      EXEC art.save_incident_member {name},{task_for_date},{nota},{ingresadas},{sub_task_id},{user_creation_id}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'name -> name,
+        'task_for_date -> task_for_date,
+        'nota -> nota,
+        'ingresadas -> ingresadas.toInt,
+        'sub_task_id -> sub_task_id.toInt,
+        'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
+    }
+  }
+
   def count(Json: String): Int = {
 
     var sqlString = "EXEC art.count_incident {Json}"
@@ -140,11 +165,10 @@ object IncidentService {
     }
   }
 
-  def selectSeverityDays(id: String): Int = {
-    var sqlString = ""
-    sqlString = "SELECT severity_days FROM art_incident_severity WHERE severity_id={id}"
+  def selectSeverityDays(id: String, feccre: String): Int = {
+    var sqlString = "EXEC art.severity_day_incident {id},{feccre}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('id -> id.toInt).as(scalar[Int].single)
+      SQL(sqlString).on('id -> id.toInt, 'feccre -> feccre).as(scalar[Int].single)
     }
   }
 
@@ -160,7 +184,26 @@ object IncidentService {
     var sqlString = ""
     sqlString = "SELECT status_id, RTRIM(status_name) status_name from art_incident_status where class_id = 1"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(ComboStatus.comboComboStatus *)
+      SQL(sqlString).as(ComboStatus.comboStatus *)
+    }
+  }
+
+  def listUsr(term: String): Seq[NameUsr] = {
+    var sqlString = "SELECT first_name + ' ' + last_name value,first_name + ' ' + last_name label from art_user where first_name like '%" + term + "%' OR last_name like '%" + term + "%'"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(NameUsr.name *)
+    }
+  }
+
+  def selectDepartamentIncident: Seq[ComboDepartament] = {
+    var sqlString = """
+    SELECT a.dId,a.department 
+    FROM art_department_master a, art_program b 
+    WHERE a.dId=b.department AND b.is_active=1 AND a.is_deleted = 0  AND b.program_id 
+    IN (SELECT DISTINCT program_id FROM art_incident)
+    """
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ComboDepartament.comboDepartament *)
     }
   }
 
