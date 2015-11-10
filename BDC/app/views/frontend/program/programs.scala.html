@@ -1,4 +1,4 @@
-@(programs: Seq[ProgramMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@(programs: Int)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
 @import services._
 @import play.api.i18n._
 @import java.text.SimpleDateFormat
@@ -34,7 +34,7 @@
      </div>
 <div class="width_full" id="search-result">
 
-@if(programs!=null){
+@if(programs>0){
 	
 <div class="project_list">
 	<div id="art_programs">
