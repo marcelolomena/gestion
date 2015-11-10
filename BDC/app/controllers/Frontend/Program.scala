@@ -112,9 +112,9 @@ object Program extends Controller {
         start = ((programnumber - 1) * 10) + 1;
         end = start + 9;
       }
-      println("start : " + start)
-      println("end : " + end)
-      println("pagina : " + programnumber)
+      //println("start : " + start)
+      //println("end : " + end)
+      //println("pagina : " + programnumber)
       
 /*
       if (StringUtils.equals(profile.trim, "pmo") || StringUtils.equals(profile.trim, "su") || StringUtils.equals(profile.trim, "cl")) {
@@ -172,8 +172,9 @@ object Program extends Controller {
 */
       
       
-        val programs = ProgramService.findAllUserJunior(username.toString())
-        println("largo weon = " + programs.length)
+        //val programs = ProgramService.findAllUserJunior(username.toString())
+        val programs = ProgramService.countAllUserJunior(username)
+        //println("largo weon = " + programs.length)
         var tasksDependents = new java.util.HashMap[Integer, Long]()
         val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
         Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
