@@ -102,7 +102,9 @@ object IncidentService {
     }
   }
 
-  def saveHours(task_for_date: String, nota: String,
+  def saveHours(task_for_date: String,
+                nota: String,
+                planeadas: String,
                 ingresadas: String,
                 sub_task_id: String,
                 task_id: String,
@@ -110,7 +112,7 @@ object IncidentService {
                 user_creation_id: String): Option[ErrorIncident] = {
 
     var sqlString = """
-      EXEC art.save_incident_hours {task_for_date},{nota},{ingresadas},{sub_task_id},
+      EXEC art.save_incident_hours {task_for_date},{nota},{planeadas},{ingresadas},{sub_task_id},
       {task_id},{uid},{user_creation_id}
       """
 
@@ -118,6 +120,7 @@ object IncidentService {
       SQL(sqlString).on(
         'task_for_date -> task_for_date,
         'nota -> nota,
+        'planeadas -> planeadas.toInt,
         'ingresadas -> ingresadas.toInt,
         'sub_task_id -> sub_task_id.toInt,
         'task_id -> task_id.toInt,
@@ -129,12 +132,13 @@ object IncidentService {
   def insertMember(name: String,
                    task_for_date: String,
                    nota: String,
+                   planeadas: String,
                    ingresadas: String,
                    sub_task_id: String,
                    user_creation_id: String): Option[ErrorIncident] = {
 
     var sqlString = """
-      EXEC art.save_incident_member {name},{task_for_date},{nota},{ingresadas},{sub_task_id},{user_creation_id}
+      EXEC art.save_incident_member {name},{task_for_date},{nota},{planeadas},{ingresadas},{sub_task_id},{user_creation_id}
       """
 
     DB.withConnection { implicit connection =>
@@ -142,6 +146,7 @@ object IncidentService {
         'name -> name,
         'task_for_date -> task_for_date,
         'nota -> nota,
+        'planeadas -> planeadas.toInt,
         'ingresadas -> ingresadas.toInt,
         'sub_task_id -> sub_task_id.toInt,
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
