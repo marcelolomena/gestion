@@ -129,6 +129,7 @@ object Incident extends Controller {
 
           val oper = (jsValue \ "oper")
           val nota = (jsValue \ "nota")
+          val planeadas = (jsValue \ "planeadas")
           val ingresadas = (jsValue \ "ingresadas")
           val sub_task_id = (jsValue \ "sub_task_id")
           val task_id = (jsValue \ "task_id")
@@ -137,7 +138,6 @@ object Incident extends Controller {
           val task_for_date = (jsValue \ "task_for_date")
 
           println("nota : " + nota)
-
           println("ingresadas : " + ingresadas)
           println("sub_task_id : " + sub_task_id)
           println("task_id : " + task_id)
@@ -146,11 +146,12 @@ object Incident extends Controller {
 
           if (oper.toString().replace("\"", "").equals("add")) {
             val name = (jsValue \ "nombre")
-            println("nombre : " + name)
+            //println("nombre : " + name)
             incident = IncidentService.insertMember(
               name.toString().replace("\"", ""),
               task_for_date.toString().replace("\"", ""),
               nota.toString().replace("\"", ""),
+              planeadas.toString().replace("\"", ""),
               ingresadas.toString().replace("\"", ""),
               sub_task_id.toString().replace("\"", ""),
               user_creation_id.toString().replace("\"", ""))
@@ -160,6 +161,7 @@ object Incident extends Controller {
             incident = IncidentService.saveHours(
               task_for_date.toString().replace("\"", ""),
               nota.toString().replace("\"", ""),
+              planeadas.toString().replace("\"", ""),
               ingresadas.toString().replace("\"", ""),
               sub_task_id.toString().replace("\"", ""),
               task_id.toString().replace("\"", ""),
