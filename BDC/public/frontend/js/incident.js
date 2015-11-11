@@ -199,7 +199,7 @@ $(document).ready(function(){
 	                   { label: 'sub_task_id', name: 'sub_task_id', hidden:true,editable: true, editrules: { edithidden: false },editoptions:{value:parentRowKey, defaultValue:parentRowKey}, hidedlg: true},
 	                   { label: 'task_id', name: 'task_id', hidden:true, editable: true, editrules: { edithidden: false }, hidedlg: true },   
 	                   { label: 'uid', name: 'uid', key: true, hidden:true },
-	                   { label: 'Nombre', name: 'nombre', width: 100,editable:true,
+	                   { label: 'Nombre', name: 'nombre', width: 100,editable:true,edittype:"text", editrules:{required: true},
 	                        editoptions: {
 	                            dataInit: function (element) {
 	                                window.setTimeout(function () {
@@ -225,7 +225,7 @@ $(document).ready(function(){
 	                            }
 	                        }
 	                   },
-	                   { label: 'Asignadas', name: 'planeadas', width: 50,editable:false },
+	                   { label: 'Asignadas', name: 'planeadas', width: 50,editable:true, edittype:"text", editrules:{number: true, required: true} },
 	                   { label: 'Trabajadas', name: 'trabajadas', width: 50,editable:false },
 	                   { label: 'Fecha', name: 'task_for_date',width: 50,editable: true,editrules:{required:true},
 	 	            	  editoptions: {
