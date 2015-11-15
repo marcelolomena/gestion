@@ -126,7 +126,7 @@ object ProjectMaster extends Controller {
                 var acutal_hours_completed_for_subtask: scala.math.BigDecimal = 0
                 for (suballoc <- allocationsubtasks) {
                   hrs_allocated_to_subtask += suballoc.estimated_time.toDouble
-                   println("hrs_allocated_to_subtask = " + suballoc.estimated_time.toDouble + "subtask completion_percentage =  " + subtask.completion_percentage.get)
+                   //println("hrs_allocated_to_subtask = " + suballoc.estimated_time.toDouble + "subtask completion_percentage =  " + subtask.completion_percentage.get)
                 }
 
                 val allocationsubtasksexternal = SubTaskServices.findSubTasksAllocationExternalBySubTask(subtask.sub_task_id.get.toString())

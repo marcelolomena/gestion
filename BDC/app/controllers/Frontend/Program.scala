@@ -112,30 +112,11 @@ object Program extends Controller {
         start = ((programnumber - 1) * 10) + 1;
         end = start + 9;
       }
-      //println("start : " + start)
-      //println("end : " + end)
-      //println("pagina : " + programnumber)
+      val programs = ProgramService.findAllUserJunior(user_id.toInt, programnumber.toInt)
+      val programCount = ProgramService.countAllUserJunior(user_id.toInt)
       
-/*
-      if (StringUtils.equals(profile.trim, "pmo") || StringUtils.equals(profile.trim, "su") || StringUtils.equals(profile.trim, "cl")) {
-        val programs = ProgramService.findPaginationProgramList(start, end)
-        val programCount = ProgramService.findProgramCount()
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)
-      } else {
-        val programs = ProgramService.findPaginationUserPrograms(user_id.toString(), start, end)
-        val programCount = ProgramService.findAllUserProgramsCount(user_id.toString())
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)
-      }
-*/
-        val programs = ProgramService.findAllUserJunior(username, programnumber)
-        val programCount = ProgramService.countAllUserJunior(username)
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)      
+      val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -149,46 +130,11 @@ object Program extends Controller {
       val user_id = Integer.parseInt(request.session.get("uId").get)
       val username = request.session.get("username").get
       val profile = request.session.get("user_profile").get
-      val pagenumber: Integer = 0
-      var start = 1;
-      var end = 10;
-      if (pagenumber > 0) {
-        start = ((pagenumber - 1) * 10) + 1;
-        end = start + 9;
-      }
-/*
-      if (StringUtils.equals(profile.trim, "pmo") || StringUtils.equals(profile.trim, "su") || StringUtils.equals(profile.trim, "cl")) {
-        val programs = ProgramService.findAllProgramList()
 
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
-      } else {
-        val programs = ProgramService.findAllUserPrograms(user_id.toString())
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
-      }
-*/
-      
-      
-        //val programs = ProgramService.findAllUserJunior(username.toString())
-        val programs = ProgramService.countAllUserJunior(username)
-        //println("largo weon = " + programs.length)
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
- 
-      /*
-       * else if (StringUtils.equals(profile.trim, "prm")) {
-        
-        val programs = ProgramService.findProjectManagerPrograms(user_id.toString())
-        println(programs.size)
-        var tasksDependents = new java.util.HashMap[Integer, Long]()
-        val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-        Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
-      }
-       */
+      val programs = ProgramService.countAllUserJunior(user_id.toInt)
+
+      val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -681,17 +627,16 @@ object Program extends Controller {
         } else {
 
           val last_program = ProgramService.insertProgramDetails(program)
-          
-            val dm = program.demand_manager
-            val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
-            //println("program member -------" + pms)
-            val lastsaved = ProgramMemberService.insertProgramMemberDetails(pms)
-          
+
+          val dm = program.demand_manager
+          val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
+          //println("program member -------" + pms)
+          val lastsaved = ProgramMemberService.insertProgramMemberDetails(pms)
 
           /**
            * Default project of type Initiative and its tasks...
            */
-/*
+          /*
           val projectTypes = GenericProjectService.findProjectTypeDetailsByType(1);
           if (!projectTypes.isEmpty) {
             val pm = program.program_manager
@@ -1277,16 +1222,16 @@ object Program extends Controller {
     Ok(node.toString())
   }
 
-  def graphDistributionInternalAction(id: String,pid: String) = Action { implicit request =>
+  def graphDistributionInternalAction(id: String, pid: String) = Action { implicit request =>
 
-    val calculos = DistributionTimeSheetService.distributionInternalTimeSheet(id,pid)
+    val calculos = DistributionTimeSheetService.distributionInternalTimeSheet(id, pid)
 
     Ok(play.api.libs.json.Json.toJson(calculos))
   }
 
-  def graphDistributionExternalAction(id: String,pid: String) = Action { implicit request =>
+  def graphDistributionExternalAction(id: String, pid: String) = Action { implicit request =>
 
-    val calculos = DistributionTimeSheetService.distributionExternalTimeSheet(id,pid)
+    val calculos = DistributionTimeSheetService.distributionExternalTimeSheet(id, pid)
 
     Ok(play.api.libs.json.Json.toJson(calculos))
   }
@@ -2650,7 +2595,7 @@ object Program extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-  
+
   def issueManagementForTimesheet(parent_id: String, parent_type: Integer) = Action { implicit request =>
     request.session.get("username").map { user =>
       Ok(views.html.frontend.task.issueManagementForTimesheet(parent_id, parent_type)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
@@ -2659,8 +2604,8 @@ object Program extends Controller {
 
       Redirect(routes.Login.loginUser())
     }
-  }  
-  
+  }
+
   def issueDetails(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 
