@@ -479,34 +479,20 @@ object ProgramService extends CustomColumns {
 
   }
   
-  def findAllUserJunior(username: String): Seq[ProgramMaster] = {
-    var email = username + "@bancochile.cl"
+ 
+  def findAllUserJunior(user_id: Int,page:Int): Seq[ProgramMaster] = {
+    var sqlString = "EXEC art.list_member_junior {uid},{page}"
 
-    var sqlString = "EXEC art.list_member_junior {email}"
-    
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('email -> email).executeQuery() as (ProgramMaster.pMaster *)
-    }    
-
-  }  
-  
-  def findAllUserJunior(username: String,page:Int): Seq[ProgramMaster] = {
-    var email = username + "@bancochile.cl"
-
-    var sqlString = "EXEC art.list_program_member {email},{page}"
-    
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('email -> email,'page -> page).executeQuery() as (ProgramMaster.pMaster *)
+      SQL(sqlString).on('uid -> user_id,'page -> page).executeQuery() as (ProgramMaster.pMaster *)
     }    
   }  
   
-  def countAllUserJunior(username: String): Int = {
-    var email = username + "@bancochile.cl"
-
-    var sqlString = "EXEC art.count_program_member {email}"
+  def countAllUserJunior(user_id: Int): Int = {
+    var sqlString = "EXEC art.count_program_member {uid}"
     
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('email -> email).executeQuery() as (scalar[Int].single)
+      SQL(sqlString).on('uid -> user_id).executeQuery() as (scalar[Int].single)
     }    
   }  
 
