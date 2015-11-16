@@ -3,7 +3,7 @@ package controllers.Frontend
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.ProgramaService
-
+import utils.FormattedOutPuts
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -16,6 +16,21 @@ import models._
  */
 object Programa extends Controller {
 
+    def fromProgramName(choice: String, value: String): String = choice match {
+    case "dId"                => " '" + value + "' "
+    case "status_id"          => " '" + value + "' "
+    case "severity_id"        => " '" + value + "' "
+    case "configuration_name" => " '%" + value + "%' "
+    case "program_name"       => " '%" + value + "%' "
+    case "sponsor_name"       => " '%" + value + "%' "
+    case "brief_description"  => " '%" + value + "%' "
+    case "date_creation"      => " '" + value + "' "
+    case "date_end"           => " '" + value + "' "
+    case "ir_number"          => value
+    case _                    => "error"
+  }
+    
+    
   def listado() = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -58,15 +73,15 @@ object Programa extends Controller {
                     qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
                   } else if (m.field.equals("severity_description")) {
                     if (m.data.toInt != 0)
-                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("severity_id", m.data) + " AND "
+                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("severity_id", m.data) + " AND "
                   } else if (m.field.equals("status_name")) {
                     if (m.data.toInt != 0)
-                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("status_id", m.data) + " AND "
                   } else if (m.field.equals("department")) {
                     if (m.data.toInt != 0)
-                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("dId", m.data) + " AND "
                   } else {
-                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromProgramName(m.field, m.data) + " AND "
                   }
                 }
 
