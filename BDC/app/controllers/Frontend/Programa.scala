@@ -16,7 +16,7 @@ import models._
  */
 object Programa extends Controller {
 
-    def fromProgramName(choice: String, value: String): String = choice match {
+  def fromProgramName(choice: String, value: String): String = choice match {
     case "dId"                => " '" + value + "' "
     case "status_id"          => " '" + value + "' "
     case "severity_id"        => " '" + value + "' "
@@ -29,8 +29,18 @@ object Programa extends Controller {
     case "ir_number"          => value
     case _                    => "error"
   }
-    
-    
+
+  def home = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        Ok(views.html.frontend.programa.programa()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
   def listado() = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -99,7 +109,7 @@ object Programa extends Controller {
             }
           }
         } else {
-          records = ProgramaService.cantidad(user_id,"")
+          records = ProgramaService.cantidad(user_id, "")
           panel = ProgramaService.listado(user_id, page, "")
 
         }
