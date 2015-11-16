@@ -71,9 +71,9 @@ object Incident extends Controller {
           val sub_task_id = (jsValue \ "sub_task_id")
           val oper = (jsValue \ "oper")
 
-          println("completion_percentage : " + completion_percentage)
-          println("sub_task_id : " + sub_task_id)
-          println("oper : " + oper)
+          //println("completion_percentage : " + completion_percentage)
+          //println("sub_task_id : " + sub_task_id)
+          //println("oper : " + oper)
 
           if (oper.toString().replace("\"", "").equals("edit")) {
 
@@ -137,12 +137,12 @@ object Incident extends Controller {
           val user_creation_id = request.session.get("uId").get
           val task_for_date = (jsValue \ "task_for_date")
 
-          println("nota : " + nota)
-          println("ingresadas : " + ingresadas)
-          println("sub_task_id : " + sub_task_id)
-          println("task_id : " + task_id)
-          println("uid : " + uid)
-          println("user_creation_id : " + user_creation_id)
+          //println("nota : " + nota)
+          //println("ingresadas : " + ingresadas)
+          //println("sub_task_id : " + sub_task_id)
+          //println("task_id : " + task_id)
+          //println("uid : " + uid)
+          //println("user_creation_id : " + user_creation_id)
 
           if (oper.toString().replace("\"", "").equals("add")) {
             val name = (jsValue \ "nombre")
