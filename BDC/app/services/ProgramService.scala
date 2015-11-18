@@ -58,7 +58,7 @@ object ProgramService extends CustomColumns {
           'program_description -> pm.program_description,
           'work_flow_status -> pm.work_flow_status,
           'demand_manager -> pm.demand_manager,
-          'program_manager -> pm.demand_manager,//pm.program_manager,
+          'program_manager -> pm.demand_manager, //pm.program_manager,
           'devison -> pm.program_details.devison,
           'management -> pm.program_details.management,
           'department -> pm.program_details.department,
@@ -328,7 +328,7 @@ object ProgramService extends CustomColumns {
     if (!creationDate) {
       new_form = form.withError("program_dates.end_planned_date", Messages.get(langObj, "error.addnewprogram.creationdatetodaycompare"))
     }
-
+/*
     if (!StringUtils.isEmpty(old_id)) {
 
       if (!invalid_release_date && release_date != null) {
@@ -377,6 +377,7 @@ object ProgramService extends CustomColumns {
       }
 
     }
+ */   
     if (date1 < date4 && date1 != 0) {
       new_form = form.withError("program_dates.closure_date", "Fecha de cierre no debe ser menor que la fecha de lanzamiento.")
     }
@@ -408,13 +409,13 @@ object ProgramService extends CustomColumns {
 
     }
   }
-  
+
   def programas_sin_avance_en_tareas(uid: String): Seq[ProgramMaster] = {
     var sqlString = "EXEC art.sin_avance {uid}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('uid -> uid.toInt).executeQuery() as (ProgramMaster.pMaster *)
     }
-  }  
+  }
 
   def findProgramMasterDetailsById(pId: String) = {
     DB.withConnection { implicit connection =>
@@ -478,23 +479,22 @@ object ProgramService extends CustomColumns {
     }
 
   }
-  
- 
-  def findAllUserJunior(user_id: Int,page:Int): Seq[ProgramMaster] = {
+
+  def findAllUserJunior(user_id: Int, page: Int): Seq[ProgramMaster] = {
     var sqlString = "EXEC art.list_member_junior {uid},{page}"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> user_id,'page -> page).executeQuery() as (ProgramMaster.pMaster *)
-    }    
-  }  
-  
+      SQL(sqlString).on('uid -> user_id, 'page -> page).executeQuery() as (ProgramMaster.pMaster *)
+    }
+  }
+
   def countAllUserJunior(user_id: Int): Int = {
     var sqlString = "EXEC art.count_program_member {uid}"
-    
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('uid -> user_id).executeQuery() as (scalar[Int].single)
-    }    
-  }  
+    }
+  }
 
   def findProjectManagerPrograms(uId: String): Seq[ProgramMaster] = {
     var sqlString = ""
@@ -834,14 +834,14 @@ object ProgramService extends CustomColumns {
       SQL(sqlString).as(ProgramStatus.pStatus.singleOpt)
     }
   }
-  
+
   def findAllProgramStatus(program_id: String): Seq[ProgramStatus] = {
     var sqlString = ""
     sqlString = "SELECT * from art_program_status where program_id=" + program_id + "  order by status_for_date DESC"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProgramStatus.pStatus *)
     }
-  }  
+  }
 
   def findActivePrograms(): Seq[ProgramMaster] = {
     var sqlString = ""
@@ -865,7 +865,7 @@ object ProgramService extends CustomColumns {
     }
   }
 
-  def searchDashboardReport(work_flow_status:String, program_name: String,program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
+  def searchDashboardReport(work_flow_status: String, program_name: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
     //var sqlString = ""
     //var stment1 = ""
     //var stment2 = ""
@@ -876,15 +876,15 @@ object ProgramService extends CustomColumns {
     //var stment7 = ""
     //var tstx = "OR"
     var sqlString = "SELECT * from art_program where "
- 
+
     if (!StringUtils.isEmpty(work_flow_status)) {
       sqlString = sqlString + " work_flow_status = " + work_flow_status + " AND"
     }
-    
+
     if (!StringUtils.isEmpty(program_name)) {
       sqlString = sqlString + " program_name like '%" + program_name + "%' AND"
     }
-    
+
     if (!StringUtils.isEmpty(program_type)) {
       sqlString = sqlString + " program_type=" + program_type + " AND"
     }
@@ -928,7 +928,7 @@ object ProgramService extends CustomColumns {
           maxVal = 1000000
       }
       */
-/*
+    /*
       val programs = ProgramService.findActivePrograms()
       for (p <- programs) {
         val earn = SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString())
@@ -962,7 +962,7 @@ object ProgramService extends CustomColumns {
     }
 */
     //println("---------------------"+sqlString)
-/*
+    /*
     if (!StringUtils.isEmpty(project_classification)) {
       var minVal: Double = 0
       var maxVal: Double = 0
