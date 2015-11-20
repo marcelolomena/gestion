@@ -590,4 +590,9 @@ POST   /incidentSaveSubTask																			  controllers.Frontend.Incident.sa
 GET	   /incidentDepartamentList																		  controllers.Frontend.Incident.departamentList
 GET    /incidentAddMember																		      controllers.Frontend.Incident.addMember
 #Migracion Programa
-GET	   /programa																					  controllers.Frontend.Programa.listado
+GET	   /programa																					  controllers.Frontend.Programa.home
+GET    /listadoPrograma																				  controllers.Frontend.Programa.listado
+GET    /listaDivisiones																				  controllers.Frontend.Programa.listaDivisiones
+GET    /listaTipo																				      controllers.Frontend.Programa.listaTipo
+GET    /listaFoco																				      controllers.Frontend.Programa.listaFoco
+GET    /listaEstado																				      controllers.Frontend.Programa.listaEstado
