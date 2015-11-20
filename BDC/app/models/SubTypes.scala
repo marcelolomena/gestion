@@ -3,6 +3,7 @@ package models
 import anorm.SqlParser._
 import anorm._
 import java.util.Date
+import play.api.libs.json.Json
 
 case class SubTypes(id: Option[Int], sub_type: String, description: String, user_id: Int, creation_date: Date, is_deleted: Boolean)
 
@@ -23,7 +24,7 @@ object SubTypes extends CustomColumns{
           is_deleted => SubTypes(id, sub_type, description, user_id, creation_date, is_deleted)
       }
   }
-
+  implicit val subtypesWrites = Json.writes[SubTypes]
 }
 
 case class SubTypeCase(id: Option[Int], sub_type: String, description: String)

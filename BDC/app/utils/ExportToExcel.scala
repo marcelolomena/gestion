@@ -77,10 +77,10 @@ object ExportToExcel {
 		dataRow.createCell(3).setCellValue(program.get.program_code)
 		dataRow.createCell(4).setCellValue(UserService.findUserDetailsById(program.get.program_manager.toLong).get.first_name)
 		dataRow.createCell(5).setCellValue(UserService.findUserDetailsById(program.get.demand_manager.toLong).get.first_name)
-		if (!program.get.work_flow_status.isEmpty) {
-			dataRow.createCell(6).setCellValue(program.get.work_flow_status.get.toString())
-		} else
-			dataRow.createCell(6).setCellValue("")
+		//if (!program.get.work_flow_status.isEmpty) {
+			dataRow.createCell(6).setCellValue(program.get.work_flow_status.toString())
+		//} else
+			//dataRow.createCell(6).setCellValue("")
 		if (!program.get.program_sub_type.isEmpty)
 			dataRow.createCell(7).setCellValue(program.get.program_sub_type.get.toString())
 		else

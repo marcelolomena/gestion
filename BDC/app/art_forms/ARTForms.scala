@@ -277,7 +277,7 @@ object ARTForms {
       "program_name" -> text.verifying(Messages.get(langObj, "error.program.program_name.MinMax"), program_name => program_name.trim().length() >= 4 && program_name.trim().length() <= 140),
       "program_code" -> of[Long], //.verifying(Messages.get(langObj, "error.program.program_code.MinMax"), program_code => (program_code >= 0 && program_code < 99999999)).verifying(Messages.get(langObj, "error.program.program_code.unique"), program_code => ProgramService.findPrgoramCode(program_code)),
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
-      "work_flow_status" -> optional(number),
+      "work_flow_status" -> number,
       "demand_manager" -> number,
       "program_manager" -> number,
       "program_details" -> mapping(
@@ -312,7 +312,7 @@ object ARTForms {
       "program_name" -> text.verifying(Messages.get(langObj, "error.program.program_name.MinMax"), program_name => program_name.trim().length() >= 4 && program_name.trim().length() <= 140),
       "program_code" -> of[Long], //.verifying(Messages.get(langObj, "error.program.program_code.MinMax"), program_code => (program_code >= 0 && program_code < 99999999)), //
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
-      "work_flow_status" -> optional(number),
+      "work_flow_status" -> number,
       "demand_manager" -> number,
       "program_manager" -> number,
       "program_details" -> mapping(
@@ -879,7 +879,8 @@ object ARTForms {
       "division" -> optional(text),
       "program_role" -> optional(text),
       "item_budget" -> optional(text),
-      "sort_field" -> optional(text))(ProgramSearch.apply)(ProgramSearch.unapply))
+      "sort_field" -> optional(text),
+      "impact_type" -> optional(text))(ProgramSearch.apply)(ProgramSearch.unapply))
 
   /**
    * *

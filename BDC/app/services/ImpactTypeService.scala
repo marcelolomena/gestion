@@ -19,6 +19,13 @@ object ImpactTypeService {
       SQL(sqlString).as(ImpactTypes.impactTypes *)
     }
   }
+  
+  def findAllImpactTypeList(): Seq[ImpactTypes] = {
+    var sqlString = "SELECT * from art_program_impact_type"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ImpactTypes.impactTypes *)
+    }
+  }  
 
   /*  def impactTypeCount() :Long = {
     DB.withConnection { implicit connection =>

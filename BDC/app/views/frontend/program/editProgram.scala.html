@@ -1,4 +1,4 @@
-@(programForm: Form[Programs],id:String, userMap: java.util.HashMap[String,String],divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap: java.util.HashMap[String,String], programSubType: java.util.HashMap[String,String], programType: java.util.HashMap[String,String],workflowStatus: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
+@(programForm: Form[Programs],id:String, userMap: java.util.HashMap[String,String],divisionMap: java.util.HashMap[String,String],gerenciasMap: java.util.HashMap[String,String],departmentsMap: java.util.HashMap[String,String], programSubType: java.util.HashMap[String,String], programType: java.util.HashMap[String,String],workflowStatus: java.util.HashMap[String,String],impacttypeMap: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
 @import services._
@@ -49,7 +49,7 @@
            			<input type="hidden" name="program_details.business_line" value="Not Needed"/>
            			@*<input type="hidden" name="program_details.sap_code" value="99999"/>*@
            			<input type="hidden" name="program_details.total_sap" value="100"/>
-           			<input type="hidden" name="program_details.impact_type" value="1"/>
+           			@*<input type="hidden" name="program_details.impact_type" value="1"/>*@
            			<input type="hidden" id="program_code" name="program_code" value="@programForm.data.get("program_code")"/>
     				<input type="hidden" name="program_manager" value="1"/>  
     				
@@ -253,6 +253,16 @@
 						         '_label -> Messages("addNewProgram.workFlowStatus"),
 						          '_default -> Messages("addNewProgram.placeholder.work_flow_status")
 					      )
+	           			</div>
+	           			
+	           			<div class="left width-pr50 padding-top-3px" >
+	    					 @select(
+						         programForm("program_details.impact_type"),
+						         options(impacttypeMap),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.impactType"),
+						          '_default -> Messages("addNewProgram.placeholder.impact_type")
+						      )
 	           			</div>
            			</div>
 					

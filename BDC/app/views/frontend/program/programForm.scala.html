@@ -1,4 +1,4 @@
-@(workflowStatusValues : java.util.HashMap[String,String],modelManagementValues : java.util.HashMap[String, String], divisionValues : java.util.HashMap[String, String], programSubTypeValues : java.util.HashMap[String, String], budgetTypeValues: java.util.HashMap[String, String], programManagerValues : java.util.HashMap[String, String], sortValues : java.util.HashMap[String, String],searchProgram : Form[ProgramSearch])(implicit session: play.api.mvc.Session,lang: Lang)
+@(impacttypeMap: java.util.HashMap[String,String],workflowStatusValues : java.util.HashMap[String,String],modelManagementValues : java.util.HashMap[String, String], divisionValues : java.util.HashMap[String, String], programSubTypeValues : java.util.HashMap[String, String], budgetTypeValues: java.util.HashMap[String, String], programManagerValues : java.util.HashMap[String, String], sortValues : java.util.HashMap[String, String],searchProgram : Form[ProgramSearch])(implicit session: play.api.mvc.Session,lang: Lang)
 @import play.api.i18n._
 @import play.api._
 @import services._
@@ -8,16 +8,15 @@
 	 	<div class="search-form-wrapper" style="padding: 10px 40px;">
 		@form(action = controllers.Frontend.routes.Program.searchResult, 'id->"search-program-form") {
 			
-			<div class="left width_full">
-			 	<div class="left width-pr50 padding-top-3px">
+			<div class="field-wrapper">
 					@inputText(
 			                searchProgram("program_name"),
 			                'class -> "span5", 
 			                '_label -> Messages("addNewProgram.programName"),
 			                'placeholder -> Messages("addNewProgram.placeholder.program_name")
 				    )
-	            </div>
-	            <div class="right width-pr50 padding-top-3px" >
+	        </div>
+	            <div class="field-wrapper">
 					@select(
 	            		searchProgram("work_flow_status"),
 	       				options(workflowStatusValues),
@@ -26,60 +25,49 @@
 						'_default -> Messages("addNewProgram.placeholder.work_flow_status")
 					)
 				</div>
-			</div>
+
 			
             <div class="field-wrapper" > 
-            	@select(
+            		@select(
 		            	searchProgram("program_type"),
 		       			options(modelManagementValues),
 						'class -> "input-xlarge ",
 						'_label -> Messages("programsearch.programtype"),
 						'_default -> Messages("programsearch.selectprogramtype"))
-            </div>
-            
-            <div class="field-wrapper"> 
-            	@select(
+			</div>
+				<div class="field-wrapper">
+					@select(
 		            	searchProgram("program_sub_type"),
 		       			options(programSubTypeValues),
 						'class -> "input-xlarge ", 
 						'_label -> Messages("programsearch.programsubtype"),
 						'_default -> Messages("programsearch.selectprogramsubtype")) 
-						
-            </div>
+				</div>
+
+            
         
             <div class="field-wrapper">
-              @select(
+
+             		 @select(
 		            	searchProgram("division"),
 		       			options(divisionValues),
 						'class -> "input-xlarge ",
 						'_label -> Messages("programsearch.division"),
 						'_default -> Messages("programsearch.selectdivision"))
               
-            	
-            </div>
-            
-            <div class="field-wrapper "> 
-              		
-              		@select(
+ 			</div>
+				<div class="field-wrapper">
+					 	@select(
 		            	searchProgram("program_role"),
 		       			options(programManagerValues),
 						'class -> "input-xlarge ",
 						'_label -> Messages("programsearch.programmember"),
 						'_default -> Messages("programsearch.selectprogrammember"))
-              
-            	@*<dl id="tasks_field" class=" ">
-				    <dt><label for="program_role">Program Managers</label></dt>
-				    <dd>
-					    <select class="input-xlarge " name="program_role" id="program_role">
-					            <option value="" class="blank">--- Choose Roles ---</option>
-					           
-					    </select>
-					</dd>
-				</dl>*@
-            </div>
-            
-            <div style="width:100%; float:left">
-	            <div class="field-wrapper" > 
+				</div>          	
+       
+ 
+            <div class="field-wrapper">
+
 	            		@select(
 		            	searchProgram("item_budget"),
 		       			options(budgetTypeValues),
@@ -87,9 +75,9 @@
 						'_label -> Messages("programsearch.budgettype"),
 						'_default -> Messages("programsearch.selectbudgettype"))
 	            	
-	            </div>
+	           </div>
 	            
-	            <div class="field-wrapper" > 
+	           <div class="field-wrapper"> 
 	            		@select(
 		            	searchProgram("sort_field"),
 		       			options(sortValues),
@@ -98,7 +86,18 @@
 						'_default -> Messages("programsearch.selectsorttype"))
 	            	
 	            </div>
-            </div>
+            
+            <div class="field-wrapper">
+
+	    					 @select(
+						         searchProgram("impact_type"),
+						         options(impacttypeMap),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.impactType"),
+						          '_default -> Messages("addNewProgram.placeholder.impact_type")
+						      )
+
+	        </div>
             
             <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
             	<span class="left" style="margin-top: 15px;"><input class="btn form-button" id="program-search-form" value='@Messages("button.search")' type="button"/></span>

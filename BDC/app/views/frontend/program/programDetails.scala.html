@@ -1,4 +1,4 @@
-@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramInternalMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternalAllocation],programWorkflowStatus:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramInternalMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternalAllocation],programWorkflowStatus:String,impacto:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import utils._
@@ -159,11 +159,19 @@
 		
          <li>
 			<span class="header">Estado </span>
-			<span style="float: left;width:143px;">
+			<span class="program-data">
 				@programWorkflowStatus
 			</span>
 
 		</li>
+		
+         <li>
+			<span class="header">Impacto </span>
+			<span class="program-data">
+				@impacto
+			</span>
+
+		</li>		
   	</ul>
   	<ul style="width: 310px;float:left;margin-left: 10px;  min-height:215px;">
   		

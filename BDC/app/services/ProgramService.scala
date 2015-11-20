@@ -865,7 +865,7 @@ object ProgramService extends CustomColumns {
     }
   }
 
-  def searchDashboardReport(work_flow_status: String, program_name: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
+  def searchDashboardReport(impact_type:String,work_flow_status: String, program_name: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
     //var sqlString = ""
     //var stment1 = ""
     //var stment2 = ""
@@ -877,6 +877,10 @@ object ProgramService extends CustomColumns {
     //var tstx = "OR"
     var sqlString = "SELECT * from art_program where "
 
+    if (!StringUtils.isEmpty(impact_type)) {
+      sqlString = sqlString + " impact_type = " + impact_type + " AND"
+    }
+    
     if (!StringUtils.isEmpty(work_flow_status)) {
       sqlString = sqlString + " work_flow_status = " + work_flow_status + " AND"
     }

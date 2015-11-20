@@ -3,6 +3,7 @@ package models
 import anorm.SqlParser._
 import anorm._
 import java.util.Date
+import play.api.libs.json.Json
 
 case class ProgramTypeMaster(id: Option[Int], program_type: String, description: String, user_id: Int, creation_date: Date, is_deleted: Boolean)
 
@@ -23,6 +24,7 @@ object ProgramTypeMaster extends CustomColumns{
           is_deleted => ProgramTypeMaster(id, program_type, description, user_id, creation_date, is_deleted)
       }
   }
+  implicit val programtypesWrites = Json.writes[ProgramTypeMaster]
 }
 
 case class ProgramTypeCase(id: Option[Int], program_type: String, description: String)
@@ -51,4 +53,5 @@ object ProgramWorkflowStatus {
         case id ~ workflow_status => ProgramWorkflowStatus(id, workflow_status)
       }
   }
+  implicit val programaWrites = Json.writes[ProgramWorkflowStatus]
 }

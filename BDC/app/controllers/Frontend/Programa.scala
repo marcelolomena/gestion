@@ -3,6 +3,9 @@ package controllers.Frontend
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.ProgramaService
+import services.DivisionService
+import services.SubTypeService
+import services.ProgramTypeService
 import utils.FormattedOutPuts
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
@@ -137,6 +140,38 @@ object Programa extends Controller {
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
+
+  }
+
+  def listaDivisiones = Action { implicit request =>
+
+    val divisionValues = DivisionService.findAllDivision
+
+    Ok(play.api.libs.json.Json.toJson(divisionValues))
+
+  }
+
+  def listaTipo = Action { implicit request =>
+
+    val modelManagementValues = ProgramTypeService.findAllProgramType
+
+    Ok(play.api.libs.json.Json.toJson(modelManagementValues))
+
+  }
+
+  def listaFoco = Action { implicit request =>
+
+    val programSubTypeValues = SubTypeService.findAllSubTypeList
+
+    Ok(play.api.libs.json.Json.toJson(programSubTypeValues))
+
+  }
+
+  def listaEstado = Action { implicit request =>
+
+    val workflowStatusValues = ProgramTypeService.findAllWorkflowStatus
+
+    Ok(play.api.libs.json.Json.toJson(workflowStatusValues))
 
   }
 
