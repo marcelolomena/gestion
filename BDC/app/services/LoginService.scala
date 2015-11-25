@@ -57,11 +57,18 @@ object LoginService {
 
 	/**
 	 * verify login username and password..
+   * 
+select IIF(LEN(emailTrab)>1,LEFT(emailTrab, CHARINDEX('@', emailTrab) - 1 ),null) mail,uname from RecursosHumanos a left outer join
+art_user b on IIF(LEN(emailTrab)>1,LEFT(emailTrab, CHARINDEX('@', emailTrab) - 1 ),null)=uname
+where uname is null 
+rpizarrom
 	 */
 	def loginUserCheck(uname: String, password: String) = {
 		DB.withConnection { implicit connection =>
 
-			val result = SQL("select * from art_user where uname='" + uname.trim() + "' AND status=1").as(Login.login.singleOpt)
+			//val result = SQL("select * from art_user where uname='" + uname.trim() + "' AND status=1").as(Login.login.singleOpt)
+      val result =SQL("art.loginUserCheck {uname}").on('uname -> uname).executeQuery() as (Login.login.singleOpt)
+
 			var isValid = false
 
 			if (!result.isEmpty) {
