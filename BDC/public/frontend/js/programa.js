@@ -21,6 +21,22 @@ $(document).ready(function(){
 	
 	var programaModel = [
 	                    { label: 'program_id', name: 'program_id', width: 100, key: true, hidden:true }, 
+	                    { label: 'Estado', name: 'spi', width: 50,search:false, 
+			            	formatter: function (cellvalue) {
+                            	var color;
+                            	var val = Number(cellvalue);
+                            	if (val < 0.8) {
+                             	   color = 'red';
+                            	} else if (val >= 0.8 && val < 0.95) {
+                             	   color = 'yellow';
+                            	} else if (val >= 0.95) {
+                             	   color = 'green';
+                            	}
+                            	console.log(color);
+                        		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
+                        	}
+			            	
+			            },  	                    
 	                    { label: 'Programa', name: 'program_name', width: 300,formatter: returnProgramLink, search:false },
 	                    { label: 'División', name: 'division', width: 250,editable: false, hidden: false, editrules: {edithidden: true},
 	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaDivisiones',
@@ -90,6 +106,10 @@ $(document).ready(function(){
 	        		              },sopt: ["gt","lt","eq"]
 	                     }
 	                    },
+	                    { label: '% Avance', name: 'pai', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] }},
+	                    { label: '% Esperado', name: 'pae', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
+	                    { label: 'SPI', name: 'spi', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
+	                    { label: 'CPI', name: 'cpi', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
 	                ];
 	
 	$("#jqGridProgram").jqGrid({

@@ -20,17 +20,16 @@ import models._
 object Programa extends Controller {
 
   def fromProgramName(choice: String, value: String): String = choice match {
-    case "dId"                => " '" + value + "' "
-    case "status_id"          => " '" + value + "' "
-    case "severity_id"        => " '" + value + "' "
-    case "configuration_name" => " '%" + value + "%' "
-    case "program_name"       => " '%" + value + "%' "
-    case "sponsor_name"       => " '%" + value + "%' "
-    case "brief_description"  => " '%" + value + "%' "
-    case "date_creation"      => " '" + value + "' "
-    case "date_end"           => " '" + value + "' "
-    case "ir_number"          => value
-    case _                    => "error"
+    case "devison"                => value
+    case "program_type"           => value
+    case "program_sub_type"       => value
+    case "work_flow_status"       => value
+    case "pai"                    => value
+    case "pae"                    => value
+    case "spi"                    => value
+    case "cpi"                    => value
+    case "release_date"           => " '" + value + "' "    
+    case _                        => "error"
   }
 
   def home = Action {
@@ -60,6 +59,7 @@ object Programa extends Controller {
         var node = new JSONObject()
         var tieneJson = true
         var qrystr = ""
+        var qrystr_c = ""
 
         if (!StringUtils.isEmpty(filters)) {
 
@@ -80,20 +80,28 @@ object Programa extends Controller {
                 val elements = (json \\ "rules").children
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
-                  if (m.field.equals("owner_name")) {
-                    qrystr += "task_owner_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
-                  } else if (m.field.equals("sponsor_name")) {
-                    qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
-                  } else if (m.field.equals("severity_description")) {
-                    if (m.data.toInt != 0)
-                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("severity_id", m.data) + " AND "
-                  } else if (m.field.equals("status_name")) {
-                    if (m.data.toInt != 0)
-                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("status_id", m.data) + " AND "
-                  } else if (m.field.equals("department")) {
-                    if (m.data.toInt != 0)
-                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("dId", m.data) + " AND "
-                  } else {
+                  if (m.field.equals("division")) {
+                    if (m.data.toInt != 0){
+                      qrystr += "X.dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
+                      qrystr_c += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
+                    }
+                  } else if (m.field.equals("program_type")) {
+                    if (m.data.toInt != 0){
+                      qrystr += "X.program_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_type", m.data) + " AND "
+                      qrystr_c += "t1.id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
+                    }
+                  } else if (m.field.equals("sub_type")) {
+                    if (m.data.toInt != 0){
+                      qrystr += "X.program_sub_type" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_sub_type", m.data) + " AND "
+                    }
+                  } else if (m.field.equals("workflow_status")) {
+                    if (m.data.toInt != 0){
+                      qrystr += "X.work_flow_status" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("work_flow_status", m.data) + " AND "
+                    }
+                  } else if (m.field.equals("release_date")) {
+                      qrystr += "X.release_date" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("release_date", m.data) + " AND "
+                  } 
+                  else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromProgramName(m.field, m.data) + " AND "
                   }
                 }
@@ -101,8 +109,10 @@ object Programa extends Controller {
               }
             }
 
+            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
+            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
             if (tieneJson) {
-              records = ProgramaService.cantidad(user_id, qrystr)
+              records = ProgramaService.cantidad(user_id, qrystr_c)
               panel = ProgramaService.listado(user_id, page, qrystr)
 
             } else {
@@ -127,6 +137,10 @@ object Programa extends Controller {
           campo.put("workflow_status", p.workflow_status)
           campo.put("program_name", p.program_name)
           campo.put("release_date", p.release_date.getOrElse("").toString())
+          campo.put("pai",p.pai)
+          campo.put("pae",p.pai)
+          campo.put("spi",p.spi)
+          campo.put("cpi",p.cpi)
           registro.put(campo)
         }
         var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt

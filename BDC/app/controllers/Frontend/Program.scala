@@ -1460,7 +1460,7 @@ object Program extends Controller {
             //val user_periods = 	ProgramMemberService.findPeriods(program_id)
             BadRequest(views.html.frontend.program.newMember(program_id, theForm, programRoles, userMap, progrma_members, externalEmployees)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
           } else {
-            println("program_member.pData : " + program_member.pData)
+            //println("program_member.pData : " + program_member.pData)
             //val pms = ProgramMembers(None, program_member.program_id, program_member.role_id, program_member.member_id, program_member.is_active,program_member.pData)
             //println("program_member.role_id : " + program_member.role_id)
             //println("program_member.member_id : " + program_member.member_id)

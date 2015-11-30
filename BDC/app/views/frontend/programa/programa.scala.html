@@ -1,6 +1,17 @@
 @()(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
 
 @frontend.simpleLayout()
+<style type="text/css">
+        span.cellWithoutBackground
+        {
+            display:block;
+            background-image:none;
+            margin-right:-2px;
+            margin-left:-2px;
+            height:14px;
+            padding:4px;
+        }
+</style>
 <style type="text/css" media="screen">
     th.ui-th-column div{
         white-space:normal !important;
