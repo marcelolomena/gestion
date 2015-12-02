@@ -15,6 +15,7 @@ import services.LoginService
 import services.ProjectManagerService
 import services.ProjectService
 import services.UserService
+import com.microsoft.sqlserver.jdbc.SQLServerException
 
 object Login extends Controller {
 
@@ -62,16 +63,22 @@ object Login extends Controller {
         if (theForm.hasErrors) {
           BadRequest(views.html.frontend.user.loginUser(theForm)).withNewSession
         } else {
-          val result = LoginService.loginUserCheck(theForm.data.get("uname").get, theForm.data.get("password").get);
-          val uType = result.get.isadmin
-          val user_profile = result.get.user_profile
-          /**
-           * Activity log
-           */
-          val act = Activity(ActivityTypes.Login.id, "Login by " + result.get.uname, new Date(), result.get.uid.get, result.get.uid.get)
-          Activity.saveLog(act)
 
-          Redirect(routes.User.employeeDetails(result.get.uid.get.toLong)).withSession("username" -> result.get.uname, "utype" -> result.get.isadmin.toString(), "uId" -> result.get.uid.get.toString(), "user_profile" -> user_profile)
+          try {
+            val result = LoginService.loginUserCheck(theForm.data.get("uname").get, theForm.data.get("password").get)
+
+            val uType = result.get.isadmin
+            val user_profile = result.get.user_profile
+            /**
+             * Activity log
+             */
+            val act = Activity(ActivityTypes.Login.id, "Login by " + result.get.uname, new Date(), result.get.uid.get, result.get.uid.get)
+            Activity.saveLog(act)
+
+            Redirect(routes.User.employeeDetails(result.get.uid.get.toLong)).withSession("username" -> result.get.uname, "utype" -> result.get.isadmin.toString(), "uId" -> result.get.uid.get.toString(), "user_profile" -> user_profile)
+          } catch {
+            case e: SQLServerException => Ok(views.html.frontend.user.loginUser(ARTForms.loginForm)).withNewSession
+          }
 
         }
       })
@@ -173,7 +180,7 @@ object Login extends Controller {
 
       if (utype == 1) {
         //admin
-       // adminProject = AdminService.findAdminProjects(uId, Integer.parseInt(p.pId.toString()))
+        // adminProject = AdminService.findAdminProjects(uId, Integer.parseInt(p.pId.toString()))
         if (!adminProject.isEmpty) {
           isSelected = true
         }

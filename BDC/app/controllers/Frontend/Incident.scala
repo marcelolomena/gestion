@@ -67,6 +67,8 @@ object Incident extends Controller {
         var ret: Int = 0
         jsonBody.map { jsValue =>
 
+          val plan_start_date = (jsValue \ "plan_start_date")
+          val plan_end_date = (jsValue \ "plan_end_date")
           val completion_percentage = (jsValue \ "completion_percentage")
           val sub_task_id = (jsValue \ "sub_task_id")
           val oper = (jsValue \ "oper")
@@ -79,7 +81,10 @@ object Incident extends Controller {
 
             ret = SubTaskServices.updateCompletionPercentage(
               sub_task_id.toString().replace("\"", ""),
-              completion_percentage.toString().replace("\"", ""))
+              completion_percentage.toString().replace("\"", ""),
+              plan_start_date.toString().replace("\"", ""),
+              plan_end_date.toString().replace("\"", "")
+              )
 
             println("ret : " + ret)
           } else if (oper.toString().replace("\"", "").equals("del")) {
@@ -107,6 +112,8 @@ object Incident extends Controller {
         //println("term : " + term)
 
         users = IncidentService.listUsr(term)
+        
+        
 
         //println("users : " + users)
 
@@ -116,6 +123,43 @@ object Incident extends Controller {
       }
 
   }
+  
+  def delMember = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val task_id = request.getQueryString("task_id").getOrElse("").toString()
+        val sub_task_id = request.getQueryString("sub_task_id").getOrElse("").toString()
+        val uid = request.getQueryString("uid").getOrElse("").toString()
+        
+        //println("task_id : " + task_id)
+        //println("sub_task_id : " + sub_task_id)
+        //println("uid : " + uid)
+        
+        
+        val ret=IncidentService.delMember(task_id,sub_task_id,uid)
+
+        Ok(ret.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  } 
+  
+  def delSubTask = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val sub_task_id = request.getQueryString("sub_task_id").getOrElse("").toString()
+        
+        val ret=IncidentService.delSubTask(sub_task_id)
+
+        Ok(ret.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }    
 
   def saveHours = Action {
     implicit request =>
@@ -137,7 +181,7 @@ object Incident extends Controller {
           val user_creation_id = request.session.get("uId").get
           val task_for_date = (jsValue \ "task_for_date")
 
-          //println("nota : " + nota)
+          println("oper : " + oper)
           //println("ingresadas : " + ingresadas)
           //println("sub_task_id : " + sub_task_id)
           //println("task_id : " + task_id)
@@ -146,7 +190,19 @@ object Incident extends Controller {
 
           if (oper.toString().replace("\"", "").equals("add")) {
             val name = (jsValue \ "nombre")
-            //println("nombre : " + name)
+            
+            if(ingresadas.toString().replace("\"", "").trim().equals("")){
+              println("por aqui")
+            incident = IncidentService.insertMember(
+              name.toString().replace("\"", ""),
+              task_for_date.toString().replace("\"", ""),
+              nota.toString().replace("\"", ""),
+              planeadas.toString().replace("\"", ""),
+              "0",
+              sub_task_id.toString().replace("\"", ""),
+              user_creation_id.toString().replace("\"", ""))
+            } else {
+                            println("por aca [" + ingresadas.toString().replace("\"", "") + "]")
             incident = IncidentService.insertMember(
               name.toString().replace("\"", ""),
               task_for_date.toString().replace("\"", ""),
@@ -154,7 +210,8 @@ object Incident extends Controller {
               planeadas.toString().replace("\"", ""),
               ingresadas.toString().replace("\"", ""),
               sub_task_id.toString().replace("\"", ""),
-              user_creation_id.toString().replace("\"", ""))
+              user_creation_id.toString().replace("\"", ""))              
+            }
 
           } else if (oper.toString().replace("\"", "").equals("edit")) {
 
@@ -167,7 +224,8 @@ object Incident extends Controller {
               task_id.toString().replace("\"", ""),
               uid.toString().replace("\"", ""),
               user_creation_id.toString().replace("\"", ""))
-          }
+              
+          } 
           // println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
 
         }
