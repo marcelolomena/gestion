@@ -1397,18 +1397,22 @@ object SubTaskServices extends CustomColumns {
   }
   
   
-  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String): Int = {
+  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String,plan_start_date:String,plan_end_date:String): Int = {
 
     DB.withConnection { implicit connection =>
       SQL(
         """
          update art_sub_task
           set 
-          completion_percentage={completion_percentage}
+          completion_percentage={completion_percentage},
+          plan_start_date={plan_start_date},
+          plan_end_date={plan_end_date}
           where sub_task_id = {sub_task_id}
         """).on(
           'sub_task_id -> sub_task_id.toInt,
-          'completion_percentage -> completion_percentage.toInt).executeUpdate()
+          'completion_percentage -> completion_percentage.toInt,
+          'plan_start_date -> plan_start_date,
+          'plan_end_date -> plan_end_date).executeUpdate()
     }
   }    
 

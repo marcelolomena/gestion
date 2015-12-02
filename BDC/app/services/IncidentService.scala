@@ -152,6 +152,33 @@ object IncidentService {
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
+  
+  def delMember(task_id:String,
+                   sub_task_id: String,
+                   uid: String): Int = {
+
+    var sqlString = """
+      EXEC art.del_incident_member {task_id},{sub_task_id},{uid}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'task_id -> task_id.toInt,
+        'sub_task_id -> sub_task_id.toInt,
+        'uid -> uid.toInt).executeQuery() as (scalar[Int].single)
+    }
+  }  
+  
+  def delSubTask(sub_task_id: String): Int = {
+
+    var sqlString = """
+      EXEC art.del_incident_subtask {sub_task_id}
+      """
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'sub_task_id -> sub_task_id.toInt).executeQuery() as (scalar[Int].single)
+    }
+  }    
 
   def count(Json: String): Int = {
 
