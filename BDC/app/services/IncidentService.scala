@@ -275,7 +275,8 @@ object IncidentService {
            WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) <= 0 AND DATEDIFF (day, X.plan_start_date, GETDATE()) >= 0 THEN IIF(DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date)) > 0, 
            ROUND(100 * CAST(DATEDIFF (day, X.plan_start_date, GETDATE()) AS FLOAT)/DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date) ),2) , 0)
         END
-        expected_percentage
+        expected_percentage,
+        '' fecini
          FROM art_sub_task X 
         LEFT OUTER JOIN
         (

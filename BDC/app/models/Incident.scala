@@ -402,25 +402,27 @@ object Hours {
 case class IncidentSubTask(
   sub_task_id: Int,
   title: String,
-  plan_start_date: Date,
-  plan_end_date: Date,
+  plan_start_date: Option[Date],
+  plan_end_date: Option[Date],
   real_start_date: Option[Date],
   real_end_date: Option[Date],
   completion_percentage: Double,
   hours: Double,
-  expected_percentage: Double)
+  expected_percentage: Double,
+  fecini: String)
 
 object IncidentSubTask {
   val incidentsubtask = {
     get[Int]("sub_task_id") ~
       get[String]("title") ~
-      get[Date]("plan_start_date") ~
-      get[Date]("plan_end_date") ~
+      get[Option[Date]]("plan_start_date") ~
+      get[Option[Date]]("plan_end_date") ~
       get[Option[Date]]("real_start_date") ~
       get[Option[Date]]("real_end_date") ~
       get[Double]("completion_percentage") ~
       get[Double]("hours") ~
-      get[Double]("expected_percentage") map {
+      get[Double]("expected_percentage") ~
+      get[String]("fecini") map {
         case sub_task_id ~
           title ~
           plan_start_date ~
@@ -429,7 +431,8 @@ object IncidentSubTask {
           real_end_date ~
           completion_percentage ~
           hours ~
-          expected_percentage => IncidentSubTask(
+          expected_percentage ~
+          fecini => IncidentSubTask(
           sub_task_id,
           title,
           plan_start_date,
@@ -438,11 +441,25 @@ object IncidentSubTask {
           real_end_date,
           completion_percentage,
           hours,
-          expected_percentage)
+          expected_percentage,
+          fecini)
       }
 
   }
-  implicit val hoursWrites = Json.writes[IncidentSubTask]
+  //implicit val hoursWrites = Json.writes[IncidentSubTask]
+  implicit val hoursWrites = new Writes[IncidentSubTask] {
+    def writes(incident: IncidentSubTask) = Json.obj(
+      "sub_task_id" -> incident.sub_task_id.toInt,
+      "title" -> incident.toString(),
+      "plan_start_date" -> incident.plan_start_date.get,
+      "plan_end_date" -> incident.plan_end_date.get,
+      "real_start_date" -> incident.real_start_date.get,
+      "real_end_date" -> incident.real_end_date.get,
+      "completion_percentage" -> incident.completion_percentage.toDouble,
+      "hours" -> incident.hours.toDouble,
+      "expected_percentage" -> incident.expected_percentage.toDouble)
+  }  
+  
 }
 
 

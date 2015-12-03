@@ -88,7 +88,6 @@ object Incident extends Controller {
 
             println("ret : " + ret)
           } else if (oper.toString().replace("\"", "").equals("del")) {
-            println("borrado callampero")
             println("ret : " + ret)
           }
 
@@ -106,15 +105,8 @@ object Incident extends Controller {
       request.session.get("username").map { user =>
 
         val term = request.getQueryString("term").getOrElse("").toString()
-
         var users: Seq[NameUsr] = null
-
-        //println("term : " + term)
-
         users = IncidentService.listUsr(term)
-        
-        
-
         //println("users : " + users)
 
         Ok(play.api.libs.json.Json.toJson(users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
@@ -338,10 +330,29 @@ object Incident extends Controller {
   def listSubTask(id: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
-
+        var node = new JSONObject()
         val subtask = IncidentService.selectSubtask(id)
+        
+        var registro = new JSONArray()
+        for (p <- subtask) {
+          var campo = new JSONObject()
 
-        Ok(play.api.libs.json.Json.toJson(subtask)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          campo.put("sub_task_id", p.sub_task_id)
+          campo.put("title", p.title)
+          campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())
+          campo.put("plan_end_date", p.plan_end_date.getOrElse("").toString())
+          campo.put("real_start_date", p.real_start_date.getOrElse("").toString())
+          campo.put("real_end_date", p.real_end_date.getOrElse("").toString())
+          campo.put("completion_percentage", p.completion_percentage)
+          campo.put("hours", p.hours)
+          campo.put("expected_percentage", p.expected_percentage)
+          campo.put("fecini", p.fecini)
+          registro.put(campo)
+        }
+
+        node.put("rows", registro)
+        Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
 
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
