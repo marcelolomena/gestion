@@ -14,39 +14,39 @@ $(document).ready(function(){
 		}
 	});
 
-    var lastSel, myDelOptions = {
-                           // because I use "local" data I don't want to send the changes to the server
-                           // so I use "processing:true" setting and delete the row manually in onclickSubmit
-                           onclickSubmit: function(rp_ge, rowid) {
-                               // we can use onclickSubmit function as "onclick" on "Delete" button
-                        	   var rowData = $("#jqGridSubTask").getRowData(rowid);
-                               alert("La subtarea : "+rowData.title+", sera borrada");
-
-                               // delete row
-                               /*
-                               $("#jqGridSubTask").delRowData(rowid);
-                               $("#delmod"+grid[0].id).hide();
-
-                               if (grid[0].p.lastpage > 1) {
-                                   // reload grid to make the row from the next page visable.
-                                   // TODO: deleting the last row from the last page which number is higher as 1
-                                   grid.trigger("reloadGrid", [{page:grid[0].p.page}]);
-                               }
-							   */
-                               return true;
-                           },
-                           processing:false
+    var lastSel, subTaskDelOptions = {
+				    		mtype: 'GET',
+				            onclickSubmit: function(options, rowid) {
+				            	var rowData = $(this).jqGrid("getRowData", rowid);
+				            	options.url += "/incidentDelSubTask?" + $.param({
+				            		sub_task_id: rowData.sub_task_id
+				                });
+				            	return {};
+				            }
                        };
+    var workerDelOptions = {
+    		mtype: 'GET',
+            onclickSubmit: function(options, rowid) {
+            	var rowData = $(this).jqGrid("getRowData", rowid);
+            	options.url += "/incidentDelMember?" + $.param({
+            		sub_task_id: rowData.sub_task_id,
+            		uid: rowData.uid,
+            		task_id:rowData.task_id 
+                });
+            	return {};
+            }
+    };    
+    $grilla = $("#jqGridSubTask");
     $("#jqGridSubTask").jqGrid({
         datatype: "json",
         mtype: "GET",
         autowidth:true,
-        colNames: ["Acciones","sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
+        colNames: ["Acciones","sub_task_id","Sub-Tarea", "invdate", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
         colModel: [
 			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',
 			    formatoptions:{
 			        keys: true, // we want use [Enter] key to save the row and [Esc] to cancel editing.
-			        delbutton:false,
+			        delbutton:true,
 			        onEdit:function(rowid) {
 			            //alert("en onEdit: rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
@@ -74,23 +74,48 @@ $(document).ready(function(){
 			        afterRestore:function(rowid) {
 			            //alert("en afterRestore (Cancel): rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
-			        delOptions: myDelOptions
+			        delOptions: subTaskDelOptions
 			    }},
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
-           { name: "title", width: 200, editable:false },
-           { name: "plan_start_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
-           { name: "plan_end_date", width: 100, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' },editable:false },
-           { name: "real_start_date", width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
-           { name: "real_end_date", width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
-           { name: "completion_percentage", width: 50, editable:true, editrules:{required:false} },
-           { name: "expected_percentage", width: 50, editable:false },
-           { name: "hours", width: 50, editable:false }
+           { name: "title", width: 200, hidden:false, editable: false},
+           {name: "invdate", width: 85, align: "center", sorttype: "date", datefmt: "d-M-Y",
+               formatoptions: {newformat:'d/m/Y'},
+               formatter: function (cellval, opts, rowObject, action) {
+                   return $.fn.fmatter.call(
+                             this,
+                             "date",
+                             new Date(cellval),
+                             $.extend({}, $.jgrid.formatter.date, opts),
+                             rowObject,
+                             action);
+           }},
+           { name: "plan_start_date", width: 85, align: "center",formatter: 'date',editable:true,
+          	  editoptions: {
+         	      size: 10, maxlengh: 10,
+         	      dataInit: function(element) {
+         	        $(element).datepicker({dateFormat: 'yy-mm-dd'})
+         	      }
+       	      },formatoptions: {srcformat: 'U/1000',newformat:'Y-m-d'},
+       	   },
+           { name: "plan_end_date", width: 85, align: "center", formatter: 'date',editable:true,
+           	  editoptions: {
+               	      size: 10, maxlengh: 10,
+               	      dataInit: function(element) {
+               	        $(element).datepicker({dateFormat: 'yy-mm-dd'})
+                   }
+              },formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' } },
+           { name: "real_start_date", width: 150, align: "center", formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
+           { name: "real_end_date", width: 150, align: "center", formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
+           { name: "completion_percentage", width: 50, align: "center", editable:true, editrules:{required:false} },
+           { name: "expected_percentage", width: 50, align: "center", editable:false },
+           { name: "hours", width: 50, align: "center", editable:false }
         ],
 		regional : "es",
 		rowList: [],        
 		pgbuttons: false,     
 		pgtext: null,         
 		viewrecords: false, 
+		pager:"jqGridSubTaskPager",
         subGrid: true, 
         ajaxRowOptions: { contentType: "application/json" },
         serializeRowData: function (data) { return JSON.stringify(data); },        
@@ -102,9 +127,10 @@ $(document).ready(function(){
         }, 
         subGridRowExpanded: showGridWorker,
         editurl: '/incidentSaveSubTask',
+        /*
         ondblClickRow: function(id, ri, ci) {
         	$("#jqGridSubTask").jqGrid('editRow',id,true,null,null, '/incidentSaveSubTask');
-        },
+        },*/
         onSelectRow: function(id) {
             if (id && id !== lastSel) {
                 if (typeof lastSel !== "undefined") {
@@ -115,8 +141,56 @@ $(document).ready(function(){
         }        
    });
     
-   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{add:false,edit:false},{},{},myDelOptions,{multipleSearch:true,overlay:false});
-	
+   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: true, del: false,search: false, refresh: false,position: "left", cloneToTop: false },
+		   {},
+		   {
+	        	addCaption: "Agregar Sub-Tarea",
+	            height: 'auto',
+	            width: 'auto',
+	            modal: true,
+	            ajaxEditOptions: jsonOptions,
+	            serializeEditData: createJSON,
+	            closeAfterAdd: true,
+	            recreateForm: true,
+	            errorTextFormat: function (data) {
+	                return 'Error: ' + data.responseText
+	            },
+	            beforeShowForm:function (formid) {
+	            	$('<tr class="FormData" id="tr_AddInfo"><td class="CaptionTD">'+
+	            	  '<b>Additional Information:</b></td class="DataTD"><td>'+
+	            	  '<input type="text" size="10" maxlengh="10" id="campito" name="campito" rowid="_empty" role="textbox" class="FormElement ui-widget-content ui-corner-all hasDatepicker"></td></tr>').insertAfter ("#tr_plan_start_date");
+	            },
+	            afterShowForm: function (formid) {
+	            	//$("#jqGridSubTask").jqGrid('setColProp','title',{editable:false});
+	            }, 
+		   },
+		   {}
+   );
+   
+/*   
+   $("#jqGridSubTask").jqGrid('inlineNav', "#jqGridSubTaskPager", {
+   	   edit: false,
+       editicon: "ui-icon-pencil",
+       add: true,
+       addicon:"ui-icon-plus",
+       save: true,
+       saveicon:"ui-icon-disk",
+       cancel: true,
+       cancelicon:"ui-icon-cancel",
+       edittext: "Editar",
+       addtext: "Agregar",
+       savetext: "Guardar",
+       canceltext: "Cancelar",
+       addParams: {
+           position: "afterSelected", 
+           useDefValues:true,
+           addRowParams: {
+               keys: true,
+               
+           }
+       }
+   });   
+*/	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
 	    var childGridPagerID = parentRowID + "_pager";
@@ -163,20 +237,14 @@ $(document).ready(function(){
 	        mtype: "GET",
 	        datatype: "json",
 	        colModel: [
-	       				{label: 'Acciones',name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',
+	       				{label: 'Acciones',name:'act',index:'act',width:25,align:'center',sortable:false,formatter:'actions',
 	    			    formatoptions:{
 	    			        keys: true, // we want use [Enter] key to save the row and [Esc] to cancel editing.
-	    			        delbutton:false,
+	    			        delbutton:true,
 	    			        onEdit:function(rowid) {
-	    			            //alert("en onEdit: rowid="+rowid+"\nNo necesitamos devolver nada");
+	    			            //console.log("in onEdit: rowid="+rowid);
 	    			        },
 	    			        onSuccess:function(jqXHR) {
-	    			        	/*
-	    			            alert("in onSuccess used only for remote editing:"+
-	    			                  "\nresponseText="+jqXHR.responseText+
-	    			                  "\n\nWe can verify the server response and return false in case of"+
-	    			                  " error response. return true confirm that the response is successful");
-	    			            */
 	    			            return true;
 	    			        },
 	    			        onError:function(rowid, jqXHR, textStatus) {
@@ -194,7 +262,8 @@ $(document).ready(function(){
 	    			        afterRestore:function(rowid) {
 	    			            //alert("en afterRestore (Cancel): rowid="+rowid+"\nNo necesitamos devolver nada");
 	    			        },
-	    			        delOptions: myDelOptions
+	    			        delOptions: workerDelOptions
+	    			        
 	    			   }},	                   
 	                   { label: 'sub_task_id', name: 'sub_task_id', hidden:true,editable: true, editrules: { edithidden: false },editoptions:{value:parentRowKey, defaultValue:parentRowKey}, hidedlg: true},
 	                   { label: 'task_id', name: 'task_id', hidden:true, editable: true, editrules: { edithidden: false }, hidedlg: true },   
@@ -225,19 +294,18 @@ $(document).ready(function(){
 	                            }
 	                        }
 	                   },
-	                   { label: 'Asignadas', name: 'planeadas', width: 50,editable:true, edittype:"text", editrules:{number: true, required: true} },
-	                   { label: 'Trabajadas', name: 'trabajadas', width: 50,editable:false },
-	                   { label: 'Fecha', name: 'task_for_date',width: 50,editable: true,editrules:{required:true},
+	                   { label: 'Asignadas', name: 'planeadas', width: 50,align: "center",editable:true, edittype:"text", editrules:{number: true, required: true} },
+	                   { label: 'Trabajadas', name: 'trabajadas', width: 50,align: "center",editable:false, edittype:"text",  },
+	                   { label: 'Fecha', name: 'task_for_date',width: 85,align: "center",editable: true,
 	 	            	  editoptions: {
 	 	            	      size: 10, maxlengh: 10,
 	 	            	      dataInit: function(element) {
-	 	            	        $(element).datepicker({dateFormat: 'yy-mm-dd', maxDate: 0})
+	 	            	        $(element).datepicker({dateFormat: 'yy-mm-dd'})
 	 	            	      }
 	 	            	    },formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
 	                   },
-	                   { label: 'Ingresadas', name: 'ingresadas', width: 50,editable: true, edittype:"text", editrules:{number: true, required: true} },
-	                   { label: 'Nota', name: 'nota', width: 50,editable: true, edittype:"text", 
-	                	   editrules:{required: true}, classes: "textInDiv" 
+	                   { label: 'Ingresadas', name: 'ingresadas', width: 50,align: "center",editable: true, edittype:"text" },
+	                   { label: 'Nota', name: 'nota', width: 50,editable: true, edittype:"textarea", editoptions:{ rows:"1",cols:"10"},
 	                   }
 	        ],
 			height: 'auto',
@@ -257,12 +325,13 @@ $(document).ready(function(){
 	        editurl: '/incidentSaveHours',
 	        onSelectRow: function(id) {
 	            if (id && id !== lastSelection) {
+	            	
 	                if (typeof lastSelection !== "undefined") {
 	                	$("#" + childGridID).jqGrid('restoreRow',lastSelection);
 	                }
 	                lastSelection = id;
 	            }
-	        }, 
+	        },
 	        ajaxRowOptions: { contentType: "application/json" },
 	        serializeRowData: function (data) { return JSON.stringify(data); },
 	        gridComplete: function(){
@@ -274,6 +343,15 @@ $(document).ready(function(){
 	    });
 	    
 	    $("#" + childGridID).jqGrid('inlineNav', "#" + childGridPagerID, {
+	    	edit: false,
+	        editicon: "ui-icon-pencil",
+	        add: true,
+	        addicon:"ui-icon-plus",
+	        save: true,
+	        saveicon:"ui-icon-disk",
+	        cancel: true,
+	        cancelicon:"ui-icon-cancel",
+	        edittext: "Editar",
 	        addtext: "Agregar",
 	        savetext: "Guardar",
 	        canceltext: "Cancelar",
@@ -286,76 +364,16 @@ $(document).ready(function(){
 	                    "task_name": $("#subtaskListDialog").dialog( "option", "title" ),
 	                },
 		            oneditfunc: function (rowid) {
-	                    //alert("new row with rowid=" + rowid + " are added.");
+	                    //console.log("new row with rowid=" + rowid + " are added.");
 	                },
 			        aftersavefunc: function (rowid, response, options) {
 			        	//console.log('response:' + response);
 			        	$("#jqGridSubTask").trigger("reloadGrid"); 
 			        },
 	            }
-	        },	        
-	        editParams: {
-	            // the parameters of editRow
-	            key: true,
-	            oneditfunc: function (rowid) {
-	                alert("row with rowid=" + rowid + " is editing.");
-	            }
 	        }
 	    });	    
-/*		
-	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{edit: false, add: true, del: false, search: false, refresh: false },
-	        {
-	        },
-	        {
-	        	addCaption: "Agregar Responsable",
-	            height: 'auto',
-	            width: 'auto',
-	            modal: true,
-	            ajaxEditOptions: jsonOptions,
-	            serializeEditData: createJSON,
-	            closeAfterAdd: true,
-	            recreateForm: true,
-	            errorTextFormat: function (data) {
-	                return 'Error: ' + data.responseText
-	            },
-	            //beforeShowForm: function(form) {
-	              // $('#tr_task_for_date', form).hide();
-	               //$('#tr_ingresadas', form).hide();
-	              // $('#tr_nota', form).hide();
-	              // $("#responsable", form).focus();
-	               //$('<tr class="FormData" id="tr_AddInfo"><td class="CaptionTD ui-widget-content"><b>Additional Information:</b></td></tr>').insertAfter (nameColumnField);
-	            //}
-	        }	    
-	    );
-	    
-*/
-/*	    
-        $("#" + childGridID).jqGrid('navButtonAdd', '#' + childGridPagerID, {
-            caption: "Guardar", buttonicon: "ui-icon-disk",id:childGridID + "_save_button",
-            onClickButton: function () {
-  	            var rowKey = $("#" + childGridID).getGridParam("selrow");
-	            var rowData = $("#" + childGridID).getRowData(rowKey);
-	            var ingresadas = $("#" + childGridID).jqGrid('getCell',rowKey,'ingresadas');
-	            var usr = rowData.uid;
 
-            	$("#" + childGridID).jqGrid('saveRow',rowKey,{
-                    "succesfunc": function(response) { 
-                        return true;                
-                    },                                  
-                    "url": '/incidentSaveHours',
-                    "mtype": "POST",
-                    "extraparam": {"uid" : rowData.uid,  
-                        "task_id" : rowData.task_id,  
-                        "sub_task_id" : rowData.sub_task_id,  
-                        "ingresadas" : $("#" + rowKey + "_ingresadas").val()
-                    },
-                    "aftersavefunc":function reload(rowid, result) { 
-                    	$("#jqGridSubTask").trigger("reloadGrid"); 
-                    } 
-                });
-            }
-        });
-*/
 	}	
 	
 	function ValidateCodIR(id){
@@ -417,21 +435,23 @@ $(document).ready(function(){
 	            	  editoptions: {dataUrl: '/incident_configuration',
 	            	  				dataEvents: [{ type: 'change', fn: function(e) {
 	            	  									 var thisval= $(this).val();
-	            	  							        $.ajax({
-	            	  							            type: "GET",
-	            	  							            url: '/incidentProgramType/'+thisval,
-	            	  							            async:false,
-	            	  							            success: function (datum) {                            
-	    	            	  							        $.ajax({
-	    	            	  							            type: "GET",
-	    	            	  							            url: '/incident_program/'+datum,
-	    	            	  							            async:false,
-	    	            	  							            success: function (data) {                            
-	    	            	  							            	$("select#program_id").html(data);
-	    	            	  							            } 
-	    	            	  							        });
-	            	  							            } 
-	            	  							        });
+	            	  									 if(thisval!=0){
+		            	  							        $.ajax({
+		            	  							            type: "GET",
+		            	  							            url: '/incidentProgramType/'+thisval,
+		            	  							            async:false,
+		            	  							            success: function (datum) {                            
+		    	            	  							        $.ajax({
+		    	            	  							            type: "GET",
+		    	            	  							            url: '/incident_program/'+datum,
+		    	            	  							            async:false,
+		    	            	  							            success: function (data) {                            
+		    	            	  							            	$("select#program_id").html(data);
+		    	            	  							            } 
+		    	            	  							        });
+		            	  							            } 
+		            	  							        });
+	            	  									 }
 	            	  								}
 	            	  							 }
 	            	               ],dataInit: function(elem) {
@@ -799,6 +819,4 @@ $(document).ready(function(){
 	    	   $("#jqGridIncident").jqGrid('excelExport',{"url":url});
 	       } 
 	});
-  		
-	//$("#jqGridIncident").jqGrid('setFrozenColumns');
 });

@@ -81,15 +81,13 @@ $.extend($.jgrid,{
 			storageType : "localStorage",
 			clearAfterLoad: false,  // clears the jqGrid localStorage items aftre load
 			beforeSetGrid : null,
+			afterSetGrid : null,
 			decompression: false,
 			decompressionModule :  'LZString', // object by example gzip, LZString
 			decompressionMethod : 'decompressFromUTF16' // string by example unzip, decompressFromUTF16
 		}, o || {});
 		if(!jqGridId) { return; }
 		var ret, tmp, $t = $("#"+jqGridId)[0], data, iN, fT;
-		if($t.grid) { 
-			$.jgrid.gridUnload( jqGridId ); 
-		}
 		if(o.useStorage) {
 			try {
 				gridstring = window[o.storageType].getItem("jqGrid"+$t.id);
@@ -114,6 +112,9 @@ $.extend($.jgrid,{
 		}
 		ret = jqGridUtils.parse( gridstring );
 		if( ret && $.type(ret) === 'object') {
+			if($t.grid) { 
+				$.jgrid.gridUnload( jqGridId ); 
+			}
 			if($.isFunction(o.beforeSetGrid)) {
 				tmp = o.beforeSetGrid( ret );
 				if(tmp && $.type(tmp) === 'object') {
@@ -135,7 +136,7 @@ $.extend($.jgrid,{
 			ret.data = [];
 			ret.datatype = 'local';
 			ret.grouping = false;
-			ret.navGrid = false;
+			//ret.navGrid = false;
 
 			if(ret.inlineNav) {
 				iN = retfunc( ret._iN );
@@ -148,8 +149,19 @@ $.extend($.jgrid,{
 			var grid = $("#"+jqGridId).jqGrid( ret );
 			grid.append( data );
 			grid.jqGrid( 'setGridParam', prm);
-			if(ret.storeNavOptions) {
+			if(ret.storeNavOptions && ret.navGrid) {
+				// set to false so that nav grid can be run
+				grid[0].p.navGrid = false;
 				grid.jqGrid('navGrid', ret.pager, ret.navOptions, ret.editOptions, ret.addOptions, ret.delOptions, ret.searchOptions, ret.viewOptions);
+				if(ret.navButtons && ret.navButtons.length) {
+					for(var b = 0; b < ret.navButtons.length; b++) {
+						if( 'sepclass'  in ret.navButtons[b][1]) {
+							grid.jqGrid('navSeparatorAdd', ret.navButtons[b][0], ret.navButtons[b][1]);
+						} else {
+							grid.jqGrid('navButtonAdd', ret.navButtons[b][0], ret.navButtons[b][1]);
+			}
+					}
+				}
 			}
 			if(ret.inlineNav && iN) {
 				grid.jqGrid('setGridParam', { inlineNav:false });
@@ -157,9 +169,18 @@ $.extend($.jgrid,{
 			}
 			if(ret.filterToolbar && fT) {
 				grid.jqGrid('setGridParam', { filterToolbar:false });
+				fT.restoreFromFilters = true;
 				grid.jqGrid('filterToolbar', fT);
 			}
+			// finally frozenColums
+			if( ret.frozenColumns ) {
+				grid.jqGrid('setFrozenColumns');
+			}
 			grid[0].updatepager(true, true);
+			
+			if($.isFunction(o.afterSetGrid)) {
+				o.afterSetGrid( grid );
+			}
 			if(o.clearAfterLoad) {
 				window[o.storageType].removeItem("jqGrid"+$t.id);
 				window[o.storageType].removeItem("jqGrid"+$t.id + "_data");
@@ -168,18 +189,40 @@ $.extend($.jgrid,{
 			alert("can not convert to object");
 		}
 	},
+	isGridInStorage : function ( jqGridId, options ) {
+		var o = {
+			storageType: "localStorage"
+		};
+		o =  $.extend(o , options || {});
+		var ret, gridstring, data;
+		try {
+			gridstring = window[o.storageType].getItem("jqGrid"+jqGridId);
+			data = window[o.storageType].getItem("jqGrid" + jqGridId + "_data");
+			ret = gridstring != null && data != null && typeof gridstring === "string" && typeof data === "string" ;
+		} catch (e) {
+			ret = false;
+		}
+		return ret;
+	},
 	setRegional : function( jqGridId , options) {
-		$.jgrid.saveState( jqGridId, {
+		var o = {
 			storageType: "sessionStorage"
-		});
-		$.jgrid.loadState( jqGridId, null, {
-			storageType: "sessionStorage",
-			beforeSetGrid: function(params) {
-				params.regional = options.regional;
-				params.force_regional = true;
-				return params;
-			}
-		});
+		};
+		o =  $.extend(o , options || {});
+		
+		if( !o.regional ) {
+			return;
+		}
+		
+		$.jgrid.saveState( jqGridId, o );
+		
+		o.beforeSetGrid = function(params) {
+			params.regional = o.regional;
+			params.force_regional = true;
+			return params;
+		};
+		
+		$.jgrid.loadState( jqGridId, null, o);
 		// check for formatter actions
 		var grid = $("#"+jqGridId)[0],
 		model = $(grid).jqGrid('getGridParam','colModel'), i=-1, nav = $.jgrid.getRegional(grid, 'nav');
@@ -199,8 +242,8 @@ $.extend($.jgrid,{
 			});
 		}
 		try {
-			window['sessionStorage'].removeItem("jqGrid"+grid.id);
-			window['sessionStorage'].removeItem("jqGrid"+grid.id+"_data");
+			window[o.storageType].removeItem("jqGrid"+grid.id);
+			window[o.storageType].removeItem("jqGrid"+grid.id+"_data");
 		} catch (e) {}
 	},
 	jqGridImport : function(jqGridId, o) {
