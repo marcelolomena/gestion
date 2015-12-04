@@ -1,11 +1,13 @@
 $(document).ready(function(){
 	$("#subtaskListDialog").dialog({
+		bgiframe: true,
 		autoOpen: false,
         modal: true,
         resizable: true,
         width: 'auto',
         minHeight:'auto',
         open: function(event, ui) {
+        	$('.ui-widget-overlay').addClass('overlay-hidden');
            	$("#jqGridSubTask").setGridWidth($(this).width(), true);
         	$("#jqGridSubTask").setGridHeight($(this).height()); 
     	},resizeStop: function(event, ui) {
@@ -36,27 +38,20 @@ $(document).ready(function(){
             	return {};
             }
     };    
-    $grilla = $("#jqGridSubTask");
+
     $("#jqGridSubTask").jqGrid({
         datatype: "json",
         mtype: "GET",
         autowidth:true,
-        colNames: ["Acciones","sub_task_id","Sub-Tarea", "invdate", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales"],
+        colNames: ["Acciones","sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini"],
         colModel: [
 			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',
 			    formatoptions:{
-			        keys: true, // we want use [Enter] key to save the row and [Esc] to cancel editing.
+			        keys: true, 
 			        delbutton:true,
 			        onEdit:function(rowid) {
-			            //alert("en onEdit: rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
 			        onSuccess:function(jqXHR) {
-			        	/*
-			            alert("in onSuccess used only for remote editing:"+
-			                  "\nresponseText="+jqXHR.responseText+
-			                  "\n\nWe can verify the server response and return false in case of"+
-			                  " error response. return true confirm that the response is successful");
-			            */
 			            return true;
 			        },
 			        onError:function(rowid, jqXHR, textStatus) {
@@ -67,48 +62,42 @@ $(document).ready(function(){
 			                  "\n\nNo necesitamos devolver nada");
 			        },
 			        afterSave:function(rowid) {
-			        	//console.log('rowid:' + rowid);
-			            //alert("en afterSave (Submit): rowid="+rowid+"\nNo necesitamos devolver nada");
 			        	$("#jqGridSubTask").trigger("reloadGrid"); 
 			        },
 			        afterRestore:function(rowid) {
-			            //alert("en afterRestore (Cancel): rowid="+rowid+"\nNo necesitamos devolver nada");
 			        },
 			        delOptions: subTaskDelOptions
 			    }},
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
            { name: "title", width: 200, hidden:false, editable: false},
-           {name: "invdate", width: 85, align: "center", sorttype: "date", datefmt: "d-M-Y",
-               formatoptions: {newformat:'d/m/Y'},
-               formatter: function (cellval, opts, rowObject, action) {
-                   return $.fn.fmatter.call(
-                             this,
-                             "date",
-                             new Date(cellval),
-                             $.extend({}, $.jgrid.formatter.date, opts),
-                             rowObject,
-                             action);
-           }},
-           { name: "plan_start_date", width: 85, align: "center",formatter: 'date',editable:true,
+           { name: "plan_start_date", width: 85, align: "center",formatter: 'text',
+        	   formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editable:true,
           	  editoptions: {
          	      size: 10, maxlengh: 10,
          	      dataInit: function(element) {
          	        $(element).datepicker({dateFormat: 'yy-mm-dd'})
          	      }
-       	      },formatoptions: {srcformat: 'U/1000',newformat:'Y-m-d'},
+       	      }
        	   },
-           { name: "plan_end_date", width: 85, align: "center", formatter: 'date',editable:true,
+           { name: "plan_end_date", width: 85, align: "center", formatter: 'text',
+       		   formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editable:true,
            	  editoptions: {
                	      size: 10, maxlengh: 10,
-               	      dataInit: function(element) {
-               	        $(element).datepicker({dateFormat: 'yy-mm-dd'})
+               	      dataInit: function(elemento) {
+               	        $(elemento).datepicker({dateFormat: 'yy-mm-dd'})
                    }
-              },formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d' } },
-           { name: "real_start_date", width: 150, align: "center", formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false },
-           { name: "real_end_date", width: 150, align: "center", formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' },editable:false }, 
+              }
+       	   },
+           { name: "real_start_date", width: 150, align: "center", formatter: 'date',
+       		   formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editable:false
+       	   },
+           { name: "real_end_date", width: 150, align: "center", formatter: 'date',
+       		   formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editable:false
+       	   }, 
            { name: "completion_percentage", width: 50, align: "center", editable:true, editrules:{required:false} },
            { name: "expected_percentage", width: 50, align: "center", editable:false },
-           { name: "hours", width: 50, align: "center", editable:false }
+           { name: "hours", width: 50, align: "center", editable:false },
+           { name: "fecini", hidden:true,editable:true,editrules: {edithidden: true} }
         ],
 		regional : "es",
 		rowList: [],        
@@ -127,10 +116,6 @@ $(document).ready(function(){
         }, 
         subGridRowExpanded: showGridWorker,
         editurl: '/incidentSaveSubTask',
-        /*
-        ondblClickRow: function(id, ri, ci) {
-        	$("#jqGridSubTask").jqGrid('editRow',id,true,null,null, '/incidentSaveSubTask');
-        },*/
         onSelectRow: function(id) {
             if (id && id !== lastSel) {
                 if (typeof lastSel !== "undefined") {
@@ -147,7 +132,7 @@ $(document).ready(function(){
 	        	addCaption: "Agregar Sub-Tarea",
 	            height: 'auto',
 	            width: 'auto',
-	            modal: true,
+	            modal:true,
 	            ajaxEditOptions: jsonOptions,
 	            serializeEditData: createJSON,
 	            closeAfterAdd: true,
@@ -155,14 +140,18 @@ $(document).ready(function(){
 	            errorTextFormat: function (data) {
 	                return 'Error: ' + data.responseText
 	            },
-	            beforeShowForm:function (formid) {
-	            	$('<tr class="FormData" id="tr_AddInfo"><td class="CaptionTD">'+
-	            	  '<b>Additional Information:</b></td class="DataTD"><td>'+
-	            	  '<input type="text" size="10" maxlengh="10" id="campito" name="campito" rowid="_empty" role="textbox" class="FormElement ui-widget-content ui-corner-all hasDatepicker"></td></tr>').insertAfter ("#tr_plan_start_date");
+	            beforeShowForm:function (form) {
+	            	$('#tr_plan_start_date',form).hide();
+	            	$('#tr_plan_end_date',form).hide();
+	            	$('#tr_completion_percentage',form).hide();
 	            },
-	            afterShowForm: function (formid) {
-	            	//$("#jqGridSubTask").jqGrid('setColProp','title',{editable:false});
-	            }, 
+                afterShowForm:function(){
+
+                },
+                onClose:function(){
+
+                }
+
 		   },
 		   {}
    );

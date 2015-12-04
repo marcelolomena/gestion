@@ -27,7 +27,7 @@
 //module begin
 $.fn.jqm=function(o){
 var p={
-overlay: 50,
+//overlay: 50,
 closeoverlay : true,
 overlayClass: 'jqmOverlay',
 closeClass: 'jqmClose',
