@@ -61,7 +61,7 @@ object Incident extends Controller {
   def saveSubTask = Action {
     implicit request =>
       request.session.get("username").map { user =>
-
+        var incident: Option[ErrorIncident] = null
         val body: AnyContent = request.body
         val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
         var ret: Int = 0
@@ -73,27 +73,37 @@ object Incident extends Controller {
           val sub_task_id = (jsValue \ "sub_task_id")
           val oper = (jsValue \ "oper")
 
-          //println("completion_percentage : " + completion_percentage)
-          //println("sub_task_id : " + sub_task_id)
-          //println("oper : " + oper)
-
+          /*
+          println("completion_percentage : " + completion_percentage)
+          println("sub_task_id : " + sub_task_id)
+          println("plan_start_date : " + plan_start_date)
+          println("plan_end_date : " + plan_end_date)          
+          println("oper : " + oper)
+          */
           if (oper.toString().replace("\"", "").equals("edit")) {
 
-            ret = SubTaskServices.updateCompletionPercentage(
+            //ret = SubTaskServices.updateCompletionPercentage(
+            incident = IncidentService.updateCompletionPercentage(                
               sub_task_id.toString().replace("\"", ""),
               completion_percentage.toString().replace("\"", ""),
               plan_start_date.toString().replace("\"", ""),
               plan_end_date.toString().replace("\"", "")
               )
 
-            println("ret : " + ret)
+            println(play.api.libs.json.Json.toJson(incident))
+            /*
+            if(incident.get.error_code>0)
+              throw new Exception(incident.get.error_text)
+              BadRequest(incident.get.error_text)
+              */
+            
           } else if (oper.toString().replace("\"", "").equals("del")) {
-            println("ret : " + ret)
+            println(incident)
           }
 
         }
 
-        Ok(play.api.libs.json.Json.toJson(ret)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
@@ -184,7 +194,7 @@ object Incident extends Controller {
             val name = (jsValue \ "nombre")
             
             if(ingresadas.toString().replace("\"", "").trim().equals("")){
-              println("por aqui")
+              //println("por aqui")
             incident = IncidentService.insertMember(
               name.toString().replace("\"", ""),
               task_for_date.toString().replace("\"", ""),
@@ -194,7 +204,7 @@ object Incident extends Controller {
               sub_task_id.toString().replace("\"", ""),
               user_creation_id.toString().replace("\"", ""))
             } else {
-                            println("por aca [" + ingresadas.toString().replace("\"", "") + "]")
+                            //println("por aca [" + ingresadas.toString().replace("\"", "") + "]")
             incident = IncidentService.insertMember(
               name.toString().replace("\"", ""),
               task_for_date.toString().replace("\"", ""),
@@ -384,22 +394,7 @@ object Incident extends Controller {
           val user_creation_id = request.session.get("uId").get
           val status_id = (jsValue \ "status_id")
           val note = (jsValue \ "note")
-          /*
-          println("incident_id : " + incident_id)
-          println("configuration_id : " + configuration_id)
-          println("program_id : " + program_id)
-          println("date_creation : " + date_creation)
-          println("ir_number : " + ir_number)
-          println("user_sponsor_id : " + user_sponsor_id)
-          println("brief_description : " + brief_description)
-          println("extended_description : " + extended_description)
-          println("severity_id : " + severity_id)
-          println("date_end : " + date_end)
-          println("task_owner_id : " + task_owner_id)
-          println("user_creation_id : " + user_creation_id)
-          println("status_id : " + status_id)
-          println("note : " + note)
-*/
+
           incident = IncidentService.update(
             severity_id.toString().replace("\"", ""),
             date_end.toString().replace("\"", ""),
@@ -407,7 +402,7 @@ object Incident extends Controller {
             status_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""),
             note.toString().replace("\"", ""))
-
+            println(incident.last.error_text)
         }
 
         /**

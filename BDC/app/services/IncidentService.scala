@@ -68,6 +68,20 @@ object IncidentService {
         'note -> note).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
+  
+  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String,plan_start_date:String,plan_end_date:String): Option[ErrorIncident] = {
+
+    var sqlString = """
+      EXEC art.update_incident_subtask {sub_task_id},{completion_percentage},{plan_start_date},{plan_end_date}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('sub_task_id -> sub_task_id.toInt,
+        'completion_percentage -> completion_percentage.toDouble,
+        'plan_start_date -> plan_start_date,
+        'plan_end_date -> plan_end_date).executeQuery() as (ErrorIncident.error.singleOpt)
+    }
+  }   
 
   def save(configuration_id: String,
            program_id: String,
