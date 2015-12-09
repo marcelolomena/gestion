@@ -45,7 +45,7 @@ $(document).ready(function(){
         autowidth:true,
         colNames: ["Acciones","sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini"],
         colModel: [
-			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',
+			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',resize: false,
 			    formatoptions:{
 			        keys: true, 
 			        delbutton:true,
@@ -55,11 +55,13 @@ $(document).ready(function(){
 			            return true;
 			        },
 			        onError:function(rowid, jqXHR, textStatus) {
+			        	/*
 			            alert("in onError used only for remote editing:"+
 			                  "\nresponseText="+jqXHR.responseText+
 			                  "\nstatus="+jqXHR.status+
 			                  "\nstatusText"+jqXHR.statusText+
 			                  "\n\nNo necesitamos devolver nada");
+			            */
 			        },
 			        afterSave:function(rowid) {
 			        	$("#jqGridSubTask").trigger("reloadGrid"); 
@@ -126,7 +128,7 @@ $(document).ready(function(){
         }        
    });
     
-   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: true, del: false,search: false, refresh: false,position: "left", cloneToTop: false },
+   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: false, del: false,search: false, refresh: false,position: "left", cloneToTop: false },
 		   {},
 		   {
 	        	addCaption: "Agregar Sub-Tarea",
@@ -151,35 +153,17 @@ $(document).ready(function(){
                 onClose:function(){
 
                 }
-
 		   },
 		   {}
    );
+   $("#jqGridSubTask").bind("jqGridInlineSuccessSaveRow",
+   	    function (e, jqXHR, rowid, options) {
+   	        var ret=JSON.parse(jqXHR.responseText);
+   	        if(ret.error_code>0)alert(ret.error_text);
+   	        return [true, jqXHR.responseText];
+   	    }
+   );   
    
-/*   
-   $("#jqGridSubTask").jqGrid('inlineNav', "#jqGridSubTaskPager", {
-   	   edit: false,
-       editicon: "ui-icon-pencil",
-       add: true,
-       addicon:"ui-icon-plus",
-       save: true,
-       saveicon:"ui-icon-disk",
-       cancel: true,
-       cancelicon:"ui-icon-cancel",
-       edittext: "Editar",
-       addtext: "Agregar",
-       savetext: "Guardar",
-       canceltext: "Cancelar",
-       addParams: {
-           position: "afterSelected", 
-           useDefValues:true,
-           addRowParams: {
-               keys: true,
-               
-           }
-       }
-   });   
-*/	
 	function showGridStatus(parentRowID, parentRowKey) {
 	    var childGridID = parentRowID + "_table";
 	    var childGridPagerID = parentRowID + "_pager";
@@ -194,9 +178,9 @@ $(document).ready(function(){
 	        colModel: [
 	                   { label: '[log_id]', name: '[log_id]', key: true, hidden:true },                   
 	                   { label: 'incident_id', name: 'incident_id', hidden:true},
-	                   { label: 'Estado', name: 'status_name', width: 150 },
-	                   { label: 'Fecha', name: 'log_date', width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' } },
-	                   { label: 'Usuario', name: 'user_creation_name', width: 150 },
+	                   { label: 'Estado', name: 'status_name', width: 50,resizable: false },
+	                   { label: 'Fecha', name: 'log_date', width: 75, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' } },
+	                   { label: 'Usuario', name: 'user_creation_name', width: 100 },
 	                   { label: 'Nota', name: 'note', width: 200 }           
 	        ],
 			height: 'auto',
@@ -243,7 +227,7 @@ $(document).ready(function(){
 	    			                  "\nstatusText"+jqXHR.statusText+
 	    			                  "\n\nNo necesitamos devolver nada");
 	    			        },
-	    			        afterSave:function(rowid) {
+	    			        afterSave:function(rowid, response, postdata, options) {
 	    			        	//console.log('rowid:' + rowid);
 	    			            //alert("en afterSave (Submit): rowid="+rowid+"\nNo necesitamos devolver nada");
 	    			        	$("#jqGridSubTask").trigger("reloadGrid"); 
@@ -409,8 +393,46 @@ $(document).ready(function(){
 	};
 
 	$.datepicker.setDefaults($.datepicker.regional['es']);
+	
+	
+	formatDate=function() {
+	    var d = new Date(),
+	        month = '' + (d.getMonth() + 1),
+	        day = '' + d.getDate(),
+	        year = d.getFullYear();
+
+	    if (month.length < 2) month = '0' + month;
+	    if (day.length < 2) day = '0' + day;
+
+	    return [year, month, day].join('-');
+	}
+	
+	restaFechas = function(f1,f2)
+	 {
+	 var aFecha1 = f1.split('-'); 
+	 var aFecha2 = f2.split('-'); 
+	 var fFecha1 = Date.UTC(aFecha1[0],aFecha1[1]-1,aFecha1[2]); 
+	 var fFecha2 = Date.UTC(aFecha2[0],aFecha2[1]-1,aFecha2[2]); 
+	 var dif = fFecha2 - fFecha1;
+	 var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+	 return dias;
+	 }
 
 	var modelIncident=[
+	              { label: 'Atrazo', name: 'diferencia',search:false, editable: false,width: 55,resizable: false,
+		            	formatter: function (cellvalue, options, rowObject) {
+                        	var color;
+                        	var val = restaFechas(formatDate(),rowObject.date_end);
+                        	if (val > 0) {
+                         	   color = 'green';
+                        	} else if (val == 0) {
+                         	   color = 'yellow';
+                        	} else if (val < 0 ) {
+                         	   color = 'red';
+                        	}
+                    		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
+                    	}
+	              },     
 	              { label: 'Tarea', name: 'task_title', width: 200,editable: false
 	            	  ,formatter: returnTaskLink, search:false },
 	              { label: 'incident_id', name: 'incident_id', key: true, hidden:true },

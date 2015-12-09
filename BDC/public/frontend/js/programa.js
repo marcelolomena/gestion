@@ -32,7 +32,7 @@ $(document).ready(function(){
                             	} else if (val >= 0.95) {
                              	   color = 'green';
                             	}
-                            	console.log(color);
+                            	//console.log(color);
                         		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
                         	}
 			            	
