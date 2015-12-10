@@ -203,7 +203,8 @@
 			    <span class="left">@Messages("projectTaskDetails.subtasks") </span>
 					     
 		   </h3>
-		   @if(utils.UserAccess.checkAccess(req,"sub_task_new")){  
+		   @*@if(utils.UserAccess.checkAccess(req,"sub_task_new")){*@  
+		   @if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.tId.get.toString())){  
 			   <a href="/new-subtask/@taskDetail.get.tId"> 
 			    		<span class="add_subtask">@Messages("projectTaskDetails.newsubtasks") </span>
 			   </a>

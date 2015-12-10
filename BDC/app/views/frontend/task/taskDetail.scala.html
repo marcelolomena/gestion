@@ -9,25 +9,33 @@
 
 <div class="width_full">
 		  <div class="width_full" style="margin-bottom:10px;">
-		  		@if(utils.UserAccess.checkAccess(req,"sub_task_update")){ 
+		  		@*@if(utils.UserAccess.checkAccess(req,"sub_task_update")){*@
+		  		@if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.task_id.toString())){  
 					<a href="@controllers.Frontend.routes.SubTask.editSubTask(taskDetail.get.sub_task_id.get.toString())"> 
 						<span class="edit-sub-task"> @Messages("taskDetails.edit")</span>
 					</a>
 				}
 				
-				@if(utils.UserAccess.checkAccess(req,"sub_task_allocation")){
+				@*@if(utils.UserAccess.checkAccess(req,"sub_task_allocation")){*@
+				@if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.task_id.toString())){ 
 					<span class="assign-sub-task">@Messages("taskDetails.assign")</span>
 				}
-				@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){
+				
+				@*@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){*@
+				@if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.task_id.toString())){ 
 					<a href='@controllers.Frontend.routes.Documents.uploadDocument(taskDetail.get.sub_task_id.get.toString, "SUBTASK", "ADD")'><span class="upload-document-icon">@Messages("uploaddocument.uploaddocument")</span></a>
 				}
 				@*TimesheetService.validateUserForHistoricalTimebooking(taskDetail.get.sub_task_id.get.toString,session.get("uId").get) &&*@
-				@if( utils.UserAccess.checkAccess(req,"sub_task_book_time")){
+				@*@if( utils.UserAccess.checkAccess(req,"sub_task_book_time")){*@
+				@if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.task_id.toString())){ 
 					<a href='@controllers.Frontend.routes.TimeSheet.bookTime(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.booktime")</span></a>	
 				}
 				
-				<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.gotosubtaskdetailpage")</span></a>
-				@if(isSubtaskAllocated && utils.UserAccess.checkAccess(req,"sub_task_delete")){
+				@if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.task_id.toString())){ 
+					<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.gotosubtaskdetailpage")</span></a>
+				}
+				@*@if(isSubtaskAllocated && utils.UserAccess.checkAccess(req,"sub_task_delete")){*@
+	            @if(isSubtaskAllocated && utils.UserAccess.canCreateSubTask(req,taskDetail.get.task_id.toString())){ 			
 					<span id="delete-sub-task-id" class="delete-sub-task" >
 					<span id="@taskDetail.get.sub_task_id.get" class="update-sub-task" style=" margin-left: 7px;">
 						@Messages("programdetails.delete")
@@ -196,7 +204,7 @@
    	   </div>
    	   <div class="team-title width_full" style="float: left;width:100%;padding:0px;margin:0px;"> 
 	   	   <h3 style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;" class="layer-title">
-				<span class="left">Las personas que están trabajando en esto!</span>
+				<span class="left">Las personas que estï¿½n trabajando en esto!</span>
 				<!-- <span style="float: right;" class="team-title right"> 
 		   			<span class="team-heading"></span>   
 				</span> -->
