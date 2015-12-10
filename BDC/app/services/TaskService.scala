@@ -5,7 +5,7 @@ import anorm.SqlParser._
 import models._
 import anorm.Id
 import anorm._
-import org.joda.time._
+//import org.joda.time._
 import com.typesafe.plugin._
 import org.apache.commons.lang3.time.DateUtils
 import java.util.Date
@@ -482,6 +482,15 @@ object TaskService extends CustomColumns {
     }
 
   }
+  
+  def canCreateSubTask(uid:String,tid: String): Int = {
+    var sqlString = ""
+    sqlString = "EXEC art.valid_create_subtask {uid},{tid}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('uid ->uid.toInt,
+          'tid -> tid.toInt).as(scalar[Int].single)
+    }
+  }  
 
   def findSubTaskListByTaskId(task_id: String): Seq[SubTasks] = {
     var sql = ""
