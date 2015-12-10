@@ -24,6 +24,7 @@ import java.util.StringTokenizer
 import services.ProjectService
 import services.ProjectManagerService
 import services.ProgramMemberService
+import services.TaskService
 import services.UserService
 import models.ProgramSearch
 import services.ProgramService
@@ -109,6 +110,24 @@ trait AuthentiCate {
     }
     isValid
   } 
+
+    def canCreateSubTask(implicit request: RequestHeader, tid: String): Boolean = {
+    var isValid = false
+    //println("uid:" + request.session.get("uId").get + ", tid:" +tid)
+    if (!request.session.get("uId").isEmpty) {
+      var uid = request.session.get("uId").get
+      
+      if(TaskService.canCreateSubTask(uid,tid)==1){
+        println(uid + " tiene permiso para crear subtarea")
+        isValid = true
+      }else{
+        println(uid + " no tiene permiso para crear subtarea")
+      }
+
+    }
+    isValid
+  } 
+  
   def isAuthenticaedProject(implicit request: RequestHeader, project_id: String): Boolean = {
     var isValid = false
     if (!request.session.get("user_profile").isEmpty) {
