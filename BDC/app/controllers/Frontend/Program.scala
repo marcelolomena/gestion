@@ -2691,6 +2691,13 @@ object Program extends Controller {
             start_date = subtask.get.plan_start_date
             end_date = subtask.get.plan_end_date
           }
+        case 4 =>
+          program = SubTaskServices.findProgramDetailForSubTask(parent_id)
+          val subtask = SubTaskServices.findSubTaskDetailsBySubtaskId(parent_id)
+          if (!subtask.isEmpty) {
+            start_date = subtask.get.plan_start_date
+            end_date = subtask.get.plan_end_date
+          }          
       }
       if (!program.isEmpty) {
         val users = ProgramMemberService.findAllProgramMembers(program.get.program_id.get.toString);

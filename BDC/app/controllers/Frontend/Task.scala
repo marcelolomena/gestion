@@ -28,6 +28,7 @@ import services.TaskDesciplineService
 import services.UserRoleService
 import services.StageService
 import services.DeliverableService
+import services.GenericProjectTypeService
 import java.text.SimpleDateFormat
 import scala.math.BigDecimal.RoundingMode
 import services.ServiceCatalogueService
@@ -114,7 +115,16 @@ object Task extends Controller {
       val project = ProjectService.findProjectDetails(Integer.parseInt(id))
       val user_id = request.session.get("uId").get
       val utype = Integer.parseInt(request.session.get("utype").get.toString())
+      var pTypes = new java.util.LinkedHashMap[String, String]()
       username = request.session.get("username").get.toString()
+
+      val project_types = services.GenericProjectService.findActiveProjectTypeDetailsByType()
+      for (p <- project_types) {
+        if (!GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).isEmpty) {
+          pTypes.put(p.id.get.toString(), GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).get.generic_project_type)
+        }
+      }
+
       val users = ProgramMemberService.findAllProgramMembers(project.get.program.toString);
       var userMap = new java.util.LinkedHashMap[String, String]()
       userMap = new java.util.LinkedHashMap[String, String]()
@@ -151,7 +161,7 @@ object Task extends Controller {
         catalougeMap.put(c.id.get.toString, c.service_name);
       }
 
-      Ok(views.html.frontend.task.newTask(ARTForms.taskForm, project, username, users, discipline, userMap, stageMap, userRoleMap, deliverableMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.task.newTask(ARTForms.taskForm, project, username, users, discipline, userMap, stageMap, userRoleMap, deliverableMap, pTypes)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -164,6 +174,15 @@ object Task extends Controller {
     val user_id = request.session.get("uId").get
     val utype = Integer.parseInt(request.session.get("utype").get.toString())
     username = request.session.get("username").get.toString()
+
+    var pTypes = new java.util.LinkedHashMap[String, String]()
+
+    val project_types = services.GenericProjectService.findActiveProjectTypeDetailsByType()
+    for (p <- project_types) {
+      if (!GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).isEmpty) {
+        pTypes.put(p.id.get.toString(), GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).get.generic_project_type)
+      }
+    }
     val users = ProgramMemberService.findAllProgramMembers(project.get.program.toString);
     var userMap = new java.util.LinkedHashMap[String, String]()
     for (u <- users) {
@@ -212,7 +231,7 @@ object Task extends Controller {
           selected_task = errors.data.get("task_depend").get
         }
 
-        BadRequest(views.html.frontend.task.newTask(newform, project, username, users, descipline, userMap, stageMap, userRoleMap, deliverableMap))
+        BadRequest(views.html.frontend.task.newTask(newform, project, username, users, descipline, userMap, stageMap, userRoleMap, deliverableMap, pTypes))
       },
       success => {
         val theForm = TaskService.validateForm(ARTForms.taskForm.fill(success), "")
@@ -222,8 +241,9 @@ object Task extends Controller {
           if (!theForm.data.get("task_depend").isEmpty) {
             selected_task = theForm.data.get("task_depend").get
           }
-          BadRequest(views.html.frontend.task.newTask(theForm, project, username, users, descipline, userMap, stageMap, userRoleMap, deliverableMap))
+          BadRequest(views.html.frontend.task.newTask(theForm, project, username, users, descipline, userMap, stageMap, userRoleMap, deliverableMap, pTypes))
         } else {
+          
           val milestoneDetails = Tasks(None, success.project, success.task_title, success.task_details.task_code,
             success.plan_start_date, success.plan_end_date, success.task_description, success.plan_time,
             new Date(), success.task_status, 1, success.owner, Option(success.task_discipline), success.completion_percentage,
@@ -231,9 +251,15 @@ object Task extends Controller {
 
           val latest_task = TaskService.insertTask(milestoneDetails)
 
-          val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
-            success.plan_start_date, success.plan_end_date, success.plan_start_date, null, null, new Date(), success.task_status, success.completion_percentage, 0, Option(""), Option(0), Option(0))
-          SubTaskServices.insertSubTask(subtask)
+          if(success.project_mode==42){
+            println("sin plantilla:" + success.project_mode)
+            val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
+              success.plan_start_date, success.plan_end_date, success.plan_start_date, null, null, new Date(), success.task_status, success.completion_percentage, 0, Option(""), Option(0), Option(0))
+            SubTaskServices.insertSubTask(subtask)
+          }else{
+            println("con plantilla:" + success.project_mode)
+            SubTaskServices.insertsubTaskFromTemplate(latest_task.toString(),success.project_mode.toString())
+          }
 
           /**
            * Activity log
@@ -305,7 +331,7 @@ object Task extends Controller {
           val isValidDependency = TaskService.checkValidDependency(task.get.tId.get.toString())
 
           val task_detail = TaskDetails(task.get.task_type, task.get.task_code, task.get.stage.getOrElse(0), task.get.user_role.getOrElse(0), task.get.deliverable)
-          val taskData = TaskMaster(Some(id.toInt), task.get.pId, task.get.task_title,
+          val taskData = TaskMaster(Some(id.toInt), task.get.pId,0, task.get.task_title,
             task.get.plan_start_date, task.get.plan_end_date, task.get.task_description,
             task.get.plan_time, task.get.task_status, task.get.status, task.get.owner, task.get.task_discipline.getOrElse(0), task.get.completion_percentage, task.get.remark, task.get.task_depend, task.get.dependencies_type, task_detail)
 
@@ -593,9 +619,9 @@ object Task extends Controller {
 
   def calculateEarnValue(id: String) = Action { implicit request =>
     var node = new JSONObject()
-    var calculos = SpiCpiCalculationsService.findIndicators(id,0)
+    var calculos = SpiCpiCalculationsService.findIndicators(id, 0)
     for (s <- calculos) {
-			
+
       node.put("EV", s.ev + " hrs")
       node.put("PV", s.pv + " hrs")
       node.put("AC", s.ac + " hrs")
@@ -702,8 +728,8 @@ object Task extends Controller {
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
       var today = FormattedDATE.format(new Date().getTime()).toString()
-      val taskStatus=TaskService.findAllTaskStatus(task_id)
-      Ok(views.html.frontend.task.updateTaskStatus(ARTForms.taskStatusForm, task_id,taskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      val taskStatus = TaskService.findAllTaskStatus(task_id)
+      Ok(views.html.frontend.task.updateTaskStatus(ARTForms.taskStatusForm, task_id, taskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -713,7 +739,7 @@ object Task extends Controller {
     request.session.get("username").map { user =>
       var FormattedDATE = new SimpleDateFormat("yyyy-MM-dd");
       var today = FormattedDATE.format(new Date().getTime()).toString()
-      val taskStatus=TaskService.findAllTaskStatus(task_id)
+      val taskStatus = TaskService.findAllTaskStatus(task_id)
       ARTForms.taskStatusForm.bindFromRequest.fold(
         errors => {
           BadRequest(views.html.frontend.task.updateTaskStatus(errors, task_id, taskStatus)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
