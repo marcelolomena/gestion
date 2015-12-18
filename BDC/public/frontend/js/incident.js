@@ -456,12 +456,27 @@ $(document).ready(function(){
 		    	            	  							            type: "GET",
 		    	            	  							            url: '/incident_program/'+datum,
 		    	            	  							            async:false,
-		    	            	  							            success: function (data) {                            
+		    	            	  							            success: function (data) {  
 		    	            	  							            	$("select#program_id").html(data);
 		    	            	  							            } 
 		    	            	  							        });
 		            	  							            } 
 		            	  							        });
+	
+		            	  							      $.ajax({
+		            	  							            type: "GET",
+		            	  							            url: '/incidentSeverityConfigurationList/'+thisval,
+		            	  							            async:false,
+		            	  							            success: function (data) { 
+		            	  				  	            		    var s = "<select>";
+		            	  				  	            		    s += '<option value="0">--Escoger Severidad--</option>';
+		            	  				  	            		    $.each(data, function(i, item) {
+		            	  				  	            		    	s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
+		            	  				  	            		    });
+		            	  				  	            		    s += "</select>";
+		            	  							            	$("select#severity_id").html(s);
+		            	  							            } 
+		            	  							        });		            	  							        
 	            	  									 }
 	            	  								}
 	            	  							 }
@@ -525,11 +540,30 @@ $(document).ready(function(){
 	              },
 	              { label: 'Prioridad', name: 'severity_description', width: 150,
 	            	  editable: false, hidden: false, editrules: {edithidden: true},
-	            	  stype: 'select',searchoptions: {dataUrl: '/incidentSeverityList'}
+	            	  stype: 'select',searchoptions: {dataUrl: '/incidentSeverityList',
+	            		  buildSelect: function (response) {
+	  	            			var data = JSON.parse(response);
+	  	            		    var s = "<select>";
+	  	            		    s += '<option value="0">--Escoger Severidad--</option>';
+	  	            		    $.each(data, function(i, item) {
+	  	            		    	s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
+	  	            		    });
+	  	            		    return s + "</select>";
+	  	            		}	            		  
+	            		  }
 	              },              
 	              { label: 'Prioridad', name: 'severity_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
-	            	  editoptions: {dataUrl: '/incidentSeverityList',
+	            	  editoptions: {dataUrl: '/incidentSeverityConfigurationList/1',
+	            		  buildSelect: function (response) {
+	  	            			var data = JSON.parse(response);
+	  	            		    var s = "<select>";//el default
+	  	            		    s += '<option value="0">--Escoger Severidad--</option>';
+	  	            		    $.each(data, function(i, item) {
+	  	            		    	s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
+	  	            		    });
+	  	            		    return s + "</select>";
+	  	            		},
 	            		  dataEvents: [{ type: 'change', fn: function(e) {
 								 var thistid= $(this).val();
 								 		$.get('/incidentSeverityDays/'+thistid + '/'+ $("input#date_creation").val(), 
