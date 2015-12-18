@@ -50,7 +50,7 @@ object GenericProjectService extends CustomColumns {
   def findActiveProjectTypeDetailsByType(): Seq[ProjectType] = {
     DB.withConnection { implicit connection =>
       val result = SQL(
-        "select * from art_project_type_master where states=0 ").as(
+        "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY description").as(
           ProjectType.projectDisplay*)
       result
     }

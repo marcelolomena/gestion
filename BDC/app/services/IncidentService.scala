@@ -68,8 +68,8 @@ object IncidentService {
         'note -> note).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
-  
-  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String,plan_start_date:String,plan_end_date:String): Option[ErrorIncident] = {
+
+  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String, plan_start_date: String, plan_end_date: String): Option[ErrorIncident] = {
 
     var sqlString = """
       EXEC art.update_incident_subtask {sub_task_id},{completion_percentage},{plan_start_date},{plan_end_date}
@@ -81,7 +81,7 @@ object IncidentService {
         'plan_start_date -> plan_start_date,
         'plan_end_date -> plan_end_date).executeQuery() as (ErrorIncident.error.singleOpt)
     }
-  }   
+  }
 
   def save(configuration_id: String,
            program_id: String,
@@ -166,10 +166,10 @@ object IncidentService {
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
-  
-  def delMember(task_id:String,
-                   sub_task_id: String,
-                   uid: String): Int = {
+
+  def delMember(task_id: String,
+                sub_task_id: String,
+                uid: String): Int = {
 
     var sqlString = """
       EXEC art.del_incident_member {task_id},{sub_task_id},{uid}
@@ -181,8 +181,8 @@ object IncidentService {
         'sub_task_id -> sub_task_id.toInt,
         'uid -> uid.toInt).executeQuery() as (scalar[Int].single)
     }
-  }  
-  
+  }
+
   def delSubTask(sub_task_id: String): Int = {
 
     var sqlString = """
@@ -192,7 +192,7 @@ object IncidentService {
       SQL(sqlString).on(
         'sub_task_id -> sub_task_id.toInt).executeQuery() as (scalar[Int].single)
     }
-  }    
+  }
 
   def count(Json: String): Int = {
 
@@ -270,6 +270,14 @@ object IncidentService {
     sqlString = "SELECT * FROM art_incident_severity"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Severity.severity *)
+    }
+  }
+
+  def selectSeverityConfiguration(id: String): Seq[Severity] = {
+    var sqlString = ""
+    sqlString = "SELECT * FROM art_incident_severity WHERE configuration_id={id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt).as(Severity.severity *)
     }
   }
 

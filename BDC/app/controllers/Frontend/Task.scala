@@ -257,8 +257,14 @@ object Task extends Controller {
               success.plan_start_date, success.plan_end_date, success.plan_start_date, null, null, new Date(), success.task_status, success.completion_percentage, 0, Option(""), Option(0), Option(0))
             SubTaskServices.insertSubTask(subtask)
           }else{
-            println("con plantilla:" + success.project_mode)
-            SubTaskServices.insertsubTaskFromTemplate(latest_task.toString(),success.project_mode.toString())
+            
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+
+            //println("con plantilla:" + success.project_mode)
+            //println("plan_start_date:" + formattedDate.format(success.plan_start_date))
+            //println("plan_end_date:" + formattedDate.format(success.plan_end_date))
+            SubTaskServices.insertsubTaskFromTemplate(formattedDate.format(success.plan_start_date),
+                formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
           }
 
           /**

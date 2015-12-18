@@ -6,7 +6,13 @@ import anorm._
 import play.api.db.DB
 import play.api.libs.json._
 
-case class Divisions(dId: Option[Int], division: String, user_id: Long, updated_by: Option[Int], updation_date: Option[Date], is_deleted: Int)
+case class Divisions(
+    dId: Option[Int],
+    division: String,
+    user_id: Long,
+    updated_by: Option[Int],
+    updation_date: Option[Date],
+    is_deleted: Int)
 
 object Divisions extends CustomColumns {
 

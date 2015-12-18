@@ -160,7 +160,7 @@ object Programa extends Controller {
   def listaDivisiones = Action { implicit request =>
 
     val divisionValues = DivisionService.findAllDivision
-
+//println(play.api.libs.json.Json.toJson(divisionValues))
     Ok(play.api.libs.json.Json.toJson(divisionValues))
 
   }

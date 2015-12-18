@@ -175,6 +175,7 @@ object ARTForms {
     mapping(
       "mId" -> optional(number),
       "pId" -> number, //.verifying(Messages.get("error.task.projectId"), project => project.length() > 4),
+      "project_mode" -> number,
       "title" -> text.verifying(Messages.get(langObj, "error.task.milestone_title"), title => title.length() >= 4 && title.length() <= 60),
       "plan_start_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
       "plan_end_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
@@ -193,12 +194,12 @@ object ARTForms {
         "task_code" -> text,
         "stage" -> number,
         "user_role" -> number,
-        "deliverable" -> optional(number))(TaskDetails.apply)(TaskDetails.unapply))((tId, pId, title, plan_start_date, plan_end_date,
+        "deliverable" -> optional(number))(TaskDetails.apply)(TaskDetails.unapply))((tId, pId, project_mode, title, plan_start_date, plan_end_date,
         description, plan_time, task_status, status, task_owner, task_discipline,
         completion_percentage, remark, task_depend, dependencies_type, task_details) =>
-        TaskMaster(tId, pId, title, plan_start_date, plan_end_date,
+        TaskMaster(tId, pId, project_mode, title, plan_start_date, plan_end_date,
           description, plan_time, task_status, status, task_owner, task_discipline,
-          completion_percentage, remark, task_depend, dependencies_type, task_details))((task: TaskMaster) => Some((task.tId, task.project, task.task_title, task.plan_start_date, task.plan_end_date,
+          completion_percentage, remark, task_depend, dependencies_type, task_details))((task: TaskMaster) => Some((task.tId, task.project,task.status, task.task_title, task.plan_start_date, task.plan_end_date,
         task.task_description, task.plan_time, task.task_status, task.status, task.owner, task.task_discipline,
         task.completion_percentage, task.remark, task.task_depend, task.dependencies_type, task.task_details))))
 

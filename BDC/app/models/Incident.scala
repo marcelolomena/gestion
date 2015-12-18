@@ -224,7 +224,10 @@ case class Severity(
   class_id: Int,
   severity_code: String,
   severity_description: String,
-  severity_days: Int)
+  severity_days: Int,
+  project_mode: Int,
+  configuration_id: Int
+  )
 
 object Severity {
   val severity = {
@@ -232,17 +235,23 @@ object Severity {
       get[Int]("class_id") ~
       get[String]("severity_code") ~
       get[String]("severity_description") ~
-      get[Int]("severity_days") map {
+      get[Int]("severity_days") ~
+      get[Int]("project_mode") ~
+      get[Int]("configuration_id") map {
         case severity_id ~
           class_id ~
           severity_code ~
           severity_description ~
-          severity_days => Severity(
+          severity_days ~
+          project_mode ~
+          configuration_id => Severity(
           severity_id,
           class_id,
           severity_code,
           severity_description,
-          severity_days)
+          severity_days,
+          project_mode,
+          configuration_id)
       }
 
   }

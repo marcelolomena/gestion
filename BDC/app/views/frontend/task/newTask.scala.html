@@ -1,4 +1,4 @@
-@(taskForm: Form[TaskMaster], project: Option[Project], username: String, users: Seq[Users],  desipline :java.util.HashMap[String, String], userMap: java.util.HashMap[String, String],stages: java.util.HashMap[String, String], userRoleMap: java.util.HashMap[String, String],deliverables:java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(taskForm: Form[TaskMaster], project: Option[Project], username: String, users: Seq[Users],  desipline :java.util.HashMap[String, String], userMap: java.util.HashMap[String, String],stages: java.util.HashMap[String, String], userRoleMap: java.util.HashMap[String, String],deliverables:java.util.HashMap[String, String],pTypes: java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
 @import util.Random
@@ -39,7 +39,16 @@
 				       <input id="project_name" name="project_name" type="text" class="span4" value="@project.get.project_name" readonly="readonly"> 
 				      *@
 				
-				
+	    				<div class="left width_full padding-top-3px">
+	    					@select(
+						         taskForm("project_mode"),
+						         options(pTypes),
+						         'class -> "input-xlarge",
+						         '_label ->   Messages("addNewProject.project_mode"),
+						         '_default -> Messages("addNewProject.placeholder.project_mode")
+						      )
+	    				</div>
+	    								
 				      @*<label>Task Code</label>*@      
 				      <input id="task_details.task_code" name="task_details.task_code" type="text" class="span4 display-none" value="SYS@Random.nextInt(9999)" readonly="readonly" style="background:#E3EAED;"> 
 				        
