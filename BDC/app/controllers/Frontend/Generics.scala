@@ -379,6 +379,7 @@ object Generics extends Controller {
   def editGenericTask(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val genericTask = GenericService.findGenericTasksDetails(id)
+      //val genericTask = GenericService.findGenericTasksByPredefinedTaskId(id)
 
       var stagesMap = new java.util.LinkedHashMap[String, String]()
       val stages = StageService.findAllStages()
@@ -685,7 +686,9 @@ object Generics extends Controller {
 
   def editPredefinedTask(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      val genericTask = GenericService.findGenericTasksDetails(id)
+      //val genericTask = GenericService.findGenericTasksDetails(id)
+      val genericTask = GenericService.findGenericTasksByPredefinedTaskId(id)
+      
       val predefinedTask = GenericService.findPredefinedTasksDetails(id)
 
       var descipline = new java.util.LinkedHashMap[String, String]()
@@ -722,6 +725,7 @@ object Generics extends Controller {
       for (serviceCatalogue <- serviceCatalogues) {
         serviceCatalogueMap.put(serviceCatalogue.id.get.toString, serviceCatalogue.service_name)
       }
+     
       val predefinedtaskDetails = PredefinedTasks(predefinedTask.get.tId, predefinedTask.get.task_type, predefinedTask.get.task_title,
         predefinedTask.get.task_description, predefinedTask.get.task_discipline, predefinedTask.get.remark,
         predefinedTask.get.stage, predefinedTask.get.user_role, predefinedTask.get.deliverable, predefinedTask.get.catalogue_service, 1)
