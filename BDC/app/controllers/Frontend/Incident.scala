@@ -116,7 +116,6 @@ object Incident extends Controller {
         val term = request.getQueryString("term").getOrElse("").toString()
         var users: Seq[NameUsr] = null
         users = IncidentService.listUsr(term)
-        //println("users : " + users)
 
         Ok(play.api.libs.json.Json.toJson(users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
@@ -124,6 +123,20 @@ object Incident extends Controller {
       }
 
   }
+  
+  def addUser = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val term = request.getQueryString("term").getOrElse("").toString()
+        var users = IncidentService.listUsrTwo(term)
+
+        Ok(play.api.libs.json.Json.toJson(users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }  
 
   def delMember = Action {
     implicit request =>
