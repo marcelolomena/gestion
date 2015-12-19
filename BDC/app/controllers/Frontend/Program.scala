@@ -2742,6 +2742,14 @@ object Program extends Controller {
             end_date = subtask.get.plan_end_date
             task_id = subtask.get.task_id.toString()
           }
+        case 4 =>
+          program = SubTaskServices.findProgramDetailForSubTask(parent_id)
+          val subtask = SubTaskServices.findSubTaskDetailsBySubtaskId(parent_id)
+          if (!subtask.isEmpty) {
+            start_date = subtask.get.plan_start_date
+            end_date = subtask.get.plan_end_date
+            task_id = subtask.get.task_id.toString()
+          }          
       }
       if (!program.isEmpty) {
 
