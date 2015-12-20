@@ -109,8 +109,8 @@ object Programa extends Controller {
               }
             }
 
-            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
-            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
+            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
+            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
             if (tieneJson) {
               records = ProgramaService.cantidad(user_id, qrystr_c)
               panel = ProgramaService.listado(user_id, page, qrystr)
