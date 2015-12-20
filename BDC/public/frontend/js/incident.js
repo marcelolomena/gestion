@@ -496,14 +496,6 @@ $(document).ready(function(){
 								 var thispid= $(this).val();
 							        $.ajax({
 							            type: "GET",
-							            url: '/incidentBusinessMember/'+thispid,
-							            async:false,
-							            success: function (data) {                            
-							            	$("select#user_sponsor_id").html(data);
-							            } 
-							        });
-							        $.ajax({
-							            type: "GET",
 							            url: '/incidentNoBusinessMember/'+thispid,
 							            async:false,
 							            success: function (data) {                            
@@ -520,13 +512,34 @@ $(document).ready(function(){
 	            	  editoptions: {dataInit: function(elem) {$(elem).width(165);$(elem).addClass("ui-state-highlight y_sponsor_name");}},
 	            	  formoptions: {rowpos:2,colpos:1,label: "<span class='x_sponsor_name'>Usuario</span>"},
 	              },
-	              { label: 'Usuario', name: 'user_sponsor_id',
-	            	  editable: true, hidden: true, editrules: {edithidden: true}, edittype: "select",
-	            	  editoptions: {dataUrl: '/incident_program_default',
-	            		  dataInit: function(elem) {$(elem).width(180);$(elem).addClass("y_user_sponsor_id");
-	            		  }
-	            	  },formoptions: {rowpos:2,colpos:1,label: "<span class='x_user_sponsor_id'>Usuario</span>"}
-   	              },	    
+                  { label: 'Usuario', name: 'user_sponsor_id',
+                	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
+                      editoptions: {
+                          dataInit: function (element) {$(element).width(170);$(element).addClass("y_user_sponsor_id");
+                              window.setTimeout(function () {
+                                  $(element).autocomplete({
+                                	  appendTo:"body",disabled:false,delay:300,minLength:1,
+                                  source: function(request, response){
+										this.xhr = $.ajax({
+											type: "GET",
+											url: '/incidentAddUser',
+											data: request,
+											dataType: "json",
+											async: false,
+											success: function( data ) {
+												response( data );
+											},
+											error: function(model, response, options) {
+												response([]);
+											}
+										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
+									},
+                                  autoFocus: true
+                                  });
+                              }, 100);
+                          }
+                      },formoptions: {rowpos:2,colpos:1,label: "<span class='x_user_sponsor_id'>Usuario</span>"}
+                  },	              
 	              { label: 'Responsable', name: 'owner_name', width: 150,editable: true, hidden: false, editrules: {edithidden: true},
 	            	  editoptions: {dataInit: function(elem) {$(elem).width(165);$(elem).addClass("ui-state-highlight y_owner_name");}},
 	            	  formoptions: {rowpos:2,colpos:2,label: "<span class='x_owner_name'>Responsable</span>"},
