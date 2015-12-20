@@ -6,6 +6,7 @@ import services.ProgramaService
 import services.DivisionService
 import services.SubTypeService
 import services.ProgramTypeService
+import services.ImpactTypeService
 import utils.FormattedOutPuts
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
@@ -20,16 +21,17 @@ import models._
 object Programa extends Controller {
 
   def fromProgramName(choice: String, value: String): String = choice match {
-    case "devison"                => value
-    case "program_type"           => value
-    case "program_sub_type"       => value
-    case "work_flow_status"       => value
-    case "pai"                    => value
-    case "pae"                    => value
-    case "spi"                    => value
-    case "cpi"                    => value
-    case "release_date"           => " '" + value + "' "    
-    case _                        => "error"
+    case "devison"          => value
+    case "program_type"     => value
+    case "program_sub_type" => value
+    case "work_flow_status" => value
+    case "impact_type"      => value
+    case "pai"              => value
+    case "pae"              => value
+    case "spi"              => value
+    case "cpi"              => value
+    case "release_date"     => " '" + value + "' "
+    case _                  => "error"
   }
 
   def home = Action {
@@ -81,27 +83,30 @@ object Programa extends Controller {
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
                   if (m.field.equals("division")) {
-                    if (m.data.toInt != 0){
+                    if (m.data.toInt != 0) {
                       qrystr += "X.dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                       qrystr_c += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                     }
                   } else if (m.field.equals("program_type")) {
-                    if (m.data.toInt != 0){
+                    if (m.data.toInt != 0) {
                       qrystr += "X.program_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_type", m.data) + " AND "
                       qrystr_c += "t1.id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                     }
                   } else if (m.field.equals("sub_type")) {
-                    if (m.data.toInt != 0){
+                    if (m.data.toInt != 0) {
                       qrystr += "X.program_sub_type" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_sub_type", m.data) + " AND "
                     }
                   } else if (m.field.equals("workflow_status")) {
-                    if (m.data.toInt != 0){
+                    if (m.data.toInt != 0) {
                       qrystr += "X.work_flow_status" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("work_flow_status", m.data) + " AND "
                     }
+                  } else if (m.field.equals("impact_type")) {
+                    if (m.data.toInt != 0) {
+                      qrystr += "X.impact_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("impact_type", m.data) + " AND "
+                    }
                   } else if (m.field.equals("release_date")) {
-                      qrystr += "X.release_date" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("release_date", m.data) + " AND "
-                  } 
-                  else {
+                    qrystr += "X.release_date" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("release_date", m.data) + " AND "
+                  } else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromProgramName(m.field, m.data) + " AND "
                   }
                 }
@@ -109,8 +114,8 @@ object Programa extends Controller {
               }
             }
 
-            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
-            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
+            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
+            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
             if (tieneJson) {
               records = ProgramaService.cantidad(user_id, qrystr_c)
               panel = ProgramaService.listado(user_id, page, qrystr)
@@ -136,11 +141,18 @@ object Programa extends Controller {
           campo.put("sub_type", p.sub_type)
           campo.put("workflow_status", p.workflow_status)
           campo.put("program_name", p.program_name)
+          campo.put("program_description", p.program_description)
+          campo.put("sap_code", p.sap_code)
+          campo.put("initiation_planned_date", p.initiation_planned_date.getOrElse("").toString())
+          campo.put("closure_date", p.release_date.getOrElse("").toString())
           campo.put("release_date", p.release_date.getOrElse("").toString())
-          campo.put("pai",p.pai)
-          campo.put("pae",p.pai)
-          campo.put("spi",p.spi)
-          campo.put("cpi",p.cpi)
+          campo.put("planned_hours", p.planned_hours)
+          campo.put("pai", p.pai)
+          campo.put("pae", p.pai)
+          campo.put("spi", p.spi)
+          campo.put("cpi", p.cpi)
+          campo.put("impact_type", p.impact_type)
+          
           registro.put(campo)
         }
         var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
@@ -160,7 +172,7 @@ object Programa extends Controller {
   def listaDivisiones = Action { implicit request =>
 
     val divisionValues = DivisionService.findAllDivision
-//println(play.api.libs.json.Json.toJson(divisionValues))
+    //println(play.api.libs.json.Json.toJson(divisionValues))
     Ok(play.api.libs.json.Json.toJson(divisionValues))
 
   }
@@ -168,6 +180,14 @@ object Programa extends Controller {
   def listaTipo = Action { implicit request =>
 
     val modelManagementValues = ProgramTypeService.findAllProgramType
+
+    Ok(play.api.libs.json.Json.toJson(modelManagementValues))
+
+  }
+
+  def listaImpacto = Action { implicit request =>
+
+    val modelManagementValues = ImpactTypeService.findAllImpactTypeList
 
     Ok(play.api.libs.json.Json.toJson(modelManagementValues))
 
