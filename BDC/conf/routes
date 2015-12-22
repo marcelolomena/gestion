@@ -590,6 +590,7 @@ POST   /incidentSaveHours																			  controllers.Frontend.Incident.save
 POST   /incidentSaveSubTask																			  controllers.Frontend.Incident.saveSubTask
 GET	   /incidentDepartamentList																		  controllers.Frontend.Incident.departamentList
 GET    /incidentAddMember																		      controllers.Frontend.Incident.addMember
+GET    /incidentAddUser  																		      controllers.Frontend.Incident.addUser
 GET    /incidentDelMember                                                                             controllers.Frontend.Incident.delMember
 GET    /incidentDelSubTask																			  controllers.Frontend.Incident.delSubTask
 #Migracion Programa
@@ -599,3 +600,5 @@ GET    /listaDivisiones																				  controllers.Frontend.Programa.lista
 GET    /listaTipo																				      controllers.Frontend.Programa.listaTipo
 GET    /listaFoco																				      controllers.Frontend.Programa.listaFoco
 GET    /listaEstado																				      controllers.Frontend.Programa.listaEstado
+GET    /listaImpacto																			      controllers.Frontend.Programa.listaImpacto
+POST   /programaGrabar																			      controllers.Frontend.Programa.grabaPrograma
