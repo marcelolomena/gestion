@@ -33,5 +33,6 @@ object ApplicationBuild extends Build {
 
   // no incluye documentacion de la API mientras empaqueta:
   doc in Compile <<= target.map(_ / "none")
+  
 
 }
