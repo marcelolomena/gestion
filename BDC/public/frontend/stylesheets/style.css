@@ -3051,6 +3051,10 @@ padding: 6px 20px 6px 8px;
   width: 80%;
   font-size: 13px;
 }
+.span7 { /* Agregado */
+  width: 85%;
+  font-size: 13px;
+}
 .fo-btn{
 	background-color: #4F5759;
     border: medium none;
