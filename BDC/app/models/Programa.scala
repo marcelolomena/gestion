@@ -17,11 +17,17 @@ case class Programa(
   sub_type: String,
   workflow_status: String,
   program_name: String,
+  program_description: String,
+  sap_code: Int,
+  initiation_planned_date: Option[Date],
+  closure_date: Option[Date],
   release_date: Option[Date],
+  planned_hours: Double,
   pai: Double,
   pae: Double,
   spi: Double,
-  cpi: Double)
+  cpi: Double,
+  impact_type: String)
 
 object Programa {
   val programa = {
@@ -31,33 +37,51 @@ object Programa {
       get[String]("sub_type") ~
       get[String]("workflow_status") ~
       get[String]("program_name") ~
+      get[String]("program_description") ~ 
+      get[Int]("sap_code") ~ 
+      get[Option[Date]]("initiation_planned_date") ~
+      get[Option[Date]]("closure_date") ~
       get[Option[Date]]("release_date") ~
+      get[Double]("planned_hours") ~
       get[Double]("pai") ~ 
       get[Double]("pae") ~
       get[Double]("spi") ~
-      get[Double]("cpi") map {
+      get[Double]("cpi") ~ 
+      get[String]("impact_type") map {
         case program_id ~
           division ~
           program_type ~
           sub_type ~
           workflow_status ~
           program_name ~
+          program_description ~
+          sap_code ~
+          initiation_planned_date ~
+          closure_date ~
           release_date ~
+          planned_hours ~
           pai ~
           pae ~
           spi ~
-          cpi => Programa (
+          cpi ~
+          impact_type => Programa (
           program_id,
           division,
           program_type,
           sub_type,
           workflow_status,
           program_name,
+          program_description,
+          sap_code,
+          initiation_planned_date,
+          closure_date,
           release_date,
+          planned_hours,
           pai,
           pae,
           spi,
-          cpi)
+          cpi,
+          impact_type)
       }
 
   }

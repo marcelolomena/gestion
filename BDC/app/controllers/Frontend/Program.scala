@@ -295,6 +295,8 @@ object Program extends Controller {
           //var project_classification = ""
           var work_flow_status = ""
           var program_name = ""
+          var program_code = "" //agregado
+          var sap_code = "" //agregado          
           var program_type = ""
           var program_sub_type = ""
           var division = ""
@@ -312,6 +314,12 @@ object Program extends Controller {
           if (!searchForm.program_name.isEmpty) {
             program_name = searchForm.program_name.get.trim()
           }
+          if (!searchForm.program_code.isEmpty) { //agregado
+            program_code = searchForm.program_code.get.trim()
+          }
+          if (!searchForm.sap_code.isEmpty) { //agregado
+            sap_code = searchForm.sap_code.get.trim()
+          }          
           if (!searchForm.program_type.isEmpty) {
             program_type = searchForm.program_type.get.trim()
           }
@@ -350,7 +358,7 @@ object Program extends Controller {
           //var tasksDependents = new java.util.HashMap[Integer, Long]()
           val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
 
-          if (StringUtils.isEmpty(work_flow_status) && StringUtils.isEmpty(program_name) && StringUtils.isEmpty(program_type) &&
+          if (StringUtils.isEmpty(work_flow_status) && StringUtils.isEmpty(program_name) && StringUtils.isEmpty(program_code) && StringUtils.isEmpty(sap_code) && StringUtils.isEmpty(program_type) && //agregado
             StringUtils.isEmpty(program_sub_type) && StringUtils.isEmpty(division) &&
             StringUtils.isEmpty(impact_type) && StringUtils.isEmpty(program_role) &&
             StringUtils.isEmpty(item_budget)) {
@@ -358,7 +366,7 @@ object Program extends Controller {
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(impact_type,work_flow_status, program_name, program_type, program_sub_type, division, program_role, item_budget, "")
+            val programs = ProgramService.searchDashboardReport(impact_type,work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
             //Ok("SUCCESS");

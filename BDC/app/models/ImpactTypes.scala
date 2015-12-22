@@ -5,6 +5,7 @@ import play.api.Play.current
 import java.util.Date
 import anorm._
 import play.api.db.DB
+import play.api.libs.json._
 
 case class ImpactTypes(id: Option[Int], impact_type: String)
 
@@ -16,4 +17,6 @@ object ImpactTypes {
         case id ~ impact_type => ImpactTypes(id, impact_type)
       }
   }
+  
+  implicit val impactWrites = Json.writes[ImpactTypes]
 }

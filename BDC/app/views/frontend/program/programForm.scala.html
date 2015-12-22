@@ -8,14 +8,36 @@
 	 	<div class="search-form-wrapper" style="padding: 10px 40px;">
 		@form(action = controllers.Frontend.routes.Program.searchResult, 'id->"search-program-form") {
 			
-			<div class="field-wrapper">
+			<div class="width_full"> <!-- Cambio -->
 					@inputText(
 			                searchProgram("program_name"),
-			                'class -> "span5", 
+			                'class -> "span7", 
 			                '_label -> Messages("addNewProgram.programName"),
 			                'placeholder -> Messages("addNewProgram.placeholder.program_name")
 				    )
 	        </div>
+	        
+	        <div class="field-wrapper"> <!-- Agregado -->
+					@inputText(
+			                searchProgram("program_code"),
+			                'class -> "span4", 
+			                '_label -> Messages("program.programcode"),
+			                'placeholder -> Messages("addNewProgram.placeholder.program_code")
+				    )
+	        </div>
+	        
+	        <div class="field-wrapper"> <!-- Agregado -->
+					@inputText(
+			                searchProgram("sap_code"),
+			                'class -> "span4", 
+			                '_label -> Messages("addNewProgram.sapCode"),
+			                'placeholder -> Messages("addNewProgram.placeholder.sap_code")
+				    )
+	        </div>
+	        
+	        
+	        
+	        
 	            <div class="field-wrapper">
 					@select(
 	            		searchProgram("work_flow_status"),
@@ -26,6 +48,7 @@
 					)
 				</div>
 
+			
 			
             <div class="field-wrapper" > 
             		@select(
@@ -98,6 +121,8 @@
 						      )
 
 	        </div>
+	        
+	        
             
             <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
             	<span class="left" style="margin-top: 15px;"><input class="btn form-button" id="program-search-form" value='@Messages("button.search")' type="button"/></span>

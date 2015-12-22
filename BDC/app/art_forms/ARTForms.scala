@@ -875,6 +875,8 @@ object ARTForms {
       //"project_classification" -> optional(text),
       "work_flow_status" -> optional(text), 
       "program_name" -> optional(text),
+      "program_code" -> optional(text), //agregado
+      "sap_code" -> optional(text), //agregado      
       "program_type" -> optional(text),
       "program_sub_type" -> optional(text),
       "division" -> optional(text),

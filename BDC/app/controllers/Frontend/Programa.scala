@@ -14,6 +14,7 @@ import org.json.JSONObject
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
 import models._
+import play.api.mvc.AnyContent
 
 /**
  * @author marcelo
@@ -114,8 +115,8 @@ object Programa extends Controller {
               }
             }
 
-            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
-            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
+            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
+            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
             if (tieneJson) {
               records = ProgramaService.cantidad(user_id, qrystr_c)
               panel = ProgramaService.listado(user_id, page, qrystr)
@@ -152,7 +153,7 @@ object Programa extends Controller {
           campo.put("spi", p.spi)
           campo.put("cpi", p.cpi)
           campo.put("impact_type", p.impact_type)
-          
+
           registro.put(campo)
         }
         var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
@@ -169,10 +170,75 @@ object Programa extends Controller {
 
   }
 
+  def grabaPrograma = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        //var incident: Option[ErrorIncident] = null
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var ret: Int = 0
+        jsonBody.map { jsValue =>
+
+          val program_id = (jsValue \ "program_id")
+          val program_name = (jsValue \ "program_name")
+          val program_description = (jsValue \ "program_description")
+          val planned_hours = (jsValue \ "planned_hours")
+
+          val sap_code = (jsValue \ "sap_code")
+          val demand_manager = (jsValue \ "demand_manager")
+          val program_manager = (jsValue \ "program_manager")
+          val program_type = (jsValue \ "program_type")
+
+          val sub_type = (jsValue \ "sub_type")
+          val workflow_status = (jsValue \ "workflow_status")
+          val impact_type = (jsValue \ "impact_type")
+          val initiation_planned_date = (jsValue \ "initiation_planned_date")
+
+          val release_date = (jsValue \ "release_date")
+          val closure_date = (jsValue \ "closure_date")
+
+          val oper = (jsValue \ "oper")
+
+          //println("program_id : " + program_id)
+          //println("program_name : " + program_name)
+          //println("program_description : " + program_description)
+          //println("planned_hours : " + planned_hours)          
+          //println("oper : " + oper)
+
+          if (oper.toString().replace("\"", "").equals("edit")) {
+
+          } else if (oper.toString().replace("\"", "").equals("del")) {
+
+          } else if (oper.toString().replace("\"", "").equals("add")) {
+            ret=ProgramaService.grabar(
+              program_name.toString().replace("\"", ""),
+              program_description.toString().replace("\"", ""),
+              planned_hours.toString().replace("\"", ""),
+              sap_code.toString().replace("\"", ""),
+              demand_manager.toString().replace("\"", ""),
+              program_manager.toString().replace("\"", ""),
+              program_type.toString().replace("\"", ""),
+              sub_type.toString().replace("\"", ""),
+              workflow_status.toString().replace("\"", ""),
+              impact_type.toString().replace("\"", ""),
+              initiation_planned_date.toString().replace("\"", ""),
+              release_date.toString().replace("\"", ""),
+              closure_date.toString().replace("\"", ""))
+          }
+
+        }
+
+        Ok(ret.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
   def listaDivisiones = Action { implicit request =>
 
     val divisionValues = DivisionService.findAllDivision
-    //println(play.api.libs.json.Json.toJson(divisionValues))
+
     Ok(play.api.libs.json.Json.toJson(divisionValues))
 
   }

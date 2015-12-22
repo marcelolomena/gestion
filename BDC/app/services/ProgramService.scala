@@ -328,7 +328,7 @@ object ProgramService extends CustomColumns {
     if (!creationDate) {
       new_form = form.withError("program_dates.end_planned_date", Messages.get(langObj, "error.addnewprogram.creationdatetodaycompare"))
     }
-/*
+    /*
     if (!StringUtils.isEmpty(old_id)) {
 
       if (!invalid_release_date && release_date != null) {
@@ -377,7 +377,7 @@ object ProgramService extends CustomColumns {
       }
 
     }
- */   
+ */
     if (date1 < date4 && date1 != 0) {
       new_form = form.withError("program_dates.closure_date", "Fecha de cierre no debe ser menor que la fecha de lanzamiento.")
     }
@@ -865,7 +865,7 @@ object ProgramService extends CustomColumns {
     }
   }
 
-  def searchDashboardReport(impact_type:String,work_flow_status: String, program_name: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
+  def searchDashboardReport(impact_type: String, work_flow_status: String, program_name: String, program_code: String, sap_code: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
     //var sqlString = ""
     //var stment1 = ""
     //var stment2 = ""
@@ -880,13 +880,20 @@ object ProgramService extends CustomColumns {
     if (!StringUtils.isEmpty(impact_type)) {
       sqlString = sqlString + " impact_type = " + impact_type + " AND"
     }
-    
+
     if (!StringUtils.isEmpty(work_flow_status)) {
       sqlString = sqlString + " work_flow_status = " + work_flow_status + " AND"
     }
 
     if (!StringUtils.isEmpty(program_name)) {
       sqlString = sqlString + " program_name like '%" + program_name + "%' AND"
+    }
+
+    if (!StringUtils.isEmpty(program_code)) { //query para program_code
+      sqlString = sqlString + " program_code = " + program_code + " AND"
+    }
+    if (!StringUtils.isEmpty(sap_code)) { //query para sap_code
+      sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_sap_master where sap_number=" + sap_code + " AND is_active='1') AND"
     }
 
     if (!StringUtils.isEmpty(program_type)) {

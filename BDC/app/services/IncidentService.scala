@@ -106,7 +106,7 @@ object IncidentService {
         'program_id -> program_id.toInt,
         'date_creation -> date_creation,
         'ir_number -> ir_number,
-        'user_sponsor_id -> user_sponsor_id.toInt,
+        'user_sponsor_id -> user_sponsor_id,
         'brief_description -> brief_description,
         'extended_description -> extended_description,
         'severity_id -> severity_id.toInt,
@@ -235,7 +235,14 @@ object IncidentService {
   }
 
   def listUsr(term: String): Seq[NameUsr] = {
-    var sqlString = "SELECT first_name + ' ' + last_name value,first_name + ' ' + last_name label from art_user where first_name like '%" + term + "%' OR last_name like '%" + term + "%'"
+    var sqlString = "SELECT first_name + ' ' + last_name value,first_name + ' ' + last_name label FROM art_user WHERE first_name like '%" + term + "%' OR last_name like '%" + term + "%'"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(NameUsr.name *)
+    }
+  }
+
+  def listUsrTwo(term: String): Seq[NameUsr] = {
+    var sqlString = "SELECT nombre value, nombre label FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND nombre like '%" + term + "%'"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(NameUsr.name *)
     }
