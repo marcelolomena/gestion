@@ -14,10 +14,14 @@ import play.mvc._
  * @author marcelo
  */
 object ProgramaService {
-  def listado(uid: Int, page: Int, json: String): Seq[Programa] = {
+  def listado(uid: Int, PageSize: Int, page: Int, order: String, json: String): Seq[Programa] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.list_program_master {uid},{page},{json}").on(
-        'uid -> uid, 'page -> page, 'json -> json).executeQuery().as(Programa.programa *)
+      SQL("EXEC art.list_program_master {uid},{PageSize},{page},{order},{json}").on(
+        'uid -> uid,
+        'PageSize -> PageSize,
+        'page -> page,
+        'order -> order,
+        'json -> json).executeQuery().as(Programa.programa *)
     }
   }
 
