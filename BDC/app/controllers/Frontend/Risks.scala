@@ -112,13 +112,13 @@ object Risks extends Controller {
       for (categ <- categories) {
         riskCategoryMap.put(categ.id.get.toString(), categ.category_name)
       }
-      
+
       val riskStateMap = new java.util.LinkedHashMap[String, String]()
 
       val states = RiskStateService.findActiveRiskState()
       for (state <- states) {
         riskStateMap.put(state.id.get.toString(), state.state_name)
-      }      
+      }
 
       val subCategoryMap = new java.util.LinkedHashMap[String, String]()
 
@@ -127,7 +127,7 @@ object Risks extends Controller {
         subCategoryMap.put(subcate.id.get.toString(), subcate.name)
       }
 */
-      Ok(views.html.frontend.risks.addRisk(parent_id, parent_type, ARTForms.riskManagementForm, usersMap, riskCategoryMap, subCategoryMap, progrm, "")).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+      Ok(views.html.frontend.risks.addRisk(parent_id, parent_type, ARTForms.riskManagementForm, usersMap, riskCategoryMap, subCategoryMap, progrm, "", riskStateMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
@@ -138,6 +138,7 @@ object Risks extends Controller {
       val subCategoryMap = new java.util.LinkedHashMap[String, String]()
       val riskCategoryMap = new java.util.LinkedHashMap[String, String]()
       val riskStateMap = new java.util.LinkedHashMap[String, String]()
+
       var progrm: Option[ProgramDates] = null
       parent_type.intValue() match {
 
@@ -183,6 +184,11 @@ object Risks extends Controller {
         riskCategoryMap.put(categ.id.get.toString(), categ.category_name)
       }
 
+      val states = RiskStateService.findActiveRiskState()
+      for (state <- states) {
+        riskStateMap.put(state.id.get.toString(), state.state_name)
+      }
+
       val oldForm = ARTForms.riskManagementForm.bindFromRequest
       oldForm.fold(
         errors => {
@@ -195,7 +201,7 @@ object Risks extends Controller {
           //selectedSubCategory = oldForm.get.sub_category.toString;
           val the_Form = RiskService.validateRisk(oldForm, progrm)
 
-          BadRequest(views.html.frontend.risks.addRisk(parent_id, parent_type, the_Form, usersMap, riskCategoryMap, subCategoryMap, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          BadRequest(views.html.frontend.risks.addRisk(parent_id, parent_type, the_Form, usersMap, riskCategoryMap, subCategoryMap, progrm, selectedSubCategory, riskStateMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
         },
         risk => {
           var newform = oldForm
@@ -205,7 +211,7 @@ object Risks extends Controller {
           }
           val the_Form = RiskService.validateRisk(oldForm, progrm)
           if (the_Form.hasErrors) {
-            BadRequest(views.html.frontend.risks.addRisk(parent_id, parent_type, the_Form, usersMap, riskCategoryMap, subCategoryMap, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+            BadRequest(views.html.frontend.risks.addRisk(parent_id, parent_type, the_Form, usersMap, riskCategoryMap, subCategoryMap, progrm, selectedSubCategory, riskStateMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
           } else {
             var newFileName = ""
             val user_id = Integer.parseInt(request.session.get("uId").get)
@@ -237,7 +243,7 @@ object Risks extends Controller {
                   risk.imapct, risk.risk_category, risk.variable_imapact, risk.probablity_of_occurence,
                   risk.quantification, risk.strategic_reply, risk.responsible, risk.reply_action,
                   risk.configuration_plan, Option(newFileName), risk.risk_clouser_date, ////////////////////temp
-                  Option(user_id), Option(new Date()), Option(new Date()), Option(1), risk.sub_category)
+                  Option(user_id), Option(new Date()), Option(new Date()), risk.risk_state, risk.sub_category)
 
                 val last = RiskService.insertRisk(risk_master)
 
@@ -260,7 +266,7 @@ object Risks extends Controller {
                 risk.imapct, risk.risk_category, risk.variable_imapact, risk.probablity_of_occurence,
                 risk.quantification, risk.strategic_reply, risk.responsible, risk.reply_action,
                 risk.configuration_plan, Option(""), risk.risk_clouser_date, ////////////////////temp
-                Option(user_id), Option(new Date()), Option(new Date()), Option(1), risk.sub_category)
+                Option(user_id), Option(new Date()), Option(new Date()), risk.risk_state, risk.sub_category)
 
               val last = RiskService.insertRisk(risk_master)
 
@@ -294,7 +300,7 @@ object Risks extends Controller {
         case Some(r: RiskManagementMaster) =>
           val rm = RiskManagement(r.parent_id, r.parent_type, r.name, r.cause, r.event, r.imapct, r.risk_category,
             r.variable_imapact, r.probablity_of_occurence, r.quantification, r.strategic_reply, r.responsible,
-            r.reply_action, r.configuration_plan, r.document_category, r.sub_category, r.risk_clouser_date, r.is_active)
+            r.reply_action, r.configuration_plan, r.document_category, r.sub_category, r.risk_state, r.risk_clouser_date /*, r.is_active*/ )
 
           val parent_type = r.parent_type.get
           val parent_id = r.parent_id.get.toString()
@@ -334,7 +340,13 @@ object Risks extends Controller {
           for (categ <- categories) {
             riskCategoryMap.put(categ.id.get.toString(), categ.category_name)
           }
-          Ok(views.html.frontend.risks.editRisk(id, ARTForms.riskManagementForm.fill(rm), usersMap, riskCategoryMap, subCategoryMap, r.parent_id.get.toString(), r.parent_type.get, progrm, rm.sub_category.toString)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          val riskStateMap = new java.util.LinkedHashMap[String, String]()
+          val states = RiskStateService.findActiveRiskState()
+          for (state <- states) {
+            riskStateMap.put(state.id.get.toString(), state.state_name)
+          }
+
+          Ok(views.html.frontend.risks.editRisk(id, ARTForms.riskManagementForm.fill(rm), usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, rm.sub_category.toString)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
     }.getOrElse {
@@ -392,7 +404,7 @@ object Risks extends Controller {
           val old_res = r.responsible
           val rm = RiskManagement(r.parent_id, r.parent_type, r.name, r.cause, r.event, r.imapct, r.risk_category,
             r.variable_imapact, r.probablity_of_occurence, r.quantification, r.strategic_reply, r.responsible,
-            r.reply_action, r.configuration_plan, r.document_category, r.sub_category, r.risk_clouser_date, r.is_active)
+            r.reply_action, r.configuration_plan, r.document_category, r.sub_category, r.risk_state, r.risk_clouser_date)
 
           val parent_type = r.parent_type.get
           val parent_id = r.parent_id.get.toString()
@@ -431,7 +443,11 @@ object Risks extends Controller {
           for (categ <- categories) {
             riskCategoryMap.put(categ.id.get.toString(), categ.category_name)
           }
-
+          val riskStateMap = new java.util.LinkedHashMap[String, String]()
+          val states = RiskStateService.findActiveRiskState()
+          for (state <- states) {
+            riskStateMap.put(state.id.get.toString(), state.state_name)
+          }
           val oldform = ARTForms.riskManagementForm.bindFromRequest
           oldform.fold(
             errors => {
@@ -440,7 +456,7 @@ object Risks extends Controller {
               if (!oldform("sub_category").value.isEmpty) {
                 selectedSubCategory = oldform("sub_category").value.get.toString
               }
-              BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
             },
             risk => {
               val the_Form = RiskService.validateRiskForUpdate(oldform, progrm, id, parent_id.toString(), parent_type.toString())
@@ -450,7 +466,7 @@ object Risks extends Controller {
                 if (!the_Form("sub_category").value.isEmpty) {
                   selectedSubCategory = the_Form("sub_category").value.get.toString
                 }
-                BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+                BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
               } else {
 
                 var newFileName = ""
@@ -489,7 +505,7 @@ object Risks extends Controller {
                   val rm = RiskManagementMaster(Option(id.toInt), r.parent_id, r.parent_type, risk.name, risk.cause, risk.event, risk.imapct, risk.risk_category,
                     risk.variable_imapact, risk.probablity_of_occurence, risk.quantification, risk.strategic_reply, risk.responsible,
                     risk.reply_action, risk.configuration_plan, Option(newFileName), risk.risk_clouser_date, r.user_id, r.creation_date,
-                    Option(new Date()), risk.is_active, risk.sub_category)
+                    Option(new Date()), risk.risk_state, risk.sub_category)
 
                   if (old_res != risk.responsible) {
                     val risk_project = ProjectService.getRiskProjectDetails(progrm.get.program_id)
@@ -510,7 +526,7 @@ object Risks extends Controller {
                   val rm = RiskManagementMaster(Option(id.toInt), r.parent_id, r.parent_type, risk.name, risk.cause, risk.event, risk.imapct, risk.risk_category,
                     risk.variable_imapact, risk.probablity_of_occurence, risk.quantification, risk.strategic_reply, risk.responsible,
                     risk.reply_action, risk.configuration_plan, riskObj.get.document_category, risk.risk_clouser_date, r.user_id, r.creation_date,
-                    Option(new Date()), risk.is_active, risk.sub_category)
+                    Option(new Date()), risk.risk_state, risk.sub_category)
 
                   if (old_res != risk.responsible) {
                     val risk_project = ProjectService.getRiskProjectDetails(progrm.get.program_id)

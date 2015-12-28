@@ -1,4 +1,4 @@
-@(parent_id:String, parent_type:Integer, riskForm : Form[RiskManagement],usersMap:java.util.HashMap[String,String],riskcategoryMap :java.util.HashMap[String,String],subCategoryMap:java.util.HashMap[String,String], progrm: Option[ProgramDates], selectedSubCategory : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(parent_id:String, parent_type:Integer, riskForm : Form[RiskManagement],usersMap:java.util.HashMap[String,String],riskcategoryMap :java.util.HashMap[String,String],subCategoryMap:java.util.HashMap[String,String], progrm: Option[ProgramDates], selectedSubCategory : String, riskStateMap:java.util.LinkedHashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
 @import services._
@@ -70,8 +70,7 @@
 			            )
 		            </div>
 		         
-		         
-			         <div class="left" style="width:50%">
+		            <div class="left" style="width:50%">
 			      	
 			      		@inputText(
 			                riskForm("imapct"),
@@ -80,10 +79,10 @@
 			                'placeholder -> Messages("addNewRisk.impactHint")
 			                
 			            )
-			         </div>
+			        </div>
 		         </div>
 		         
-		          <div class="left width_full">
+	             <div class="left width_full">
 		        	 @textarea(
 		                riskForm("configuration_plan"),
 		                'class -> "span5", 
@@ -92,8 +91,7 @@
 					    'rows -> 7,
 					    'cols -> 60
 	            	)
-				  </div>
-				  
+				 </div>
 				  
 		         <div class="left width_full">
 		        	 @textarea(
@@ -104,13 +102,9 @@
 					    'rows -> 7,
 					    'cols -> 60
 	            	)
-				  </div>
+				 </div>
 		         
-		         
-		         
-		  
-		         
-		          <div class="left width_full">
+		         <div class="left width_full">
 		      		<div class="right width-pr50 padding-top-3px" >
 			      		@select(
 				         riskForm("probablity_of_occurence"),
@@ -133,7 +127,7 @@
 		         </div>
 		         
 		         
-		          <div class="left width_full">
+		         <div class="left width_full">
 		      		<div class="right width-pr50 padding-top-3px" >
 			      		@select(
 				         riskForm("strategic_reply"),
@@ -145,40 +139,37 @@
 		            </div>
 		            
 		            <div class="right width-pr50 padding-top-3px" >
-		            
-		            @select(
+			            @select(
 				         riskForm("responsible"),
 				          options(usersMap),
 				         'class -> "input-xlarge ",
 				         '_label -> Messages("addNewRisk.responsible"),
 				          '_default -> Messages("addNewRisk.responsibleHint")
-				      )
-			      		
+					      )
 		            </div>
 		         </div>
 		         
 		       
 				<div class="left width_full">
-                <div class="left width-pr50 padding-top-3px" >
+               		 <div class="left width-pr50 padding-top-3px" >
 			      		@select(
 				         riskForm("variable_imapact"),
 				         options("0"->"Plazo", "1"->"Presupuesto","2"->"Alcance","3"->"Calidad", "4"->"Plazo/Presupuesto","5"->"Plazo/Alcance","6"->"Plazo/Alcance/Presupuesto", "7"->"Plazo/Calidad","8"->"Presupuesto/Calidad","9"->"Alcance/Calidad","10"->"Plazo/Presupuesto/Alcance/CalidadPlazo/Presupuesto/Calidad"),
 				         'class -> "input-xlarge span6",
 				         '_label -> Messages("addNewRisk.variableImpact")
 				      )
-		            </div>
-					<div class="right width-pr50 padding-top-3px" >
+		             </div>
+					 <div class="right width-pr50 padding-top-3px" >
 						@inputText(
 		                riskForm("risk_clouser_date"),
 		                'class -> "span6", 
 		                '_label -> Messages("addNewRisk.clouserDate"),
 		                'placeholder -> Messages("addNewRisk.clouserDateHint")
 		                
-		            )
-					</div>
-					
+		             )
+					 </div>
 				</div> 
-			 <div class="left width_full">
+			 	<div class="left width_full">
 		            <div class="left width-pr50 padding-top-3px" >
 		            @select(
 				         riskForm("risk_category"),
@@ -195,11 +186,21 @@
 				         'class -> "input-xlarge ",
 				         '_label -> Messages("addrisk.subcategoryrisk"),
 				         '_default -> Messages("addrisk.selectsubcategoryrisk")
-				         
 				      )
 		            </div>
 		         </div>
 
+			 	<div class="left width_full">
+		            <div class="left width-pr50 padding-top-3px" >
+		            @select(
+				         riskForm("risk_state"),
+				         options(riskStateMap),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.riskState"),
+				         '_default -> Messages("addNewRisk.riskStateHint")
+				      )
+		            </div>
+		         </div>
 		                  
 		         <div class="left width_full">
 		         	<div class="left width-pr50 padding-top-3px" >

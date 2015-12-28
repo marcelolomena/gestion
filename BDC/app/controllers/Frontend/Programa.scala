@@ -52,17 +52,29 @@ object Programa extends Controller {
         val user_id = Integer.parseInt(request.session.get("uId").get)
         val username = request.session.get("username").get
         val profile = request.session.get("user_profile").get
-        val rows = request.getQueryString("rows").getOrElse("20").toString()
+        val rows = request.getQueryString("rows").getOrElse("20").toInt
         val page = request.getQueryString("page").getOrElse("1").toInt
         val filters = request.getQueryString("filters").getOrElse("").toString()
+        val sidx = request.getQueryString("sidx").getOrElse("").toString()
+        val sord = request.getQueryString("sord").getOrElse("").toString()
 
         var panel: Seq[models.Programa] = null
         var records: Int = 0
-
         var node = new JSONObject()
         var tieneJson = true
         var qrystr = ""
         var qrystr_c = ""
+        var order = ""
+        
+        println("sidx:" + sidx)
+        println("sort:" + sord)
+        
+        if (sidx.trim().size==0) {
+          order = "X.program_id asc"
+        }else{
+          order = "X." + sidx + " " + sord
+        }
+        println("order: " + order)
 
         if (!StringUtils.isEmpty(filters)) {
 
@@ -119,17 +131,17 @@ object Programa extends Controller {
             //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
             if (tieneJson) {
               records = ProgramaService.cantidad(user_id, qrystr_c)
-              panel = ProgramaService.listado(user_id, page, qrystr)
+              panel = ProgramaService.listado(user_id, rows, page, order, qrystr)
 
             } else {
               records = ProgramaService.cantidad(user_id, "")
-              panel = ProgramaService.listado(user_id, page, "")
+              panel = ProgramaService.listado(user_id, rows, page, order, "")
 
             }
           }
         } else {
           records = ProgramaService.cantidad(user_id, "")
-          panel = ProgramaService.listado(user_id, page, "")
+          panel = ProgramaService.listado(user_id, rows, page, order, "")
 
         }
 

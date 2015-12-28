@@ -3,7 +3,7 @@ import anorm.SqlParser._
 import anorm._
 import java.util.Date
 
-
+/*
 case class RiskManagement(
     parent_id: Option[Int],
     parent_type: Option[Int],
@@ -21,8 +21,9 @@ case class RiskManagement(
   configuration_plan: Option[String],
   document_category: Option[String],
   sub_category: Int,
-  risk_clouser_date: Date,
-  is_active: Option[Int])
+  risk_state: Int,
+  risk_clouser_date: Date/*,
+  is_active: Option[Int]*/)
 
 object RiskManagement extends CustomColumns {
 
@@ -43,16 +44,82 @@ object RiskManagement extends CustomColumns {
       get[Option[String]]("configuration_plan") ~
       get[Option[String]]("document_category") ~
       get[Int]("sub_category") ~
-      get[Date]("risk_clouser_date") ~ 
-      get[Option[Int]]("is_active") map {
+      get[Int]("risk_state") ~
+      get[Date]("risk_clouser_date") /*~ 
+      get[Option[Int]]("is_active")*/ map {
         case parent_id ~ parent_type ~ name ~ cause ~ event ~ imapct ~ risk_category ~ variable_imapact ~ probablity_of_occurence ~ quantification ~ strategic_reply ~ responsible
-          ~ reply_action ~ configuration_plan ~ document_category ~ sub_category ~ risk_clouser_date ~ is_active =>
+          ~ reply_action ~ configuration_plan ~ document_category ~ sub_category ~ risk_state ~ risk_clouser_date /*~ is_active*/ =>
           RiskManagement(parent_id, parent_type, name, cause, event, imapct, risk_category, variable_imapact, probablity_of_occurence, quantification, strategic_reply, responsible,
-            reply_action, configuration_plan, document_category, sub_category,risk_clouser_date, is_active)
+            reply_action, configuration_plan, document_category, sub_category,risk_state,risk_clouser_date/*, is_active*/)
       }
   }
 }
+*/
 
+case class RiskManagement(
+    parent_id: Option[Int],
+    parent_type: Option[Int],
+    name: String,
+    cause: String,
+    event: String,
+  imapct: String,
+  risk_category: Int,
+  variable_imapact: String,
+  probablity_of_occurence: Int,
+  quantification: Int,
+  strategic_reply: Int,
+  responsible: Int,
+  reply_action: Option[String],
+  configuration_plan: Option[String],
+  document_category: Option[String],
+  sub_category: Int,
+  risk_state: Int,
+  risk_clouser_date: Date)
+
+object RiskManagement extends CustomColumns {
+
+  val riskManagement = {
+      get[Option[Int]]("parent_id") ~
+      get[Option[Int]]("parent_type") ~
+      get[String]("name") ~
+      get[String]("cause") ~
+      get[String]("event") ~
+      get[String]("imapct") ~
+      get[Int]("risk_category") ~
+      get[String]("variable_imapact") ~
+      get[Int]("probablity_of_occurence") ~
+      get[Int]("quantification") ~
+      get[Int]("strategic_reply") ~
+      get[Int]("responsible") ~
+      get[Option[String]]("reply_action") ~
+      get[Option[String]]("configuration_plan") ~
+      get[Option[String]]("document_category") ~
+      get[Int]("sub_category") ~
+      get[Int]("risk_state") ~
+      get[Date]("risk_clouser_date") map {
+        case parent_id ~ parent_type ~ name ~ cause ~ event ~ imapct ~ risk_category ~ variable_imapact ~ probablity_of_occurence ~ quantification ~ strategic_reply ~ responsible
+          ~ reply_action ~ configuration_plan ~ document_category ~ sub_category ~ risk_state ~ risk_clouser_date  =>
+          RiskManagement(parent_id, parent_type, name, cause, event, imapct, risk_category, variable_imapact, probablity_of_occurence, quantification, strategic_reply, responsible,
+            reply_action, configuration_plan, document_category, sub_category,risk_state,risk_clouser_date)
+      }
+  }
+}
+/*
+case class RiskManagementEx(
+  risk_state: Int
+  )
+
+object RiskManagementEx extends CustomColumns {
+
+  val riskManagementEx = {
+      get[Int]("risk_state")  map {
+        case  risk_state  =>
+          RiskManagementEx(
+              risk_state)
+      }
+  }
+}
+*/
 
 case class RiskManagementIssue(id: Option[Int], parent_id: Option[Int], parent_type: Option[Int], title: String, description: String,
   category: Int, sub_category: Int, members_involved: Option[String], action_plan: Option[String],
@@ -96,7 +163,7 @@ case class RiskManagementMaster(id: Option[Int], parent_id: Option[Int], parent_
   event: String, imapct: String, risk_category: Int, variable_imapact: String,
   probablity_of_occurence: Int, quantification: Int, strategic_reply: Int, responsible: Int,
   reply_action: Option[String], configuration_plan: Option[String],
-  document_category: Option[String], risk_clouser_date: Date, user_id: Option[Int], creation_date: Option[Date], updation_date: Option[Date], is_active: Option[Int], sub_category: Int)
+  document_category: Option[String], risk_clouser_date: Date, user_id: Option[Int], creation_date: Option[Date], updation_date: Option[Date], risk_state: Int, sub_category: Int)
 
 object RiskManagementMaster extends CustomColumns {
 
@@ -121,12 +188,12 @@ object RiskManagementMaster extends CustomColumns {
       get[Option[Int]]("user_id") ~
       get[Option[Date]]("creation_date") ~
       get[Option[Date]]("updation_date") ~
-      get[Option[Int]]("is_active") ~
+      get[Int]("risk_state") ~
       get[Int]("sub_category") map {
         case id ~ parent_id ~ parent_type ~ name ~ cause ~ event ~ imapct ~ risk_category ~ variable_imapact ~ probablity_of_occurence ~ quantification ~ strategic_reply ~ responsible
-          ~ reply_action ~ configuration_plan ~ document_category ~ risk_clouser_date ~ user_id ~ creation_date ~ updation_date ~ is_active ~ sub_category =>
+          ~ reply_action ~ configuration_plan ~ document_category ~ risk_clouser_date ~ user_id ~ creation_date ~ updation_date ~ risk_state ~ sub_category =>
           RiskManagementMaster(id, parent_id, parent_type, name, cause, event, imapct, risk_category, variable_imapact, probablity_of_occurence, quantification, strategic_reply, responsible,
-            reply_action, configuration_plan, document_category, risk_clouser_date, user_id, creation_date, updation_date, is_active, sub_category)
+            reply_action, configuration_plan, document_category, risk_clouser_date, user_id, creation_date, updation_date, risk_state, sub_category)
       }
   }
 }

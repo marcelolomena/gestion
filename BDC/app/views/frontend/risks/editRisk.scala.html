@@ -1,4 +1,4 @@
-@(id:String,riskForm : Form[RiskManagement],usersMap:java.util.HashMap[String,String],riskcategoryMap:java.util.HashMap[String,String],subCategoryMap:java.util.HashMap[String,String],parent_id:String,parent_type:Integer, progrm: Option[ProgramDates], selectedSubCategory : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(id:String,riskForm : Form[RiskManagement],usersMap:java.util.HashMap[String,String],riskcategoryMap:java.util.HashMap[String,String],subCategoryMap:java.util.HashMap[String,String],riskStateMap:java.util.LinkedHashMap[String, String],parent_id:String,parent_type:Integer, progrm: Option[ProgramDates], selectedSubCategory : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
 @import services._
@@ -187,7 +187,6 @@
 		                
 		            )
 				      
-				      
 		            </div>
 		            
 		         </div>
@@ -216,6 +215,19 @@
 				      )
 		            </div>
 		         </div>
+		         
+			 	<div class="left width_full">
+		            <div class="left width-pr50 padding-top-3px" >
+		            @select(
+				         riskForm("risk_state"),
+				         options(riskStateMap),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewRisk.riskState"),
+				         '_default -> Messages("addNewRisk.riskStateHint")
+				      )
+		            </div>
+		         </div>		         
+		         
 		          <div class="left width_full">
 		            <div class="left width-pr50 padding-top-3px" >
 			     	 @if(parent_type==0 || parent_type==1){

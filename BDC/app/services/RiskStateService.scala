@@ -13,7 +13,7 @@ import models.RiskState
 object RiskStateService {
   
     def findActiveRiskState(): Seq[RiskState] = {
-    var sqlString = "SELECT * FROM art_risk_state where is_deleted = 0"
+    var sqlString = "SELECT * FROM art_risk_state where is_deleted = 1"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskState.riskstate *)
     }
