@@ -417,9 +417,10 @@ object ARTForms {
       "last_update" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
       "planned_hours" -> optional(of[Double]),
       "approved_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "comitted_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")))((program_id, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, investment, expenditure, is_active, creation_date, last_update, planned_hours, approved_date, comitted_date) =>
-        SAPMaster(program_id, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, investment, expenditure, is_active, creation_date, last_update, planned_hours, approved_date, comitted_date))((sap: SAPMaster) => Some((sap.program_id, sap.sap_number, sap.budget_type, sap.cui1, sap.cui1_per,
-        sap.cui2, sap.cui2_per, sap.investment, sap.expenditure, sap.is_active, sap.creation_date, sap.last_update, sap.planned_hours, sap.approved_date, sap.comitted_date))))
+      "comitted_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
+      "close_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")))((program_id, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, investment, expenditure, is_active, creation_date, last_update, planned_hours, approved_date, comitted_date, close_date) =>
+        SAPMaster(program_id, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, investment, expenditure, is_active, creation_date, last_update, planned_hours, approved_date, comitted_date, close_date))((sap: SAPMaster) => Some((sap.program_id, sap.sap_number, sap.budget_type, sap.cui1, sap.cui1_per,
+        sap.cui2, sap.cui2_per, sap.investment, sap.expenditure, sap.is_active, sap.creation_date, sap.last_update, sap.planned_hours, sap.approved_date, sap.comitted_date, sap.close_date))))
 
   val project_sap_form: Form[ProjectSAP] = Form(
     mapping(

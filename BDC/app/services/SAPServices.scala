@@ -46,10 +46,10 @@ object SAPServices extends CustomColumns {
       val sap_master = SQL(
         """
           insert into  art_program_sap_master (program_id,sap_number,budget_type, cui1, 
-          cui1_per,cui2,cui2_per,is_active,creation_date,last_update,approved_date,comitted_date
+          cui1_per,cui2,cui2_per,is_active,creation_date,last_update,approved_date,comitted_date, close_date
          ) values (
           {program_id}, {sap_number},{budget_type},
-          {cui1},{cui1_per},{cui2},{cui2_per},{is_active},{creation_date},{last_update},{approved_date},{comitted_date})
+          {cui1},{cui1_per},{cui2},{cui2_per},{is_active},{creation_date},{last_update},{approved_date},{comitted_date},{close_date})
           """).on(
           'program_id -> sap.program_id,
           'sap_number -> sap.sap_number,
@@ -62,6 +62,7 @@ object SAPServices extends CustomColumns {
           'creation_date -> new Date(),
           'approved_date -> sap.approved_date,
           'comitted_date -> sap.comitted_date,
+          'close_date -> sap.close_date,
           'last_update -> new Date()).executeInsert(scalar[Long].singleOpt)
 
       var last_index = sap_master.last
@@ -158,7 +159,7 @@ object SAPServices extends CustomColumns {
       val sap_master = SQL(
         """
           update  art_program_sap_master SET program_id={program_id},sap_number={sap_number},budget_type={budget_type}, cui1={cui1}, 
-          cui1_per={cui1_per},cui2={cui2},cui2_per={cui2_per},last_update={last_update},approved_date={approved_date},comitted_date={comitted_date} where id={sap_id}
+          cui1_per={cui1_per},cui2={cui2},cui2_per={cui2_per},last_update={last_update},approved_date={approved_date},comitted_date={comitted_date},close_date={close_date} where id={sap_id}
           """).on(
           'sap_id -> sap_id,
           'program_id -> sap.program_id,
@@ -170,7 +171,8 @@ object SAPServices extends CustomColumns {
           'cui2_per -> sap.cui2_per,
           'last_update -> new Date(),
           'approved_date -> sap.approved_date,
-          'comitted_date -> sap.comitted_date).executeUpdate()
+          'comitted_date -> sap.comitted_date,
+          'close_date -> sap.close_date).executeUpdate()
 
       //Investment = 0
       val sap_invest = SQL(

@@ -198,7 +198,7 @@ object DistributionTimeSheet {
 
 
 case class SAP(id: Int, program_id: Int, sap_number: Int, budget_type: Int, cui1: String, cui1_per: Double, cui2: String, cui2_per: Double,
-  is_active: Int, creation_date: Option[Date], last_update: Option[Date], planned_hours: Option[Double], approved_date: Option[Date], comitted_date: Option[Date])
+  is_active: Int, creation_date: Option[Date], last_update: Option[Date], planned_hours: Option[Double], approved_date: Option[Date], comitted_date: Option[Date],close_date: Option[Date])
 
 object SAP extends CustomColumns {
 
@@ -216,9 +216,10 @@ object SAP extends CustomColumns {
       get[Option[Date]]("last_update") ~
       get[Option[Double]]("planned_hours") ~
       get[Option[Date]]("approved_date") ~
-      get[Option[Date]]("comitted_date") map {
-        case id ~ program_id ~ sap_number ~ budget_type ~ cui1 ~ cui1_per ~ cui2 ~ cui2_per ~ is_active ~ creation_date ~ last_update ~ planned_hours ~ approved_date ~ comitted_date =>
-          SAP(id, program_id, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, is_active, creation_date, last_update, planned_hours, approved_date, comitted_date)
+      get[Option[Date]]("comitted_date") ~
+      get[Option[Date]]("close_date")map {
+        case id ~ program_id ~ sap_number ~ budget_type ~ cui1 ~ cui1_per ~ cui2 ~ cui2_per ~ is_active ~ creation_date ~ last_update ~ planned_hours ~ approved_date ~ comitted_date ~ close_date =>
+          SAP(id, program_id, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, is_active, creation_date, last_update, planned_hours, approved_date, comitted_date, close_date)
 
       }
   }
@@ -226,7 +227,7 @@ object SAP extends CustomColumns {
 }
 
 case class SAPMaster(program_id: Int, sap_number: Int, budget_type: Int, cui1: String, cui1_per: Double, cui2: String, cui2_per: Double,
-  investment: Investment, expenditure: Expenditure, is_active: Int, creation_date: Option[Date], last_update: Option[Date], planned_hours: Option[Double], approved_date: Option[Date], comitted_date: Option[Date])
+  investment: Investment, expenditure: Expenditure, is_active: Int, creation_date: Option[Date], last_update: Option[Date], planned_hours: Option[Double], approved_date: Option[Date], comitted_date: Option[Date], close_date: Option[Date])
 
 object SAPMaster extends CustomColumns {
 

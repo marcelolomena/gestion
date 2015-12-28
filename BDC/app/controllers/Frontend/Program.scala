@@ -1747,7 +1747,16 @@ object Program extends Controller {
       } else {
         comitted_date = None
       }
-      val sap = SAPMaster(program_id.toInt, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, invst, expds, 1, None, None, None, approved_date, comitted_date)
+      var close_date: Option[Date] = None
+      if (oldForm.data.get("close_date").isDefined && !oldForm.data.get("close_date").get.trim().isEmpty) {
+        val string = oldForm.data.get("close_date").get.trim();
+        val format = new SimpleDateFormat("dd-MM-yyyy");
+        val date = format.parse(string);
+        close_date = Option(date)
+      } else {
+        close_date = None
+      }
+      val sap = SAPMaster(program_id.toInt, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, invst, expds, 1, None, None, None, approved_date, comitted_date,close_date)
       oldForm = oldForm.fill(sap)
       oldForm.fold(
         errors => {
@@ -1863,7 +1872,7 @@ object Program extends Controller {
           Option(current_e_development), Option(current_e_other), Option(current_e_qa), Option(current_e_improvements), Option(current_e_recurring_first))
 
         val objSAP = SAPMaster(sapMaster.get.program_id, sapMaster.get.sap_number, sapMaster.get.budget_type, sapMaster.get.cui1,
-          sapMaster.get.cui1_per, sapMaster.get.cui2, sapMaster.get.cui2_per, invest, expend, sapMaster.get.is_active, sapMaster.get.creation_date, sapMaster.get.last_update, sapMaster.get.planned_hours, sapMaster.get.approved_date, sapMaster.get.comitted_date)
+          sapMaster.get.cui1_per, sapMaster.get.cui2, sapMaster.get.cui2_per, invest, expend, sapMaster.get.is_active, sapMaster.get.creation_date, sapMaster.get.last_update, sapMaster.get.planned_hours, sapMaster.get.approved_date, sapMaster.get.comitted_date,sapMaster.get.close_date)
 
         var bts = new java.util.LinkedHashMap[String, String]()
         val bType = BudgetTypeService.findActiveBudgetTypes
@@ -2276,8 +2285,17 @@ object Program extends Controller {
         } else {
           comitted_date = None
         }
+        var close_date: Option[Date] = None
+        if (oldForm.data.get("close_date").isDefined && !oldForm.data.get("close_date").get.trim().isEmpty) {
+          val string = oldForm.data.get("close_date").get.trim();
+          val format = new SimpleDateFormat("dd-MM-yyyy");
+          val date = format.parse(string);
+          close_date = Option(date)
+        } else {
+          close_date = None
+        }
         val sap = SAPMaster(program_id.toInt, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per,
-          invst, expds, 1, None, None, None, approved_date, comitted_date)
+          invst, expds, 1, None, None, None, approved_date, comitted_date,close_date)
 
         oldForm = oldForm.fill(sap)
         oldForm.fold(
