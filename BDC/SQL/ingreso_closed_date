@@ -1,0 +1,2 @@
+ALTER TABLE art_program_sap_master ADD 
+      close_date datetime2
