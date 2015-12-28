@@ -97,6 +97,7 @@ import models.NonCommittedInvestment
 import models.AvailableInvestment
 import models.AvailableExpenditure
 
+
 object ARTForms {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
@@ -915,8 +916,6 @@ object ARTForms {
    * backend form to add/edit
    */
 
-
-      
   val riskManagementForm: Form[RiskManagement] = Form(
     mapping(
       "parent_id" -> optional(number),
@@ -935,8 +934,74 @@ object ARTForms {
       "configuration_plan" -> optional(text),
       "document_category" -> optional(text),
       "sub_category" -> number,
-      "risk_clouser_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
-      "is_active" -> optional(number))(RiskManagement.apply)(RiskManagement.unapply))
+      "risk_state" -> number,
+      "risk_clouser_date" -> play.api.data.Forms.date("dd-MM-yyyy")/*,
+      "is_active" -> optional(number)*/)(RiskManagement.apply)(RiskManagement.unapply))
+/*      
+  val riskManagementExForm: Form[RiskManagement] = Form(
+    mapping(
+              "parent_id" -> optional(number),
+              "parent_type" -> optional(number),
+              "name" -> text.verifying(Messages.get(langObj, "risk.name"), name => (name.trim().length() > 0)),
+              "cause" -> text.verifying(Messages.get(langObj, "risk.cause"), cause => (cause.trim().length() > 0)),
+              "event" -> text.verifying(Messages.get(langObj, "risk.event"), event => (event.trim().length() > 0)),
+              "imapct" -> text.verifying(Messages.get(langObj, "risk.imapct"), imapct => (imapct.trim().length() > 0)),
+              "risk_category" -> number,
+              "variable_imapact" -> text,
+              "probablity_of_occurence" -> number,
+              "quantification" -> number,
+              "strategic_reply" -> number,
+              "responsible" -> number,
+              "reply_action" -> optional(text),
+              "configuration_plan" -> optional(text),
+              "document_category" -> optional(text),
+              "sub_category" -> number,
+              "risk_clouser_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
+              "is_active" -> optional(number),
+              "tail_risk" -> mapping(
+                 "risk_state" -> number)(RiskManagementEx.apply)(RiskManagementEx.unapply))((parent_id,
+                        parent_type,
+                        name,
+                        cause,
+                        event,
+                        imapct,
+                        risk_category,
+                        variable_imapact,
+                        probablity_of_occurence,
+                        quantification,
+                        strategic_reply,
+                        responsible,
+                        reply_action,
+                        configuration_plan,
+                        document_category,
+                        sub_category,
+                        risk_clouser_date,
+                        is_active,
+                        tail_risk) => RiskManagement(
+                          parent_id,
+                        parent_type,
+                        name,
+                        cause,
+                        event,
+                        imapct,
+                        risk_category,
+                        variable_imapact,
+                        probablity_of_occurence,
+                        quantification,
+                        strategic_reply,
+                        responsible,
+                        reply_action,
+                        configuration_plan,
+                        document_category,
+                        sub_category,
+                        risk_clouser_date,
+                        is_active, 
+                        tail_risk))((risk:RiskManagement) => Some((risk.parent_id,risk.parent_type,risk.name,risk.cause,
+                            risk.event,risk.imapct,risk.risk_category,risk.variable_imapact,
+                            risk.probablity_of_occurence,risk.quantification,risk.strategic_reply,
+                            risk.responsible,risk.reply_action,risk.configuration_plan,
+                            risk.document_category,risk.sub_category,risk.risk_clouser_date,risk.is_active,risk.tail_risk))))         
+*/          
 
       
   val addIssueForm: Form[models.RiskManagementIssueMain] = Form(

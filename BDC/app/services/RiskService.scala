@@ -47,13 +47,13 @@ object RiskService extends CustomColumns {
           insert into art_risk (parent_id,parent_type,name,cause, event, imapct,risk_category, sub_category, variable_imapact,
           probablity_of_occurence,quantification,strategic_reply,
           responsible,reply_action,configuration_plan,document_category,risk_clouser_date,user_id,creation_date,
-          updation_date,is_active
+          updation_date,risk_state,is_active
          ) values (
           {parent_id},{parent_type},{name},{cause}, {event}, {imapct},{risk_category}, {sub_category},{variable_imapact},
           {probablity_of_occurence},{quantification},{strategic_reply},
           {responsible},{reply_action},{configuration_plan},{document_category},
           {risk_clouser_date},{user_id},{creation_date},
-          {updation_date},{is_active})
+          {updation_date},{risk_state},{is_active})
           """).on(
           'parent_id -> risk.parent_id,
           'parent_type -> risk.parent_type,
@@ -76,7 +76,8 @@ object RiskService extends CustomColumns {
           'user_id -> risk.user_id,
           'creation_date -> new Date,
           'updation_date -> risk.updation_date,
-          'is_active -> risk.is_active).executeInsert(scalar[Long].singleOpt)
+          'risk_state -> risk.risk_state,
+          'is_active -> 1).executeInsert(scalar[Long].singleOpt)
 
       var last_index = sap_master.last
 
