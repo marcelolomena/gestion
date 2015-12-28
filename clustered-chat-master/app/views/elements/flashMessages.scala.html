@@ -1,0 +1,14 @@
+@(flash: Flash)
+
+@flashMessage("error")
+@flashMessage("warning")
+@flashMessage("success")
+@flashMessage("info")
+
+@flashMessage(flashType: String) = {
+    @flash.get(flashType).map { message =>
+        <div class="alert alert-@flashType">
+            @message
+        </div>
+    }
+}
