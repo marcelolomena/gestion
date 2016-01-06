@@ -298,7 +298,7 @@ object ProjectMaster extends Controller {
             val service_id = GenericService.findPredefinedTasksDetails(predefined_id).get.catalogue_service
             val taskDetails = Tasks(None, pId.toInt, g.task_title, g.task_code,
               start_date, end_date, g.task_description, g.plan_time,
-              new Date(), g.task_status, 1, 1, g.task_discipline, g.completion_percentage,
+              new Date(), g.task_status, 1, project_manager, g.task_discipline, g.completion_percentage,
               g.remark, g.task_depend, Option(1), g.stage, g.user_role, Option(g.deliverable), g.task_type, 1)
 
             if (g.task_type == 3) {
