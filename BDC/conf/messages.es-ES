@@ -843,6 +843,7 @@ newTask.placeholder.stage=--- Elija Etapa ---
 newTask.placeholder.user_role=--- Elija rol de Usuario ---
 newTask.placeholder.deliverable=--- Elija Entregable ---
 newTask.placeholder.task_owner=--- Elegir Propietario de la Tarea ---
+newTask.placeholder.pert=Con Pert
 
 addSubTask.placeholder.subtask=Introducir nombre subtarea
 addSubTask.placeholder.description=Introduzca Descripción
