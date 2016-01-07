@@ -260,11 +260,24 @@ object Task extends Controller {
             
             var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
 
-            //println("con plantilla:" + success.project_mode)
-            //println("plan_start_date:" + formattedDate.format(success.plan_start_date))
-            //println("plan_end_date:" + formattedDate.format(success.plan_end_date))
-            SubTaskServices.insertsubTaskFromTemplate(formattedDate.format(success.plan_start_date),
+            println("con plantilla:" + success.project_mode)
+            println("pert:" + success.pert)
+            println("plan_start_date:" + formattedDate.format(success.plan_start_date))
+            println("latest_task:" + latest_task)
+            println("task_title:" + success.task_title)
+            println("task_description:" + success.task_description)
+            if(success.pert){
+              val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(formattedDate.format(success.plan_start_date),
+                  success.project_mode.toString(),
+                  "",
+                  latest_task.toString(),
+                  ""
+                  )
+                  println("errorCode:" + errorCode)
+            }else{
+            SubTaskServices.insertSubTaskFromTemplate(formattedDate.format(success.plan_start_date),
                 formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
+            }
           }
 
           /**
@@ -337,7 +350,7 @@ object Task extends Controller {
           val isValidDependency = TaskService.checkValidDependency(task.get.tId.get.toString())
 
           val task_detail = TaskDetails(task.get.task_type, task.get.task_code, task.get.stage.getOrElse(0), task.get.user_role.getOrElse(0), task.get.deliverable)
-          val taskData = TaskMaster(Some(id.toInt), task.get.pId,0, task.get.task_title,
+          val taskData = TaskMaster(Some(id.toInt), task.get.pId,0,false, task.get.task_title,
             task.get.plan_start_date, task.get.plan_end_date, task.get.task_description,
             task.get.plan_time, task.get.task_status, task.get.status, task.get.owner, task.get.task_discipline.getOrElse(0), task.get.completion_percentage, task.get.remark, task.get.task_depend, task.get.dependencies_type, task_detail)
 

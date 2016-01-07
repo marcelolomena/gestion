@@ -56,7 +56,7 @@ object SubTaskServices extends CustomColumns {
     }
   }
   
-  def insertsubTaskFromTemplate(plan_start_date:String,plan_end_date:String,task_id: String,project_mode: String): Option[ErrorIncident] = {
+  def insertSubTaskFromTemplate(plan_start_date:String,plan_end_date:String,task_id: String,project_mode: String): Option[ErrorIncident] = {
 
     var sqlString = """
       EXEC art.insert_subtask_template {plan_start_date},{plan_end_date},{task_id},{project_mode}
@@ -70,6 +70,28 @@ object SubTaskServices extends CustomColumns {
         'project_mode -> project_mode.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }  
+  
+  def insertSubTaskFromTemplatePert(
+      fecha_inicio:String,
+      id_platilla:String,
+      title: String,
+      id_tarea: String,
+      extended_description:String) = {
+
+    var sqlString = """
+      EXEC art.incident_pert {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+          'fecha_inicio -> fecha_inicio,
+          'id_platilla -> id_platilla.toInt,
+          'tipo -> 2,
+          'title -> title,
+          'id_tarea -> id_tarea.toInt,
+          'extended_description -> extended_description).executeUpdate() 
+    }
+  }    
 
   def updateSubTask(task: SubTaskMaster): Int = {
     var actual_end_date: Date = null

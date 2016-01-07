@@ -35,9 +35,10 @@
 				      <input type="hidden" id="pId" name="pId" value="@project.get.pId" />
 				          <input type="hidden" id="status" name="status" value="1" />
 				          <input type="hidden" id="task_details.task_type" name="task_details.task_type" value="0" />
-				    @*<label>Project Name</label>
-				       <input id="project_name" name="project_name" type="text" class="span4" value="@project.get.project_name" readonly="readonly"> 
-				      *@
+				          <!-- <label>Pert</label>
+				       <input id=""is_pert"" name=""is_pert"" type="checkbox" class="span4"> 
+				       -->
+				      
 				
 	    				<div class="left width_full padding-top-3px">
 	    					@select(
@@ -48,7 +49,9 @@
 						         '_default -> Messages("addNewProject.placeholder.project_mode")
 						      )
 	    				</div>
-	    								
+	    				
+   						@checkbox(taskForm("pert"), 'class -> "span4", '_label -> Messages("newTask.placeholder.pert"))<!-- , 'checked -> "checked" -->
+	    									
 				      @*<label>Task Code</label>*@      
 				      <input id="task_details.task_code" name="task_details.task_code" type="text" class="span4 display-none" value="SYS@Random.nextInt(9999)" readonly="readonly" style="background:#E3EAED;"> 
 				        
@@ -225,9 +228,9 @@
 					          '_default -> Messages("newTask.placeholder.task_owner")
 					     
 					      )
-					      
-					      
+					     <!--  
 				        <input type="text" id="search-user" name="search-user" class="left"  style="margin-top: 20px;border-radius:5px;height:21px;" placeholder="@Messages("addNewProject.searchuser")">
+				        -->
 				        <span class="search-user-icon push-top20px"></span>
 				        
 				        
