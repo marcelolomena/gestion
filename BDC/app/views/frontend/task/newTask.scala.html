@@ -50,7 +50,8 @@
 						      )
 	    				</div>
 	    				
-   						@checkbox(taskForm("pert"), 'class -> "span4", '_label -> Messages("newTask.placeholder.pert"))<!-- , 'checked -> "checked" -->
+   						@checkbox(taskForm("pert"), 'class -> "span4", '_label -> Messages("newTask.placeholder.pert"))
+   						<!-- , 'checked -> "checked" -->
 	    									
 				      @*<label>Task Code</label>*@      
 				      <input id="task_details.task_code" name="task_details.task_code" type="text" class="span4 display-none" value="SYS@Random.nextInt(9999)" readonly="readonly" style="background:#E3EAED;"> 

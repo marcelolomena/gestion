@@ -20,17 +20,20 @@
    		<tr class="tableCells">
     	<td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">
 	    	@if(baseLine.object_type=="task"){
-	    		@ProjectService.findProject(TaskService.findTaskDetailsByTaskId(baseLine.ref_id).get.pId).get.project_name
+	    		@*@ProjectService.findProject(TaskService.findTaskDetailsByTaskId(baseLine.ref_id).pId).get.project_name*@
 	    	}else{
-	    		@ProjectService.findProject(TaskService.findTaskDetailsByTaskId(Integer.parseInt(SubTaskServices.findSubTasksBySubTaskId(baseLine.ref_id.toString()).get.task_id.toString)).get.pId).get.project_name
+	    		@baseLine.ref_id
+	    		@*@ProjectService.findProject(TaskService.findTaskDetailsByTaskId(Integer.parseInt(SubTaskServices.findSubTasksBySubTaskId(baseLine.ref_id.toString()).get.task_id.toString)).get.pId).get.project_name*@
 	    	}	
     	 </td>
 	    	@if(baseLine.object_type == "task"){
-	    	     <td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@TaskService.findTaskDetailsByTaskId(baseLine.ref_id).get.task_title </td>
+	    		@baseLine.ref_id
+	    	     <td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@*@TaskService.findTaskDetailsByTaskId(baseLine.ref_id).get.task_title*@ </td>
 	    	}else{
-	    	     <td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@SubTaskServices.findSubTasksBySubTaskId(baseLine.ref_id.toString()).get.title </td>
+	    		@baseLine.ref_id
+	    	     <td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@*@SubTaskServices.findSubTasksBySubTaskId(baseLine.ref_id.toString()).get.title*@ </td>
 	    	}
-  		<td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@UserService.findUserDetailsById(baseLine.user_id.toLong).get.first_name </td>
+  		<td class="" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;">@*@UserService.findUserDetailsById(baseLine.user_id.toLong).get.first_name*@ </td>
   		<td class=" change_set" style="padding-left:5px; width:96% ;">@baseLine.change_set </td>
   		<td class=" org_value" style="padding-left:5px; border-right:1px solid #dadada; vertical-align: middle;"></td>
  		<td class=" changed_value" style="padding-left:5px; border-left:1px solid #dadada; vertical-align: middle;"></td>

@@ -66,15 +66,15 @@ object Programa extends Controller {
         var qrystr_c = ""
         var order = ""
         
-        println("sidx:" + sidx)
-        println("sort:" + sord)
+        //println("sidx:" + sidx)
+        //println("sort:" + sord)
         
         if (sidx.trim().size==0) {
           order = "X.program_id asc"
         }else{
           order = "X." + sidx + " " + sord
         }
-        println("order: " + order)
+        //println("order: " + order)
 
         if (!StringUtils.isEmpty(filters)) {
 

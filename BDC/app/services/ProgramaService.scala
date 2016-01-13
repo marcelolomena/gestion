@@ -15,6 +15,7 @@ import play.mvc._
  */
 object ProgramaService {
   def listado(uid: Int, PageSize: Int, page: Int, order: String, json: String): Seq[Programa] = {
+    
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_program_master {uid},{PageSize},{page},{order},{json}").on(
         'uid -> uid,
