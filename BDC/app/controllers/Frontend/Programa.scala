@@ -181,6 +181,41 @@ object Programa extends Controller {
       }
 
   }
+  
+  
+  def listadoRecursos(pid: String) = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        var node = new JSONObject()
+        val subtask = ProgramaService.listadoRecursos(pid)
+
+        var registro = new JSONArray()
+        for (p <- subtask) {
+          var campo = new JSONObject()
+
+          campo.put("program_id", p.program_id)
+          campo.put("programa", p.programa)
+          campo.put("recurso", p.recurso)
+          campo.put("proyecto", p.proyecto)
+          campo.put("pId", p.pId)
+          campo.put("tarea", p.tarea)          
+          campo.put("tId", p.tId)
+          campo.put("subtarea", p.subtarea)
+          campo.put("sub_task_id", p.sub_task_id)
+          campo.put("planeadas", p.planeadas)
+          campo.put("trabajadas", p.trabajadas)
+          campo.put("porcentaje", p.porcentaje)
+          registro.put(campo)
+        }
+
+        node.put("rows", registro)
+        Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }  
 
   def grabaPrograma = Action {
     implicit request =>

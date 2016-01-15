@@ -25,6 +25,14 @@ object ProgramaService {
         'json -> json).executeQuery().as(Programa.programa *)
     }
   }
+  
+  def listadoRecursos(pid: String): Seq[Recurso] = {
+    
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.list_member_activity {pid}").on(
+        'pid -> pid.toInt).executeQuery().as(Recurso.recurso *)
+    }
+  }  
 
   def cantidad(uid: Int, json: String): Int = {
     DB.withConnection { implicit connection =>

@@ -87,3 +87,61 @@ object Programa {
   }
   implicit val programaWrites = Json.writes[Programa]
 }
+
+case class Recurso(
+  program_id: Int,
+  programa: String,
+  recurso: String,
+  proyecto: String,
+  pId: Int,
+  tarea: String,
+  tId: Int,
+  subtarea: String,
+  sub_task_id: Int,
+  planeadas: Double,
+  trabajadas: Double,
+  porcentaje: Double)
+
+object Recurso {
+  val recurso = {
+    get[Int]("program_id") ~
+      get[String]("programa") ~
+      get[String]("recurso") ~
+      get[String]("proyecto") ~
+      get[Int]("pId") ~
+      get[String]("tarea") ~
+      get[Int]("tId") ~ 
+      get[String]("subtarea") ~ 
+      get[Int]("sub_task_id") ~
+      get[Double]("planeadas") ~
+      get[Double]("trabajadas") ~
+      get[Double]("porcentaje") map {
+        case program_id ~
+          programa ~
+          recurso ~
+          proyecto ~
+          pId ~
+          tarea ~
+          tId ~
+          subtarea ~
+          sub_task_id ~
+          planeadas ~
+          trabajadas ~
+          porcentaje => Recurso (
+          program_id,
+          programa,
+          recurso,
+          proyecto,
+          pId,
+          tarea,
+          tId,
+          subtarea,
+          sub_task_id,
+          planeadas,
+          trabajadas,
+          porcentaje)
+      }
+
+  }
+  implicit val recursoWrites = Json.writes[Recurso]
+}
