@@ -100,7 +100,8 @@ case class Recurso(
   sub_task_id: Int,
   planeadas: Double,
   trabajadas: Double,
-  porcentaje: Double)
+  porcentaje: Double,
+  estado: Option[String])
 
 object Recurso {
   val recurso = {
@@ -115,7 +116,8 @@ object Recurso {
       get[Int]("sub_task_id") ~
       get[Double]("planeadas") ~
       get[Double]("trabajadas") ~
-      get[Double]("porcentaje") map {
+      get[Double]("porcentaje")  ~
+      get[Option[String]]("estado") map {
         case program_id ~
           programa ~
           recurso ~
@@ -127,7 +129,8 @@ object Recurso {
           sub_task_id ~
           planeadas ~
           trabajadas ~
-          porcentaje => Recurso (
+          porcentaje ~
+          estado => Recurso (
           program_id,
           programa,
           recurso,
@@ -139,7 +142,8 @@ object Recurso {
           sub_task_id,
           planeadas,
           trabajadas,
-          porcentaje)
+          porcentaje,
+          estado)
       }
 
   }

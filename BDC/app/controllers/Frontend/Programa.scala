@@ -182,7 +182,6 @@ object Programa extends Controller {
 
   }
   
-  
   def listadoRecursos(pid: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -205,6 +204,7 @@ object Programa extends Controller {
           campo.put("planeadas", p.planeadas)
           campo.put("trabajadas", p.trabajadas)
           campo.put("porcentaje", p.porcentaje)
+          campo.put("estado", p.estado.getOrElse("").toString())
           registro.put(campo)
         }
 
