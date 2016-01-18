@@ -15,7 +15,7 @@ import play.mvc._
  */
 object ProgramaService {
   def listado(uid: Int, PageSize: Int, page: Int, order: String, json: String): Seq[Programa] = {
-    
+
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_program_master {uid},{PageSize},{page},{order},{json}").on(
         'uid -> uid,
@@ -25,14 +25,24 @@ object ProgramaService {
         'json -> json).executeQuery().as(Programa.programa *)
     }
   }
-  
-  def listadoRecursos(pid: String): Seq[Recurso] = {
-    
+
+  def listadoRecursos(pid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[Recurso] = {
+/*
+    println(pid)
+    println(SortColumnName)
+    println(SortOrderBy)
+    println(NumberOfRows)
+    println(StartRow)
+*/    
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.list_member_activity {pid}").on(
-        'pid -> pid.toInt).executeQuery().as(Recurso.recurso *)
+      SQL("EXEC art.list_member_activity {pid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
+        'pid -> pid.toInt,
+        'SortColumnName -> SortColumnName,
+        'SortOrderBy -> SortOrderBy,
+        'NumberOfRows -> NumberOfRows,
+        'StartRow -> StartRow).executeQuery().as(Recurso.recurso *)
     }
-  }  
+  }
 
   def cantidad(uid: Int, json: String): Int = {
     DB.withConnection { implicit connection =>

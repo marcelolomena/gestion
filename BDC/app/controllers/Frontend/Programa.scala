@@ -155,7 +155,7 @@ object Programa extends Controller {
           campo.put("workflow_status", p.workflow_status)
           campo.put("program_name", p.program_name)
           campo.put("program_description", p.program_description)
-          campo.put("sap_code", p.sap_code)
+          campo.put("program_code", p.program_code)
           campo.put("initiation_planned_date", p.initiation_planned_date.getOrElse("").toString())
           campo.put("closure_date", p.release_date.getOrElse("").toString())
           campo.put("release_date", p.release_date.getOrElse("").toString())
@@ -165,6 +165,8 @@ object Programa extends Controller {
           campo.put("spi", p.spi)
           campo.put("cpi", p.cpi)
           campo.put("impact_type", p.impact_type)
+          campo.put("sap_number", p.sap_number.getOrElse("").toString())
+          
 
           registro.put(campo)
         }
@@ -185,13 +187,30 @@ object Programa extends Controller {
   def listadoRecursos(pid: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
+        val rows = request.getQueryString("rows").get.toInt
+        val page = request.getQueryString("page").get.toInt
+        val filters = request.getQueryString("filters").getOrElse("").toString()
+        var sidx = request.getQueryString("sidx").getOrElse("recurso").toString()
+        val sord = request.getQueryString("sord").getOrElse("").toString()
+        var records: Int = 0        
+        
         var node = new JSONObject()
-        val subtask = ProgramaService.listadoRecursos(pid)
+        
+        if (sidx.trim().size==0) {
+          sidx = "recurso"
+        }
+        val pageIndex = page
+        val pageSize = rows
+        val startRow = (pageIndex * pageSize) + 1;
+
+        //println(rows)
+        //println(startRow)
+        val subtask = ProgramaService.listadoRecursos(pid,sidx,sord,rows,startRow)
 
         var registro = new JSONArray()
         for (p <- subtask) {
           var campo = new JSONObject()
-
+          records=p.cantidad
           campo.put("program_id", p.program_id)
           campo.put("programa", p.programa)
           campo.put("recurso", p.recurso)
@@ -204,11 +223,19 @@ object Programa extends Controller {
           campo.put("planeadas", p.planeadas)
           campo.put("trabajadas", p.trabajadas)
           campo.put("porcentaje", p.porcentaje)
+          campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())
+          campo.put("plan_end_date", p.plan_end_date.getOrElse("").toString())
           campo.put("estado", p.estado.getOrElse("").toString())
           registro.put(campo)
         }
 
+        var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+        node.put("page", page)
+        node.put("total", pagedisplay)
+        node.put("records", records)
         node.put("rows", registro)
+        
         Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       }.getOrElse {

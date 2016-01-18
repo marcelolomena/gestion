@@ -18,7 +18,7 @@ case class Programa(
   workflow_status: String,
   program_name: String,
   program_description: String,
-  sap_code: Int,
+  program_code: Int,
   initiation_planned_date: Option[Date],
   closure_date: Option[Date],
   release_date: Option[Date],
@@ -27,7 +27,8 @@ case class Programa(
   pae: Double,
   spi: Double,
   cpi: Double,
-  impact_type: String)
+  impact_type: String,
+  sap_number:Option[String])
 
 object Programa {
   val programa = {
@@ -38,7 +39,7 @@ object Programa {
       get[String]("workflow_status") ~
       get[String]("program_name") ~
       get[String]("program_description") ~ 
-      get[Int]("sap_code") ~ 
+      get[Int]("program_code") ~ 
       get[Option[Date]]("initiation_planned_date") ~
       get[Option[Date]]("closure_date") ~
       get[Option[Date]]("release_date") ~
@@ -47,7 +48,8 @@ object Programa {
       get[Double]("pae") ~
       get[Double]("spi") ~
       get[Double]("cpi") ~ 
-      get[String]("impact_type") map {
+      get[String]("impact_type") ~
+      get[Option[String]]("sap_number") map {
         case program_id ~
           division ~
           program_type ~
@@ -55,7 +57,7 @@ object Programa {
           workflow_status ~
           program_name ~
           program_description ~
-          sap_code ~
+          program_code ~
           initiation_planned_date ~
           closure_date ~
           release_date ~
@@ -64,7 +66,8 @@ object Programa {
           pae ~
           spi ~
           cpi ~
-          impact_type => Programa (
+          impact_type ~
+          sap_number => Programa (
           program_id,
           division,
           program_type,
@@ -72,7 +75,7 @@ object Programa {
           workflow_status,
           program_name,
           program_description,
-          sap_code,
+          program_code,
           initiation_planned_date,
           closure_date,
           release_date,
@@ -81,7 +84,8 @@ object Programa {
           pae,
           spi,
           cpi,
-          impact_type)
+          impact_type,
+          sap_number)
       }
 
   }
@@ -89,6 +93,8 @@ object Programa {
 }
 
 case class Recurso(
+  sno: Int,
+  cantidad:Int,
   program_id: Int,
   programa: String,
   recurso: String,
@@ -101,10 +107,14 @@ case class Recurso(
   planeadas: Double,
   trabajadas: Double,
   porcentaje: Double,
+  plan_start_date: Option[Date],
+  plan_end_date: Option[Date],
   estado: Option[String])
 
 object Recurso {
   val recurso = {
+    get[Int]("sno") ~
+    get[Int]("cantidad") ~
     get[Int]("program_id") ~
       get[String]("programa") ~
       get[String]("recurso") ~
@@ -117,8 +127,12 @@ object Recurso {
       get[Double]("planeadas") ~
       get[Double]("trabajadas") ~
       get[Double]("porcentaje")  ~
+      get[Option[Date]]("plan_start_date") ~ 
+      get[Option[Date]]("plan_end_date") ~ 
       get[Option[String]]("estado") map {
-        case program_id ~
+        case sno ~ 
+          cantidad ~ 
+          program_id ~
           programa ~
           recurso ~
           proyecto ~
@@ -130,7 +144,11 @@ object Recurso {
           planeadas ~
           trabajadas ~
           porcentaje ~
+          plan_start_date ~
+          plan_end_date ~
           estado => Recurso (
+              sno,
+              cantidad,
           program_id,
           programa,
           recurso,
@@ -143,6 +161,8 @@ object Recurso {
           planeadas,
           trabajadas,
           porcentaje,
+          plan_start_date,
+          plan_end_date,
           estado)
       }
 
