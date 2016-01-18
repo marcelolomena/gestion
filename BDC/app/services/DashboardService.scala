@@ -187,11 +187,14 @@ object DashboardService {
     }
   }
 
-  def reportStateSubTask(pageSize: String, pageNumber: String, Json: String): Seq[StateSubTarea] = {
+  def reportStateSubTask(pageSize: String, pageNumber: String, json: String): Seq[StateSubTarea] = {
 
-    var sqlString = "EXEC art.estado_sub_tarea {PageSize},{PageNumber},{Json}"
+    var sqlString = "EXEC art.estado_sub_tarea {PageSize},{PageNumber},{json}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (StateSubTarea.state *)
+      SQL(sqlString).on(
+          'PageSize -> pageSize.toInt,
+          'PageNumber -> pageNumber.toInt,
+          'json -> json).executeQuery() as (StateSubTarea.state *)
     }
   }
 
