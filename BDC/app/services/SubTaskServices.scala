@@ -1214,7 +1214,7 @@ object SubTaskServices extends CustomColumns {
   }
 
   def findAllSubTasksForProgram(program_id: String) = {
-    val sqlString = "select * from art_sub_task  where (completion_percentage < 100 OR completion_percentage Is Null) AND  sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where is_deleted=1 AND  pId IN (select DISTINCT(pId) from art_project_master where is_active=1 AND program=" + program_id + ") ) AND is_deleted=1 AND task_id IN ( select DISTINCT(task_id) from art_task  where is_active=1 AND  pId IN ( select DISTINCT(pId) from art_project_master where is_active=1 AND program =" + program_id + ") )"
+    val sqlString = "select * from art_sub_task  where (completion_percentage < 100 OR completion_percentage Is Null) AND is_deleted=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where is_deleted=1 AND  pId IN (select DISTINCT(pId) from art_project_master where is_active=1 AND program=" + program_id + ") ) AND is_deleted=1 AND task_id IN ( select DISTINCT(task_id) from art_task  where is_active=1 AND  pId IN ( select DISTINCT(pId) from art_project_master where is_active=1 AND program =" + program_id + ") )"
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(SubTasks.subTask *)
       result
