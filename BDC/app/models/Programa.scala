@@ -7,8 +7,8 @@ import play.api.libs.json._
 
 /**
  * @author marcelo
-
-d.division,t1.program_type,t2.sub_type,w.workflow_status,a.program_id,a.program_name,a.release_date
+ *
+ * d.division,t1.program_type,t2.sub_type,w.workflow_status,a.program_id,a.program_name,a.release_date
  */
 case class Programa(
   program_id: Int,
@@ -28,7 +28,7 @@ case class Programa(
   spi: Double,
   cpi: Double,
   impact_type: String,
-  sap_number:Option[String])
+  sap_number: Option[String])
 
 object Programa {
   val programa = {
@@ -38,16 +38,16 @@ object Programa {
       get[String]("sub_type") ~
       get[String]("workflow_status") ~
       get[String]("program_name") ~
-      get[String]("program_description") ~ 
-      get[Int]("program_code") ~ 
+      get[String]("program_description") ~
+      get[Int]("program_code") ~
       get[Option[Date]]("initiation_planned_date") ~
       get[Option[Date]]("closure_date") ~
       get[Option[Date]]("release_date") ~
       get[Double]("planned_hours") ~
-      get[Double]("pai") ~ 
+      get[Double]("pai") ~
       get[Double]("pae") ~
       get[Double]("spi") ~
-      get[Double]("cpi") ~ 
+      get[Double]("cpi") ~
       get[String]("impact_type") ~
       get[Option[String]]("sap_number") map {
         case program_id ~
@@ -67,7 +67,7 @@ object Programa {
           spi ~
           cpi ~
           impact_type ~
-          sap_number => Programa (
+          sap_number => Programa(
           program_id,
           division,
           program_type,
@@ -94,7 +94,7 @@ object Programa {
 
 case class Recurso(
   sno: Int,
-  cantidad:Int,
+  cantidad: Int,
   program_id: Int,
   programa: String,
   recurso: String,
@@ -114,24 +114,24 @@ case class Recurso(
 object Recurso {
   val recurso = {
     get[Int]("sno") ~
-    get[Int]("cantidad") ~
-    get[Int]("program_id") ~
+      get[Int]("cantidad") ~
+      get[Int]("program_id") ~
       get[String]("programa") ~
       get[String]("recurso") ~
       get[String]("proyecto") ~
       get[Int]("pId") ~
       get[String]("tarea") ~
-      get[Int]("tId") ~ 
-      get[String]("subtarea") ~ 
+      get[Int]("tId") ~
+      get[String]("subtarea") ~
       get[Int]("sub_task_id") ~
       get[Double]("planeadas") ~
       get[Double]("trabajadas") ~
-      get[Double]("porcentaje")  ~
-      get[Option[Date]]("plan_start_date") ~ 
-      get[Option[Date]]("plan_end_date") ~ 
+      get[Double]("porcentaje") ~
+      get[Option[Date]]("plan_start_date") ~
+      get[Option[Date]]("plan_end_date") ~
       get[Option[String]]("estado") map {
-        case sno ~ 
-          cantidad ~ 
+        case sno ~
+          cantidad ~
           program_id ~
           programa ~
           recurso ~
@@ -146,9 +146,9 @@ object Recurso {
           porcentaje ~
           plan_start_date ~
           plan_end_date ~
-          estado => Recurso (
-              sno,
-              cantidad,
+          estado => Recurso(
+          sno,
+          cantidad,
           program_id,
           programa,
           recurso,
@@ -168,4 +168,26 @@ object Recurso {
 
   }
   implicit val recursoWrites = Json.writes[Recurso]
+}
+
+case class Asignado(
+  uid: Int,
+  nombre: String,
+  asignado: Int)
+
+object Asignado {
+  val asignado = {
+    get[Int]("uid") ~
+      get[String]("nombre") ~
+      get[Int]("estado") map {
+        case uid ~
+          nombre ~
+          asignado => Asignado(
+          uid,
+          nombre,
+          asignado)
+      }
+
+  }
+  implicit val recursoWrites = Json.writes[Asignado]
 }
