@@ -1971,6 +1971,15 @@ object SAPServices extends CustomColumns {
         newform = sap_form.withError("comitted_date", "Comitted date should not greater than Program Start date");
       }
     }
+	if (!sap_form.data.get("close_date").isEmpty) {
+      val format = new java.text.SimpleDateFormat("dd-MM-yyyy");
+      val string = sap_form.data.get("close_date").get.trim();
+      val date = format.parse(string);
+      val start_date = ProgramService.findProgramDateDetailsById(program_id).get.initiation_planned_date
+      if (start_date.after(date)) {
+        newform = sap_form.withError("close_date", "Closed date should not greater than Program Start date");
+      }
+    }
     if (!sap_form.data.get("approved_date").isEmpty && !sap_form.data.get("comitted_date").isEmpty) {
       val format = new java.text.SimpleDateFormat("dd-MM-yyyy");
       val string = sap_form.data.get("comitted_date").get.trim();

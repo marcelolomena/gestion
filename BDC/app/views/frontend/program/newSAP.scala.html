@@ -70,6 +70,17 @@
 					            	)	
 				        </span>
 				 	</div>
+					
+					<div class="width_full">
+						<span style="float: left;width: 395px;" id="sap_number_span">
+							      @inputText(
+					                sap_form("close_date"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("newsap.closeddateplaceholder"),
+					                '_label -> Messages("newsap.closeddate")
+					            	)	
+				        </span>
+				 	</div>
 				 	
 				 	
 					<div class="width_full">
@@ -371,9 +382,17 @@
 								minDate.setDate(minDate.getDate());
 								var minReleaseDate = new Date(Date.parse($("#comitted_date").val()));
 								$("#comitted_date").datepicker("option", "minDate", minDate);
+								$("#close_date").datepicker("option", "minDate", minDate);
 							}
 				});
 				$("#comitted_date").datepicker({
+					buttonImageOnly : true,
+					dateFormat : "dd-mm-yy",
+					minDate : $("#program_start_date").val(),
+					changeMonth : true,
+					changeYear : true
+				});
+				$("#close_date").datepicker({
 					buttonImageOnly : true,
 					dateFormat : "dd-mm-yy",
 					minDate : $("#program_start_date").val(),

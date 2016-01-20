@@ -1400,6 +1400,8 @@ newsap.approveddateplaceholder=Entrar Fecha de Aprobación
 newsap.approveddate=Fecha de Aprobación
 newsap.comitteddateplaceholder=Entrar Fecha de Paso a Producción
 newsap.comitteddate=Fecha de Paso a Producción
+newsap.closeddateplaceholder=Entrar Fecha de Cierre
+newsap.closeddate=Fecha de Cierre
 
 newpert.programa=Programa
 newpert.proyecto=Proyecto

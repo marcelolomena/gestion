@@ -59,7 +59,6 @@ width: 99.5%
 					</div>
 					<div class="width_full">
 						<span style="float: left;width: 395px;" id="sap_number_span">
-						
 						@if(!session.get("user_profile").isEmpty && session.get("user_profile").get.equals("pmo") ){
 							 @inputText(
 					                sap_form("comitted_date"),
@@ -73,6 +72,22 @@ width: 99.5%
 					                'class -> "span4", 
 					                'placeholder -> Messages("newsap.comitteddateplaceholder"),
 					                '_label -> Messages("newsap.comitteddate"),
+					                'disabled->"disabled"
+					            	)	
+						}
+						@if(!session.get("user_profile").isEmpty && session.get("user_profile").get.equals("pmo") ){
+							 @inputText(
+					                sap_form("close_date"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("newsap.closeddateplaceholder"),
+					                '_label -> Messages("newsap.closeddate")
+					            	)	
+						}else{
+						 @inputText(
+					                sap_form("close_date"),
+					                'class -> "span4", 
+					                'placeholder -> Messages("newsap.closeddateplaceholder"),
+					                '_label -> Messages("newsap.closeddate"),
 					                'disabled->"disabled"
 					            	)	
 						}
@@ -2360,6 +2375,7 @@ width: 99.5%
 					minDate.setDate(minDate.getDate());
 					var minReleaseDate = new Date(Date.parse($("#comitted_date").val()));
 					$("#comitted_date").datepicker("option", "minDate", minDate);
+					$("#close_date").datepicker("option", "minDate", minDate);
 				}
 			});
 			if($("#approved_date").val()!=""){
@@ -2370,8 +2386,22 @@ width: 99.5%
 					changeMonth : true,
 					changeYear : true
 				});
+				$("#close_date").datepicker({
+					buttonImageOnly : true,
+					dateFormat : "dd-mm-yy",
+					minDate : $("#approved_date").val(),
+					changeMonth : true,
+					changeYear : true
+				});
 				}else{
 				$("#comitted_date").datepicker({
+					buttonImageOnly : true,
+					dateFormat : "dd-mm-yy",
+					minDate : $("#program_start_date").val(),
+					changeMonth : true,
+					changeYear : true
+				});
+				$("#close_date").datepicker({
 					buttonImageOnly : true,
 					dateFormat : "dd-mm-yy",
 					minDate : $("#program_start_date").val(),
