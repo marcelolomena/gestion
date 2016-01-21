@@ -311,24 +311,38 @@
    	</h3>
 		<ul id="sap_list">
 			<li class="top-header height28px">
-				<span class="role header" style="width:80px"> @Messages("programdetails.sapdetails.date")</span>
-				<span class="member header">@Messages("programdetails.sapdetails.sapno")</span>
-				<span class="member header">@Messages("programdetails.sapdetails.budgettype")</span>
+				<span class="role header" style="width:83px"> @Messages("programDetails.sapcode")</span>
 				<span class="member header">@Messages("programdetails.sapdetails.investment")</span>
-				<span class="member header"> @Messages("programdetails.sapdetails.expenditure")</span>
-				<span class="member header"> @Messages("programdetails.availableinvestment")</span>
-				<span class="member header">@Messages("programdetails.availableexpenditure")</span>
+				<span class="member header">@Messages("programdetails.sapdetails.expenditure")</span>
+				<span class="member header">@Messages("programdetails.availableinvestment")</span>
+				<span class="member header">Fecha Aprobación</span>
+				<span class="member header">Fecha Paso a Prod.</span>
+				<span class="member header">Fecha Cierre</span>
 				<span class="active header">@Messages("programDetails.action")</span>
 			</li>
 			@for( (p,index) <- SAPServices.findAllSAPMasterDetails(program_id).zipWithIndex){
 			<li class="@if(index%2==0){even_row}else{odd_row}">	
-					<span id="p_s_@p.id" class="role @if(p.is_active==1){active-sap}else{in-active-sap}">@p.creation_date.get.format("dd/MM/YYYY")</span>
+			
+				@*<span id="p_s_@p.id" class="role @if(p.is_active==1){active-sap}else{in-active-sap}">@p.creation_date.get.format("dd/MM/YYYY")</span>
 				<span class="member">@p.sap_number </span>
 				<span class="member">@BudgetTypeService.findBudgetTypeById(p.budget_type.toString).get.budget_type</span>
 				<span class="member">@SAPServices.calculateSAPInvestment(p.id.toString)</span>
 				<span class="member">@SAPServices.calculateSAPExpenditure(p.id.toString) </span>
 				<span class="member">@SAPServices.calculateProgramSAPInvestment(p.id.toString) </span>
 				<span class="member">@SAPServices.calculateProgramSAPExpenditure(p.id.toString) </span>
+				<span class="active program-sap @if(p.is_active==1){enabled_member}else{disabled_member}" id="m_@p.id"></span>
+				*@
+				
+				<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@p.sap_number</span>
+				<span class="member">@SAPServices.calculateSAPInvestment(p.id.toString)</span>
+				<span class="member">@SAPServices.calculateSAPExpenditure(p.id.toString)</span>
+				<span class="member">@SAPServices.calculateProgramSAPInvestment(p.id.toString) </span>
+				<span class="member">@if(p.approved_date){
+					@p.approved_date.get.format("dd/MM/YYYY")}&nbsp;</span>
+					<span class="member">@if(p.approved_date){
+					@p.comitted_date.get.format("dd/MM/YYYY")}&nbsp;</span>
+					<span class="member">@if(p.close_date){
+					@p.close_date.get.format("dd/MM/YYYY")}&nbsp;</span>
 				<span class="active program-sap @if(p.is_active==1){enabled_member}else{disabled_member}" id="m_@p.id"></span>
 			</li>
 			}
