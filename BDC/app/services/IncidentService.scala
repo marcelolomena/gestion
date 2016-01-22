@@ -87,6 +87,7 @@ object IncidentService {
            program_id: String,
            date_creation: String,
            ir_number: String,
+		   alm_number: String,
            user_sponsor_id: String,
            brief_description: String,
            extended_description: String,
@@ -97,7 +98,7 @@ object IncidentService {
 
     var sqlString = """
       EXEC art.save_incident {configuration_id},{program_id},
-      {date_creation},{ir_number},{user_sponsor_id},{brief_description},
+      {date_creation},{ir_number},{alm_number},{user_sponsor_id},{brief_description},
       {extended_description},{severity_id},{date_end},{task_owner_id},{user_creation_id}
       """
 
@@ -106,6 +107,7 @@ object IncidentService {
         'program_id -> program_id.toInt,
         'date_creation -> date_creation,
         'ir_number -> ir_number,
+		'alm_number -> alm_number,
         'user_sponsor_id -> user_sponsor_id,
         'brief_description -> brief_description,
         'extended_description -> extended_description,

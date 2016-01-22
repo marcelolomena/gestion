@@ -34,6 +34,7 @@ object Incident extends Controller {
     case "date_creation"      => " '" + value + "' "
     case "date_end"           => " '" + value + "' "
     case "ir_number"          => value
+	case "alm_number"          => value
     case _                    => "error"
   }
 
@@ -272,6 +273,7 @@ object Incident extends Controller {
           val program_id = (jsValue \ "program_id")
           val date_creation = (jsValue \ "date_creation")
           val ir_number = (jsValue \ "ir_number")
+		  val alm_number = (jsValue \ "alm_number")
           val user_sponsor_id = (jsValue \ "user_sponsor_id")
           val brief_description = (jsValue \ "brief_description")
           val extended_description = (jsValue \ "extended_description")
@@ -299,6 +301,7 @@ object Incident extends Controller {
             program_id.toString().replace("\"", ""),
             date_creation.toString().replace("\"", ""),
             ir_number.toString().replace("\"", ""),
+			alm_number.toString().replace("\"", ""),
             user_sponsor_id.toString().replace("\"", ""),
             brief_description.toString().replace("\"", ""),
             extended_description.toString().replace("\"", ""),
@@ -509,6 +512,7 @@ object Incident extends Controller {
           campo.put("program_id", p.program_id)
           campo.put("date_creation", p.date_creation.getOrElse("").toString())
           campo.put("ir_number", p.ir_number)
+		  campo.put("alm_number", p.alm_number.getOrElse("").toString())
           campo.put("user_sponsor_id", p.user_sponsor_id)
           campo.put("brief_description", p.brief_description)
           campo.put("extended_description", p.extended_description)
@@ -755,6 +759,7 @@ object Incident extends Controller {
         rowhead.createCell(8).setCellValue("Fecha Termino")
         rowhead.createCell(9).setCellValue("Descripción Corta")
         rowhead.createCell(10).setCellValue("Descripción Extensa")
+		rowhead.createCell(11).setCellValue("Número ALM")
 
         for (j <- 0 to 10)
           rowhead.getCell(j).setCellStyle(style);
@@ -794,6 +799,9 @@ object Incident extends Controller {
 
           val cel10 = row.createCell(cNum + 10)
           cel10.setCellValue(s.extended_description)
+		  
+		  val cel11 = row.createCell(cNum + 11)
+          cel11.setCellValue(s.alm_number.getOrElse("").toString())
 
           rNum = rNum + 1
           cNum = 0

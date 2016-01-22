@@ -419,7 +419,7 @@ $(document).ready(function(){
 	 }
 
 	var modelIncident=[
-	              { label: 'Atrazo', name: 'diferencia',search:false, editable: false,width: 55,resizable: false,
+	              { label: 'Atraso', name: 'diferencia',search:false, editable: false,width: 55,resizable: false,
 		            	formatter: function (cellvalue, options, rowObject) {
                         	var color;
                         	var val = restaFechas(formatDate(),rowObject.date_end);
@@ -599,6 +599,12 @@ $(document).ready(function(){
 	            	                   $(elem).width(180);  
 	            	               }
 	            		  },formoptions: {rowpos:3,colpos:1}
+	              },
+				{ label: 'Número de ALM', name: 'alm_number', width: 100,editable: true,
+	            	  editrules:{required:true},
+	            	  editoptions: {size: 10, maxlengh: 10},
+	            	  searchoptions: {sopt:["gt","lt","eq"] },
+	            	  formoptions: {rowpos:5,colpos:2}
 	              },	              
 	              { label: 'Fecha Creación', name: 'date_creation',width: 100,editable: true,editrules:{required:true},
 	            	  editoptions: {
@@ -744,6 +750,7 @@ $(document).ready(function(){
             	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');
             	$('input#ir_number',form).attr('readonly','readonly');
+				$('input#alm_number',form).attr('readonly','readonly');
             	
             	$('input#date_creation',form).datepicker( "destroy" );
             	
