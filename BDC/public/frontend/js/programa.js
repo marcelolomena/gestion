@@ -385,16 +385,10 @@ $(document).ready(function(){
 	       caption:"",
 	       buttonicon : "ui-icon-gear",//silk-icon-cog
 	       onClickButton : function() { 
-
 	    	   var grid = $("#jqGridProgram");
 	           var rowKey = grid.getGridParam("selrow");
 	           var rowData = grid.getRowData(rowKey);
-	           //var tId = rowData.task_id;
-	           //console.log(rowData);
-	           console.log(rowData.program_name);
 	           var titulo = rowData.program_name;
-	           //var titulo = $(rowData.program_name).text();
-	           console.log("titulo:" + titulo);
 	           
 	           if(rowKey === null && typeof rowKey === "object"){
 		           alert('debe seleccionar un programa');

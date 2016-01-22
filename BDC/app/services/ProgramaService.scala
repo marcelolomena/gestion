@@ -27,7 +27,7 @@ object ProgramaService {
   }
 
   def listadoRecursos(pid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[Recurso] = {
-   
+
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_member_activity {pid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
         'pid -> pid.toInt,
@@ -37,9 +37,9 @@ object ProgramaService {
         'StartRow -> StartRow).executeQuery().as(Recurso.recurso *)
     }
   }
-  
+
   def listadoAsignacionDependiente(uid: String, fecini: String, fecfin: String, size: String, page: String): Seq[Asignado] = {
-   
+
     DB.withConnection { implicit connection =>
       SQL("EXEC art.asignacion_dependiente {uid},{fecini},{fecfin}").on(
         'uid -> uid.toInt,
@@ -48,7 +48,15 @@ object ProgramaService {
         'size -> size.toInt,
         'page -> page.toInt).executeQuery().as(Asignado.asignado *)
     }
-  }  
+  }
+
+  def cantidadSubalternos(uid: String): Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.cantidad_subalternos  {uid}").on(
+        'uid -> uid.toInt).executeQuery().as(scalar[Int].single)
+    }
+  }
 
   def cantidad(uid: Int, json: String): Int = {
     DB.withConnection { implicit connection =>

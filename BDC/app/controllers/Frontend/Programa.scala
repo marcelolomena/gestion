@@ -65,13 +65,13 @@ object Programa extends Controller {
         var qrystr = ""
         var qrystr_c = ""
         var order = ""
-        
+
         //println("sidx:" + sidx)
         //println("sort:" + sord)
-        
-        if (sidx.trim().size==0) {
+
+        if (sidx.trim().size == 0) {
           order = "X.program_id asc"
-        }else{
+        } else {
           order = "X." + sidx + " " + sord
         }
         //println("order: " + order)
@@ -166,7 +166,6 @@ object Programa extends Controller {
           campo.put("cpi", p.cpi)
           campo.put("impact_type", p.impact_type)
           campo.put("sap_number", p.sap_number.getOrElse("").toString())
-          
 
           registro.put(campo)
         }
@@ -183,7 +182,7 @@ object Programa extends Controller {
       }
 
   }
-  
+
   def listadoRecursos(pid: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -192,11 +191,11 @@ object Programa extends Controller {
         val filters = request.getQueryString("filters").getOrElse("").toString()
         var sidx = request.getQueryString("sidx").getOrElse("recurso").toString()
         val sord = request.getQueryString("sord").getOrElse("").toString()
-        var records: Int = 0        
-        
+        var records: Int = 0
+
         var node = new JSONObject()
-        
-        if (sidx.trim().size==0) {
+
+        if (sidx.trim().size == 0) {
           sidx = "recurso"
         }
         val pageIndex = page
@@ -205,18 +204,18 @@ object Programa extends Controller {
 
         //println(rows)
         //println(startRow)
-        val subtask = ProgramaService.listadoRecursos(pid,sidx,sord,rows,startRow)
+        val subtask = ProgramaService.listadoRecursos(pid, sidx, sord, rows, startRow)
 
         var registro = new JSONArray()
         for (p <- subtask) {
           var campo = new JSONObject()
-          records=p.cantidad
+          records = p.cantidad
           campo.put("program_id", p.program_id)
           campo.put("programa", p.programa)
           campo.put("recurso", p.recurso)
           campo.put("proyecto", p.proyecto)
           campo.put("pId", p.pId)
-          campo.put("tarea", p.tarea)          
+          campo.put("tarea", p.tarea)
           campo.put("tId", p.tId)
           campo.put("subtarea", p.subtarea)
           campo.put("sub_task_id", p.sub_task_id)
@@ -235,27 +234,26 @@ object Programa extends Controller {
         node.put("total", pagedisplay)
         node.put("records", records)
         node.put("rows", registro)
-        
+
         Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
 
-  }  
-  
-  //
-    def listadoAsignacion = Action {
+  }
+
+  def listadoAsignacion = Action {
     implicit request =>
       request.session.get("username").map { user =>
         val rows = request.getQueryString("rows").get.toString()
         val page = request.getQueryString("page").get.toString()
-        var records: Int = 0        
+        var records: Int = 0
         val uId = request.session.get("uId").get.toString()
         var node = new JSONObject()
 
-        val subtask = ProgramaService.listadoAsignacionDependiente(uId,"","",rows,page)
-        records=subtask.size
+        val subtask = ProgramaService.listadoAsignacionDependiente(uId, "", "", rows, page)
+        records = subtask.size
         var registro = new JSONArray()
         for (p <- subtask) {
           var campo = new JSONObject()
@@ -271,15 +269,27 @@ object Programa extends Controller {
         node.put("total", pagedisplay)
         node.put("records", records)
         node.put("rows", registro)
-        
+
         Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
 
-  }  
-  //
+  }
+
+  def cantidadSubalternos = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        val uid = request.session.get("uId").get
+        val count = ProgramaService.cantidadSubalternos(uid)
+        Ok(count.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
 
   def grabaPrograma = Action {
     implicit request =>
@@ -321,7 +331,7 @@ object Programa extends Controller {
           } else if (oper.toString().replace("\"", "").equals("del")) {
 
           } else if (oper.toString().replace("\"", "").equals("add")) {
-            ret=ProgramaService.grabar(
+            ret = ProgramaService.grabar(
               program_name.toString().replace("\"", ""),
               program_description.toString().replace("\"", ""),
               planned_hours.toString().replace("\"", ""),

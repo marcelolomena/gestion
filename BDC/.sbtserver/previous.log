@@ -1,5 +1,5 @@
-New log file opened at Wed Jan 20 09:56:56 CLT 2016 by 1952@zrismart
-jvm 1952@zrismart
+New log file opened at Fri Jan 22 12:45:19 CLT 2016 by 6100@zrismart
+jvm 6100@zrismart
 jvm vmName=Java HotSpot(TM) 64-Bit Server VM vmVendor=Oracle Corporation vmVersion=24.79-b02
 jvm specName=Java Virtual Machine Specification specVendor=Oracle Corporation specVersion=1.7
 jvm arguments: [-Xms256m, -Xmx1024m, -XX:PermSize=64m, -XX:MaxPermSize=256m]
@@ -27,7 +27,7 @@ sorting: ns: List(sbt.plugins.CorePlugin, sbt.plugins.IvyPlugin, sbt.plugins.Jvm
   :: sorted deduced result: List(sbt.plugins.CorePlugin, sbt.plugins.IvyPlugin, sbt.plugins.JvmPlugin, sbt.plugins.JUnitXmlReportPlugin)
 [Loading] Done in C:\Users\marcelo\git\BDC\project, returning: (bdc-build)
 Loading project definition from C:\Users\marcelo\git\BDC\project
-Running task... Cancel: sbt.TaskCancellationStrategy$Null$@568b43ab, check cycles: false
+Running task... Cancel: sbt.TaskCancellationStrategy$Null$@779da1de, check cycles: false
 Updating {file:/C:/Users/marcelo/git/BDC/project/}bdc-build...
 Other repositories:
 Default repositories:
@@ -15796,7 +15796,7 @@ sbt-chain: module revision found in cache: org.fusesource.jansi#jansi;1.4
 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8-M3!apply-macro.jar
 	[NOT REQUIRED] org.scala-lang#jline;2.10.4!jline.jar
 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
-:: resolution report :: resolve 7594ms :: artifacts dl 250ms
+:: resolution report :: resolve 9228ms :: artifacts dl 273ms
 	report for default#bdc-build;0.1-SNAPSHOT compile produced in C:\Users\marcelo\git\BDC\project\target\resolution-cache\reports\default-bdc-build-compile.xml
 	report for default#bdc-build;0.1-SNAPSHOT runtime produced in C:\Users\marcelo\git\BDC\project\target\resolution-cache\reports\default-bdc-build-runtime.xml
 	report for default#bdc-build;0.1-SNAPSHOT test produced in C:\Users\marcelo\git\BDC\project\target\resolution-cache\reports\default-bdc-build-test.xml
@@ -15810,7 +15810,7 @@ sbt-chain: module revision found in cache: org.fusesource.jansi#jansi;1.4
 	report for default#bdc-build;0.1-SNAPSHOT docs produced in C:\Users\marcelo\git\BDC\project\target\resolution-cache\reports\default-bdc-build-docs.xml
 	report for default#bdc-build;0.1-SNAPSHOT pom produced in C:\Users\marcelo\git\BDC\project\target\resolution-cache\reports\default-bdc-build-pom.xml
 	report for default#bdc-build;0.1-SNAPSHOT scala-tool produced in C:\Users\marcelo\git\BDC\project\target\resolution-cache\reports\default-bdc-build-scala-tool.xml
-	resolve done (7594ms resolve - 250ms download)
+	resolve done (9228ms resolve - 273ms download)
 Done updating.
 
 Initial source changes: 
@@ -15832,13 +15832,13 @@ Recompiling all 1 sources: invalidated sources (1) exceeded 50.0% of all sources
 Compiling 1 Scala source to C:\Users\marcelo\git\BDC\project\target\scala-2.10\sbt-0.13\classes...
 Getting compiler-interface from component compiler for Scala 2.10.4
 Getting compiler-interface from component compiler for Scala 2.10.4
-Running cached compiler 2fa28eb6, interfacing (CompilerInterface) with Scala compiler version 2.10.4
+Running cached compiler 596b2557, interfacing (CompilerInterface) with Scala compiler version 2.10.4
 Calling Scala compiler with arguments  (CompilerInterface):
 	-bootclasspath
 	C:\Program Files\Java\jdk1.7.0_79\jre\lib\resources.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\rt.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jce.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.7.0_79\jre\classes;C:\Users\marcelo\.sbt\boot\scala-2.10.4\lib\scala-library.jar
 	-classpath
 	C:\Users\marcelo\git\BDC\project\target\scala-2.10\sbt-0.13\classes;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.play\sbt-fork-run-plugin\jars\sbt-fork-run-plugin-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\sbt-fork-run-protocol_2.10\jars\sbt-fork-run-protocol_2.10-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\sbt-run-support_2.10\jars\sbt-run-support_2.10-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\build-link\jars\build-link-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-exceptions\jars\play-exceptions-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\org.javassist\javassist\bundles\javassist-3.18.2-GA.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.sbtrc\client-2-10\jars\client-2-10-0.3.1-tests.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.sbtrc\client-2-10\jars\client-2-10-0.3.1.jar;C:\Users\marcelo\.sbt\boot\scala-2.10.4\lib\scala-reflect.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\serialization_2.10\jars\serialization_2.10-0.1.0.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang.modules\scala-pickling_2.10\jars\scala-pickling_2.10-0.10.0.jar;C:\Users\marcelo\.sbt\boot\scala-2.10.4\lib\scala-compiler.jar;C:\Users\marcelo\.ivy2\cache\org.scalamacros\quasiquotes_2.10\jars\quasiquotes_2.10-2.0.1.jar;C:\Users\marcelo\.ivy2\cache\org.json4s\json4s-core_2.10\jars\json4s-core_2.10-3.2.10.jar;C:\Users\marcelo\.ivy2\cache\org.json4s\json4s-ast_2.10\jars\json4s-ast_2.10-3.2.10.jar;C:\Users\marcelo\.ivy2\cache\com.thoughtworks.paranamer\paranamer\jars\paranamer-2.6.jar;C:\Users\marcelo\.ivy2\cache\org.spire-math\jawn-parser_2.10\jars\jawn-parser_2.10-0.6.0.jar;C:\Users\marcelo\.ivy2\cache\org.spire-math\json4s-support_2.10\jars\json4s-support_2.10-0.6.0.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\launcher-interface\jars\launcher-interface-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\interface\jars\interface-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\io\jars\io-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\control\jars\control-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\collections\jars\collections-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\com.novocode\junit-interface\jars\junit-interface-0.11.jar;C:\Users\marcelo\.ivy2\cache\junit\junit\jars\junit-4.11.jar;C:\Users\marcelo\.ivy2\cache\org.hamcrest\hamcrest-core\jars\hamcrest-core-1.3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\test-interface\jars\test-interface-1.0.jar;C:\Users\marcelo\.ivy2\cache\org.scalacheck\scalacheck_2.10\jars\scalacheck_2.10-1.11.5.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.play\sbt-plugin\jars\sbt-plugin-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\routes-compiler_2.10\jars\routes-compiler_2.10-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe\config\bundles\config-1.2.1.jar;C:\Users\marcelo\.ivy2\cache\org.mozilla\rhino\jars\rhino-1.7R4.jar;C:\Users\marcelo\.ivy2\cache\com.google.javascript\closure-compiler\jars\closure-compiler-v20130603.jar;C:\Users\marcelo\.ivy2\cache\com.google.guava\guava\bundles\guava-16.0.1.jar;C:\Users\marcelo\.ivy2\cache\org.json\json\jars\json-20090211.jar;C:\Users\marcelo\.ivy2\cache\org.avaje.ebeanorm\avaje-ebeanorm-agent\jars\avaje-ebeanorm-agent-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\com.h2database\h2\jars\h2-1.3.175.jar;C:\Users\marcelo\.ivy2\cache\net.contentobjects.jnotify\jnotify\jars\jnotify-0.94.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbt\sbt-twirl\jars\sbt-twirl-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\twirl-compiler_2.10\jars\twirl-compiler_2.10-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\twirl-api_2.10\jars\twirl-api_2.10-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\twirl-parser_2.10\jars\twirl-parser_2.10-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbteclipse\sbteclipse-plugin\jars\sbteclipse-plugin-3.0.0.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbteclipse\sbteclipse-core\jars\sbteclipse-core-3.0.0.jar;C:\Users\marcelo\.ivy2\cache\org.scalaz\scalaz-core_2.10\bundles\scalaz-core_2.10-7.0.2.jar;C:\Users\marcelo\.ivy2\cache\org.scalaz\scalaz-effect_2.10\bundles\scalaz-effect_2.10-7.0.2.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.github.mpeltonen\sbt-idea\jars\sbt-idea-1.5.1.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbt\sbt-native-packager\jars\sbt-native-packager-0.7.4.jar;C:\Users\marcelo\.ivy2\cache\org.vafer\jdeb\jars\jdeb-1.3.jar;C:\Users\marcelo\.ivy2\cache\commons-io\commons-io\jars\commons-io-2.4.jar;C:\Users\marcelo\.ivy2\cache\org.apache.commons\commons-compress\jars\commons-compress-1.7.jar;C:\Users\marcelo\.ivy2\cache\org.tukaani\xz\jars\xz-1.4.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-core\jars\maven-core-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-model\jars\maven-model-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.codehaus.plexus\plexus-utils\jars\plexus-utils-3.0.17.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-settings\jars\maven-settings-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-settings-builder\jars\maven-settings-builder-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.codehaus.plexus\plexus-interpolation\jars\plexus-interpolation-1.19.jar;C:\Users\marcelo\.ivy2\cache\org.codehaus.plexus\plexus-component-annotations\jars\plexus-component-annotations-1.5.5.jar;C:\Users\marcelo\.ivy2\cache\org.sonatype.plexus\plexus-sec-dispatcher\jars\plexus-sec-dispatcher-1.3.jar;C:\Users\marcelo\.ivy2\cache\org.sonatype.plexus\plexus-cipher\jars\plexus-cipher-1.7.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-repository-metadata\jars\maven-repository-metadata-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-artifact\jars\maven-artifact-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-plugin-api\jars\maven-plugin-api-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.sisu\org.eclipse.sisu.plexus\eclipse-plugins\org.eclipse.sisu.plexus-0.0.0.M5.jar;C:\Users\marcelo\.ivy2\cache\javax.enterprise\cdi-api\jars\cdi-api-1.0.jar;C:\Users\marcelo\.ivy2\cache\javax.annotation\jsr250-api\jars\jsr250-api-1.0.jar;C:\Users\marcelo\.ivy2\cache\javax.inject\javax.inject\jars\javax.inject-1.jar;C:\Users\marcelo\.ivy2\cache\org.sonatype.sisu\sisu-guice\jars\sisu-guice-3.1.3-no_aop.jar;C:\Users\marcelo\.ivy2\cache\aopalliance\aopalliance\jars\aopalliance-1.0.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.sisu\org.eclipse.sisu.inject\eclipse-plugins\org.eclipse.sisu.inject-0.0.0.M5.jar;C:\Users\marcelo\.ivy2\cache\org.codehaus.plexus\plexus-classworlds\bundles\plexus-classworlds-2.5.1.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-model-builder\jars\maven-model-builder-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.maven\maven-aether-provider\jars\maven-aether-provider-3.2.2.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.aether\aether-api\jars\aether-api-0.9.0.M2.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.aether\aether-spi\jars\aether-spi-0.9.0.M2.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.aether\aether-util\jars\aether-util-0.9.0.M2.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.aether\aether-impl\jars\aether-impl-0.9.0.M2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.ant\ant\jars\ant-1.9.3.jar;C:\Users\marcelo\.ivy2\cache\org.apache.ant\ant-launcher\jars\ant-launcher-1.9.3.jar;C:\Users\marcelo\.ivy2\cache\org.bouncycastle\bcpg-jdk15on\jars\bcpg-jdk15on-1.51.jar;C:\Users\marcelo\.ivy2\cache\org.bouncycastle\bcprov-jdk15on\jars\bcprov-jdk15on-1.51.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbt\sbt-js-engine\jars\sbt-js-engine-1.0.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe\jse_2.10\jars\jse_2.10-1.0.0.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-actor_2.10\jars\akka-actor_2.10-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-contrib_2.10\jars\akka-contrib_2.10-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-remote_2.10\jars\akka-remote_2.10-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\io.netty\netty\bundles\netty-3.8.0.Final.jar;C:\Users\marcelo\.ivy2\cache\com.google.protobuf\protobuf-java\bundles\protobuf-java-2.5.0.jar;C:\Users\marcelo\.ivy2\cache\org.uncommons.maths\uncommons-maths\jars\uncommons-maths-1.2.2a.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-cluster_2.10\jars\akka-cluster_2.10-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-persistence-experimental_2.10\jars\akka-persistence-experimental_2.10-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\org.iq80.leveldb\leveldb\jars\leveldb-0.5.jar;C:\Users\marcelo\.ivy2\cache\org.iq80.leveldb\leveldb-api\jars\leveldb-api-0.5.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni-all\bundles\leveldbjni-all-1.7.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni\jars\leveldbjni-1.7.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.hawtjni\hawtjni-runtime\jars\hawtjni-runtime-1.8.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni-osx\jars\leveldbjni-osx-1.5.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni-linux32\jars\leveldbjni-linux32-1.5.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni-linux64\jars\leveldbjni-linux64-1.5.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni-win32\jars\leveldbjni-win32-1.5.jar;C:\Users\marcelo\.ivy2\cache\org.fusesource.leveldbjni\leveldbjni-win64\jars\leveldbjni-win64-1.5.jar;C:\Users\marcelo\.ivy2\cache\io.apigee.trireme\trireme-core\jars\trireme-core-0.7.5.jar;C:\Users\marcelo\.ivy2\cache\io.apigee.trireme\trireme-node10src\jars\trireme-node10src-0.7.5.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-json_2.10\bundles\spray-json_2.10-1.2.6.jar;C:\Users\marcelo\.ivy2\cache\org.parboiled\parboiled-scala_2.10\bundles\parboiled-scala_2.10-1.1.6.jar;C:\Users\marcelo\.ivy2\cache\org.parboiled\parboiled-core\bundles\parboiled-core-1.1.6.jar;C:\Users\marcelo\.ivy2\cache\org.slf4j\slf4j-simple\jars\slf4j-simple-1.7.7.jar;C:\Users\marcelo\.ivy2\cache\org.slf4j\slf4j-api\jars\slf4j-api-1.7.7.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe\npm_2.10\jars\npm_2.10-1.0.0.jar;C:\Users\marcelo\.ivy2\cache\org.webjars\npm\jars\npm-1.3.26.jar;C:\Users\marcelo\.ivy2\cache\org.webjars\webjars-locator\jars\webjars-locator-0.14.jar;C:\Users\marcelo\.ivy2\cache\com.fasterxml.jackson.core\jackson-databind\bundles\jackson-databind-2.3.3.jar;C:\Users\marcelo\.ivy2\cache\com.fasterxml.jackson.core\jackson-annotations\bundles\jackson-annotations-2.3.0.jar;C:\Users\marcelo\.ivy2\cache\com.fasterxml.jackson.core\jackson-core\bundles\jackson-core-2.3.3.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbt\sbt-web\jars\sbt-web-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\com.typesafe.sbt\sbt-webdriver\jars\sbt-webdriver-1.0.0.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe\webdriver_2.10\jars\webdriver_2.10-1.0.0.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-client\bundles\spray-client-1.3.1.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-can\bundles\spray-can-1.3.1.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-io\bundles\spray-io-1.3.1.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-util\bundles\spray-util-1.3.1.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-http\bundles\spray-http-1.3.1.jar;C:\Users\marcelo\.ivy2\cache\io.spray\spray-httpx\bundles\spray-httpx-1.3.1.jar;C:\Users\marcelo\.ivy2\cache\org.jvnet.mimepull\mimepull\jars\mimepull-1.9.4.jar;C:\Users\marcelo\.ivy2\cache\net.sourceforge.htmlunit\htmlunit\jars\htmlunit-2.14.jar;C:\Users\marcelo\.ivy2\cache\xalan\xalan\jars\xalan-2.7.1.jar;C:\Users\marcelo\.ivy2\cache\xalan\serializer\jars\serializer-2.7.1.jar;C:\Users\marcelo\.ivy2\cache\commons-collections\commons-collections\jars\commons-collections-3.2.1.jar;C:\Users\marcelo\.ivy2\cache\org.apache.commons\commons-lang3\jars\commons-lang3-3.2.1.jar;C:\Users\marcelo\.ivy2\cache\org.apache.httpcomponents\httpclient\jars\httpclient-4.3.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.httpcomponents\httpcore\jars\httpcore-4.3.1.jar;C:\Users\marcelo\.ivy2\cache\commons-logging\commons-logging\jars\commons-logging-1.1.3.jar;C:\Users\marcelo\.ivy2\cache\org.apache.httpcomponents\httpmime\jars\httpmime-4.3.2.jar;C:\Users\marcelo\.ivy2\cache\commons-codec\commons-codec\jars\commons-codec-1.9.jar;C:\Users\marcelo\.ivy2\cache\net.sourceforge.htmlunit\htmlunit-core-js\jars\htmlunit-core-js-2.14.jar;C:\Users\marcelo\.ivy2\cache\xerces\xercesImpl\jars\xercesImpl-2.11.0.jar;C:\Users\marcelo\.ivy2\cache\xml-apis\xml-apis\jars\xml-apis-1.4.01.jar;C:\Users\marcelo\.ivy2\cache\net.sourceforge.nekohtml\nekohtml\jars\nekohtml-1.9.20.jar;C:\Users\marcelo\.ivy2\cache\net.sourceforge.cssparser\cssparser\jars\cssparser-0.9.13.jar;C:\Users\marcelo\.ivy2\cache\org.w3c.css\sac\jars\sac-1.3.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.jetty\jetty-websocket\jars\jetty-websocket-8.1.14.v20131031.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.jetty\jetty-util\jars\jetty-util-8.1.14.v20131031.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.jetty\jetty-io\jars\jetty-io-8.1.14.v20131031.jar;C:\Users\marcelo\.ivy2\cache\org.eclipse.jetty\jetty-http\jars\jetty-http-8.1.14.v20131031.jar;C:\Users\marcelo\.ivy2\cache\scala_2.10\sbt_0.13\org.scala-sbt\sbt-core-next\jars\sbt-core-next-0.1.1.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\core-next_2.10\jars\core-next_2.10-0.1.1.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\sbt\jars\sbt-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\main\jars\main-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\actions\jars\actions-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\classpath\jars\classpath-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\completion\jars\completion-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\jline\jline\jars\jline-2.11.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\api\jars\api-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\compiler-integration\jars\compiler-integration-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\incremental-compiler\jars\incremental-compiler-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\logging\jars\logging-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\process\jars\process-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\relation\jars\relation-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\compile\jars\compile-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\classfile\jars\classfile-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\persist\jars\persist-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-tools.sbinary\sbinary_2.10\jars\sbinary_2.10-0.4.2.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\compiler-ivy-integration\jars\compiler-ivy-integration-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\ivy\jars\ivy-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\cross\jars\cross-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt.ivy\ivy\jars\ivy-2.3.0-sbt-fccfbd44c9f64523b61398a0155784dcbaeae28f.jar;C:\Users\marcelo\.ivy2\cache\com.jcraft\jsch\jars\jsch-0.1.46.jar;C:\Users\marcelo\.ivy2\cache\org.json4s\json4s-native_2.10\jars\json4s-native_2.10-3.2.10.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\run\jars\run-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\task-system\jars\task-system-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\tasks\jars\tasks-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\tracking\jars\tracking-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\cache\jars\cache-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\testing\jars\testing-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\test-agent\jars\test-agent-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\main-settings\jars\main-settings-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\apply-macro\jars\apply-macro-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\command\jars\command-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\logic\jars\logic-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\compiler-interface\jars\compiler-interface-src-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\compiler-interface\jars\compiler-interface-bin-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\precompiled-2_8_2\jars\compiler-interface-bin-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\precompiled-2_9_2\jars\compiler-interface-bin-0.13.8-M3.jar;C:\Users\marcelo\.ivy2\cache\org.scala-sbt\precompiled-2_9_3\jars\compiler-interface-bin-0.13.8-M3.jar
-Scala compilation took 4.324397599 s
+Scala compilation took 4.418449414 s
 Invalidating C:\Users\marcelo\git\BDC\project\Build.scala...
 Invalidating (transitively) by inheritance from C:\Users\marcelo\git\BDC\project\Build.scala...
 Initial set of included nodes: Set(C:\Users\marcelo\git\BDC\project\Build.scala)
@@ -15874,7 +15874,7 @@ Set current project to BDC (in build file:/C:/Users/marcelo/git/BDC/)
 > server-handle-next-server-request
 > {file:/C:/Users/marcelo/git/BDC/}BDC/*:playForkConfig
 Evaluating tasks: *:playForkConfig
-Running task... Cancel: sbt.server.ServerTaskCancellation@6736cd9d, check cycles: false
+Running task... Cancel: sbt.server.ServerTaskCancellation@a70855e, check cycles: false
 Read from stdout: Updating {file:/C:/Users/marcelo/git/BDC/}BDC...
 Updating {file:/C:/Users/marcelo/git/BDC/}BDC...
 Other repositories:
@@ -15889,7 +15889,7 @@ resolving dependencies for configuration 'compile'
 == resolving dependencies bdc#bdc_2.11;1.0-SNAPSHOT->org.scala-lang#scala-library;2.11.7 [compile->default(compile)]
 Read from stdout: Resolving org.scala-lang#scala-library;2.11.7 ...
 Resolving org.scala-lang#scala-library;2.11.7 ...
-sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4b514164
+sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@59e1c805
 sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7
 	found org.scala-lang#scala-library;2.11.7 in sbt-chain
 	[2.11.7] org.scala-lang#scala-library;2.11.7
@@ -23539,7 +23539,7 @@ all callers are evicted for commons-logging#commons-logging;1.1.1: evicting too
 	[NOT REQUIRED] org.scalacheck#scalacheck_2.11;1.11.5!scalacheck_2.11.jar
 	[NOT REQUIRED] com.typesafe.akka#akka-actor_2.11;2.3.8!akka-actor_2.11.jar
 	[NOT REQUIRED] com.typesafe.akka#akka-testkit_2.11;2.3.8!akka-testkit_2.11.jar
-:: resolution report :: resolve 7709ms :: artifacts dl 294ms
+:: resolution report :: resolve 5865ms :: artifacts dl 246ms
 	report for bdc#bdc_2.11;1.0-SNAPSHOT compile produced in C:\Users\marcelo\git\BDC\target\resolution-cache\reports\bdc-bdc_2.11-compile.xml
 	report for bdc#bdc_2.11;1.0-SNAPSHOT runtime produced in C:\Users\marcelo\git\BDC\target\resolution-cache\reports\bdc-bdc_2.11-runtime.xml
 	report for bdc#bdc_2.11;1.0-SNAPSHOT test produced in C:\Users\marcelo\git\BDC\target\resolution-cache\reports\bdc-bdc_2.11-test.xml
@@ -23554,47 +23554,46 @@ all callers are evicted for commons-logging#commons-logging;1.1.1: evicting too
 	report for bdc#bdc_2.11;1.0-SNAPSHOT pom produced in C:\Users\marcelo\git\BDC\target\resolution-cache\reports\bdc-bdc_2.11-pom.xml
 	report for bdc#bdc_2.11;1.0-SNAPSHOT scala-tool produced in C:\Users\marcelo\git\BDC\target\resolution-cache\reports\bdc-bdc_2.11-scala-tool.xml
 	report for bdc#bdc_2.11;1.0-SNAPSHOT fork-run produced in C:\Users\marcelo\git\BDC\target\resolution-cache\reports\bdc-bdc_2.11-fork-run.xml
-	resolve done (7709ms resolve - 294ms download)
+	resolve done (5865ms resolve - 246ms download)
 Read from stdout: Done updating.
 Done updating.
-Total time: 9 s, completed 20-01-2016 09:57:25 AM
+Total time: 7 s, completed 22-01-2016 12:45:49 PM
 > server-post-command-cleanup
 > server-handle-next-server-request
 > BDC/playForkNotifyStart http://localhost:9000
 Evaluating tasks: *:playForkNotifyStart
-Running task... Cancel: sbt.server.ServerTaskCancellation@1ef8e054, check cycles: false
-Total time: 0 s, completed 20-01-2016 09:57:26 AM
+Running task... Cancel: sbt.server.ServerTaskCancellation@4d267309, check cycles: false
+Total time: 0 s, completed 22-01-2016 12:45:50 PM
 > server-post-command-cleanup
 > server-handle-next-server-request
 > {file:/C:/Users/marcelo/git/BDC/}BDC/*:playForkReload
 Evaluating tasks: *:playForkReload
-Running task... Cancel: sbt.server.ServerTaskCancellation@67204f45, check cycles: false
-Invalidating C:\Users\marcelo\git\BDC\target\scala-2.11\classes\art_forms\ARTForms.class: stamp changed from lastModified(1453131209580) to lastModified(1453294244224)
+Running task... Cancel: sbt.server.ServerTaskCancellation@2ecd318, check cycles: false
 
 Initial source changes: 
 	removed:Set()
 	added: Set()
-	modified: Set()
+	modified: Set(C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\controllers\Frontend\routes.java, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\controllers\routes.java, C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala)
 Removed products: Set()
 External API changes: API Changes: Set()
-Modified binary dependencies: Set(C:\Users\marcelo\git\BDC\target\scala-2.11\classes\art_forms\ARTForms.class)
-Initial directly invalidated sources: Set()
+Modified binary dependencies: Set()
+Initial directly invalidated sources: Set(C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\controllers\Frontend\routes.java, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\controllers\routes.java, C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala)
 
 Sources indirectly invalidated by:
 	product: Set()
-	binary dep: Set(C:\Users\marcelo\git\BDC\app\controllers\TaskDescipline.scala, C:\Users\marcelo\git\BDC\app\controllers\ProgramType.scala, C:\Users\marcelo\git\BDC\app\controllers\UserRole.scala, C:\Users\marcelo\git\BDC\app\controllers\SubType.scala, C:\Users\marcelo\git\BDC\app\controllers\Stage.scala, C:\Users\marcelo\git\BDC\app\controllers\Department.scala, C:\Users\marcelo\git\BDC\app\controllers\DocumentType.scala, C:\Users\marcelo\git\BDC\app\controllers\Frontend\Generics.scala, C:\Users\marcelo\git\BDC\app\controllers\ProjectWorkflowStatus.scala, C:\Users\marcelo\git\BDC\app\controllers\WorkflowStatus.scala, C:\Users\marcelo\git\BDC\app\controllers\Deliverable.scala, C:\Users\marcelo\git\BDC\app\controllers\User.scala, C:\Users\marcelo\git\BDC\app\controllers\BudgetType.scala, C:\Users\marcelo\git\BDC\app\controllers\Division.scala, C:\Users\marcelo\git\BDC\app\controllers\Frontend\Login.scala, C:\Users\marcelo\git\BDC\app\controllers\UserProfile.scala, C:\Users\marcelo\git\BDC\app\controllers\Genrencia.scala, C:\Users\marcelo\git\BDC\app\controllers\GenericProjectType.scala, C:\Users\marcelo\git\BDC\app\controllers\Application.scala, C:\Users\marcelo\git\BDC\app\controllers\ImpactType.scala, C:\Users\marcelo\git\BDC\app\controllers\ServiceCatalogue.scala)
+	binary dep: Set()
 	external source: Set()
-All initially invalidated sources: Set(C:\Users\marcelo\git\BDC\app\controllers\TaskDescipline.scala, C:\Users\marcelo\git\BDC\app\controllers\ProgramType.scala, C:\Users\marcelo\git\BDC\app\controllers\UserRole.scala, C:\Users\marcelo\git\BDC\app\controllers\SubType.scala, C:\Users\marcelo\git\BDC\app\controllers\Stage.scala, C:\Users\marcelo\git\BDC\app\controllers\Department.scala, C:\Users\marcelo\git\BDC\app\controllers\DocumentType.scala, C:\Users\marcelo\git\BDC\app\controllers\Frontend\Generics.scala, C:\Users\marcelo\git\BDC\app\controllers\ProjectWorkflowStatus.scala, C:\Users\marcelo\git\BDC\app\controllers\WorkflowStatus.scala, C:\Users\marcelo\git\BDC\app\controllers\Deliverable.scala, C:\Users\marcelo\git\BDC\app\controllers\User.scala, C:\Users\marcelo\git\BDC\app\controllers\BudgetType.scala, C:\Users\marcelo\git\BDC\app\controllers\Division.scala, C:\Users\marcelo\git\BDC\app\controllers\Frontend\Login.scala, C:\Users\marcelo\git\BDC\app\controllers\UserProfile.scala, C:\Users\marcelo\git\BDC\app\controllers\Genrencia.scala, C:\Users\marcelo\git\BDC\app\controllers\GenericProjectType.scala, C:\Users\marcelo\git\BDC\app\controllers\Application.scala, C:\Users\marcelo\git\BDC\app\controllers\ImpactType.scala, C:\Users\marcelo\git\BDC\app\controllers\ServiceCatalogue.scala)
+All initially invalidated sources: Set(C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\controllers\Frontend\routes.java, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\controllers\routes.java, C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala)
 
-Read from stdout: Compiling 21 Scala sources to C:\Users\marcelo\git\BDC\target\scala-2.11\classes...
-Compiling 21 Scala sources to C:\Users\marcelo\git\BDC\target\scala-2.11\classes...
+Read from stdout: Compiling 4 Scala sources and 2 Java sources to C:\Users\marcelo\git\BDC\target\scala-2.11\classes...
+Compiling 4 Scala sources and 2 Java sources to C:\Users\marcelo\git\BDC\target\scala-2.11\classes...
 Getting compiler-interface from component compiler for Scala 2.11.7
 Other repositories:
 Default repositories:
 Getting compiler-interface from component compiler for Scala 2.11.7
 Other repositories:
 Default repositories:
-Running cached compiler 7c7e4d74, interfacing (CompilerInterface) with Scala compiler version 2.11.7
+Running cached compiler 6d278680, interfacing (CompilerInterface) with Scala compiler version 2.11.7
 Calling Scala compiler with arguments  (CompilerInterface):
 	-deprecation
 	-unchecked
@@ -23604,12 +23603,507 @@ Calling Scala compiler with arguments  (CompilerInterface):
 	C:\Program Files\Java\jdk1.7.0_79\jre\lib\resources.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\rt.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jce.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.7.0_79\jre\classes;C:\Users\marcelo\.ivy2\cache\org.scala-lang\scala-library\jars\scala-library-2.11.7.jar
 	-classpath
 	C:\Users\marcelo\git\BDC\target\scala-2.11\classes;C:\Users\marcelo\git\BDC\lib\sqljdbc4.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\twirl-api_2.11\jars\twirl-api_2.11-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.commons\commons-lang3\jars\commons-lang3-3.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play_2.11\jars\play_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\build-link\jars\build-link-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-exceptions\jars\play-exceptions-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\org.javassist\javassist\bundles\javassist-3.18.2-GA.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-iteratees_2.11\jars\play-iteratees_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\org.scala-stm\scala-stm_2.11\jars\scala-stm_2.11-0.7.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe\config\bundles\config-1.2.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-json_2.11\jars\play-json_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-functional_2.11\jars\play-functional_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-datacommons_2.11\jars\play-datacommons_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\joda-time\joda-time\jars\joda-time-2.3.jar;C:\Users\marcelo\.ivy2\cache\org.joda\joda-convert\jars\joda-convert-1.6.jar;C:\Users\marcelo\.ivy2\cache\com.fasterxml.jackson.core\jackson-annotations\bundles\jackson-annotations-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\com.fasterxml.jackson.core\jackson-core\bundles\jackson-core-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\com.fasterxml.jackson.core\jackson-databind\bundles\jackson-databind-2.3.2.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang\scala-reflect\jars\scala-reflect-2.11.1.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang.modules\scala-parser-combinators_2.11\bundles\scala-parser-combinators_2.11-1.0.1.jar;C:\Users\marcelo\.ivy2\cache\io.netty\netty\bundles\netty-3.9.8.Final.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.netty\netty-http-pipelining\jars\netty-http-pipelining-1.1.2.jar;C:\Users\marcelo\.ivy2\cache\org.slf4j\slf4j-api\jars\slf4j-api-1.7.6.jar;C:\Users\marcelo\.ivy2\cache\org.slf4j\jul-to-slf4j\jars\jul-to-slf4j-1.7.6.jar;C:\Users\marcelo\.ivy2\cache\org.slf4j\jcl-over-slf4j\jars\jcl-over-slf4j-1.7.6.jar;C:\Users\marcelo\.ivy2\cache\ch.qos.logback\logback-core\jars\logback-core-1.1.1.jar;C:\Users\marcelo\.ivy2\cache\ch.qos.logback\logback-classic\jars\logback-classic-1.1.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-actor_2.11\jars\akka-actor_2.11-2.3.4.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.akka\akka-slf4j_2.11\jars\akka-slf4j_2.11-2.3.4.jar;C:\Users\marcelo\.ivy2\cache\commons-codec\commons-codec\jars\commons-codec-1.9.jar;C:\Users\marcelo\.ivy2\cache\xerces\xercesImpl\jars\xercesImpl-2.11.0.jar;C:\Users\marcelo\.ivy2\cache\xml-apis\xml-apis\jars\xml-apis-1.4.01.jar;C:\Users\marcelo\.ivy2\cache\javax.transaction\jta\jars\jta-1.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-ws_2.11\jars\play-ws_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.google.guava\guava\bundles\guava-16.0.1.jar;C:\Users\marcelo\.ivy2\cache\com.ning\async-http-client\jars\async-http-client-1.8.15.jar;C:\Users\marcelo\.ivy2\cache\oauth.signpost\signpost-core\jars\signpost-core-1.2.1.2.jar;C:\Users\marcelo\.ivy2\cache\oauth.signpost\signpost-commonshttp4\jars\signpost-commonshttp4-1.2.1.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.httpcomponents\httpcore\jars\httpcore-4.0.1.jar;C:\Users\marcelo\.ivy2\cache\org.apache.httpcomponents\httpclient\jars\httpclient-4.0.1.jar;C:\Users\marcelo\.ivy2\cache\commons-logging\commons-logging\jars\commons-logging-1.1.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\play-jdbc_2.11\jars\play-jdbc_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.jolbox\bonecp\bundles\bonecp-0.8.0.RELEASE.jar;C:\Users\marcelo\.ivy2\cache\com.h2database\h2\jars\h2-1.3.175.jar;C:\Users\marcelo\.ivy2\cache\tyrex\tyrex\jars\tyrex-1.0.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play\anorm_2.11\jars\anorm_2.11-2.3.9.jar;C:\Users\marcelo\.ivy2\cache\com.jsuereth\scala-arm_2.11\jars\scala-arm_2.11-1.4.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang.plugins\scala-continuations-library_2.11\bundles\scala-continuations-library_2.11-1.0.1.jar;C:\Users\marcelo\.ivy2\cache\net.liftweb\lift-json_2.11\jars\lift-json_2.11-2.6.2.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang\scalap\jars\scalap-2.11.1.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang\scala-compiler\jars\scala-compiler-2.11.1.jar;C:\Users\marcelo\.ivy2\cache\org.scala-lang.modules\scala-xml_2.11\bundles\scala-xml_2.11-1.0.2.jar;C:\Users\marcelo\.ivy2\cache\com.thoughtworks.paranamer\paranamer\jars\paranamer-2.4.1.jar;C:\Users\marcelo\.ivy2\cache\org.json\org.json\jars\org.json-chargebee-1.0.jar;C:\Users\marcelo\.ivy2\cache\org.mindrot\jbcrypt\jars\jbcrypt-0.3m.jar;C:\Users\marcelo\.ivy2\cache\org.imgscalr\imgscalr-lib\jars\imgscalr-lib-4.2.jar;C:\Users\marcelo\.ivy2\cache\org.apache.poi\poi\jars\poi-3.9.jar;C:\Users\marcelo\.ivy2\cache\org.apache.poi\poi-ooxml\jars\poi-ooxml-3.9.jar;C:\Users\marcelo\.ivy2\cache\org.apache.poi\poi-ooxml-schemas\jars\poi-ooxml-schemas-3.9.jar;C:\Users\marcelo\.ivy2\cache\org.apache.xmlbeans\xmlbeans\jars\xmlbeans-2.3.0.jar;C:\Users\marcelo\.ivy2\cache\stax\stax-api\jars\stax-api-1.0.1.jar;C:\Users\marcelo\.ivy2\cache\dom4j\dom4j\jars\dom4j-1.6.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play.plugins\play-plugins-mailer_2.11\jars\play-plugins-mailer_2.11-2.3.1.jar;C:\Users\marcelo\.ivy2\cache\org.apache.commons\commons-email\jars\commons-email-1.3.3.jar;C:\Users\marcelo\.ivy2\cache\javax.mail\mail\jars\mail-1.4.5.jar;C:\Users\marcelo\.ivy2\cache\javax.activation\activation\jars\activation-1.1.1.jar;C:\Users\marcelo\.ivy2\cache\com.typesafe.play.plugins\play-plugins-util_2.11\jars\play-plugins-util_2.11-2.3.0.jar
-Scala compilation took 28.572528848 s
+Read from stdout: there were three feature warnings; re-run with -feature for details
+there were three feature warnings; re-run with -feature for details
+Read from stdout: one warning found
+one warning found
+Scala compilation took 49.621745885 s
+Attempting to call com.sun.tools.javac.api.JavacTool@4229eba4 directly...
+Java compilation took 1.193615144 s
+Java analysis took 0.678566853 s
+Java compile + analysis took 2.508508795 s
+Invalidating C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala...
+Invalidating (transitively) by inheritance from C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala...
+Initial set of included nodes: Set(C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala)
+Invalidated by transitive inheritance dependency: Set(C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala)
+The C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala source file has the following regular definitions changed:
+	cantidadSubalternos.
+All member reference dependencies will be considered within this context.
+The following modified names cause invalidation of C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala: Set(cantidadSubalternos)
+The following modified names cause invalidation of C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala: Set(cantidadSubalternos)
+Invalidating C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala...
+Invalidating (transitively) by inheritance from C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala...
+Initial set of included nodes: Set(C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala)
+Invalidated by transitive inheritance dependency: Set(C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala)
+The C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala source file has the following regular definitions changed:
+	cantidadSubalternos.
+All member reference dependencies will be considered within this context.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\searchDocument.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\addServiceCatalogue.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\updateProgramStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\notFound.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\simpleLayout.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\documentType\editDocumentType.template.scala. This dependency is not being considered for invalidation.
+The following modified names cause invalidation of C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala: Set(cantidadSubalternos)
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\headerScripts.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programImpactType\addImpactType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\addRisk.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\serviceCatalogueListNew.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programImpactType\impactTypeList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\restrictedAccess.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\editRisk.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\deliverable\editDeliverable.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\forgotPassword.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\newGenericTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\TaskDescipline.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programSubType\editSubType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\updateSubTaskStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\addGenericTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\department\departmentList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUsersSkills.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\deliverable\deliverableList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\index.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\ProgramType.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userProfile\editUserProfile.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\UserRole.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\addIssue.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\projectTaskDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\userUpdate.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\newHeaderScript.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\budgetType\editBudgetType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\updateTaskStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\genrenciaList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\SubType.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReport.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\taskDetail.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\projectWorkFlowStatus\editProjectWorkflowStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\index.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Stage.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\resetPassword.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programForm.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\projectTypeDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\subTaskDetailsFromTimesheet.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\uploadDocument.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\programa\programa.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Department.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\DocumentType.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programType\editProgramType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\projectTypesListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\InternalServerError.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\addGenrencia.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUser.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Generics.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\riskIssueListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueManagementForTimesheet.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\addSubTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\atmReport.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programWorkFlowStatus\workflowList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programSubType\addSubType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\addGenericProjectType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userProfile\addUserProfile.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\changeProfileImage.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\latestUpdate.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\ProjectWorkflowStatus.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\stage\editStage.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\department\departmentUpdate.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userRole\editUserRole.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\login.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\newProjectDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\searchResult.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\editSubTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\main.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\WorkflowStatus.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\newSAP.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\addPredefinedTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\editProgram.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editPredefinedTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userProfile\userProfileList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editProjectType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\projectSapListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\loginUser.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programSubTaskSummary.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\overview.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\addNewProgram.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programWorkFlowStatus\editWorkFlowStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Documents.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\subTaskDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\addProject.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\editSAP.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Deliverable.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\incident\listIncident.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programType\programTypeList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\SubTask.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\stage\stageList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\genericProjectTypeList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardReport.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editHistoricProjectType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\budgetType\budgetTypeList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\User.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\BudgetType.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Division.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\topNav.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardForm.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboard.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\roadmap\roadmap.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programs.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Pert.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Task.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\predefinedTaskListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardEmployee.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userRole\userRoleDetails.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsTimeSheet.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardOther.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\employee.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programSubType\subTypeList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programWorkFlowStatus\addWorkflowStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\assignSubTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\artLog.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editGenericTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\editIssue.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Login.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUsersProfile.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\newTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programTaskDescipline\editTaskDescipline.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Room.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\department\addDepartment.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\generatePert.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\ProjectMaster.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\newMember.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\panel.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\editProject.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\issueReport.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\addUser.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\documentOverview.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\User.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\genrenciaUpdate.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\serviceCatalogueList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueManagement.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\documentListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Risks.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\UserProfile.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsTimeSheetAdvance.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Genrencia.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\projectWorkFlowStatus\projectWorkflowList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Security.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\customizeSetting.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\reportTool.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\TimeSheet.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\projectWorkFlowStatus\addProjectWorkflowStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programType\addProgramType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\stage\addStage.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\budgetType\addBudgetType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\division\addDivision.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Program.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\updateProjectStatus.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\topLayout.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\userList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\documentOverviewListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\documentType\addDocumentType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\historicProjectTypesListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\managePredefinedTasks.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\recoverPassword.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\documentType\documentTypeList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Roadmap.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userRole\addUserRole.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\editProjectSAP.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\InternalError.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\room\videochat.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskManagement.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programImpactType\editImpactType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\addNewProjectType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Application.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Incident.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\projects.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\subtaskDocumentListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\newAlerts.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\editTask.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\newProjectSAP.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\division\divisionUpdate.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\historicOverview.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\bookTime.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\editGenericProjectType.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\division\divisionList.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\GenericProjectType.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\layout.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\deliverable\addDeliverable.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\editServiceCatalogue.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Frontend\Dashboard.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\Application.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\userAdd.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\admin.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueListing.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\ImpactType.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\app\controllers\ServiceCatalogue.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardFinance.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\leftNav.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programTaskDescipline\addTaskDescipline.template.scala. This dependency is not being considered for invalidation.
+None of the modified names appears in C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programTaskDescipline\taskDesciplineList.template.scala. This dependency is not being considered for invalidation.
+Invalidating C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala...
+Invalidating (transitively) by inheritance from C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala...
+Initial set of included nodes: Set(C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala)
+Invalidated by transitive inheritance dependency: Set(C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala)
+The C:\Users\marcelo\git\BDC\app\services\ProgramaService.scala source file has the following regular definitions changed:
+	cantidadSubalternos, cantiadSubalternos.
+All member reference dependencies will be considered within this context.
+The following modified names cause invalidation of C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala: Set(cantidadSubalternos)
 New invalidations:
-	Set()
-Initial set of included nodes: Set()
+	Set(C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala)
+Initial set of included nodes: Set(C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala)
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_routing.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\searchDocument.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Documents.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\searchDocument.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\addServiceCatalogue.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\ServiceCatalogue.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\addServiceCatalogue.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\updateProgramStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Program.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\updateProgramStatus.template.scala
+Including C:\Users\marcelo\git\BDC\app\services\SAPServices.scala by C:\Users\marcelo\git\BDC\app\controllers\Frontend\Program.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardProjectReport.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Dashboard.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardProjectReport.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\exportToExcel.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programDetails.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\newSAP.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\projectSapListing.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\newProjectDetails.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\projectSapListing.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\ProjectMaster.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\newProjectDetails.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\newProjectSAP.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\projectSapListing.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardReportExport.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardReport.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardSearchReport.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardProgramList.template.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\app\services\ProgramService.scala by C:\Users\marcelo\git\BDC\app\services\SAPServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReportForProjects.template.scala by C:\Users\marcelo\git\BDC\app\services\ProgramService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\programsList.template.scala by C:\Users\marcelo\git\BDC\app\services\ProgramService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\ReportTool.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\programsList.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReportForTasks.template.scala by C:\Users\marcelo\git\BDC\app\services\ProgramService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\projectTaskDetails.template.scala by C:\Users\marcelo\git\BDC\app\services\ProgramService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Task.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\projectTaskDetails.template.scala
+Including C:\Users\marcelo\git\BDC\app\services\RiskService.scala by C:\Users\marcelo\git\BDC\app\services\ProgramService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueDetails.template.scala by C:\Users\marcelo\git\BDC\app\services\RiskService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskListing.template.scala by C:\Users\marcelo\git\BDC\app\services\RiskService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\subTaskDetailsFromTimesheet.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskListing.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\SubTask.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\subTaskDetailsFromTimesheet.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\subTaskDetails.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskListing.template.scala
+Including C:\Users\marcelo\git\BDC\app\services\SubTaskServices.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\subTaskDetails.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsTimeSheetList.template.scala by C:\Users\marcelo\git\BDC\app\services\SubTaskServices.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\TimeSheet.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsTimeSheetList.template.scala
+Including C:\Users\marcelo\git\BDC\app\services\TaskService.scala by C:\Users\marcelo\git\BDC\app\services\SubTaskServices.scala
+Including C:\Users\marcelo\git\BDC\app\utils\ExportToExcel.scala by C:\Users\marcelo\git\BDC\app\services\TaskService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\updatedTaskList.template.scala by C:\Users\marcelo\git\BDC\app\services\TaskService.scala
+Including C:\Users\marcelo\git\BDC\app\services\DocumentService.scala by C:\Users\marcelo\git\BDC\app\services\TaskService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\taskDetail.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\uploadDocument.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\searchResult.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\documentOverview.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\documentListing.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Risks.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\documents\documentOverviewListing.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\subtaskDocumentListing.template.scala by C:\Users\marcelo\git\BDC\app\services\DocumentService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programSubTaskSummary.template.scala by C:\Users\marcelo\git\BDC\app\services\TaskService.scala
+Including C:\Users\marcelo\git\BDC\app\services\TimesheetService.scala by C:\Users\marcelo\git\BDC\app\services\TaskService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\bookTimeTimesheet.template.scala by C:\Users\marcelo\git\BDC\app\services\TimesheetService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\editSubTask.template.scala by C:\Users\marcelo\git\BDC\app\services\TimesheetService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\newBookTimeTimesheet.template.scala by C:\Users\marcelo\git\BDC\app\services\TimesheetService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\allocationList.template.scala by C:\Users\marcelo\git\BDC\app\services\TimesheetService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\bookTime.template.scala by C:\Users\marcelo\git\BDC\app\services\TimesheetService.scala
+Including C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala by C:\Users\marcelo\git\BDC\app\services\TaskService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala by C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\baseline.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\addRisk.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\restrictedAccess.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\editRisk.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\newGenericTask.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Generics.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\newGenericTask.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\updateSubTaskStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\addGenericTask.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUsersSkills.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\User.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUsersSkills.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\addIssue.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\updateTaskStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\userProfileRoleMapping.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\index.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\resetPassword.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Application.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\resetPassword.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\TaskDescipline.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\ProgramType.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\UserRole.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\SubType.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Stage.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Department.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\DocumentType.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\ProjectWorkflowStatus.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\WorkflowStatus.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Deliverable.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\BudgetType.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Division.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\UserProfile.scala by C:\Users\marcelo\git\BDC\app\controllers\Application.scala
+Including C:\Users\marcelo\git\BDC\app\services\UserprofileServices.scala by C:\Users\marcelo\git\BDC\app\controllers\UserProfile.scala
+Including C:\Users\marcelo\git\BDC\app\services\UserService.scala by C:\Users\marcelo\git\BDC\app\services\UserprofileServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\serviceCatalogueListNew.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\department\departmentList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\deliverable\deliverableList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\employeeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardEmployee.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\employeeList.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\employeeOverview.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\genrenciaList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Genrencia.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\genrenciaList.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\projectTypeDetails.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\projectTypesListing.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\overview.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\projectTypesListing.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskDetails.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\department\departmentUpdate.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userProfile\userProfileList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programType\programTypeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\stage\stageList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\genericProjectTypeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\GenericProjectType.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\genericProjectTypeList.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\budgetType\budgetTypeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\User.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Pert.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\employeeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userRole\userRoleDetails.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\employee.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programSubType\subTypeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\issueReportForSubtasks.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\artLog.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReportForPrograms.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReport.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReportForPrograms.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Login.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\newMember.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\genrenciaUpdate.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\services\ProgramMemberService.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Incident.scala by C:\Users\marcelo\git\BDC\app\services\ProgramMemberService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\serviceCatalogueList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\riskReportForSubtasks.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\employeeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\projectWorkFlowStatus\projectWorkflowList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\historicProjectTypesListing.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\historicOverview.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\historicProjectTypesListing.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\documentType\documentTypeList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Roadmap.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\art_forms\ARTForms.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\ImpactType.scala by C:\Users\marcelo\git\BDC\app\art_forms\ARTForms.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\division\divisionUpdate.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\issueReportForTasks.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\issueReport.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\issueReportForTasks.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\division\divisionList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\admin.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\Global.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\app\services\ProjectService.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\projectList.template.scala by C:\Users\marcelo\git\BDC\app\services\ProjectService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\trackProgram.template.scala by C:\Users\marcelo\git\BDC\app\services\ProjectService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\editProject.template.scala by C:\Users\marcelo\git\BDC\app\services\ProjectService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\customizeSetting.template.scala by C:\Users\marcelo\git\BDC\app\services\ProjectService.scala
+Including C:\Users\marcelo\git\BDC\app\models\Tasks.scala by C:\Users\marcelo\git\BDC\app\services\ProjectService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\manageTasks.template.scala by C:\Users\marcelo\git\BDC\app\models\Tasks.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\addSubTask.template.scala by C:\Users\marcelo\git\BDC\app\models\Tasks.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\subTask\assignSubTask.template.scala by C:\Users\marcelo\git\BDC\app\models\Tasks.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\newTask.template.scala by C:\Users\marcelo\git\BDC\app\models\Tasks.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\editTask.template.scala by C:\Users\marcelo\git\BDC\app\models\Tasks.scala
+Including C:\Users\marcelo\git\BDC\app\services\EarnValueService.scala by C:\Users\marcelo\git\BDC\app\models\Tasks.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Application.scala by C:\Users\marcelo\git\BDC\app\services\EarnValueService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programTaskDescipline\taskDesciplineList.template.scala by C:\Users\marcelo\git\BDC\app\services\UserService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\programa\programa.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\programa\programa.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUser.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueManagementForTimesheet.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\atmReport.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\changeProfileImage.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\addPredefinedTask.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\editProgram.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editPredefinedTask.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editProjectType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\addNewProgram.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\addProject.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\editSAP.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\incident\listIncident.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editHistoricProjectType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboard.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\roadmap\roadmap.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programs.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsTimeSheet.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\editGenericTask.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\editIssue.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\editUsersProfile.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\generatePert.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\addUser.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueManagement.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsTimeSheetAdvance.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\reportTool.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\updateProjectStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\editProjectSAP.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\room\videochat.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Frontend\Room.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\room\videochat.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskManagement.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\addNewProjectType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\project\projects.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\users.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\riskIssueListing.template.scala by C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\riskalertDetails.template.scala by C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\paginationProgramListing.template.scala by C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\topLayout.template.scala by C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\panel.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\topLayout.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\task\issueListing.template.scala by C:\Users\marcelo\git\BDC\app\utils\UserAccess.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\timesheet\projectsSubtaskList.template.scala by C:\Users\marcelo\git\BDC\app\services\SubTaskServices.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programListing.template.scala by C:\Users\marcelo\git\BDC\app\services\ProgramService.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\notFound.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\simpleLayout.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\documentType\editDocumentType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\headerScripts.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\forgotPassword.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\headerScripts.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\reports\hoursBookedPerMonth.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\headerScripts.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\user\loginUser.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\headerScripts.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\recoverPassword.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\headerScripts.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programImpactType\addImpactType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programImpactType\impactTypeList.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\deliverable\editDeliverable.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programSubType\editSubType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\index.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userProfile\editUserProfile.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\userUpdate.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\newHeaderScript.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\budgetType\editBudgetType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\projectWorkFlowStatus\editProjectWorkflowStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\program\programForm.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programType\editProgramType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\InternalServerError.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genrencia\addGenrencia.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programWorkFlowStatus\workflowList.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programSubType\addSubType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\addGenericProjectType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userProfile\addUserProfile.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\latestUpdate.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\stage\editStage.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userRole\editUserRole.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\login.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\main.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programWorkFlowStatus\editWorkFlowStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\accountActivate.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programWorkFlowStatus\addWorkflowStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programTaskDescipline\editTaskDescipline.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\department\addDepartment.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\projectWorkFlowStatus\addProjectWorkflowStatus.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programType\addProgramType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\stage\addStage.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\budgetType\addBudgetType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\division\addDivision.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\userList.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\documentType\addDocumentType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\userRole\addUserRole.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programImpactType\editImpactType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\genericProjectType\editGenericProjectType.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\deliverable\addDeliverable.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\serviceCatalogue\editServiceCatalogue.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\users\userAdd.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\programTaskDescipline\addTaskDescipline.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\header.template.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\topNav.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardForm.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\predefinedTaskListing.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardOther.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\app\controllers\Security.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\generics\managePredefinedTasks.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\InternalError.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\risks\newAlerts.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\layout.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\frontend\dashboard\dashboardFinance.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
+Including C:\Users\marcelo\git\BDC\target\scala-2.11\twirl\main\views\html\leftNav.template.scala by C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala
 Previously invalidated, but (transitively) depend on new invalidations:
-	Set()
+	Set(C:\Users\marcelo\git\BDC\app\controllers\Frontend\Programa.scala, C:\Users\marcelo\git\BDC\target\scala-2.11\src_managed\main\routes_reverseRouting.scala)
 All newly invalidated sources after taking into account (previously) recompiled sources:Set()
 Copy resource mappings: 
 	(C:\Users\marcelo\git\BDC\conf\application.conf,C:\Users\marcelo\git\BDC\target\scala-2.11\classes\application.conf)
@@ -23621,7 +24115,7 @@ Copy resource mappings:
 	(C:\Users\marcelo\git\BDC\conf\routes,C:\Users\marcelo\git\BDC\target\scala-2.11\classes\routes)
 	(C:\Users\marcelo\git\BDC\conf\evolutions\default,C:\Users\marcelo\git\BDC\target\scala-2.11\classes\evolutions\default)
 	(C:\Users\marcelo\git\BDC\conf\evolutions\default\1.sql,C:\Users\marcelo\git\BDC\target\scala-2.11\classes\evolutions\default\1.sql)
-Total time: 36 s, completed 20-01-2016 09:58:08 AM
+Total time: 71 s, completed 22-01-2016 12:47:47 PM
 > server-post-command-cleanup
 > server-handle-next-server-request
 Done executing sbt server engine, result Right(Exit(0))
@@ -23630,4 +24124,4 @@ Waiting for socket thread
 Waiting for request processor thread
 Waiting for command engine result
 Returning control to sbt launcher with result Exit(0)
-Closing the 1952@zrismart logs at Wed Jan 20 09:59:58 CLT 2016, goodbye.
+Closing the 6100@zrismart logs at Fri Jan 22 12:48:21 CLT 2016, goodbye.

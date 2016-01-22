@@ -603,3 +603,4 @@ GET    /listaEstado																				      controllers.Frontend.Programa.lista
 GET    /listaImpacto																			      controllers.Frontend.Programa.listaImpacto
 GET    /listaRecursos/$pid<[A-Za-z0-9_-]+>														      controllers.Frontend.Programa.listadoRecursos(pid:String)
 POST   /programaGrabar																			      controllers.Frontend.Programa.grabaPrograma
+GET    /cantidadSubalternos																			  controllers.Frontend.Programa.cantidadSubalternos
