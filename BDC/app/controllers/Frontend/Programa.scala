@@ -38,6 +38,8 @@ object Programa extends Controller {
   def home = Action {
     implicit request =>
       request.session.get("username").map { user =>
+        val user_id = Integer.parseInt(request.session.get("uId").get)
+        
         Ok(views.html.frontend.programa.programa()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
