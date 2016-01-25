@@ -102,6 +102,7 @@ topNav.logout=Salir
 topNav.timesheet=Parte de horas
 topNav.maintenance=Mantenimiento
 header.admin=Administración
+header.personal=Personal
 topNav.documents=Documentos
 topNav.employees=Empleados
 topNav.version=Aplicación Versión-

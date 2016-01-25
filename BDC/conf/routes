@@ -604,3 +604,5 @@ GET    /listaImpacto																			      controllers.Frontend.Programa.lista
 GET    /listaRecursos/$pid<[A-Za-z0-9_-]+>														      controllers.Frontend.Programa.listadoRecursos(pid:String)
 POST   /programaGrabar																			      controllers.Frontend.Programa.grabaPrograma
 GET    /cantidadSubalternos																			  controllers.Frontend.Programa.cantidadSubalternos
+GET    /listadoAsignacion																			  controllers.Frontend.Programa.listadoAsignacion
+GET    /listadoUsr/$uid<[A-Za-z0-9_-]+>																  controllers.Frontend.Programa.listadoUsr(uid:String)
