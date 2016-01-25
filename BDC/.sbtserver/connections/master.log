@@ -1,25 +1,13 @@
-New log file opened at Mon Jan 25 10:54:39 CLT 2016 by 4156@zrismart
-Taking next connection to: 49403
-New client attempting to connect on port: 49404-49403
-  Address = /192.168.56.1:49403
-This client on port 49404 has uuid b9e0340e-8341-49d4-88ff-216be125a1f2 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
-Connected Clients: play-fork-run-b9e0340e-8341-49d4-88ff-216be125a1f2
-Taking next connection to: 49403
+New log file opened at Mon Jan 25 12:20:42 CLT 2016 by 8680@zrismart
+Taking next connection to: 50150
+New client attempting to connect on port: 50151-50150
+  Address = /192.168.56.1:50150
+This client on port 50151 has uuid d2c32a2d-253b-4841-b300-4dd5117d5a3d configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-d2c32a2d-253b-4841-b300-4dd5117d5a3d
+Taking next connection to: 50150
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 49403
+Taking next connection to: 50150
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 49403
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 49403
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 49403
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 49403
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 49403
+Taking next connection to: 50150

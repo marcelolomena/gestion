@@ -20,7 +20,7 @@
 	       				<li><a href="@controllers.Frontend.routes.Dashboard.getPanel()" id="reporte_id">@Messages("header.dashboard")</a></li>
 						
 					}
-					@if(Integer.parseInt(session.get("esJefe").get.toString())>1){
+					@if(utils.UserAccess.isBoss(req)){
 						<li><a id="personal" href="/personal" > @Messages("header.personal")</a></li>
 					}
 						 @*<li><a id="projects" href="/projects" >Projects</a></li>*@

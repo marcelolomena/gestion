@@ -26,6 +26,7 @@ import services.ProjectManagerService
 import services.ProgramMemberService
 import services.TaskService
 import services.UserService
+import services.ProgramaService
 import models.ProgramSearch
 import services.ProgramService
 import services.FunctionRoleService
@@ -105,6 +106,21 @@ trait AuthentiCate {
         isValid = true
       }else{
         println("acceso denegado a: " + element_type)
+      }
+
+    }
+    isValid
+  } 
+  
+    def isBoss(implicit request: RequestHeader): Boolean = {
+    var isValid = false
+    if (!request.session.get("user_profile").isEmpty) {
+      var uId = request.session.get("uId").get.toString()
+
+      if(ProgramaService.cantidadSubalternos(uId)>1){
+        isValid = true
+      }else{
+        println("no es jefe: " + uId)
       }
 
     }

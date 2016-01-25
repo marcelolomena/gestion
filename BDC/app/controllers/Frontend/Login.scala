@@ -15,7 +15,7 @@ import services.LoginService
 import services.ProjectManagerService
 import services.ProjectService
 import services.UserService
-import services.ProgramaService
+//import services.ProgramaService
 import com.microsoft.sqlserver.jdbc.SQLServerException
 
 object Login extends Controller {
@@ -71,15 +71,15 @@ object Login extends Controller {
             val uType = result.get.isadmin
             val user_profile = result.get.user_profile
             val uid = result.get.uid.get.toString()
-            val numSub=ProgramaService.cantidadSubalternos(uid)
-            println("numSub : " + numSub)
+            //val numSub=ProgramaService.cantidadSubalternos(uid)
+            //println("numSub : " + numSub)
             /**
              * Activity log
              */
             val act = Activity(ActivityTypes.Login.id, "Login by " + result.get.uname, new Date(), result.get.uid.get, result.get.uid.get)
             Activity.saveLog(act)
 
-            Redirect(routes.User.employeeDetails(result.get.uid.get.toLong)).withSession("username" -> result.get.uname, "utype" -> result.get.isadmin.toString(), "uId" -> result.get.uid.get.toString(), "user_profile" -> user_profile, "esJefe" -> numSub.toString())
+            Redirect(routes.User.employeeDetails(result.get.uid.get.toLong)).withSession("username" -> result.get.uname, "utype" -> result.get.isadmin.toString(), "uId" -> result.get.uid.get.toString(), "user_profile" -> user_profile)
           } catch {
             case e: SQLServerException => Ok(views.html.frontend.user.loginUser(ARTForms.loginForm)).withNewSession
           }
