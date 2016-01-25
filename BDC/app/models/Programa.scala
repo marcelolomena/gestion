@@ -173,13 +173,13 @@ object Recurso {
 case class Asignado(
   uid: Int,
   nombre: String,
-  asignado: Int)
+  asignado: Option[Double])
 
 object Asignado {
   val asignado = {
     get[Int]("uid") ~
       get[String]("nombre") ~
-      get[Int]("estado") map {
+      get[Option[Double]]("asignado") map {
         case uid ~
           nombre ~
           asignado => Asignado(

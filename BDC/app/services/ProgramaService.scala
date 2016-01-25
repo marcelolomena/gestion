@@ -15,7 +15,13 @@ import play.mvc._
  */
 object ProgramaService {
   def listado(uid: Int, PageSize: Int, page: Int, order: String, json: String): Seq[Programa] = {
-
+    /*
+println("uid:" + uid)
+println("PageSize:" + PageSize)
+println("page:" + page)
+println("order:" +order)
+println("json:" + json)
+    */
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_program_master {uid},{PageSize},{page},{order},{json}").on(
         'uid -> uid,
@@ -41,7 +47,7 @@ object ProgramaService {
   def listadoAsignacionDependiente(uid: String, fecini: String, fecfin: String, size: String, page: String): Seq[Asignado] = {
 
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.asignacion_dependiente {uid},{fecini},{fecfin}").on(
+      SQL("EXEC art.asignacion_dependiente {uid},{fecini},{fecfin},{size},{page}").on(
         'uid -> uid.toInt,
         'fecini -> fecini,
         'fecfin -> fecfin,
