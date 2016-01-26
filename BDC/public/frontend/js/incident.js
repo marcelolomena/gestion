@@ -569,11 +569,19 @@ $(document).ready(function(){
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
 	            	  editoptions: {dataUrl: '/incidentSeverityConfigurationList/1',
 	            		  buildSelect: function (response) {
+		           	    	   var grid = $("#jqGridIncident");
+		        	           var rowKey = grid.getGridParam("selrow");
+		        	           var rowData = grid.getRowData(rowKey);
+		        	           var thissid = rowData.severity_id;
 	  	            			var data = JSON.parse(response);
 	  	            		    var s = "<select>";//el default
 	  	            		    s += '<option value="0">--Escoger Severidad--</option>';
 	  	            		    $.each(data, function(i, item) {
-	  	            		    	s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
+	  	            		    	if(data[i].severity_id==thissid){
+	  	            		    		s += '<option value="' + data[i].severity_id + '" selected>' + data[i].severity_description + '</option>';
+	  	            		    	}else{
+	  	            		    		s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
+	  	            		    	}
 	  	            		    });
 	  	            		    return s + "</select>";
 	  	            		},

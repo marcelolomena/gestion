@@ -53,12 +53,6 @@ $(document).ready(function(){
 	        return cellvalue;
 	}
 	
-	var programaSubalternos = [
-		                    { label: 'uid', name: 'uid', width: 10, key: true, hidden:true }, 
-		                    { label: 'Nombre', name: 'nombre', width: 300,editable: false},
-		                    { label: 'Horas Asignadas', name: 'asignado', width: 300,editable: false}
-		                    ]
-	
 	var programaModel = [
 		                    { label: 'program_id', name: 'program_id', width: 100, key: true, hidden:true }, 
 		                    { label: 'Estado', name: 'spi', width: 50,search:false, 
@@ -327,16 +321,6 @@ $(document).ready(function(){
 		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } }
 		                ];	
 
-    $.ajax({
-        type: "GET",
-        url: "/cantidadSubalternos",
-        async:false,
-        success: function (data) {                            
-            //console.log('datum:' + data);
-            
-            if(data==1)//raton
-            	{
-            		//console.log('raton');
             		$("#jqGridProgram").jqGrid({
             	        url: '/listadoPrograma',
             	        mtype: "GET",
@@ -425,206 +409,6 @@ $(document).ready(function(){
             		           }
             		       } 
             		});         
-            	}else//jefe
-            	{
-            		console.log('jefe');
-					$("#jqGridProgram").jqGrid({
-				        url: '/listadoAsignacion',
-				        mtype: "GET",
-				        datatype: "json",
-				        page: 1,
-				        colModel: programaSubalternos,
-				        rowNum: 20,
-				        regional : 'es',
-				        height: 'auto',
-				        autowidth:true, 
-            	        viewrecords: true,
-            	        rowList: [5, 10, 20, 50],
-            	        gridview: true,				        
-				        subGrid: true, 
-				        subGridRowExpanded: showChildGrid, 
-				        pager: "#jqGridProgramPager"
-				    });	           		
-            		/*
-            		$("#jqGridProgram").jqGrid({
-            	        url: '/listadoPrograma',
-            	        mtype: "GET",
-            	        datatype: "json",
-            	        page: 1,
-            	        colModel: programaModel,
-            	        rowNum: 20,
-            	        regional : 'es',
-            	        height: 'auto',
-            	        autowidth:true, 
-            	        shrinkToFit: false,
-            	        forceFit:true,
-            	        caption:'Lista de Programas',
-            	        pager: "#jqGridProgramPager",
-            	        loadComplete: findWithColor,
-            	        editurl:"/programaGrabar",
-            	        viewrecords: true,
-            	        rowList: [5, 10, 20, 50],
-            	        gridview: true,
-            	        gridComplete: function() {
-            	            var recs = parseInt($("#jqGridProgram").getGridParam("records"),10);
-            	            if (isNaN(recs) || recs == 0) {
-            	                $("#programasWrapper").hide();
-            	            }
-            	            else {
-            	                $('#programasWrapper').show();
-            	                //alert('records > 0');
-            	            }
-            	        }
-            	    });	
-            		$("#jqGridProgram").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
-            		$("#jqGridProgram").jqGrid('navGrid','#jqGridProgramPager',{edit: true, add: true, del: true,search: false},
-            		    {
-            				mtype: 'POST',
-            				//url: '/incidentUpdate',
-            		        height: 'auto',
-            		        width: 'auto',
-            		        editCaption: "Actualizar Programa",
-            		        recreateForm: true,
-            		        closeAfterEdit: true,
-            		        ajaxEditOptions: jsonOptions,
-            		        serializeEditData: createJSON,
-            		        errorTextFormat: function (data) {
-            		            return 'Error: ' + data.responseText
-            		        }
-            		    },
-            		    {
-            		    	mtype: 'POST',
-            		    	addCaption: "Agregar Programa",
-            		        height: 'auto',
-            		        width: 'auto',
-            		        modal: true,
-            		        ajaxEditOptions: jsonOptions,
-            		        serializeEditData: createJSON,
-            		        closeAfterAdd: true,
-            		        recreateForm: true,
-            		        errorTextFormat: function (data) {
-            		            return 'Error: ' + data.responseText
-            		        }
-            		    },
-            		    {
-            		    	mtype: 'POST',
-            		    	//url: '/incidentDelete',
-            		        height: 'auto',
-            		        width: 'auto',
-            		        errorTextFormat: function (data) {
-            		            return 'Error: ' + data.responseText
-            		        }
-            		    }			
-            		);
-            		$("#jqGridProgram").jqGrid('navButtonAdd','#jqGridProgramPager',{
-            		       caption:"",
-            		       buttonicon : "ui-icon-gear",//silk-icon-cog
-            		       onClickButton : function() { 
-            		    	   var grid = $("#jqGridProgram");
-            		           var rowKey = grid.getGridParam("selrow");
-            		           var rowData = grid.getRowData(rowKey);
-            		           var titulo = rowData.program_name;
-            		           
-            		           if(rowKey === null && typeof rowKey === "object"){
-            			           alert('debe seleccionar un programa');
-            		           }else{
-            					   $("#jqGridRecursos").jqGrid('setGridParam', { url: 'listaRecursos/' + rowKey});
-            					   $("#jqGridRecursos").trigger('reloadGrid');
-            			           $("#recursosListDialog").dialog({title:titulo}).dialog("open");  	
-            		           }
-            		       } 
-            		});             		
-					*/
-            	}//if
-        } //success ajax
-    });//ajax
-	
-
-/*coco*/
-    function showChildGrid(parentRowID, parentRowKey) {
-        var childGridID = parentRowID + "_table";
-        var childGridPagerID = parentRowID + "_pager";
-        var childGridURL = "/listadoUsr/" + parentRowKey;
-
-        $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
-        $("#" + childGridID).jqGrid({
-            url: childGridURL,
-            mtype: "GET",
-            datatype: "json",
-            page: 1,
-            colModel: programaModel,
-            rowNum: 20,
-    		height: 'auto',
-            autowidth:true,
-            regional : "es",
-	        viewrecords: true,
-	        rowList: [5, 10, 20, 50],
-	        gridview: true,            
-            pager: "#" + childGridPagerID
-        });
-        
-        $("#" + childGridID).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
-		$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{edit: true, add: true, del: true,search: false},
-		    {
-				mtype: 'POST',
-				//url: '/incidentUpdate',
-		        height: 'auto',
-		        width: 'auto',
-		        editCaption: "Actualizar Programa",
-		        recreateForm: true,
-		        closeAfterEdit: true,
-		        ajaxEditOptions: jsonOptions,
-		        serializeEditData: createJSON,
-		        errorTextFormat: function (data) {
-		            return 'Error: ' + data.responseText
-		        }
-		    },
-		    {
-		    	mtype: 'POST',
-		    	addCaption: "Agregar Programa",
-		        height: 'auto',
-		        width: 'auto',
-		        modal: true,
-		        ajaxEditOptions: jsonOptions,
-		        serializeEditData: createJSON,
-		        closeAfterAdd: true,
-		        recreateForm: true,
-		        errorTextFormat: function (data) {
-		            return 'Error: ' + data.responseText
-		        }
-		    },
-		    {
-		    	mtype: 'POST',
-		    	//url: '/incidentDelete',
-		        height: 'auto',
-		        width: 'auto',
-		        errorTextFormat: function (data) {
-		            return 'Error: ' + data.responseText
-		        }
-		    }			
-		);
-		$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
-		       caption:"",
-		       buttonicon : "ui-icon-gear",//silk-icon-cog
-		       onClickButton : function() { 
-		    	   var grid = $("#" + childGridID);
-		           var rowKey = grid.getGridParam("selrow");
-		           var rowData = grid.getRowData(rowKey);
-		           var titulo = rowData.program_name;
-		           
-		           if(rowKey === null && typeof rowKey === "object"){
-			           alert('debe seleccionar un programa');
-		           }else{
-					   $("#jqGridRecursos").jqGrid('setGridParam', { url: 'listaRecursos/' + rowKey});
-					   $("#jqGridRecursos").trigger('reloadGrid');
-			           $("#recursosListDialog").dialog({title:titulo}).dialog("open");  	
-		           }
-		       } 
-		});                     
-        
-    }    
-/*coco*/
 	
     $("#jqGridRecursos").jqGrid({
         datatype: "json",
@@ -647,7 +431,7 @@ $(document).ready(function(){
                	} else if (cellvalue == '') {
                 	   color = 'white';
                	}
-               	//console.log(color);
+
            		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
            	}
            	
