@@ -590,9 +590,15 @@ object Incident extends Controller {
     val incidents = IncidentService.selectSeverity
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
-
+/*
   def severityConfigurationList(id: String) = Action { implicit request =>
 
+    val incidents = IncidentService.selectSeverityConfiguration(id)
+    Ok(play.api.libs.json.Json.toJson(incidents))
+  }
+ */
+  def severityConfigurationList() = Action { implicit request =>
+        val id = request.getQueryString("id").get.toString()
     val incidents = IncidentService.selectSeverityConfiguration(id)
     Ok(play.api.libs.json.Json.toJson(incidents))
   }

@@ -567,12 +567,19 @@ $(document).ready(function(){
 	              },              
 	              { label: 'Prioridad', name: 'severity_id', 
 	            	  editable: true,hidden: true, editrules: {edithidden: true}, edittype: "select", 
-	            	  editoptions: {dataUrl: '/incidentSeverityConfigurationList/1',
+	            	  editoptions: {dataUrl: '/incidentSeverityConfigurationList',
+					  postData:function(rowid){
+						  var idConf=$("#jqGridIncident").getRowData($("#jqGridIncident").getGridParam("selrow")).configuration_id;
+						  return {id:idConf};
+						  },
 	            		  buildSelect: function (response) {
 		           	    	   var grid = $("#jqGridIncident");
 		        	           var rowKey = grid.getGridParam("selrow");
 		        	           var rowData = grid.getRowData(rowKey);
 		        	           var thissid = rowData.severity_id;
+							   console.log("rowKey:" + $("#jqGridIncident").getGridParam("selrow"));
+							   console.log("rowData:" + $("#jqGridIncident").getRowData($("#jqGridIncident").getGridParam("selrow")));
+							   console.log("cod:" + $("#jqGridIncident").getRowData($("#jqGridIncident").getGridParam("selrow")).configuration_id);
 	  	            			var data = JSON.parse(response);
 	  	            		    var s = "<select>";//el default
 	  	            		    s += '<option value="0">--Escoger Severidad--</option>';

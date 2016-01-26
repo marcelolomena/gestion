@@ -289,6 +289,13 @@ object IncidentService {
       SQL(sqlString).on('id -> id.toInt).as(Severity.severity *)
     }
   }
+  def selectSeverityConfiguration(): Seq[Severity] = {
+    var sqlString = ""
+    sqlString = "SELECT * FROM art_incident_severity"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Severity.severity *)
+    }
+  }
 
   def selectSubtask(id: String): Seq[IncidentSubTask] = {
     var sqlString = """
