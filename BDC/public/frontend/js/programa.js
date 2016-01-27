@@ -93,7 +93,7 @@ $(document).ready(function(){
 		                                    source: function(request, response){
 		  										this.xhr = $.ajax({
 		  											type: "GET",
-		  											url: '/incidentAddUser',
+		  											url: '/listadoPersonal',
 		  											data: request,
 		  											dataType: "json",
 		  											async: false,
@@ -121,7 +121,7 @@ $(document).ready(function(){
 			                                    source: function(request, response){
 			  										this.xhr = $.ajax({
 			  											type: "GET",
-			  											url: '/incidentAddUser',
+			  											url: '/listadoPersonal',
 			  											data: request,
 			  											dataType: "json",
 			  											async: false,

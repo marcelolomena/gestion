@@ -430,6 +430,20 @@ object Programa extends Controller {
       }
 
   }
+  
+    def listadoPersonal = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val term = request.getQueryString("term").getOrElse("").toString()
+        var users = ProgramaService.listPersonal(term)
+
+        Ok(play.api.libs.json.Json.toJson(users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  } 
 
   def grabaPrograma = Action {
     implicit request =>
