@@ -53,6 +53,8 @@ object Incident extends Controller {
     request.session.get("username").map { user =>
       val cod = IncidentService.delete(id)
 
+        val act = Activity(ActivityTypes.Incident.id, "Delete by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get),id.toInt)
+        Activity.saveLog(act)
       Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -273,7 +275,7 @@ object Incident extends Controller {
           val program_id = (jsValue \ "program_id")
           val date_creation = (jsValue \ "date_creation")
           val ir_number = (jsValue \ "ir_number")
-		  val alm_number = (jsValue \ "alm_number")
+		      val alm_number = (jsValue \ "alm_number")
           val user_sponsor_id = (jsValue \ "user_sponsor_id")
           val brief_description = (jsValue \ "brief_description")
           val extended_description = (jsValue \ "extended_description")
@@ -301,7 +303,7 @@ object Incident extends Controller {
             program_id.toString().replace("\"", ""),
             date_creation.toString().replace("\"", ""),
             ir_number.toString().replace("\"", ""),
-			alm_number.toString().replace("\"", ""),
+			      alm_number.toString().replace("\"", ""),
             user_sponsor_id.toString().replace("\"", ""),
             brief_description.toString().replace("\"", ""),
             extended_description.toString().replace("\"", ""),
@@ -317,7 +319,7 @@ object Incident extends Controller {
          * Activity log
          */
 
-        val act = Activity(ActivityTypes.Project.id, "New incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
+        val act = Activity(ActivityTypes.Incident.id, "New incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
         Activity.saveLog(act)
 
         Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
@@ -422,7 +424,7 @@ object Incident extends Controller {
          * Activity log
          */
 
-        val act = Activity(ActivityTypes.Project.id, "Update incident created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
+        val act = Activity(ActivityTypes.Incident.id, "Update incident by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
         Activity.saveLog(act)
 
         Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
@@ -512,7 +514,7 @@ object Incident extends Controller {
           campo.put("program_id", p.program_id)
           campo.put("date_creation", p.date_creation.getOrElse("").toString())
           campo.put("ir_number", p.ir_number)
-		  campo.put("alm_number", p.alm_number.getOrElse("").toString())
+		      campo.put("alm_number", p.alm_number.getOrElse("").toString())
           campo.put("user_sponsor_id", p.user_sponsor_id)
           campo.put("brief_description", p.brief_description)
           campo.put("extended_description", p.extended_description)
