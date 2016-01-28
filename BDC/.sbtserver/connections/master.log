@@ -1,19 +1,56 @@
-New log file opened at Mon Jan 25 22:55:42 CLT 2016 by 7280@zrismart
-Taking next connection to: 54761
-New client attempting to connect on port: 54762-54761
-  Address = /192.168.56.1:54761
-This client on port 54762 has uuid 51377c04-e03d-4f78-ada6-d9c595369765 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
-Connected Clients: play-fork-run-51377c04-e03d-4f78-ada6-d9c595369765
-Taking next connection to: 54761
+New log file opened at Thu Jan 28 13:27:45 CLT 2016 by 2360@zrismart
+Taking next connection to: 50811
+New client attempting to connect on port: 50812-50811
+  Address = /192.168.56.1:50811
+This client on port 50812 has uuid 5662c60a-f254-403e-bf57-8a74390b9e56 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-5662c60a-f254-403e-bf57-8a74390b9e56
+Taking next connection to: 50811
 Checking to see if clients are empty...
 We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 54761
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 54761
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 54761
-Checking to see if clients are empty...
-We have 1 non-daemon clients, continuing serving connections.
-Taking next connection to: 54761
+Taking next connection to: 50811
+New client attempting to connect on port: 50816-50811
+  Address = /192.168.56.1:50811
+Handshake exception on socket: 50816
+sbt.impl.ipc.HandshakeException: Unable to perform handshake
+	at sbt.impl.ipc.Peer.handshake(IPC.scala:46)
+	at sbt.impl.ipc.MultiClientServer.<init>(IPC.scala:150)
+	at sbt.server.SbtServerSocketHandler$$anon$1.run(SbtServerSocketHandler.scala:43)
+Caused by: java.net.SocketException: Software caused connection abort: recv failed
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:152)
+	at java.net.SocketInputStream.read(SocketInputStream.java:122)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:235)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:254)
+	at java.io.DataInputStream.readInt(DataInputStream.java:387)
+	at sbt.impl.ipc.Peer.receive(IPC.scala:95)
+	at sbt.impl.ipc.Peer.handshake(IPC.scala:49)
+	... 2 more
+Taking next connection to: 50811
+New client attempting to connect on port: 50817-50811
+  Address = /192.168.56.1:50811
+This client on port 50817 has uuid b84d324d-d252-415e-bcb5-a6045bc8064d configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-b84d324d-d252-415e-bcb5-a6045bc8064d
+Taking next connection to: 50811
+New client attempting to connect on port: 50854-50811
+  Address = /192.168.56.1:50811
+Handshake exception on socket: 50854
+sbt.impl.ipc.HandshakeException: Unable to perform handshake
+	at sbt.impl.ipc.Peer.handshake(IPC.scala:46)
+	at sbt.impl.ipc.MultiClientServer.<init>(IPC.scala:150)
+	at sbt.server.SbtServerSocketHandler$$anon$1.run(SbtServerSocketHandler.scala:43)
+Caused by: java.net.SocketException: Software caused connection abort: recv failed
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:152)
+	at java.net.SocketInputStream.read(SocketInputStream.java:122)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:235)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:254)
+	at java.io.DataInputStream.readInt(DataInputStream.java:387)
+	at sbt.impl.ipc.Peer.receive(IPC.scala:95)
+	at sbt.impl.ipc.Peer.handshake(IPC.scala:49)
+	... 2 more
+Taking next connection to: 50811
+New client attempting to connect on port: 50855-50811
+  Address = /192.168.56.1:50811
+This client on port 50855 has uuid 4e96df3d-17d2-4582-9d28-d6df907fd43f configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-4e96df3d-17d2-4582-9d28-d6df907fd43f
+Taking next connection to: 50811

@@ -28,7 +28,10 @@ case class Programa(
   spi: Double,
   cpi: Double,
   impact_type: String,
-  sap_number: Option[String])
+  sap_number: Option[String],
+  sap_code: Option[Int],
+  demand_manager_name:String,
+  program_manager_name:String)
 
 object Programa {
   val programa = {
@@ -49,7 +52,10 @@ object Programa {
       get[Double]("spi") ~
       get[Double]("cpi") ~
       get[String]("impact_type") ~
-      get[Option[String]]("sap_number") map {
+      get[Option[String]]("sap_number") ~
+      get[Option[Int]]("sap_code") ~
+      get[String]("demand_manager_name") ~
+      get[String]("program_manager_name") map {
         case program_id ~
           division ~
           program_type ~
@@ -67,7 +73,10 @@ object Programa {
           spi ~
           cpi ~
           impact_type ~
-          sap_number => Programa(
+          sap_number ~
+          sap_code ~
+          demand_manager_name ~
+          program_manager_name => Programa(
           program_id,
           division,
           program_type,
@@ -85,7 +94,10 @@ object Programa {
           spi,
           cpi,
           impact_type,
-          sap_number)
+          sap_number,
+          sap_code,
+          demand_manager_name,
+          program_manager_name)
       }
 
   }

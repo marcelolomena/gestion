@@ -609,3 +609,4 @@ POST   /programaGrabar																			      controllers.Frontend.Programa.gra
 GET    /cantidadSubalternos																			  controllers.Frontend.Programa.cantidadSubalternos
 GET    /listadoAsignacion																			  controllers.Frontend.Programa.listadoAsignacion
 GET    /listadoUsr/$uid<[A-Za-z0-9_-]+>																  controllers.Frontend.Programa.listadoUsr(uid:String)
+GET    /listadoPersonal																				  controllers.Frontend.Programa.listadoPersonal

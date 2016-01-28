@@ -52,7 +52,9 @@ object Incident extends Controller {
   def delete(oper: String, id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val cod = IncidentService.delete(id)
-
+	  
+	  val act = Activity(ActivityTypes.Incident.id, "Delete by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get),id.toInt)
+	  Activity.saveLog(act)
       Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -832,5 +834,3 @@ object Incident extends Controller {
       }
 
   }
-
-}

@@ -71,6 +71,13 @@ println("json:" + json)
     }
   }
 
+  def listPersonal(term: String): Seq[NameUsr] = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.list_program_demand {term}").on(
+        'term -> term).executeQuery().as(NameUsr.name *)
+    }
+  }
+
   def grabar(program_name: String,
              program_description: String,
              planned_hours: String,
