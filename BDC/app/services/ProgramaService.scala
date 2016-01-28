@@ -108,4 +108,67 @@ println("json:" + json)
         'closure_date -> closure_date).executeQuery().as(scalar[Int].single)
     }
   }
+
+  def actualizar(
+    program_id: String,
+    program_name: String,
+    program_description: String,
+    planned_hours: String,
+    sap_code: String,
+    demand_manager: String,
+    program_manager: String,
+    program_type: String,
+    sub_type: String,
+    workflow_status: String,
+    impact_type: String,
+    initiation_planned_date: String,
+    release_date: String,
+    closure_date: String): Int = {
+    DB.withConnection { implicit connection =>
+      
+  /*    
+    exec art.programa_actualizar 2433,'programa truchoX','programa truchoX',1000,66699,'Raquel de las Merced Bravo Farias','Jimena Kirsinger',3,5,3,3,'2016-01-31','2016-01-31','2016-01-31'  
+      println("program_id:" + program_id)
+      println("program_name:" + program_name)
+      println("program_description:" + program_description)
+      println("planned_hours:" + planned_hours)
+      println("sap_code:" + sap_code)
+
+      println("demand_manager:" + demand_manager)
+      println("program_manager:" + program_manager)
+      println("program_type:" + program_type)
+      println("sub_type:" + sub_type)
+      println("workflow_status:" + workflow_status)
+
+      println("impact_type:" + impact_type)
+      println("initiation_planned_date:" + initiation_planned_date)
+      println("release_date:" + release_date)
+      println("closure_date:" + closure_date)
+  
+*/      
+      SQL("EXEC art.programa_actualizar {program_id},{program_name},{program_description},{planned_hours},{sap_code},{demand_manager},{program_manager},{program_type},{sub_type},{workflow_status},{impact_type},{initiation_planned_date},{release_date},{closure_date}").on(
+        'program_id -> program_id.toInt,
+        'program_name -> program_name,
+        'program_description -> program_description,
+        'planned_hours -> planned_hours.toInt,
+        'sap_code -> sap_code.toInt,
+        'demand_manager -> demand_manager,
+        'program_manager -> program_manager,
+        'program_type -> program_type.toInt,
+        'sub_type -> sub_type.toInt,
+        'workflow_status -> workflow_status.toInt,
+        'impact_type -> impact_type.toInt,
+        'initiation_planned_date -> initiation_planned_date,
+        'release_date -> release_date,
+        'closure_date -> closure_date).executeQuery().as(scalar[Int].single)
+    }
+  }
+
+  def borrar(
+    program_id: String): Int = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.programa_borrar {program_id}").on(
+        'program_id -> program_id).executeQuery().as(scalar[Int].single)
+    }
+  }
 }

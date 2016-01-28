@@ -40,7 +40,7 @@ object Programa extends Controller {
     implicit request =>
       request.session.get("username").map { user =>
         val user_id = Integer.parseInt(request.session.get("uId").get)
-        
+
         Ok(views.html.frontend.programa.programa()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
@@ -170,7 +170,7 @@ object Programa extends Controller {
           campo.put("sap_number", p.sap_number.getOrElse("").toString())
           campo.put("sap_code", p.sap_code.getOrElse("").toString())
           campo.put("demand_manager_name", p.demand_manager_name.toString())
-          campo.put("program_manager_name", p.program_manager_name.toString())          
+          campo.put("program_manager_name", p.program_manager_name.toString())
 
           registro.put(campo)
         }
@@ -187,7 +187,7 @@ object Programa extends Controller {
       }
 
   }
-  
+
   def listadoUsr(uid: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -324,7 +324,6 @@ object Programa extends Controller {
       }
 
   }
-  
 
   def listadoRecursos(pid: String) = Action {
     implicit request =>
@@ -434,8 +433,8 @@ object Programa extends Controller {
       }
 
   }
-  
-    def listadoPersonal = Action {
+
+  def listadoPersonal = Action {
     implicit request =>
       request.session.get("username").map { user =>
 
@@ -447,7 +446,7 @@ object Programa extends Controller {
         Redirect(routes.Login.loginUser()).withNewSession
       }
 
-  } 
+  }
 
   def grabaPrograma = Action {
     implicit request =>
@@ -458,14 +457,16 @@ object Programa extends Controller {
         var last_program: Int = 0
         jsonBody.map { jsValue =>
 
-          val program_id = (jsValue \ "program_id")
+          val program_id = (jsValue \ "id")
           val program_name = (jsValue \ "program_name")
           val program_description = (jsValue \ "program_description")
           val planned_hours = (jsValue \ "planned_hours")
 
-          val sap_code = (jsValue \ "sap_code")//numero ppm
+          val sap_code = (jsValue \ "sap_code") //numero ppm
           val demand_manager = (jsValue \ "demand_manager")
+          val demand_manager_name = (jsValue \ "demand_manager_name")
           val program_manager = (jsValue \ "program_manager")
+          val program_manager_name = (jsValue \ "program_manager_name")
           val program_type = (jsValue \ "program_type")
 
           val sub_type = (jsValue \ "sub_type")
@@ -478,16 +479,40 @@ object Programa extends Controller {
 
           val oper = (jsValue \ "oper")
 
-          //println("program_id : " + program_id)
+          println("program_id : " + program_id)
           //println("program_name : " + program_name)
           //println("program_description : " + program_description)
           //println("planned_hours : " + planned_hours)          
-          //println("oper : " + oper)
+          println("oper : " + oper)
 
           if (oper.toString().replace("\"", "").equals("edit")) {
-
+            last_program = ProgramaService.actualizar(
+              program_id.toString().replace("\"", ""),
+              program_name.toString().replace("\"", ""),
+              program_description.toString().replace("\"", ""),
+              planned_hours.toString().replace("\"", ""),
+              sap_code.toString().replace("\"", ""),
+              demand_manager_name.toString().replace("\"", ""),
+              program_manager_name.toString().replace("\"", ""),
+              program_type.toString().replace("\"", ""),
+              sub_type.toString().replace("\"", ""),
+              workflow_status.toString().replace("\"", ""),
+              impact_type.toString().replace("\"", ""),
+              initiation_planned_date.toString().replace("\"", ""),
+              release_date.toString().replace("\"", ""),
+              closure_date.toString().replace("\"", ""))
+            if (last_program.toInt > 0) {
+              val act = Activity(ActivityTypes.Program.id, "Program updated by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_program.toInt)
+              Activity.saveLog(act)
+            }
           } else if (oper.toString().replace("\"", "").equals("del")) {
+            last_program = ProgramaService.borrar(
+              program_id.toString().replace("\"", ""))
 
+            if (last_program.toInt > 0) {
+              val act = Activity(ActivityTypes.Program.id, "Program deleted by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_program.toInt)
+              Activity.saveLog(act)
+            }
           } else if (oper.toString().replace("\"", "").equals("add")) {
             last_program = ProgramaService.grabar(
               program_name.toString().replace("\"", ""),
@@ -503,11 +528,11 @@ object Programa extends Controller {
               initiation_planned_date.toString().replace("\"", ""),
               release_date.toString().replace("\"", ""),
               closure_date.toString().replace("\"", ""))
-              
-              if(last_program.toInt>0){
-          val act = Activity(ActivityTypes.Program.id, "New program created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_program.toInt)
-          Activity.saveLog(act)        
-              }
+
+            if (last_program.toInt > 0) {
+              val act = Activity(ActivityTypes.Program.id, "New program created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_program.toInt)
+              Activity.saveLog(act)
+            }
           }
 
         }

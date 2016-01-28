@@ -72,16 +72,17 @@ $(document).ready(function(){
 				            	
 				            },  	                    
 		                    { label: 'Programa', name: 'program_name', width: 300,formatter: returnProgramLink, unformat:unaddlink,search:false,
-				            	editable: true, editrules: {edithidden: true},edittype: "text",formoptions: {rowpos:1,colpos:1}
+				            	editable: true, editrules: {edithidden: true,required: true},edittype: "text",formoptions: {rowpos:1,colpos:1}
 			            	},
-		                    { label: 'Descripción', name: 'program_description', width: 500, editoptions: { rows: "3", cols: "25"},hidden: true,
-				            	editable: true, editrules: {edithidden: true},edittype: "textarea",formoptions: {rowpos:1,colpos:2}
+		                    { label: 'Descripción', name: 'program_description', width: 300, editoptions: { rows: "3", cols: "50"},hidden: true,
+				            	editable: true, editrules: {edithidden: true,required: true},edittype: "textarea",formoptions: {rowpos:2,colpos:1}
 			            	},
 		                    { label: 'Horas Planeadas', name: 'planned_hours',width: 50,hidden: true,
-				            	editable: true, editrules: {edithidden: true},edittype: "text",formoptions: {rowpos:2,colpos:1}
+				            	editable: true, editrules: {edithidden: true,required: true},edittype: "text",
+				            	editoptions: {dataInit: function (element) {$(element).width(170);}},formoptions: {rowpos:3,colpos:1}
 			            	},
 		                    { label: 'Número Programa', name: 'program_code',width: 100,hidden: false,
-				            	editable: false, formoptions: {rowpos:2,colpos:2}
+				            	editable: false, formoptions: {rowpos:3,colpos:2}
 			            	},
 			            	{ label: 'Demand Manager', name: 'demand_manager_name',
 			            		editable: true,hidden: true, editrules: {edithidden: true},edittype: "text",
@@ -109,7 +110,7 @@ $(document).ready(function(){
 		                                    });
 		                                }, 100);
 		                            }
-		                        },formoptions: {rowpos:3,colpos:1,label: "<span class='x_demand_manager_name'>Demand Manager</span>"}
+		                        },formoptions: {rowpos:4,colpos:1,label: "<span class='x_demand_manager_name'>Demand Manager</span>"}
 		            		},
 		                    { label: 'Demand Manager', name: 'demand_manager',
 		                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
@@ -137,7 +138,7 @@ $(document).ready(function(){
 		                                    });
 		                                }, 100);
 		                            }
-		                        },formoptions: {rowpos:3,colpos:1,label: "<span class='x_demand_manager'>Demand Manager</span>"}
+		                        },formoptions: {rowpos:4,colpos:1,label: "<span class='x_demand_manager'>Demand Manager</span>"}
 		                    },
 		                    { label: 'Program Manager', name: 'program_manager_name',
 		                    	editable: true,hidden: true, editrules: {edithidden: true},edittype: "text",
@@ -165,7 +166,7 @@ $(document).ready(function(){
 		                                    });
 		                                }, 100);
 		                            }
-		                        },formoptions: {rowpos:3,colpos:2,label: "<span class='x_program_manager_name'>Program Manager</span>"}
+		                        },formoptions: {rowpos:4,colpos:2,label: "<span class='x_program_manager_name'>Program Manager</span>"}
 	                    	},
 		                    { label: 'Program Manager', name: 'program_manager',
 			                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
@@ -193,7 +194,7 @@ $(document).ready(function(){
 			                                    });
 			                                }, 100);
 			                            }
-			                        },formoptions: {rowpos:3,colpos:2,label: "<span class='x_program_manager'>Program Manager</span>"}
+			                        },formoptions: {rowpos:4,colpos:2,label: "<span class='x_program_manager'>Program Manager</span>"}
 			                },	                    
 		                    { label: 'División', name: 'division', width: 250,editable: false, hidden: false, editrules: {edithidden: true},
 		  	            	  stype: 'select',searchoptions: {dataUrl: '/listaDivisiones',
@@ -228,7 +229,7 @@ $(document).ready(function(){
 		  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].program_type + '</option>';
 		  	  	            		    });
 		  	  	            		    return s + "</select>";
-		  	  	            		}}, formoptions: {rowpos:4,colpos:1} 	  	            		
+		  	  	            		},dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:5,colpos:1} 	  	            		
 		                    },
 		                    { label: 'Foco Estratégico', name: 'sub_type', width: 150,editable: true,
 		                    	hidden: false, editrules: {edithidden: true},edittype: "select",
@@ -251,7 +252,7 @@ $(document).ready(function(){
 		  		  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].sub_type + '</option>';
 		  		  	  	            		    });
 		  		  	  	            		    return s + "</select>";
-		  		  	  	            		}}, formoptions: {rowpos:4,colpos:2}	  		  	  	            		
+		  		  	  	            		},dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:5,colpos:2}	  		  	  	            		
 	                    	},
 		                    { label: 'Estado', name: 'workflow_status', width: 150,editable: true,
 	                    		hidden: false, editrules: {edithidden: true},edittype: "select",
@@ -274,7 +275,7 @@ $(document).ready(function(){
 			  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].workflow_status + '</option>';
 			  	  	            		    });
 			  	  	            		    return s + "</select>";
-			  	  	            		}},	formoptions: {rowpos:5,colpos:1}	  	  	            		
+			  	  	            		}, dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:6,colpos:1}	  	  	            		
 		                    },
 		                    { label: 'Impacto', name: 'impact_type', width: 150,editable: true,
 	                    		hidden: false, editrules: {edithidden: true},edittype: "select",
@@ -297,10 +298,10 @@ $(document).ready(function(){
 			  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].impact_type + '</option>';
 			  	  	            		    });
 			  	  	            		    return s + "</select>";
-			  	  	            		}},	formoptions: {rowpos:5,colpos:2}	  	  	            		
+			  	  	            		}, dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:6,colpos:2}	  	  	            		
 		                    },	                    
 		                    { label: 'Fecha Inicio', name: 'initiation_planned_date',hidden: true,
-			                      width: 100,editable: true,editrules: {edithidden: true},
+			                      width: 100,editable: true,editrules: {edithidden: true,required: true},
 			                      formatter: 'date',
 			                      formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 			                     editoptions: {
@@ -316,7 +317,7 @@ $(document).ready(function(){
 				                          var year = currentTime.getFullYear(); 
 				                          return year+"-"+month + "-"+day; 
 				                        } 
-				            	    },formoptions: {rowpos:6,colpos:1}
+				            	    },formoptions: {rowpos:7,colpos:1}
 		                    },	                    
 		                    { label: 'Fecha Entrega', name: 'release_date',
 		                      width: 100,editable: true,
@@ -349,7 +350,7 @@ $(document).ready(function(){
 			                          var year = currentTime.getFullYear(); 
 			                          return year+"-"+month + "-"+day; 
 			                        } 
-			            	    },formoptions: {rowpos:6,colpos:2}
+			            	    },formoptions: {rowpos:7,colpos:2}
 		                    },
 		                    { label: 'Fecha Cierre', name: 'closure_date',hidden: true,
 			                      width: 100,editable: true,editrules: {edithidden: true},
@@ -368,14 +369,14 @@ $(document).ready(function(){
 				                          var year = currentTime.getFullYear(); 
 				                          return year+"-"+month + "-"+day; 
 				                        } 
-				            	    },formoptions: {rowpos:7,colpos:1}
+				            	    },formoptions: {rowpos:8,colpos:1}
 		                    },		                    
 		                    { label: '% Avance', name: 'pai', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] }},
 		                    { label: '% Esperado', name: 'pae', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'SPI', name: 'spi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'CPI', name: 'cpi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
-		                    { label: 'Número BPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:7,colpos:2} }
+		                    { label: 'Número BPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:8,colpos:2} }
 		                ];	
 
             		$("#jqGridProgram").jqGrid({
@@ -419,6 +420,18 @@ $(document).ready(function(){
             		        recreateForm: true,
             		        closeAfterEdit: true,
             		        beforeShowForm: function(form) {
+            		        	var $tr = $("#tr_program_name")
+            		            $label = $tr.children("td.CaptionTD"),
+            		            $data = $tr.children("td.DataTD");
+	            		        $data.attr("colspan", "3");
+	            		        $data.children("input").css("width", "75%");
+	            		        
+            		        	var $trs = $("#tr_program_description")
+            		            $label = $trs.children("td.CaptionTD"),
+            		            $data = $trs.children("td.DataTD");
+	            		        $data.attr("colspan", "3");
+	            		        $data.children("input").css("width", "75%");	            		        
+	            		        
             	            	//$('.x_demand_manager',form).hide();
             	            	$('.y_demand_manager',form).hide();
             	            	//$('.x_program_manager',form).hide();
@@ -446,6 +459,18 @@ $(document).ready(function(){
             		        closeAfterAdd: true,
             		        recreateForm: true,
             		        beforeShowForm: function(form) {
+            		        	var $tr = $("#tr_program_name")
+            		            $label = $tr.children("td.CaptionTD"),
+            		            $data = $tr.children("td.DataTD");
+	            		        $data.attr("colspan", "3");
+	            		        $data.children("input").css("width", "75%");
+	            		        //$label.hide();
+            		        	var $trs = $("#tr_program_description")
+            		            $label = $trs.children("td.CaptionTD"),
+            		            $data = $trs.children("td.DataTD");
+	            		        $data.attr("colspan", "3");
+	            		        $data.children("input").css("width", "75%");	            		        
+            		        
             	            	$('.x_demand_manager',form).show();
             	            	$('.y_demand_manager',form).show();
             	            	$('.x_program_manager',form).show();
