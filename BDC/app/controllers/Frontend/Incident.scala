@@ -92,7 +92,7 @@ object Incident extends Controller {
               plan_start_date.toString().replace("\"", ""),
               plan_end_date.toString().replace("\"", ""))
 
-            println(play.api.libs.json.Json.toJson(incident))
+            //println(play.api.libs.json.Json.toJson(incident))
             /*
             if(incident.get.error_code>0)
               throw new Exception(incident.get.error_text)

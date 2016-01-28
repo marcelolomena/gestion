@@ -77,16 +77,16 @@ $(document).ready(function(){
 		                    { label: 'Descripción', name: 'program_description', width: 500, editoptions: { rows: "3", cols: "25"},hidden: true,
 				            	editable: true, editrules: {edithidden: true},edittype: "textarea",formoptions: {rowpos:1,colpos:2}
 			            	},
-		                    { label: 'Horas Planeadas', name: 'planned_hours',width: 100,hidden: true,
+		                    { label: 'Horas Planeadas', name: 'planned_hours',width: 50,hidden: true,
 				            	editable: true, editrules: {edithidden: true},edittype: "text",formoptions: {rowpos:2,colpos:1}
 			            	},
 		                    { label: 'Número Programa', name: 'program_code',width: 100,hidden: false,
 				            	editable: false, formoptions: {rowpos:2,colpos:2}
-			            	},			            	
-		                    { label: 'Demand Manager', name: 'demand_manager',
-		                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
+			            	},
+			            	{ label: 'Demand Manager', name: 'demand_manager_name',
+			            		editable: true,hidden: true, editrules: {edithidden: true},edittype: "text",
 		                        editoptions: {
-		                            dataInit: function (element) {$(element).width(170);
+		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_demand_manager_name");
 		                                window.setTimeout(function () {
 		                                    $(element).autocomplete({
 		                                  	  appendTo:"body",disabled:false,delay:300,minLength:1,
@@ -109,12 +109,68 @@ $(document).ready(function(){
 		                                    });
 		                                }, 100);
 		                            }
-		                        },formoptions: {rowpos:3,colpos:1}
+		                        },formoptions: {rowpos:3,colpos:1,label: "<span class='x_demand_manager_name'>Demand Manager</span>"}
+		            		},
+		                    { label: 'Demand Manager', name: 'demand_manager',
+		                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
+		                        editoptions: {
+		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_demand_manager");
+		                                window.setTimeout(function () {
+		                                    $(element).autocomplete({
+		                                  	  appendTo:"body",disabled:false,delay:300,minLength:1,
+		                                    source: function(request, response){
+		  										this.xhr = $.ajax({
+		  											type: "GET",
+		  											url: '/listadoPersonal',
+		  											data: request,
+		  											dataType: "json",
+		  											async: false,
+		  											success: function( data ) {
+		  												response( data );
+		  											},
+		  											error: function(model, response, options) {
+		  												response([]);
+		  											}
+		  										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
+		  									},
+		                                    autoFocus: true
+		                                    });
+		                                }, 100);
+		                            }
+		                        },formoptions: {rowpos:3,colpos:1,label: "<span class='x_demand_manager'>Demand Manager</span>"}
 		                    },
+		                    { label: 'Program Manager', name: 'program_manager_name',
+		                    	editable: true,hidden: true, editrules: {edithidden: true},edittype: "text",
+		                        editoptions: {
+		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_program_manager_name");
+		                                window.setTimeout(function () {
+		                                    $(element).autocomplete({
+		                                  	  appendTo:"body",disabled:false,delay:300,minLength:1,
+		                                    source: function(request, response){
+		  										this.xhr = $.ajax({
+		  											type: "GET",
+		  											url: '/listadoPersonal',
+		  											data: request,
+		  											dataType: "json",
+		  											async: false,
+		  											success: function( data ) {
+		  												response( data );
+		  											},
+		  											error: function(model, response, options) {
+		  												response([]);
+		  											}
+		  										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
+		  									},
+		                                    autoFocus: true
+		                                    });
+		                                }, 100);
+		                            }
+		                        },formoptions: {rowpos:3,colpos:2,label: "<span class='x_program_manager_name'>Program Manager</span>"}
+	                    	},
 		                    { label: 'Program Manager', name: 'program_manager',
 			                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
 			                        editoptions: {
-			                            dataInit: function (element) {$(element).width(170);
+			                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_program_manager");
 			                                window.setTimeout(function () {
 			                                    $(element).autocomplete({
 			                                  	  appendTo:"body",disabled:false,delay:300,minLength:1,
@@ -137,7 +193,7 @@ $(document).ready(function(){
 			                                    });
 			                                }, 100);
 			                            }
-			                        },formoptions: {rowpos:3,colpos:2}
+			                        },formoptions: {rowpos:3,colpos:2,label: "<span class='x_program_manager'>Program Manager</span>"}
 			                },	                    
 		                    { label: 'División', name: 'division', width: 250,editable: false, hidden: false, editrules: {edithidden: true},
 		  	            	  stype: 'select',searchoptions: {dataUrl: '/listaDivisiones',
@@ -314,11 +370,12 @@ $(document).ready(function(){
 				                        } 
 				            	    },formoptions: {rowpos:7,colpos:1}
 		                    },		                    
-		                    { label: '% Avance', name: 'pai', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] }},
-		                    { label: '% Esperado', name: 'pae', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
-		                    { label: 'SPI', name: 'spi', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
-		                    { label: 'CPI', name: 'cpi', width: 100,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
-		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } }
+		                    { label: '% Avance', name: 'pai', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] }},
+		                    { label: '% Esperado', name: 'pae', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
+		                    { label: 'SPI', name: 'spi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
+		                    { label: 'CPI', name: 'cpi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
+		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
+		                    { label: 'Número BPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:7,colpos:2} }
 		                ];	
 
             		$("#jqGridProgram").jqGrid({
@@ -361,6 +418,17 @@ $(document).ready(function(){
             		        editCaption: "Actualizar Programa",
             		        recreateForm: true,
             		        closeAfterEdit: true,
+            		        beforeShowForm: function(form) {
+            	            	//$('.x_demand_manager',form).hide();
+            	            	$('.y_demand_manager',form).hide();
+            	            	//$('.x_program_manager',form).hide();
+            	            	$('.y_program_manager',form).hide();   
+            	            	
+            	            	$('.x_demand_manager_name',form).show();
+            	            	$('.y_demand_manager_name',form).show();
+            	            	$('.x_program_manager_name',form).show();
+            	            	$('.y_program_manager_name',form).show();             	            	
+            		        },
             		        ajaxEditOptions: jsonOptions,
             		        serializeEditData: createJSON,
             		        errorTextFormat: function (data) {
@@ -377,6 +445,17 @@ $(document).ready(function(){
             		        serializeEditData: createJSON,
             		        closeAfterAdd: true,
             		        recreateForm: true,
+            		        beforeShowForm: function(form) {
+            	            	$('.x_demand_manager',form).show();
+            	            	$('.y_demand_manager',form).show();
+            	            	$('.x_program_manager',form).show();
+            	            	$('.y_program_manager',form).show();   
+            	            	
+            	            	$('.x_demand_manager_name',form).hide();
+            	            	$('.y_demand_manager_name',form).hide();
+            	            	$('.x_program_manager_name',form).hide();
+            	            	$('.y_program_manager_name',form).hide();               		        	
+            		        },
             		        errorTextFormat: function (data) {
             		            return 'Error: ' + data.responseText
             		        }

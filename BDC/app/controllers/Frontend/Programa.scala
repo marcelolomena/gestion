@@ -15,6 +15,7 @@ import net.liftweb.json._
 import net.liftweb.json.JsonParser._
 import models._
 import play.api.mvc.AnyContent
+import java.util.Date
 
 /**
  * @author marcelo
@@ -167,6 +168,9 @@ object Programa extends Controller {
           campo.put("cpi", p.cpi)
           campo.put("impact_type", p.impact_type)
           campo.put("sap_number", p.sap_number.getOrElse("").toString())
+          campo.put("sap_code", p.sap_code.getOrElse("").toString())
+          campo.put("demand_manager_name", p.demand_manager_name.toString())
+          campo.put("program_manager_name", p.program_manager_name.toString())          
 
           registro.put(campo)
         }
@@ -451,7 +455,7 @@ object Programa extends Controller {
         //var incident: Option[ErrorIncident] = null
         val body: AnyContent = request.body
         val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
-        var ret: Int = 0
+        var last_program: Int = 0
         jsonBody.map { jsValue =>
 
           val program_id = (jsValue \ "program_id")
@@ -459,7 +463,7 @@ object Programa extends Controller {
           val program_description = (jsValue \ "program_description")
           val planned_hours = (jsValue \ "planned_hours")
 
-          val sap_code = (jsValue \ "sap_code")
+          val sap_code = (jsValue \ "sap_code")//numero ppm
           val demand_manager = (jsValue \ "demand_manager")
           val program_manager = (jsValue \ "program_manager")
           val program_type = (jsValue \ "program_type")
@@ -485,7 +489,7 @@ object Programa extends Controller {
           } else if (oper.toString().replace("\"", "").equals("del")) {
 
           } else if (oper.toString().replace("\"", "").equals("add")) {
-            ret = ProgramaService.grabar(
+            last_program = ProgramaService.grabar(
               program_name.toString().replace("\"", ""),
               program_description.toString().replace("\"", ""),
               planned_hours.toString().replace("\"", ""),
@@ -499,11 +503,16 @@ object Programa extends Controller {
               initiation_planned_date.toString().replace("\"", ""),
               release_date.toString().replace("\"", ""),
               closure_date.toString().replace("\"", ""))
+              
+              if(last_program.toInt>0){
+          val act = Activity(ActivityTypes.Program.id, "New program created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_program.toInt)
+          Activity.saveLog(act)        
+              }
           }
 
         }
 
-        Ok(ret.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(last_program.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
