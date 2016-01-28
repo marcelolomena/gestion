@@ -577,6 +577,7 @@ GET	   /incidentSeverityList																		  controllers.Frontend.Incident.se
 #GET	   /incidentSeverityConfigurationList     									  					  controllers.Frontend.Incident.severityConfigurationList
 #GET	   /incidentSeverityConfigurationList/$id<[A-Za-z0-9_-]+>     									  controllers.Frontend.Incident.severityConfigurationList(id:String)
 GET	   /incidentSeverityConfigurationList     									                      controllers.Frontend.Incident.severityConfigurationList
+GET	   /incidentProgramConfigurationList     									                      controllers.Frontend.Incident.programConfigurationList
 GET	   /incidentProgramType/$id<[A-Za-z0-9_-]+>													      controllers.Frontend.Incident.getConfigurationProgramType(id:String)
 #GET   /incidentSeverityDays/$id<[A-Za-z0-9_-]+>													  controllers.Frontend.Incident.getSeverityDays(id:String)
 GET	   /incidentSeverityDays/:id/:feccre													  		  controllers.Frontend.Incident.getSeverityDays(id:String,feccre:String)

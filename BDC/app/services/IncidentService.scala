@@ -289,6 +289,13 @@ object IncidentService {
       SQL(sqlString).on('id -> id.toInt).as(Severity.severity *)
     }
   }
+  def selectProgramConfiguration(id: String): Seq[ProgramCombo] = {
+    var sqlString = ""
+    sqlString = "SELECT a.program_id,RTRIM(a.program_name) program_name from art_program a, art_incident_configuration b WHERE a.program_type=b.configuration_program_type AND b.configuration_id={id} AND a.is_active=1"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt).as(ProgramCombo.pCombo *)
+    }
+  }
   def selectSeverityConfiguration(): Seq[Severity] = {
     var sqlString = ""
     sqlString = "SELECT * FROM art_incident_severity"

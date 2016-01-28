@@ -696,6 +696,7 @@ object ProgramCombo {
 
     }
   }
+  implicit val ProgramComboWrites = Json.writes[ProgramCombo]
 
 }
 

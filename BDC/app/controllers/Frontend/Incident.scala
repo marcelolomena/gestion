@@ -602,6 +602,12 @@ object Incident extends Controller {
     val incidents = IncidentService.selectSeverityConfiguration(id)
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
+  def programConfigurationList() = Action { implicit request =>
+        val id = request.getQueryString("id").get.toString()
+		println("id: "+id)
+    val incidents = IncidentService.selectProgramConfiguration(id)
+    Ok(play.api.libs.json.Json.toJson(incidents))
+  }
 
   def validateCodIR(id: String) = Action { implicit request =>
 
