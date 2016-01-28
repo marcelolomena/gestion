@@ -416,7 +416,9 @@ object Incident extends Controller {
             incident_id.toString().replace("\"", ""),
             status_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""),
-            note.toString().replace("\"", ""))
+            note.toString().replace("\"", ""),
+			configuration_id.toString().replace("\"", ""),
+			program_id.toString().replace("\"", ""))
           println(incident.last.error_text)
         }
 

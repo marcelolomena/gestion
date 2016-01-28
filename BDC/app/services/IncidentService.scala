@@ -52,11 +52,13 @@ object IncidentService {
              incident_id: String,
              status_id: String,
              user_creation_id: String,
-             note: String): Option[ErrorIncident] = {
+             note: String,
+			 configuration_id: String,
+			 program_id: String): Option[ErrorIncident] = {
 
     var sqlString = """
       EXEC art.update_incident {severity_id},{date_end},{incident_id},{status_id},
-      {user_creation_id},{note}
+      {user_creation_id},{note},{configuration_id},{program_id}
       """
 
     DB.withConnection { implicit connection =>
@@ -65,7 +67,9 @@ object IncidentService {
         'incident_id -> incident_id.toInt,
         'status_id -> status_id.toInt,
         'user_creation_id -> user_creation_id.toInt,
-        'note -> note).executeQuery() as (ErrorIncident.error.singleOpt)
+        'note -> note,
+		'configuration_id -> configuration_id.toInt,
+		'program_id -> program_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
 
