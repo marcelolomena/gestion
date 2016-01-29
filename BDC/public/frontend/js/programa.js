@@ -52,6 +52,19 @@ $(document).ready(function(){
 	{
 	        return cellvalue;
 	}
+	check = function (value,columnname) {
+	    if (columnname === "program_type") {
+	        fld1 = value;
+	    } else if (columnname === "fld2") {
+	        fld2 = value;
+	    }
+	    if (fld1 !== undefined && fld2 !== undefined) {
+	        // validate the fields here
+	        return [false, "please enter text"];
+	    } else {
+	        return true;
+	    }
+	};
 	
 	var programaModel = [
 		                    { label: 'program_id', name: 'program_id', width: 100, key: true, hidden:true }, 
@@ -209,7 +222,7 @@ $(document).ready(function(){
 		  	            		}}  	            			
 		                    },
 		                    { label: 'Tipo de Programa', name: 'program_type', width: 150,editable: true, hidden: false,
-		                    	editrules: {edithidden: true},edittype: "select", 
+		                    	editrules: {edithidden: true,custom: true, custom_func: check},edittype: "select", 
 		  	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaTipo',
 		  	  	            		buildSelect: function (response) {
 		  	  	            			var data = JSON.parse(response);
@@ -232,7 +245,7 @@ $(document).ready(function(){
 		  	  	            		},dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:5,colpos:1} 	  	            		
 		                    },
 		                    { label: 'Foco Estratégico', name: 'sub_type', width: 150,editable: true,
-		                    	hidden: false, editrules: {edithidden: true},edittype: "select",
+		                    	hidden: false, editrules: {edithidden: true,custom: true, custom_func: check},edittype: "select",
 		  		  	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaFoco',
 		  		  	  	            		buildSelect: function (response) {
 		  		  	  	            			var data = JSON.parse(response);
