@@ -52,18 +52,20 @@ $(document).ready(function(){
 	{
 	        return cellvalue;
 	}
-	check = function (value,columnname) {
-	    if (columnname === "program_type") {
-	        fld1 = value;
-	    } else if (columnname === "fld2") {
-	        fld2 = value;
-	    }
-	    if (fld1 !== undefined && fld2 !== undefined) {
-	        // validate the fields here
-	        return [false, "please enter text"];
-	    } else {
-	        return true;
-	    }
+
+	check = function (value,colname) {
+		if (value == 0) 
+			   return [false,"Seleccione un valor para : " + colname ];
+			else 
+			   return [true,""];
+	};
+	
+	checkNum = function (value,colname) {
+		var num = new Number(value);
+        if(isNaN(num))
+		   return [false,"Ingrese horas válidas"];
+		else 
+		   return [true,""];
 	};
 	
 	var programaModel = [
@@ -79,26 +81,25 @@ $(document).ready(function(){
 	                            	} else if (val >= 0.95) {
 	                             	   color = 'green';
 	                            	}
-	                            	//console.log(color);
 	                        		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
 	                        	}
 				            	
 				            },  	                    
-		                    { label: 'Programa', name: 'program_name', width: 300,formatter: returnProgramLink, unformat:unaddlink,search:false,
-				            	editable: true, editrules: {edithidden: true,required: true},edittype: "text",formoptions: {rowpos:1,colpos:1}
+		                    { label: 'Programa', name: 'program_name', width: 300,editoptions: { rows: "1", cols: "50"},formatter: returnProgramLink, unformat:unaddlink,search:false,
+				            	editable: true, editrules: {edithidden: true,required: true},edittype: "textarea",formoptions: {rowpos:1,colpos:1}
 			            	},
 		                    { label: 'Descripción', name: 'program_description', width: 300, editoptions: { rows: "3", cols: "50"},hidden: true,
 				            	editable: true, editrules: {edithidden: true,required: true},edittype: "textarea",formoptions: {rowpos:2,colpos:1}
 			            	},
 		                    { label: 'Horas Planeadas', name: 'planned_hours',width: 50,hidden: true,
-				            	editable: true, editrules: {edithidden: true,required: true},edittype: "text",
+				            	editable: true, editrules: {edithidden: true,required: true,custom: true, custom_func: checkNum},edittype: "text",
 				            	editoptions: {dataInit: function (element) {$(element).width(170);}},formoptions: {rowpos:3,colpos:1}
 			            	},
 		                    { label: 'Número Programa', name: 'program_code',width: 100,hidden: false,
 				            	editable: false, formoptions: {rowpos:3,colpos:2}
 			            	},
 			            	{ label: 'Demand Manager', name: 'demand_manager_name',
-			            		editable: true,hidden: true, editrules: {edithidden: true},edittype: "text",
+			            		editable: true,hidden: true, editrules: {edithidden: true,required: true},edittype: "text",
 		                        editoptions: {
 		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_demand_manager_name");
 		                                window.setTimeout(function () {
@@ -125,36 +126,8 @@ $(document).ready(function(){
 		                            }
 		                        },formoptions: {rowpos:4,colpos:1,label: "<span class='x_demand_manager_name'>Demand Manager</span>"}
 		            		},
-		                    { label: 'Demand Manager', name: 'demand_manager',
-		                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
-		                        editoptions: {
-		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_demand_manager");
-		                                window.setTimeout(function () {
-		                                    $(element).autocomplete({
-		                                  	  appendTo:"body",disabled:false,delay:300,minLength:1,
-		                                    source: function(request, response){
-		  										this.xhr = $.ajax({
-		  											type: "GET",
-		  											url: '/listadoPersonal',
-		  											data: request,
-		  											dataType: "json",
-		  											async: false,
-		  											success: function( data ) {
-		  												response( data );
-		  											},
-		  											error: function(model, response, options) {
-		  												response([]);
-		  											}
-		  										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
-		  									},
-		                                    autoFocus: true
-		                                    });
-		                                }, 100);
-		                            }
-		                        },formoptions: {rowpos:4,colpos:1,label: "<span class='x_demand_manager'>Demand Manager</span>"}
-		                    },
 		                    { label: 'Program Manager', name: 'program_manager_name',
-		                    	editable: true,hidden: true, editrules: {edithidden: true},edittype: "text",
+		                    	editable: true,hidden: true, editrules: {edithidden: true,required: true},edittype: "text",
 		                        editoptions: {
 		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_program_manager_name");
 		                                window.setTimeout(function () {
@@ -180,35 +153,7 @@ $(document).ready(function(){
 		                                }, 100);
 		                            }
 		                        },formoptions: {rowpos:4,colpos:2,label: "<span class='x_program_manager_name'>Program Manager</span>"}
-	                    	},
-		                    { label: 'Program Manager', name: 'program_manager',
-			                  	  editable: true, hidden: true, editrules: {edithidden: true},edittype: "text",
-			                        editoptions: {
-			                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_program_manager");
-			                                window.setTimeout(function () {
-			                                    $(element).autocomplete({
-			                                  	  appendTo:"body",disabled:false,delay:300,minLength:1,
-			                                    source: function(request, response){
-			  										this.xhr = $.ajax({
-			  											type: "GET",
-			  											url: '/listadoPersonal',
-			  											data: request,
-			  											dataType: "json",
-			  											async: false,
-			  											success: function( data ) {
-			  												response( data );
-			  											},
-			  											error: function(model, response, options) {
-			  												response([]);
-			  											}
-			  										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
-			  									},
-			                                    autoFocus: true
-			                                    });
-			                                }, 100);
-			                            }
-			                        },formoptions: {rowpos:4,colpos:2,label: "<span class='x_program_manager'>Program Manager</span>"}
-			                },	                    
+	                    	},	                    
 		                    { label: 'División', name: 'division', width: 250,editable: false, hidden: false, editrules: {edithidden: true},
 		  	            	  stype: 'select',searchoptions: {dataUrl: '/listaDivisiones',
 		  	            		buildSelect: function (response) {
@@ -222,7 +167,7 @@ $(document).ready(function(){
 		  	            		}}  	            			
 		                    },
 		                    { label: 'Tipo de Programa', name: 'program_type', width: 150,editable: true, hidden: false,
-		                    	editrules: {edithidden: true,custom: true, custom_func: check},edittype: "select", 
+		                    	editrules: {edithidden: true,required: true,custom: true, custom_func: check},edittype: "select", 
 		  	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaTipo',
 		  	  	            		buildSelect: function (response) {
 		  	  	            			var data = JSON.parse(response);
@@ -245,7 +190,7 @@ $(document).ready(function(){
 		  	  	            		},dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:5,colpos:1} 	  	            		
 		                    },
 		                    { label: 'Foco Estratégico', name: 'sub_type', width: 150,editable: true,
-		                    	hidden: false, editrules: {edithidden: true,custom: true, custom_func: check},edittype: "select",
+		                    	hidden: false, editrules: {edithidden: true,required: true,custom: true, custom_func: check},edittype: "select",
 		  		  	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaFoco',
 		  		  	  	            		buildSelect: function (response) {
 		  		  	  	            			var data = JSON.parse(response);
@@ -268,7 +213,7 @@ $(document).ready(function(){
 		  		  	  	            		},dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:5,colpos:2}	  		  	  	            		
 	                    	},
 		                    { label: 'Estado', name: 'workflow_status', width: 150,editable: true,
-	                    		hidden: false, editrules: {edithidden: true},edittype: "select",
+	                    		hidden: false, editrules: {edithidden: true,required: true,custom: true, custom_func: check},edittype: "select",
 			  	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaEstado',
 			  	  	            		buildSelect: function (response) {
 			  	  	            			var data = JSON.parse(response);
@@ -291,7 +236,7 @@ $(document).ready(function(){
 			  	  	            		}, dataInit: function(elem) {$(elem).width(180);}}, formoptions: {rowpos:6,colpos:1}	  	  	            		
 		                    },
 		                    { label: 'Impacto', name: 'impact_type', width: 150,editable: true,
-	                    		hidden: false, editrules: {edithidden: true},edittype: "select",
+	                    		hidden: false, editrules: {edithidden: true,required: true,custom: true, custom_func: check},edittype: "select",
 			  	  	            	  stype: 'select',searchoptions: {dataUrl: '/listaImpacto',
 			  	  	            		buildSelect: function (response) {
 			  	  	            			var data = JSON.parse(response);
@@ -418,7 +363,6 @@ $(document).ready(function(){
             	            }
             	            else {
             	                $('#programasWrapper').show();
-            	                //alert('records > 0');
             	            }
             	        }
             	    });	
@@ -426,13 +370,13 @@ $(document).ready(function(){
             		$("#jqGridProgram").jqGrid('navGrid','#jqGridProgramPager',{edit: true, add: true, del: true,search: false},
             		    {
             				mtype: 'POST',
-            				//url: '/incidentUpdate',
             		        height: 'auto',
             		        width: 'auto',
             		        editCaption: "Actualizar Programa",
             		        recreateForm: true,
             		        closeAfterEdit: true,
             		        beforeShowForm: function(form) {
+
             		        	var $tr = $("#tr_program_name")
             		            $label = $tr.children("td.CaptionTD"),
             		            $data = $tr.children("td.DataTD");
@@ -444,18 +388,16 @@ $(document).ready(function(){
             		            $data = $trs.children("td.DataTD");
 	            		        $data.attr("colspan", "3");
 	            		        $data.children("input").css("width", "75%");	            		        
-	            		        
-            	            	//$('.x_demand_manager',form).hide();
-            	            	$('.y_demand_manager',form).hide();
-            	            	//$('.x_program_manager',form).hide();
-            	            	$('.y_program_manager',form).hide();   
             	            	
-            	            	$('.x_demand_manager_name',form).show();
-            	            	$('.y_demand_manager_name',form).show();
-            	            	$('.x_program_manager_name',form).show();
-            	            	$('.y_program_manager_name',form).show();             	            	
-            		        },
-            		        ajaxEditOptions: jsonOptions,
+            		        },afterSubmit : function(response,postdata){
+            	                var json   = response.responseText; 
+            	                var result = JSON.parse(json); 
+
+            	                if(result.error_code>=66100)
+            	                	return [false,result.error_text,""]; 
+            	                else
+            	                	return [true,"",""]
+            		        },ajaxEditOptions: jsonOptions,
             		        serializeEditData: createJSON,
             		        errorTextFormat: function (data) {
             		            return 'Error: ' + data.responseText
@@ -472,27 +414,27 @@ $(document).ready(function(){
             		        closeAfterAdd: true,
             		        recreateForm: true,
             		        beforeShowForm: function(form) {
+            		        	
             		        	var $tr = $("#tr_program_name")
             		            $label = $tr.children("td.CaptionTD"),
             		            $data = $tr.children("td.DataTD");
 	            		        $data.attr("colspan", "3");
 	            		        $data.children("input").css("width", "75%");
-	            		        //$label.hide();
+
             		        	var $trs = $("#tr_program_description")
             		            $label = $trs.children("td.CaptionTD"),
             		            $data = $trs.children("td.DataTD");
 	            		        $data.attr("colspan", "3");
 	            		        $data.children("input").css("width", "75%");	            		        
-            		        
-            	            	$('.x_demand_manager',form).show();
-            	            	$('.y_demand_manager',form).show();
-            	            	$('.x_program_manager',form).show();
-            	            	$('.y_program_manager',form).show();   
-            	            	
-            	            	$('.x_demand_manager_name',form).hide();
-            	            	$('.y_demand_manager_name',form).hide();
-            	            	$('.x_program_manager_name',form).hide();
-            	            	$('.y_program_manager_name',form).hide();               		        	
+            		        	
+            		        },afterSubmit : function(response,postdata){
+            	                var json   = response.responseText; 
+            	                var result = JSON.parse(json); 
+
+            	                if(result.error_code<0)
+            	                	return [false,result.error_text,""]; 
+            	                else
+            	                	return [true,"",""]
             		        },
             		        errorTextFormat: function (data) {
             		            return 'Error: ' + data.responseText
@@ -500,9 +442,17 @@ $(document).ready(function(){
             		    },
             		    {
             		    	mtype: 'POST',
-            		    	//url: '/incidentDelete',
             		        height: 'auto',
             		        width: 'auto',
+            		        afterSubmit : function(response,postdata){
+            	                var json   = response.responseText; 
+            	                var result = JSON.parse(json); 
+
+            	                if(result.error_code>0)
+            	                	return [false,result.error_text,""]; 
+            	                else
+            	                	return [true,"",""]
+            		        },
             		        errorTextFormat: function (data) {
             		            return 'Error: ' + data.responseText
             		        }

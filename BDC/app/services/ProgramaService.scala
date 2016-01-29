@@ -90,7 +90,7 @@ println("json:" + json)
              impact_type: String,
              initiation_planned_date: String,
              release_date: String,
-             closure_date: String): Int = {
+             closure_date: String): Option[ErrorSQL] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC art.programa_grabar {program_name},{program_description},{planned_hours},{sap_code},{demand_manager},{program_manager},{program_type},{sub_type},{workflow_status},{impact_type},{initiation_planned_date},{release_date},{closure_date}").on(
         'program_name -> program_name,
@@ -105,7 +105,7 @@ println("json:" + json)
         'impact_type -> impact_type.toInt,
         'initiation_planned_date -> initiation_planned_date,
         'release_date -> release_date,
-        'closure_date -> closure_date).executeQuery().as(scalar[Int].single)
+        'closure_date -> closure_date).executeQuery().as(ErrorSQL.errorsql.singleOpt)
     }
   }
 
@@ -123,10 +123,10 @@ println("json:" + json)
     impact_type: String,
     initiation_planned_date: String,
     release_date: String,
-    closure_date: String): Int = {
+    closure_date: String): Option[ErrorSQL] = {
     DB.withConnection { implicit connection =>
-      
-  /*    
+
+      /*    
     exec art.programa_actualizar 2433,'programa truchoX','programa truchoX',1000,66699,'Raquel de las Merced Bravo Farias','Jimena Kirsinger',3,5,3,3,'2016-01-31','2016-01-31','2016-01-31'  
       println("program_id:" + program_id)
       println("program_name:" + program_name)
@@ -145,7 +145,7 @@ println("json:" + json)
       println("release_date:" + release_date)
       println("closure_date:" + closure_date)
   
-*/      
+*/
       SQL("EXEC art.programa_actualizar {program_id},{program_name},{program_description},{planned_hours},{sap_code},{demand_manager},{program_manager},{program_type},{sub_type},{workflow_status},{impact_type},{initiation_planned_date},{release_date},{closure_date}").on(
         'program_id -> program_id.toInt,
         'program_name -> program_name,
@@ -160,15 +160,15 @@ println("json:" + json)
         'impact_type -> impact_type.toInt,
         'initiation_planned_date -> initiation_planned_date,
         'release_date -> release_date,
-        'closure_date -> closure_date).executeQuery().as(scalar[Int].single)
+        'closure_date -> closure_date).executeQuery().as(ErrorSQL.errorsql.singleOpt)
     }
   }
 
   def borrar(
-    program_id: String): Int = {
+    program_id: String): Option[ErrorSQL] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC art.programa_borrar {program_id}").on(
-        'program_id -> program_id).executeQuery().as(scalar[Int].single)
+        'program_id -> program_id).executeQuery().as(ErrorSQL.errorsql.singleOpt)
     }
   }
 }

@@ -1,0 +1,1 @@
+CREATE INDEX Index_RecursosHumanos_nombre_apellido ON RecursosHumanos (nombre, apellido)
