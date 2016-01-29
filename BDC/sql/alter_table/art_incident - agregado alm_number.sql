@@ -1,0 +1,1 @@
+ALTER TABLE art_incident ADD alm_number varchar(10) NULL;
