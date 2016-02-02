@@ -648,7 +648,33 @@ $(document).ready(function(){
 		editrules: {edithidden: true}, 
 		edittype: "select", 
 	    editoptions: {
-			dataUrl: '/incident_program_default',
+			//dataUrl: '/incident_program_default',
+			dataUrl: '/incidentResponsable',
+			postData:function(rowid){
+				var idProgram=$("#jqGridIncident").getRowData($("#jqGridIncident").getGridParam("selrow")).program_id;
+				if (idProgram!=undefined){
+					return {id:idProgram};
+				}else{
+					return {id:2496};
+				}
+			},
+			buildSelect: function (response) {
+				var grid = $("#jqGridIncident");
+				var rowKey = grid.getGridParam("selrow");
+				var rowData = grid.getRowData(rowKey);
+				var thissid = rowData.program_name;
+				var data = JSON.parse(response);
+				var s = "<select>";//el default
+				s += '<option value="0">--Seleccione Responsable--</option>';
+				$.each(data, function(i, item) {
+					if(data[i].user_name==thissid){
+						s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + " " + data[i].last_name + '</option>';
+					}else{
+						s += '<option value="' + data[i].uid + '">' + data[i].first_name + " " + data[i].last_name + '</option>';
+					}
+				});
+				return s + "</select>";
+	  	    },
 	        dataInit: function(elem) {
 				$(elem).width(180);
 				$(elem).addClass("y_task_owner_id");
@@ -947,14 +973,15 @@ $(document).ready(function(){
             	$('.x_user_sponsor_id',form).show();
             	$('.y_user_sponsor_id',form).hide();
             	
+				$('.y_owner_name',form).hide();
             	$('.x_task_owner_id',form).show();
-            	$('.y_task_owner_id',form).hide();
+            	$('.y_task_owner_id',form).show();
 
             	//$('input#configuration_name',form).attr('readonly','readonly');
             	$('input#program_name',form).attr('readonly','readonly');
             	
             	$('input#sponsor_name',form).attr('readonly','readonly');
-            	$('input#owner_name',form).attr('readonly','readonly');
+            	//$('input#owner_name',form).attr('readonly','readonly');
             	$('textarea#brief_description',form).attr('readonly','readonly');
             	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');

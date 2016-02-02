@@ -14,6 +14,7 @@ import play.api.data.Forms._
 import play.api.data.format.Formats._
 import play.i18n._
 import play.api.Play.current
+import play.api.libs.json._
 //0 normal
 //1 admin
 //2 PMo
@@ -231,6 +232,8 @@ object Users extends ConvertToDate {
   }
 
   //"Mala", "Mediocre", "Bien", "Bastante Bien", "Sobresaliente"
+  
+  implicit val usersWrites = Json.writes[Users]
 }
 
 object MyGlobalObject {

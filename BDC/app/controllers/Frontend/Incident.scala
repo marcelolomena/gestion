@@ -418,7 +418,8 @@ object Incident extends Controller {
             user_creation_id.toString().replace("\"", ""),
             note.toString().replace("\"", ""),
 			configuration_id.toString().replace("\"", ""),
-			program_id.toString().replace("\"", ""))
+			program_id.toString().replace("\"", ""),
+			task_owner_id.toString().replace("\"", ""))
           println(incident.last.error_text)
         }
 
@@ -665,6 +666,13 @@ object Incident extends Controller {
 
     Ok(s)
 
+  }
+  
+  def programResponsableList() = Action { implicit request =>
+        val id = request.getQueryString("id").get.toString()
+		println("id: "+id)
+    val users = ProgramMemberService.findNoBusinessMemberForIncident(id)
+    Ok(play.api.libs.json.Json.toJson(users))
   }
 
   def getConfigurationProgramType(id: String) = Action { implicit request =>
