@@ -42,7 +42,7 @@ $(document).ready(function(){
             { label: 'Nombre', name: 'nombre', width: 300,editable: false},
             { label: 'Horas Asignadas', name: 'asignado', width: 300,editable: false}
             { label: 'plan_start_date', name: 'plan_start_date', editable: false, hidden:true,
-            	searchoptions: {
+            	/*searchoptions: {
                     dataInit: function (element) {
                         $(element).datepicker({
                             id: 'Fecha Inicio',
@@ -52,10 +52,10 @@ $(document).ready(function(){
                             showOn: 'focus'
                         });
                     }
-                }
+                }*/
             },
             { label: 'plan_end_date', name: 'plan_end_date', editable: false, hidden:true,
-            	searchoptions: {
+            	/*searchoptions: {
                     dataInit: function (element) {
                         $(element).datepicker({
                             id: 'Fecha Final',
@@ -65,7 +65,7 @@ $(document).ready(function(){
                             showOn: 'focus'
                         });
                     }
-                }            	
+                }*/            	
             }            
     ]
 	
