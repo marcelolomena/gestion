@@ -179,13 +179,13 @@ $(document).ready(function(){
 	        colModel: [
 	                   { label: '[log_id]', name: '[log_id]', key: true, hidden:true },                   
 	                   { label: 'incident_id', name: 'incident_id', hidden:true},
-	                   { label: 'Estado', name: 'status_name', width: 50,resizable: false },
-	                   { label: 'Fecha', name: 'log_date', width: 75, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' } },
-	                   { label: 'Usuario', name: 'user_creation_name', width: 100 },
-	                   { label: 'Nota', name: 'note', width: 200 }           
+	                   { label: 'Estado', name: 'status_name', width: 120,resizable: false },
+	                   { label: 'Fecha', name: 'log_date', width: 150, formatter: 'date', formatoptions: { srcformat: 'U/1000', newformat: 'Y-m-d h:i:s A' } },
+	                   { label: 'Usuario', name: 'user_creation_name', width: 180 },
+	                   { label: 'Nota', name: 'note', width: 460 }           
 	        ],
 			height: 'auto',
-	        autowidth:true,
+	        //autowidth:true,
 	        regional : "es",
 	        rowList: [],        
 			pgbuttons: false,     
