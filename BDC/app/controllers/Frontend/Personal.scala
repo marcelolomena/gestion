@@ -47,6 +47,8 @@ object Personal extends Controller {
           campo.put("uid", p.uid)
           campo.put("nombre", p.nombre)
           campo.put("asignado", p.asignado.getOrElse("").toString())
+          campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())
+          campo.put("plan_end_date", p.plan_end_date.getOrElse("").toString())
           registro.put(campo)
         }
 

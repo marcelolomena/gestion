@@ -41,6 +41,32 @@ $(document).ready(function(){
             { label: 'uid', name: 'uid', width: 10, key: true, hidden:true }, 
             { label: 'Nombre', name: 'nombre', width: 300,editable: false},
             { label: 'Horas Asignadas', name: 'asignado', width: 300,editable: false}
+            { label: 'plan_start_date', name: 'plan_start_date', editable: false, hidden:true,
+            	searchoptions: {
+                    dataInit: function (element) {
+                        $(element).datepicker({
+                            id: 'Fecha Inicio',
+                            dateFormat: 'yy-mm-dd',
+                            //minDate: new Date(2010, 0, 1),
+                            maxDate: new Date(2020, 0, 1),
+                            showOn: 'focus'
+                        });
+                    }
+                }
+            },
+            { label: 'plan_end_date', name: 'plan_end_date', editable: false, hidden:true,
+            	searchoptions: {
+                    dataInit: function (element) {
+                        $(element).datepicker({
+                            id: 'Fecha Final',
+                            dateFormat: 'yy-mm-dd',
+                            //minDate: new Date(2010, 0, 1),
+                            maxDate: new Date(2020, 0, 1),
+                            showOn: 'focus'
+                        });
+                    }
+                }            	
+            }            
     ]
 	
 	$("#jqGridPersonal").jqGrid({
@@ -57,6 +83,20 @@ $(document).ready(function(){
    	        rowList: [5, 10, 20, 50],
    	        gridview: true,
 			pager: "#jqGridPersonal"
-    });	           		
+    });	  
+	
+	
+	$('#jqGridPersonal').navGrid("#jqGridPersonalPager", {                
+        search: true, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    },
+    {}, // edit options
+    {}, // add options
+    {}, // delete options
+    { multipleSearch: true } // search options - define multiple search
+    );
 
 });

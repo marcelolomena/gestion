@@ -185,19 +185,27 @@ object Recurso {
 case class Asignado(
   uid: Int,
   nombre: String,
-  asignado: Option[Double])
+  asignado: Option[Double],
+  plan_start_date: Option[Date],
+  plan_end_date: Option[Date])
 
 object Asignado {
   val asignado = {
     get[Int]("uid") ~
       get[String]("nombre") ~
-      get[Option[Double]]("asignado") map {
+      get[Option[Double]]("asignado") ~
+      get[Option[Date]]("plan_start_date") ~ 
+      get[Option[Date]]("plan_end_date") map {
         case uid ~
           nombre ~
-          asignado => Asignado(
+          asignado ~
+          plan_start_date ~
+          plan_end_date => Asignado(
           uid,
           nombre,
-          asignado)
+          asignado,
+          plan_start_date,
+          plan_end_date)
       }
 
   }
