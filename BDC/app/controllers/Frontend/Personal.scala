@@ -34,11 +34,47 @@ object Personal extends Controller {
       request.session.get("username").map { user =>
         val rows = request.getQueryString("rows").get.toString()
         val page = request.getQueryString("page").get.toString()
+        val filters = request.getQueryString("filters").getOrElse("").toString()
         var records: Int = 0
         val uId = request.session.get("uId").get.toString()
         var node = new JSONObject()
+        var plan_start_date,plan_end_date = ""
+        
+        
+        if (!StringUtils.isEmpty(filters)) {
 
-        val subtask = PersonalService.listadoAsignacionDependiente(uId, "", "", rows, page)
+          val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+          if (!jObject.\\("rules").isEmpty) {
+
+            val jList = jObject.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (!jElement.equals("[]")) {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filters)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+
+                  if (m.field.equals("plan_start_date")) {
+                      plan_start_date=m.data
+                  }else if (m.field.equals("plan_end_date")) {
+                      plan_end_date=m.data
+                  }
+                  
+                }
+              }
+            }  
+          }
+        }
+        
+        //println("plan_start_date:" + plan_start_date)
+        //println("plan_end_date:" + plan_end_date)        
+
+        val subtask = PersonalService.listadoAsignacionDependiente(uId, plan_start_date, plan_end_date, rows, page)
         records = ProgramaService.cantidadSubalternos(uId)
 
         var registro = new JSONArray()

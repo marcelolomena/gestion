@@ -25,7 +25,7 @@
 					}
 						 @*<li><a id="projects" href="/projects" >Projects</a></li>*@
 					@if(utils.UserAccess.checkAccess(req,"tab_program")){
-						<li><a id="programs" href="/programa" > @Messages("header.programs")</a></li>
+						<li><a id="programs" href="/programs" > @Messages("header.programs")</a></li>
 					}
 					<input type="hidden" value="@utils.UserAccess.checkAccess(req,"tab_admin")" id="test-val">
 					@if(utils.UserAccess.checkAccess(req,"tab_admin")){
