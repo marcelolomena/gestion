@@ -42,7 +42,7 @@ object SubTaskServices extends CustomColumns {
           'added_date -> task.added_date,
           'note -> "NA",
           'status -> task.status,
-          'completion_percentage -> task.completion_percentage,
+          'completion_percentage -> 0,
           'task_complete -> task.task_complete,
           'sub_task_depend -> task.sub_task_depend,
           'dependencies_type -> task.dependencies_type,
