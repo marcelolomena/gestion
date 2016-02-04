@@ -270,7 +270,8 @@ object ProgramMemberService extends CustomColumns {
         UserService.updateUserRole(user_profile.user_id.toString(), 6, "pm")
 
       } else if (pmr) {
-        UserService.updateUserRole(user_profile.user_id.toString(), 5, "pmr")
+        //UserService.updateUserRole(user_profile.user_id.toString(), 5, "pmr")
+        UserService.updateUserRole(user_profile.user_id.toString(), 5, "prm")
 
       }
       result.last

@@ -23,6 +23,7 @@ import java.util.Date
 object Programa extends Controller {
 
   def fromProgramName(choice: String, value: String): String = choice match {
+    case "program_name"       => " '%" + value + "%' "    
     case "devison"          => value
     case "program_type"     => value
     case "program_sub_type" => value
@@ -72,7 +73,7 @@ object Programa extends Controller {
         //println("sort:" + sord)
 
         if (sidx.trim().size == 0) {
-          order = "X.program_id asc"
+          order = "X.program_id desc"
         } else {
           order = "X." + sidx + " " + sord
         }
@@ -97,7 +98,10 @@ object Programa extends Controller {
                 val elements = (json \\ "rules").children
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
-                  if (m.field.equals("division")) {
+                  if (m.field.equals("program_name")) {
+                      qrystr += "X.program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
+                      qrystr_c += "program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
+                  } else if (m.field.equals("division")) {
                     if (m.data.toInt != 0) {
                       qrystr += "X.dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                       qrystr_c += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
@@ -237,7 +241,12 @@ object Programa extends Controller {
                 val elements = (json \\ "rules").children
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
-                  if (m.field.equals("division")) {
+                  if (m.field.equals("program_name")) {
+
+                      qrystr += "X.program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
+                      qrystr_c += "program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
+
+                  }else if (m.field.equals("division")) {
                     if (m.data.toInt != 0) {
                       qrystr += "X.dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                       qrystr_c += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "

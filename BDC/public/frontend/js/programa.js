@@ -85,7 +85,7 @@ $(document).ready(function(){
 	                        	}
 				            	
 				            },  	                    
-		                    { label: 'Programa', name: 'program_name', width: 300,editoptions: { rows: "1", cols: "50"},formatter: returnProgramLink, unformat:unaddlink,search:false,
+		                    { label: 'Programa', name: 'program_name', width: 300,editoptions: { rows: "1", cols: "50"},formatter: returnProgramLink, unformat:unaddlink,
 				            	editable: true, editrules: {edithidden: true,required: true},edittype: "textarea",formoptions: {rowpos:1,colpos:1}
 			            	},
 		                    { label: 'Descripción', name: 'program_description', width: 300, editoptions: { rows: "3", cols: "50"},hidden: true,
@@ -98,7 +98,7 @@ $(document).ready(function(){
 		                    { label: 'Número Programa', name: 'program_code',width: 100,hidden: false,
 				            	editable: false, formoptions: {rowpos:3,colpos:2}
 			            	},
-			            	{ label: 'Demand Manager', name: 'demand_manager_name',
+			            	{ label: 'Gestor de la Demanda', name: 'demand_manager_name',
 			            		editable: true,hidden: true, editrules: {edithidden: true,required: true},edittype: "text",
 		                        editoptions: {
 		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_demand_manager_name");
@@ -124,9 +124,9 @@ $(document).ready(function(){
 		                                    });
 		                                }, 100);
 		                            }
-		                        },formoptions: {rowpos:4,colpos:1,label: "<span class='x_demand_manager_name'>Demand Manager</span>"}
+		                        },formoptions: {rowpos:4,colpos:1,label: "<span class='x_demand_manager_name'>Gestor de la Demanda</span>"}
 		            		},
-		                    { label: 'Program Manager', name: 'program_manager_name',
+		                    { label: 'Lider de Programa', name: 'program_manager_name',
 		                    	editable: true,hidden: true, editrules: {edithidden: true,required: true},edittype: "text",
 		                        editoptions: {
 		                            dataInit: function (element) {$(element).width(170);$(element).addClass("y_program_manager_name");
@@ -152,7 +152,7 @@ $(document).ready(function(){
 		                                    });
 		                                }, 100);
 		                            }
-		                        },formoptions: {rowpos:4,colpos:2,label: "<span class='x_program_manager_name'>Program Manager</span>"}
+		                        },formoptions: {rowpos:4,colpos:2,label: "<span class='x_program_manager_name'>Lider de Programa</span>"}
 	                    	},	                    
 		                    { label: 'División', name: 'division', width: 250,editable: false, hidden: false, editrules: {edithidden: true},
 		  	            	  stype: 'select',searchoptions: {dataUrl: '/listaDivisiones',
@@ -334,7 +334,7 @@ $(document).ready(function(){
 		                    { label: 'SPI', name: 'spi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'CPI', name: 'cpi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
-		                    { label: 'Número BPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:8,colpos:2} }
+		                    { label: 'Número PPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:8,colpos:2} }
 		                ];	
 
             		$("#jqGridProgram").jqGrid({
@@ -431,7 +431,7 @@ $(document).ready(function(){
             	                var json   = response.responseText; 
             	                var result = JSON.parse(json); 
 
-            	                if(result.error_code<0)
+            	                if(result.id<0)
             	                	return [false,result.error_text,""]; 
             	                else
             	                	return [true,"",""]

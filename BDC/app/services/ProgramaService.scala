@@ -96,7 +96,7 @@ println("json:" + json)
         'program_name -> program_name,
         'program_description -> program_description,
         'planned_hours -> planned_hours.toInt,
-        'sap_code -> sap_code.toInt,
+        'sap_code -> sap_code,
         'demand_manager -> demand_manager,
         'program_manager -> program_manager,
         'program_type -> program_type.toInt,
