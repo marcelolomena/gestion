@@ -108,7 +108,7 @@ object Tasks extends CustomColumns {
   }
 }
 
-case class TaskMaster(tId: Option[Int], project: Int,project_mode:Int, pert:Boolean,task_title: String,
+case class TaskMaster(tId: Option[Int], project: Int,project_mode:Int, pert:Int,task_title: String,
                       plan_start_date: Date, plan_end_date: Date, task_description: String, plan_time: BigDecimal, task_status: Int,
                       status: Int, owner: Int, task_discipline: Int, completion_percentage: Option[Double],
                       remark: Option[String], task_depend: Option[String], dependencies_type: Option[Int], task_details: TaskDetails)

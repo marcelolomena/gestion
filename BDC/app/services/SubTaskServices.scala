@@ -72,15 +72,19 @@ object SubTaskServices extends CustomColumns {
   }  
   
   def insertSubTaskFromTemplatePert(
+      holiday: Boolean,
       fecha_inicio:String,
       id_platilla:String,
       title: String,
       id_tarea: String,
       extended_description:String) = {
 
-    var sqlString = """
-      EXEC art.incident_pert {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}
-      """
+    var sqlString:String=null
+    
+    if(holiday)
+        sqlString = "EXEC art.pert_discontinuo {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}"
+    else
+        sqlString = "EXEC art.incident_pert {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(

@@ -266,17 +266,28 @@ object Task extends Controller {
             println("latest_task:" + latest_task)
             println("task_title:" + success.task_title)
             println("task_description:" + success.task_description)
-            if(success.pert){
-              val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(formattedDate.format(success.plan_start_date),
+            
+            if(success.pert==0){ //con plantilla pero sin pert
+
+              SubTaskServices.insertSubTaskFromTemplate(formattedDate.format(success.plan_start_date),
+                  formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
+
+            }else if(success.pert==1){//pert dias corridos
+              val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(false,formattedDate.format(success.plan_start_date),
                   success.project_mode.toString(),
                   "",
                   latest_task.toString(),
                   ""
                   )
                   println("errorCode:" + errorCode)
-            }else{
-            SubTaskServices.insertSubTaskFromTemplate(formattedDate.format(success.plan_start_date),
-                formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
+            }else if(success.pert==2){ //pert dias habiles
+              val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(true,formattedDate.format(success.plan_start_date),
+                  success.project_mode.toString(),
+                  "",
+                  latest_task.toString(),
+                  ""
+                  )
+                  println("errorCode:" + errorCode)              
             }
           }
 
@@ -350,7 +361,7 @@ object Task extends Controller {
           val isValidDependency = TaskService.checkValidDependency(task.get.tId.get.toString())
 
           val task_detail = TaskDetails(task.get.task_type, task.get.task_code, task.get.stage.getOrElse(0), task.get.user_role.getOrElse(0), task.get.deliverable)
-          val taskData = TaskMaster(Some(id.toInt), task.get.pId,0,false, task.get.task_title,
+          val taskData = TaskMaster(Some(id.toInt), task.get.pId, 0, 0, task.get.task_title,
             task.get.plan_start_date, task.get.plan_end_date, task.get.task_description,
             task.get.plan_time, task.get.task_status, task.get.status, task.get.owner, task.get.task_discipline.getOrElse(0), task.get.completion_percentage, task.get.remark, task.get.task_depend, task.get.dependencies_type, task_detail)
 

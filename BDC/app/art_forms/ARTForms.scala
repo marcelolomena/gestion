@@ -177,7 +177,7 @@ object ARTForms {
       "mId" -> optional(number),
       "pId" -> number, //.verifying(Messages.get("error.task.projectId"), project => project.length() > 4),
       "project_mode" -> number,
-      "pert" -> of[Boolean],
+      "pert" -> number,//of[Boolean]
       "title" -> text.verifying(Messages.get(langObj, "error.task.milestone_title"), title => title.length() >= 4 && title.length() <= 60),
       "plan_start_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
       "plan_end_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
