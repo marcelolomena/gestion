@@ -177,6 +177,12 @@ object TimeSheet extends Controller {
               val pId = milestone.get.pId
               val planDetails = Timesheet(None, 1, subtask_id.toInt, m_id, user_id, pId, task_for_date, "", actual_hour, Option(0))
               val last = TimesheetService.addTimesheet(planDetails);
+              
+              /**
+               * Activity log
+               */
+              val act = Activity(ActivityTypes.Timesheet.id, "Timesheet entry made by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
+              Activity.saveLog(act)            
             }
           } else if (!subtask_id.isEmpty() && subtask_id.matches("(?i:.*nproj_.*)")) {
             val arr = subtask_id.split('_');
@@ -184,6 +190,12 @@ object TimeSheet extends Controller {
             val notes = ""
             val planDetails = Timesheet(None, 2, subtask_id.toInt, 2, user_id, -1, task_for_date, notes, actual_hour, Option(0))
             val last = TimesheetService.addTimesheet(planDetails);
+            
+            /**
+             * Activity log
+             */
+            val act = Activity(ActivityTypes.Timesheet.id, "Timesheet entry made by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
+            Activity.saveLog(act)            
           }
         }
       }.getOrElse {
