@@ -8,7 +8,7 @@
 	<classpathentry kind="src" path="test/resources"/>
 	<classpathentry kind="lib" path="lib/sqljdbc4.jar"/>
 	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/lenovo/Favorites/.ivy2/cache/com.typesafe.play/twirl-api_2.10/jars/twirl-api_2.10-1.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/marcelo/.ivy2/cache/com.typesafe.play/twirl-api_2.10/jars/twirl-api_2.10-1.0.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/marcelo/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/marcelo/.ivy2/cache/com.typesafe.play/play_2.10/jars/play_2.10-2.3.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/lenovo/Favorites/.ivy2/cache/com.typesafe.play/build-link/jars/build-link-2.3.9.jar"/>

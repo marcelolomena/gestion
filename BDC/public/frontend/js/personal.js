@@ -59,7 +59,6 @@ $(document).ready(function(){
                         $(element).datepicker({
                             id: 'Fecha Final',
                             dateFormat: 'yy-mm-dd',
-                            maxDate: new Date(2020, 0, 1),
                             showOn: 'focus'
                         });
                     }
