@@ -195,6 +195,15 @@ object TaskService extends CustomColumns {
       result
     }
   }
+  
+  def findTaskListByProjectIdAsign(pId: String): Seq[Tasks] = {
+    var sqlString = ""
+    sqlString = "EXEC art.task_asigned_time {pid}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('pid ->pId.toInt).as(Tasks.tasks *)
+    }
+  }  
+
 
   def getTaskGanttChart(projectId: String): JSONArray = {
     var jsonArr = new JSONArray()

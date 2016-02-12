@@ -79,7 +79,7 @@ object ProjectMaster extends Controller {
           case 0 =>
             Ok(views.html.frontend.project.restrictedAccess()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
           case _ =>
-            val tasks = TaskService.findTaskListByProjectId(project.get.pId.get.toString)
+            val tasks = TaskService.findTaskListByProjectIdAsign(project.get.pId.get.toString)
             var list = new ListBuffer[String]()
 
             var plan_time_for_project: scala.math.BigDecimal = 0.0
