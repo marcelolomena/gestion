@@ -287,7 +287,7 @@ object ARTForms {
         "devison" -> number,
         "management" -> optional(number),
         "department" -> optional(number),
-        "impact_type" -> optional(number),
+        "impact_type" -> number,
         "business_line" -> optional(text.verifying(Messages.get(langObj, "error.program.program_details_business_line.MinMax"), business_line => business_line.trim().length() > 0 && business_line.trim().length() < 60)),
         "sap_code" -> optional(number))(ProgramDetail.apply)(ProgramDetail.unapply),
       "program_dates" -> mapping(
@@ -322,7 +322,7 @@ object ARTForms {
         "devison" -> number,
         "management" -> optional(number),
         "department" -> optional(number),
-        "impact_type" -> optional(number),
+        "impact_type" -> number,
         "business_line" -> optional(text.verifying(Messages.get(langObj, "error.program.program_details_business_line.MinMax"), business_line => business_line.trim().length() > 0 && business_line.trim().length() < 60)),
         "sap_code" -> optional(number))(ProgramDetail.apply)(ProgramDetail.unapply),
       "program_dates" -> mapping(

@@ -106,8 +106,8 @@ object ExportToExcel {
 		dataRow.createCell(13).setCellValue(ProgramService.findSpentHoursForPrgoram(program.get.program_id.toString()).toString())
 		dataRow.createCell(14).setCellValue(ProgramService.findBookedHoursForPrgoram(program.get.program_id.toString()).toString())
 
-		if (!programDetail.get.impact_type.isEmpty)
-			dataRow.createCell(15).setCellValue(programDetail.get.impact_type.get.toString())
+		if (programDetail.get.impact_type>0)
+			dataRow.createCell(15).setCellValue(programDetail.get.impact_type.toString())
 		else
 			dataRow.createCell(15).setCellValue("")
 

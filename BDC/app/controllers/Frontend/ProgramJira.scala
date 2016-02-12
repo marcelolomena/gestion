@@ -407,7 +407,7 @@ object ProgramJira extends Controller {
       var statusWF = statusWorkflow.get.workflow_status.toString()
       val programDetail = ProgramService.findProgramOtherDetailsById(programId)
       
-      val  impact_type=     ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.get.toString())
+      val  impact_type=     ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString())
       var impactType=impact_type.get.impact_type.toString()
       val programDates = ProgramService.findProgramDateDetailsById(programId)
       val projectList = UserService.findProjectListForUserAndProgram(uId, programId)

@@ -1,4 +1,4 @@
-@(programs: Seq[ProgramMaster])(implicit session: play.api.mvc.Session,lang:Lang) 
+@(programs: Seq[ProgramMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
 @import services._
 @import play.api.i18n._
 @import play.api._
@@ -62,3 +62,11 @@
 	<p>@Messages("employeeProfile.projectlistnotavailable")</p>
 </div>
 }
+
+<script type="text/javascript">
+$(document).ready(function() {
+	@if(utils.UserAccess.checkAccess(req,"delete_program")){
+		$(".delete-program").on("click", renderProgramSoftdelete);
+	}
+});
+</script>

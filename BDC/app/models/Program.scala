@@ -71,13 +71,13 @@ object ProgramMaster extends CustomColumns {
 }
 
 case class ProgramDetails(program_id: Int, devison: Int, management: Option[Int], department: Option[Int],
-  impact_type: Option[Int], business_line: Option[String], sap_code: Option[Int])
+  impact_type: Int, business_line: Option[String], sap_code: Option[Int])
 
 object ProgramDetails {
 
   val pDetails = {
     get[Int]("program_id") ~ get[Int]("devison") ~ get[Option[Int]]("management") ~ get[Option[Int]]("department") ~
-      get[Option[Int]]("impact_type") ~ get[Option[String]]("business_line") ~ get[Option[Int]]("sap_code") map {
+      get[Int]("impact_type") ~ get[Option[String]]("business_line") ~ get[Option[Int]]("sap_code") map {
         case program_id ~ devison ~ management ~ department ~ impact_type ~ business_line ~ sap_code =>
           ProgramDetails(program_id, devison, management, department, impact_type, business_line, sap_code)
 
@@ -292,7 +292,7 @@ object Programs {
 
 }
 
-case class ProgramDetail(devison: Int, management: Option[Int], department: Option[Int], impact_type: Option[Int],
+case class ProgramDetail(devison: Int, management: Option[Int], department: Option[Int], impact_type: Int,
   business_line: Option[String], sap_code: Option[Int])
 
 object ProgramDetail {

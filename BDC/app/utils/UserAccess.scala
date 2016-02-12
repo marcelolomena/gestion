@@ -101,7 +101,8 @@ trait AuthentiCate {
     var isValid = false
     if (!request.session.get("user_profile").isEmpty) {
       var user_role = request.session.get("user_profile").get
-
+      println ("user_role:[" + user_role + "]")
+      println ("element_type:[" + element_type + "]")
       if(FunctionRoleService.checkDBAccess(user_role,element_type)==1){
         isValid = true
       }else{

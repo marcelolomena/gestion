@@ -246,7 +246,7 @@ object Task extends Controller {
           
           val milestoneDetails = Tasks(None, success.project, success.task_title, success.task_details.task_code,
             success.plan_start_date, success.plan_end_date, success.task_description, success.plan_time,
-            new Date(), success.task_status, 1, success.owner, Option(success.task_discipline), success.completion_percentage,
+            new Date(), success.task_status, user_id.toInt, success.owner, Option(success.task_discipline), success.completion_percentage,
             success.remark, success.task_depend, success.dependencies_type, Option(success.task_details.stage), Option(success.task_details.user_role), success.task_details.deliverable, success.task_details.task_type, 1)
 
           val latest_task = TaskService.insertTask(milestoneDetails)
