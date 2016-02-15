@@ -246,6 +246,7 @@ POST   /update-external-member                                                  
 POST   /add-software-factory                                                                          controllers.Frontend.Program.addSoftwareFactory()
 POST   /add-external-contractor                                                                       controllers.Frontend.Program.addExternalContractor()
 POST   /new-program-jira                                                                              controllers.Frontend.ProgramJira.saveNewProgram()
+GET    /test-jira                                                                              		  controllers.Frontend.ProgramJira.addNewProgram()
 
 #Risk Management
 GET    /risk-management/$id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>                               controllers.Frontend.Risks.riskManagement(id:String,parent_type:Integer)
