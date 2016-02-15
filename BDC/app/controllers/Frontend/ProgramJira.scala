@@ -488,7 +488,7 @@ object ProgramJira extends Controller {
    * add new program....
    */
   def addNewProgram() = Action { implicit request =>
-    request.session.get("username").map { user =>
+    
 
       var workflowStatusValues = new java.util.HashMap[String, String]()
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
@@ -556,11 +556,9 @@ object ProgramJira extends Controller {
         }
       }
 
-      Ok(views.html.frontend.program.addNewProgram(ARTForms.programForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.addNewProgramJira(ARTForms.programForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap))
 
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
+    
   }
 
   /**
@@ -830,7 +828,7 @@ object ProgramJira extends Controller {
           /**
            * Activity log
            */
-          val act = Activity(ActivityTypes.Program.id, "New program created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_program.toInt)
+          val act = Activity(ActivityTypes.Program.id, "New program created by JIRA ", new Date(), 1202, last_program.toInt)
           Activity.saveLog(act)
 		  Ok(last_program.toString())
           //Redirect(routes.Program.programDetails(last_program.toString()))
