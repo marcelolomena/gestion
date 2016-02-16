@@ -1,0 +1,3 @@
+CREATE INDEX nombre_index ON RecursosHumanos(nombre)
+CREATE INDEX apellido_index ON RecursosHumanos(apellido)
+CREATE INDEX emailTrab_index ON RecursosHumanos(emailTrab)
