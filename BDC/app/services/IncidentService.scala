@@ -250,7 +250,8 @@ object IncidentService {
   }
 
   def listUsrTwo(term: String): Seq[NameUsr] = {
-    var sqlString = "SELECT nombre value, nombre label FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND nombre like '%" + term + "%'"
+    //var sqlString = "SELECT nombre value, nombre label FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND nombre like '%" + term + "%'"
+    var sqlString = "SELECT RTRIM(LTRIM(nombre)) + ' ' + RTRIM(LTRIM(apellido)) value, RTRIM(LTRIM(nombre)) + ' ' + RTRIM(LTRIM(apellido)) label FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND periodo=(select max(periodo) from RecursosHumanos) AND (nombre+apellido like '%" + term + "%')"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(NameUsr.name *)
     }
