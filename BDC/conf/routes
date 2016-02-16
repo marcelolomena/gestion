@@ -615,3 +615,4 @@ GET    /listadoPersonal																				  controllers.Frontend.Programa.lista
 #Asignacion
 GET    /personal				                                                                      controllers.Frontend.Personal.home
 GET    /listadoAsignacion																			  controllers.Frontend.Personal.listadoAsignacion
+GET	   /listSubTaskFromUser/$uid<[A-Za-z0-9_-]+>																				  controllers.Frontend.Personal.listadoSubTareasDeUsuario(uid:String)

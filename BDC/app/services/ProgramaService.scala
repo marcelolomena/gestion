@@ -15,13 +15,13 @@ import play.mvc._
  */
 object ProgramaService {
   def listado(uid: Int, PageSize: Int, page: Int, order: String, json: String): Seq[Programa] = {
-
+/*
 println("uid:" + uid)
 println("PageSize:" + PageSize)
 println("page:" + page)
 println("order:" +order)
 println("json:" + json)
-
+*/
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_program_master {uid},{PageSize},{page},{order},{json}").on(
         'uid -> uid,
@@ -35,7 +35,7 @@ println("json:" + json)
   def listadoRecursos(pid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[Recurso] = {
 
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.list_member_activity {pid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
+      SQL("EXEC art.list_member_program_activity {pid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
         'pid -> pid.toInt,
         'SortColumnName -> SortColumnName,
         'SortOrderBy -> SortOrderBy,

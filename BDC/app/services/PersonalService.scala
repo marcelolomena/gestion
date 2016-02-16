@@ -26,4 +26,17 @@ object PersonalService {
         'page -> page.toInt).executeQuery().as(Asignado.asignado *)
     }
   }
+  
+  def listadoSubTareas(uid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[Recurso] = {
+
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.list_member_activity {uid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
+        'uid -> uid.toInt,
+        'SortColumnName -> SortColumnName,
+        'SortOrderBy -> SortOrderBy,
+        'NumberOfRows -> NumberOfRows,
+        'StartRow -> StartRow).executeQuery().as(Recurso.recurso *)
+    }
+  }  
+  
 }
