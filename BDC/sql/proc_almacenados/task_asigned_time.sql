@@ -49,7 +49,7 @@ SELECT
             LEFT OUTER JOIN art_sub_task_allocation b
             ON a.tId=b.task_id
             ) x
-            WHERE x.pId=@pid
+            WHERE x.pId=@pid AND is_active=1
             GROUP BY x.tId
             ) Z
             ON W.tId=Z.tId
