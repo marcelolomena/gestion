@@ -844,7 +844,7 @@ $(document).ready(function(){
 		name: 'ir_number', 
 		width: 100,
 		editable: true,
-		editrules:{required:true},
+		editrules:{required:true, number:true},
 		editoptions: {size: 10, maxlengh: 10},
 		searchoptions: {sopt:["gt","lt","eq"] },
 		formoptions: {rowpos:5,colpos:1}
@@ -855,7 +855,7 @@ $(document).ready(function(){
 		editable: true,
 	    editrules:{required:true},
 		edittype: "textarea",
-	    editoptions: { rows: "3", cols: "25"},
+	    editoptions: { rows: "3", cols: "25", maxlength: "60"},
 	    formoptions: {rowpos:6,colpos:1}
 	    },
 	    { 
@@ -865,7 +865,7 @@ $(document).ready(function(){
 	    hidden: true, 
 		editrules: {edithidden: true},
 		edittype: "textarea",
-	    editoptions: { rows: "3", cols: "25"},
+	    editoptions: { rows: "3", cols: "25", maxlength: "160"},
 	    formoptions: {rowpos:6,colpos:2}
 	    },
 	    { 
