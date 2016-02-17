@@ -79,6 +79,8 @@ $(document).ready(function(){
    	        viewrecords: true,
    	        rowList: [5, 10, 20, 50],
    	        gridview: true,
+   	        subGrid: true, 
+   	        subGridRowExpanded: showGridSubTask,   	        
 			pager: "#jqGridPersonalPager"
     });	  
 	
@@ -97,5 +99,60 @@ $(document).ready(function(){
       sopt: ['eq'],
       multipleSearch: true } 
     );
+	
+	function showGridSubTask(parentRowID, parentRowKey) {
+	    var childGridID = parentRowID + "_table";
+	    var childGridPagerID = parentRowID + "_pager";
+	    var childGridURL = "/listSubTaskFromUser/" + parentRowKey;
+
+	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+	    $("#" + childGridID).jqGrid({
+	        url: childGridURL,
+	        mtype: "GET",
+	        datatype: "json",
+	        colNames: ["sub_task_id","Estado","Recurso","Proyecto", "Tarea", "Subtarea","Planeadas", "Trabajadas", "% Avance","Fecha Inicio","Fecha Termino"],
+	        colModel: [
+	           { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
+	           { label: 'Estado', name: 'estado', width: 50,search:false, 
+	           	formatter: function (cellvalue) {
+	               	var color;
+	               	if (cellvalue == 'ATRASADA') {
+	                	   color = 'red';
+	               	} else if (cellvalue == 'EN EJECUCION') {
+	                	   color = 'yellow';
+	               	} else if (cellvalue == 'TERMINADA A TIEMPO') {
+	                	   color = 'green';
+	               	} else if (cellvalue == 'TERMINADA ADELANTADA') {
+	                	   color = 'blue';
+	               	} else if (cellvalue == '') {
+	                	   color = 'white';
+	               	}
+
+	           		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
+	           	}
+	           	
+	           },             
+	           { name: "recurso", width: 200, align: "left", editable:false },
+	           { name: "proyecto", width: 200, align: "left", editable:false },
+	           { name: "tarea", width: 200, align: "left", editable:false },
+	           { name: "subtarea", width: 200, align: "left", editable:false },
+	           { name: "planeadas", width: 100, align: "center",editable:false },
+	           { name: "trabajadas", width: 100, align: "center", editable:false },
+	           { name: "porcentaje", width: 100, align: "center",editable:false },
+	           { name: "plan_start_date", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
+	           { name: "plan_end_date", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
+	        ],
+			height: 'auto',
+	        regional : "es",
+	        rowList: [],        
+			pgbuttons: false,     
+			pgtext: null,        
+			viewrecords: false,    
+	        pager: "#" + childGridPagerID
+	    });
+		
+	    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});	
+	}	
 
 });
