@@ -40,14 +40,16 @@ $(document).ready(function(){
 	var programaSubalternos = [
             { label: 'uid', name: 'uid', width: 10, key: true, hidden:true }, 
             { label: 'Nombre', name: 'nombre', width: 300,editable: false,search:false},
-            { label: 'Horas Asignadas', name: 'asignado', width: 300,editable: false,search:false},
+            { label: 'Area', name: 'area', width: 300,editable: false,search:false},
+            { label: 'Departamento', name: 'departamento', width: 300,editable: false,search:false},
+            { label: 'Horas Asignadas', name: 'asignado', width: 100,editable: false,search:false},
+            { label: 'Horas Avanzadas', name: 'avanzado', width: 100,editable: false,search:false},
             { label: 'Fecha Inicio', name: 'plan_start_date', editable: false, hidden:true,
             	searchoptions: {searchhidden: true,
                     dataInit: function (element) {
                         $(element).datepicker({
                             id: 'Fecha Inicio',
                             dateFormat: 'yy-mm-dd',
-                            maxDate: new Date(2020, 0, 1),
                             showOn: 'focus'
                         });
                     }
@@ -80,8 +82,20 @@ $(document).ready(function(){
    	        rowList: [5, 10, 20, 50],
    	        gridview: true,
    	        subGrid: true, 
+   	        caption: "Fecha",
    	        subGridRowExpanded: showGridSubTask,   	        
-			pager: "#jqGridPersonalPager"
+			pager: "#jqGridPersonalPager",
+			loadComplete: function () {
+                var $grid = $(this), columnNames, name,
+                    userdata = $grid.jqGrid('getGridParam', 'userData');
+
+                if (userdata) {
+                    if (userdata.daterang) {
+                        $grid.jqGrid('setCaption', userdata.daterang);
+                    }                	
+                }
+            }
+			
     });	  
 	
 	
@@ -101,6 +115,8 @@ $(document).ready(function(){
     );
 	
 	function showGridSubTask(parentRowID, parentRowKey) {
+		//var rowData = $('#jqGridPersonal').jqGrid('getRowData', parentRowID)
+		//console.log("lala:" + rowData.nombre)
 	    var childGridID = parentRowID + "_table";
 	    var childGridPagerID = parentRowID + "_pager";
 	    var childGridURL = "/listSubTaskFromUser/" + parentRowKey;
@@ -111,7 +127,7 @@ $(document).ready(function(){
 	        url: childGridURL,
 	        mtype: "GET",
 	        datatype: "json",
-	        colNames: ["sub_task_id","Estado","Recurso","Proyecto", "Tarea", "Subtarea","Planeadas", "Trabajadas", "% Avance","Fecha Inicio","Fecha Termino"],
+	        colNames: ["sub_task_id","Estado","Recurso","Proyecto", "Tarea", "Subtarea","Planeadas", "Trabajadas", "% Avance","Fecha Inicio Planeada","Fecha Término Planeada","Fecha Inicio Real","Fecha Término Real"],
 	        colModel: [
 	           { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
 	           { label: 'Estado', name: 'estado', width: 50,search:false, 
@@ -142,13 +158,18 @@ $(document).ready(function(){
 	           { name: "porcentaje", width: 100, align: "center",editable:false },
 	           { name: "plan_start_date", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
 	           { name: "plan_end_date", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
+	           { name: "rfecini", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
+	           { name: "rfecfin", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },		           
 	        ],
 			height: 'auto',
-	        regional : "es",
-	        rowList: [],        
-			pgbuttons: false,     
-			pgtext: null,        
-			viewrecords: false,    
+			page: 1,
+	        rowNum: 20,
+	        regional : 'es',
+	        autowidth:true, 
+   	        viewrecords: true,
+   	        rowList: [5, 10, 20, 50],
+   	        gridview: true,     
+			viewrecords: true,    
 	        pager: "#" + childGridPagerID
 	    });
 		
