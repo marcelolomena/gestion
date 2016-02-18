@@ -27,6 +27,10 @@ function returnSubTaskLink(cellValue, options, rowdata, action)
 {
     return "<a href='/sub-task-details/" + options.rowId + "' >" + cellValue +"</a>";
 } 
+function returnUserLink(cellValue, options, rowdata, action) 
+{
+    return "<a href='/employee/" + options.rowId + "' >" + cellValue +"</a>";
+} 
 
 function findWithColor() {
     var filters, i, l, rules, rule, iCol, $this = $(this);

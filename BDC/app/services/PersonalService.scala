@@ -30,6 +30,12 @@ object PersonalService {
   }
   
   def listadoSubTareas(uid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[XRecurso] = {
+//println("uid:" + uid)
+//println("SortColumnName:" + SortColumnName)
+//println("SortOrderBy:" + SortOrderBy)
+//println("NumberOfRows:" + NumberOfRows)
+//println("StartRow:" + StartRow)
+
 
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_member_activity {uid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(

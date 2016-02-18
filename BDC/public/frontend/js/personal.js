@@ -39,7 +39,7 @@ $(document).ready(function(){
 	
 	var programaSubalternos = [
             { label: 'uid', name: 'uid', width: 10, key: true, hidden:true }, 
-            { label: 'Nombre', name: 'nombre', width: 300,editable: false,search:false},
+            { label: 'Nombre', name: 'nombre', width: 300,editable: false,search:false,formatter: returnUserLink},
             { label: 'Area', name: 'area', width: 300,editable: false,search:false},
             { label: 'Departamento', name: 'departamento', width: 300,editable: false,search:false},
             { label: 'Horas Asignadas', name: 'asignado', width: 100,editable: false,search:false},
