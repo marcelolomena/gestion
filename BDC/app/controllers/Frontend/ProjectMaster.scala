@@ -564,14 +564,19 @@ object ProjectMaster extends Controller {
           val task_list = TaskService.findAllTaskIdListByProjectId(p.pId.get.toString) //findProjectTaskCount(p.pId.get.toString)
           val timesheetList = TimesheetService.getAllTimesheetIds()
           for (task <- task_list) {
+            /*
+             
             val subtask_list = SubTaskServices.findAllocatedSubTaskIdsByTask(task.toString())
             for (subtask <- subtask_list) {
               for (t <- timesheetList) {
                 if (t == subtask) {
+                
+                */
+                if (true) {
                   do_delete = false
                 }
-              }
-            }
+              //}
+            //}
           }
           if (do_delete) {
             ProjectService.softDeleteProject(id)
@@ -584,7 +589,7 @@ object ProjectMaster extends Controller {
 
           } else {
             node.put("status", "Fail")
-            node.put("message", "Time is booked against this project, you can not delete this project.")
+            node.put("message", "Existen tareas asociadas a este proyecto, favor elimine estas tareas antes de eliminar el proyecto.")
           }
       }
       Ok(node.toString())

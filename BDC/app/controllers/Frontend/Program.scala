@@ -1136,6 +1136,9 @@ object Program extends Controller {
           val timesheetList = TimesheetService.getAllTimesheetIds()
 
           for (project <- projectlist) {
+            if(true){
+              do_delete=false
+            }/*
             val tasklist = TaskService.findAllTaskIdListByProjectId(project.toString())
             for (task <- tasklist) {
               val subtask_list = SubTaskServices.findAllocatedSubTaskIdsByTask(task.toString())
@@ -1148,6 +1151,8 @@ object Program extends Controller {
               }
 
             }
+            */
+            
 
           }
 
@@ -1164,7 +1169,7 @@ object Program extends Controller {
 
       } else {
         node.put("status", "Fail")
-        node.put("message", "Time is booked against this program, you can not delete this program.")
+        node.put("message", "Existen proyectos asociados a este programa, favor elimine estos proyectos antes de eliminar el programa")
       }
       Ok(node.toString())
     }.getOrElse {
