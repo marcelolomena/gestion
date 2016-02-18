@@ -15,19 +15,21 @@ import play.mvc._
  */
 object PersonalService {
 
-  def listadoAsignacionDependiente(uid: String, fecini: String, fecfin: String, size: String, page: String): Seq[Asignado] = {
+  def listadoAsignacionDependiente(uid: String, fecini: String, fecfin: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[Asignado] = {
 
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.asignacion_dependiente {uid},{fecini},{fecfin},{size},{page}").on(
+      SQL("EXEC art.asignacion_dependiente {uid},{fecini},{fecfin},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
         'uid -> uid.toInt,
         'fecini -> fecini,
         'fecfin -> fecfin,
-        'size -> size.toInt,
-        'page -> page.toInt).executeQuery().as(Asignado.asignado *)
+        'SortColumnName -> SortColumnName,
+        'SortOrderBy -> SortOrderBy,
+        'NumberOfRows -> NumberOfRows,
+        'StartRow -> StartRow).executeQuery().as(Asignado.asignado *)
     }
   }
   
-  def listadoSubTareas(uid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[Recurso] = {
+  def listadoSubTareas(uid: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[XRecurso] = {
 
     DB.withConnection { implicit connection =>
       SQL("EXEC art.list_member_activity {uid},{SortColumnName},{SortOrderBy},{NumberOfRows},{StartRow}").on(
@@ -35,7 +37,7 @@ object PersonalService {
         'SortColumnName -> SortColumnName,
         'SortOrderBy -> SortOrderBy,
         'NumberOfRows -> NumberOfRows,
-        'StartRow -> StartRow).executeQuery().as(Recurso.recurso *)
+        'StartRow -> StartRow).executeQuery().as(XRecurso.xrecurso *)
     }
   }  
   

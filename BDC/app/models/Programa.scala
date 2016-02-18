@@ -182,30 +182,138 @@ object Recurso {
   implicit val recursoWrites = Json.writes[Recurso]
 }
 
-case class Asignado(
-  uid: Int,
-  nombre: String,
-  asignado: Option[Double],
+case class XRecurso(
+  sno: Int,
+  cantidad: Int,
+  program_id: Int,
+  programa: String,
+  recurso: String,
+  proyecto: String,
+  pId: Int,
+  tarea: String,
+  tId: Int,
+  subtarea: String,
+  sub_task_id: Int,
+  planeadas: Double,
+  rfecini: Option[Date],
+  rfecfin:  Option[Date],
+  trabajadas: Double,
+  porcentaje: Double,
   plan_start_date: Option[Date],
-  plan_end_date: Option[Date])
+  plan_end_date: Option[Date],
+  estado: Option[String])
+
+object XRecurso {
+  val xrecurso = {
+    get[Int]("sno") ~
+      get[Int]("cantidad") ~
+      get[Int]("program_id") ~
+      get[String]("programa") ~
+      get[String]("recurso") ~
+      get[String]("proyecto") ~
+      get[Int]("pId") ~
+      get[String]("tarea") ~
+      get[Int]("tId") ~
+      get[String]("subtarea") ~
+      get[Int]("sub_task_id") ~
+      get[Double]("planeadas") ~
+      get[Option[Date]]("rfecini") ~      
+      get[Option[Date]]("rfecfin") ~      
+      get[Double]("trabajadas") ~
+      get[Double]("porcentaje") ~
+      get[Option[Date]]("plan_start_date") ~
+      get[Option[Date]]("plan_end_date") ~
+      get[Option[String]]("estado") map {
+        case sno ~
+          cantidad ~
+          program_id ~
+          programa ~
+          recurso ~
+          proyecto ~
+          pId ~
+          tarea ~
+          tId ~
+          subtarea ~
+          sub_task_id ~
+          planeadas ~
+          rfecini ~
+          rfecfin ~
+          trabajadas ~
+          porcentaje ~
+          plan_start_date ~
+          plan_end_date ~
+          estado => XRecurso(
+          sno,
+          cantidad,
+          program_id,
+          programa,
+          recurso,
+          proyecto,
+          pId,
+          tarea,
+          tId,
+          subtarea,
+          sub_task_id,
+          planeadas,
+          rfecini,
+          rfecfin,
+          trabajadas,
+          porcentaje,
+          plan_start_date,
+          plan_end_date,
+          estado)
+      }
+
+  }
+  implicit val xrecursoWrites = Json.writes[XRecurso]
+}
+
+case class Asignado(
+  sno: Int,
+  cantidad: Int,    
+  uid: Int,
+  fecini: Date,
+  fecfin: Date,
+  nombre: String,
+  area: String,
+  departamento: String,
+  asignado: Option[Double],
+  avanzado: Option[Double]
+)
 
 object Asignado {
   val asignado = {
+    get[Int]("sno") ~
+    get[Int]("cantidad") ~    
     get[Int]("uid") ~
+    get[Date]("fecini") ~
+    get[Date]("fecfin") ~
       get[String]("nombre") ~
+      get[String]("area") ~
+      get[String]("departamento") ~
       get[Option[Double]]("asignado") ~
-      get[Option[Date]]("plan_start_date") ~ 
-      get[Option[Date]]("plan_end_date") map {
-        case uid ~
+      get[Option[Double]]("avanzado") map {
+        case
+        sno ~
+        cantidad ~
+        uid ~
+          fecini ~
+          fecfin ~
           nombre ~
+          area ~
+          departamento ~
           asignado ~
-          plan_start_date ~
-          plan_end_date => Asignado(
+          avanzado => Asignado(
+              sno,
+              cantidad,
           uid,
+          fecini,
+          fecfin,
           nombre,
+          area,
+          departamento,
           asignado,
-          plan_start_date,
-          plan_end_date)
+          avanzado)
       }
 
   }
