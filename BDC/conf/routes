@@ -316,6 +316,8 @@ GET    /project-earn-value                                                      
 POST   /update-baseline                                                                               controllers.Frontend.ProjectMaster.updateBaseLine()
 GET    /get-project-list                                                                              controllers.Frontend.ProjectMaster.getProjectListForProgram(programid:String)
 GET    /get-roadmap-project-list                                                                      controllers.Frontend.ProjectMaster.getRoadmapProjectListForProgram(programid:String)
+GET    /add-new-projectJira/$pIndex<[A-Za-z0-9_-]+>                                                       controllers.Frontend.ProjectMasterJira.addNewProject(pIndex)
+POST   /test-new-projectJira/$pIndex<[A-Za-z0-9_-]+>                                                       controllers.Frontend.ProjectMasterJira.saveProjectDetails(pIndex)
 
 GET    /update-project-status/$project_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.ProjectMaster.updateProjectStatus(project_id:String)
 POST   /update-project-status/$project_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.ProjectMaster.updateStatus(project_id:String)
