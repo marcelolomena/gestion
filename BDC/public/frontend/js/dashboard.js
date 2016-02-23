@@ -728,6 +728,42 @@ $(document).ready(function(){
 	                }
 	            }
 	        },series: []			
+	};		
+	
+	var optionsPieDepa ={
+			chart: {
+				renderTo: 'containerDepa',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	            text: 'Programas por Departamento'
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}	        	
+	        },plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   grillaProgramaConSAP(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []			
 	};			
 	
 	function grillaPrograma(did,name){
@@ -1264,6 +1300,37 @@ $(document).ready(function(){
 					           var url = 'status-subtask';
 					    	   $("#jqGrid3").jqGrid('excelExport',{"url":url});
 					       } 
+					});
+				}
+			}else if(currentHeaderID=='depa'){
+				if($('#containerDepa').html() == "") {	
+					$.ajax({
+						  url: '/pieDepa',
+						  type: 'GET',
+						  success: function(data) {
+							  optionsPieDepa.series.push(JSON.parse(data));
+								var charPieDepa = new Highcharts.Chart(optionsPieDepa);
+
+								$("#jqGridDepa").jqGrid({
+							        url: '/panelDepa?did=6079',
+							        mtype: "GET",
+							        datatype: "json",
+							        page: 1,
+							        colModel: modelPie,
+									viewrecords: true,
+									regional : "es",
+									height: 'auto',
+							        autowidth:true,
+							        rowNum: 20,
+							        pager: "#jqGridPagerDepa",
+							        ignoreCase: true,
+							        caption:'Programas'
+							    });
+							
+						  },
+						  error: function(e) {
+
+						  }
 					});
 				}
 			}

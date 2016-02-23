@@ -78,11 +78,20 @@ object DashboardService {
       SQL(sqlString).on('did -> did.toInt, 'Json -> Json).executeQuery() as (scalar[Int].single)
     }
   }
-  
-///
+
+  ///
   def reporteProgramaPorSapFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
     //println(Json)
     var sqlString = "EXEC art.programas_por_sap_filtrado {did},{PageSize},{PageNumber},{Json}"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('did -> did.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
+    }
+  }
+
+  def reporteProgramaPorDepartamentoFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
+    //println(Json)
+    var sqlString = "EXEC art.programas_por_departamento_filtrado {did},{PageSize},{PageNumber},{Json}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('did -> did.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
@@ -96,8 +105,16 @@ object DashboardService {
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('did -> did.toInt, 'Json -> Json).executeQuery() as (scalar[Int].single)
     }
-  }  
-  
+  }
+
+  def cantidadProgramaPorDepartamentoFiltrado(did: String, Json: String): Int = {
+    //println(Json)
+    var sqlString = "EXEC art.cantidad_programas_por_departamento_filtrado {did},{Json}"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('did -> did.toInt, 'Json -> Json).executeQuery() as (scalar[Int].single)
+    }
+  }
 
   def reportBubble(): Seq[Bubble] = {
 
@@ -118,6 +135,14 @@ object DashboardService {
   def reportType(): Seq[Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_type"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).executeQuery() as (Pie.pie *)
+    }
+  }
+
+  def reportDepa(): Seq[Pie] = {
+
+    var sqlString = "EXEC art.porcentaje_programas_for_departamento"
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Pie.pie *)
     }
@@ -146,7 +171,7 @@ object DashboardService {
       SQL(sqlString).executeQuery() as (Pie.pie *)
     }
   }
-  
+
   def getProgramExcel(pid: String): Seq[ATM] = {
 
     var sqlString = "EXEC art.excel {pid}"
@@ -192,9 +217,9 @@ object DashboardService {
     var sqlString = "EXEC art.estado_sub_tarea {PageSize},{PageNumber},{json}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
-          'PageSize -> pageSize.toInt,
-          'PageNumber -> pageNumber.toInt,
-          'json -> json).executeQuery() as (StateSubTarea.state *)
+        'PageSize -> pageSize.toInt,
+        'PageNumber -> pageNumber.toInt,
+        'json -> json).executeQuery() as (StateSubTarea.state *)
     }
   }
 

@@ -343,6 +343,7 @@ GET    /panelType		                                                             
 GET    /panelSubType		                                                                          controllers.Frontend.Dashboard.panelSubType
 GET    /panelState		                                                                          	  controllers.Frontend.Dashboard.panelState
 GET    /panelSap		                                                                          	  controllers.Frontend.Dashboard.panelSap
+GET    /panelDepa		                                                                          	  controllers.Frontend.Dashboard.panelDepa
 GET    /bar-finance                                                                                   controllers.Frontend.Dashboard.barChart(mode:String,id:String)
 GET    /bar-division-finace                                                                           controllers.Frontend.Dashboard.barChartDivision
 GET    /bar-timesheet                                                                                 controllers.Frontend.Dashboard.barChartTimesheet
@@ -565,6 +566,7 @@ GET    /pieType                                                                 
 GET    /pieSubType                                                                        	      	  controllers.Frontend.Dashboard.pieSubType
 GET    /pieState                                                                        	      	  controllers.Frontend.Dashboard.pieState
 GET    /pieSap                                                              				      	  controllers.Frontend.Dashboard.pieSap
+GET    /pieDepa                                                              				      	  controllers.Frontend.Dashboard.pieDepa
 GET    /getPyChart/$pid<[A-Za-z0-9_-]+>                                                       	      controllers.Frontend.Dashboard.chartProject(pid:String)
 GET    /save_advance_rate																	          controllers.Frontend.SubTask.saveAdvanceRate(sub_task_id: String, advance_rate: String)
 GET    /chat/$id<[A-Za-z0-9_-]+>                                                     				  controllers.Frontend.Room.chat(id:String)

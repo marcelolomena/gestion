@@ -269,51 +269,43 @@ object XRecurso {
 }
 
 case class Asignado(
-  sno: Int,
-  cantidad: Int,    
-  uid: Int,
-  fecini: Date,
-  fecfin: Date,
+  id:Int,
+  parent:Option[Int],
+  isleaf:Int,
+  level: Int,
+  uname: String,
   nombre: String,
   area: String,
-  departamento: String,
-  asignado: Option[Double],
-  avanzado: Option[Double]
+  departamento: String
 )
 
 object Asignado {
   val asignado = {
-    get[Int]("sno") ~
-    get[Int]("cantidad") ~    
-    get[Int]("uid") ~
-    get[Date]("fecini") ~
-    get[Date]("fecfin") ~
-      get[String]("nombre") ~
-      get[String]("area") ~
-      get[String]("departamento") ~
-      get[Option[Double]]("asignado") ~
-      get[Option[Double]]("avanzado") map {
+    get[Int]("id") ~
+    get[Option[Int]]("parent") ~
+    get[Int]("isleaf") ~ 
+    get[Int]("level") ~  
+    get[String]("uname") ~
+    get[String]("nombre") ~
+    get[String]("area") ~
+    get[String]("departamento") map {
         case
-        sno ~
-        cantidad ~
-        uid ~
-          fecini ~
-          fecfin ~
+          id ~
+          parent ~
+          isleaf ~
+          level ~
+          uname ~
           nombre ~
           area ~
-          departamento ~
-          asignado ~
-          avanzado => Asignado(
-              sno,
-              cantidad,
-          uid,
-          fecini,
-          fecfin,
+          departamento => Asignado(
+          id,
+          parent,
+          isleaf,
+          level,
+          uname,
           nombre,
           area,
-          departamento,
-          asignado,
-          avanzado)
+          departamento)
       }
 
   }
