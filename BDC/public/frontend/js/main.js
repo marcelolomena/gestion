@@ -443,20 +443,20 @@ function renderNewTask() {
 										},
 										messages : {
 											title : {
-												required : "Please enter the title.",
-												maxlength : "Title should be less than 60 characters."
+												required : "Por favor ingresa un título",
+												maxlength : "El título debe debe tener mínimo 4 y máximo de 60 caracteres."
 											},
 											plan_start_date : {
-												required : "Please enter task planned start date."
+												required : "Por favor, introduzca la fecha."
 											},
 											description : {
-												maxlength : "Description should be less than 160 characters."
+												maxlength : "Descripción de la tarea debe tener como máximo 160 caracteres."
 											},
 											plan_end_date : {
-												required : "Please enter task planned end date."
+												required : "Por favor, introduzca la fecha."
 											},
 											plan_time : {
-												required : "Please enter the project plan time in hours."
+												required : "Por favor, introduzca el valor numérico."
 											}
 
 										}
@@ -471,7 +471,7 @@ function renderNewTask() {
 					$("#milestone_status").on("change", renderTaskRemark);
 				},
 				error : function() {
-					alert("alertSomethingWentWrong");
+					alert("Error");
 				}
 			});
 }
@@ -609,18 +609,18 @@ function renderEditSubTask() {
 										},
 										messages : {
 											task_title : {
-												required : "Please enter the sub task.",
-												maxlength : "Title should be less than 60 characters."
+												required : "Por favor, ingresa el título.",
+												maxlength : "Título debe tener mínimo 4 y máximo de 60 caracteres."
 											},
 											task_description : {
-												required : "Please enter sub task description",
-												maxlength : "Description should be less than 160 characters."
+												required : "Por favor, ingresa la descripción",
+												maxlength : "Descripción de la subtarea debe tener como máximo 160 caracteres."
 											},
 											planned_start_date : {
-												required : "Please select date."
+												required : "Por favor, introduzca la fecha."
 											},
 											planned_end_date : {
-												required : "Please select date."
+												required : "Por favor, introduzca la fecha."
 											}
 
 										}
@@ -724,10 +724,10 @@ function renderAssignSubTask() {
 										},
 										messages : {
 											user : {
-												required : "Please select user."
+												required : "Por favor selecciona un usuario."
 											},
 											estimated_time : {
-												required : "Please enter estimated time in hours."
+												required : "Por favor ingresa el tiempo estimado, en horas"
 											}
 										}
 									});
@@ -1075,10 +1075,10 @@ function saveTaskFo() {
 							$("#plan_end_date").addClass("error");
 							$("#plan_end_date").focus();
 						} else if (obj.completion_percentage) {
-							alert("Please enter valid completion percentage");
+							alert("Por favor ingresa un % de tiempo válido");
 
 						} else {
-							alert("Somthing went wrong, please enter valid input");
+							alert("Error, por favor ingresa un valor válido");
 						}
 
 					}
@@ -1086,7 +1086,7 @@ function saveTaskFo() {
 					// jQuery("#timesheet-list tbody").append(data);
 				},
 				error : function() {
-					alert("alertSomethingWentWrong");
+					alert("Error");
 				}
 			});
 }
@@ -1143,7 +1143,7 @@ function saveSubTaskFo() {
 					$("#task_title").addClass("error");
 					$("#task_title").focus();
 				} else {
-					alert("Somthing went wrong, please enter valid input");
+					alert("Error, por favor ingresa un valor válido");
 				}
 
 			}
@@ -1151,7 +1151,7 @@ function saveSubTaskFo() {
 			// jQuery("#timesheet-list tbody").append(data);
 		},
 		error : function() {
-			alert("alertSomethingWentWrong");
+			alert("Error");
 		}
 	});
 }
@@ -1167,13 +1167,13 @@ function assignSubTaskFo() {
 	var estimated_time = parseFloat($("#estimated_time").val());
 
 	if (days < estimated_time) {
-		alert("maximum of " + days
-				+ " hours can be asigned for this task, please re-enter hours.");
+		alert("Un máximo de " + days
+				+ " horas pueden ser asignadas para esta tarea, favor reingrese las horas.");
 		$("#estimated_time").focus();
 	} else {
 		var userValue = $("#user").val();
 		if (userValue == "") {
-			alert("Please select valid user.");
+			alert("Por favor seleccione un usuario válido.");
 			$("#search-user").focus();
 		} else {
 			var max_hour = parseFloat($("#max_hours").val());
@@ -1208,7 +1208,7 @@ function assignSubTaskFo() {
 										}, delay);
 
 									} else {
-										alert("Somthing went wrong, please enter valid input");
+										alert("Error, por favor ingresa un valor válido");
 									}
 									$('#assign_subtask input').attr('disabled',
 											'disabled');
@@ -1216,11 +1216,11 @@ function assignSubTaskFo() {
 									// tbody").append(data);
 								},
 								error : function() {
-									alert("alertSomethingWentWrong");
+									alert("Error");
 								}
 							});
 				} else {
-					alert("estimated time should be less than available hours.");
+					alert("Tiempo estimado debe ser menor a las horas disponibles.");
 					$("#estimated_time").focus();
 				}
 			} else {
@@ -1267,7 +1267,7 @@ function assignSubTaskFo() {
 											 */
 										}
 									} else {
-										alert("Somthing went wrong, please enter valid input");
+										alert("Error, por favor ingresa un valor válido");
 									}
 									$('#assign_subtask input').attr('disabled',
 											'disabled');
@@ -1275,11 +1275,11 @@ function assignSubTaskFo() {
 									// tbody").append(data);
 								},
 								error : function() {
-									alert("alertSomethingWentWrong");
+									alert("Error");
 								}
 							});
 				} else {
-					alert("estimated time should be less than available hours.");
+					alert("Tiempo estimado debe ser menor a las horas disponibles.");
 					$("#estimated_time").focus();
 				}
 			}
@@ -1351,7 +1351,7 @@ function renderDeleteAllocation() {
 				window.location.reload();
 			}
 			if (obj.status == "Fail") {
-				alert("No Records available...");
+				alert("No hay registros disponibles...");
 			}
 		}
 	});
@@ -1378,7 +1378,7 @@ function renderDeleteExternalAllocation() {
 				window.location.reload();
 			}
 			if (obj.status == "Fail") {
-				alert("No Records available...");
+				alert("No hay registros disponibles...");
 			}
 		}
 	});
@@ -1399,7 +1399,7 @@ function renderEditAssignSubTask() {
 
 	$("#user_hour_" + id).keypress(function(e) {
 		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-			alert("Numbers only");
+			alert("Sólo números");
 			return false;
 		}
 	});
@@ -1523,23 +1523,23 @@ function renderTaskEdit() {
 										},
 										messages : {
 											title : {
-												required : "Please enter the title.",
-												maxlength : "Title should be less than 60 characters."
+												required : "Por favor ingrese el título.",
+												maxlength : "Título debe tener mínimo 4 y máximo de 60 caracteres."
 											},
 											description : {
-												maxlength : "Description should be less than 160 characters."
+												maxlength : "Descripción debe tener como máximo 160 caracteres."
 											},
 											plan_start_date : {
-												required : "Please enter task planned start date."
+												required : "Por favor, introduzca la fecha."
 											},
 											plan_end_date : {
-												required : "Please enter task planned end date."
+												required : "Por favor, introduzca la fecha."
 											},
 											milestone_release_date : {
-												required : "Please enter task approx released date."
+												required : "Por favor, introduzca la fecha."
 											},
 											plan_time : {
-												required : "Please enter the project plan time in hours."
+												required : "Por favor, introduzca el valor numérico."
 											}
 
 										}
@@ -1552,7 +1552,7 @@ function renderTaskEdit() {
 					$("#milestone_status").on("change", renderTaskRemark);
 				},
 				error : function() {
-					alert("alertSomethingWentWrong");
+					alert("Error");
 				}
 			});
 }
@@ -3049,12 +3049,12 @@ function renderAddTaskDepends() {
 }
 
 function customDialogBox(message, height, width) {
-	$("#dialog-confirm").html("You have deleted program member successfully!"); // /warning
+	$("#dialog-confirm").html("Miembro eliminado del programa"); // /warning
 
 	$("#dialog-confirm").dialog({
 		resizable : false,
 		modal : true,
-		title : "Information",
+		title : "Información",
 		height : 150,
 		width : 300,
 		buttons : {
@@ -3092,10 +3092,10 @@ function renderTasksforDependency() {
 	var _this = $("#project").val();
 	if (_this != "" && _this == "") {
 		$("#task").html(
-				"<option value='' class='blank'>--- Choose Task ---</option>");
+				"<option value='' class='blank'>--- Seleccione tarea ---</option>");
 		$("#sub_task")
 				.html(
-						"<option value='' class='blank'>--- Choose Sub Task ---</option>");
+						"<option value='' class='blank'>--- Seleccione subtarea ---</option>");
 	} else {
 		callApi("/search-task-list?projectId=" + $("#project").val(), null,
 				"GET", getTaskListSuccess);
@@ -3115,7 +3115,7 @@ function renderSubTaskListforDependency() {
 function getTaskListSuccess(response) {
 	$("#task").html(response);
 	$("#sub_task").html(
-			"<option value='' class='blank'>--- Choose Sub Task ---</option>");
+			"<option value='' class='blank'>--- Seleccione subtarea ---</option>");
 }
 function getSubTaskListSuccess(response) {
 	$("#subtask").html(response);
@@ -3151,8 +3151,8 @@ function renderDependencySubTaskDates() {
 			$("#planned_start_date").datepicker("destroy");
 			$("#planned_end_date").datepicker("destroy");
 
-			alert("This Sub Task should be scheduled between "
-					+ formatDate(obj.maxDate) + " & "
+			alert("Esta subtarea debe ser planificada entre "
+					+ formatDate(obj.maxDate) + " y "
 					+ formatDate($("#task_end_date").val()))
 			$("#planned_start_date").datepicker({
 				buttonImageOnly : true,
@@ -3200,8 +3200,8 @@ function renderDependencyTaskDates() {
 			$("#plan_end_date").val("");
 			// alert("min "+new Date(minD) +" maxD "+new Date(maxD) +" - "+"min
 			// "+ minD +" maxD "+ maxD )
-			alert("This Task should be scheduled between " + formatDate(minD)
-					+ " & " + formatDate(maxD))
+			alert("Esta tarea debe ser planificada entre " + formatDate(minD)
+					+ " y " + formatDate(maxD))
 			// alert( new Date(obj.start.replace(/-/g, '/'))+ " - "+new
 			// Date(obj.end.replace(/-/g, '/')));
 			$("#plan_start_date").datepicker({
@@ -3544,7 +3544,7 @@ function renderCriticalPathGantt() {
 			alert("Minimum lag for critcial path is " + lag);
 
 		} else {
-			alert("Critical path not available.");
+			alert("Ruta crítica no disponible.");
 			// $("#task-ganttr").html("No Tasks to Display.");
 			// $("#task-gantt").css("height","0px");
 			// $("#task-gantt").css("margin-top","10px");
@@ -3683,7 +3683,7 @@ function renderSubTaskCriticalPathGantt() {
 
 			if (obj[0].lag != null) {
 				var lag = obj[0].lag
-				alert("Minimum lag for critcial path is " + lag);
+				alert("Minimum lag for critical path is " + lag);
 			}
 			$("#flot-placeholder").gantt({
 				source : obj,
@@ -3692,7 +3692,7 @@ function renderSubTaskCriticalPathGantt() {
 				maxScale : "months",
 				minScale : "days",
 				itemsPerPage : 10,
-				waitText : "Please Wait...",
+				waitText : "Por favor espere...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
 
@@ -3830,7 +3830,7 @@ function renderProgramMember() {
 
 														$("#dialog-confirm")
 																.html(
-																		"You have deleted program member successfully !"); // /warning
+																		"Ha borrado al miembro del programa"); // /warning
 
 														$("#dialog-confirm")
 																.dialog(
@@ -3921,7 +3921,7 @@ function renderProgramMemberExternal() {
 
 														$("#dialog-confirm")
 																.html(
-																		"You have deleted program member successfully !"); // /warning
+																		"Ha borrado al miembro del programa"); // /warning
 
 														$("#dialog-confirm")
 																.dialog(
@@ -3982,16 +3982,16 @@ function renderProgramSoftdelete() {
 
 	var _this = $(this);
 	var programid = _this.attr("id").split("_")[1];
-	$("#dialog-confirm").html("Do you want delete this program?"); // /warning
+	$("#dialog-confirm").html("¿Está seguro que desea eliminar este programa?"); // /warning
 	$("#dialog-confirm").dialog(
 			{
 				resizable : false,
 				modal : true,
-				title : "Warning",
+				title : "Advertencia",
 				height : 150,
 				width : 300,
 				buttons : {
-					"Yes" : function() {
+					"Sí" : function() {
 						$(this).dialog('close');
 						$("#pop-box-over").css("display", "none");
 						$("#dialog-confirm").css("display", "none");
@@ -4051,17 +4051,17 @@ function renderProgramSoftdelete() {
 function renderProjectSoftdelete() {
 	var _this = $(this);
 	var project_id = _this.attr("id").split("_")[1];
-	$("#dialog-confirm").html("Do you want to delete this project?"); // /warning
+	$("#dialog-confirm").html("¿Está seguro que desea eliminar este proyecto?"); // /warning
 
 	$("#dialog-confirm").dialog(
 			{
 				resizable : false,
 				modal : true,
-				title : "Warning",
+				title : "Advertencia",
 				height : 150,
 				width : 300,
 				buttons : {
-					"Yes" : function() {
+					"Sí" : function() {
 						$(this).dialog('close');
 						$("#pop-box-over").css("display", "none");
 						$("#dialog-confirm").css("display", "none");
@@ -4136,11 +4136,11 @@ function renderSAPUpdate() {
 													var json_var = $.parseJSON(data);
 													var json_data = json_var.status
 													if (json_data == "Success") {
-														$("#dialog-confirm").html("You have deleted this SAP number successfully !"); // /warning
+														$("#dialog-confirm").html("Ha eliminado el número SAP"); // /warning
 														$("#dialog-confirm")
 																.dialog({resizable : false,
 																			modal : true,
-																			title : "Information",
+																			title : "Información",
 																			height : 150,
 																			width : 300,
 																			buttons : {
@@ -4221,7 +4221,7 @@ function renderTasksUpdate() {
 	var isValidString = _this.find("input").val();
 	if (isValidString == "true") {
 		
-		$("#dialog-confirm").html("¿Quieres eliminar esta tarea"); // /Do you
+		$("#dialog-confirm").html("¿Está seguro que desea eliminar esta tarea?"); // /Do you
 		// want
 		// to change the
 		// status?
@@ -4229,7 +4229,7 @@ function renderTasksUpdate() {
 				{
 					resizable : false,
 					modal : true,
-					title : "Warning",
+					title : "Advertencia",
 					height : 150,
 					width : 300,
 					buttons : {
@@ -4254,7 +4254,7 @@ function renderTasksUpdate() {
 											{
 												resizable : false,
 												modal : true,
-												title : "Warning",
+												title : "Advertencia",
 												height : 150,
 												width : 300,
 												buttons : {
@@ -4285,7 +4285,7 @@ function renderTasksUpdate() {
 		
 	}else if(isValidString == "false") {
 		
-		$("#dialog-confirm").html("Esta tarea es Predecesor tarea a otra tarea por el mismo proyecto, es lo que quieres borrarlo?"); // /Do you
+		$("#dialog-confirm").html("Esta tarea es predecesor de otra tarea en el mismo proyecto. ¿Seguro desea borrarla?"); // /Do you
 		// want
 		// to change the
 		// status?
@@ -4318,7 +4318,7 @@ function renderTasksUpdate() {
 											{
 												resizable : false,
 												modal : true,
-												title : "Warning",
+												title : "Advertencia",
 												height : 150,
 												width : 300,
 												buttons : {
@@ -4538,11 +4538,11 @@ function renderBookTimeNew() {
 				}
 			});
 		} else {
-			alert("Please insert correct start date and end date");
+			alert("Por favor ingrese fechas correctas de inicio y término");
 		}
 
 	} else {
-		alert("Please Insert correct hours.");
+		alert("Por favor ingrese horas correctas.");
 	}
 	// alert(1);
 }
@@ -4583,11 +4583,11 @@ function renderBookTimeExternal() {
 				}
 			});
 		} else {
-			alert("Please insert correct start date and end date");
+			alert("Por favor ingrese fechas correctas de inicio y término");
 		}
 
 	} else {
-		alert("Please Insert correct hours.");
+		alert("Por favor ingrese las horas correctas.");
 	}
 	
 }
@@ -4600,12 +4600,12 @@ function renderBookTime() {
 	var user_hour = $("#user_hour_" + user).val();
 	if (typeof user_hour != 'undefined') {
 		if (!user_hour.match(num)) {
-			$("#dialog-confirm").html("Please Insert correct hours.");
+			$("#dialog-confirm").html("Por favor ingrese las horas correctas.");
 			// Define the Dialog and its properties.
 			$("#dialog-confirm").dialog({
 				resizable : false,
 				modal : true,
-				title : "Warning",
+				title : "Advertencia",
 				height : 150,
 				width : 300,
 				buttons : {
@@ -4620,7 +4620,7 @@ function renderBookTime() {
 
 			var available = parseInt($("#available_hours_" + user).html());
 			if (available < parseInt(user_hour)) {
-				$("#dialog-confirm").html("Please Insert correct hours.");
+				$("#dialog-confirm").html("Por favor ingrese las horas correctas.");
 
 				// Define the Dialog and its properties.
 				$("#dialog-confirm").dialog({
@@ -4638,7 +4638,7 @@ function renderBookTime() {
 					}
 				});
 			} else {
-				$("#dialog-confirm").html("Do you want to book time?");
+				$("#dialog-confirm").html("¿Desea ingresar tiempo?");
 
 				// Define the Dialog and its properties.
 				$("#dialog-confirm")
@@ -4700,7 +4700,7 @@ function renderBookTime() {
 }
 
 function renderDeleteSubTask() {
-	$("#dialog-confirm").html("Do you want to delete this Subtask?");
+	$("#dialog-confirm").html("¿Está seguro que desea eliminar esta subtarea?");
 	
 	var id = $('.update-sub-task').attr('id');
 
@@ -4712,7 +4712,7 @@ function renderDeleteSubTask() {
 		height : 150,
 		width : 300,
 		buttons : {
-			"Yes" : function() {
+			"Sí" : function() {
 				$(this).dialog('close');
 				$("#pop-box-over").css("display", "none");
 				$("#dialog-confirm").css("display", "none");
@@ -4739,7 +4739,7 @@ function renderDeleteSubTask() {
 function renderDeletePredefinedTask() {
 	var _this = $(this);
 	var id = _this.attr("id").split("_")[1];
-	$("#dialog-confirm").html("Do you want to delete this predefine task?");
+	$("#dialog-confirm").html("¿Está seguro que desea eliminar esta tarea predefinida?");
 	// Define the Dialog and its properties.
 	$("#dialog-confirm").dialog({
 		resizable : false,
@@ -4748,7 +4748,7 @@ function renderDeletePredefinedTask() {
 		height : 150,
 		width : 300,
 		buttons : {
-			"Yes" : function() {
+			"Sí" : function() {
 				$(this).dialog('close');
 				$("#pop-box-over").css("display", "none");
 				$("#dialog-confirm").css("display", "none");
@@ -4817,7 +4817,7 @@ function renderSubmitProjectHours() {
 				$("#dialog-confirm").dialog({
 					resizable : false,
 					modal : true,
-					title : "Warning",
+					title : "Advertencia",
 					height : 150,
 					width : 500,
 					buttons : {
@@ -4832,7 +4832,7 @@ function renderSubmitProjectHours() {
 			} else {
 
 				$("#dialog-confirm").html(
-						"Project planned hours saved successfully"); // /warning
+						"Horas planeadas guardadas"); // /warning
 				$("#dialog-confirm").dialog({
 					resizable : false,
 					modal : true,
@@ -4987,7 +4987,7 @@ function renderSubmitProgramStatus() {
 					}
 				});
 			} else {
-				$("#dialog-confirm").html("Program status updated successfully"); // /warning
+				$("#dialog-confirm").html("Programa actualizado"); // /warning
 				$("#dialog-confirm").dialog({
 					resizable : false,
 					modal : true,
@@ -5025,7 +5025,7 @@ function renderSubmitProgramHours() {
 		hours = "0.0"
 	} else {
 		var _value = hours;
-		var _message = "Please enter a valid number";
+		var _message = "Por favor ingrese un número válido";
 		bool = validateNumeric(_value, _message, "planned_hrs");
 	}
 	if (bool) {
@@ -5059,7 +5059,7 @@ function renderSubmitProgramHours() {
 			} else {
 
 				$("#dialog-confirm").html(
-						"Program planned hours saved successfully"); // /warning
+						"Horas planeadas del programa guardadas"); // /warning
 				$("#dialog-confirm").dialog({
 					resizable : false,
 					modal : true,
@@ -5118,7 +5118,7 @@ function renderSubmitProgramEstimatedCost() {
 		estimated_cost = "0"
 	} else {
 		var _value = estimated_cost;
-		var _message = "Please enter a valid number";
+		var _message = "Por favor ingrese un número válido";
 		bool = validateNumeric(_value, _message, "est_cost");
 	}
 	if (bool) {
@@ -5134,13 +5134,13 @@ function renderSubmitProgramEstimatedCost() {
 							if (json.status == "Success") {
 								$("#dialog-confirm")
 										.html(
-												"Program Estimated cost saved successfully"); // /Information
+												"Costo estimado del programa guardado"); // /Information
 								$("#dialog-confirm")
 										.dialog(
 												{
 													resizable : false,
 													modal : true,
-													title : "Information",
+													title : "Información",
 													height : 150,
 													width : 300,
 													buttons : {
@@ -5186,7 +5186,7 @@ function renderSubmitProgramEstimatedCost() {
 												{
 													resizable : false,
 													modal : true,
-													title : "Warning",
+													title : "Advertencia",
 													height : 150,
 													width : 500,
 													buttons : {
@@ -5249,7 +5249,7 @@ function renderUserProfile() {
 function renderDeleteRisk() {
 	var _this = $(this);
 	var id = _this.attr("id").split("_")[1];
-	$("#dialog-confirm").html("Do you want to delete this risk?");
+	$("#dialog-confirm").html("¿Está seguro que desea eliminar este riesgo?");
 	// Define the Dialog and its properties.
 	$("#dialog-confirm").dialog({
 		resizable : false,
@@ -5258,7 +5258,7 @@ function renderDeleteRisk() {
 		height : 150,
 		width : 300,
 		buttons : {
-			"Yes" : function() {
+			"Sí" : function() {
 				$(this).dialog('close');
 				$("#pop-box-over").css("display", "none");
 				$("#dialog-confirm").css("display", "none");
@@ -5645,11 +5645,11 @@ function submitBookHours() {
 
 					});
 	if (!invalidMinutes) {
-		alert("Please enter valid minutes.");
+		alert("Por favor ingrese minutos válidos.");
 	} else if (!isNonEmpty) {
-		alert("Please enter valid input.");
+		alert("Por favor ingrese el valor.");
 	} else if (!isValid) {
-		alert("Hours should be greater than 0 and less than 24 per day.");
+		alert("Horas deben ser mayor a 0 y menor a 24 horas por día.");
 	} else {
 		var formData = $("#book-time-listing").serialize();
 		var url = "/new-book-time-timesheet"
@@ -5690,7 +5690,7 @@ function submitBookHours() {
 
 							// });
 						} else {
-							alert("Hours should be greater than 0 and less than 24 per day.");
+							alert("Horas deben ser mayor a 0 y menor a 24 horas por día.");
 						}
 
 					}
@@ -5847,7 +5847,7 @@ function renderUpdateExternalAllocation(id,txt_value,_this){
 					$("#dialog-confirm").dialog({
 						resizable : false,
 						modal : true,
-						title : "Information",
+						title : "Información",
 						height : 150,
 						width : 300,
 						buttons : {
@@ -6157,17 +6157,17 @@ function programSubtaskPagination(){
 }
 
 function validateProjectStartDate(project_id,start_date){
-	$("#dialog-confirm").html("Proyecto fecha de finalización no puede ser anterior a la fecha de finalización de tareas, ¿quieres chnage fecha de finalización de tareas.");
+	$("#dialog-confirm").html("Fecha de finalización del proyecto no puede ser anterior a la fecha de finalización de tareas, ¿Desea cambiar la fecha de finalización de tareas?");
 	// Define the Dialog and its properties.
 	$("#jquery-ui").removeAttr("disabled");
 	$("#dialog-confirm").dialog({
 		resizable : false,
 		modal : true,
-		title : "Confirm",
+		title : "Confirmar",
 		height : 150,
 		width : 450,
 		buttons : {
-			"Yes" : function() {
+			"Ok" : function() {
 				jQuery.ajax({
 					url: "/update-project-start-dates?project_id="+project_id+"&start_date="+start_date,
 					cache:false,
@@ -6183,7 +6183,7 @@ function validateProjectStartDate(project_id,start_date){
 								$("#dialog-confirm").dialog({
 									resizable : false,
 									modal : true,
-									title : "Information",
+									title : "Información",
 									height : 150,
 									width : 450,
 									buttons : {
@@ -6199,7 +6199,7 @@ function validateProjectStartDate(project_id,start_date){
 							
 			        },
 			        error: function () {
-			        	alert("alertSomethingWentWrong");
+			        	alert("Error");
 			        }
 				});
 				$(this).dialog('close');
@@ -6286,7 +6286,7 @@ function validateProjectEndDate(project_id,end_date){
 
 
 function validateTaskEdit(task_id,end_date){
-	$("#dialog-confirm").html("Tarea fecha de finalización no puede ser anterior a la fecha de finalización subtarea, ¿quieres modificar la fecha de finalización subtarea?");
+	$("#dialog-confirm").html("Fecha de finalización de tarea no puede ser anterior a la fecha de finalización de subtarea, ¿Desea modificar la fecha de finalización de la subtarea?");
 	// Define the Dialog and its properties.
 	$("#jquery-ui").removeAttr("disabled");
 	$("#dialog-confirm").dialog({
@@ -6350,17 +6350,17 @@ function validateTaskEdit(task_id,end_date){
 }
 
 function validateTaskStartDate(task_id,start_date){
-	$("#dialog-confirm").html("Inicio de la tarea fecha no puede ser posterior a la fecha de inicio subtarea, ¿quieres modificar misión prevista fecha de inicio subtarea?");
+	$("#dialog-confirm").html("Fecha de inicio de la tarea no puede ser posterior a la fecha de inicio de la subtarea, ¿Desea modificar la fecha de inicio de la subtarea?");
 	// Define the Dialog and its properties.
 	$("#jquery-ui").removeAttr("disabled");
 	$("#dialog-confirm").dialog({
 		resizable : false,
 		modal : true,
-		title : "Confirm",
+		title : "Confirmar",
 		height : 150,
 		width : 450,
 		buttons : {
-			"Yes" : function() {
+			"Ok" : function() {
 				jQuery.ajax({
 					url: "/update-sub-task-start-dates?task_id="+task_id+"&start_date="+start_date,
 					cache:false,
@@ -6376,7 +6376,7 @@ function validateTaskStartDate(task_id,start_date){
 								$("#dialog-confirm").dialog({
 									resizable : false,
 									modal : true,
-									title : "Information",
+									title : "Información",
 									height : 150,
 									width : 450,
 									buttons : {
@@ -6392,7 +6392,7 @@ function validateTaskStartDate(task_id,start_date){
 							
 			        },
 			        error: function () {
-			        	alert("alertSomethingWentWrong");
+			        	alert("Error");
 			        }
 				});
 				$(this).dialog('close');
@@ -6414,17 +6414,17 @@ function validateTaskStartDate(task_id,start_date){
 }
 
 function validateSubTaskStartDate(sub_task_id,start_date){
-	$("#dialog-confirm").html("Sub Tarea fecha de inicio no puede ser anterior a la fecha de inicio de la tarea, es lo que quieres modificar tarea fecha de inicio?");
+	$("#dialog-confirm").html("La fecha de inicio de la subtarea no puede ser anterior a la fecha de inicio de la tarea, ¿Desea modificar tarea fecha de inicio de la tarea?");
 	// Define the Dialog and its properties.
 	$("#jquery-ui").removeAttr("disabled");
 	$("#dialog-confirm").dialog({
 		resizable : false,
 		modal : true,
-		title : "Confirm",
+		title : "Confirmar",
 		height : 150,
 		width : 450,
 		buttons : {
-			"Yes" : function() {
+			"Ok" : function() {
 				jQuery.ajax({
 					url: "/update-task-start-dates?sub_task_id="+sub_task_id+"&start_date="+start_date,
 					cache:false,
@@ -6441,7 +6441,7 @@ function validateSubTaskStartDate(sub_task_id,start_date){
 							$("#dialog-confirm").dialog({
 								resizable : false,
 								modal : true,
-								title : "Information",
+								title : "Información",
 								height : 150,
 								width : 450,
 								buttons : {
@@ -6480,17 +6480,17 @@ function validateSubTaskStartDate(sub_task_id,start_date){
 }
 
 function validateSubTaskEdit(sub_task_id,end_date){
-	$("#dialog-confirm").html("Fecha de finalización subtarea no puede ser mayor que la fecha de finalización de tareas, ¿quieres modificar Tarea final Fecha?");
+	$("#dialog-confirm").html("Fecha de finalización de la subtarea no puede ser mayor que la fecha de finalización de la tarea, ¿Desea modificar la fecha de término de la tarea?");
 	// Define the Dialog and its properties.
 	$("#jquery-ui").removeAttr("disabled");
 	$("#dialog-confirm").dialog({
 		resizable : false,
 		modal : true,
-		title : "Confirm",
+		title : "Confirmar",
 		height : 150,
 		width : 450,
 		buttons : {
-			"Yes" : function() {
+			"Ok" : function() {
 				jQuery.ajax({
 					url: "/update-task-dates?sub_task_id="+sub_task_id+"&end_date="+end_date,
 					cache:false,
@@ -6524,7 +6524,7 @@ function validateSubTaskEdit(sub_task_id,end_date){
 							
 			        },
 			        error: function () {
-			        	alert("alertSomethingWentWrong");
+			        	alert("Error");
 			        }
 				});
 				$(this).dialog('close');
