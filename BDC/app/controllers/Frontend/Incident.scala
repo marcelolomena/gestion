@@ -444,6 +444,7 @@ object Incident extends Controller {
         val rows = request.getQueryString("rows").getOrElse("20").toString()
         val page = request.getQueryString("page").getOrElse("1").toString()
         val filters = request.getQueryString("filters").getOrElse("").toString()
+        val user_id = Integer.parseInt(request.session.get("uId").get)
 
         var panel: Seq[models.Incident] = null
         var records: Int = 0
@@ -493,18 +494,18 @@ object Incident extends Controller {
             }
 
             if (tieneJson) {
-              records = IncidentService.count(qrystr)
-              panel = IncidentService.list(rows, page, qrystr)
+              records = IncidentService.count(qrystr, user_id)
+              panel = IncidentService.list(rows, page, qrystr, user_id)
 
             } else {
-              records = IncidentService.count("")
-              panel = IncidentService.list(rows, page, "")
+              records = IncidentService.count("", user_id)
+              panel = IncidentService.list(rows, page, "", user_id)
 
             }
           }
         } else {
-          records = IncidentService.count("")
-          panel = IncidentService.list(rows, page, "")
+          records = IncidentService.count("",user_id)
+          panel = IncidentService.list(rows, page, "",user_id)
 
         }
 
@@ -703,6 +704,7 @@ object Incident extends Controller {
         var a = 0
         var tieneJson = true
         var qrystr = ""
+        val user_id = Integer.parseInt(request.session.get("uId").get)
 
         if (!StringUtils.isEmpty(filters)) {
 
@@ -755,13 +757,13 @@ object Incident extends Controller {
           }
           println(qrystr)
           if (tieneJson) {
-            panel = IncidentService.list("0", "0", qrystr)
+            panel = IncidentService.list("0", "0", qrystr,user_id)
           } else {
-            panel = IncidentService.list("0", "0", "")
+            panel = IncidentService.list("0", "0", "",user_id)
           }
 
         } else {
-          panel = IncidentService.list("0", "0", "")
+          panel = IncidentService.list("0", "0", "",user_id)
 
         }
 

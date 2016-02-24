@@ -24,10 +24,10 @@ import play.api.libs.json.JsObject
  */
 object IncidentService {
 
-  def list(pageSize: String, pageNumber: String, Json: String): Seq[Incident] = {
-    var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json}"
+  def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
+    var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Incident.incident *)
+      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json, 'User_Id -> user_id).executeQuery() as (Incident.incident *)
     }
   }
 
@@ -202,12 +202,12 @@ object IncidentService {
     }
   }
 
-  def count(Json: String): Int = {
+  def count(Json: String, user_id: Int): Int = {
 
-    var sqlString = "EXEC art.count_incident {Json}"
+    var sqlString = "EXEC art.count_incident {Json}, {User_Id}"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
+      SQL(sqlString).on('Json -> Json, 'User_Id -> user_id).executeQuery() as (scalar[Int].single)
     }
   }
 
@@ -340,7 +340,7 @@ object IncidentService {
            GROUP BY sub_task_id
         ) Y
         ON X.sub_task_id=Y.sub_task_id
-        WHERE is_deleted=1 AND task_id = {id}
+        WHERE is_deleted=1 AND task_id = {id} order by plan_start_date
       """
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id -> id.toInt).as(IncidentSubTask.incidentsubtask *)
