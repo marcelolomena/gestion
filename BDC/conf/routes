@@ -318,6 +318,7 @@ GET    /get-project-list                                                        
 GET    /get-roadmap-project-list                                                                      controllers.Frontend.ProjectMaster.getRoadmapProjectListForProgram(programid:String)
 GET    /add-new-projectJira/$pIndex<[A-Za-z0-9_-]+>                                                       controllers.Frontend.ProjectMasterJira.addNewProject(pIndex)
 POST   /test-new-projectJira/$pIndex<[A-Za-z0-9_-]+>                                                       controllers.Frontend.ProjectMasterJira.saveProjectDetails(pIndex)
+GET    /project-detailsJira/$projectid<[A-Za-z0-9_-]+>                                                    controllers.Frontend.ProjectMasterJira.projectDetails(projectid:String)
 
 GET    /update-project-status/$project_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.ProjectMaster.updateProjectStatus(project_id:String)
 POST   /update-project-status/$project_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.ProjectMaster.updateStatus(project_id:String)

@@ -766,7 +766,7 @@ $(document).ready(function(){
 		editable: true,
 		editrules:{required:false},
 		editoptions: {size: 10, maxlengh: 10},
-		searchoptions: {sopt:["gt","lt","eq"] },
+		searchoptions: {sopt:["eq"] },
 		formoptions: {rowpos:5,colpos:2}
 	    },	              
 	    { 
@@ -806,7 +806,7 @@ $(document).ready(function(){
 					}
 				});
 			},
-			sopt: ["gt","lt","eq"]
+			sopt: ["eq"]
 		},
 		formoptions: {rowpos:4,colpos:1}
 		},
@@ -835,7 +835,7 @@ $(document).ready(function(){
 					}
 				});
 			},
-			sopt: ["gt","lt","eq"]
+			sopt: ["eq"]
 		},
 		formoptions: {rowpos:4,colpos:2}
 	    },	              
@@ -846,7 +846,7 @@ $(document).ready(function(){
 		editable: true,
 		editrules:{required:true, number:true},
 		editoptions: {size: 10, maxlengh: 10},
-		searchoptions: {sopt:["gt","lt","eq"] },
+		searchoptions: {sopt:["eq"] },
 		formoptions: {rowpos:5,colpos:1}
 	    },
 	    { 

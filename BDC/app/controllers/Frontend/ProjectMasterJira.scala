@@ -54,12 +54,7 @@ object ProjectMasterJira extends Controller {
    * Get  project details by project id...
    */
   def projectDetails(projectId: String) = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val uId = Integer.parseInt(request.session.get("uId").get)
-      val utype = Integer.parseInt(request.session.get("utype").get)
       val project = ProjectService.findProjectDetails(Integer.parseInt(projectId))
-
       val EVobj = EarnValueService.getEarnCalculationForProject(projectId)
       var expected_completion_percentage_for_project = 0.0
       if (!EVobj.isEmpty) {
@@ -73,12 +68,7 @@ object ProjectMasterJira extends Controller {
           }
         }
       }
-
       if (!project.isEmpty) {
-        utype match {
-          case 0 =>
-            Ok(views.html.frontend.project.restrictedAccess()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-          case _ =>
             val tasks = TaskService.findTaskListByProjectIdAsign(project.get.pId.get.toString)
             var list = new ListBuffer[String]()
 
@@ -191,18 +181,21 @@ object ProjectMasterJira extends Controller {
 
             if (plan_time_for_project.!=(0)) {
               val completion_percentage_forProject: scala.math.BigDecimal = ((actual_hours_completed_for_project / plan_time_for_project) * 100).setScale(2, RoundingMode.HALF_UP);
-              Ok(views.html.frontend.project.newProjectDetails(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project, tasks, countList, documents, changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+              //Ok(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString())
+              //var node = new JSONObject()
+              //node.put(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString())
+              //Ok(Json.toJson(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString()))
+              Ok("OK")
             } else {
-              Ok(views.html.frontend.project.newProjectDetails(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project, tasks, countList, documents, changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+              Ok("OK")
+              //Ok(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString())
+              //Ok(Json.toJson(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString()))
             }
 
-        }
+        
       } else {
-        Ok(views.html.frontend.index("No Records"))
+        Ok("No existe Proyecto")
       }
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
   }
 
   /**
@@ -431,7 +424,6 @@ object ProjectMasterJira extends Controller {
    * id : Project id
    */
   def editProject(id: String) = Action { implicit request =>
-    request.session.get("username").map { user =>
 
       val project = ProjectService.findProjectDetails(Integer.parseInt(id))
       val projectData = ProjectMasters(project.get.project_id, project.get.program, project.get.project_mode, project.get.project_name, project.get.description, project.get.project_manager, project.get.start_date, project.get.final_release_date, project.get.completion_percentage, project.get.ppm_number, project.get.work_flow_status, project.get.baseline, Option(project.get.planned_hours.getOrElse(0)))
@@ -446,11 +438,9 @@ object ProjectMasterJira extends Controller {
       for (pm <- progrma_members) {
         pmMap.put(pm.uid.get.toString(), pm.first_name + " " + pm.last_name)
       }
-      Ok(views.html.frontend.project.editProject(ARTForms.projectForm.fill(projectData), Integer.parseInt(id), pmMap, workFlow)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.project.editProject(ARTForms.projectForm.fill(projectData), Integer.parseInt(id), pmMap, workFlow))
 
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
+    
   }
 
   /**
@@ -549,7 +539,6 @@ object ProjectMasterJira extends Controller {
    * id -  Project id
    */
   def deleteProject(id: String) = Action { implicit request =>
-    request.session.get("username").map { user =>
 
       val project = ProjectService.findProjectDetails(Integer.parseInt(id))
       var node = new JSONObject()
@@ -561,19 +550,9 @@ object ProjectMasterJira extends Controller {
           val task_list = TaskService.findAllTaskIdListByProjectId(p.pId.get.toString) //findProjectTaskCount(p.pId.get.toString)
           val timesheetList = TimesheetService.getAllTimesheetIds()
           for (task <- task_list) {
-            /*
-             
-            val subtask_list = SubTaskServices.findAllocatedSubTaskIdsByTask(task.toString())
-            for (subtask <- subtask_list) {
-              for (t <- timesheetList) {
-                if (t == subtask) {
-                
-                */
                 if (true) {
                   do_delete = false
                 }
-              //}
-            //}
           }
           if (do_delete) {
             ProjectService.softDeleteProject(id)
@@ -590,9 +569,6 @@ object ProjectMasterJira extends Controller {
           }
       }
       Ok(node.toString())
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
   }
 
   /**
