@@ -750,7 +750,7 @@ $(document).ready(function(){
 	                point: {
 	                    events: {
 	                       click: function(event) {
-	                    	   grillaProgramaConSAP(this.options.dId,this.options.name);
+	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
 	                       }
 	                    }
 	                 },
@@ -858,6 +858,25 @@ $(document).ready(function(){
 	    });			
 		$("#jqGridSap").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
+	
+	function grillaProgramaDepa(did,name){
+		var chuurl='/panelDepa?did=' + did;
+
+		$("#jqGridDepa").jqGrid({
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: modelPie,
+			viewrecords: true,
+			regional : "es",
+			height: 'auto',
+	        autowidth:true,
+	        rowNum: 20,
+	        pager: "#jqGridPagerDepa",
+	        ignoreCase: true
+	    });			
+		$("#jqGridDepa").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}	
 	
 		/*
 		$("#jqGrid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true,searchOnEnter: false, defaultSearch: 'cn'});
