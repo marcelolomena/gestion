@@ -34,7 +34,7 @@ object Incident extends Controller {
     case "date_creation"      => " '" + value + "' "
     case "date_end"           => " '" + value + "' "
     case "ir_number"          => value
-	case "alm_number"          => value
+    case "alm_number"         => value
     case _                    => "error"
   }
 
@@ -52,9 +52,9 @@ object Incident extends Controller {
   def delete(oper: String, id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val cod = IncidentService.delete(id)
-	  
-	  val act = Activity(ActivityTypes.Incident.id, "Delete by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get),id.toInt)
-	  Activity.saveLog(act)
+
+      val act = Activity(ActivityTypes.Incident.id, "Delete by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
+      Activity.saveLog(act)
       Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -126,7 +126,7 @@ object Incident extends Controller {
       }
 
   }
-  
+
   def addUser = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -139,7 +139,7 @@ object Incident extends Controller {
         Redirect(routes.Login.loginUser()).withNewSession
       }
 
-  }  
+  }
 
   def delMember = Action {
     implicit request =>
@@ -270,12 +270,11 @@ object Incident extends Controller {
 
         jsonBody.map { jsValue =>
 
-          //val incident_id = (jsValue \ "incident_id")
           val configuration_id = (jsValue \ "configuration_id")
           val program_id = (jsValue \ "program_id")
           val date_creation = (jsValue \ "date_creation")
           val ir_number = (jsValue \ "ir_number")
-		  val alm_number = (jsValue \ "alm_number")
+          val alm_number = (jsValue \ "alm_number")
           val user_sponsor_id = (jsValue \ "user_sponsor_id")
           val brief_description = (jsValue \ "brief_description")
           val extended_description = (jsValue \ "extended_description")
@@ -284,26 +283,12 @@ object Incident extends Controller {
           val task_owner_id = (jsValue \ "task_owner_id")
           val user_creation_id = request.session.get("uId").get
 
-          /*
-          println("configuration_id : " + configuration_id)
-          println("program_id : " + program_id)
-          println("date_creation : " + date_creation)
-          println("ir_number : " + ir_number)
-          println("user_sponsor_id : " + user_sponsor_id)
-          println("brief_description : " + brief_description)
-          println("extended_description : " + extended_description)
-          println("severity_id : " + severity_id)
-          println("date_end : " + date_end)
-          println("task_owner_id : " + task_owner_id)
-          println("user_creation_id : " + user_creation_id)
-          */
-
           incident = IncidentService.save(
             configuration_id.toString().replace("\"", ""),
             program_id.toString().replace("\"", ""),
             date_creation.toString().replace("\"", ""),
             ir_number.toString().replace("\"", ""),
-			alm_number.toString().replace("\"", ""),
+            alm_number.toString().replace("\"", ""),
             user_sponsor_id.toString().replace("\"", ""),
             brief_description.toString().replace("\"", ""),
             extended_description.toString().replace("\"", ""),
@@ -312,7 +297,7 @@ object Incident extends Controller {
             task_owner_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""))
 
-          println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+          //println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
         }
 
         /**
@@ -417,9 +402,9 @@ object Incident extends Controller {
             status_id.toString().replace("\"", ""),
             user_creation_id.toString().replace("\"", ""),
             note.toString().replace("\"", ""),
-			configuration_id.toString().replace("\"", ""),
-			program_id.toString().replace("\"", ""),
-			task_owner_id.toString().replace("\"", ""))
+            configuration_id.toString().replace("\"", ""),
+            program_id.toString().replace("\"", ""),
+            task_owner_id.toString().replace("\"", ""))
           println(incident.last.error_text)
         }
 
@@ -518,7 +503,7 @@ object Incident extends Controller {
           campo.put("program_id", p.program_id)
           campo.put("date_creation", p.date_creation.getOrElse("").toString())
           campo.put("ir_number", p.ir_number)
-		  campo.put("alm_number", p.alm_number.getOrElse("").toString())
+          campo.put("alm_number", p.alm_number.getOrElse("").toString())
           campo.put("user_sponsor_id", p.user_sponsor_id)
           campo.put("brief_description", p.brief_description)
           campo.put("extended_description", p.extended_description)
@@ -596,7 +581,7 @@ object Incident extends Controller {
     val incidents = IncidentService.selectSeverity
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
-/*
+  /*
   def severityConfigurationList(id: String) = Action { implicit request =>
 
     val incidents = IncidentService.selectSeverityConfiguration(id)
@@ -604,13 +589,13 @@ object Incident extends Controller {
   }
  */
   def severityConfigurationList() = Action { implicit request =>
-        val id = request.getQueryString("id").get.toString()
+    val id = request.getQueryString("id").get.toString()
     val incidents = IncidentService.selectSeverityConfiguration(id)
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
   def programConfigurationList() = Action { implicit request =>
-        val id = request.getQueryString("id").get.toString()
-		println("id: "+id)
+    val id = request.getQueryString("id").get.toString()
+    println("id: " + id)
     val incidents = IncidentService.selectProgramConfiguration(id)
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
@@ -668,10 +653,10 @@ object Incident extends Controller {
     Ok(s)
 
   }
-  
+
   def programResponsableList() = Action { implicit request =>
-        val id = request.getQueryString("id").get.toString()
-		println("id: "+id)
+    val id = request.getQueryString("id").get.toString()
+    println("id: " + id)
     val users = ProgramMemberService.findNoBusinessMemberForIncident(id)
     Ok(play.api.libs.json.Json.toJson(users))
   }
@@ -785,7 +770,7 @@ object Incident extends Controller {
         rowhead.createCell(8).setCellValue("Fecha Termino")
         rowhead.createCell(9).setCellValue("Descripción Corta")
         rowhead.createCell(10).setCellValue("Descripción Extensa")
-		rowhead.createCell(11).setCellValue("Número ALM")
+        rowhead.createCell(11).setCellValue("Número ALM")
 
         for (j <- 0 to 10)
           rowhead.getCell(j).setCellStyle(style);
@@ -825,8 +810,8 @@ object Incident extends Controller {
 
           val cel10 = row.createCell(cNum + 10)
           cel10.setCellValue(s.extended_description)
-		  
-		  val cel11 = row.createCell(cNum + 11)
+
+          val cel11 = row.createCell(cNum + 11)
           cel11.setCellValue(s.alm_number.getOrElse("").toString())
 
           rNum = rNum + 1
