@@ -103,7 +103,7 @@ $(document).ready(function(){
            { name: "fecini", hidden:true,editable:true,editrules: {edithidden: true} }
         ],
 		regional : "es",
-		height:'auto',
+		//height:'auto',
 		viewrecords: true,
         rowList: [5, 10, 20, 50],
         gridview: true,
@@ -318,13 +318,13 @@ $(document).ready(function(){
 	            }
 	        },
 	        ajaxRowOptions: { contentType: "application/json" },
-	        serializeRowData: function (data) { return JSON.stringify(data); },
+	        serializeRowData: function (data) { return JSON.stringify(data); }/*,
 	        gridComplete: function(){
 	    	    if ($("#" + childGridID).getGridParam('records') == 0){ 
 	    	        $("#" + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-hdiv").hide();
 	    	        //$("#" + childGridID + "_save_button").hide();
-	    	    }	    	    
-	        }	
+	    	    }
+	        }*/
 	    });
 	    
 	    $("#" + childGridID).jqGrid('inlineNav', "#" + childGridPagerID, {
