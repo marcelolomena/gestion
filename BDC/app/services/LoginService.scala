@@ -65,13 +65,18 @@ rpizarrom
 	 */
 	def loginUserCheck(uname: String, password: String) = {
 		DB.withConnection { implicit connection =>
-
+		  var loginok: Boolean = false
 			//val result = SQL("select * from art_user where uname='" + uname.trim() + "' AND status=1").as(Login.login.singleOpt)
-      val result =SQL("art.loginUserCheck {uname}").on('uname -> uname).executeQuery() as (Login.login.singleOpt)
-
+		  var result : Option[Login] = null
+		  try{
+      result =SQL("art.loginUserCheck {uname}").on('uname -> uname).executeQuery() as (Login.login.singleOpt)
+      loginok = true
+		  }catch{
+		    case e: Exception => loginok = false
+		  }
 			var isValid = false
 
-			if (!result.isEmpty) {
+			if (loginok) {
 				val dbPassword = result.get.password
 
 				isValid = org.mindrot.jbcrypt.BCrypt.checkpw(password, dbPassword)
