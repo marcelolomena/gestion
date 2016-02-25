@@ -414,6 +414,8 @@ object Hours {
 }
 
 case class IncidentSubTask(
+    sno:Int,
+    cantidad:Int,
   sub_task_id: Int,
   title: String,
   plan_start_date: Option[Date],
@@ -427,6 +429,8 @@ case class IncidentSubTask(
 
 object IncidentSubTask {
   val incidentsubtask = {
+    get[Int]("sno") ~
+    get[Int]("cantidad") ~
     get[Int]("sub_task_id") ~
       get[String]("title") ~
       get[Option[Date]]("plan_start_date") ~
@@ -437,7 +441,9 @@ object IncidentSubTask {
       get[Double]("hours") ~
       get[Double]("expected_percentage") ~
       get[String]("fecini") map {
-        case sub_task_id ~
+        case sno ~
+        cantidad ~
+        sub_task_id ~
           title ~
           plan_start_date ~
           plan_end_date ~
@@ -447,6 +453,8 @@ object IncidentSubTask {
           hours ~
           expected_percentage ~
           fecini => IncidentSubTask(
+              sno,
+              cantidad,
           sub_task_id,
           title,
           plan_start_date,
@@ -463,6 +471,8 @@ object IncidentSubTask {
   //implicit val hoursWrites = Json.writes[IncidentSubTask]
   implicit val hoursWrites = new Writes[IncidentSubTask] {
     def writes(incident: IncidentSubTask) = Json.obj(
+      "sno" -> incident.sno.toInt,
+      "cantidad" -> incident.cantidad.toInt,
       "sub_task_id" -> incident.sub_task_id.toInt,
       "title" -> incident.toString(),
       "plan_start_date" -> incident.plan_start_date.get,
