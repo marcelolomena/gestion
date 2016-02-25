@@ -108,7 +108,7 @@ object TimesheetService extends CustomColumns {
    * b. Project Manager / CEO / Admin views his selected users' list of tasks for a given period
    */
   def getUserTimesheets(user_id: Int, task_for_date: String): Seq[Timesheet] = {
-    val sql = "select DISTINCT(at.id), at.* from art_timesheet at  where at.user_id = " + user_id + " AND at.task_for_date = '" + task_for_date + "'";
+    val sql = "select DISTINCT(at.id), at.* from art_timesheet at  where at.user_id = " + user_id + " AND at.task_for_date = '" + task_for_date + "' AND is_deleted=1";
     //println(sql);
     DB.withConnection { implicit connection =>
       val result = SQL(sql).as(Timesheet.timesheetLists *)

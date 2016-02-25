@@ -986,7 +986,7 @@ $(document).ready(function(){
             	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');
             	$('input#ir_number',form).attr('readonly','readonly');
-				$('input#alm_number',form).attr('readonly','readonly');
+				//$('input#alm_number',form).attr('readonly','readonly');
             	
             	$('input#date_creation',form).datepicker( "destroy" );
             	

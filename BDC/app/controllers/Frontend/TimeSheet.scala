@@ -212,9 +212,15 @@ object TimeSheet extends Controller {
    */
   def getUserTasks() = Action { implicit request =>
     request.session.get("username").map { user =>
+      println("Entro")
       val uId = request.session.get("uId").get
+      println(uId)
       val startDate = request.getQueryString("sd").get
+      println(startDate)
       val tasks = TimesheetService.getUserTimesheets(uId.toInt, startDate.toString())
+      for(task <- tasks) {
+        println("tarea: "+task.task_id)
+      }
       /*    var task_list = Seq
       var total_hrs: BigDecimal = 0.0
 

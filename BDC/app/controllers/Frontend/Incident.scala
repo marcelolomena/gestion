@@ -400,6 +400,7 @@ object Incident extends Controller {
           val program_id = (jsValue \ "program_id")
           val date_creation = (jsValue \ "date_creation")
           val ir_number = (jsValue \ "ir_number")
+          val alm_number = (jsValue \ "alm_number")
           val user_sponsor_id = (jsValue \ "user_sponsor_id")
           val brief_description = (jsValue \ "brief_description")
           val extended_description = (jsValue \ "extended_description")
@@ -419,7 +420,8 @@ object Incident extends Controller {
             note.toString().replace("\"", ""),
 			configuration_id.toString().replace("\"", ""),
 			program_id.toString().replace("\"", ""),
-			task_owner_id.toString().replace("\"", ""))
+			task_owner_id.toString().replace("\"", ""),
+			alm_number.toString().replace("\"", ""))
           println(incident.last.error_text)
         }
 
