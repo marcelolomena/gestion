@@ -311,7 +311,7 @@ object IncidentService {
       SQL(sqlString).as(Severity.severity *)
     }
   }
-
+/*
   def selectSubtask(id: String): Seq[IncidentSubTask] = {
     var sqlString = """
     SELECT
@@ -346,7 +346,57 @@ object IncidentService {
       SQL(sqlString).on('id -> id.toInt).as(IncidentSubTask.incidentsubtask *)
     }
   }
-
+*/
+  def selectSubtask(id: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[IncidentSubTask] = {
+    var sqlString = """
+  SELECT * FROM
+(SELECT Row_Number() Over(ORDER BY CASE                  
+                    WHEN {SortColumnName} = 'title'
+                    AND {SortOrderBy} = 'asc'
+                    THEN title
+                    END ASC, CASE
+                    WHEN {SortColumnName} = 'title'
+                    AND {SortOrderBy} = 'desc'
+                    THEN title
+                    END DESC) as sno,
+  COUNT(*) Over() cantidad,
+        X.sub_task_id,
+        X.title,
+        X.plan_start_date,
+        X.plan_end_date,
+        Y.real_start_date,
+        Y.real_end_date,
+        X.completion_percentage,
+        ISNULL(Y.hours,0) hours,
+    CASE WHEN DATEDIFF (day, X.plan_start_date, GETDATE()) < 0 THEN 0 
+           WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) > 0 THEN 100 
+           WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) <= 0 AND DATEDIFF (day, X.plan_start_date, GETDATE()) >= 0 THEN IIF(DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date)) > 0, 
+           ROUND(100 * CAST(DATEDIFF (day, X.plan_start_date, GETDATE()) AS FLOAT)/DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date) ),2) , 0)
+        END
+        expected_percentage,
+        '' fecini
+         FROM art_sub_task X 
+        LEFT OUTER JOIN
+        (
+         SELECT SUM(hours) hours,
+         MIN(task_for_date) real_start_date,
+          MAX(task_for_date) real_end_date, 
+          sub_task_id FROM art_timesheet
+           GROUP BY sub_task_id
+        ) Y
+        ON X.sub_task_id=Y.sub_task_id
+    WHERE is_deleted=1 AND task_id = {id} 
+    ) as RECORDS
+    WHERE  RECORDS.Sno BETWEEN ({StartRow} - {NumberOfRows}) AND ({StartRow} - 1) ORDER BY plan_start_date
+      """
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt,
+          'SortColumnName -> SortColumnName,
+          'SortOrderBy -> SortOrderBy,
+          'NumberOfRows -> NumberOfRows,
+          'StartRow -> StartRow).as(IncidentSubTask.incidentsubtask *)
+    }
+  }  
   def selectStatus(id: String): Seq[Status] = {
     var sqlString = """    
     SELECT

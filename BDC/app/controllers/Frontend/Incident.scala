@@ -341,13 +341,26 @@ object Incident extends Controller {
   def listSubTask(id: String) = Action {
     implicit request =>
       request.session.get("username").map { user =>
+        var sidx = request.getQueryString("sidx").get.toString()
+        val sord = request.getQueryString("sord").get.toString()
+        val rows = request.getQueryString("rows").get.toInt
+        val page = request.getQueryString("page").get.toInt
+        var records: Int = 0
+
+        if (sidx.trim().size == 0) {
+          sidx = "recurso"
+        }
+        val pageIndex = page
+        val pageSize = rows
+        val startRow = (pageIndex * pageSize) + 1;
+        
         var node = new JSONObject()
-        val subtask = IncidentService.selectSubtask(id)
+        val subtask = IncidentService.selectSubtask(id, sidx, sord, rows, startRow)
 
         var registro = new JSONArray()
         for (p <- subtask) {
           var campo = new JSONObject()
-
+          records = p.cantidad
           campo.put("sub_task_id", p.sub_task_id)
           campo.put("title", p.title)
           campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())
@@ -361,7 +374,16 @@ object Incident extends Controller {
           registro.put(campo)
         }
 
-        node.put("rows", registro)
+        //node.put("rows", registro)
+        
+        var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
+
+        node.put("page", page)
+        node.put("total", pagedisplay)
+        node.put("records", records)
+        node.put("rows", registro)        
+        
+        
         Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       }.getOrElse {

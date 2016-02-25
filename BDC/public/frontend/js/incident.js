@@ -103,10 +103,12 @@ $(document).ready(function(){
            { name: "fecini", hidden:true,editable:true,editrules: {edithidden: true} }
         ],
 		regional : "es",
-		rowList: [],        
-		pgbuttons: false,     
-		pgtext: null,         
-		viewrecords: false, 
+		height:'auto',
+		viewrecords: true,
+        rowList: [5, 10, 20, 50],
+        gridview: true,
+        page: 1,
+        rowNum: 20,
 		pager:"jqGridSubTaskPager",
         subGrid: true, 
         ajaxRowOptions: { contentType: "application/json" },
@@ -126,7 +128,16 @@ $(document).ready(function(){
                 }
                 lastSel = id;
             }
-        }        
+        },
+        gridComplete: function() {
+            var recs = parseInt($("#jqGridSubTask").getGridParam("records"),10);
+            if (isNaN(recs) || recs == 0) {
+                $("#subTaskWrapper").hide();
+            }
+            else {
+                $('#subTaskWrapper').show();
+            }
+        }
    });
     
    $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: false, del: false,search: false, refresh: false,position: "left", cloneToTop: false },
