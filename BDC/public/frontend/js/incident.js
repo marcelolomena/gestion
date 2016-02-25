@@ -285,7 +285,12 @@ $(document).ready(function(){
 				  editoptions: {
 					  size: 10, maxlengh: 10,
 					  dataInit: function(element) {
-						$(element).datepicker({dateFormat: 'yy-mm-dd'})
+						$(element).datepicker({dateFormat: 'yy-mm-dd',
+							beforeShow:function(input,inst){
+						          setTimeout(function(){
+						         $(".ui-datepicker").css("z-index", 2000);}, 10);
+							}
+						})
 					  }
 					},formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
 				},
