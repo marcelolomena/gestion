@@ -181,6 +181,99 @@ object Dashboard extends Controller {
       }
 
   }
+  
+  
+  def getDepaExcel() = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val file = new File("departament.xlsx")
+        val fileOut = new FileOutputStream(file);
+        val wb = new XSSFWorkbook
+        val sheet = wb.createSheet("Departament")
+        var j = 0
+        var rNum = 1
+        var cNum = 0
+        var a = 0
+
+        var rowhead = sheet.createRow(0);
+        val style = wb.createCellStyle();
+        val font = wb.createFont();
+        font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL);
+        font.setFontHeightInPoints(10);
+        font.setBold(true);
+        style.setFont(font);
+        rowhead.createCell(0).setCellValue("Division")
+        rowhead.createCell(1).setCellValue("Programa")
+        rowhead.createCell(2).setCellValue("Responsable")
+        rowhead.createCell(3).setCellValue("Fecha Inicio")
+        rowhead.createCell(4).setCellValue("Fecha Comprometida")
+        rowhead.createCell(5).setCellValue("% Avance")
+        rowhead.createCell(6).setCellValue("% Plan")
+        rowhead.createCell(7).setCellValue("SPI")
+        rowhead.createCell(8).setCellValue("CPI")
+        rowhead.createCell(9).setCellValue("Inversion")
+        rowhead.createCell(10).setCellValue("Gasto")
+
+        for (j <- 0 to 10)
+          rowhead.getCell(j).setCellStyle(style);
+
+        val panel = DashboardService.reportDepartamentExcel
+        
+        for (s <- panel) {
+          var row = sheet.createRow(rNum)
+
+          val cel0 = row.createCell(cNum)
+          cel0.setCellValue(s.division)
+
+          val cel1 = row.createCell(cNum + 1)
+          cel1.setCellValue(s.programa)
+
+          val cel2 = row.createCell(cNum + 2)
+          cel2.setCellValue(s.responsable)
+
+          val cel3 = row.createCell(cNum + 3)
+          cel3.setCellValue(s.fecini.get)
+
+          val cel4 = row.createCell(cNum + 4)
+          cel4.setCellValue(s.feccom.get)
+
+          val cel5 = row.createCell(cNum + 5)
+          cel5.setCellValue(s.pai)
+
+          val cel6 = row.createCell(cNum + 6)
+          cel6.setCellValue(s.pae)
+
+          val cel7 = row.createCell(cNum + 7)
+          cel7.setCellValue(s.spi)
+
+          val cel8 = row.createCell(cNum + 8)
+          cel8.setCellValue(s.cpi)
+
+          val cel9 = row.createCell(cNum + 9)
+          cel9.setCellValue(s.inversion)
+
+          val cel10 = row.createCell(cNum + 10)
+          cel10.setCellValue(s.gasto)
+
+          rNum = rNum + 1
+          cNum = 0
+
+        }
+
+        for (a <- 0 to 10) {
+          sheet.autoSizeColumn((a.toInt));
+        }
+
+        wb.write(fileOut);
+        fileOut.close();
+        Ok.sendFile(content = file, fileName = _ => "departament.xlsx")
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }  
+  
 
   /**
    * Chart project details...

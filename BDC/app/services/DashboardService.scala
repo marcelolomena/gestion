@@ -97,6 +97,15 @@ object DashboardService {
       SQL(sqlString).on('did -> did.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
     }
   }
+  
+  def reportDepartamentExcel(): Seq[Panel] = {
+    //println(Json)
+    var sqlString = "EXEC art.programas_por_departamento_excel"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on().executeQuery() as (Panel.panel *)
+    }
+  }  
 
   def cantidadProgramaPorSapFiltrado(did: String, Json: String): Int = {
     //println(Json)

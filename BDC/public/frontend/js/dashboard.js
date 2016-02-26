@@ -1343,8 +1343,21 @@ $(document).ready(function(){
 							        rowNum: 20,
 							        pager: "#jqGridPagerDepa",
 							        ignoreCase: true,
-							        caption:'Programas'
+							        caption:'Programas Por departamento'
 							    });
+								$("#jqGridDepa").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+								$("#jqGridDepa").jqGrid('navGrid','#jqGridPagerDepa',{add:false,edit:false,del:false,search: false});
+								$("#jqGridDepa").jqGrid('navButtonAdd','#jqGridPagerDepa',{
+								       caption:"",
+								       buttonicon : "silk-icon-page-excel",
+								       title: "Exportar a Excel", 
+								       onClickButton : function () { 
+								    	   var grid = $("#jqGridDepa");
+								           var rowKey = grid.getGridParam("selrow");
+								           var url = 'depa-excel';
+								    	   $("#jqGridDepa").jqGrid('excelExport',{"url":url});
+								       } 
+								});								
 							
 						  },
 						  error: function(e) {
