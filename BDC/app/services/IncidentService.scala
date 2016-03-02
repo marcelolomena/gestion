@@ -126,6 +126,29 @@ object IncidentService {
     }
   }
 
+  def saveSubTask(
+                task_id: String,
+                title: String,
+                description: String,
+                plan_start_date: String,
+                plan_end_date: String,               
+                catalogo: String): Option[ErrorIncident] = {
+
+    var sqlString = """
+      EXEC art.save_incident_subtask {task_id},{title},{description},{plan_start_date},{plan_end_date},{catalogo}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'task_id -> task_id.toInt,
+        'title -> title,
+        'description -> description,
+        'plan_start_date -> plan_start_date,
+        'plan_end_date -> plan_end_date,
+        'catalogo -> catalogo.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
+    }
+  }
+
   def saveHours(task_for_date: String,
                 nota: String,
                 planeadas: String,
@@ -363,7 +386,9 @@ object IncidentService {
                     END DESC) as sno,
   COUNT(*) Over() cantidad,
         X.sub_task_id,
+        X.task_id,
         X.title,
+        '' description,
         X.plan_start_date,
         X.plan_end_date,
         Y.real_start_date,

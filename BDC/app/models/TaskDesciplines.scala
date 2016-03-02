@@ -3,6 +3,7 @@ package models
 import anorm.SqlParser._
 import anorm._
 import java.util.Date
+import play.api.libs.json._
 
 case class TaskDesciplines(id: Option[Int], sequencing: Option[Int], task_discipline: String, description: String, created_by: Int, updation_date: Option[Date], is_deleted: Int);
 
@@ -19,7 +20,7 @@ object TaskDesciplines {
         case id ~ sequencing ~ task_discipline ~ description ~ created_by ~ updation_date ~ is_deleted => TaskDesciplines(id, sequencing, task_discipline, description, created_by, updation_date, is_deleted)
       }
   }
-
+implicit val taskDesciplineWrites = Json.writes[TaskDesciplines]
 }
 
 case class TaskDesciplineChild(id: Option[Int], sequencing: Option[Int], task_discipline: String, description: String)

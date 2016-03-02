@@ -351,7 +351,7 @@ object Task extends Controller {
               stageMap.put(st.id.get.toString(), st.stage.toString())
 
           }
-          var deliverableMap = new java.util.HashMap[String, String]()
+          var deliverableMap = new java.util.LinkedHashMap[String, String]()
           val deliverableList = DeliverableService.findAllDeliverables()
           for (del <- deliverableList) {
             if (!StringUtils.equals(del.id.toString, id))

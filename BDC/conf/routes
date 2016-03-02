@@ -593,6 +593,7 @@ GET	   /incidentSeverityDays/:id/:feccre													  		  controllers.Frontend.
 GET	   /incidentDelete																		          controllers.Frontend.Incident.delete(oper:String,id:String)
 GET	   /incident_valid_ir/$id<[A-Za-z0-9_-]+>											  	          controllers.Frontend.Incident.validateCodIR(id:String)
 GET	   /incidentStatusList																			  controllers.Frontend.Incident.statusList
+GET	   /incidentServiceCatalogList																		      controllers.Frontend.Incident.serviceCatalogList
 POST   /incidentUpdate																				  controllers.Frontend.Incident.update
 GET	   /listStatus/$id<[A-Za-z0-9_-]+>											  	          		  controllers.Frontend.Incident.listStatus(id:String)
 GET    /incident-excel 			                                                                      controllers.Frontend.Incident.excel

@@ -32,7 +32,7 @@ object DeliverableService extends CustomColumns {
   }
 
   def findAllDeliverables(): Seq[Deliverables] = {
-    var sqlString = "SELECT * from art_program_deliverable where is_deleted = 0 "
+    var sqlString = "SELECT * from art_program_deliverable where is_deleted = 0 ORDER BY deliverable"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Deliverables.deliverable *)
     }

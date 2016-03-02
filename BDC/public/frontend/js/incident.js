@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$("#subtaskListDialog").dialog({
-		bgiframe: true,
+		//bgiframe: true,
 		autoOpen: false,
         modal: true,
         resizable: true,
@@ -26,6 +26,18 @@ $(document).ready(function(){
 			return {};
 		}
     };
+    
+	var jsonOptions = {
+		    type :"POST",
+		    contentType :"application/json; charset=utf-8",
+		    dataType :"json"
+	};
+
+	function createJSON(postdata) {
+		if (postdata.id === '_empty')
+			postdata.id = null; 
+		return JSON.stringify(postdata)
+	}    
 	
     var workerDelOptions = {
 		mtype: 'GET',
@@ -44,7 +56,7 @@ $(document).ready(function(){
         datatype: "json",
         mtype: "GET",
         autowidth:true,
-        colNames: ["Acciones","sub_task_id","Sub-Tarea", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini"],
+        colNames: ["Acciones", "sub_task_id", "Sub Tarea", "Tarea", "Descripción", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini","Catálogo"],
         colModel: [
 			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',resize: false,
 			    formatoptions:{
@@ -72,7 +84,14 @@ $(document).ready(function(){
 			        delOptions: subTaskDelOptions
 			    }},
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
-           { name: "title", width: 200, hidden:false, editable: false},
+           { name: "task_id", hidden:true, editrules:{required: false}},
+           { name: "title", width: 200, editable: true,edittype:"text", editrules:{required: true}},
+           { name: "description",editable: true,
+       	    hidden: true, 
+    		editrules: {edithidden: true},
+    		edittype: "textarea",
+    	    editoptions: { rows: "3", cols: "25", maxlength: "160"}, 
+       	   },
            { name: "plan_start_date", width: 85, align: "center",formatter: 'text',
 				formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editable:true,
 				editoptions: {
@@ -97,10 +116,28 @@ $(document).ready(function(){
            { name: "real_end_date", width: 150, align: "center", formatter: 'date',
 				formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },editable:false
        	   }, 
-           { name: "completion_percentage", width: 50, align: "center", editable:true, editrules:{required:false} },
+       	   { name: "completion_percentage", width: 50, align: "center", editable:true, editrules:{required:false} },
            { name: "expected_percentage", width: 50, align: "center", editable:false },
            { name: "hours", width: 50, align: "center", editable:false },
-           { name: "fecini", hidden:true,editable:true,editrules: {edithidden: true} }
+           { name: "fecini", hidden:true,editable:false },
+   	       { name: 'catalogo',
+       		editable: true,
+       		hidden: true, 
+       		editrules: {edithidden: true}, 
+       		edittype: "select", 
+       		editoptions: {
+       			dataUrl: '/incidentServiceCatalogList',
+       				buildSelect: function (response) {
+       					var data = JSON.parse(response);
+       					var s = "<select>";//el default
+       					s += '<option value="0">--Escoger Catálogo de Servicio--</option>';
+       					$.each(data, function(i, item) {
+       							s += '<option value="' + data[i].id + '">' + data[i].service_name + '</option>';
+       					});
+       					return s + "</select>";
+       	  	        }
+       		} 
+   	       }
         ],
 		regional : "es",
 		//height:'auto',
@@ -140,23 +177,24 @@ $(document).ready(function(){
         }
    });
     
-   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: false, del: false,search: false, refresh: false,position: "left", cloneToTop: false },
+   $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: true, del: false,search: false, refresh: true,position: "left", cloneToTop: false },
 		{},
 		{
-		addCaption: "Agregar Sub-Tarea",
+		mtype: 'POST',
+		addCaption: "Agregar Sub Tarea",
 		height: 'auto',
 		width: 'auto',
-		modal:true,
-		ajaxEditOptions: jsonOptions,
-		serializeEditData: createJSON,
+		modal: true,
+        ajaxEditOptions: jsonOptions,
+        serializeEditData: createJSON,		
 		closeAfterAdd: true,
 		recreateForm: true,
 		errorTextFormat: function (data) {
 			return 'Error: ' + data.responseText
 		},
 		beforeShowForm:function (form) {
-			$('#tr_plan_start_date',form).hide();
-			$('#tr_plan_end_date',form).hide();
+			//$('#tr_plan_start_date',form).hide();
+			//$('#tr_plan_end_date',form).hide();
 			$('#tr_completion_percentage',form).hide();
 		},
 		afterShowForm:function(){
@@ -378,19 +416,7 @@ $(document).ready(function(){
         });
         return count;
 	}
-	
-	var jsonOptions = {
-		    type :"POST",
-		    contentType :"application/json; charset=utf-8",
-		    dataType :"json"
-	};
 
-	function createJSON(postdata) {
-		if (postdata.id === '_empty')
-			postdata.id = null; 
-		return JSON.stringify(postdata)
-	}
-		
 	$.datepicker.regional['es'] = {
 		closeText: 'Cerrar',
 		prevText: '<Ant',

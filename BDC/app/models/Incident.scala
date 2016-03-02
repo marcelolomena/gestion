@@ -417,7 +417,9 @@ case class IncidentSubTask(
     sno:Int,
     cantidad:Int,
   sub_task_id: Int,
+  task_id: Int,
   title: String,
+  description: String,
   plan_start_date: Option[Date],
   plan_end_date: Option[Date],
   real_start_date: Option[Date],
@@ -432,7 +434,9 @@ object IncidentSubTask {
     get[Int]("sno") ~
     get[Int]("cantidad") ~
     get[Int]("sub_task_id") ~
+    get[Int]("task_id") ~
       get[String]("title") ~
+      get[String]("description") ~
       get[Option[Date]]("plan_start_date") ~
       get[Option[Date]]("plan_end_date") ~
       get[Option[Date]]("real_start_date") ~
@@ -444,7 +448,9 @@ object IncidentSubTask {
         case sno ~
         cantidad ~
         sub_task_id ~
+        task_id ~
           title ~
+          description ~
           plan_start_date ~
           plan_end_date ~
           real_start_date ~
@@ -456,7 +462,9 @@ object IncidentSubTask {
               sno,
               cantidad,
           sub_task_id,
+          task_id,
           title,
+          description,
           plan_start_date,
           plan_end_date,
           real_start_date,
@@ -474,6 +482,7 @@ object IncidentSubTask {
       "sno" -> incident.sno.toInt,
       "cantidad" -> incident.cantidad.toInt,
       "sub_task_id" -> incident.sub_task_id.toInt,
+      "task_id" -> incident.task_id.toInt,
       "title" -> incident.toString(),
       "plan_start_date" -> incident.plan_start_date.get,
       "plan_end_date" -> incident.plan_end_date.get,

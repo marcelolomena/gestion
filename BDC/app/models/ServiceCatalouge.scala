@@ -2,6 +2,7 @@ package models
 import anorm.SqlParser._
 import anorm._
 import java.util.Date
+import play.api.libs.json._
 
 case class ServiceCatalogueMaster(id: Option[Int], discipline: Int, service_code: String, service_name: String,
   description: String, service_scope: String, service_requestor_role: Option[Int],
@@ -29,6 +30,7 @@ object ServiceCatalogueMaster {
         case id ~ discipline ~ service_code ~ service_name ~ description ~ service_scope ~ service_requestor_role ~ executive_role_primary ~ executive_role_secondary ~ sla_value ~ sla_unit ~ creation_date ~ updation_date ~ updated_by ~ is_deleted => ServiceCatalogueMaster(id, discipline, service_code, service_name, description, service_scope, service_requestor_role, executive_role_primary, executive_role_secondary, sla_value, sla_unit, creation_date, updation_date, updated_by, is_deleted)
       }
   }
+  implicit val serviceCatalogueWrites = Json.writes[ServiceCatalogueMaster]
 }
 
 case class ServiceCatalogues(id: Option[Int], discipline: Int, service_code: String, service_name: String,

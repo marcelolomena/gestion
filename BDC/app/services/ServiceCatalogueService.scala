@@ -121,6 +121,15 @@ object ServiceCatalogueService extends CustomColumns {
       result
     }
   }
+  
+  def getIncidentServiceCatalogue(): Seq[ServiceCatalogueMaster] = {
+    var sqlString = "SELECT * FROM art_service_catalogue WHERE is_deleted=0 AND discipline = 1057";
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(
+        ServiceCatalogueMaster.serviceCatalogueMaster *)
+      result
+    }
+  }  
 
   def serviceCatalogueCount(): Long = {
     DB.withConnection { implicit connection =>

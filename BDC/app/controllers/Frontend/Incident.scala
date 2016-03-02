@@ -5,6 +5,7 @@ import play.api.mvc.Controller
 import services.IncidentService
 import services.ProgramMemberService
 import services.SubTaskServices
+import services.ServiceCatalogueService
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -75,17 +76,15 @@ object Incident extends Controller {
           val completion_percentage = (jsValue \ "completion_percentage")
           val sub_task_id = (jsValue \ "sub_task_id")
           val oper = (jsValue \ "oper")
-
           /*
+          println("oper : " + oper)
           println("completion_percentage : " + completion_percentage)
           println("sub_task_id : " + sub_task_id)
           println("plan_start_date : " + plan_start_date)
           println("plan_end_date : " + plan_end_date)          
-          println("oper : " + oper)
           */
+          
           if (oper.toString().replace("\"", "").equals("edit")) {
-
-            //ret = SubTaskServices.updateCompletionPercentage(
             incident = IncidentService.updateCompletionPercentage(
               sub_task_id.toString().replace("\"", ""),
               completion_percentage.toString().replace("\"", ""),
@@ -100,6 +99,22 @@ object Incident extends Controller {
               */
 
           } else if (oper.toString().replace("\"", "").equals("del")) {
+            println(incident)
+          } else if (oper.toString().replace("\"", "").equals("add")) {
+            val task_id = (jsValue \ "task_id")
+            val title = (jsValue \ "title")
+            val description = (jsValue \ "description")
+            val catalogo = (jsValue \ "catalogo")            
+            
+            
+            incident = IncidentService.saveSubTask(
+              task_id.toString().replace("\"", ""),
+              title.toString().replace("\"", ""),
+              description.toString().replace("\"", ""),
+              plan_start_date.toString().replace("\"", ""),
+              plan_end_date.toString().replace("\"", ""),
+              catalogo.toString().replace("\"", ""))
+            
             println(incident)
           }
 
@@ -362,7 +377,9 @@ object Incident extends Controller {
           var campo = new JSONObject()
           records = p.cantidad
           campo.put("sub_task_id", p.sub_task_id)
+          campo.put("task_id", p.task_id)
           campo.put("title", p.title)
+          campo.put("description", p.description)
           campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())
           campo.put("plan_end_date", p.plan_end_date.getOrElse("").toString())
           campo.put("real_start_date", p.real_start_date.getOrElse("").toString())
@@ -605,13 +622,13 @@ object Incident extends Controller {
     val incidents = IncidentService.selectSeverity
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
-  /*
-  def severityConfigurationList(id: String) = Action { implicit request =>
+  
+  def serviceCatalogList = Action { implicit request =>
 
-    val incidents = IncidentService.selectSeverityConfiguration(id)
-    Ok(play.api.libs.json.Json.toJson(incidents))
-  }
- */
+    val disciplines = ServiceCatalogueService.getIncidentServiceCatalogue
+    Ok(play.api.libs.json.Json.toJson(disciplines))
+  }  
+
   def severityConfigurationList() = Action { implicit request =>
     val id = request.getQueryString("id").get.toString()
     val incidents = IncidentService.selectSeverityConfiguration(id)
@@ -680,7 +697,7 @@ object Incident extends Controller {
 
   def programResponsableList() = Action { implicit request =>
     val id = request.getQueryString("id").get.toString()
-    println("id: " + id)
+    //println("id: " + id)
     val users = ProgramMemberService.findNoBusinessMemberForIncident(id)
     Ok(play.api.libs.json.Json.toJson(users))
   }
