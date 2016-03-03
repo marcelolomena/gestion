@@ -71,6 +71,7 @@ object Incident extends Controller {
         var ret: Int = 0
         jsonBody.map { jsValue =>
 
+          val title = (jsValue \ "title")
           val plan_start_date = (jsValue \ "plan_start_date")
           val plan_end_date = (jsValue \ "plan_end_date")
           val completion_percentage = (jsValue \ "completion_percentage")
@@ -87,6 +88,7 @@ object Incident extends Controller {
           if (oper.toString().replace("\"", "").equals("edit")) {
             incident = IncidentService.updateCompletionPercentage(
               sub_task_id.toString().replace("\"", ""),
+              title.toString().replace("\"", ""),
               completion_percentage.toString().replace("\"", ""),
               plan_start_date.toString().replace("\"", ""),
               plan_end_date.toString().replace("\"", ""))
@@ -102,7 +104,7 @@ object Incident extends Controller {
             println(incident)
           } else if (oper.toString().replace("\"", "").equals("add")) {
             val task_id = (jsValue \ "task_id")
-            val title = (jsValue \ "title")
+            
             val description = (jsValue \ "description")
             val catalogo = (jsValue \ "catalogo")            
             
