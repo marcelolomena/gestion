@@ -2,7 +2,7 @@ $(document).ready(function(){
 	$("#subtaskListDialog").dialog({
 		//bgiframe: true,
 		autoOpen: false,
-        modal: true,
+        modal: false,
         resizable: true,
         width: 'auto',
         minHeight:'auto',
@@ -84,8 +84,12 @@ $(document).ready(function(){
 			        delOptions: subTaskDelOptions
 			    }},
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
-           { name: "task_id", hidden:true, editrules:{required: false}},
-           { name: "title", width: 200, editable: true,edittype:"text", editrules:{required: true}},
+           { name: "task_id", hidden: true, editable: true, editrules: { edithidden: false }},
+           { name: "title", width: 200, editable: true,/*edittype:"text",*/
+        	   editrules:{required: true},
+        	   edittype: "textarea",
+       	       editoptions: { rows: "1", cols: "25", maxlength: "160"}         	   
+           },
            { name: "description",editable: true,
        	    hidden: true, 
     		editrules: {edithidden: true},
@@ -189,17 +193,30 @@ $(document).ready(function(){
         serializeEditData: createJSON,		
 		closeAfterAdd: true,
 		recreateForm: true,
+		onclickSubmit: function(rowid){
+			var id= $("#jqGridSubTask").getDataIDs()[0];
+            var rowData = $("#jqGridSubTask").getRowData(id);
+            var val = rowData.task_id;
+            return {task_id:val};
+        },
 		errorTextFormat: function (data) {
 			return 'Error: ' + data.responseText
 		},
 		beforeShowForm:function (form) {
-			//$('#tr_plan_start_date',form).hide();
-			//$('#tr_plan_end_date',form).hide();
 			$('#tr_completion_percentage',form).hide();
 		},
 		afterShowForm:function(){
 
 		},
+		afterSubmit : function(response,postdata){
+            var json   = response.responseText; 
+            var result = JSON.parse(json); 
+
+            if(result.error_code!=0)
+            	return [false,result.error_text,""]; 
+            else
+            	return [true,"",""]
+        },		
 		onClose:function(){
 
 		}

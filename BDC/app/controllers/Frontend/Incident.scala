@@ -115,7 +115,7 @@ object Incident extends Controller {
               plan_end_date.toString().replace("\"", ""),
               catalogo.toString().replace("\"", ""))
             
-            println(incident)
+            println(incident.get.error_code)
           }
 
         }
