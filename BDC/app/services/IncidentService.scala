@@ -417,6 +417,7 @@ object IncidentService {
   def selectWorkerHours(id: String): Seq[Hours] = {
     var sqlString = """    
       SELECT
+      t.owner task_owner_id,
       a.task_id,
       a.sub_task_id,
       c.uid,
@@ -432,8 +433,9 @@ object IncidentService {
       ON a.sub_task_id=b.sub_task_id AND a.user_id=b.user_id
       JOIN art_user c
       ON a.user_id=c.uid
+      JOIN art_task t ON t.tId=a.task_id
       WHERE
-      a.is_deleted  = 1 AND
+      a.is_deleted  = 1 AND t.is_active = 1 AND
        a.sub_task_id={id}
     """
 

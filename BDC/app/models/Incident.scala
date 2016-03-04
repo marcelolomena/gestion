@@ -372,6 +372,7 @@ object Status {
 }
 
 case class Hours(
+    task_owner_id: Int,
   task_id: Int,
   sub_task_id: Int,
   uid: Int,
@@ -383,6 +384,7 @@ case class Hours(
 
 object Hours {
   val hours = {
+    get[Int]("task_owner_id") ~
     get[Int]("task_id") ~
       get[Int]("sub_task_id") ~
       get[Int]("uid") ~
@@ -391,7 +393,9 @@ object Hours {
       get[Double]("trabajadas") ~
       get[Double]("ingresadas") ~
       get[String]("nota") map {
-        case task_id ~
+        case
+        task_owner_id ~
+        task_id ~
           sub_task_id ~
           uid ~
           nombre ~
@@ -399,6 +403,7 @@ object Hours {
           trabajadas ~
           ingresadas ~
           nota => Hours(
+          task_owner_id,    
           task_id,
           sub_task_id,
           uid,

@@ -190,8 +190,12 @@ $(document).ready(function(){
         
             if (val_task_owner_id==uid) {            	
                 $("#add_" + thisId).removeClass('ui-state-disabled');
+                $(this).find("div.ui-inline-del").show();
+                $(this).find("div.ui-inline-edit").show();
             } else {
                 $("#add_" + thisId).addClass('ui-state-disabled');
+                $(this).find("div.ui-inline-del").hide();
+                $(this).find("div.ui-inline-edit").hide();
             }
         	
             var recs = parseInt($("#jqGridSubTask").getGridParam("records"),10);
@@ -330,7 +334,8 @@ $(document).ready(function(){
 					},
 					delOptions: workerDelOptions
 					
-			   }},	                   
+			   }},	
+			   { label: 'task_owner_id', name: 'task_owner_id', hidden:true },
 			   { label: 'sub_task_id', name: 'sub_task_id', hidden:true,editable: true, editrules: { edithidden: false },editoptions:{value:parentRowKey, defaultValue:parentRowKey}, hidedlg: true},
 			   { label: 'task_id', name: 'task_id', hidden:true, editable: true, editrules: { edithidden: false }, hidedlg: true },   
 			   { label: 'uid', name: 'uid', key: true, hidden:true },
@@ -404,15 +409,31 @@ $(document).ready(function(){
 	            }
 	        },
 	        ajaxRowOptions: { contentType: "application/json" },
-	        serializeRowData: function (data) { return JSON.stringify(data); }/*,
+	        serializeRowData: function (data) { return JSON.stringify(data); },
 	        gridComplete: function(){
+				var id= $("#" + childGridID).getDataIDs()[0];
+	            var rowData = $("#" + childGridID).getRowData(id);
+	            var val_task_owner_id = rowData.task_owner_id;  
+	            var thisId = $.jgrid.jqID(this.id);
+	            console.log(thisId + "_iladd");
+	            if (val_task_owner_id==uid) {            	
+	                $(thisId + "_iladd").removeClass('ui-state-disabled');//esta malo id=[jqGridSubTask_75866_table_iladd]
+	                $(this).find("div.ui-inline-del").show();
+	                $(this).find("div.ui-inline-edit").show();
+	            } else {
+	                $(thisId + "_iladd").addClass('ui-state-disabled');
+	                $(this).find("div.ui-inline-del").hide();
+	                $(this).find("div.ui-inline-edit").hide();
+	            }	        	
+	        	/*
 	    	    if ($("#" + childGridID).getGridParam('records') == 0){ 
 	    	        $("#" + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-hdiv").hide();
 	    	        //$("#" + childGridID + "_save_button").hide();
 	    	    }
-	        }*/
+	    	    */
+	        }
 	    });
-	    
+    
 	    $("#" + childGridID).jqGrid('inlineNav', "#" + childGridPagerID, {
 	    	edit: false,
 	        editicon: "ui-icon-pencil",
