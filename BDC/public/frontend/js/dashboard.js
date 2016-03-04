@@ -513,6 +513,20 @@ $(document).ready(function(){
             { label: 'Inversión', name: 'inversion', width: 150 },  
             { label: 'Gasto', name: 'gasto', width: 150 }                      
         ];
+	var modelPieDepa=[
+	              { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+	              { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
+	              { label: 'Estado', name: 'division', width: 150 },
+	              { label: 'Responsable', name: 'responsable', width: 200 },
+	              { label: 'Fecha Inicio', name: 'fecini',width: 180,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },
+	              { label: 'Fecha Comprometida',   name: 'feccom', width: 180, formatter: 'date', formatoptions: { srcformat: 'Y-m-d',newformat: 'Y-m-d' } },
+	              { label: '% Avance', name: 'pai', width: 150 },
+	              { label: '% Plan', name: 'pae', width: 150 },
+	              { label: 'SPI', name: 'spi', width: 150 },
+	              { label: 'CPI', name: 'cpi', width: 150 },
+	              { label: 'Inversión', name: 'inversion', width: 150 },  
+	              { label: 'Gasto', name: 'gasto', width: 150 }                      
+	          ];	
 	
 	var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/program-details/';
 
@@ -866,7 +880,7 @@ $(document).ready(function(){
 	        mtype: "GET",
 	        datatype: "json",
 	        page: 1,
-	        colModel: modelPie,
+	        colModel: modelPieDepa,
 			viewrecords: true,
 			regional : "es",
 			height: 'auto',
@@ -1335,7 +1349,7 @@ $(document).ready(function(){
 							        mtype: "GET",
 							        datatype: "json",
 							        page: 1,
-							        colModel: modelPie,
+							        colModel: modelPieDepa,
 									viewrecords: true,
 									regional : "es",
 									height: 'auto',

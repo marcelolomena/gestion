@@ -1,4 +1,16 @@
 $(document).ready(function(){
+	var rawCookie = $.cookie('PLAY_SESSION');
+	var hashes = rawCookie.substring(rawCookie.indexOf('-') + 1).split('&');
+	var hash,uid;
+	for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        if(hash[0]=='uId'){
+        	uid=hash[1];
+        	break;
+        }
+    }
+
 	$("#subtaskListDialog").dialog({
 		//bgiframe: true,
 		autoOpen: false,
@@ -51,12 +63,12 @@ $(document).ready(function(){
 			return {};
 		}
     };    
-
+    var incidentSubTaskGrid = $("#jqGridSubTask"), incidentSubTaskGridId = $.jgrid.jqID(incidentSubTaskGrid[0].id);
     $("#jqGridSubTask").jqGrid({
         datatype: "json",
         mtype: "GET",
         autowidth:true,
-        colNames: ["Acciones", "sub_task_id", "Sub Tarea", "Tarea", "Descripción", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini","Catálogo"],
+        colNames: ["Acciones", "sub_task_id", "Sub Tarea", "task_owner_id", "Tarea", "Descripción", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini","Catálogo"],
         colModel: [
 			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',resize: false,
 			    formatoptions:{
@@ -85,6 +97,7 @@ $(document).ready(function(){
 			    }},
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
            { name: "task_id", hidden: true, editable: true, editrules: { edithidden: false }},
+           { name: "task_owner_id", hidden: true},
            { name: "title", width: 200, editable: true,/*edittype:"text",*/
         	   editrules:{required: true},
         	   edittype: "textarea",
@@ -144,7 +157,6 @@ $(document).ready(function(){
    	       }
         ],
 		regional : "es",
-		//height:'auto',
 		viewrecords: true,
         rowList: [5, 10, 20, 50],
         gridview: true,
@@ -171,6 +183,17 @@ $(document).ready(function(){
             }
         },
         gridComplete: function() {
+			var id= $("#jqGridSubTask").getDataIDs()[0];
+            var rowData = $("#jqGridSubTask").getRowData(id);
+            var val_task_owner_id = rowData.task_owner_id;  
+            var thisId = $.jgrid.jqID(this.id);
+        
+            if (val_task_owner_id==uid) {            	
+                $("#add_" + thisId).removeClass('ui-state-disabled');
+            } else {
+                $("#add_" + thisId).addClass('ui-state-disabled');
+            }
+        	
             var recs = parseInt($("#jqGridSubTask").getGridParam("records"),10);
             if (isNaN(recs) || recs == 0) {
                 $("#subTaskWrapper").hide();
@@ -180,6 +203,9 @@ $(document).ready(function(){
             }
         }
    });
+    
+    $("#add_" + incidentSubTaskGridId).addClass('ui-state-disabled');
+   
     
    $("#jqGridSubTask").jqGrid("navGrid","#jqGridSubTaskPager",{edit: false, add: true, del: false,search: false, refresh: true,position: "left", cloneToTop: false },
 		{},
@@ -591,7 +617,6 @@ $(document).ready(function(){
 		editrules: {edithidden: true}, 
 		edittype: "select", 
 		editoptions: {
-			//dataUrl: '/incident_program_default',
 			dataUrl: '/incidentProgramConfigurationList',
 				postData:function(rowid){
 					var idConf=$("#jqGridIncident").getRowData($("#jqGridIncident").getGridParam("selrow")).configuration_id;
@@ -707,7 +732,6 @@ $(document).ready(function(){
 		editrules: {edithidden: true}, 
 		edittype: "select", 
 	    editoptions: {
-			//dataUrl: '/incident_program_default',
 			dataUrl: '/incidentResponsable',
 			postData:function(rowid){
 				var idProgram=$("#jqGridIncident").getRowData($("#jqGridIncident").getGridParam("selrow")).program_id;
@@ -783,7 +807,6 @@ $(document).ready(function(){
 					var rowKey = grid.getGridParam("selrow");
 					var rowData = grid.getRowData(rowKey);
 					var thissid = rowData.severity_id;
-					//console.log(thissid);
 					var data = JSON.parse(response);
 					var s = "<select>";//el default
 					s += '<option value="0">--Escoger Severidad--</option>';
@@ -986,6 +1009,8 @@ $(document).ready(function(){
 	    },		              
 	];	
 	
+	var incidentGrid = $("#jqGridIncident"), incidentGridId = $.jgrid.jqID(incidentGrid[0].id);
+
 	$("#jqGridIncident").jqGrid({
         url: '/incidentList',
         mtype: "GET",
@@ -1007,7 +1032,27 @@ $(document).ready(function(){
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         gridview: true,
-    });	
+        beforeSelectRow: function (rowid) {
+            var tr = $(this.rows.namedItem(rowid)), thisId = $.jgrid.jqID(this.id);
+			var rowData = incidentGrid.getRowData(rowid);
+			var task_owner_id = rowData.task_owner_id;
+            //if (task_owner_id==uid && !tr.hasClass('not-editable-row')) {
+           	if (task_owner_id==uid) {            	
+                $("#edit_" + thisId).removeClass('ui-state-disabled');
+                $("#del_" + thisId).removeClass('ui-state-disabled');
+            } else {
+                $("#edit_" + thisId).addClass('ui-state-disabled');
+                $("#del_" + thisId).addClass('ui-state-disabled');
+            }
+            return true; 
+        },
+        loadComplete: function () {
+        	//esta wea esta de mas
+        	$("tr.jqgrow:odd", this).addClass('not-editable-row');
+            $("tr.jqgrow:even", this).addClass('not-editable-row');
+        }
+    });
+
 	$("#jqGridIncident").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 	$("#jqGridIncident").jqGrid('navGrid','#jqGridIncidentPager',{edit: true, add: true, del: true,search: false, position: "left", cloneToTop: false },
         {
@@ -1177,4 +1222,8 @@ $(document).ready(function(){
 			$("#jqGridIncident").jqGrid('excelExport',{"url":url});
 	   } 
 	});
+	
+	$("#edit_" + incidentGridId).addClass('ui-state-disabled');
+    $("#del_" + incidentGridId).addClass('ui-state-disabled');
+
 });

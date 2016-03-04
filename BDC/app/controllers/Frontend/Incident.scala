@@ -380,6 +380,7 @@ object Incident extends Controller {
           records = p.cantidad
           campo.put("sub_task_id", p.sub_task_id)
           campo.put("task_id", p.task_id)
+          campo.put("task_owner_id", p.task_owner_id)
           campo.put("title", p.title)
           campo.put("description", p.description)
           campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())

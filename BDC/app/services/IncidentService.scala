@@ -286,7 +286,7 @@ object IncidentService {
 
   def selectDepartamentIncident: Seq[ComboDepartament] = {
     var sqlString = """
-    SELECT a.dId,a.department 
+    SELECT DISTINCT a.dId,a.department 
     FROM art_department_master a, art_program b 
     WHERE a.dId=b.department AND b.is_active=1 AND a.is_deleted = 0  AND b.program_id 
     IN (SELECT DISTINCT program_id FROM art_incident)
@@ -337,42 +337,7 @@ object IncidentService {
       SQL(sqlString).as(Severity.severity *)
     }
   }
-/*
-  def selectSubtask(id: String): Seq[IncidentSubTask] = {
-    var sqlString = """
-    SELECT
-        X.sub_task_id,
-        X.title,
-        X.plan_start_date,
-        X.plan_end_date,
-        Y.real_start_date,
-        Y.real_end_date,
-        X.completion_percentage,
-        ISNULL(Y.hours,0) hours,
-    CASE WHEN DATEDIFF (day, X.plan_start_date, GETDATE()) < 0 THEN 0 
-           WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) > 0 THEN 100 
-           WHEN DATEDIFF (day, X.plan_end_date, GETDATE()) <= 0 AND DATEDIFF (day, X.plan_start_date, GETDATE()) >= 0 THEN IIF(DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date)) > 0, 
-           ROUND(100 * CAST(DATEDIFF (day, X.plan_start_date, GETDATE()) AS FLOAT)/DATEDIFF (day, X.plan_start_date, DATEADD(day,1,X.plan_end_date) ),2) , 0)
-        END
-        expected_percentage,
-        '' fecini
-         FROM art_sub_task X 
-        LEFT OUTER JOIN
-        (
-         SELECT SUM(hours) hours,
-         MIN(task_for_date) real_start_date,
-          MAX(task_for_date) real_end_date, 
-          sub_task_id FROM art_timesheet
-           GROUP BY sub_task_id
-        ) Y
-        ON X.sub_task_id=Y.sub_task_id
-        WHERE is_deleted=1 AND task_id = {id} order by plan_start_date
-      """
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('id -> id.toInt).as(IncidentSubTask.incidentsubtask *)
-    }
-  }
-*/
+
   def selectSubtask(id: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[IncidentSubTask] = {
     var sqlString = """
   SELECT * FROM
@@ -388,6 +353,7 @@ object IncidentService {
   COUNT(*) Over() cantidad,
         X.sub_task_id,
         X.task_id,
+        W.owner task_owner_id,
         X.title,
         '' description,
         X.plan_start_date,
@@ -412,8 +378,9 @@ object IncidentService {
           sub_task_id FROM art_timesheet
            GROUP BY sub_task_id
         ) Y
-        ON X.sub_task_id=Y.sub_task_id
-    WHERE is_deleted=1 AND task_id = {id} 
+        ON X.sub_task_id=Y.sub_task_id 
+        JOIN art_task W ON X.task_id=W.tId 
+    WHERE X.is_deleted=1 AND W.is_active=1 AND X.task_id = {id} 
     ) as RECORDS
     WHERE  RECORDS.Sno BETWEEN ({StartRow} - {NumberOfRows}) AND ({StartRow} - 1) ORDER BY plan_start_date
       """
