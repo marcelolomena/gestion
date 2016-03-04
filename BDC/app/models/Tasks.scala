@@ -9,6 +9,14 @@ import java.util.Calendar
 import org.apache.commons.lang3.StringUtils
 import services.ProjectService
 import play.api.libs.json.Json
+import anorm._
+import anorm.SqlParser._
+import java.util.Date
+import play.api.libs.json._
+
+import play.api.data.Forms._
+import play.api.data._
+
 
 /*case class TaskMaster(tId: Option[Int], project: Int, task_title: String, task_code: String,
 	plan_start_date: Date, plan_end_date: Date, task_description: String, plan_time: BigDecimal, task_status: Int,
@@ -105,6 +113,34 @@ object Tasks extends CustomColumns {
             plan_time, creation_date, task_status, status, owner, task_discipline,
             completion_percentage, remark, task_depend, dependencies_type, stage, user_role, deliverable, task_type, is_active)
       }
+  }
+  //implicit val tasksWrites = Json.writes[Tasks]
+  implicit val tasksWrites = new Writes[Tasks] {
+    def writes(tasks: Tasks) = Json.obj(
+      "tId" -> tasks.tId.toString,
+      "pId" -> tasks.pId.toString,
+      "task_title" -> tasks.task_title.toString,
+      "task_code" -> tasks.task_code.toString,
+      "plan_start_date" -> tasks.plan_start_date.toString(),
+      "plan_end_date" -> tasks.plan_end_date.toString(),
+      "task_description" -> tasks.task_description.toString(),
+      "plan_time" -> tasks.plan_time.toString(),
+      "creation_date" -> tasks.creation_date.toString(),
+      "task_status" -> tasks.task_status.toString(),
+      "status" -> tasks.status.toString(),
+      "owner" -> tasks.owner.toString(),
+      "task_discipline" -> tasks.task_discipline.toString(),
+      "completion_percentage" -> tasks.completion_percentage.toString(),
+      "remark" -> tasks.remark.toString(),
+      "task_depend" -> tasks.task_depend.toString(),
+      "dependencies_type" -> tasks.dependencies_type.toString(),
+      "stage" -> tasks.stage.toString(),
+      "user_role" -> tasks.user_role.toString(),
+      "deliverable" -> tasks.deliverable.toString(),
+      "task_type" -> tasks.task_type.toString(),
+      "is_active" -> tasks.is_active.toString())
+      
+      
   }
 }
 

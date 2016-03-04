@@ -4,6 +4,8 @@ import java.util.Date
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
+import net.liftweb.json._
+import net.liftweb.json.JsonParser._
 import anorm.NotAssigned
 import art_forms.ARTForms
 import models.Activity
@@ -54,148 +56,17 @@ object ProjectMasterJira extends Controller {
    * Get  project details by project id...
    */
   def projectDetails(projectId: String) = Action { implicit request =>
-      val project = ProjectService.findProjectDetails(Integer.parseInt(projectId))
-      val EVobj = EarnValueService.getEarnCalculationForProject(projectId)
-      var expected_completion_percentage_for_project = 0.0
-      if (!EVobj.isEmpty) {
-        if (!EVobj.get.planned_value.isEmpty) {
-          if (EVobj.get.planned_value.get != 0) {
-            if (!project.get.planned_hours.isEmpty) {
-              if (project.get.planned_hours.get != 0) {
-                expected_completion_percentage_for_project = (EVobj.get.planned_value.get / project.get.planned_hours.get) * 100
-              }
-            }
-          }
-        }
-      }
-      if (!project.isEmpty) {
-            val tasks = TaskService.findTaskListByProjectIdAsign(project.get.pId.get.toString)
-            var list = new ListBuffer[String]()
-
-            var plan_time_for_project: scala.math.BigDecimal = 0.0
-            var actual_hours_completed_for_project: scala.math.BigDecimal = 0.0
-            var actual_completion_date: Date = null
-            var isValid = true
-
-            for (c <- tasks) {
-              list += Baseline.getBaselineCount(c.tId.get, "Task").toString();
-              // plan_time_for_project = plan_time_for_project.+(c.plan_time) // new definition for completion percentage
-
-              val subtasks = TaskService.findSubTaskListByTaskId(c.tId.get.toString())
-              var compl_per_task: scala.math.BigDecimal = 0
-              var actual_hours_completed_for_task: scala.math.BigDecimal = 0
-              for (subtask <- subtasks) {
-
-                if (!subtask.completion_percentage.isEmpty) {
-                  if (subtask.completion_percentage.get != 100) {
-                    isValid = false
-                    println(isValid+"--------------------")
-                  }
-                  var actual_completion: Date = null
-                  if (!subtask.actual_end_date.isEmpty) {
-                    if (!subtask.actual_end_date_final.isEmpty) {
-                      if (subtask.actual_end_date.get.getTime > subtask.actual_end_date_final.get.getTime) {
-                        actual_completion = subtask.actual_end_date.get
-                      } else {
-                        actual_completion = subtask.actual_end_date_final.get
-                      }
-                    } else {
-                      actual_completion = subtask.actual_end_date.get
-                    }
-                  }
-                  if (actual_completion_date == null) {
-                    actual_completion_date = actual_completion
-                  } /*else if (actual_completion.getTime > actual_completion_date.getTime) {
-                    actual_completion_date = actual_completion
-                  }*/
-
-                }
-
-                val allocationsubtasks = SubTaskServices.findSubTasksAllocationBySubTask(subtask.sub_task_id.get.toString())
-                var hrs_allocated_to_subtask = 0.0
-                var acutal_hours_completed_for_subtask: scala.math.BigDecimal = 0
-                for (suballoc <- allocationsubtasks) {
-                  hrs_allocated_to_subtask += suballoc.estimated_time.toDouble
-                   //println("hrs_allocated_to_subtask = " + suballoc.estimated_time.toDouble + "subtask completion_percentage =  " + subtask.completion_percentage.get)
-                }
-
-                val allocationsubtasksexternal = SubTaskServices.findSubTasksAllocationExternalBySubTask(subtask.sub_task_id.get.toString())
-                for (a <- allocationsubtasksexternal) {
-                  hrs_allocated_to_subtask += a.estimated_time.toDouble
-                }
-
-                if (!subtask.completion_percentage.isEmpty) {
-                  acutal_hours_completed_for_subtask = (hrs_allocated_to_subtask * subtask.completion_percentage.get / 100)
-                } else {
-                  acutal_hours_completed_for_subtask = 0
-                }
-
-                actual_hours_completed_for_task += acutal_hours_completed_for_subtask
-              }
-              if (!isValid) {
-                actual_completion_date = null
-              } else {
-                if (actual_completion_date != null) {
-                  if (actual_completion_date.getTime < c.plan_end_date.getTime) {
-                    actual_completion_date = c.plan_end_date
-                  }
-                } else {
-                  actual_completion_date = c.plan_end_date
-                }
-              }
-               println("actual_hours_completed_for_task = " + actual_hours_completed_for_task)
-              actual_hours_completed_for_project += actual_hours_completed_for_task
-            }
-            println(isValid)
-            if (!isValid) {
-              actual_completion_date = null
-            }
-            println(actual_completion_date)
-            var countList = list.toList;
-            var documents = DocumentService.findAllDocuments(projectId, "PROJECT", "", "", "");
-
-            val baseline = Baseline.getBaseline(Integer.parseInt(projectId), "project")
-            var changeSet = "";
-            if (baseline.length > 0) {
-              changeSet = "[";
-              var i = 0;
-              for (b <- baseline) {
-
-                var jsonNode = Json.parse(b.change_set);
-                var itr = jsonNode.iterator()
-                while (itr.hasNext()) {
-                  var jsonObj = itr.next();
-                  if (i == 0) {
-                    changeSet = "[" + jsonObj.toString() + ",";
-                  } else {
-                    changeSet = changeSet + jsonObj.toString() + ",";
-                  }
-                  i = i + 1;
-                }
-              }
-
-              changeSet = changeSet.substring(0, changeSet.length() - 1) + "]";
-            }
-
-            plan_time_for_project = project.get.planned_hours.getOrElse(0).toString().toDouble
-
-            if (plan_time_for_project.!=(0)) {
-              val completion_percentage_forProject: scala.math.BigDecimal = ((actual_hours_completed_for_project / plan_time_for_project) * 100).setScale(2, RoundingMode.HALF_UP);
-              //Ok(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString())
-              //var node = new JSONObject()
-              //node.put(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString())
-              //Ok(Json.toJson(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString()))
-              Ok("OK")
-            } else {
-              Ok("OK")
-              //Ok(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString())
-              //Ok(Json.toJson(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project.toString(), tasks.toString(), countList.toString(), documents.toString(), changeSet.toString()))
-            }
-
-        
-      } else {
-        Ok("No existe Proyecto")
-      }
+    val project = ProjectService.findProjectDetails(Integer.parseInt(projectId))
+    var tareas = new JSONArray()
+    var respuesta = new JSONArray()
+    if (!project.isEmpty) {
+      respuesta.put( play.api.libs.json.Json.toJson(project))
+      val tasks = TaskService.findTaskListByProjectIdAsign(project.get.pId.get.toString)
+      respuesta.put(play.api.libs.json.Json.toJson(tasks))
+      Ok(respuesta.toString())
+    }else{
+      Ok("No existe Proyecto")
+    }
   }
 
   /**
@@ -233,22 +104,18 @@ object ProjectMasterJira extends Controller {
    * id -  Program ID
    */
   def saveProjectDetails(program_id: String) = Action { implicit request =>
-
     var workFlow = new java.util.LinkedHashMap[String, String]()
-
     val work_flows = ProjectWorkflowStatusService.findAllProjectWorkflowList
     for (w <- work_flows) {
       workFlow.put(w.id.get.toString(), w.project_workflow_status)
     }
     var pTypes = new java.util.LinkedHashMap[String, String]()
-
     val project_types = GenericProjectService.findActiveProjectTypeDetailsByType()
     for (p <- project_types) {
       if (!GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).isEmpty) {
         pTypes.put(p.id.get.toString(), GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).get.generic_project_type)
       }
     }
-
     pmMap = new java.util.LinkedHashMap[String, String]()
     val progrma_members = ProgramMemberService.findProgramMemberForProgram(program_id)
     for (pm <- progrma_members) {
@@ -438,7 +305,7 @@ object ProjectMasterJira extends Controller {
       for (pm <- progrma_members) {
         pmMap.put(pm.uid.get.toString(), pm.first_name + " " + pm.last_name)
       }
-      Ok(views.html.frontend.project.editProject(ARTForms.projectForm.fill(projectData), Integer.parseInt(id), pmMap, workFlow))
+      Ok(views.html.frontend.project.editProjectJira(ARTForms.projectForm.fill(projectData), Integer.parseInt(id), pmMap, workFlow))
 
     
   }
@@ -465,24 +332,24 @@ object ProjectMasterJira extends Controller {
     oldForm.fold(
       errors => {
         val theForm = ProjectService.validateForm(errors, project.get.program, id)
-        BadRequest(views.html.frontend.project.editProject(theForm, Integer.parseInt(id), pmMap, workFlow)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest("Error Form")
       },
       ProjectMaster => {
         val theForm = ProjectService.validateForm(ARTForms.projectForm.fill(ProjectMaster), ProjectMaster.program, id)
         println(theForm.errors)
         if (theForm.hasErrors) {
-          BadRequest(views.html.frontend.project.editProject(theForm, Integer.parseInt(id), pmMap, workFlow)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest("Error Form 2")
         } else {
           val project_manager = ProjectMaster.project_manager
 
-          ProjectService.projectBasline(project, ProjectMaster.final_release_date, ProjectMaster.start_date, request.session.get("uId").get, id)
+          ProjectService.projectBasline(project, ProjectMaster.final_release_date, ProjectMaster.start_date, "1202", id)
           val projectVlaues = Project(project.get.pId, project.get.project_id, project.get.program, project.get.project_mode, ProjectMaster.project_name, ProjectMaster.description, ProjectMaster.project_manager, ProjectMaster.start_date, ProjectMaster.final_release_date, ProjectMaster.completion_percentage, ProjectMaster.ppm_number, ProjectMaster.work_flow_status, project.get.baseline, Option(project.get.planned_hours.getOrElse(0)))
           ProjectService.updateProject(projectVlaues)
 
           /**
            * Activity log
            */
-          val act = Activity(ActivityTypes.Project.id, "Project updated by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), Integer.parseInt(id))
+          val act = Activity(ActivityTypes.Project.id, "Project updated by Jira ", new Date(), 1202, Integer.parseInt(id))
           Activity.saveLog(act)
 
           /**
@@ -496,7 +363,7 @@ object ProjectMasterJira extends Controller {
             UserService.saveUserSetting(projectmapping)
           }
 
-          Redirect(routes.ProjectMaster.projectDetails(id))
+          Ok("Proyecto modificado")
         }
 
       })
@@ -559,7 +426,7 @@ object ProjectMasterJira extends Controller {
             /**
              * Activity log
              */
-            val act = Activity(ActivityTypes.Project.id, "Project deleted by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), Integer.parseInt(id))
+            val act = Activity(ActivityTypes.Project.id, "Project deleted by Jira ", new Date(), 1202, Integer.parseInt(id))
             Activity.saveLog(act)
             node.put("status", "Success")
 

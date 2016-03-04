@@ -36,6 +36,7 @@ object Project extends CustomColumns {
             work_flow_status, baseline, planned_hours)
       }
   }
+  implicit val projectWrites = Json.writes[Project]
 }
 
 case class ProjectDisplay(pId: Option[Int], project_id: String, program: Integer, project_name: String, name: String, description: String)
