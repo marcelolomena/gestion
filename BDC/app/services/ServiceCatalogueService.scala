@@ -123,7 +123,7 @@ object ServiceCatalogueService extends CustomColumns {
   }
   
   def getIncidentServiceCatalogue(): Seq[ServiceCatalogueMaster] = {
-    var sqlString = "SELECT * FROM art_service_catalogue WHERE is_deleted=0 AND discipline = 1057";
+    var sqlString = "SELECT * FROM art_service_catalogue WHERE is_deleted=0 AND discipline = 1057 ORDER BY CAST(service_name AS VARCHAR)";
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(
         ServiceCatalogueMaster.serviceCatalogueMaster *)

@@ -875,4 +875,34 @@ object Incident extends Controller {
       }
 
   }
+  
+  
+  def pieIncident = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val pie = IncidentService.pieChart
+
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Incidencias por Departamento")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        //punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }    
 }

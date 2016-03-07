@@ -834,6 +834,15 @@ object ProgramService extends CustomColumns {
       SQL(sqlString).as(ProgramStatus.pStatus.singleOpt)
     }
   }
+  
+  def findProgramWorkflowStatus(program_id: String) = {
+    var sqlString = ""
+    sqlString = "SELECT ISNULL(w.workflow_status,'NULO') workflow_status FROM art_program p JOIN art_program_workflow_status w ON p.work_flow_status=w.id WHERE p.is_active = 1 AND p.program_id = " + program_id
+    //sqlString = "SELECT * from art_program_status where program_id=" + program_id + "  order by status_for_date DESC LIMIT 0, 1 "
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(scalar[String].singleOpt)
+    }
+  }  
 
   def findAllProgramStatus(program_id: String): Seq[ProgramStatus] = {
     var sqlString = ""

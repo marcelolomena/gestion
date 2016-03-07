@@ -7,10 +7,10 @@
 <input type="hidden" value="@programCount" id="program-count"/>
 <h3 class="title">
 	<span style="margin-left:12px; width:25%; float:left;">@Messages("programDetails.division")</span>
-	<span style=" width:25%; float:left;">@Messages("program.typeprogram")</span>
+	<span style=" width:20%; float:left;">@Messages("program.typeprogram")</span>
 	<span style=" width:25%; float:left;">@Messages("program.program")</span>
 	<span style=" width:15%; float:left;">@Messages("programlisting.deliverydate")</span>
-	<span style=" width:5%; float:left;">@Messages("addDepartment.projectworkflowstatus")</span>
+	<span style=" width:10%; float:left;">@Messages("addDepartment.projectworkflowstatus")</span>
 	<span style=" width:3%; float:left;">@Messages("program.action")</span>
 </h3>
 <div class="project_list_1  padding-none">
@@ -21,7 +21,7 @@
 				<div class="@if( index%2==0 ){ program_list_1 }else{ program_list_2 } program_list ">
 		 			<a href="/program-details/@p.program_id">	
 		 				<span style="width: 25%" class="left width138px">@DivisionService.findDivisionById(ProgramService.findProgramOtherDetailsById(p.program_id.get.toString()).get.devison).get.division</span>
-		  			<span style="width: 25%" class="left width270px">
+		  			<span style="width: 20%" class="left width270px">
 		  			@{
 		  				prograType = ProgramTypeService.findProgramTypeById(p.program_type.toString) 
 		  				if(!prograType.isEmpty){
@@ -38,7 +38,9 @@
 		    			}
 		   			}
 		  			</span>
-		  			<span style="width: 5%" class="left width312px">
+		  			<span style="width: 10%" class="left width312px">
+		  			@ProgramService.findProgramWorkflowStatus(p.program_id.get.toString())
+		  			@*
 		  			@{
 		  				programStatus = ProgramService.findProgramStatus(p.program_id.get.toString())
 		  				if(!programStatus.isEmpty){
@@ -54,6 +56,7 @@
 		  			} 
 		  			
 		 				}
+		 			*@
 		  			</span>
 		 			</a>
 		    			@*<a href="/edit-program/@p.program_id"><span class="edit-icon" ></span></a>*@

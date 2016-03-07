@@ -15,6 +15,7 @@ import models.SubTasks
 import models.Hours
 import models.IncidentSubTask
 import models.NameUsr
+import models.Pie;
 import anorm._
 import anorm.SqlParser._
 import play.api.libs.json.JsObject
@@ -443,5 +444,13 @@ object IncidentService {
       SQL(sqlString).on('id -> id.toInt).as(Hours.hours *)
     }
   }
+  
+  def pieChart(): Seq[Pie] = {
+
+    var sqlString = "EXEC art.porcentaje_incident_for_department"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).executeQuery() as (Pie.pie *)
+    }
+  }  
 
 }
