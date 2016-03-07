@@ -1119,7 +1119,8 @@ $(document).ready(function(){
 			var rowData = incidentGrid.getRowData(rowid);
 			var task_owner_id = rowData.task_owner_id;
 			var project_manager_id = rowData.project_manager_id;
-			var program_manager_id = rowData.program_manager_id;			
+			var program_manager_id = rowData.program_manager_id;
+			//console.log("program_manager_id=" + program_manager_id);
 
            	if ( (task_owner_id==uid) || (project_manager_id==uid) || (program_manager_id==uid) ) {            	
                 $("#edit_" + thisId).removeClass('ui-state-disabled');

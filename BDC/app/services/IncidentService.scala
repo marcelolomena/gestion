@@ -356,7 +356,7 @@ object IncidentService {
         X.task_id,
         W.owner task_owner_id,
         J.project_manager project_manager_id,
-        G.program_manager program_manager_id,        
+        G.demand_manager program_manager_id,        
         X.title,
         '' description,
         X.plan_start_date,
