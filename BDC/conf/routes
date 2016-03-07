@@ -609,6 +609,7 @@ GET    /incidentAddMember																		      controllers.Frontend.Incident.a
 GET    /incidentAddUser  																		      controllers.Frontend.Incident.addUser
 GET    /incidentDelMember                                                                             controllers.Frontend.Incident.delMember
 GET    /incidentDelSubTask																			  controllers.Frontend.Incident.delSubTask
+GET    /incidentPie																			          controllers.Frontend.Incident.pieIncident
 #Migracion Programa
 GET	   /programa																					  controllers.Frontend.Programa.home
 GET    /listadoPrograma																				  controllers.Frontend.Programa.listado

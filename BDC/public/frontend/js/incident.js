@@ -10,6 +10,55 @@ $(document).ready(function(){
         	break;
         }
     }
+	
+	var optionsPieIncident ={
+			chart: {
+				renderTo: 'containerIncident',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	            text: 'Incidentes por Departamento'
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}	        	
+	        },plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []			
+	};	
+	
+	$.ajax({
+		  url: '/incidentPie',
+		  type: 'GET',
+		  success: function(data) {
+			  optionsPieIncident.series.push(JSON.parse(data));
+				var charPieDepa = new Highcharts.Chart(optionsPieIncident);
+			
+		  },
+		  error: function(e) {
+
+		  }
+	});	
 
 	$("#subtaskListDialog").dialog({
 		//bgiframe: true,
@@ -411,17 +460,23 @@ $(document).ready(function(){
 	        ajaxRowOptions: { contentType: "application/json" },
 	        serializeRowData: function (data) { return JSON.stringify(data); },
 	        gridComplete: function(){
-				var id= $("#" + childGridID).getDataIDs()[0];
-	            var rowData = $("#" + childGridID).getRowData(id);
+	        	
+				//var id= $("#" + childGridID).getDataIDs()[0];
+	            //var rowData = $("#" + childGridID).getRowData(id);
+				var id= $("#jqGridSubTask").getDataIDs()[0];
+	            var rowData = $("#jqGridSubTask").getRowData(id);	            
 	            var val_task_owner_id = rowData.task_owner_id;  
 	            var thisId = $.jgrid.jqID(this.id);
-	            console.log(thisId + "_iladd");
+	            console.log("val_task_owner_id:" + val_task_owner_id);
+	            console.log("uid:" + uid);
 	            if (val_task_owner_id==uid) {            	
-	                $(thisId + "_iladd").removeClass('ui-state-disabled');//esta malo id=[jqGridSubTask_75866_table_iladd]
+	                //$("#" + thisId + "_iladd").removeClass('ui-state-disabled');
+	                $("#" + thisId + "_iladd").show();
 	                $(this).find("div.ui-inline-del").show();
 	                $(this).find("div.ui-inline-edit").show();
 	            } else {
-	                $(thisId + "_iladd").addClass('ui-state-disabled');
+	                //$("#" + thisId + "_iladd").addClass('ui-state-disabled');
+	            	$("#" + thisId + "_iladd").hide();
 	                $(this).find("div.ui-inline-del").hide();
 	                $(this).find("div.ui-inline-edit").hide();
 	            }	        	
