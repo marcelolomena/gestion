@@ -74,7 +74,7 @@ object IncidentService {
 		'configuration_id -> configuration_id.toInt,
 		'program_id -> program_id.toInt,
 		'task_owner_id -> task_owner_id.toInt,
-		'alm_number -> alm_number.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
+		'alm_number -> alm_number).executeQuery() as (ErrorIncident.error.singleOpt)
     }
   }
 
