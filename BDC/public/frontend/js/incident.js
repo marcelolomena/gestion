@@ -117,7 +117,7 @@ $(document).ready(function(){
         datatype: "json",
         mtype: "GET",
         autowidth:true,
-        colNames: ["Acciones", "sub_task_id", "Sub Tarea", "task_owner_id", "Tarea", "Descripción", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini","Catálogo"],
+        colNames: ["Acciones", "sub_task_id", "Sub Tarea", "task_owner_id", "project_manager_id", "program_manager_id", "Tarea", "Descripción", "Inicio Planeado", "Término Planeado","Inicio Real", "Último Ingreso", "% Avance","% Esperado","Horas Totales","fecini","Catálogo"],
         colModel: [
 			{name:'act',index:'act',width:55,align:'center',sortable:false,formatter:'actions',resize: false,
 			    formatoptions:{
@@ -147,6 +147,8 @@ $(document).ready(function(){
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
            { name: "task_id", hidden: true, editable: true, editrules: { edithidden: false }},
            { name: "task_owner_id", hidden: true},
+           { name: "project_manager_id", hidden: true},
+           { name: "program_manager_id", hidden: true},
            { name: "title", width: 200, editable: true,/*edittype:"text",*/
         	   editrules:{required: true},
         	   edittype: "textarea",
@@ -235,9 +237,11 @@ $(document).ready(function(){
 			var id= $("#jqGridSubTask").getDataIDs()[0];
             var rowData = $("#jqGridSubTask").getRowData(id);
             var val_task_owner_id = rowData.task_owner_id;  
+            var val_project_manager_id = rowData.project_manager_id;  
+            var val_program_manager_id = rowData.program_manager_id;  
             var thisId = $.jgrid.jqID(this.id);
         
-            if (val_task_owner_id==uid) {            	
+            if ((val_task_owner_id==uid) || (val_project_manager_id==uid) || (val_program_manager_id==uid)) {            	
                 $("#add_" + thisId).removeClass('ui-state-disabled');
                 $(this).find("div.ui-inline-del").show();
                 $(this).find("div.ui-inline-edit").show();
@@ -460,17 +464,17 @@ $(document).ready(function(){
 	        ajaxRowOptions: { contentType: "application/json" },
 	        serializeRowData: function (data) { return JSON.stringify(data); },
 	        gridComplete: function(){
-	        	
 				//var id= $("#" + childGridID).getDataIDs()[0];
 	            //var rowData = $("#" + childGridID).getRowData(id);
 				var id= $("#jqGridSubTask").getDataIDs()[0];
 	            var rowData = $("#jqGridSubTask").getRowData(id);	            
 	            var val_task_owner_id = rowData.task_owner_id;  
+	            var val_project_manager_id = rowData.project_manager_id;  
+	            var val_program_manager_id = rowData.program_manager_id;  
 	            var thisId = $.jgrid.jqID(this.id);
-	            console.log("val_task_owner_id:" + val_task_owner_id);
-	            console.log("uid:" + uid);
-	            if (val_task_owner_id==uid) {            	
-	                //$("#" + thisId + "_iladd").removeClass('ui-state-disabled');
+	            //console.log("val_task_owner_id:" + val_task_owner_id);
+	            //console.log("uid:" + uid);
+	            if ((val_task_owner_id==uid) || (val_project_manager_id==uid) || (val_program_manager_id==uid)) {            	
 	                $("#" + thisId + "_iladd").show();
 	                $(this).find("div.ui-inline-del").show();
 	                $(this).find("div.ui-inline-edit").show();
@@ -1082,7 +1086,9 @@ $(document).ready(function(){
 		editrules: {edithidden: true},
 	    stype: 'select',
 		searchoptions: {dataUrl: '/incidentDepartamentList'},
-	    },		              
+	    },	
+	    { label: 'project_manager_id', name: 'project_manager_id', hidden:true },
+	    { label: 'program_manager_id', name: 'program_manager_id', hidden:true },
 	];	
 	
 	var incidentGrid = $("#jqGridIncident"), incidentGridId = $.jgrid.jqID(incidentGrid[0].id);
@@ -1112,8 +1118,10 @@ $(document).ready(function(){
             var tr = $(this.rows.namedItem(rowid)), thisId = $.jgrid.jqID(this.id);
 			var rowData = incidentGrid.getRowData(rowid);
 			var task_owner_id = rowData.task_owner_id;
-            //if (task_owner_id==uid && !tr.hasClass('not-editable-row')) {
-           	if (task_owner_id==uid) {            	
+			var project_manager_id = rowData.project_manager_id;
+			var program_manager_id = rowData.program_manager_id;			
+
+           	if ( (task_owner_id==uid) || (project_manager_id==uid) || (program_manager_id==uid) ) {            	
                 $("#edit_" + thisId).removeClass('ui-state-disabled');
                 $("#del_" + thisId).removeClass('ui-state-disabled');
             } else {

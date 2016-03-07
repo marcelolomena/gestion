@@ -93,7 +93,7 @@ object Incident extends Controller {
               plan_start_date.toString().replace("\"", ""),
               plan_end_date.toString().replace("\"", ""))
 
-            println(play.api.libs.json.Json.toJson(incident))
+            //println(play.api.libs.json.Json.toJson(incident))
             /*
             if(incident.get.error_code>0)
               throw new Exception(incident.get.error_text)
@@ -381,6 +381,8 @@ object Incident extends Controller {
           campo.put("sub_task_id", p.sub_task_id)
           campo.put("task_id", p.task_id)
           campo.put("task_owner_id", p.task_owner_id)
+          campo.put("project_manager_id", p.project_manager_id)
+          campo.put("program_manager_id", p.program_manager_id)
           campo.put("title", p.title)
           campo.put("description", p.description)
           campo.put("plan_start_date", p.plan_start_date.getOrElse("").toString())
@@ -554,6 +556,8 @@ object Incident extends Controller {
           campo.put("severity_id", p.severity_id)
           campo.put("date_end", p.date_end.getOrElse("").toString())
           campo.put("task_owner_id", p.task_owner_id)
+          campo.put("project_manager_id", p.project_manager_id)
+          campo.put("program_manager_id", p.program_manager_id)
           campo.put("user_creation_id", p.user_creation_id)
           campo.put("task_id", p.task_id)
           campo.put("task_title", p.task_title)

@@ -14,13 +14,15 @@ case class Incident(incident_id: Int,
                     program_id: Int,
                     date_creation: Option[Date],
                     ir_number: String,
-					alm_number: Option[String],
+					          alm_number: Option[String],
                     user_sponsor_id: Int,
                     brief_description: String,
                     extended_description: String,
                     severity_id: Int,
                     date_end: Option[Date],
                     task_owner_id: Int,
+                    project_manager_id:Int,
+                    program_manager_id:Int,
                     user_creation_id: Int,
                     task_id: Int,
                     task_title: String,
@@ -42,13 +44,15 @@ object Incident {
       get[Int]("program_id") ~
       get[Option[Date]]("date_creation") ~
       get[String]("ir_number") ~
-	  get[Option[String]]("alm_number") ~
+	    get[Option[String]]("alm_number") ~
       get[Int]("user_sponsor_id") ~
       get[String]("brief_description") ~
       get[String]("extended_description") ~
       get[Int]("severity_id") ~
       get[Option[Date]]("date_end") ~
       get[Int]("task_owner_id") ~
+      get[Int]("project_manager_id") ~
+      get[Int]("program_manager_id") ~
       get[Int]("user_creation_id") ~
       get[Int]("task_id") ~
       get[String]("task_title") ~
@@ -67,13 +71,15 @@ object Incident {
           program_id ~
           date_creation ~
           ir_number ~
-		  alm_number ~
+		      alm_number ~
           user_sponsor_id ~
           brief_description ~
           extended_description ~
           severity_id ~
           date_end ~
           task_owner_id ~
+          project_manager_id ~
+          program_manager_id ~
           user_creation_id ~
           task_id ~
           task_title ~
@@ -91,13 +97,15 @@ object Incident {
           program_id,
           date_creation,
           ir_number,
-		  alm_number,
+		      alm_number,
           user_sponsor_id,
           brief_description,
           extended_description,
           severity_id,
           date_end,
           task_owner_id,
+          project_manager_id,
+          program_manager_id,
           user_creation_id,
           task_id,
           task_title,
@@ -121,13 +129,15 @@ object Incident {
       "program_id" -> incident.program_id.toInt,
       "date_creation" -> incident.date_creation.get,
       "ir_number" -> incident.ir_number.toString(),
-	  "alm_number" -> incident.alm_number.toString(),
+	    "alm_number" -> incident.alm_number.toString(),
       "user_sponsor_id" -> incident.user_sponsor_id.toInt,
       "brief_description" -> incident.brief_description.toString(),
       "extended_description" -> incident.extended_description.toString(),
       "severity_id" -> incident.severity_id.toInt,
       "date_end" -> incident.date_end.get,
       "task_owner_id" -> incident.task_owner_id.toInt,
+      "project_manager_id" -> incident.project_manager_id.toInt,
+      "program_manager_id" -> incident.program_manager_id.toInt,
       "user_creation_id" -> incident.user_creation_id.toInt,
       "task_id" -> incident.task_id.toInt,
       "task_title" -> incident.task_title.toString(),
@@ -424,6 +434,8 @@ case class IncidentSubTask(
   sub_task_id: Int,
   task_id: Int,
   task_owner_id: Int,
+  project_manager_id: Int,
+  program_manager_id: Int,
   title: String,
   description: String,
   plan_start_date: Option[Date],
@@ -442,6 +454,8 @@ object IncidentSubTask {
     get[Int]("sub_task_id") ~
     get[Int]("task_id") ~
     get[Int]("task_owner_id") ~
+    get[Int]("project_manager_id") ~
+    get[Int]("program_manager_id") ~
       get[String]("title") ~
       get[String]("description") ~
       get[Option[Date]]("plan_start_date") ~
@@ -457,6 +471,8 @@ object IncidentSubTask {
         sub_task_id ~
         task_id ~
         task_owner_id ~
+        project_manager_id ~
+        program_manager_id ~
           title ~
           description ~
           plan_start_date ~
@@ -472,6 +488,8 @@ object IncidentSubTask {
           sub_task_id,
           task_id,
           task_owner_id,
+          project_manager_id,
+          program_manager_id,
           title,
           description,
           plan_start_date,

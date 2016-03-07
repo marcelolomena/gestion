@@ -355,6 +355,8 @@ object IncidentService {
         X.sub_task_id,
         X.task_id,
         W.owner task_owner_id,
+        J.project_manager project_manager_id,
+        G.program_manager program_manager_id,        
         X.title,
         '' description,
         X.plan_start_date,
@@ -380,7 +382,9 @@ object IncidentService {
            GROUP BY sub_task_id
         ) Y
         ON X.sub_task_id=Y.sub_task_id 
-        JOIN art_task W ON X.task_id=W.tId 
+        JOIN art_task W ON X.task_id=W.tId
+        JOIN art_project_master J ON W.pId = J.pId 
+        JOIN art_program G ON J.program = G.program_id              
     WHERE X.is_deleted=1 AND W.is_active=1 AND X.task_id = {id} 
     ) as RECORDS
     WHERE  RECORDS.Sno BETWEEN ({StartRow} - {NumberOfRows}) AND ({StartRow} - 1) ORDER BY plan_start_date
