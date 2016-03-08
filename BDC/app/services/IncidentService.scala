@@ -26,7 +26,7 @@ import play.api.libs.json.JsObject
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
-    var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
+    var sqlString = "EXEC art.list_incident_desa {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json, 'User_Id -> user_id).executeQuery() as (Incident.incident *)
     }
@@ -284,7 +284,7 @@ object IncidentService {
       SQL(sqlString).on('term -> term) as(NameUsr.name *)
     }
   }
-
+/*
   def selectDepartamentIncident: Seq[ComboDepartament] = {
     var sqlString = """
     SELECT DISTINCT a.dId,a.department 
@@ -296,6 +296,29 @@ object IncidentService {
       SQL(sqlString).as(ComboDepartament.comboDepartament *)
     }
   }
+*/  
+  def selectDepartamentIncident: Seq[ComboDepartament] = {
+    var sqlString = """
+  SELECT DISTINCT r.codDepartamento dId
+      ,r.glosaDepartamento department
+     FROM art_incident a,
+       art_incident_configuration c,
+       art_user f,
+       art_incident_severity g,
+       RecursosHumanos r
+      WHERE
+      a.configuration_id=c.configuration_id AND
+      a.task_owner_id=f.uid AND
+      g.severity_id=a.severity_id AND
+      a.is_deleted = 1 AND
+      LEFT(r.emailTrab, CHARINDEX('@', r.emailTrab) - 1 ) = f.uname 
+      AND LEN(r.emailTrab) > 1
+      AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+    """
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ComboDepartament.comboDepartament *)
+    }
+  }  
 
   def selectProgramForType(id: String): Seq[ProgramCombo] = {
     var sqlString = """

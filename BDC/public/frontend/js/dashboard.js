@@ -516,7 +516,8 @@ $(document).ready(function(){
 	var modelPieDepa=[
 	              { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
 	              { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
-	              { label: 'Estado', name: 'division', width: 150 },
+	              { label: 'Departamento', name: 'division', hidden: true},
+	              { label: 'Estado', name: 'estado', width: 150 },
 	              { label: 'Responsable', name: 'responsable', width: 200 },
 	              { label: 'Fecha Inicio', name: 'fecini',width: 180,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },
 	              { label: 'Fecha Comprometida',   name: 'feccom', width: 180, formatter: 'date', formatoptions: { srcformat: 'Y-m-d',newformat: 'Y-m-d' } },
@@ -1357,7 +1358,12 @@ $(document).ready(function(){
 							        rowNum: 20,
 							        pager: "#jqGridPagerDepa",
 							        ignoreCase: true,
-							        caption:'Programas Por departamento'
+							        gridComplete: function() {
+										var id= $("#jqGridDepa").getDataIDs()[0];
+							            var rowData = $("#jqGridDepa").getRowData(id);
+							            var val_division = rowData.division;
+							            $("#jqGridDepa").jqGrid('setCaption', val_division)
+							        }
 							    });
 								$("#jqGridDepa").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 								$("#jqGridDepa").jqGrid('navGrid','#jqGridPagerDepa',{add:false,edit:false,del:false,search: false});

@@ -968,7 +968,7 @@ $(document).ready(function(){
 					}
 				});
 			},
-			sopt: ["eq"]
+			sopt: ["eq","le","ge"]
 		},
 		formoptions: {rowpos:4,colpos:1}
 		},
@@ -997,7 +997,7 @@ $(document).ready(function(){
 					}
 				});
 			},
-			sopt: ["eq"]
+			sopt: ["eq","le","ge"]
 		},
 		formoptions: {rowpos:4,colpos:2}
 	    },	              

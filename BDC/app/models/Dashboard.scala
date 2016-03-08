@@ -148,7 +148,58 @@ object Panel {
   }
   implicit val panelWrites = Json.writes[Panel]
 }
+/**/
+case class PanelDepartamento(
+    division: String, 
+    estado: String, 
+    program_id: Int,
+    programa: String, 
+    responsable: String, 
+    fecini: Option[Date], 
+    feccom: Option[Date], 
+    pai: String, 
+    pae: String, 
+    spi: String,
+    cpi: String,
+    inversion: String,
+    gasto: String
+    )
 
+object PanelDepartamento {
+  val panelDepa = {
+    get[String]("division") ~
+    get[String]("estado") ~
+      get[Int]("program_id") ~
+      get[String]("programa") ~
+      get[String]("responsable") ~
+      get[Option[Date]]("fecini") ~
+      get[Option[Date]]("feccom") ~
+      get[String]("pai") ~
+      get[String]("pae") ~
+      get[String]("spi") ~
+      get[String]("cpi") ~
+      get[String]("inversion") ~
+      get[String]("gasto") map {
+        case 
+        division ~ 
+        estado ~ 
+        program_id ~ 
+        programa ~ 
+        responsable ~ 
+        fecini ~ 
+        feccom ~ 
+        pai ~ 
+        pae ~ 
+        spi ~ 
+        cpi ~ 
+        inversion ~
+        gasto => PanelDepartamento(division, estado, program_id, programa, responsable, fecini, feccom, pai, pae, spi, cpi, inversion,gasto)
+      }
+    
+  }
+  implicit val panelDepaWrites = Json.writes[PanelDepartamento]
+}
+/**/
 case class ATM(id: Int, 
     nivel: String, 
     codigo: Int, 

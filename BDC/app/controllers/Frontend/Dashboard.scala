@@ -40,6 +40,7 @@ import models.ProgramDetails
 import models.EarnValue
 import services.RiskService
 import models.Panel;
+import models.PanelDepartamento
 import models.DBFilter;
 import java.io.File
 import java.io.FileOutputStream
@@ -200,10 +201,10 @@ object Dashboard extends Controller {
         val style = wb.createCellStyle();
         val font = wb.createFont();
         font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL);
-        font.setFontHeightInPoints(10);
+        font.setFontHeightInPoints(11);
         font.setBold(true);
         style.setFont(font);
-        rowhead.createCell(0).setCellValue("Division")
+        rowhead.createCell(0).setCellValue("Departamento")
         rowhead.createCell(1).setCellValue("Programa")
         rowhead.createCell(2).setCellValue("Responsable")
         rowhead.createCell(3).setCellValue("Fecha Inicio")
@@ -214,8 +215,9 @@ object Dashboard extends Controller {
         rowhead.createCell(8).setCellValue("CPI")
         rowhead.createCell(9).setCellValue("Inversion")
         rowhead.createCell(10).setCellValue("Gasto")
+        rowhead.createCell(11).setCellValue("Estado")        
 
-        for (j <- 0 to 10)
+        for (j <- 0 to 11)
           rowhead.getCell(j).setCellStyle(style);
 
         val panel = DashboardService.reportDepartamentExcel
@@ -255,13 +257,16 @@ object Dashboard extends Controller {
 
           val cel10 = row.createCell(cNum + 10)
           cel10.setCellValue(s.gasto)
+          
+          val cel11 = row.createCell(cNum + 11)
+          cel11.setCellValue(s.estado)          
 
           rNum = rNum + 1
           cNum = 0
 
         }
 
-        for (a <- 0 to 10) {
+        for (a <- 0 to 11) {
           sheet.autoSizeColumn((a.toInt));
         }
 
@@ -1104,7 +1109,7 @@ object Dashboard extends Controller {
       val page = request.getQueryString("page").getOrElse("1").toString()
       val filters = request.getQueryString("filters").getOrElse("").toString()
 
-      var panel: Seq[Panel] = null
+      var panel: Seq[PanelDepartamento] = null
       var records: Int = 0
 
       var node = new JSONObject()
@@ -1157,6 +1162,7 @@ object Dashboard extends Controller {
       for (p <- panel) {
         var campo = new JSONObject()
         campo.put("division", p.division)
+        campo.put("estado", p.estado)
         campo.put("program_id", p.program_id)
         campo.put("programa", p.programa)
         campo.put("responsable", p.responsable)

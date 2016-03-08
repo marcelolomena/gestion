@@ -89,21 +89,21 @@ object DashboardService {
     }
   }
 
-  def reporteProgramaPorDepartamentoFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
+  def reporteProgramaPorDepartamentoFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[PanelDepartamento] = {
     //println(Json)
     var sqlString = "EXEC art.programas_por_departamento_filtrado {did},{PageSize},{PageNumber},{Json}"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('did -> did.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (Panel.panel *)
+      SQL(sqlString).on('did -> did.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (PanelDepartamento.panelDepa *)
     }
   }
   
-  def reportDepartamentExcel(): Seq[Panel] = {
+  def reportDepartamentExcel(): Seq[PanelDepartamento] = {
     //println(Json)
     var sqlString = "EXEC art.programas_por_departamento_excel"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on().executeQuery() as (Panel.panel *)
+      SQL(sqlString).on().executeQuery() as (PanelDepartamento.panelDepa *)
     }
   }  
 
