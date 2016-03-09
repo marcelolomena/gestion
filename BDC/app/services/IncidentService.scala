@@ -26,7 +26,7 @@ import play.api.libs.json.JsObject
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
-    var sqlString = "EXEC art.list_incident_desa {PageSize},{PageNumber},{Json},{User_Id}"
+    var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json, 'User_Id -> user_id).executeQuery() as (Incident.incident *)
     }
@@ -308,7 +308,7 @@ object IncidentService {
        RecursosHumanos r
       WHERE
       a.configuration_id=c.configuration_id AND
-      a.task_owner_id=f.uid AND
+      a.user_sponsor_id=f.uid AND
       g.severity_id=a.severity_id AND
       a.is_deleted = 1 AND
       LEFT(r.emailTrab, CHARINDEX('@', r.emailTrab) - 1 ) = f.uname 
