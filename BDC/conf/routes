@@ -421,6 +421,11 @@ GET    /project-task-details/$taskid<[A-Za-z0-9_-]+>                            
 GET    /get-updated-tasks                                                                             controllers.Frontend.Task.updatedTaskList(project_id:String)
 GET    /delete-task                                                                                   controllers.Frontend.Task.deleteTask(id:String)
 
+POST   /new-task-jira/:id                                                                             controllers.Frontend.TaskJira.saveTaskDetails(id :String)
+GET    /project-task-details-jira/$taskid<[A-Za-z0-9_-]+>                                             controllers.Frontend.TaskJira.projectTaskDetails(taskid:String)
+POST   /task-edit-jira/:id                                                                            controllers.Frontend.TaskJira.updateTask(id :String)
+GET    /delete-task-jira/:id                                                                          controllers.Frontend.TaskJira.deleteTask(id:String)
+
 GET    /update-task-status/$task_id<[A-Za-z0-9_-]+>                                                   controllers.Frontend.Task.updateTaskStatus(task_id:String)
 POST   /update-task-status/$task_id<[A-Za-z0-9_-]+>                                                   controllers.Frontend.Task.updateStatus(task_id:String)
 GET    /update-sub-task-dates                                                                         controllers.Frontend.Task.updateSubTaskDates(task_id:String,end_date:String)
