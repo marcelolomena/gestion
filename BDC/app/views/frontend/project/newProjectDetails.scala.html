@@ -1,4 +1,5 @@
-@(expected_completion_percentage_for_project :String,completion_percentage_forProject :String,project:Option[Project],tasks:Seq[Tasks], countList:Seq[String], documents : Seq[DocumentMaster], changeSet : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@import org.json.JSONObject 
+@(expected_completion_percentage_for_project :String,completion_percentage_forProject :String,project:Option[Project],tasks:Seq[Tasks], allocatedForTasks:JSONObject, countList:Seq[String], documents : Seq[DocumentMaster], changeSet : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import play.api.i18n._
@@ -255,7 +256,8 @@
 					    		<div class="task_owner_name" >@if(m.owner != -1){@UserService.findUserDetailsById(m.owner.toLong).get.first_name}</div>
 					    		<div class="task_plan_start_date"  style="">@m.plan_start_date.format("dd-MM-yyyy") </div>
 					    		<div class="task_plan_end_date" style="">@m.plan_end_date.format("dd-MM-yyyy") </div>
-					    		<div class="task_plan_time" style="">@m.plan_time </div>
+					    		
+					    		<div class="task_plan_time" style="">@allocatedForTasks.get(m.tId.toString())</div>
 					    		@*<div class="task_plan_time" style="">@m.milestone_status </div>*@
 					    		<div class="task_staus" @if(!project.get.baseline) {style="width:8%"}else{style="width:7%"}>@TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size </div>
 					    		

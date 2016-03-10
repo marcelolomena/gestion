@@ -80,6 +80,8 @@ object ProjectMaster extends Controller {
             Ok(views.html.frontend.project.restrictedAccess()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
           case _ =>
             val tasks = TaskService.findTaskListByProjectIdAsign(project.get.pId.get.toString)
+            var allocatedForTasks = new JSONObject() //Guarda el allocated para cada tarea
+            
             var list = new ListBuffer[String]()
 
             var plan_time_for_project: scala.math.BigDecimal = 0.0
@@ -88,6 +90,7 @@ object ProjectMaster extends Controller {
             var isValid = true
 
             for (c <- tasks) {
+              var hrs_allocated_to_task = 0.0
               list += Baseline.getBaselineCount(c.tId.get, "Task").toString();
               // plan_time_for_project = plan_time_for_project.+(c.plan_time) // new definition for completion percentage
 
@@ -133,6 +136,7 @@ object ProjectMaster extends Controller {
                 for (a <- allocationsubtasksexternal) {
                   hrs_allocated_to_subtask += a.estimated_time.toDouble
                 }
+                
 
                 if (!subtask.completion_percentage.isEmpty) {
                   acutal_hours_completed_for_subtask = (hrs_allocated_to_subtask * subtask.completion_percentage.get / 100)
@@ -141,7 +145,10 @@ object ProjectMaster extends Controller {
                 }
 
                 actual_hours_completed_for_task += acutal_hours_completed_for_subtask
+                hrs_allocated_to_task += hrs_allocated_to_subtask
               }
+              
+              
               if (!isValid) {
                 actual_completion_date = null
               } else {
@@ -155,7 +162,9 @@ object ProjectMaster extends Controller {
               }
                println("actual_hours_completed_for_task = " + actual_hours_completed_for_task)
               actual_hours_completed_for_project += actual_hours_completed_for_task
+              allocatedForTasks.put(c.tId.toString(),hrs_allocated_to_task)
             }
+            
             println(isValid)
             if (!isValid) {
               actual_completion_date = null
@@ -191,9 +200,9 @@ object ProjectMaster extends Controller {
 
             if (plan_time_for_project.!=(0)) {
               val completion_percentage_forProject: scala.math.BigDecimal = ((actual_hours_completed_for_project / plan_time_for_project) * 100).setScale(2, RoundingMode.HALF_UP);
-              Ok(views.html.frontend.project.newProjectDetails(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project, tasks, countList, documents, changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+              Ok(views.html.frontend.project.newProjectDetails(expected_completion_percentage_for_project.toString(), completion_percentage_forProject.toString(), project, tasks,allocatedForTasks, countList, documents, changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
             } else {
-              Ok(views.html.frontend.project.newProjectDetails(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project, tasks, countList, documents, changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+              Ok(views.html.frontend.project.newProjectDetails(expected_completion_percentage_for_project.toString(), plan_time_for_project.toString(), project, tasks, allocatedForTasks,countList, documents, changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
             }
 
         }
