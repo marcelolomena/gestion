@@ -193,6 +193,32 @@ object Incident extends Controller {
       }
 
   }
+  
+  def isValidAction(fecha : String, valor : String): Boolean = {
+    var isValid = false
+    var count = 0
+    
+    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
+    try {
+       format.parse(fecha)
+    } catch{
+        case e: java.text.ParseException  => count = count + 1
+    }
+   
+    try {
+       Integer.parseInt(valor)
+    } catch{
+        case e: java.lang.NumberFormatException  => count = count + 1
+    }
+
+    if(valor.toInt<=0)  
+      count = count + 1
+    
+    if(count==0)
+        isValid = true
+    
+    isValid
+  }
 
   def saveHours = Action {
     implicit request =>
@@ -247,19 +273,21 @@ object Incident extends Controller {
             }
 
           } else if (oper.toString().replace("\"", "").equals("edit")) {
-
-            incident = IncidentService.saveHours(
-              task_for_date.toString().replace("\"", ""),
-              nota.toString().replace("\"", ""),
-              planeadas.toString().replace("\"", ""),
-              ingresadas.toString().replace("\"", ""),
-              sub_task_id.toString().replace("\"", ""),
-              task_id.toString().replace("\"", ""),
-              uid.toString().replace("\"", ""),
-              user_creation_id.toString().replace("\"", ""))
+            if(isValidAction(task_for_date.toString().replace("\"", ""), ingresadas.toString().replace("\"", "")))
+              incident = IncidentService.saveHours(
+                task_for_date.toString().replace("\"", ""),
+                nota.toString().replace("\"", ""),
+                planeadas.toString().replace("\"", ""),
+                ingresadas.toString().replace("\"", ""),
+                sub_task_id.toString().replace("\"", ""),
+                task_id.toString().replace("\"", ""),
+                uid.toString().replace("\"", ""),
+                user_creation_id.toString().replace("\"", ""))  
+             else
+               incident = Some(ErrorIncident(-1,"Error: Cuando registra horas, debe colocar una fecha y un valor mayor que cero",task_id.toString().replace("\"", "").toInt))
 
           }
-          // println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
+           //println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
 
         }
 
@@ -270,7 +298,7 @@ object Incident extends Controller {
         val act = Activity(ActivityTypes.Project.id, "Booked by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), incident.get.task_id)
         Activity.saveLog(act)
 
-        Ok(play.api.libs.json.Json.toJson("OK")).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }

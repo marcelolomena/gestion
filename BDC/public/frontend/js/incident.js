@@ -378,9 +378,19 @@ $(document).ready(function(){
 							  "\n\nNo necesitamos devolver nada");
 					},
 					afterSave:function(rowid, response, postdata, options) {
-						//console.log('rowid:' + rowid);
-						//alert("en afterSave (Submit): rowid="+rowid+"\nNo necesitamos devolver nada");
-						$("#jqGridSubTask").trigger("reloadGrid"); 
+						var rowData = $(this).jqGrid("getRowData", rowid);
+						var task_for_date= rowData.task_for_date;
+						var ingresadas= rowData.ingresadas;
+						//var result = JSON.stringify(response);
+						//console.log('result:' + result);	
+						
+						var result=response.responseJSON;
+							
+		                if(result.error_code!=0){
+		                	alert(result.error_text);
+		                }else{
+		                	$("#jqGridSubTask").trigger("reloadGrid");
+		                }
 					},
 					afterRestore:function(rowid) {
 						//alert("en afterRestore (Cancel): rowid="+rowid+"\nNo necesitamos devolver nada");
