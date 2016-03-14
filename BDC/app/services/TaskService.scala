@@ -75,33 +75,11 @@ object TaskService extends CustomColumns {
    * Update task detail information...
    */
   def updateTask(task: Tasks): Int = {
+
+    var sqlString = ""
+    sqlString = "EXEC art.update_task {tId},{pId},{task_title},{task_code},{plan_start_date},{plan_end_date},{task_description},{plan_time},{creation_date},{task_status},{status},{owner},{task_discipline},{completion_percentage},{remark},{task_depend},{dependencies_type},{stage},{user_role},{deliverable}"
     DB.withConnection { implicit connection =>
-      SQL(
-        """
-          update art_task
-          set 
-            pId =  {pId},
-            task_title={task_title},
-            task_code ={task_code},
-            plan_start_date ={plan_start_date},
-            plan_end_date ={plan_end_date},
-            task_description = {task_description},
-            plan_time={plan_time},
-            creation_date = {creation_date},
-            task_status={task_status},
-            status = {status} ,
-            owner = {owner},
-  					task_discipline = {task_discipline},
-  					completion_percentage = {completion_percentage},
-  					remark = {remark},
-  					task_depend={task_depend},
-  					dependencies_type={dependencies_type},
-  					stage={stage},
-  					user_role={user_role},
-  					deliverable={deliverable}
-  					
-          where tId = {tId}
-          """).on(
+      SQL(sqlString).on(
           'tId -> task.tId,
           'pId -> task.pId,
           'task_title -> task.task_title,
