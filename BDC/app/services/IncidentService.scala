@@ -277,26 +277,12 @@ object IncidentService {
   }
 
   def listUsrTwo(term: String): Seq[NameUsr] = {
-    //var sqlString = "SELECT nombre value, nombre label FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND nombre like '%" + term + "%'"
-    //var sqlString = "SELECT RTRIM(LTRIM(nombre)) + ' ' + RTRIM(LTRIM(apellido)) value, RTRIM(LTRIM(nombre)) + ' ' + RTRIM(LTRIM(apellido)) label FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND periodo=(select max(periodo) from RecursosHumanos) AND (nombre+apellido like '%" + term + "%')"
     var sqlString = "exec art.list_member_rrhh {term}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('term -> term) as(NameUsr.name *)
     }
   }
-/*
-  def selectDepartamentIncident: Seq[ComboDepartament] = {
-    var sqlString = """
-    SELECT DISTINCT a.dId,a.department 
-    FROM art_department_master a, art_program b 
-    WHERE a.dId=b.department AND b.is_active=1 AND a.is_deleted = 0  AND b.program_id 
-    IN (SELECT DISTINCT program_id FROM art_incident)
-    """
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).as(ComboDepartament.comboDepartament *)
-    }
-  }
-*/  
+  
   def selectDepartamentIncident: Seq[ComboDepartament] = {
     var sqlString = """
   SELECT DISTINCT r.codDepartamento dId

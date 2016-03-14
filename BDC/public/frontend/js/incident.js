@@ -419,8 +419,8 @@ $(document).ready(function(){
 					}
 				},
 				{ label: 'Asignadas', name: 'planeadas', width: 50,align: "center",editable:true, edittype:"text", editrules:{number: true, required: true} },
-				{ label: 'Trabajadas', name: 'trabajadas', width: 50,align: "center",editable:false, edittype:"text",  },
-				{ label: 'Fecha', name: 'task_for_date',width: 85,align: "center",editable: true,
+				{ label: 'Trabajadas', name: 'trabajadas', width: 50,align: "center",editable:false, edittype:"text"},
+				{ label: 'Fecha', name: 'task_for_date',width: 85,editable: true, edittype:"text",
 				  editoptions: {
 					  size: 10, maxlengh: 10,
 					  dataInit: function(element) {
@@ -448,9 +448,6 @@ $(document).ready(function(){
 			height: '100%',
 			emptyDataText:'No hay datos',
 	        pager: "#" + childGridPagerID,
-	        ondblClickRow: function(id, ri, ci) {
-	        	$("#" + childGridID).jqGrid('editRow',id,true,null,null, '/incidentSaveHours');
-	        },
 	        editurl: '/incidentSaveHours',
 	        onSelectRow: function(id) {
 	            if (id && id !== lastSelection) {
@@ -464,22 +461,18 @@ $(document).ready(function(){
 	        ajaxRowOptions: { contentType: "application/json" },
 	        serializeRowData: function (data) { return JSON.stringify(data); },
 	        gridComplete: function(){
-				//var id= $("#" + childGridID).getDataIDs()[0];
-	            //var rowData = $("#" + childGridID).getRowData(id);
 				var id= $("#jqGridSubTask").getDataIDs()[0];
 	            var rowData = $("#jqGridSubTask").getRowData(id);	            
 	            var val_task_owner_id = rowData.task_owner_id;  
 	            var val_project_manager_id = rowData.project_manager_id;  
 	            var val_program_manager_id = rowData.program_manager_id;  
 	            var thisId = $.jgrid.jqID(this.id);
-	            //console.log("val_task_owner_id:" + val_task_owner_id);
-	            //console.log("uid:" + uid);
+
 	            if ((val_task_owner_id==uid) || (val_project_manager_id==uid) || (val_program_manager_id==uid)) {            	
 	                $("#" + thisId + "_iladd").show();
 	                $(this).find("div.ui-inline-del").show();
 	                $(this).find("div.ui-inline-edit").show();
 	            } else {
-	                //$("#" + thisId + "_iladd").addClass('ui-state-disabled');
 	            	$("#" + thisId + "_iladd").hide();
 	                $(this).find("div.ui-inline-del").hide();
 	                $(this).find("div.ui-inline-edit").hide();
@@ -865,8 +858,7 @@ $(document).ready(function(){
 			}	            		  
 	    }
 	    },              
-	    { 
-			label: 'Prioridad', 
+	    { 	label: 'Prioridad', 
 			name: 'severity_id', 
 	        editable: true,
 			hidden: true, 
@@ -1120,7 +1112,6 @@ $(document).ready(function(){
 			var task_owner_id = rowData.task_owner_id;
 			var project_manager_id = rowData.project_manager_id;
 			var program_manager_id = rowData.program_manager_id;
-			//console.log("program_manager_id=" + program_manager_id);
 
            	if ( (task_owner_id==uid) || (project_manager_id==uid) || (program_manager_id==uid) ) {            	
                 $("#edit_" + thisId).removeClass('ui-state-disabled');
@@ -1132,7 +1123,6 @@ $(document).ready(function(){
             return true; 
         },
         loadComplete: function () {
-        	//esta wea esta de mas
         	$("tr.jqgrow:odd", this).addClass('not-editable-row');
             $("tr.jqgrow:even", this).addClass('not-editable-row');
         }
@@ -1166,16 +1156,12 @@ $(document).ready(function(){
             	$('.x_task_owner_id',form).show();
             	$('.y_task_owner_id',form).show();
 
-            	//$('input#configuration_name',form).attr('readonly','readonly');
             	$('input#program_name',form).attr('readonly','readonly');
-            	
             	$('input#sponsor_name',form).attr('readonly','readonly');
-            	//$('input#owner_name',form).attr('readonly','readonly');
             	$('textarea#brief_description',form).attr('readonly','readonly');
             	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');
             	$('input#ir_number',form).attr('readonly','readonly');
-				//$('input#alm_number',form).attr('readonly','readonly');
             	
             	$('input#date_creation',form).datepicker( "destroy" );
             	
@@ -1201,6 +1187,8 @@ $(document).ready(function(){
             },beforeSubmit : function (postdata, formid) {
             	if( postdata.status_id == 0) {
             		return [false,"Estado: Debe escoger un valor",""];
+            	} if( postdata.task_owner_id == 0) {
+            		return [false,"Responsable: Debe escoger un valor",""];
             	} if( $.trim(postdata.note) == '') {//.length
             		return [false,"Observación: Debe ingresar un texto",""];
             	} else {
