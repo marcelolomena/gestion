@@ -466,7 +466,14 @@ GET    /get-service-catalog/:id                                                 
 GET    /get-service-catalog-discipline/:id                                                            controllers.Frontend.SubTask.getServiceCatalogDiscipline(id:String)
 
 GET    /update-task-dates                                                                             controllers.Frontend.SubTask.updateTaskDates(sub_task_id:String,end_date:String)
-GET    /update-task-start-dates                                                                             controllers.Frontend.SubTask.updateTaskStartDates(sub_task_id:String,start_date:String)
+GET    /update-task-start-dates                                                                       controllers.Frontend.SubTask.updateTaskStartDates(sub_task_id:String,start_date:String)
+
+POST   /save-subTask-jira/:id                                                                         controllers.Frontend.SubTaskJira.saveSubTask(id :String)
+POST   /edit-subTask-jira/:id                                                                         controllers.Frontend.SubTaskJira.updateSubTask(id :String)
+POST   /assign-subTask-fo-jira                                                                       controllers.Frontend.SubTaskJira.saveSubTaskAllocation
+POST   /assign-subTask-external-jira                                                                 controllers.Frontend.SubTaskJira.saveSubTaskAllocationExternal
+GET    /delete-subTask-jira/:id                                                                      controllers.Frontend.SubTaskJira.deleteSubtask(id :String)
+GET    /subTask-details-jira/:subtaskId                                                              controllers.Frontend.SubTaskJira.subTaskDetails(subtaskId:String)
 
 #User
 GET    /add-new-user                                                                                  controllers.Frontend.User.addNewUser
