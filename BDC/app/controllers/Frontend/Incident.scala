@@ -194,31 +194,28 @@ object Incident extends Controller {
 
   }
   
-  def isValidAction(fecha : String, valor : String): Boolean = {
-    var isValid = false
-    var count = 0
-    
+  def isValidIntroHrs(fecha : String, valor : String): Boolean = {
+    var isValid = true
+    var isNumber = true
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
-    try {
-       format.parse(fecha)
-    } catch{
-        case e: java.text.ParseException  => count = count + 1
-    }
    
     try {
        Integer.parseInt(valor)
     } catch{
-        case e: java.lang.NumberFormatException  => count = count + 1
+        case e: java.lang.NumberFormatException  => isNumber = false
     }
 
-    if(valor.toInt<=0)  
-      count = count + 1
-    
-    if(count==0)
-        isValid = true
-    
+    if(isNumber && valor.toInt>0){  
+      try {
+         format.parse(fecha)
+      } catch{
+          case e: java.text.ParseException  => isValid = false
+      }
+    }else{
+      isValid = true
+    }
     isValid
-  }
+  }  
 
   def saveHours = Action {
     implicit request =>
@@ -273,7 +270,7 @@ object Incident extends Controller {
             }
 
           } else if (oper.toString().replace("\"", "").equals("edit")) {
-            if(isValidAction(task_for_date.toString().replace("\"", ""), ingresadas.toString().replace("\"", "")))
+            if(isValidIntroHrs(task_for_date.toString().replace("\"", ""), ingresadas.toString().replace("\"", "")))
               incident = IncidentService.saveHours(
                 task_for_date.toString().replace("\"", ""),
                 nota.toString().replace("\"", ""),
@@ -284,7 +281,7 @@ object Incident extends Controller {
                 uid.toString().replace("\"", ""),
                 user_creation_id.toString().replace("\"", ""))  
              else
-               incident = Some(ErrorIncident(-1,"Error: Cuando registra horas, debe colocar una fecha y un valor mayor que cero",task_id.toString().replace("\"", "").toInt))
+               incident = Some(ErrorIncident(-1,"Error: Cuando registra horas, debe ingresar una fecha.",task_id.toString().replace("\"", "").toInt))
 
           }
            //println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
