@@ -237,7 +237,7 @@ object Incident extends Controller {
           val user_creation_id = request.session.get("uId").get
           val task_for_date = (jsValue \ "task_for_date")
 
-          println("task_for_date : " + task_for_date)
+          //println("task_for_date : " + task_for_date)
           //println("ingresadas : " + ingresadas)
           //println("sub_task_id : " + sub_task_id)
           //println("task_id : " + task_id)
@@ -476,7 +476,7 @@ object Incident extends Controller {
 			program_id.toString().replace("\"", ""),
 			task_owner_id.toString().replace("\"", ""),
 			alm_number.toString().replace("\"", ""))
-          println(incident.last.error_text)
+          //println(incident.last.error_text)
         }
 
         /**

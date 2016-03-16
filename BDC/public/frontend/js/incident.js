@@ -45,7 +45,13 @@ $(document).ready(function(){
 	                }
 	            }
 	        },series: []			
-	};	
+	};
+	
+	function grillaProgramaDepa(did,name){
+		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"department\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+		
 	
 	$.ajax({
 		  url: '/incidentPie',
@@ -381,9 +387,6 @@ $(document).ready(function(){
 						var rowData = $(this).jqGrid("getRowData", rowid);
 						var task_for_date= rowData.task_for_date;
 						var ingresadas= rowData.ingresadas;
-						//var result = JSON.stringify(response);
-						//console.log('result:' + result);	
-						
 						var result=response.responseJSON;
 							
 		                if(result.error_code!=0){
