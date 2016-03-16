@@ -169,8 +169,8 @@ object IncidentService {
       SQL(sqlString).on(
         'task_for_date -> task_for_date,
         'nota -> nota,
-        'planeadas -> planeadas.toInt,
-        'ingresadas -> ingresadas.toInt,
+        'planeadas -> planeadas.toFloat,
+        'ingresadas -> ingresadas.toFloat,
         'sub_task_id -> sub_task_id.toInt,
         'task_id -> task_id.toInt,
         'uid -> uid.toInt,
@@ -195,8 +195,8 @@ object IncidentService {
         'name -> name,
         'task_for_date -> task_for_date,
         'nota -> nota,
-        'planeadas -> planeadas.toInt,
-        'ingresadas -> ingresadas.toInt,
+        'planeadas -> planeadas.toFloat,
+        'ingresadas -> ingresadas.toFloat,
         'sub_task_id -> sub_task_id.toInt,
         'user_creation_id -> user_creation_id.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
