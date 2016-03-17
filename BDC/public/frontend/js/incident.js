@@ -1240,6 +1240,8 @@ $(document).ready(function(){
             		return [false,"Tipo de incidencia: Debe escoger un valor",""];
             	} if( postdata.program_id == 0) {
             		return [false,"Sistema: Debe escoger un valor",""];
+            	} if( postdata.uname.length == 0) {
+            		return [false,"Usuario: El usuario no existe",""];
             	} if( postdata.user_sponsor_id == 0) {
             		return [false,"Usuario: Debe escoger un valor",""];
             	} if( postdata.severity_id == 0) {
