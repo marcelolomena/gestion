@@ -788,6 +788,11 @@ $(document).ready(function(){
 								$(element).autocomplete('widget').css('font-size','11px');
 								$(element).autocomplete('widget').css('z-index','1000');
 							},
+							select: function (event, ui) {
+								$("input#uname").val(ui.item.value); 
+								$("input#user_sponsor_id").val(ui.item.label); 
+				                return false;
+				            },
                             autoFocus: true
                         });
                 },100);
@@ -1094,6 +1099,7 @@ $(document).ready(function(){
 	    },	
 	    { label: 'project_manager_id', name: 'project_manager_id', hidden:true },
 	    { label: 'program_manager_id', name: 'program_manager_id', hidden:true },
+	    { label: 'uname', name: 'uname', editable: true, /*editrules: {edithidden: true}, */hidden: true },	    
 	];	
 	
 	var incidentGrid = $("#jqGridIncident"), incidentGridId = $.jgrid.jqID(incidentGrid[0].id);
@@ -1142,7 +1148,7 @@ $(document).ready(function(){
     });
 
 	$("#jqGridIncident").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
-	$("#jqGridIncident").jqGrid('navGrid','#jqGridIncidentPager',{edit: true, add: true, del: true,search: false, position: "left", cloneToTop: false },
+	$("#jqGridIncident").jqGrid('navGrid','#jqGridIncidentPager',{edit: true, add: true, del: true,refresh:true,search: false, position: "left", cloneToTop: false },
         {
     		mtype: 'POST',
     		url: '/incidentUpdate',
@@ -1260,6 +1266,7 @@ $(document).ready(function(){
             	
             	$('#tr_status_id', form).hide();
             	$('#tr_note', form).hide();
+            	//$('#tr_uname', form).hide();
             	
             },afterShowForm: function($form) {
                 $form.closest(".ui-jqdialog").closest(".ui-jqdialog").position({
@@ -1277,7 +1284,10 @@ $(document).ready(function(){
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
-        }		
+        },
+        {
+            recreateFilter:true
+        }
 	);
 	$("#jqGridIncident").jqGrid('navButtonAdd','#jqGridIncidentPager',{
 	    caption:"",

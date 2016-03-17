@@ -15,6 +15,7 @@ case class Incident(incident_id: Int,
                     date_creation: Option[Date],
                     ir_number: String,
 					          alm_number: Option[String],
+                    uname:String,
                     user_sponsor_id: Int,
                     brief_description: String,
                     extended_description: String,
@@ -45,6 +46,7 @@ object Incident {
       get[Option[Date]]("date_creation") ~
       get[String]("ir_number") ~
 	    get[Option[String]]("alm_number") ~
+      get[String]("uname") ~
       get[Int]("user_sponsor_id") ~
       get[String]("brief_description") ~
       get[String]("extended_description") ~
@@ -72,6 +74,7 @@ object Incident {
           date_creation ~
           ir_number ~
 		      alm_number ~
+          uname ~
           user_sponsor_id ~
           brief_description ~
           extended_description ~
@@ -98,6 +101,7 @@ object Incident {
           date_creation,
           ir_number,
 		      alm_number,
+          uname,
           user_sponsor_id,
           brief_description,
           extended_description,
@@ -130,6 +134,7 @@ object Incident {
       "date_creation" -> incident.date_creation.get,
       "ir_number" -> incident.ir_number.toString(),
 	    "alm_number" -> incident.alm_number.toString(),
+      "uname" -> incident.uname.toString(),
       "user_sponsor_id" -> incident.user_sponsor_id.toInt,
       "brief_description" -> incident.brief_description.toString(),
       "extended_description" -> incident.extended_description.toString(),

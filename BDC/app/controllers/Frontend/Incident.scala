@@ -205,7 +205,7 @@ object Incident extends Controller {
         case e: java.lang.NumberFormatException  => isNumber = false
     }
 
-    if(isNumber && valor.toInt>0){  
+    if(isNumber && valor.toInt>0 && valor.toInt<24){  
       try {
          format.parse(fecha)
       } catch{
@@ -281,7 +281,7 @@ object Incident extends Controller {
                 uid.toString().replace("\"", ""),
                 user_creation_id.toString().replace("\"", ""))  
              else
-               incident = Some(ErrorIncident(-1,"Error: Cuando registra horas, debe ingresar una fecha.",task_id.toString().replace("\"", "").toInt))
+               incident = Some(ErrorIncident(-1,"Error: Cuando registra horas, debe ingresar una fecha, y no mas de 24 por día",task_id.toString().replace("\"", "").toInt))
 
           }
            //println("ErrorIncident : " + play.api.libs.json.Json.toJson(incident))
@@ -317,6 +317,7 @@ object Incident extends Controller {
           val date_creation = (jsValue \ "date_creation")
           val ir_number = (jsValue \ "ir_number")
           val alm_number = (jsValue \ "alm_number")
+          val uname = (jsValue \ "uname")
           val user_sponsor_id = (jsValue \ "user_sponsor_id")
           val brief_description = (jsValue \ "brief_description")
           val extended_description = (jsValue \ "extended_description")
@@ -331,7 +332,7 @@ object Incident extends Controller {
             date_creation.toString().replace("\"", ""),
             ir_number.toString().replace("\"", ""),
             alm_number.toString().replace("\"", ""),
-            user_sponsor_id.toString().replace("\"", ""),
+            uname.toString().replace("\"", ""),
             brief_description.toString().replace("\"", ""),
             extended_description.toString().replace("\"", ""),
             severity_id.toString().replace("\"", ""),
