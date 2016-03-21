@@ -465,6 +465,11 @@ object Incident extends Controller {
           val user_creation_id = request.session.get("uId").get
           val status_id = (jsValue \ "status_id")
           val note = (jsValue \ "note")
+          val uname = (jsValue \ "uname")
+          println("va el dato uname en el controlador")
+          println(uname)
+          println("va el dato user_sponsor_id en el controlador")
+          println(user_sponsor_id)
 
           incident = IncidentService.update(
             severity_id.toString().replace("\"", ""),
@@ -476,7 +481,9 @@ object Incident extends Controller {
 			configuration_id.toString().replace("\"", ""),
 			program_id.toString().replace("\"", ""),
 			task_owner_id.toString().replace("\"", ""),
-			alm_number.toString().replace("\"", ""))
+			alm_number.toString().replace("\"", ""),
+			uname.toString().replace("\"", ""))
+			
           //println(incident.last.error_text)
         }
 
@@ -594,6 +601,8 @@ object Incident extends Controller {
           campo.put("severity_description", p.severity_description)
           campo.put("status_name", p.status_name)
           campo.put("department", p.department)
+          campo.put("uname", p.uname)
+          
 
           registro.put(campo)
         }

@@ -36,6 +36,7 @@ import services.ProgramMemberService
 import java.text.DecimalFormat
 import services.EarnValueService
 import services.SpiCpiCalculationsService
+import play.libs.Json
 
 object Task extends Controller {
 
@@ -70,6 +71,30 @@ object Task extends Controller {
       var compl_per_task: scala.math.BigDecimal = 0
       var actual_hours_completed_for_task: scala.math.BigDecimal = 0
       var actual_completion_date: Date = null
+      
+      val baseline = Baseline.getBaseline(Integer.parseInt(task_id), "task")
+      var changeSet = "";
+      if (baseline.length > 0) {
+        changeSet = "[";
+        var i = 0;
+        for (b <- baseline) {
+
+          var jsonNode = Json.parse(b.change_set);
+          var itr = jsonNode.iterator()
+          while (itr.hasNext()) {
+            var jsonObj = itr.next();
+            if (i == 0) {
+              changeSet = "[" + jsonObj.toString() + ",";
+            } else {
+              changeSet = changeSet + jsonObj.toString() + ",";
+            }
+            i = i + 1;
+          }
+        }
+
+        changeSet = changeSet.substring(0, changeSet.length() - 1) + "]";
+      }
+
 
       var isValid = true
 
@@ -77,9 +102,9 @@ object Task extends Controller {
       if (total_time.!=(0)) {
         val completion_percentage_forTask: scala.math.BigDecimal = TaskService.completionPercentageForTask(task_id);
         //println(completion_percentage_forTask)
-        Ok(views.html.frontend.task.projectTaskDetails(completion_percentage_forTask.toString(), taskDetail, project, documents, actual_completion_date)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.task.projectTaskDetails(completion_percentage_forTask.toString(), taskDetail, project, documents, actual_completion_date,changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       } else {
-        Ok(views.html.frontend.task.projectTaskDetails(total_time.toString(), taskDetail, project, documents, actual_completion_date)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.task.projectTaskDetails(total_time.toString(), taskDetail, project, documents, actual_completion_date,changeSet)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }
 
     }.getOrElse {

@@ -615,7 +615,7 @@ $(document).ready(function(){
 		width: 200,
 		editable: false,
 		formatter: returnTaskLink,
-		search:false 
+		search:true 
 		},
 		{
 		label: 'incident_id', 
@@ -744,6 +744,7 @@ $(document).ready(function(){
 			},
 		formoptions: {rowpos:1,colpos:2,label: "<span class='x_program_id'>Sistema</span>"}
 	    },
+	    /*
 	    { 
 		label: 'Usuario', 
 		width: 150, 
@@ -752,6 +753,53 @@ $(document).ready(function(){
 		hidden: false, 
 		editrules: {edithidden: true},
 	    editoptions: {dataInit: function(elem) {$(elem).width(165);$(elem).addClass("ui-state-highlight y_sponsor_name");}},
+	    formoptions: {rowpos:2,colpos:1,label: "<span class='x_sponsor_name'>Usuario</span>"},
+	    },
+	    */
+	    {
+	    label: 'Usuario', 
+		width: 150, 
+		name: 'sponsor_name',
+	    editable: true, 
+		hidden: false, 
+		editrules: {edithidden: true},
+		editoptions: {
+            dataInit: function (element) {
+				$(element).width(170);
+				$(element).addClass("y_sponsor_name");
+				window.setTimeout(function () {
+						$(element).autocomplete({
+							appendTo:"body",
+							disabled:false,
+							delay:300,
+							minLength:1,
+                            source: function(request, response){
+								this.xhr = $.ajax({
+									type: "GET",
+									url: '/incidentAddUser',
+									data: request,
+									dataType: "json",
+									async: false,
+									success: function( data ) {
+										response( data );
+									},
+									error: function(model, response, options) {
+										response([]);
+									}
+								});
+								$(element).autocomplete('widget').css('font-size','11px');
+								$(element).autocomplete('widget').css('z-index','1000');
+							},
+							select: function (event, ui) {
+								$("input#uname").val(ui.item.value); 
+								$("input#sponsor_name").val(ui.item.label); 
+				                return false;
+				            },
+                            autoFocus: true
+                        });
+                },100);
+            }
+        },
 	    formoptions: {rowpos:2,colpos:1,label: "<span class='x_sponsor_name'>Usuario</span>"},
 	    },
         { 
@@ -855,6 +903,7 @@ $(document).ready(function(){
 	        }
 	    },formoptions: {rowpos:2,colpos:2,label : "<span class='x_task_owner_id'>Responsable</span>"}
 	    },
+	    /*
 		{ 
 		label: 'Prioridad', 
 		name: 'severity_description', 
@@ -875,12 +924,36 @@ $(document).ready(function(){
 				return s + "</select>";
 			}	            		  
 	    }
-	    },              
+	    },      
+	    */  
+	    { 
+			label: 'Prioridad', 
+			name: 'severity_description', 
+			width: 150,
+		    editable: true, 
+			hidden: false, 
+			editrules: {edithidden: true},
+		    stype: 'select',
+			searchoptions: {
+				dataUrl: '/incidentSeverityList',
+				buildSelect: function (response) {
+					var data = JSON.parse(response);
+					var s = "<select>";
+					s += '<option value="0">--Escoger Severidad--</option>';
+					$.each(data, function(i, item) {
+						s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
+					});
+					return s + "</select>";
+				}	            		  
+		    },
+		    formoptions: {rowpos:3,colpos:1}
+		    },  
 	    { 	label: 'Prioridad', 
 			name: 'severity_id', 
 	        editable: true,
 			hidden: true, 
 			editrules: {edithidden: true}, 
+			
 			edittype: "select", 
 	        editoptions: {
 				dataUrl: '/incidentSeverityConfigurationList',
@@ -927,7 +1000,7 @@ $(document).ready(function(){
 						}
 					); 
 				}}],
-				dataInit: function(elem) {$(elem).width(180);}
+				dataInit: function(elem) {$(elem).width(180);$(elem).addClass("y_severity_id");}
 	        },
 			formoptions: {rowpos:3,colpos:1}
 	    },
@@ -987,12 +1060,27 @@ $(document).ready(function(){
 		name: 'date_end',
 		width: 100,
 		editable: true,
+		editrules: {edithidden: true},
 	    formatter: 'date',
 	    formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
 	    editoptions: {
-			size: 10, 
-			readonly: "readonly",
-			dataInit: function (domElem) {$(domElem).addClass("ui-state-highlight"); } 
+	    	size: 10, 
+			maxlengh: 10,
+	        dataInit: function(element) {
+				$(element).datepicker({dateFormat: 'yy-mm-dd', minDate: 0})
+	        },
+			defaultValue: function(){ 
+				var currentTime = new Date(); 
+				var month = parseInt(currentTime.getMonth() + 1); 
+				month = month <= 9 ? "0"+month : month; 
+				var day = currentTime.getDate(); 
+				day = day <= 9 ? "0"+day : day; 
+				var year = currentTime.getFullYear(); 
+				return year+"-"+month + "-"+day; 
+	        } 
+			//size: 10, 
+			//readonly: "readonly",
+			//dataInit: function (domElem) {$(domElem).addClass("ui-state-highlight"); } 
 		},
 		searchoptions:{
 			dataInit:function(el){
@@ -1160,9 +1248,12 @@ $(document).ready(function(){
             ajaxEditOptions: jsonOptions,
             serializeEditData: createJSON,
             beforeShowForm: function(form) {
+            	//$('.x_configuration_id',form).show();
+				//$('.y_configuration_name',form).hide();
+            	//$('.y_configuration_id',form).show();
+            	
             	$('.x_configuration_id',form).show();
-				$('.y_configuration_name',form).hide();
-            	$('.y_configuration_id',form).show();
+            	$('.y_configuration_id',form).hide();
 				
 				$('.y_program_name',form).hide();
             	$('.x_program_id',form).show();
@@ -1171,16 +1262,24 @@ $(document).ready(function(){
             	$('.x_user_sponsor_id',form).show();
             	$('.y_user_sponsor_id',form).hide();
             	
+            	
+            	
 				$('.y_owner_name',form).hide();
             	$('.x_task_owner_id',form).show();
             	$('.y_task_owner_id',form).show();
 
             	$('input#program_name',form).attr('readonly','readonly');
-            	$('input#sponsor_name',form).attr('readonly','readonly');
+            	$('input#configuration_name',form).attr('readonly','readonly');
+            	
+            	//$('input#sponsor_name',form).attr('readonly','readonly');
             	$('textarea#brief_description',form).attr('readonly','readonly');
             	$('textarea#extended_description',form).attr('readonly','readonly');
             	$('input#date_creation',form).attr('readonly','readonly');
             	$('input#ir_number',form).attr('readonly','readonly');
+            	
+            	$('input#severity_description',form).attr('readonly','readonly');
+            	$('.y_severity_id',form).hide();
+            	
             	
             	$('input#date_creation',form).datepicker( "destroy" );
             	
@@ -1195,6 +1294,7 @@ $(document).ready(function(){
                     at: 'center',
                     of: window
                   });
+
             },afterSubmit : function(response,postdata){
                 var json   = response.responseText; 
                 var result = JSON.parse(json); 
@@ -1269,6 +1369,7 @@ $(document).ready(function(){
             	$('#tr_status_id', form).hide();
             	$('#tr_note', form).hide();
             	//$('#tr_uname', form).hide();
+            	$('input#severity_description',form).hide();
             	
             },afterShowForm: function($form) {
                 $form.closest(".ui-jqdialog").closest(".ui-jqdialog").position({

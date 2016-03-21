@@ -1,4 +1,5 @@
-@(compl_per_task_show :String ,taskDetail:Option[Tasks],project:Option[Project], documents : Seq[DocumentMaster],actual_completion_date: java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@import org.json.JSONObject 
+@(compl_per_task_show :String ,taskDetail:Option[Tasks],project:Option[Project], documents : Seq[DocumentMaster],actual_completion_date: java.util.Date,changeSet : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import org.apache.commons.lang3.StringUtils
@@ -18,6 +19,7 @@
 	
 		<input id="projectId" value="@project.get.pId" class="display-none"/>
 		<input id="project_id" value="@project.get.project_id" class="display-none"/>
+		<input id="task_changeset" name="task_changeset" value="@changeSet" type="hidden"/>
 		<input id="task_end_date" type="hidden" value="@taskDetail.get.plan_end_date.format("dd-MM-yyyy")"/>
 		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
 		  <div class="product_detail_1 ">
@@ -50,7 +52,7 @@
 				  			<td class="table_header">@Messages("projectTaskDetails.description")</strong></td>
 				  			<td class="p_values width380px"> @taskDetail.get.task_description </td>
 				  			<td class="table_header">@Messages("projectTaskDetails.plannedstartdate") </strong></td>
-				  			<td class="p_values">@taskDetail.get.plan_start_date.format("dd-MM-yyyy") </td>
+				  			<td class="p_values"><span id="plan_start_date" class="task-data" style="width:auto;">@taskDetail.get.plan_start_date.format("dd-MM-yyyy")</span></td>
 				  		</tr>	
 				
 				  		<tr>
@@ -58,7 +60,7 @@
 				  			<td  class="p_values">
 				  			@if(taskDetail.get.owner != -1){<a href="/employee/@taskDetail.get.owner.toLong" class="progDemandMgr">@UserService.findUserDetailsById(taskDetail.get.owner.toLong).get.first_name&nbsp;@UserService.findUserDetailsById(taskDetail.get.owner.toLong).get.last_name </a> }</td>
 				  			<td class="table_header" style="width:185px;">@Messages("projectTaskDetails.plannedenddate")</strong></td>
-				  			<td class="p_values">@taskDetail.get.plan_end_date.format("dd-MM-yyyy")</td>
+				  			<td class="p_values"><span id="plan_end_date" class="task-data" style="width:auto;">@taskDetail.get.plan_end_date.format("dd-MM-yyyy")</span></td>
 				  		</tr>
 				  		<tr>
 				  			<td class="table_header">@Messages("projectTaskDetails.taskdiscipline")</strong></td>
@@ -647,6 +649,41 @@
 				
 			}*@	
 		renderEarnValue($("#task_id").val());
+		var changeSet = $("#task_changeset").val();
+						var endDateChanges = "";
+						var startDate = "";
+						if (changeSet != '') {
+							var jsonObj = $.parseJSON(changeSet);
+							$
+									.each(
+											jsonObj,
+											function(idx, obj) {
+												if (obj.fieldName == "Planned End Date") {
+													endDateChanges = endDateChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												} else if (obj.fieldName == "Planned Start Date") {
+													startDate = startDate
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												}
+											});
+						}
+						$('.task-data').data('powertip', function() {
+							if ($(this).attr('id') == "plan_end_date") {
+								return endDateChanges;
+							} else if ($(this).attr('id') == "plan_start_date") {
+								return startDate;
+							}
+
+						});
+
+						$('.task-data').powerTip({
+							placement : 'ne', // north-east tooltip position
+							mouseOnToPopup : true
+						});
 	});
 
 	function isIE() {
