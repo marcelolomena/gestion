@@ -571,14 +571,14 @@ object SubTaskJira extends Controller {
    *
    */
   def allocationList(id: String) = Action { implicit request =>
-    request.session.get("username").map { user =>
 
       val allocationList = SubTaskServices.findSubTasksAllocationBySubTask(id)
       val allocationListExternal = SubTaskServices.findSubTasksAllocationExternalBySubTask(id);
-      Ok(views.html.frontend.subTask.allocationList(allocationList, allocationListExternal))
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
+      var respuesta = new JSONArray()
+      respuesta.put(allocationList)
+      respuesta.put(allocationListExternal)
+      Ok(respuesta.toString())
+    
   }
 
   /**
@@ -609,7 +609,7 @@ object SubTaskJira extends Controller {
       /**
        * Activity log
        */
-      val act = Activity(ActivityTypes.Allocation.id, "Sub task Allocation deleted by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), Integer.parseInt(id))
+      val act = Activity(ActivityTypes.Allocation.id, "Sub task Allocation deleted by Jira", new Date(), 1202, Integer.parseInt(id))
       Activity.saveLog(act)
       response.put("status", "Success")
 

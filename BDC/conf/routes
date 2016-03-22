@@ -336,6 +336,7 @@ POST   /roadmapProductDetails                                                   
 #user
 GET    /user-login                                                                                    controllers.Frontend.Login.loginUser
 POST   /user-login                                                                                    controllers.Frontend.Login.loggedIn
+POST   /user-login-cel                                                                                controllers.Frontend.LoginCel.loggedIn
 POST   /update-user-setting                                                                           controllers.Frontend.Login.updateUserProjectManagementSetting 
 GET    /user-logout                                                                                   controllers.Frontend.Login.loggedOut
 GET    /user-setting                                                                                  controllers.Frontend.Login.userSetting
@@ -379,6 +380,7 @@ GET    /search-projects                                                         
 
 #timesheet
 GET    /timesheet                                                                                     controllers.Frontend.TimeSheet.productsTimesheet
+GET    /timesheet-cel                                                                                 controllers.Frontend.TimeSheetCel.productsTimesheet
 POST   /addrow                                                                                        controllers.Frontend.TimeSheet.addRow
 GET    /getUserTimeSheetList                                                                          controllers.Frontend.TimeSheet.getUserTasks
 GET    /daleteTimesheet                                                                               controllers.Frontend.TimeSheet.daleteTimesheet
@@ -436,9 +438,11 @@ GET    /update-sub-task-start-dates                                             
 GET    /assign-sub-task                                                                               controllers.Frontend.SubTask.assignSubTask(id :String)
 POST   /assign-sub-task-fo                                                                            controllers.Frontend.SubTask.saveSubTaskAllocation
 POST   /assign-sub-task-external                                                                      controllers.Frontend.SubTask.saveSubTaskAllocationExternal
-GET    /allocation-list                                                                               controllers.Frontend.SubTask.allocationList(id :String)
+GET    /allocation-list                                                                              controllers.Frontend.SubTask.allocationList(id :String)
+GET    /allocation-list-jira/:id                                                                      controllers.Frontend.SubTaskJira.allocationList(id :String)
 GET    /update-hours                                                                                  controllers.Frontend.SubTask.updateHours(id :String,hours:String)
 GET    /delete-allocation                                                                             controllers.Frontend.SubTask.deleteAllocation(id :String)
+GET    /delete-allocation-jira/:id                                                                    controllers.Frontend.SubTaskJira.deleteAllocation(id :String)
 GET    /delete-external-allocation                                                                    controllers.Frontend.SubTask.deleteExternalAllocation(id :String)
 GET    /delete-sub-task                                                                               controllers.Frontend.SubTask.deleteSubtask(id :String)
 GET    /get-sub-tasks                                                                                 controllers.Frontend.SubTask.getSubTasksForTask(task_id:String,selected_sub_task:String)
@@ -470,10 +474,10 @@ GET    /update-task-start-dates                                                 
 
 POST   /save-subTask-jira/:id                                                                         controllers.Frontend.SubTaskJira.saveSubTask(id :String)
 POST   /edit-subTask-jira/:id                                                                         controllers.Frontend.SubTaskJira.updateSubTask(id :String)
-POST   /assign-subTask-fo-jira                                                                       controllers.Frontend.SubTaskJira.saveSubTaskAllocation
-POST   /assign-subTask-external-jira                                                                 controllers.Frontend.SubTaskJira.saveSubTaskAllocationExternal
-GET    /delete-subTask-jira/:id                                                                      controllers.Frontend.SubTaskJira.deleteSubtask(id :String)
-GET    /subTask-details-jira/:subtaskId                                                              controllers.Frontend.SubTaskJira.subTaskDetails(subtaskId:String)
+POST   /assign-subTask-fo-jira                                                                        controllers.Frontend.SubTaskJira.saveSubTaskAllocation
+POST   /assign-subTask-external-jira                                                                  controllers.Frontend.SubTaskJira.saveSubTaskAllocationExternal
+GET    /delete-subTask-jira/:id                                                                       controllers.Frontend.SubTaskJira.deleteSubtask(id :String)
+GET    /subTask-details-jira/:subtaskId                                                               controllers.Frontend.SubTaskJira.subTaskDetails(subtaskId:String)
 
 #User
 GET    /add-new-user                                                                                  controllers.Frontend.User.addNewUser
