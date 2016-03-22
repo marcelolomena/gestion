@@ -1099,7 +1099,17 @@ $(document).ready(function(){
 				            },
 				            { label: 'Estado',
 					              name: 'estado',
-					              width: 100,
+					              width: 150, 
+					              stype: 'select',searchoptions: {dataUrl: '/listaEstado',
+			  	  	            		buildSelect: function (response) {
+			  	  	            			var data = JSON.parse(response);
+			  	  	            		    var s = "<select>";
+			  	  	            		    s += '<option value="0">--Sin Estado--</option>';
+			  	  	            		    $.each(data, function(i, item) {
+			  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].workflow_status + '</option>';
+			  	  	            		    });
+			  	  	            		    return s + "</select>";
+			  	  	            		}},
 				            },
 				            { label: 'Nombre', name: 'programa', width: 250,formatter: returnProgramLink },
 				            { label: 'Responsable', name: 'responsable', width: 150 },
@@ -1190,6 +1200,9 @@ $(document).ready(function(){
 				            { label: 'Horas Consumidas', name: 'hreal', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
 				        ],
 				        rowNum: 20,
+				        viewrecords: true,
+            	        rowList: [5, 10, 20, 50],
+            	        gridview: true,
 				        regional : 'es',
 				        height: 'auto',
 				        autowidth:true,        

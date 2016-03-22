@@ -1236,7 +1236,14 @@ object Dashboard extends Controller {
               val elements = (json \\ "rules").children
               for (acct <- elements) {
                 val m = acct.extract[DBFilter]
-                qrystr += m.field + fromPredicate(m.op) + filtroNombrePrograma(m.field, m.data) + " AND "
+                
+               if (m.field.equals("estado")) {
+                    if (m.data.toInt != 0) {
+                      qrystr += "work_flow_status" + fromPredicate(m.op) + filtroNombrePrograma("estado", m.data) + " AND "
+                    }
+               }else{
+                    qrystr += m.field + fromPredicate(m.op) + filtroNombrePrograma(m.field, m.data) + " AND "
+               }
               }
 
             }
@@ -1245,7 +1252,7 @@ object Dashboard extends Controller {
         }
 
         if (tieneJson) {
-          //println(qrystr)
+          
           records = DashboardService.programCount(qrystr)
           panel = DashboardService.reportProgram(rows, page, qrystr)
         } else {
@@ -1272,8 +1279,8 @@ object Dashboard extends Controller {
         campo.put("pfecter", p.pfecter.getOrElse(""))
         campo.put("rfecini", p.rfecini.getOrElse(""))
         campo.put("rfecter", p.rfecter.getOrElse(""))
-        campo.put("hplan", p.hplan)
-        campo.put("hreal", p.hreal)
+        campo.put("hplan", p.hplan.getOrElse(""))
+        campo.put("hreal", p.hreal.getOrElse(""))
         registro.put(campo)
       }
       var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt

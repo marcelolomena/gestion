@@ -254,8 +254,8 @@ case class ReportePrograma(id: Int,
     pfecter: Option[Date], 
     rfecini: Option[Date],
     rfecter: Option[Date],
-    hplan: Double,
-    hreal: Double
+    hplan: Option[Double],
+    hreal: Option[Double]
     )
 
 object ReportePrograma {
@@ -270,8 +270,8 @@ object ReportePrograma {
       get[Option[Date]]("pfecter") ~
       get[Option[Date]]("rfecini") ~
       get[Option[Date]]("rfecter") ~
-      get[Double]("hplan") ~
-      get[Double]("hreal") map {
+      get[Option[Double]]("hplan") ~
+      get[Option[Double]]("hreal") map {
         case id ~ 
         nivel ~
         estado ~ 
