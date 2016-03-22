@@ -5,6 +5,7 @@ import java.util.Date
 import anorm._
 import play.api.db.DB
 import play.api.libs.json.Json
+import play.api.libs.json._
 
 case class SubTaskAllocation(id: Option[Int], sub_task_id: Long, task_id: Long, pId: Int, user_id: Long,
   estimated_time: Double, status: Integer)
@@ -25,8 +26,36 @@ object SubTaskAllocation extends CustomColumns {
         case id ~ sub_task_id ~ task_id ~ pId ~ user_id ~ estimated_time ~ status =>
           SubTaskAllocation(id, sub_task_id, task_id, pId, user_id, estimated_time, status)
       }
-  }
-
+  }/*
+  implicit val SubTaskAllocationWrites = new Writes[SubTaskAllocation] {
+    def writes(tasks: Tasks) = Json.obj(
+      "tId" -> tasks.tId.toString,
+      "pId" -> tasks.pId.toString,
+      "task_title" -> tasks.task_title.toString,
+      "task_code" -> tasks.task_code.toString,
+      "plan_start_date" -> tasks.plan_start_date.toString(),
+      "plan_end_date" -> tasks.plan_end_date.toString(),
+      "task_description" -> tasks.task_description.toString(),
+      "plan_time" -> tasks.plan_time.toString(),
+      "creation_date" -> tasks.creation_date.toString(),
+      "task_status" -> tasks.task_status.toString(),
+      "status" -> tasks.status.toString(),
+      "owner" -> tasks.owner.toString(),
+      "task_discipline" -> tasks.task_discipline.toString(),
+      "completion_percentage" -> tasks.completion_percentage.toString(),
+      "remark" -> tasks.remark.toString(),
+      "task_depend" -> tasks.task_depend.toString(),
+      "dependencies_type" -> tasks.dependencies_type.toString(),
+      "stage" -> tasks.stage.toString(),
+      "user_role" -> tasks.user_role.toString(),
+      "deliverable" -> tasks.deliverable.toString(),
+      "task_type" -> tasks.task_type.toString(),
+      "is_active" -> tasks.is_active.toString())
+      
+      
+  }*/
+  implicit val SubTaskAllocationWrites = Json.writes[TaskStatus]
+ 
 }
 
 object SubTaskAllocationExternal extends CustomColumns {

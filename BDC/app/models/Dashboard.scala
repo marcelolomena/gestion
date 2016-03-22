@@ -243,6 +243,54 @@ object ATM {
   implicit val atmWrites = Json.writes[ATM]
 }
 
+/**/
+case class ReportePrograma(id: Int, 
+    nivel: String, 
+    estado: String,
+    codigo: Int, 
+    programa: String, 
+    responsable: String, 
+    pfecini: Option[Date], 
+    pfecter: Option[Date], 
+    rfecini: Option[Date],
+    rfecter: Option[Date],
+    hplan: Option[Double],
+    hreal: Option[Double]
+    )
+
+object ReportePrograma {
+  val rpt = {
+    get[Int]("id") ~
+      get[String]("nivel") ~
+      get[String]("estado") ~
+      get[Int]("codigo") ~
+      get[String]("programa") ~
+      get[String]("responsable") ~
+      get[Option[Date]]("pfecini") ~
+      get[Option[Date]]("pfecter") ~
+      get[Option[Date]]("rfecini") ~
+      get[Option[Date]]("rfecter") ~
+      get[Option[Double]]("hplan") ~
+      get[Option[Double]]("hreal") map {
+        case id ~ 
+        nivel ~
+        estado ~ 
+        codigo ~ 
+        programa ~ 
+        responsable ~ 
+        pfecini ~ 
+        pfecter ~ 
+        rfecini ~ 
+        rfecter ~ 
+        hplan ~
+        hreal => ReportePrograma(id, nivel, estado, codigo, programa, responsable, pfecini, pfecter, rfecini, rfecter, hplan, hreal)
+      }
+    
+  }
+  implicit val rptWrites = Json.writes[ReportePrograma]
+}
+/**/
+
 case class StateSubTarea(
     sub_task_id: Int, 
     programa: String, 

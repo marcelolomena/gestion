@@ -1097,6 +1097,20 @@ $(document).ready(function(){
 				              name: 'nivel',
 				              width: 100,
 				            },
+				            { label: 'Estado',
+					              name: 'estado',
+					              width: 150, 
+					              stype: 'select',searchoptions: {dataUrl: '/listaEstado',
+			  	  	            		buildSelect: function (response) {
+			  	  	            			var data = JSON.parse(response);
+			  	  	            		    var s = "<select>";
+			  	  	            		    s += '<option value="0">--Sin Estado--</option>';
+			  	  	            		    $.each(data, function(i, item) {
+			  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].workflow_status + '</option>';
+			  	  	            		    });
+			  	  	            		    return s + "</select>";
+			  	  	            		}},
+				            },
 				            { label: 'Nombre', name: 'programa', width: 250,formatter: returnProgramLink },
 				            { label: 'Responsable', name: 'responsable', width: 150 },
 				            { label: 'Fecha Inicio Planeada',
@@ -1182,10 +1196,13 @@ $(document).ready(function(){
 						              },sopt: ["gt","lt","eq"]
 				             }
 				            },
-				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
+				            { label: 'Horas Planificadas', name: 'hplan', width: 100,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'Horas Consumidas', name: 'hreal', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
 				        ],
 				        rowNum: 20,
+				        viewrecords: true,
+            	        rowList: [5, 10, 20, 50],
+            	        gridview: true,
 				        regional : 'es',
 				        height: 'auto',
 				        autowidth:true,        

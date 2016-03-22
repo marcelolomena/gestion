@@ -189,11 +189,11 @@ object DashboardService {
     }
   }
 
-  def reportProgram(pageSize: String, pageNumber: String, Json: String): Seq[ATM] = {
+  def reportProgram(pageSize: String, pageNumber: String, Json: String): Seq[ReportePrograma] = {
 
-    var sqlString = "EXEC art.programa {PageSize},{PageNumber},{Json}"
+    var sqlString = "EXEC art.reporte_programa {PageSize},{PageNumber},{Json}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (ATM.atm *)
+      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (ReportePrograma.rpt *)
     }
   }
 
