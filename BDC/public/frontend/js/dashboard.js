@@ -1097,6 +1097,10 @@ $(document).ready(function(){
 				              name: 'nivel',
 				              width: 100,
 				            },
+				            { label: 'Estado',
+					              name: 'estado',
+					              width: 100,
+				            },
 				            { label: 'Nombre', name: 'programa', width: 250,formatter: returnProgramLink },
 				            { label: 'Responsable', name: 'responsable', width: 150 },
 				            { label: 'Fecha Inicio Planeada',
@@ -1182,8 +1186,8 @@ $(document).ready(function(){
 						              },sopt: ["gt","lt","eq"]
 				             }
 				            },
-				            { label: 'Porcentaje Avance Informado', name: 'pai', width: 100,searchoptions: {sopt:["gt","lt","eq"] } },
-				            { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
+				            { label: 'Horas Planificadas', name: 'hplan', width: 100,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'Horas Consumidas', name: 'hreal', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
 				        ],
 				        rowNum: 20,
 				        regional : 'es',

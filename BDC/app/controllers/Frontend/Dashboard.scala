@@ -38,6 +38,7 @@ import utils.DateTime
 import services.SpiCpiCalculationsService
 import models.ProgramDetails
 import models.EarnValue
+import models.ReportePrograma
 import services.RiskService
 import models.Panel;
 import models.PanelDepartamento
@@ -647,6 +648,21 @@ object Dashboard extends Controller {
     case "pae"         => value
     case _             => "error"
   }
+  
+  def filtroNombrePrograma(choice: String, value: String): String = choice match {
+    case "nivel"       => " '%" + value + "%' "
+    case "estado"      => value
+    case "programa"    => " '%" + value + "%' "
+    case "responsable" => " '%" + value + "%' "
+    case "pfecini"     => " '" + value + "' "
+    case "pfecter"     => " '" + value + "' "
+    case "rfecini"     => " '" + value + "' "
+    case "rfecter"     => " '" + value + "' "
+    case "hplan"       => value
+    case "hreal"       => value
+    case _             => "error"
+  }
+  
 
   def fromStateSubTask(choice: String, value: String): String = choice match {
     case "programa"    => " '%" + value + "%' "
@@ -1192,7 +1208,7 @@ object Dashboard extends Controller {
 
   def reportProgram() = Action { implicit request =>
     request.session.get("username").map { user =>
-      var panel: Seq[ATM] = null
+      var panel: Seq[ReportePrograma] = null
       var records: Int = 0
       val rows = request.getQueryString("rows").get.toString()
       val page = request.getQueryString("page").get.toString()
@@ -1220,7 +1236,7 @@ object Dashboard extends Controller {
               val elements = (json \\ "rules").children
               for (acct <- elements) {
                 val m = acct.extract[DBFilter]
-                qrystr += m.field + fromPredicate(m.op) + fromNameProgram(m.field, m.data) + " AND "
+                qrystr += m.field + fromPredicate(m.op) + filtroNombrePrograma(m.field, m.data) + " AND "
               }
 
             }
@@ -1229,7 +1245,7 @@ object Dashboard extends Controller {
         }
 
         if (tieneJson) {
-          println(qrystr)
+          //println(qrystr)
           records = DashboardService.programCount(qrystr)
           panel = DashboardService.reportProgram(rows, page, qrystr)
         } else {
@@ -1248,6 +1264,7 @@ object Dashboard extends Controller {
         var campo = new JSONObject()
         campo.put("id", p.id)
         campo.put("nivel", p.nivel)
+        campo.put("estado", p.estado)
         campo.put("codigo", p.codigo)
         campo.put("programa", p.programa)
         campo.put("responsable", p.responsable)
@@ -1255,8 +1272,8 @@ object Dashboard extends Controller {
         campo.put("pfecter", p.pfecter.getOrElse(""))
         campo.put("rfecini", p.rfecini.getOrElse(""))
         campo.put("rfecter", p.rfecter.getOrElse(""))
-        campo.put("pai", p.pai)
-        campo.put("pae", p.pae)
+        campo.put("hplan", p.hplan)
+        campo.put("hreal", p.hreal)
         registro.put(campo)
       }
       var pagedisplay = Math.ceil(records.toInt / Integer.parseInt(rows.toString()).toFloat).toInt
