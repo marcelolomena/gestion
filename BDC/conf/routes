@@ -569,6 +569,7 @@ GET    /getATM                                                                  
 GET    /getExcel/:did                                                                            	  controllers.Frontend.Dashboard.getExcel(did:String)
 GET    /status-subtask 			                                                                      controllers.Frontend.Dashboard.getStatusSubTaskExcel
 GET	   /depa-excel																					  controllers.Frontend.Dashboard.getDepaExcel
+GET	   /indicadores/$pid<[A-Za-z0-9_-]+>															  controllers.Frontend.Dashboard.indicadores(pid:String)
 GET    /getProgramExcel/$pid<[A-Za-z0-9_-]+>                                                       	  controllers.Frontend.Dashboard.getProgramExcel(pid:String)
 POST   /resultPert                                                                                	  controllers.Frontend.Pert.resultPert
 GET    /program-distribucion-interno                                                                  controllers.Frontend.Program.graphDistributionInternalAction(id:String, pid:String)

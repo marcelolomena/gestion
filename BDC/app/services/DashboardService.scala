@@ -97,7 +97,7 @@ object DashboardService {
       SQL(sqlString).on('did -> did.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json).executeQuery() as (PanelDepartamento.panelDepa *)
     }
   }
-  
+
   def reportDepartamentExcel(): Seq[PanelDepartamento] = {
     //println(Json)
     var sqlString = "EXEC art.programas_por_departamento_excel"
@@ -105,7 +105,7 @@ object DashboardService {
     DB.withConnection { implicit connection =>
       SQL(sqlString).on().executeQuery() as (PanelDepartamento.panelDepa *)
     }
-  }  
+  }
 
   def cantidadProgramaPorSapFiltrado(did: String, Json: String): Int = {
     //println(Json)
@@ -181,6 +181,14 @@ object DashboardService {
     }
   }
 
+  def getIndicadores(pid: String): Seq[Indicadores] = {
+
+    var sqlString = "SELECT spi,cpi,pae FROM dbo.CalculaIndicadoresDePrograma({pid})"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('pid -> pid.toInt).executeQuery() as (Indicadores.ind *)
+    }
+  }
+  
   def getProgramExcel(pid: String): Seq[ATM] = {
 
     var sqlString = "EXEC art.excel {pid}"

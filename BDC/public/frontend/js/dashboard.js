@@ -1229,6 +1229,38 @@ $(document).ready(function(){
 					           }
 					       } 
 					});
+					
+            		$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
+         		       caption:"",
+         		       buttonicon : "ui-icon-gear",//silk-icon-cog
+         		       onClickButton : function() { 
+         		    	   var grid = $("#jqGrid2");
+         		           var rowKey = grid.getGridParam("selrow");
+         		           var rowData = grid.getRowData(rowKey);
+         		           var titulo = rowData.program_name;
+         		           
+         		           if(rowKey === null && typeof rowKey === "object"){
+         			           alert('debe seleccionar un programa');
+         		           }else{
+         		        	  var iurl = 'indicadores/' + rowKey;
+         		        	  
+         		        	 $.ajax({
+									type: "GET",
+									url: iurl,
+									dataType: "json",
+									async: false,
+									success: function( data ) {
+										alert( data[0].cpi );
+									},
+									error: function(model, response, options) {
+										alert(response);
+									}
+         		        	 });
+         		        	 
+         		        	 
+         		           }
+         		       } 
+         		});					
 				}
 			}else if(currentHeaderID=='ter'){
 				if($('#jqGrid3').html() == "") {

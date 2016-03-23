@@ -199,7 +199,27 @@ object PanelDepartamento {
   }
   implicit val panelDepaWrites = Json.writes[PanelDepartamento]
 }
-/**/
+
+case class Indicadores(
+    spi: Double,
+    cpi: Double,
+    pae: Double
+)
+
+object Indicadores {
+  val ind = {
+      get[Double]("spi") ~
+      get[Double]("cpi") ~
+      get[Double]("pae") map {
+        case spi ~ 
+        cpi ~ 
+        pae => Indicadores(spi, cpi, pae)
+      }
+    
+  }
+  implicit val indWrites = Json.writes[Indicadores]
+}
+
 case class ATM(id: Int, 
     nivel: String, 
     codigo: Int, 
