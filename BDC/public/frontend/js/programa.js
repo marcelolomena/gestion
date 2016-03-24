@@ -334,7 +334,9 @@ $(document).ready(function(){
 		                    { label: 'SPI', name: 'spi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'CPI', name: 'cpi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
-		                    { label: 'Número PPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:8,colpos:2} }
+		                    { label: 'Número PPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:8,colpos:2} },
+		                    { label: 'uname_demand', name: 'uname', editable: true, hidden: true },
+		                    { label: 'uname_program', name: 'uname', editable: true, hidden: true },	
 		                ];	
 
             		$("#jqGridProgram").jqGrid({

@@ -466,10 +466,13 @@ object Incident extends Controller {
           val status_id = (jsValue \ "status_id")
           val note = (jsValue \ "note")
           val uname = (jsValue \ "uname")
+          /*
           println("va el dato uname en el controlador")
           println(uname)
           println("va el dato user_sponsor_id en el controlador")
           println(user_sponsor_id)
+          * 
+          */
 
           incident = IncidentService.update(
             severity_id.toString().replace("\"", ""),

@@ -30,8 +30,10 @@ case class Programa(
   impact_type: String,
   sap_number: Option[String],
   sap_code: Option[Int],
-  demand_manager_name:String,
-  program_manager_name:String)
+  uname_demand: String,
+  demand_manager_name: String,
+  uname_program: String,
+  program_manager_name: String)
 
 object Programa {
   val programa = {
@@ -54,7 +56,9 @@ object Programa {
       get[String]("impact_type") ~
       get[Option[String]]("sap_number") ~
       get[Option[Int]]("sap_code") ~
+      get[String]("uname_demand") ~
       get[String]("demand_manager_name") ~
+      get[String]("uname_program") ~
       get[String]("program_manager_name") map {
         case program_id ~
           division ~
@@ -75,7 +79,9 @@ object Programa {
           impact_type ~
           sap_number ~
           sap_code ~
+          uname_demand ~
           demand_manager_name ~
+          uname_program ~
           program_manager_name => Programa(
           program_id,
           division,
@@ -96,12 +102,40 @@ object Programa {
           impact_type,
           sap_number,
           sap_code,
+          uname_demand,
           demand_manager_name,
+          uname_program,
           program_manager_name)
       }
 
   }
-  implicit val programaWrites = Json.writes[Programa]
+  //implicit val programaWrites = Json.writes[Programa]
+  implicit val programaWrites = new Writes[Programa] {
+    def writes(programa: Programa) = Json.obj(
+      "program_id" -> programa.program_id.toInt,
+      "division" -> programa.division.toString(),
+      "program_type" -> programa.program_type.toString(),
+      "sub_type" -> programa.sub_type.toString(),
+      "workflow_status" -> programa.workflow_status.toString(),
+      "program_name" -> programa.program_name.toString(),
+      "program_description" -> programa.program_description.toString(),
+      "program_code" -> programa.program_code.toInt,
+      "initiation_planned_date" -> programa.initiation_planned_date.get.toString(),
+      "closure_date" -> programa.closure_date.get.toString(),
+      "release_date" -> programa.release_date.get.toString(),
+      "planned_hours" -> programa.planned_hours.toDouble,
+      "pai" -> programa.pai.toDouble,
+      "pae" -> programa.pae.toDouble,
+      "spi" -> programa.spi.toDouble,
+      "cpi" -> programa.cpi.toDouble,
+      "impact_type" -> programa.impact_type,
+      "sap_number" -> programa.sap_number.get.toString(),
+      "sap_code" -> programa.sap_code.get.toInt,
+      "uname_demand" -> programa.uname_demand,
+      "demand_manager_name" -> programa.demand_manager_name,
+      "uname_program" -> programa.uname_program,
+      "program_manager_name" -> programa.program_manager_name)
+  }
 }
 
 case class Recurso(
@@ -196,7 +230,7 @@ case class XRecurso(
   sub_task_id: Int,
   planeadas: Double,
   rfecini: Option[Date],
-  rfecfin:  Option[Date],
+  rfecfin: Option[Date],
   trabajadas: Double,
   porcentaje: Double,
   plan_start_date: Option[Date],
@@ -217,8 +251,8 @@ object XRecurso {
       get[String]("subtarea") ~
       get[Int]("sub_task_id") ~
       get[Double]("planeadas") ~
-      get[Option[Date]]("rfecini") ~      
-      get[Option[Date]]("rfecfin") ~      
+      get[Option[Date]]("rfecini") ~
+      get[Option[Date]]("rfecfin") ~
       get[Double]("trabajadas") ~
       get[Double]("porcentaje") ~
       get[Option[Date]]("plan_start_date") ~
@@ -269,28 +303,26 @@ object XRecurso {
 }
 
 case class Asignado(
-  id:Int,
-  parent:Option[Int],
-  isleaf:Int,
+  id: Int,
+  parent: Option[Int],
+  isleaf: Int,
   level: Int,
   uname: String,
   nombre: String,
   area: String,
-  departamento: String
-)
+  departamento: String)
 
 object Asignado {
   val asignado = {
     get[Int]("id") ~
-    get[Option[Int]]("parent") ~
-    get[Int]("isleaf") ~ 
-    get[Int]("level") ~  
-    get[String]("uname") ~
-    get[String]("nombre") ~
-    get[String]("area") ~
-    get[String]("departamento") map {
-        case
-          id ~
+      get[Option[Int]]("parent") ~
+      get[Int]("isleaf") ~
+      get[Int]("level") ~
+      get[String]("uname") ~
+      get[String]("nombre") ~
+      get[String]("area") ~
+      get[String]("departamento") map {
+        case id ~
           parent ~
           isleaf ~
           level ~

@@ -150,6 +150,8 @@ object Programa extends Controller {
           panel = ProgramaService.listado(user_id, rows, page, order, "")
 
         }
+        
+        //println(play.api.libs.json.Json.toJson(panel))
 
         var registro = new JSONArray()
         for (p <- panel) {
@@ -173,7 +175,9 @@ object Programa extends Controller {
           campo.put("impact_type", p.impact_type)
           campo.put("sap_number", p.sap_number.getOrElse("").toString())
           campo.put("sap_code", p.sap_code.getOrElse("").toString())
+          campo.put("uname_demand", p.uname_demand.toString())
           campo.put("demand_manager_name", p.demand_manager_name.toString())
+          campo.put("uname_program", p.uname_program.toString())
           campo.put("program_manager_name", p.program_manager_name.toString())
 
           registro.put(campo)
