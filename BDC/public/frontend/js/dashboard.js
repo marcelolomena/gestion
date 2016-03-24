@@ -1214,22 +1214,7 @@ $(document).ready(function(){
  
 					$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 					$("#jqGrid2").jqGrid('navGrid','#jqGridPager2',{add:false,edit:false,del:false,search: false});
-					$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
-					       caption:"",
-					       buttonicon : "silk-icon-page-excel",
-					       title: "Exportar a Excel", 
-					       onClickButton : function () { 
-					    	   var grid = $("#jqGrid2");
-					           var rowKey = grid.getGridParam("selrow");
-					           if(rowKey === null && typeof rowKey === "object"){
-						           alert('debe seleccionar un programa');
-					           }else{
-						           var url = 'getProgramExcel/' + rowKey;
-						    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
-					           }
-					       } 
-					});
-					
+				
             		$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
          		       caption:"",
          		       buttonicon : "ui-icon-gear",//silk-icon-cog
@@ -1250,7 +1235,13 @@ $(document).ready(function(){
 									dataType: "json",
 									async: false,
 									success: function( data ) {
-										alert( data[0].cpi );
+										$("#cell_spi").text(data[0].spi);
+										$("#cell_cpi").text(data[0].cpi);
+										$("#dialog-modal").dialog({
+								              height: 140,
+								              modal: true
+								        });
+										$( "#dialog-modal" ).show();
 									},
 									error: function(model, response, options) {
 										alert(response);
@@ -1260,7 +1251,23 @@ $(document).ready(function(){
          		        	 
          		           }
          		       } 
-         		});					
+         		});		
+            		
+					$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
+					       caption:"",
+					       buttonicon : "silk-icon-page-excel",
+					       title: "Exportar a Excel", 
+					       onClickButton : function () { 
+					    	   var grid = $("#jqGrid2");
+					           var rowKey = grid.getGridParam("selrow");
+					           if(rowKey === null && typeof rowKey === "object"){
+						           alert('debe seleccionar un programa');
+					           }else{
+						           var url = 'getProgramExcel/' + rowKey;
+						    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
+					           }
+					       } 
+					});            		
 				}
 			}else if(currentHeaderID=='ter'){
 				if($('#jqGrid3').html() == "") {

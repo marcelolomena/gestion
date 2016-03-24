@@ -85,6 +85,22 @@
 	  	@*@frontend.footer()
 	</section>*@
 	<button>Volver</button>
+	<div id="dialog-modal" style="display:none">
+	    <table border="0" style="border-spacing: 5px;border-collapse:separate" class="ui-widget" align="center">
+	        <thead class="ui-widget-header">
+	            <tr>
+	                <td>CPI</td>
+	                <td>SPI</td>
+	            </tr>               
+	        </thead>
+	        <tbody class="ui-widget-content">
+	            <tr>
+	                <td id="cell_cpi"></td>
+	                <td id="cell_spi"></td>
+	            </tr>
+	        </tbody>
+	    </table>
+	</div>	
 </div>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.min.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">

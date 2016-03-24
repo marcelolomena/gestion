@@ -343,7 +343,7 @@ $(document).ready(function(){
             	        datatype: "json",
             	        page: 1,
             	        colModel: programaModel,
-            	        rowNum: 20,
+            	        rowNum: 10,
             	        regional : 'es',
             	        height: 'auto',
             	        autowidth:true, 

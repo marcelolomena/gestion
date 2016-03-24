@@ -55,8 +55,8 @@ object Programa extends Controller {
         val user_id = Integer.parseInt(request.session.get("uId").get)
         val username = request.session.get("username").get
         val profile = request.session.get("user_profile").get
-        val rows = request.getQueryString("rows").getOrElse("20").toInt
-        val page = request.getQueryString("page").getOrElse("1").toInt
+        val rows = request.getQueryString("rows").get.toInt
+        val page = request.getQueryString("page").get.toInt
         val filters = request.getQueryString("filters").getOrElse("").toString()
         val sidx = request.getQueryString("sidx").get.toString()
         val sord = request.getQueryString("sord").get.toString()
