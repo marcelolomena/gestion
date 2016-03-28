@@ -93,7 +93,7 @@ $(document).ready(function(){
 			            	},
 		                    { label: 'Horas Planeadas', name: 'planned_hours',width: 50,hidden: true,
 				            	editable: true, editrules: {edithidden: true,required: true,custom: true, custom_func: checkNum},edittype: "text",
-				            	editoptions: {dataInit: function (element) {$(element).width(170);}},formoptions: {rowpos:3,colpos:1}
+				            	editoptions: {dataInit: function (element) {$(element).width(50);}},formoptions: {rowpos:3,colpos:1}
 			            	},
 		                    { label: 'Número Programa', name: 'program_code',width: 100,hidden: false,
 				            	editable: false, formoptions: {rowpos:3,colpos:2}
@@ -120,6 +120,11 @@ $(document).ready(function(){
 		  											}
 		  										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
 		  									},
+		  									select: function (event, ui) {
+		  										$("input#uname_demand").val(ui.item.value); 
+		  										$("input#demand_manager_name").val(ui.item.label); 
+		  						                return false;
+		  						            },
 		                                    autoFocus: true
 		                                    });
 		                                }, 100);
@@ -148,6 +153,11 @@ $(document).ready(function(){
 		  											}
 		  										});$(element).autocomplete('widget').css('font-size','11px');$(element).autocomplete('widget').css('z-index','1000');
 		  									},
+		  									select: function (event, ui) {
+		  										$("input#uname_program").val(ui.item.value); 
+		  										$("input#program_manager_name").val(ui.item.label); 
+		  						                return false;
+		  						            },
 		                                    autoFocus: true
 		                                    });
 		                                }, 100);
@@ -335,8 +345,8 @@ $(document).ready(function(){
 		                    { label: 'CPI', name: 'cpi', width: 80,editable: false, formatter: 'number', formatoptions: { decimalPlaces: 2 },searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'Número SAP', name: 'sap_number',width: 100,hidden: false,editable: false, searchoptions: {sopt:["gt","lt","eq"] } },
 		                    { label: 'Número PPM', name: 'sap_code',width: 100,hidden: true,editable: true,editoptions: {size: 10, maxlengh: 10},formoptions: {rowpos:8,colpos:2} },
-		                    { label: 'uname_demand', name: 'uname', editable: true, hidden: true },
-		                    { label: 'uname_program', name: 'uname', editable: true, hidden: true },	
+		                    { label: 'uname_demand', name: 'uname_demand', editable: true, hidden: true },
+		                    { label: 'uname_program', name: 'uname_program', editable: true, hidden: true },	
 		                ];	
 
             		$("#jqGridProgram").jqGrid({

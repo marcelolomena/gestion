@@ -66,7 +66,7 @@ object Programa extends Controller {
         var node = new JSONObject()
         var tieneJson = true
         var qrystr = ""
-        var qrystr_c = ""
+        //var qrystr_c = ""
         var order = ""
 
         //println("sidx:" + sidx)
@@ -99,32 +99,32 @@ object Programa extends Controller {
                 for (acct <- elements) {
                   val m = acct.extract[DBFilter]
                   if (m.field.equals("program_name")) {
-                      qrystr += "X.program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
-                      qrystr_c += "program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
+                      qrystr += "program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
+                      //qrystr_c += "program_name" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_name", m.data) + " AND "
                   } else if (m.field.equals("division")) {
                     if (m.data.toInt != 0) {
                       qrystr += "X.dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
-                      qrystr_c += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
+                      //qrystr_c += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                     }
                   } else if (m.field.equals("program_type")) {
                     if (m.data.toInt != 0) {
-                      qrystr += "X.program_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_type", m.data) + " AND "
-                      qrystr_c += "t1.id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
+                      qrystr += "program_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_type", m.data) + " AND "
+                      //qrystr_c += "t1.id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("devison", m.data) + " AND "
                     }
                   } else if (m.field.equals("sub_type")) {
                     if (m.data.toInt != 0) {
-                      qrystr += "X.program_sub_type" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_sub_type", m.data) + " AND "
+                      qrystr += "program_sub_type" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("program_sub_type", m.data) + " AND "
                     }
                   } else if (m.field.equals("workflow_status")) {
                     if (m.data.toInt != 0) {
-                      qrystr += "X.work_flow_status" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("work_flow_status", m.data) + " AND "
+                      qrystr += "work_flow_status" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("work_flow_status", m.data) + " AND "
                     }
                   } else if (m.field.equals("impact_type")) {
                     if (m.data.toInt != 0) {
-                      qrystr += "X.impact_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("impact_type", m.data) + " AND "
+                      qrystr += "impact_type_id" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("impact_type", m.data) + " AND "
                     }
                   } else if (m.field.equals("release_date")) {
-                    qrystr += "X.release_date" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("release_date", m.data) + " AND "
+                    qrystr += "release_date" + FormattedOutPuts.fromPredicate(m.op) + fromProgramName("release_date", m.data) + " AND "
                   } else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromProgramName(m.field, m.data) + " AND "
                   }
@@ -133,10 +133,10 @@ object Programa extends Controller {
               }
             }
 
-            //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
+            println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr + "]")
             //println(">>>>>>>>>>>>>>>>>>>>>  [" + qrystr_c + "]")
             if (tieneJson) {
-              records = ProgramaService.cantidad(user_id, qrystr_c)
+              records = ProgramaService.cantidad(user_id, qrystr)
               panel = ProgramaService.listado(user_id, rows, page, order, qrystr)
 
             } else {
@@ -151,7 +151,7 @@ object Programa extends Controller {
 
         }
         
-        //println(play.api.libs.json.Json.toJson(panel))
+        //println(play.api.libs.json.Json.toJson(panel.))
 
         var registro = new JSONArray()
         for (p <- panel) {
@@ -443,27 +443,24 @@ object Programa extends Controller {
           val planned_hours = (jsValue \ "planned_hours")
 
           val sap_code = (jsValue \ "sap_code") //numero ppm
-          //val demand_manager = (jsValue \ "demand_manager")
           val demand_manager_name = (jsValue \ "demand_manager_name")
-          //val program_manager = (jsValue \ "program_manager")
           val program_manager_name = (jsValue \ "program_manager_name")
           val program_type = (jsValue \ "program_type")
-
           val sub_type = (jsValue \ "sub_type")
           val workflow_status = (jsValue \ "workflow_status")
           val impact_type = (jsValue \ "impact_type")
           val initiation_planned_date = (jsValue \ "initiation_planned_date")
-
           val release_date = (jsValue \ "release_date")
           val closure_date = (jsValue \ "closure_date")
-
+          val uname_demand = (jsValue \ "uname_demand")
+          val uname_program = (jsValue \ "uname_program")
           val oper = (jsValue \ "oper")
 
-          //println("program_id : " + program_id)
-          //println("program_name : " + program_name)
+          //println("uname_demand : " + uname_demand)
+          //println("uname_program : " + uname_program)
           //println("program_description : " + program_description)
           //println("planned_hours : " + planned_hours)          
-          println("oper : " + oper)
+          //println("oper : " + oper)
 
           if (oper.toString().replace("\"", "").equals("edit")) {
             status = ProgramaService.actualizar(
@@ -472,8 +469,8 @@ object Programa extends Controller {
               program_description.toString().replace("\"", ""),
               planned_hours.toString().replace("\"", ""),
               sap_code.toString().replace("\"", ""),
-              demand_manager_name.toString().replace("\"", ""),
-              program_manager_name.toString().replace("\"", ""),
+              uname_demand.toString().replace("\"", ""),
+              uname_program.toString().replace("\"", ""),
               program_type.toString().replace("\"", ""),
               sub_type.toString().replace("\"", ""),
               workflow_status.toString().replace("\"", ""),
@@ -499,8 +496,8 @@ object Programa extends Controller {
               program_description.toString().replace("\"", ""),
               planned_hours.toString().replace("\"", ""),
               sap_code.toString().replace("\"", ""),
-              demand_manager_name.toString().replace("\"", ""),
-              program_manager_name.toString().replace("\"", ""),
+              uname_demand.toString().replace("\"", ""),
+              uname_program.toString().replace("\"", ""),
               program_type.toString().replace("\"", ""),
               sub_type.toString().replace("\"", ""),
               workflow_status.toString().replace("\"", ""),

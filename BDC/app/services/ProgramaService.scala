@@ -73,7 +73,7 @@ println("json:" + json)
 
   def listPersonal(term: String): Seq[NameUsr] = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.list_program_demand {term}").on(
+      SQL("EXEC art.list_member_art {term}").on(
         'term -> term).executeQuery().as(NameUsr.name *)
     }
   }
@@ -126,26 +126,7 @@ println("json:" + json)
     closure_date: String): Option[ErrorSQL] = {
     DB.withConnection { implicit connection =>
 
-      /*    
-    exec art.programa_actualizar 2433,'programa truchoX','programa truchoX',1000,66699,'Raquel de las Merced Bravo Farias','Jimena Kirsinger',3,5,3,3,'2016-01-31','2016-01-31','2016-01-31'  
-      println("program_id:" + program_id)
-      println("program_name:" + program_name)
-      println("program_description:" + program_description)
-      println("planned_hours:" + planned_hours)
-      println("sap_code:" + sap_code)
 
-      println("demand_manager:" + demand_manager)
-      println("program_manager:" + program_manager)
-      println("program_type:" + program_type)
-      println("sub_type:" + sub_type)
-      println("workflow_status:" + workflow_status)
-
-      println("impact_type:" + impact_type)
-      println("initiation_planned_date:" + initiation_planned_date)
-      println("release_date:" + release_date)
-      println("closure_date:" + closure_date)
-  
-*/
       SQL("EXEC art.programa_actualizar {program_id},{program_name},{program_description},{planned_hours},{sap_code},{demand_manager},{program_manager},{program_type},{sub_type},{workflow_status},{impact_type},{initiation_planned_date},{release_date},{closure_date}").on(
         'program_id -> program_id.toInt,
         'program_name -> program_name,
