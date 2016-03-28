@@ -380,13 +380,15 @@ GET    /search-projects                                                         
 
 #timesheet
 GET    /timesheet                                                                                     controllers.Frontend.TimeSheet.productsTimesheet
-GET    /timesheet-cel                                                                                 controllers.Frontend.TimeSheetCel.productsTimesheet
+POST   /timesheet-cel                                                                                 controllers.Frontend.TimeSheetCel.productsTimesheet
 POST   /addrow                                                                                        controllers.Frontend.TimeSheet.addRow
 GET    /getUserTimeSheetList                                                                          controllers.Frontend.TimeSheet.getUserTasks
+POST   /getUserTimeSheetListCel                                                                       controllers.Frontend.TimeSheetCel.getUserTasks
 GET    /daleteTimesheet                                                                               controllers.Frontend.TimeSheet.daleteTimesheet
 POST   /saveTimesheet                                                                                 controllers.Frontend.TimeSheet.saveTaskPlan
 POST   /save-hours-for-subtask                                                                        controllers.Frontend.TimeSheet.saveHoursForSubtask(sd:String)
 #GET    /get-project-tasks-list                                                                       controllers.Frontend.TimeSheet.getProjectTasks(user_id:String)
+POST    /getProjectTasksUserCel                                                                       controllers.Frontend.TimeSheetCel.getProjectTasks(user_id:String)
 GET    /get-non-project-tasks                                                                         controllers.Frontend.TimeSheet.getNonProjectTasks
 GET    /validate-subtask-timesheet                                                                    controllers.Frontend.TimeSheet.getSubTaskValidation(subtask:String,tDate:String)
 GET    /book-time/:subtask_id                                                                         controllers.Frontend.TimeSheet.bookTime(subtask_id :String)

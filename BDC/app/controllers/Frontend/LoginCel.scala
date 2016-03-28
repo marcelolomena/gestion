@@ -57,12 +57,12 @@ object LoginCel extends Controller {
     ARTForms.loginForm.bindFromRequest().fold(
       hasErrors => {
         println(hasErrors.errors);
-        BadRequest("ERROR"+hasErrors.errors)
+        BadRequest("ERROR "+hasErrors.errors)
       },
       success => {
         val theForm = LoginService.validateForm(ARTForms.loginForm.fill(success))
         if (theForm.hasErrors) {
-          BadRequest("ERROR"+theForm.hasErrors)
+          BadRequest("ERROR "+theForm.hasErrors)
         } else {
 
           try {
@@ -79,9 +79,9 @@ object LoginCel extends Controller {
             val act = Activity(ActivityTypes.Login.id, "Login by Mobile " + result.get.uname, new Date(), result.get.uid.get, result.get.uid.get)
             Activity.saveLog(act)
 
-            Redirect(routes.TimeSheetCel.productsTimesheet()).withSession("username" -> result.get.uname, "utype" -> result.get.isadmin.toString(), "uId" -> result.get.uid.get.toString(), "user_profile" -> user_profile)
+            Ok("OK - LOGIN CORRECTO")
           } catch {
-            case e: SQLServerException => Ok(views.html.frontend.user.loginUser(ARTForms.loginForm)).withNewSession
+            case e: SQLServerException => Ok("Error Login ")
           }
 
         }

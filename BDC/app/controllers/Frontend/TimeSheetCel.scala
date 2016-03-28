@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
-//import org.codehaus.jackson.JsonNode
 import play.api.libs.json.{ JsNull, Json, JsString, JsValue }
 import anorm.NotAssigned
 import models.Activity
@@ -24,29 +23,46 @@ import services.TimesheetService
 import java.util.Calendar
 import models.Baseline
 import play.api.libs.functional.syntax._
-//import javassist.CtField.NewInitializer
 import java.util.regex.Pattern
 import models.TimesheetExternal
 import java.text.DecimalFormat
-//import com.google.gson.JsonObject
 import java.util.ArrayList
-
 import scala.math.BigDecimal.RoundingMode
+import org.json.JSONArray
 
 object TimeSheetCel extends Controller {
 
   def productsTimesheet = Action { implicit request =>
-    request.session.get("username").map { user =>
-      val uId = request.session.get("uId").get
-      val utype = Integer.parseInt(request.session.get("utype").get.toString())
       // val currentSubTasks = TaskService.getAllCurrentAllocatedSubTask(uId)
       // val futureSubTasks = TaskService.getAllFutureAllocatedSubTask(uId)
-      val subTasks = TaskService.getAllAllocatedSubTask(uId);
+      val subTasks = TaskService.getAllAllocatedSubTask("1202");
       val nonProjectTasks = TaskService.getAllNonProjectTask
-      Ok(views.html.frontend.timesheet.projectsTimeSheet(subTasks, nonProjectTasks)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
+      
+      var subtareas = new JSONArray;
+      
+      for(subTask <- subTasks) {
+        println("subtarea: "+subTask.sub_task_id.toString())
+        var subtarea = new JSONObject;
+        //subtarea.put("nombre",SubTaskServices.findSubTaskDetailsBySubtaskId(subTask.sub_task_id.get.toString()).get.task)
+        subtarea.put("nombre",SubTaskServices.findSubTaskDetailsBySubtaskId(subTask.sub_task_id.get.toString()).get.task.toString())
+        subtarea.put("hours",subTask.completion_percentage.get.toString());
+        subtarea.put("proyecto",ProjectService.findProject(TaskService.findTaskDetailsByTaskId(subTask.task_id).get.pId).get.project_name.toString());
+        subtareas.put(subtarea)
+      }
+      for(subTask <- nonProjectTasks) {
+        println("subtarea: "+subTask.task.toString())
+        var subtarea = new JSONObject;
+        //subtarea.put("nombre",SubTaskServices.findSubTaskDetailsBySubtaskId(subTask.sub_task_id.get.toString()).get.task)
+        subtarea.put("nombre",subTask.task.toString())
+        subtarea.put("hours","00.00");
+        subtarea.put("proyecto",subTask.task.toString());
+        subtareas.put(subtarea)
+      }
+      
+      println(subtareas.toString())
+      Ok(subtareas.toString())
+      
+    
   }
 
   /**
@@ -211,37 +227,27 @@ object TimeSheetCel extends Controller {
    *
    */
   def getUserTasks() = Action { implicit request =>
-    request.session.get("username").map { user =>
+
       println("Entro")
-      val uId = request.session.get("uId").get
+      val uId = 1202
       println(uId)
-      val startDate = request.getQueryString("sd").get
+      val startDate = "2016-03-24"
       println(startDate)
       val tasks = TimesheetService.getUserTimesheets(uId.toInt, startDate.toString())
+      var tareas = new JSONArray;
+      
       for(task <- tasks) {
         println("tarea: "+task.task_id)
+        var tarea = new JSONObject;
+        tarea.put("nombre",TaskService.findTaskDetailsByTaskId(task.task_id).get.task_title)
+        tarea.put("hours",task.hours.toString());
+        tarea.put("proyecto",ProjectService.findProject(task.pId).get.project_name);
+        tareas.put(tarea)
       }
-      /*    var task_list = Seq
-      var total_hrs: BigDecimal = 0.0
-
-      val list = new ArrayList
-      for (task <- tasks) {
-        val hr = task.hours.toString().trim().replace(".", "_").split("_").apply(0)
-        val min = task.hours.toString().trim().replace(".", "_").split("_").apply(1)
-        var minutes = 0
-        if (!min.isEmpty()) {
-          minutes = min.toInt * 60 / 100
-        }
-        var hours = (hr.toString() + "." + minutes.toString()).toDouble
-        total_hrs += hours
-        total_hrs
-        val tmsht = Timesheet(task.Id, task.task_type, task.sub_task_id, task.task_id, task.user_id, task.pId, task.task_for_date, task.notes, total_hrs, task.booked_by)
-        // list.add(tmsht.toString())
-      }*/
-      Ok(views.html.frontend.timesheet.projectsTimeSheetList(tasks))
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
+      
+      println(tareas.toString())
+      Ok(tareas.toString())
+   
   }
 
   /**

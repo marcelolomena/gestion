@@ -155,6 +155,23 @@ object RiskService extends CustomColumns {
       SQL(sqlString).as(RiskManagementMaster.riskManagementMaster *)
     }
   }
+  def findRiskListProgram(parent_id: String): Seq[RiskManagementMaster] = {
+    var sqlString = "SELECT *  FROM art_risk where is_active = 1 AND (parent_id=" + parent_id + ""
+    val proyectos = ProjectService.findProjectIdListForProgramId(parent_id)
+    for(pr <- proyectos){
+      val tareas = TaskService.findAllTaskIdListByProjectId(pr.toString())
+      sqlString = sqlString + " OR parent_id=" + pr.toString()+" "
+      for(ta <- tareas){
+        sqlString = sqlString + " OR parent_id=" + ta.toString()+" "
+      }
+    }
+    sqlString = sqlString + " )"
+    println(sqlString)
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(RiskManagementMaster.riskManagementMaster *)
+    }
+  }
 
   def findAllRiskList(parent_id: String, parent_type: Int): Seq[RiskManagementMaster] = {
     val sqlString = "SELECT *  FROM art_risk where parent_id=" + parent_id + " AND parent_type=" + parent_type + ""
