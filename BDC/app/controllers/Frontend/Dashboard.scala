@@ -411,7 +411,8 @@ object Dashboard extends Controller {
   def burbujas = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val bubble = DashboardService.reportBubble
+      val uid = request.session.get("uId").get
+      val bubble = DashboardService.reportBubble(uid)
 
       var node = new JSONObject()
 

@@ -108,7 +108,7 @@ object TaskDesciplineService extends CustomColumns {
     }
   }
   def findAllTaskDesciplineList(): Seq[TaskDesciplines] = {
-    var sqlString = "SELECT * FROM  (SELECT  ROW_NUMBER() OVER(ORDER BY sequencing ASC) AS Row, * FROM art_task_discipline AS tbl where is_deleted = 0) as ss"
+    var sqlString = "SELECT * FROM  (SELECT  ROW_NUMBER() OVER(ORDER BY sequencing ASC) AS Row, * FROM art_task_discipline AS tbl where is_deleted = 0) as ss ORDER BY task_discipline"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(TaskDesciplines.taskDesciplineMaster *)
     }

@@ -125,9 +125,9 @@ object DashboardService {
     }
   }
 
-  def reportBubble(): Seq[Bubble] = {
+  def reportBubble(uid:String): Seq[Bubble] = {
 
-    var sqlString = "EXEC art.bubble"
+    var sqlString = "EXEC art.bubble "+uid
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Bubble.bubble *)
     }

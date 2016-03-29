@@ -160,16 +160,16 @@ object ProjectMaster extends Controller {
                   actual_completion_date = c.plan_end_date
                 }
               }
-               println("actual_hours_completed_for_task = " + actual_hours_completed_for_task)
+               //println("actual_hours_completed_for_task = " + actual_hours_completed_for_task)
               actual_hours_completed_for_project += actual_hours_completed_for_task
               allocatedForTasks.put(c.tId.toString(),hrs_allocated_to_task)
             }
             
-            println(isValid)
+            //println(isValid)
             if (!isValid) {
               actual_completion_date = null
             }
-            println(actual_completion_date)
+            //println(actual_completion_date)
             var countList = list.toList;
             var documents = DocumentService.findAllDocuments(projectId, "PROJECT", "", "", "");
 

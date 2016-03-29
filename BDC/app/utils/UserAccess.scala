@@ -158,7 +158,7 @@ trait AuthentiCate {
       if (!program.isEmpty) {
         val programMemmber = ProgramMemberService.findAllProgramMember(program.get.program_id.get.toString())
         for (pm <- programMemmber) {
-          if (pm.role_id == 6 && pm.member_id == user_id.toInt) {
+          if ((pm.role_id == 6 || pm.role_id == 7 || pm.role_id == 28) && pm.member_id == user_id.toInt) {
             isValidProgramMamnager = true
           }
         }

@@ -70,7 +70,7 @@ object GenericProjectTypeService extends CustomColumns{
   
    def findActiveGenericProjectTypeById(id: String): Option[GenericProjectTypes] = {
     if (!id.isEmpty()) {
-      var sql = "select t.* from art_program_generic_project_type t where t.id='" + id + "' AND is_deleted=0"
+      var sql = "select t.* from art_program_generic_project_type t where t.id='" + id + "' AND is_deleted=0 ORDER BY generic_project_type"
       DB.withConnection { implicit connection =>
         val result = SQL(sql).as(GenericProjectTypes.pTypes.singleOpt)
         result

@@ -166,7 +166,7 @@ object RiskService extends CustomColumns {
       }
     }
     sqlString = sqlString + " )"
-    println(sqlString)
+    //println(sqlString)
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskManagementMaster.riskManagementMaster *)

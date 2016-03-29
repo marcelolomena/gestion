@@ -1,6 +1,7 @@
 @(program_id:String,sap_form: Form[SAPMaster],bts:java.util.HashMap[String, String],planned_hours:Double)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
+@import utils._
 @import services._
 @import java.util.Date._
 </head>
@@ -314,7 +315,7 @@
 				<span class="role header" style="width:83px"> @Messages("programDetails.sapcode")</span>
 				<span class="member header">@Messages("programdetails.sapdetails.investment")</span>
 				<span class="member header">@Messages("programdetails.sapdetails.expenditure")</span>
-				<span class="member header">@Messages("programdetails.availableinvestment")</span>
+				<span class="member header">Presupuesto Total</span>
 				<span class="member header">Fecha Aprobación</span>
 				<span class="member header">Fecha Paso a Prod.</span>
 				<span class="member header">Fecha Cierre</span>
@@ -334,9 +335,9 @@
 				*@
 				
 				<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@p.sap_number</span>
-				<span class="member">@SAPServices.calculateSAPInvestment(p.id.toString)</span>
-				<span class="member">@SAPServices.calculateSAPExpenditure(p.id.toString)</span>
-				<span class="member">@SAPServices.calculateProgramSAPInvestment(p.id.toString) </span>
+				<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPInvestment(p.id.toString))</span>
+				<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPExpenditure(p.id.toString))</span>
+				<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPInvestment(p.id.toString)+SAPServices.calculateSAPExpenditure(p.id.toString)) </span>
 				<span class="member">@if(p.approved_date){
 					@p.approved_date.get.format("dd/MM/YYYY")}&nbsp;</span>
 					<span class="member">@if(p.approved_date){

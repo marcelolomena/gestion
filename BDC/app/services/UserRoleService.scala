@@ -31,7 +31,7 @@ object UserRoleService extends CustomColumns {
 
   def findAllUserRoles(): Seq[UserRoleMaster] = {
     var sqlString = ""
-    sqlString = "SELECT * from art_user_role where is_deleted = 0"
+    sqlString = "SELECT * from art_user_role where is_deleted = 0 ORDER BY role"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(UserRoles.userRoleMaster *)
     }
