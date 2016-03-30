@@ -369,13 +369,32 @@ $(document).ready(function(){
             	        rowList: [5, 10, 20, 50],
             	        gridview: true,
             	        gridComplete: function() {
+            	        	/*
+            	            var $this = $(this);
+            	            var postfilt = $this.jqGrid('getGridParam','postData').filters;
+            	            var postsord = $this.jqGrid('getGridParam','postData').sord;
+            	            var postsort = $this.jqGrid('getGridParam','postData').sidx;
+                            var postpage = $this.jqGrid('getGridParam', 'postData').page;
+                            
+                            if ($this.jqGrid("getGridParam", "datatype") === "json") {
+                                    setTimeout(function () {
+                                            $this.jqGrid("setGridParam", {
+                                                    datatype: "local",
+                                                    postData: {filters: postfilt, sord: postsord, sidx: postsort},
+                                                    search: true
+                                            });
+                                            $this.trigger("reloadGrid", [{ page: postpage}]);
+                                    }, 25);
+                            }            	            
+                            */
             	            var recs = parseInt($("#jqGridProgram").getGridParam("records"),10);
             	            if (isNaN(recs) || recs == 0) {
             	                $("#programasWrapper").hide();
+            	                alertG("No hay programas","#jqGridProgram");
             	            }
             	            else {
             	                $('#programasWrapper').show();
-            	            }
+            	            }                            
             	        }
             	    });	
             		$("#jqGridProgram").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
