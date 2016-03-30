@@ -280,7 +280,7 @@
 					    		<div  class="left task_action">
 
 					    			<span id="st_@m.tId" class="show_tasks_details"></span>	
-					    			@if(utils.UserAccess.checkAccess(req,"task_delete") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString) && m.task_type !=3 ){
+					    			@if(utils.UserAccess.checkAccess(req,"task_delete") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString)){
 					    				<span id="dt_@m.tId" class="delete_tasks_details">
 					    				<input type="hidden" value="@TaskService.validateTasksDependency(m.pId.toString(),m.tId.get.toString())"></span>
 					    			}

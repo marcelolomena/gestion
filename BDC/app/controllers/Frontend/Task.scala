@@ -831,8 +831,8 @@ object Task extends Controller {
           if (tasks.size > 0) {
 
             for (t <- tasks) {
-              var current_tId = t.tId.toString()
-              if (!t.task_depend.isEmpty) {
+              var current_tId = t.tId.get.toString()
+              if (!t.task_depend.get.isEmpty) {
                 var task_depend = t.task_depend.get
                 var new_task_depend = ""
                 var task_dpeend_aaray = task_depend.split(",")
@@ -852,6 +852,7 @@ object Task extends Controller {
 
                 }
                 if (isvalid) {
+                  
                   TaskService.updateTaskDependecy(current_tId, new_task_depend)
                 }
               }
@@ -870,7 +871,7 @@ object Task extends Controller {
         node.put("status", "Success")
       } else {
         node.put("status", "Fail")
-        node.put("message", "Time is booked against this Task, you can not delete this Task.")
+        node.put("message", "Existen horas imputadas en esta tarea, no se puede eliminar")
       }
       Ok(node.toString())
     }.getOrElse {
