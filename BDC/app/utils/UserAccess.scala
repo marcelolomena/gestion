@@ -91,7 +91,7 @@ trait AuthentiCate {
       if(FunctionRoleService.checkDBAccess(user_role,element_type)==1){
         isValid = true
       }else{
-        println("acceso denegado a: " + element_type)
+        //println("acceso denegado a: " + element_type)
       }
     }
     isValid
@@ -106,7 +106,7 @@ trait AuthentiCate {
       if(FunctionRoleService.checkDBAccess(user_role,element_type)==1){
         isValid = true
       }else{
-        println("acceso denegado a: " + element_type)
+        //println("acceso denegado a: " + element_type)
       }
 
     }
@@ -121,7 +121,7 @@ trait AuthentiCate {
       if(ProgramaService.cantidadSubalternos(uId)>1){
         isValid = true
       }else{
-        println("no es jefe: " + uId)
+        //println("no es jefe: " + uId)
       }
 
     }
@@ -135,10 +135,10 @@ trait AuthentiCate {
       var uid = request.session.get("uId").get
       
       if(TaskService.canCreateSubTask(uid,tid)==1){
-        println(uid + " tiene permiso para crear subtarea")
+        //println(uid + " tiene permiso para crear subtarea")
         isValid = true
       }else{
-        println(uid + " no tiene permiso para crear subtarea")
+        //println(uid + " no tiene permiso para crear subtarea")
       }
 
     }
