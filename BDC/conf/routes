@@ -381,12 +381,15 @@ GET    /search-projects                                                         
 #timesheet
 GET    /timesheet                                                                                     controllers.Frontend.TimeSheet.productsTimesheet
 POST   /timesheet-cel                                                                                 controllers.Frontend.TimeSheetCel.productsTimesheet
+GET   /timesheet-jira/:uId                                                                            controllers.Frontend.TimeSheetJira.productsTimesheet(uId:String)
 POST   /addrow                                                                                        controllers.Frontend.TimeSheet.addRow
 GET    /getUserTimeSheetList                                                                          controllers.Frontend.TimeSheet.getUserTasks
 POST   /getUserTimeSheetListCel                                                                       controllers.Frontend.TimeSheetCel.getUserTasks
 GET    /daleteTimesheet                                                                               controllers.Frontend.TimeSheet.daleteTimesheet
+POST   /deleteTimesheet-jira                                                                          controllers.Frontend.TimeSheetJira.deleteTimesheet(tid:String)
 POST   /saveTimesheet                                                                                 controllers.Frontend.TimeSheet.saveTaskPlan
 POST   /save-hours-for-subtask                                                                        controllers.Frontend.TimeSheet.saveHoursForSubtask(sd:String)
+POST   /save-hours-for-subtask-jira                                                                   controllers.Frontend.TimeSheetJira.saveHoursForSubtask(sd:String,user:Integer)
 #GET    /get-project-tasks-list                                                                       controllers.Frontend.TimeSheet.getProjectTasks(user_id:String)
 POST    /getProjectTasksUserCel                                                                       controllers.Frontend.TimeSheetCel.getProjectTasks(user_id:String)
 GET    /get-non-project-tasks                                                                         controllers.Frontend.TimeSheet.getNonProjectTasks
