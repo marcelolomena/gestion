@@ -126,35 +126,17 @@ object TimeSheetJira extends Controller {
    * Save hours plan for a subtask
    */
 
-  def saveHoursForSubtask(_date: String,user_id: Int) = Action { implicit request =>
+  def saveHoursForSubtask(_date: String,user_id: String, subtask: String, hours: String) = Action { implicit request =>
     
       val task_for_date = new SimpleDateFormat("yyyy-MM-dd").parse(_date)
-      request.body.asJson.map { jjjson =>
+    
         var hashMap = new java.util.HashMap[String, String]()
-        var subtasks = jjjson.asOpt[JsArray].get.value
-        for (subtask <- subtasks) {
-          var subtask_id = subtask.\\("subtask_id").iterator.next().toString()
-          var hours1 = subtask.\\("value").iterator.next().toString().replace("\"", "")
-          /* println(hours1 + "hours1")*/
-          var new_hour = hours1.replace(".", "_").split("_").apply(0).toDouble
-          var new_min = hours1.replace(".", "_").split("_").apply(1).toDouble
+        
+          var subtask_id = subtask
+          var hours1 = hours
           var actual_hour: Double = 0
-          /*      println(new_hour + "new_hour")
-          println(new_min + "new_min")*/
-          var final_hour_string: Double = 0
-          if (new_min < 10) {
-            new_min = new_min * 100 / 60
-            actual_hour = new_hour + Math.ceil(new_min) / 100
-          } else {
-            final_hour_string = new_min.toDouble
-            final_hour_string = final_hour_string * 100 / 60
-            if (new_hour < 10) {
-              new_hour = ("0" + new_hour).toDouble
-            }
-            actual_hour = (new_hour.toInt + "." + Math.ceil(final_hour_string.toDouble).toInt).toDouble
-          }
+          actual_hour = hours1.toDouble
 
-          if (!subtask_id.isEmpty() && subtask_id.matches("(?i:.*sub_.*)")) {
             val arr = subtask_id.split('_');
             subtask_id = arr.apply(1).substring(0, arr.apply(1).length() - 1)
             val pDetails = SubTaskServices.findSubTaskDetailsBySubtaskId(subtask_id)
@@ -162,32 +144,17 @@ object TimeSheetJira extends Controller {
               val m_id = pDetails.get.task_id
               val milestone = TaskService.findTaskDetailsByTaskId(m_id)
               val pId = milestone.get.pId
-              val planDetails = Timesheet(None, 1, subtask_id.toInt, m_id, user_id, pId, task_for_date, "", actual_hour, Option(0))
+              val planDetails = Timesheet(None, 1, subtask_id.toInt, m_id, user_id.toInt, pId, task_for_date, "", actual_hour, Option(0))
               val last = TimesheetService.addTimesheet(planDetails);
               
               /**
                * Activity log
                */
-              val act = Activity(ActivityTypes.Timesheet.id, "Timesheet entry made by Jira ", new Date(), user_id, last.toInt)
+              val act = Activity(ActivityTypes.Timesheet.id, "Timesheet entry made by Jira ", new Date(), user_id.toInt, last.toInt)
               Activity.saveLog(act)            
             }
-          } else if (!subtask_id.isEmpty() && subtask_id.matches("(?i:.*nproj_.*)")) {
-            val arr = subtask_id.split('_');
-            subtask_id = arr.apply(1).substring(0, arr.apply(1).length() - 1)
-            val notes = ""
-            val planDetails = Timesheet(None, 2, subtask_id.toInt, 2, user_id, -1, task_for_date, notes, actual_hour, Option(0))
-            val last = TimesheetService.addTimesheet(planDetails);
-            
-            /**
-             * Activity log
-             */
-            val act = Activity(ActivityTypes.Timesheet.id, "Timesheet entry made by Jira ", new Date(), user_id, last.toInt)
-            Activity.saveLog(act)            
-          }
-        }
-      }.getOrElse {
-        BadRequest("Expecting Json data")
-      }
+        
+      
     
     Ok("Success")
   }
