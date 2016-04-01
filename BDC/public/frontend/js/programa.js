@@ -506,34 +506,82 @@ $(document).ready(function(){
             			           $("#recursosListDialog").dialog({title:titulo}).dialog("open");  	
             		           }
             		       } 
-            		});         
+            		});  
+            		
+            		$("#jqGridProgram").jqGrid('navButtonAdd','#jqGridProgramPager',{
+         		       caption:"",
+         		       buttonicon : "silk-icon-user-add",//add member
+         		       onClickButton : function() { 
+         		    	   var grid = $("#jqGridProgram");
+         		           var rowKey = grid.getGridParam("selrow");
+         		           var rowData = grid.getRowData(rowKey);
+         		           var titulo = rowData.program_name;
+         		           
+         		           if(rowKey === null && typeof rowKey === "object"){
+         			           alert('debe seleccionar un programa');
+         		           }else{
+         					   $("#jqGridMiembros").jqGrid('setGridParam', { url: 'listadoMiembros/' + rowKey});
+         					   $("#jqGridMiembros").trigger('reloadGrid');
+         			           $("#membersListDialog").dialog({title:titulo}).dialog("open");  	
+         		           }
+         		       } 
+         		}); 
+            		
+            	    $("#jqGridRecursos").jqGrid({
+            	        datatype: "json",
+            	        mtype: "GET",
+            	        autowidth:true,
+            	        colNames: ["sub_task_id","Estado","Recurso","Proyecto", "Tarea", "Subtarea","Planeadas", "Trabajadas", "% Avance","Fecha Inicio","Fecha Termino"],
+            	        colModel: [
+            	           { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
+            	           { label: 'Estado', name: 'estado', width: 50,search:false, 
+            	           	formatter: function (cellvalue) {
+            	               	var color;
+            	               	if (cellvalue == 'ATRASADA') {
+            	                	   color = 'red';
+            	               	} else if (cellvalue == 'EN EJECUCION') {
+            	                	   color = 'yellow';
+            	               	} else if (cellvalue == 'TERMINADA A TIEMPO') {
+            	                	   color = 'green';
+            	               	} else if (cellvalue == 'TERMINADA ADELANTADA') {
+            	                	   color = 'blue';
+            	               	} else if (cellvalue == '') {
+            	                	   color = 'white';
+            	               	}
+
+            	           		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
+            	           	}
+            	           	
+            	           },             
+            	           { name: "recurso", width: 200, align: "left", editable:false },
+            	           { name: "proyecto", width: 200, align: "left", editable:false },
+            	           { name: "tarea", width: 200, align: "left", editable:false },
+            	           { name: "subtarea", width: 200, align: "left", editable:false },
+            	           { name: "planeadas", width: 100, align: "center",editable:false },
+            	           { name: "trabajadas", width: 100, align: "center", editable:false },
+            	           { name: "porcentaje", width: 100, align: "center",editable:false },
+            	           { name: "plan_start_date", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
+            	           { name: "plan_end_date", width: 100,formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },	
+            	        ],
+            			regional : "es",
+            	        page: 1,
+            	        rowNum: 10,
+            	        viewrecords: true,
+            	        rowList: [10, 20, 50, 100],
+            	        gridview: true,
+            			pager:"jqGridRecursosPager",
+            	        ajaxRowOptions: { contentType: "application/json" },
+            	        serializeRowData: function (data) { return JSON.stringify(data); },        
+    });            		
 	
-    $("#jqGridRecursos").jqGrid({
+    $("#jqGridMiembros").jqGrid({
         datatype: "json",
         mtype: "GET",
         autowidth:true,
         colNames: ["sub_task_id","Estado","Recurso","Proyecto", "Tarea", "Subtarea","Planeadas", "Trabajadas", "% Avance","Fecha Inicio","Fecha Termino"],
         colModel: [
            { name: "sub_task_id", width: 10, align: "center", key: true, hidden:true },
-           { label: 'Estado', name: 'estado', width: 50,search:false, 
-           	formatter: function (cellvalue) {
-               	var color;
-               	if (cellvalue == 'ATRASADA') {
-                	   color = 'red';
-               	} else if (cellvalue == 'EN EJECUCION') {
-                	   color = 'yellow';
-               	} else if (cellvalue == 'TERMINADA A TIEMPO') {
-                	   color = 'green';
-               	} else if (cellvalue == 'TERMINADA ADELANTADA') {
-                	   color = 'blue';
-               	} else if (cellvalue == '') {
-                	   color = 'white';
-               	}
-
-           		return '<span class="cellWithoutBackground" style="background-color:' + color + ';"></span>';
-           	}
-           	
-           },             
+           { label: 'Estado', name: 'estado', width: 50,search:false},             
            { name: "recurso", width: 200, align: "left", editable:false },
            { name: "proyecto", width: 200, align: "left", editable:false },
            { name: "tarea", width: 200, align: "left", editable:false },
@@ -550,7 +598,7 @@ $(document).ready(function(){
         viewrecords: true,
         rowList: [10, 20, 50, 100],
         gridview: true,
-		pager:"jqGridRecursosPager",
+		pager:"jqGridMiembrosPager",
         ajaxRowOptions: { contentType: "application/json" },
         serializeRowData: function (data) { return JSON.stringify(data); },        
    });	

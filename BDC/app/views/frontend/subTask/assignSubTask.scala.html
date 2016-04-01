@@ -22,7 +22,7 @@
 	  				</div>
 	  				@{if( dep.dId.toString() == project.get.department.toString() ) "selected='selected'"}
 	  				
-	  				
+	  				*@
 	        		  <label>@Messages("assignsubtask.userRole")</label>
 	        		  
 	       		      <select name="user_role" id="user_role" class="input-xlarge width208px">
@@ -31,7 +31,7 @@
 	                     	<option value="@role.rId" >@role.role </option>
 	                   	 }
 	                  </select> 
-		  			*@
+		  			
  			       	
 				    
 				    <div class="width_full">
