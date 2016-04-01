@@ -386,7 +386,7 @@ POST   /addrow                                                                  
 GET    /getUserTimeSheetList                                                                          controllers.Frontend.TimeSheet.getUserTasks
 POST   /getUserTimeSheetListCel                                                                       controllers.Frontend.TimeSheetCel.getUserTasks
 GET    /daleteTimesheet                                                                               controllers.Frontend.TimeSheet.daleteTimesheet
-GET   /deleteTimesheet-jira/:tId                                                                      controllers.Frontend.TimeSheetJira.deleteTimesheet(tid:String)
+GET   /deleteTimesheet-jira/:tid                                                                      controllers.Frontend.TimeSheetJira.deleteTimesheet(tid:String)
 POST   /saveTimesheet                                                                                 controllers.Frontend.TimeSheet.saveTaskPlan
 POST   /save-hours-for-subtask                                                                        controllers.Frontend.TimeSheet.saveHoursForSubtask(sd:String)
 POST   /save-hours-for-subtask-jira                                                                   controllers.Frontend.TimeSheetJira.saveHoursForSubtask(fecha:String,user:String,subtask:String,hours:String)
