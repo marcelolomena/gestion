@@ -182,6 +182,38 @@ trait AuthentiCate {
 
   }
 
+  def isAuthenticatedProgram(implicit request: RequestHeader, program_id: String): Boolean = {
+    var isValid = false
+    if (!request.session.get("user_profile").isEmpty) {
+      var user_role = request.session.get("user_profile").get
+      var user_id = request.session.get("uId").get
+      var isValidProject = false
+      var isValidProgramMamnager = false
+
+      ///isValidProject = UserService.checkUserSettingbyuIdandpId(user_id.toInt, project_id.toInt)
+      //val program = ProjectService.findProgramDetailForProject(project_id)
+      if (!program_id.isEmpty) {
+        val programMemmber = ProgramMemberService.findAllProgramMember(program_id)
+        for (pm <- programMemmber) {
+          if ((pm.role_id == 6 || pm.role_id == 7 ) && pm.member_id == user_id.toInt) {
+            isValidProgramMamnager = true
+          }
+        }
+      } else {
+
+      }
+
+     
+
+      //println(isValidProject +"---"+isValidProgramMamnager)
+      if (user_role == "pmo" || user_role == "su" || isValidProject || isValidProgramMamnager) {
+        isValid = true
+      }
+    }
+    isValid
+
+  }
+  
 }
 
 object UserAccess extends AuthentiCate {

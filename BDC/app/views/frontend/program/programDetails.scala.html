@@ -290,14 +290,19 @@
 						<tr>
 							<td class="table_header">@Messages("programDetails.actualcost")</td>
 							<td class="p_values width160px"><span id="ac"></span></td>
+							@if(utils.UserAccess.isAuthenticatedProgram(req,program.get.program_id.get.toString)){
 							<td class="table_header">@Messages("programDetails.estimatetocomplete")</td>
-							<td class="p_values width160px"><span id="etc"></span></td>							
+							<td class="p_values width160px"><span id="etc"></span></td>
+							}		
+												
 						</tr>
 						<tr>
 							<td class="table_header">@Messages("programDetails.ha")</td>
-							<td class="p_values width160px"><span id="ha"></span></td>						
+							<td class="p_values width160px"><span id="ha"></span></td>		
+							@if(utils.UserAccess.isAuthenticatedProgram(req,program.get.program_id.get.toString)){				
 							<td class="table_header">@Messages("programDetails.estimetcopmletion")</td>
 							<td class="p_values width160px"><span id="eac"></span></td>
+							}
 						</tr>
 						<tr>
 							<td class="table_header">@Messages("programDetails.scheduledvar")</td>

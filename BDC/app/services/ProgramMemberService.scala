@@ -80,6 +80,7 @@ object ProgramMemberService extends CustomColumns {
   def findAllProgramMember(program_id: String): Seq[ProgramMembers] = {
     var sqlString = ""
     //sqlString = "SELECT  * from art_program_members where program_id=" + program_id
+    println(program_id)
     sqlString = "SELECT id,program_id,role_id,member_id,is_active, 'None' pData from art_program_members where program_id=" + program_id
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProgramMembers.program_members *)
