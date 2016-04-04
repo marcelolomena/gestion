@@ -183,7 +183,7 @@ object DashboardService {
 
   def getIndicadores(pid: String): Seq[Indicadores] = {
 
-    var sqlString = "SELECT ROUND(spi,2) spi,ROUND(cpi,2) cpi,pae FROM dbo.CalculaIndicadoresDePrograma({pid})"
+    var sqlString = "SELECT ROUND(ISNULL(spi,0),2) spi,ROUND(ISNULL(cpi,0),2) cpi,ROUND(ISNULL(pae,0),2) pae FROM dbo.CalcProgramInd({pid})"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('pid -> pid.toInt).executeQuery() as (Indicadores.ind *)
     }
