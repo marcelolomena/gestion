@@ -142,14 +142,18 @@ object Task extends Controller {
       val utype = Integer.parseInt(request.session.get("utype").get.toString())
       var pTypes = new java.util.LinkedHashMap[String, String]()
       username = request.session.get("username").get.toString()
-
+      /*
       val project_types = services.GenericProjectService.findActiveProjectTypeDetailsByType()
       for (p <- project_types) {
         if (!GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).isEmpty) {
           pTypes.put(p.id.get.toString(), GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).get.generic_project_type)
         }
       }
-
+			*/
+      val project_types = GenericProjectTypeService.findAllActiveGenericProjectType2()
+      for (p <- project_types) {
+          pTypes.put(p.status_id.toString(),p.status_name)
+      }
       val users = ProgramMemberService.findAllProgramMembers(project.get.program.toString);
       var userMap = new java.util.LinkedHashMap[String, String]()
       userMap = new java.util.LinkedHashMap[String, String]()

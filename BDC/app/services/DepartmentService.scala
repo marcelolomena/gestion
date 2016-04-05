@@ -59,7 +59,7 @@ object DepartmentService extends CustomColumns {
   def findAllDepartmentListByGenrencia(genrencia: String): Seq[Departments] = {
     //printf("id for depts = " + genrencia);
     var sqlString = ""
-    sqlString = "SELECT  d.* from art_department_master d where d.report_type = 0 AND  d.is_deleted = 0 AND d.report_to=" + genrencia
+    sqlString = "SELECT  d.* from art_department_master d where d.report_type = 0 AND  d.is_deleted = 0 AND d.report_to=" + genrencia + " order by department"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Departments.department *)
     }

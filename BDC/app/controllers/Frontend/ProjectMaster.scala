@@ -228,12 +228,22 @@ object ProjectMaster extends Controller {
       for (w <- work_flows) {
         workFlow.put(w.id.get.toString(), w.project_workflow_status)
       }
-      val project_types = services.GenericProjectService.findActiveProjectTypeDetailsByType()
+      val project_types = GenericProjectTypeService.findAllActiveGenericProjectType2()
+      for (p <- project_types) {
+          pTypes.put(p.status_id.toString(),p.status_name)
+      }
+      
+      /*
+
+				val project_types = services.GenericProjectService.findActiveProjectTypeDetailsByType()
+       
       for (p <- project_types) {
         if (!GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).isEmpty) {
           pTypes.put(p.id.get.toString(), GenericProjectTypeService.findActiveGenericProjectTypeById(p.project_type.toString()).get.generic_project_type)
         }
       }
+      
+      */
 
       pmMap = new java.util.LinkedHashMap[String, String]()
       val progrma_members = ProgramMemberService.findProgramMemberForProgram(program)

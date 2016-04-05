@@ -490,7 +490,7 @@ object Program extends Controller {
   def addNewProgram() = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      var workflowStatusValues = new java.util.HashMap[String, String]()
+      var workflowStatusValues = new java.util.LinkedHashMap[String, String]()
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
         workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
       }
@@ -499,13 +499,13 @@ object Program extends Controller {
       val today = Calendar.getInstance()
       today.setTime(new Date())
       val program_code = today.get(Calendar.YEAR) + "" + (today.get(Calendar.MONTH) + 1) + "" + (Integer.parseInt(ProgramService.findProgramCount.toString) + 1).toString
-      var programSubType = new java.util.HashMap[String, String]()
+      var programSubType = new java.util.LinkedHashMap[String, String]()
       var subtype = SubTypeService.findAllSubTypeList();
       for (s <- subtype) {
         programSubType.put(s.id.get.toString, s.sub_type)
       }
 
-      var programType = new java.util.HashMap[String, String]()
+      var programType = new java.util.LinkedHashMap[String, String]()
       var programtype = ProgramTypeService.findAllProgramTypeList();
 
       for (s <- programtype) {
@@ -513,19 +513,19 @@ object Program extends Controller {
       }
 
       val divisions = DivisionService.findAllDivisions
-      var divisionMap = new java.util.HashMap[String, String]()
+      var divisionMap = new java.util.LinkedHashMap[String, String]()
       for (d <- divisions) {
         divisionMap.put(d.dId.get.toString(), d.division)
       }
       
       var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.HashMap[String, String]()
+      var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
       }
 
       // val departments = DepartmentService.findAllDepartmentS
-      var departmentsMap = new java.util.HashMap[String, String]()
+      var departmentsMap = new java.util.LinkedHashMap[String, String]()
       /*for (d <- departments) {
         departmentsMap.put(d.dId.get.toString(), d.department)
       }*/
@@ -542,7 +542,7 @@ object Program extends Controller {
       if (!divisionObj.isEmpty) {
         division_Id = divisionObj.apply(0).dId.get
       }
-      var gerenciasMap = new java.util.HashMap[String, String]()
+      var gerenciasMap = new java.util.LinkedHashMap[String, String]()
       if (division_Id == 0) {
         val gerencias = GenrenciaService.findAllGenrencias
 
@@ -845,31 +845,31 @@ object Program extends Controller {
   def editProgram(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      var workflowStatusValues = new java.util.HashMap[String, String]()
+      var workflowStatusValues = new java.util.LinkedHashMap[String, String]()
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
         workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
       }
 
-      var programSubType = new java.util.HashMap[String, String]()
+      var programSubType = new java.util.LinkedHashMap[String, String]()
       var subtype = SubTypeService.findAllSubTypeList();
       for (s <- subtype) {
         programSubType.put(s.id.get.toString, s.sub_type)
       }
 
-      var programType = new java.util.HashMap[String, String]()
+      var programType = new java.util.LinkedHashMap[String, String]()
       var programtype = ProgramTypeService.findAllProgramTypeList();
       for (s <- programtype) {
         programType.put(s.id.get.toString, s.program_type)
       }
       
       var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.HashMap[String, String]()
+      var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
       }
 
       val divisions = DivisionService.findAllDivisions
-      var divisionMap = new java.util.HashMap[String, String]()
+      var divisionMap = new java.util.LinkedHashMap[String, String]()
       for (d <- divisions) {
         divisionMap.put(d.dId.get.toString(), d.division)
       }
@@ -889,7 +889,7 @@ object Program extends Controller {
 
       //println(div.get.is_deleted + " - - - - - - - - - - ")
 
-      var departmentsMap = new java.util.HashMap[String, String]()
+      var departmentsMap = new java.util.LinkedHashMap[String, String]()
 
       val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
 
@@ -897,7 +897,7 @@ object Program extends Controller {
       if (!divisionObj.isEmpty) {
         division_Id = divisionObj.apply(0).dId.get
       }
-      var gerenciasMap = new java.util.HashMap[String, String]()
+      var gerenciasMap = new java.util.LinkedHashMap[String, String]()
       if (division_Id == 0) {
         val gerencias = GenrenciaService.findAllGenrencias
 

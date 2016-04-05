@@ -101,7 +101,7 @@ object SubTypeService extends CustomColumns {
   def findAllSubTypeList(): Seq[SubTypes] = {
     var sqlString = ""
 
-    sqlString = "SELECT * from art_program_sub_type where is_deleted = 0"
+    sqlString = "SELECT * from art_program_sub_type where is_deleted = 0 order by sub_type"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(SubTypes.subtypes *)
     }

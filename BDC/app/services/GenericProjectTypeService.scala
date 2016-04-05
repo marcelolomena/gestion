@@ -10,6 +10,7 @@ import com.sun.xml.internal.ws.wsdl.writer.document.Import
 import java.util._
 import models.GenericProjectTypes
 import models.CustomColumns
+import models.ComboStatus
 
 object GenericProjectTypeService extends CustomColumns{
 
@@ -78,6 +79,15 @@ object GenericProjectTypeService extends CustomColumns{
     } else {
       null
     }
+  }
+   
+   def findAllActiveGenericProjectType2(): Seq[ComboStatus] = {
+    
+      var sql = "select a.id status_id, t.generic_project_type status_name from art_program_generic_project_type t join art_project_type_master a on t.id=a.project_type WHERE a.states=0 and t.is_deleted=0 order by generic_project_type"
+      DB.withConnection { implicit connection =>
+        SQL(sql).as(ComboStatus.comboStatus *)
+      }
+   
   }
 
   def findGenericProjectTypeByName(genericProjectType: String): Option[GenericProjectTypes] = {

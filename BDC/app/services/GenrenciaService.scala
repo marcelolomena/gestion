@@ -46,7 +46,7 @@ object GenrenciaService extends CustomColumns {
   }
 
   def findAllGenrenciaListByDivision(devision: String): Seq[Genrencias] = {
-    var sqlString = "SELECT  d.* from art_genrencia_master d where d.report_type=0 and d.is_deleted=0 and d.report_to= " + devision
+    var sqlString = "SELECT  d.* from art_genrencia_master d where d.report_type=0 and d.is_deleted=0 and d.report_to= " + devision + " order by genrencia"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Genrencias.genrencia *)
     }
@@ -165,7 +165,7 @@ object GenrenciaService extends CustomColumns {
   
    def findAllGenrencias(): Seq[Genrencias] = {
     var sqlString = ""
-    sqlString = "SELECT  d.* from art_genrencia_master d where d.is_deleted = 0"
+    sqlString = "SELECT  d.* from art_genrencia_master d where d.is_deleted = 0 order by genrencia"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Genrencias.genrencia *)
     }

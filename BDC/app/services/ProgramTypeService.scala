@@ -153,7 +153,7 @@ object ProgramTypeService extends CustomColumns {
   def findAllProgramTypeList(): Seq[ProgramTypeMaster] = {
     var sqlString = ""
 
-    sqlString = "SELECT * from art_program_type where is_deleted = 0"
+    sqlString = "SELECT * from art_program_type where is_deleted = 0 order by program_type"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProgramTypeMaster.programtypes *)
     }

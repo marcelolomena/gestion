@@ -30,7 +30,7 @@ object DivisionService extends CustomColumns {
 
   def findAllDivisions: Seq[Divisions] = {
     var sqlString = ""
-    sqlString = "SELECT  * from art_division_master where is_deleted = 0 "
+    sqlString = "SELECT  * from art_division_master where is_deleted = 0 order by division"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Divisions.division *)
     }
