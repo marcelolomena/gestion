@@ -954,6 +954,24 @@ object SubTask extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
+  
+  def getProgramMembersFromPid(project_id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var stateString = " <option value=''>" + "Please select the member" + "</option>";
+
+        val project = ProjectService.findProjectDetails(Integer.parseInt(project_id))
+        var userList = ProgramMemberService.findProgramMembersForRole(project.get.program.toString);
+        if (!userList.isEmpty) {
+          for (u <- userList) {
+            stateString += " <option value='" + u.uid.get + "'>" + u.first_name + " " + u.last_name + "</option>"
+          }
+        }
+
+      Ok(stateString);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }  
 
   def getProgramMembersExternalFromRole(role_id: String, project_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
@@ -993,6 +1011,38 @@ object SubTask extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
+  
+  def getProgramMembersExternalFromPid(pid: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var stateString = " <option value=''>" + "Please select external contractor" + "</option>";
+
+        val project = ProjectService.findProjectDetails(Integer.parseInt(pid))
+        var externalContarctor = ProgramMemberExternalService.findProgramMembersExternalForRole(project.get.program.toString);
+        if (!externalContarctor.isEmpty) {
+          for (e <- externalContarctor) {
+            if (e.provider_type.toString().equals("46")) {
+              var rs = "NA"
+              if (!e.resource_name.isEmpty) {
+                rs = e.resource_name.get
+              }
+
+              stateString += " <option value='" + e.id.get + "'>" + e.provider_name + " - " + rs + "</option>"
+            } else {
+              var rc = 0
+              if (!e.number_of_resources.isEmpty) {
+                rc = e.number_of_resources.get
+              }
+              stateString += " <option value='" + e.id.get + "'>" + e.provider_name + " - " + rc + "</option>"
+            }
+
+          }
+        }
+
+      Ok(stateString);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }  
 
   def getServiceCatalog(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>

@@ -24,15 +24,19 @@
 	  				
 	  				*@
 	        		  <label>@Messages("assignsubtask.userRole")</label>
-	        		  
+	        		  @*
 	       		      <select name="user_role" id="user_role" class="input-xlarge width208px">
 	                    <option value=""> @Messages("assignsubtask.placeholder.userRoles")</option>
 	                  	 @for(role <- roles) {
 	                     	<option value="@role.rId" >@role.role </option>
 	                   	 }
 	                  </select> 
-		  			
- 			       	
+						*@
+				       <select name="user_role" id="user_role" class="input-xlarge width208px">
+				       		<option value=""> @Messages("assignsubtask.placeholder.userRoles")</option>
+				       		<option value="0">Interno</option>
+				        	<option value="1">Externo</option>
+				       </select> 
 				    
 				    <div class="width_full">
 				  	   <span style="float:left;width:509px" class="user-select">

@@ -443,7 +443,7 @@ GET    /update-sub-task-start-dates                                             
 GET    /assign-sub-task                                                                               controllers.Frontend.SubTask.assignSubTask(id :String)
 POST   /assign-sub-task-fo                                                                            controllers.Frontend.SubTask.saveSubTaskAllocation
 POST   /assign-sub-task-external                                                                      controllers.Frontend.SubTask.saveSubTaskAllocationExternal
-GET    /allocation-list                                                                              controllers.Frontend.SubTask.allocationList(id :String)
+GET    /allocation-list                                                                               controllers.Frontend.SubTask.allocationList(id :String)
 GET    /allocation-list-jira/:id                                                                      controllers.Frontend.SubTaskJira.allocationList(id :String)
 GET    /update-hours                                                                                  controllers.Frontend.SubTask.updateHours(id :String,hours:String)
 GET    /delete-allocation                                                                             controllers.Frontend.SubTask.deleteAllocation(id :String)
@@ -473,7 +473,8 @@ GET    /get-program-members-from-role/$role_id<[A-Za-z0-9_-]+>/$project_id<[A-Za
 GET    /get-program-members-external-from-role/$role_id<[A-Za-z0-9_-]+>/$project_id<[A-Za-z0-9_-]+>   controllers.Frontend.SubTask.getProgramMembersExternalFromRole(role_id:String, project_id:String)
 GET    /get-service-catalog/:id                                                                       controllers.Frontend.SubTask.getServiceCatalog(id:String)
 GET    /get-service-catalog-discipline/:id                                                            controllers.Frontend.SubTask.getServiceCatalogDiscipline(id:String)
-
+GET	   /get-program-members-external-from-projectid/$pid<[A-Za-z0-9_-]+>							  controllers.Frontend.SubTask.getProgramMembersExternalFromPid(pid:String)
+GET    /get-program-members-from-projectid/$pid<[A-Za-z0-9_-]+>										  controllers.Frontend.SubTask.getProgramMembersFromPid(pid:String)
 GET    /update-task-dates                                                                             controllers.Frontend.SubTask.updateTaskDates(sub_task_id:String,end_date:String)
 GET    /update-task-start-dates                                                                       controllers.Frontend.SubTask.updateTaskStartDates(sub_task_id:String,start_date:String)
 

@@ -665,7 +665,7 @@ function renderAssignSubTask() {
 										if (roleId == null || roleId == "") {
 											roleId = 0;
 										}
-
+										/*
 										if (roleId == 46 || roleId == 47) {
 											var url1 = "/get-program-members-external-from-role/"
 													+ roleId
@@ -679,6 +679,16 @@ function renderAssignSubTask() {
 													+ $("#subtask_project_id")
 															.val();
 										}
+										*/
+										if (roleId == 1) {
+											var url1 = "/get-program-members-external-from-projectid/"
+													+ $("#projectId")
+															.val();
+										} else {
+											var url1 = "/get-program-members-from-projectid/"
+													+ $("#projectId")
+															.val();
+										}										
 
 										$(".loader").css("display", "block");
 										$.ajax({
@@ -1183,7 +1193,8 @@ function assignSubTaskFo() {
 			// alert(max_hour +" - "+ input_value +" - "+ (max_hour >=
 			// input_value) );
 			var role_id = $("#user_role").val();
-			if (role_id == 46 || role_id == 47) {
+			//if (role_id == 46 || role_id == 47) {
+			if (role_id == 1) {				
 				if (max_hour >= input_value) {
 					$
 							.ajax({

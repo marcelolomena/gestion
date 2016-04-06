@@ -104,6 +104,15 @@ object ProgramMemberExternalService {
       result
     }
   }
+  
+  def findProgramMembersExternalForRole(program_id: String): Seq[ProgramMembersExternal] = {
+    var sql = "SELECT * FROM art_program_members_external  WHERE is_deleted = 0 AND program_id=" + program_id.trim() 
+    DB.withConnection { implicit connection =>
+      val result = SQL(sql).as(ProgramMembersExternal.programMembersExternal *)
+      result
+    }
+  }
+  
   /**
    * delete stage
    */

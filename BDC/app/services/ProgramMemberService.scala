@@ -141,6 +141,14 @@ object ProgramMemberService extends CustomColumns {
       SQL(sqlString).as(Users.user *)
     }
   }
+  
+  def findProgramMembersForRole(program_id: String): Seq[Users] = {
+    var sqlString = ""
+    sqlString = "Select * from art_user where uid IN (SELECT  member_id from art_program_members where is_active=0 AND program_id=" + program_id + ") order by first_name asc";
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Users.user *)
+    }
+  }  
 
   def findResponsibleProgramMember(program_id: String, role_id: String): Seq[ProgramMembers] = {
     var sqlString = ""
