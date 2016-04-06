@@ -32,9 +32,9 @@
 			  	   <a href="/project-details/@project.get.pId">
 			  	   		<span class="left">@if(project.get.project_name.length()>55){@project.get.project_name.substring(0, 55) ...}else{@project.get.project_name}</span>
 			  	   </a>
-			  	 
+			  	@if(TaskService.permisosTarea(taskDetail.get.tId.get.toString,session.get("uId").get)==1){
 			 		<a href="/task-edit/@taskDetail.get.tId" style="float:right"><span id="et_@taskDetail.get.tId"class="edit-project edit-icon edit-text edit_tasks_details " style="float:right;margin-right:27px">@Messages("employee.edit")</span></a>
-			 
+			 	}
 			  	  <span  class=""></span>
 			  </h3>
 			 
@@ -129,14 +129,18 @@
 						<tr>
 							<td class="table_header">@Messages("programDetails.actualcost")</td>
 							<td class="p_values width160px"><span id="ac"></span></td>
+							@if(TaskService.permisosTarea(taskDetail.get.tId.get.toString,session.get("uId").get)==1){
 							<td class="table_header">@Messages("programDetails.estimatetocomplete")</td>
-							<td class="p_values width160px"><span id="etc"></span></td>							
+							<td class="p_values width160px"><span id="etc"></span></td>	
+							}						
 						</tr>
 						<tr>
 							<td class="table_header">@Messages("programDetails.ha")</td>
-							<td class="p_values width160px"><span id="ha"></span></td>						
+							<td class="p_values width160px"><span id="ha"></span></td>	
+							@if(TaskService.permisosTarea(taskDetail.get.tId.get.toString,session.get("uId").get)==1){					
 							<td class="table_header">@Messages("programDetails.estimetcopmletion")</td>
 							<td class="p_values width160px"><span id="eac"></span></td>
+							}
 						</tr>
 						<tr>
 							<td class="table_header">@Messages("programDetails.scheduledvar")</td>
@@ -232,9 +236,10 @@
 						    <div class="tabbed_1_left width956px" id="flot-placeholder">
 						    </div>
 						 </div>
+						 
 						 <div class="team_task_div">
 						 </div>
-				    
+				    	
 				    	
 					} else{
 					<div class="no-subtask">@Messages("projectTaskDetails.nosubTaskAvailable")</div>

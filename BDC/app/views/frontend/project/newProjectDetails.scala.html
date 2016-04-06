@@ -27,8 +27,7 @@
 		   <h3 id="productNm" class="parent-new-h3">
 		   		<span class="parent-icon"> &#60; </span>
 			    <a href="/program-details/@project.get.program"><span class="left width700px">@if(ProgramService.findProgramMasterDetailsById(project.get.program.toString()).get.program_name.length>120){@ProgramService.findProgramMasterDetailsById(project.get.program.toString()).get.program_name.substring(0, 120) ...}else{@ProgramService.findProgramMasterDetailsById(project.get.program.toString()).get.program_name}</span></a>
-			    
-			    @if(utils.UserAccess.checkAccess(req,"project_update") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString)){
+			    @if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){
 				   	<a href="/edit-project/@project.get.pId" style="float:right;margin-right:45px;"> 
 				 		<span class="edit-project edit-icon edit-text" style="margin-right: -11px;">@Messages("programDetails.edit") </span>
 				 	</a>
@@ -80,7 +79,7 @@
 										<input type="text" disabled="disabled"  value="0" maxlength="8"  class="planned_hours" readonly="readonly"/>
 									}
 									</span>
-									@if(utils.UserAccess.checkAccess(req,"project_plan_hours")){
+									@if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){
 										<span class="edit-project-hours"></span>
 									}
 				  			</td>
@@ -129,14 +128,18 @@
 						<tr>
 							<td class="table_header">@Messages("programDetails.actualcost")</td>
 							<td class="p_values width160px"><span id="ac"></span></td>
+							@if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){
 							<td class="table_header">@Messages("programDetails.estimatetocomplete")</td>
-							<td class="p_values width160px"><span id="etc"></span></td>							
+							<td class="p_values width160px"><span id="etc"></span></td>		
+							}					
 						</tr>
 						<tr>
 							<td class="table_header">@Messages("programDetails.ha")</td>
-							<td class="p_values width160px"><span id="ha"></span></td>						
+							<td class="p_values width160px"><span id="ha"></span></td>	
+							@if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){					
 							<td class="table_header">@Messages("programDetails.estimetcopmletion")</td>
 							<td class="p_values width160px"><span id="eac"></span></td>
+							}
 						</tr>
 						<tr>
 							<td class="table_header">@Messages("programDetails.scheduledvar")</td>

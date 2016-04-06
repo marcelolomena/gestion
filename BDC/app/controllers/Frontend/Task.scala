@@ -244,7 +244,7 @@ object Task extends Controller {
         deliverableMap.put(del.id.get.toString(), del.deliverable.toString())
 
     }
-
+    var isErrorSQL = false
     var catalougeMap = new java.util.HashMap[String, String]()
     var catalaogues = ServiceCatalogueService.getServiceCatalogue
     for (c <- catalaogues) {
@@ -289,7 +289,7 @@ object Task extends Controller {
           }else{
             
             var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-            var isErrorSQL = false
+            
             println("con plantilla:" + success.project_mode)
             println("pert:" + success.pert)
             println("plan_start_date:" + formattedDate.format(success.plan_start_date))
@@ -303,6 +303,7 @@ object Task extends Controller {
                   formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
 
             }else if(success.pert==1){//pert dias corridos
+              try {
               val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(false,formattedDate.format(success.plan_start_date),
                   success.project_mode.toString(),
                   "",
@@ -310,6 +311,10 @@ object Task extends Controller {
                   ""
                   )
                   println("errorCode:" + errorCode)
+              }
+                catch{
+                case e: SQLServerException  => isErrorSQL = true
+              }  
             }else if(success.pert==2){ //pert dias habiles
               try {
 
@@ -330,65 +335,23 @@ object Task extends Controller {
           /**
            * Activity log
            */
+          if(isErrorSQL){
+            println("error")
+            TaskService.DeleteTask(latest_task.toInt)
+            var newform: play.api.data.Form[models.TaskMaster] = null
+            newform = theForm.withError("project_mode","Plantilla no tiene duracion, seleccione otra plantilla o seleccione Sin Pert")
+            BadRequest(views.html.frontend.task.newTask(newform, project, username, users, descipline, userMap, stageMap, userRoleMap, deliverableMap, pTypes))
+          }else{
+            println("no error")
           val act = Activity(ActivityTypes.Task.id, "New task created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), latest_task.toInt)
           Activity.saveLog(act)
 
           Redirect(routes.ProjectMaster.projectDetails(id))
+          }
         }
       })
       
   }
-  /*
-    
-            if(success.pert==0){ //con plantilla pero sin pert
-
-              SubTaskServices.insertSubTaskFromTemplate(formattedDate.format(success.plan_start_date),
-                  formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
-
-            }else if(success.pert==1){//pert dias corridos
-              val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(false,formattedDate.format(success.plan_start_date),
-                  success.project_mode.toString(),
-                  "",
-                  latest_task.toString(),
-                  ""
-                  )
-                  println("errorCode:" + errorCode)
-            }else if(success.pert==2){ //pert dias habiles
-              try {
-
-              	val errorCode=SubTaskServices.insertSubTaskFromTemplatePert(true,formattedDate.format(success.plan_start_date),
-                	success.project_mode.toString(),
-                	"",
-                	latest_task.toString(),
-                  ""
-                  )
-                  println("errorCode:" + errorCode) 
-              }
-              } catch{
-                  case e: SQLServerException  => isErrorSQL = true
-              }
-            }
-          
-
-          /**
-           * Activity log
-           */
-        if(isErrorSQL){
-          Ok("error")
-        }
-        else{
-          
-          val act = Activity(ActivityTypes.Task.id, "New task created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), latest_task.toInt)
-          Activity.saveLog(act)
-
-          Redirect(routes.ProjectMaster.projectDetails(id))
-        }
-        }
-      }
-      )
-      })
-  }
-*/
   /**
    * Vew task for edit
    * id - task id

@@ -58,7 +58,7 @@
 	  		<span class="left"> @Messages("programDetails.proogramlist")</span>
   	  	</a>
   	  	
-  	  	@if(utils.UserAccess.checkAccess(req,"update_program")){
+  	  	@if(ProgramService.permisosPrograma(program.get.program_id.get.toString,session.get("uId").get)==1){
 	  	  	<a href="/edit-program/@program.get.program_id" style="float:right;margin-right: 12px;"> 
 		 		<span class="edit-project edit-icon edit-text">@Messages("programDetails.edit") </span>
 		 	</a>
@@ -290,7 +290,7 @@
 						<tr>
 							<td class="table_header">@Messages("programDetails.actualcost")</td>
 							<td class="p_values width160px"><span id="ac"></span></td>
-							@if(utils.UserAccess.isAuthenticatedProgram(req,program.get.program_id.get.toString)){
+							@if(ProgramService.permisosPrograma(program.get.program_id.get.toString,session.get("uId").get)==1){
 							<td class="table_header">@Messages("programDetails.estimatetocomplete")</td>
 							<td class="p_values width160px"><span id="etc"></span></td>
 							}		
@@ -299,7 +299,7 @@
 						<tr>
 							<td class="table_header">@Messages("programDetails.ha")</td>
 							<td class="p_values width160px"><span id="ha"></span></td>		
-							@if(utils.UserAccess.isAuthenticatedProgram(req,program.get.program_id.get.toString)){				
+							@if(ProgramService.permisosPrograma(program.get.program_id.get.toString,session.get("uId").get)==1){				
 							<td class="table_header">@Messages("programDetails.estimetcopmletion")</td>
 							<td class="p_values width160px"><span id="eac"></span></td>
 							}

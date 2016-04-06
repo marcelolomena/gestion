@@ -1079,6 +1079,12 @@ object ProjectService extends CustomColumns {
       result
     }
   }
+  def permisosProyecto(idProyecto: String, user_id: String) = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.permisos 2,{idProyecto},{user_id}").on(
+        'idProyecto -> idProyecto.toInt, 'user_id -> user_id.toInt).executeQuery().as(scalar[Int].single)
+    }
+  }
 
   /*  //Expected advance percentage AVE%
   def getTaskAVExpectedPercentage(task_id: String) = {

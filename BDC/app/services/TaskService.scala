@@ -1664,6 +1664,12 @@ SELECT ISNULL(SUM(hours),0) hours FROM art_timesheet_external WHERE  task_id="""
       result
     }
   }
+  def permisosTarea(idTarea: String, user_id: String) = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.permisos 3,{idTarea},{user_id}").on(
+        'idTarea -> idTarea.toInt, 'user_id -> user_id.toInt).executeQuery().as(scalar[Int].single)
+    }
+  }
 
   /*  //Expected advance percentage AVE%
   def getTaskAVExpectedPercentage(task_id: String) = {

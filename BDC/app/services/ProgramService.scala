@@ -1694,4 +1694,10 @@ ON A.sub_task_id=B.sub_task_id
         'uid -> uid.toInt, 'periodo -> periodo.toInt).executeQuery().as(ProgramUserCapacity.programUserCapacity *)
     }
   }
+  def permisosPrograma(idPrograma: String, user_id: String) = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.permisos 1,{idPrograma},{user_id}").on(
+        'idPrograma -> idPrograma.toInt, 'user_id -> user_id.toInt).executeQuery().as(scalar[Int].single)
+    }
+  }
 }
