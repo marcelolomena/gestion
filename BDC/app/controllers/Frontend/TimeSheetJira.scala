@@ -635,234 +635,25 @@ object TimeSheetJira extends Controller {
   }
 
   def submitNewBookedTimeTimeSheet() = Action { implicit request =>
-    request.session.get("username").map { user =>
-      var node = new JSONObject()
-
+      //var node = new JSONObject()
+      var FormattedDATE2 = new SimpleDateFormat("yyyy-MM-dd")
       var user_id = request.body.asFormUrlEncoded.get("user_id")(0);
       var sub_task = request.body.asFormUrlEncoded.get("sub_task_id")(0);
       var user_type = Integer.parseInt(request.body.asFormUrlEncoded.get("user_type")(0));
-
+      var fecha = request.body.asFormUrlEncoded.get("fecha")(0);
+      var rec_date = FormattedDATE2.parse(fecha)
+      var actual_hour = BigDecimal(request.body.asFormUrlEncoded.get("hours")(0))
       val sub_task_detail = SubTaskServices.findSubTaskDetailsBySubtaskId(sub_task)
-      sub_task_detail match {
-        case None =>
-          node.put("status", "fail")
-        case Some(s: SubTasks) =>
-          var lCount = request.body.asFormUrlEncoded.get("curr_hours[]").size;
-          var j = 0;
+      val project_id = TaskService.findTaskDetailsByTaskId(sub_task_detail.get.task_id).get.pId
+      val planDetails = Timesheet(None, 1, Integer.parseInt(sub_task), sub_task_detail.get.task_id, Integer.parseInt(user_id), project_id, rec_date, "ADDED BY PROJECT MANAGER", actual_hour.toDouble, Option(1))
+      val last = TimesheetService.addTimesheet(planDetails);
+      /**
+         * Activity log
+         */
+        val act = Activity(ActivityTypes.Timesheet.id, "Timesheet book time entry updated by Jira", new Date(), 1202, last.toInt)
+        Activity.saveLog(act)
+      Ok(last.toString())
 
-          var FormattedDATE = new SimpleDateFormat("dd-MM-yyyy")
-          var FormattedDATE2 = new SimpleDateFormat("yyyy-MM-dd")
-          val project_id = TaskService.findTaskDetailsByTaskId(s.task_id).get.pId
-
-          while (lCount - 1 >= 0) {
-            if (!request.body.asFormUrlEncoded.get("curr_hours[]").lift(j).isEmpty || StringUtils.isNotBlank(request.body.asFormUrlEncoded.get("curr_hours[]").lift(j).get)) {
-              //
-              if (StringUtils.isNotEmpty(request.body.asFormUrlEncoded.get("curr_hours[]").lift(j).get.trim())) {
-                //println(request.body.asFormUrlEncoded.get("curr_hours[]").lift(j).get)    
-                var rec_hour = request.body.asFormUrlEncoded.get("curr_hours[]").lift(j).get.trim().toString().split(":")
-                var actual_hour: Double = 0
-                //var actual_hour = ""
-                /*                var df = new DecimalFormat("00.00");
-                var hour: Double = rec_hour(0).toString().toDouble
-                var minutes: Double = 0
-                if (rec_hour(1).toString().toDouble > 30) {
-                  minutes = rec_hour(1).toString().toDouble % (24 * 60) / 60
-                  println("minutes------------" + minutes)
-                  println("hour---------" + hour)
-                  actual_hour = hour + minutes
-                } else {
-                  
-                }
-*/
-                var actual_hour1 = ""
-                actual_hour1 = request.body.asFormUrlEncoded.get("curr_hours[]").lift(j).get.trim().toString().replace(":", ".").toString()
-
-                //println(df.format(actual_hour))
-                var df = new DecimalFormat("00.00");
-                var new_date = FormattedDATE2.format(FormattedDATE.parse(request.body.asFormUrlEncoded.get("curr_date[]").lift(j).get.trim().toString()))
-                var rec_date = FormattedDATE2.parse(new_date)
-                //println(actual_hour1 + "-----------")
-
-                var new_hour: Double = actual_hour1.toString().replace(".", "-").split("-")(0).toDouble
-                var new_min: Double = actual_hour1.toString().replace(".", "-").split("-")(1).toDouble
-                //println(new_hour + "new_hour")
-                //println(new_min + "new_min")
-                //new_min = new_min * 100 / 60
-                // var finalHr = new_hour + new_min / 100
-
-                var final_hour_string: Double = 0
-                if (new_min < 10) {
-                  //final_hour_string = ("0" + new_min).toString().toDouble
-                  new_min = new_min * 100 / 60
-
-                  actual_hour = new_hour + Math.ceil(new_min) / 100
-                } else {
-
-                  final_hour_string = new_min.toDouble
-                  final_hour_string = final_hour_string * 100 / 60
-                  if (new_hour < 10) {
-                    new_hour = ("0" + new_hour).toDouble
-                  }
-                  actual_hour = (new_hour.toInt + "." + Math.ceil(final_hour_string.toDouble).toInt).toDouble
-                }
-
-                /**
-                 * Internal user book time time sheet..
-                 */
-                if (user_type == 1) {
-                  val timsheets = TimesheetService.getUserTimesheets(Integer.parseInt(user_id), new_date)
-
-                  if (timsheets.size > 0) {
-                    var isAvailable = false
-                    var previousBookedHour: Double = 0
-                    var id = 0
-                    for (t <- timsheets) {
-                      if (t.sub_task_id == Integer.parseInt(sub_task)) {
-                        isAvailable = true
-                        previousBookedHour = t.hours.toDouble
-                        id = t.Id.get
-                      }
-                    }
-                    val hour: Double = previousBookedHour + actual_hour.toDouble
-
-                    if (isAvailable) {
-                      /*
-                       * update existing time sheet entry
-                       */
-                      if (id == 0) {
-                        id = timsheets(0).Id.get.toInt
-                      }
-                      //val id = timsheets(0).Id.get.toString()
-                      if (hour > 24.01) {
-                        node.put("status", "fail")
-                      } else {
-                        TimesheetService.updateTimesheetBookTimeDirect(id.toString(), hour)
-                        node.put("status", "success")
-                        /**
-                         * Activity log
-                         */
-                        val act = Activity(ActivityTypes.Timesheet.id, "Timesheet book time entry updated by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id)
-                        Activity.saveLog(act)
-                      }
-
-                    } else {
-
-                      /*
-                       * update new time sheet entry
-                       */
-                      if (actual_hour.toDouble > 24.01) {
-                        node.put("status", "fail")
-                      } else {
-                        val planDetails = Timesheet(None, 1, Integer.parseInt(sub_task), s.task_id, Integer.parseInt(user_id), project_id, rec_date, "ADDED BY PROJECT MANAGER", actual_hour.toDouble, Option(1))
-                        val last = TimesheetService.addTimesheet(planDetails);
-                        node.put("status", "success")
-
-                        /**
-                         * Activity log
-                         */
-                        val act = Activity(ActivityTypes.Timesheet.id, "Timesheet book time entry updated by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
-                        Activity.saveLog(act)
-                      }
-
-                    }
-
-                  } else {
-
-                    if (actual_hour.toDouble > 24.01) {
-                      node.put("status", "fail")
-                    } else {
-                      val planDetails = Timesheet(None, 1, Integer.parseInt(sub_task), s.task_id, Integer.parseInt(user_id), project_id, rec_date, "ADDED BY PROJECT MANAGER", actual_hour.toDouble, Option(1))
-                      val last = TimesheetService.addTimesheet(planDetails);
-                      node.put("status", "success")
-                    }
-
-                  }
-
-                  val new_hours = TimesheetService.getFormatedAvailableHoursforUser(user_id, sub_task)
-                  node.put("new_hours", new_hours)
-                }
-
-                /**
-                 * External User timesheet
-                 */
-                if (user_type == 0) {
-                  val timsheets = TimesheetService.getExternalUserTimesheets(Integer.parseInt(user_id), new_date)
-
-                  if (timsheets.size > 0) {
-                    var isAvailable = false
-                    var previousBookedHour: Double = 0
-                    var id = 0
-                    for (t <- timsheets) {
-
-                      if (t.sub_task_id == Integer.parseInt(sub_task)) {
-                        isAvailable = true
-                        previousBookedHour = t.hours.toDouble
-                        id = t.Id.get
-                      }
-                    }
-                    val hour: Double = previousBookedHour + actual_hour.toDouble
-                    if (isAvailable) {
-                      /*
-                       * update existing time sheet entry
-                       */
-
-                      if (id == 0) {
-                        id = timsheets(0).Id.get.toInt
-                      }
-                      if (hour > 24.01) {
-                        node.put("status", "fail")
-                      } else {
-                        TimesheetService.updateTimesheetBookTimeDirectExternal(id.toString(), hour)
-                        node.put("status", "success")
-                      }
-                    } else {
-                      /*
-                       * update new time sheet entry
-                       */
-                      if (actual_hour.toDouble > 24.01) {
-                        node.put("status", "fail")
-                      } else {
-                        val planDetails = TimesheetExternal(None, 1, Integer.parseInt(sub_task), s.task_id, Integer.parseInt(user_id), project_id, rec_date, "ADDED BY PROJECT MANAGER", actual_hour.toDouble)
-                        val last = TimesheetService.addTimesheetExternal(planDetails);
-                        node.put("status", "success")
-
-                      }
-
-                    }
-                  } else {
-
-                    if (actual_hour.toDouble > 24.01) {
-                      node.put("status", "fail")
-                    } else {
-                      val planDetails = TimesheetExternal(None, 1, Integer.parseInt(sub_task), s.task_id, Integer.parseInt(user_id), project_id, rec_date, "ADDED BY PROJECT MANAGER", actual_hour.toDouble)
-                      val last = TimesheetService.addTimesheetExternal(planDetails);
-                      node.put("status", "success")
-                    }
-
-                  }
-
-                  val new_hours = TimesheetService.getFormattedAvailableHoursforExternalUser(user_id, sub_task)
-                  node.put("new_hours", new_hours)
-
-                }
-
-              }
-
-              lCount = lCount - 1;
-              j = j + 1;
-            }
-
-          }
-
-          node.put("user_id", user_id)
-
-      }
-
-      Ok(node.toString())
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
-    }
   }
 
   def updateAllocationHours(sub_task_allocation: String, input_hours: String, allocation_type: String) = Action { implicit request =>

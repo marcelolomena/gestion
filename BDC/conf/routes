@@ -402,6 +402,7 @@ GET    /daleteTimesheetBookTime                                                 
 GET    /updateTimesheetBookTime                                                                       controllers.Frontend.TimeSheet.updateTimesheetBookTime
 GET    /new-book-time-timesheet                                                                       controllers.Frontend.TimeSheet.newBookedTimeTimeSheet(sub_task :String,user:String,user_type:String,start_date:String,end_date:String)
 POST   /new-book-time-timesheet                                                                       controllers.Frontend.TimeSheet.submitNewBookedTimeTimeSheet
+POST   /new-book-time-timesheet-jira                                                                  controllers.Frontend.TimeSheetJira.submitNewBookedTimeTimeSheet
 
 GET    /time-booked-external                                                                          controllers.Frontend.TimeSheet.timeBookedExternal(sub_task :String,user:String,user_hour:String)
 GET    /get-subtask-document-listing                                                                  controllers.Frontend.TimeSheet.getDocumentListForSubtask(subtask:String)   
