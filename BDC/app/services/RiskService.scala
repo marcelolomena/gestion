@@ -160,9 +160,9 @@ object RiskService extends CustomColumns {
     val proyectos = ProjectService.findProjectIdListForProgramId(parent_id)
     for(pr <- proyectos){
       val tareas = TaskService.findAllTaskIdListByProjectId(pr.toString())
-      sqlString = sqlString + " OR parent_id=" + pr.toString()+" "
+      sqlString = sqlString + " OR (parent_id=" + pr.toString()+" AND parent_type=1) "
       for(ta <- tareas){
-        sqlString = sqlString + " OR parent_id=" + ta.toString()+" "
+        sqlString = sqlString + " OR (parent_id=" + ta.toString()+" AND parent_type=2) "
       }
     }
     sqlString = sqlString + " )"

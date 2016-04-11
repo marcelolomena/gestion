@@ -10,6 +10,7 @@
 			<span class="member header">@Messages("programdetails.event")</span>
 			<span class="member header">@Messages("programdetails.impact")</span>
 			<span class="member header">@Messages("programdetails.responsible")</span>
+			<span class="member header">Nivel</span>
 			<span class="active header">@Messages("program.action")</span>
 		</li>
 		@for( (p,index) <- risks.zipWithIndex){
@@ -20,6 +21,12 @@
 				<span class="member">@p.event</span>
 				<span class="member">@p.imapct </span>
 				<span class="member">@UserService.findUserDetails(p.responsible).get.first_name.substring(0,1).&nbsp;@UserService.findUserDetails(p.responsible).get.last_name </span>
+				<span class="member">
+				@if(p.parent_type.get==0){Programa}
+				@if(p.parent_type.get==1){Proyecto}
+				@if(p.parent_type.get==2){Tarea}
+				@println(p.parent_type.get)
+				</span>
 				@*<span class="member">
 				@if(!p.risk_state.isEmpty){
 					@{
