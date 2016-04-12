@@ -379,8 +379,6 @@ object TaskJira extends Controller {
    */
   def updateTask(id: String) = Action { implicit request =>
 
-    val utype = Integer.parseInt(request.session.get("utype").get.toString())
-    username = request.session.get("username").get.toString()
     val task = TaskService.findTaskDetailsByTaskId(Integer.parseInt(id))
     val project = ProjectService.findProject(task.get.pId)
 
