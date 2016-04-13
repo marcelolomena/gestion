@@ -20,6 +20,7 @@
 	"squel": "latest",
 	"passport": "latest",
     "passport-local": "latest",
-	"sequelize": "latest"
+	"sequelize": "latest",
+	"express-flash": "0.0.2"
   }
 }

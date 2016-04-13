@@ -12,12 +12,6 @@ module.exports = function(passport){
     });
 
     passport.deserializeUser(function(id, done) {
-		/*
-        User.findById(id, function(err, user) {
-            console.log('deserializing user:',user);
-            done(err, user);
-        });
-		*/
 		User.find({where: {id: user.id}}).success(function(user){
                 done(null, user);
         }).error(function(err){
@@ -25,16 +19,6 @@ module.exports = function(passport){
         });		
     });
 	
-	// For Authentication Purposes
-	passport.use(new LocalStrategy(
-			function(username, password, done){
-					User.find({where: {username: username}}).success(function(user){
-							passwd = user ? user.password : ''
-							isMatch = User.validPassword(password, passwd, done, user)
-					});
-			}
-	));	
-
     // Setting up Passport Strategies for Login and SignUp/Registration
     login(passport);
     signup(passport);
