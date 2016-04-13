@@ -197,10 +197,26 @@ object SubTask extends Controller {
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
       val alerts = RiskService.findUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(Integer.parseInt(employeeid.toString()))
+     
+      var consumos = new JSONArray();
+      for(a <- availability)
+      {
+         var consumo = new JSONObject();
+         consumo.put("name",a.fecha.toString())
+         consumo.put("data",a.horas)
+         consumos.put(consumo)
+      }
+      /*
+      var consumos = new JSONObject();
+      for(a <- availability)
+      {
+         consumos.put(a.fecha.toString(),a.horas)
+      }
+      */
       val program_task=ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
       // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, availability, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, consumos, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       
       
       

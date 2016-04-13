@@ -810,7 +810,7 @@ section.slider {
 }
 
 .dash_detail_1_right {
-	width: 278px;
+	width: 638px;
 	float: right;
 	padding: 0;
 	margin: 0;
@@ -820,7 +820,7 @@ section.slider {
 }
 
 .dash_detail_1_right h3 {
-	width: 268px;
+	width: 608px;
 	height: 28px;
 	float: left;
 	padding: 0 0 0 10px;
@@ -866,7 +866,7 @@ section.slider {
 }
 
 .dash_right_data_2 {
-	width: 278px;
+	width: 608px;
 	float: left;
 	padding: 4px 0;
 	margin: 0;
@@ -874,7 +874,7 @@ section.slider {
 }
 
 .dash_right_data_2:hover {
-	width: 278px;
+	width: 608px;
 	float: left;
 	padding: 4px 0;
 	margin: 0;

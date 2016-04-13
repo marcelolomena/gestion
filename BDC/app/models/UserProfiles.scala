@@ -32,3 +32,13 @@ object UserAvailability extends CustomColumns {
       }
   }
 }
+case class UserConsumo(fecha : Date, horas : Double)
+object UserConsumo extends CustomColumns {
+
+  val userconsumo = {
+    get[Date]("fecha") ~
+      get[Double]("horas")  map {
+        case fecha ~ horas  => UserConsumo(fecha, horas)
+      }
+  }
+}

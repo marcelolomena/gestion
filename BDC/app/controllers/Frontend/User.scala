@@ -40,6 +40,7 @@ import services.SubTaskServices
 import models.ProgramMembers
 import services.ProgramMemberService
 import org.json.JSONObject
+import org.json.JSONArray
 import models.UserProfileMapping
 import services.UserRoleService
 import services.ProjectService
@@ -64,10 +65,28 @@ object User extends Controller {
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
       val alerts = RiskService.findUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
+      
+      var consumos = new JSONArray();
+      for(a <- availability)
+      {
+         var consumo = new JSONObject();
+         consumo.put(a.fecha.toString(),a.horas)
+         consumos.put(consumo)
+      }
+      println(consumos)
+      
+      /*
+      var consumos = new JSONObject();
+      for(a <- availability)
+      {
+         consumos.put(a.fecha.toString(),a.horas)
+      }
+      */
       val program_task = ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
+      
       // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, availability, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, consumos, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())

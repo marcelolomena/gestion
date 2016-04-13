@@ -5835,7 +5835,7 @@ form button {
 }
 .risk-alerts-header{
 	float: left;
-    margin-left: 20px;
+    /*margin-left: 20px;*/
     margin-top: 15px;
     width: 290px;
 }

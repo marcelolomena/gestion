@@ -3,6 +3,7 @@ package services
 import controllers.UserProfile
 import models.UserProfiles
 import models.UserAvailability
+import models.UserConsumo
 import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
@@ -104,10 +105,10 @@ object UserProfileServices {
     }
   }
 
-  def findAvailability(uid: Integer): Seq[UserAvailability] = {
+  def findAvailability(uid: Integer): Seq[UserConsumo] = {
     DB.withConnection { implicit connection =>
       SQL("EXEC art.disponibilidad  {uid}").on(
-        'uid -> uid.toInt).executeQuery().as(UserAvailability.useravailabity *)
+        'uid -> uid.toInt).executeQuery().as(UserConsumo.userconsumo *)
     }
   }
 }
