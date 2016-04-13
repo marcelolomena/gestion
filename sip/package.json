@@ -15,6 +15,12 @@
 	"express-session": "^1.7.6",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+	"bcryptjs": "latest",
+	"squel": "latest",
+	"passport": "latest",
+    "passport-local": "latest",
+	"sequelize": "latest",
+	"express-flash": "0.0.2"
   }
 }

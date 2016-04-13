@@ -24,9 +24,9 @@ var request;
 
     var config = {
         user: 'pi',
-        password: '123momia',
+        password: '123momiaes',
         driver: 'tedious',
-        server: 'trantor', 
+        server: 'zrismart', 
         database: 'art_live',
         pool: {
             max: 10,
