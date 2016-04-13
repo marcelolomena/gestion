@@ -1,0 +1,18 @@
+{
+"development": {
+"username": "biometria",
+"password": "biometria123",
+"database": "art_live",
+"host": "200.14.166.182",
+"dialect": "mssql",
+"port": "1433"
+},
+"production": {
+"username": "DATABASE_USERNAME",
+"password": "DATABASE_PASSWORD",
+"database": "DATABASE_NAME",
+"host": "PRODUCTION_DATABASE_URL",
+"dialect": "postgres",
+"port": "DATABASE_PORT"
+}
+}

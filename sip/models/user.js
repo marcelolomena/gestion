@@ -1,14 +1,36 @@
-//var bcrypt = require('bcrypt-nodejs')
-var bcrypt = require('bcryptjs')
+"use strict";
+var bcrypt = require('bcryptjs');
 
 module.exports = function(sequelize, DataTypes) {
         var User = sequelize.define('User', {
-                username: {type: DataTypes.STRING, unique: true, validate: {notNull: true, notEmpty: true}},
-                password: {type: DataTypes.STRING, validate: {notNull: true, notEmpty: true}},
-				firstName: DataTypes.STRING,
-				lastName: DataTypes.STRING,
-				email: DataTypes.STRING
-        },
+				uid: {primaryKey: true, type: DataTypes.INTEGER },
+				uname: DataTypes.STRING,
+				password: DataTypes.STRING,
+				profile_image: DataTypes.STRING,
+				first_name: DataTypes.STRING,
+				last_name: DataTypes.STRING,
+				division: DataTypes.INTEGER,
+				gerencia: DataTypes.INTEGER,
+				department: DataTypes.INTEGER,
+				email: DataTypes.STRING,
+				birth_date: DataTypes.DATE,
+				office_number: DataTypes.STRING,
+				joining_date: DataTypes.DATE,
+				isadmin: DataTypes.INTEGER,
+				isverify: DataTypes.INTEGER,
+				verify_code: DataTypes.STRING,
+				verify_date: DataTypes.DATE,
+				status: DataTypes.INTEGER,
+				added_date: DataTypes.DATE,
+				rut_number: DataTypes.STRING,
+				rate_hour: DataTypes.INTEGER,
+				contact_number: DataTypes.STRING,
+				user_type: DataTypes.INTEGER,
+				work_hours: DataTypes.INTEGER,
+				bonus_app: DataTypes.INTEGER,
+				designation: DataTypes.INTEGER,
+				user_profile: DataTypes.STRING
+        },{timestamps: false,tableName: 'art_user'},
         {
                 classMethods: {
                         validPassword: function(password, passwd, done, user){
@@ -22,22 +44,8 @@ module.exports = function(sequelize, DataTypes) {
                                 })
                         }
                 }
-        },
-        {
-                dialect: 'mssql'
         }
 );
-
-User.hook('beforeCreate', function(user, fn){
-        var salt = bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
-                return salt
-        });
-        bcrypt.hash(user.password, salt, null, function(err, hash){
-                if(err) return next(err);
-                user.password = hash;
-                return fn(null, user)
-        });
-})
         
- return User        
+return User        
 }

@@ -99,6 +99,7 @@ trait AuthentiCate {
 
   def checkAccess(implicit request: RequestHeader, element_type: String): Boolean = {
     var isValid = false
+
     if (!request.session.get("user_profile").isEmpty) {
       var user_role = request.session.get("user_profile").get
       //println ("user_role:[" + user_role + "]")
