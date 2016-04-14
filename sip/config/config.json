@@ -1,9 +1,9 @@
 {
 "development": {
-"username": "pi",
-"password": "123momia",
+"username": "biometria",
+"password": "biometria123",
 "database": "art_live",
-"host": "WIN-KJSV9PBSECD",
+"host": "200.14.166.182",
 "dialect": "mssql",
 "port": "1433"
 },
@@ -12,6 +12,16 @@
 "password": "123momia",
 "database": "art_live",
 "host": "WIN-KJSV9PBSECD",
+"dialect": "mssql",
+"dialectOptions": {
+ "instanceName": "SQLEXPRESS"
+}
+},
+"local": {
+"username": "pi",
+"password": "123momiaes",
+"database": "art_live",
+"host": "ZRISMART",
 "dialect": "mssql",
 "dialectOptions": {
  "instanceName": "SQLEXPRESS"

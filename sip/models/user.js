@@ -30,21 +30,7 @@ module.exports = function(sequelize, DataTypes) {
 				bonus_app: DataTypes.INTEGER,
 				designation: DataTypes.INTEGER,
 				user_profile: DataTypes.STRING
-        },{timestamps: false,tableName: 'art_user'},
-        {
-                classMethods: {
-                        validPassword: function(password, passwd, done, user){
-                                bcrypt.compare(password, passwd, function(err, isMatch){
-                                        if (err) console.log(err)
-                                        if (isMatch) {
-                                                return done(null, user)
-                                        } else {
-                                                return done(null, false)
-                                        }
-                                })
-                        }
-                }
-        }
+        },{timestamps: false,tableName: 'art_user'}
 );
         
 return User        

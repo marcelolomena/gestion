@@ -1,13 +1,11 @@
 var express = require('express');
-var session = require('express-session');
+//var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash = require('express-flash');
-
-//var routes = require('./routes/index');
 
 var app = express();
 
@@ -26,9 +24,13 @@ app.use(flash());
 
 // Configuring Passport
 var passport = require('passport');
-var expressSession = require('express-session');
+//var expressSession = require('express-session');
 // TODO - Why Do we need this key ?
-app.use(expressSession({secret: 'mySecretKey'}));
+//app.use(expressSession({secret: 'mySecretKey'}));
+//app.use(passport.initialize());
+//app.use(passport.session());
+
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 

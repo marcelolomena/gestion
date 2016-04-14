@@ -18,17 +18,6 @@ module.exports = function(passport){
 	/* GET login page. */
 	router.get('/', function(req, res) {
     	// Display the Login page with any flash message, if any
-		
-		//console.log(db.sequelize);
-/*		Esto funciona
-models.User.findAll().then(function(users) {
-    res.render('index', {
-      title: 'Express',
-      users: users,
-	  message: req.flash('message')
-    });
-});		
-*/		
 		res.render('index', { message: req.flash('message') });
 	});
 
@@ -64,7 +53,3 @@ models.User.findAll().then(function(users) {
 
 	return router;
 }
-
-
-
-
