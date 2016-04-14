@@ -1,18 +1,20 @@
 {
 "development": {
-"username": "biometria",
-"password": "biometria123",
+"username": "pi",
+"password": "123momia",
 "database": "art_live",
-"host": "200.14.166.182",
+"host": "WIN-KJSV9PBSECD",
 "dialect": "mssql",
 "port": "1433"
 },
-"production": {
-"username": "DATABASE_USERNAME",
-"password": "DATABASE_PASSWORD",
-"database": "DATABASE_NAME",
-"host": "PRODUCTION_DATABASE_URL",
-"dialect": "postgres",
-"port": "DATABASE_PORT"
+"home": {
+"username": "pi",
+"password": "123momia",
+"database": "art_live",
+"host": "WIN-KJSV9PBSECD",
+"dialect": "mssql",
+"dialectOptions": {
+ "instanceName": "SQLEXPRESS"
+}
 }
 }

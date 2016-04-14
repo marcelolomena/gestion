@@ -66,6 +66,7 @@ module.exports = function(passport){
 		console.log("password [" + password + "]");
 		console.log("user.password [" + user.password + "]");
 		//var hash = bCrypt.hashSync(usersPassword);
+		console.log("retorno:" + bCrypt.compareSync(password, user.password));
         return bCrypt.compareSync(password, user.password);
     }
     
