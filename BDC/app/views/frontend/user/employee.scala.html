@@ -434,7 +434,6 @@ var month = [
 						 for(var i=0;i<consumo.length;i++){
 							 var obj = consumo[i];
 						        for(var key in obj){
-						        	console.log(key);
 							        if(key>=now){
 						        		dist.push([key,obj[key]]);
 							        }    
@@ -519,13 +518,11 @@ var month = [
 									 for(var i=0;i<consumo.length;i++){
 										 var obj = consumo[i];
 									        for(var key in obj){
-									        	console.log(key);
 										        if(key>=now){
 									        		dist2.push([key,obj[key]]);
 										        }    
 									        }
 									 }
-									 console.log(dist2);
 								 		while (chart.series.length > 0) {
 								            chart.series[0].remove(true);
 								        }
@@ -568,9 +565,6 @@ var month = [
 								} 
 								now = yyyy + '-'+mm+'-'+dd;
 								now2 = yyyy2 + '-'+mm2+'-'+dd;
-								console.log(seleccion);
-								console.log('menor o igual que: '+now);
-								console.log('mayor o igual que: '+now2);
 								 for(var i=0;i<consumo2.length;i++){
 									 var obj2 = consumo2[i];
 								        for(var key in obj2){
@@ -579,7 +573,6 @@ var month = [
 									        }    
 								        }
 								 }
-						 		console.log(dist2);
 						 		while (chart.series.length > 0) {
 						            chart.series[0].remove(true);
 						        }
@@ -600,8 +593,6 @@ var month = [
 					                    }
 					                }         
 					            });
-						    
-						    console.log(dist)					     
 						 	}
 						 	});
 						$('dt label').hide();
