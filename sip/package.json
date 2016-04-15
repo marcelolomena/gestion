@@ -21,6 +21,8 @@
 	"passport": "latest",
     "passport-local": "latest",
 	"sequelize": "latest",
-	"express-flash": "0.0.2"
+	"express-flash": "0.0.2",
+	"tedious": "latest",
+	"bcrypt-nodejs": "latest"
   }
 }

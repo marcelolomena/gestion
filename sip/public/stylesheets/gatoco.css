@@ -1,0 +1,466 @@
+.header {
+	background-color: #002464;
+	height: 110px;
+}
+.header .headMain {
+	height: 106px;
+	width: 1172px;
+	margin-right: auto;
+	margin-left: auto;
+	background-image: url(../img/header.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.header .headUnderline {
+	height: 4px;
+	background-color: #234e85;
+}
+.header .headMain .tituloWeb {
+	float: right;
+	height: 106px;
+	width: 420px;
+	line-height: 106px;
+	color: #FFF;
+	font-size: 26px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	margin-right: 35px;
+}
+.header .headMain .user {
+	float: right;
+	height: 76px;
+	width: 179px;
+	background-image: url(../img/pic_user.png);
+	background-repeat: no-repeat;
+	background-position: 35px center;
+	padding-left: 90px;
+	padding-top: 30px;
+}
+.header .headMain .user .usuario1 {
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 13px;
+	color: #FFF;
+	line-height: 18px;
+}
+.header .headMain .user .usuario2 {
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 11px;
+	color: #FFF;
+	line-height: 16px;
+}
+.header .headMain .user .usuario3 {
+	font-family: 'Roboto', sans-serif;
+	font-weight:700;
+	font-size: 11px;
+	color: #FFF;
+	line-height: 16px;
+}
+.header .headMain .user .usuario3 a {
+	color: #309ad6;
+	text-decoration: none;
+}
+.header .headMain .user .usuario3 a:hover {
+	color: #6baa1f;
+	text-decoration: none;
+}
+.central {
+	margin-right: auto;
+	margin-left: auto;
+	height: 100%;
+}
+.central .menuHorizontal {
+	height: 35px;
+	background-color: #f6f6f8;
+}
+.central .menuHorizontal .menu {
+	height: 35px;
+	width: 1140px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.central .cuerpoCentral {
+	width: 1140px;
+	margin-right: auto;
+	margin-left: auto;
+	height: 100%;
+}
+.central .cuerpoCentral .crums {
+	height: 115px;
+	line-height: 115px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 12px;
+	color: #002464;
+}
+.central .cuerpoCentral .txt_bienvenida {
+	height: 55px;
+	line-height: 45px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 28px;
+	color: #002464;
+}
+.central_columnaIzquierda .titMenu {
+	width: 240px;
+	height: 48px;
+	background-color: #3599d4;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	color: #FFFFFF;
+	line-height: 48px;
+	padding-left: 20px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+}
+.central_columnaIzquierda .titMenu2 {
+	width: 240px;
+	height: 48px;
+	background-color: #e7efd7;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	color: #333334;
+	line-height: 48px;
+	padding-left: 20px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+}
+.central .cuerpoCentral .central_columnaIzquierda {
+	width: 260px;
+	float: left;
+	height: 1400px;
+}
+.central .cuerpoCentral .central_columnaDerecha {
+	width: 218px;
+	height: 1496px;
+	border: 1px solid #e6e6e8;
+	float: left;
+}
+.central .cuerpoCentral .contenedorCentro {
+	width: 1140px;
+	height: 2400px;
+}
+.cajaLogoLac {
+	height: 175px;
+	border: 1px solid #f1f1f3;
+}
+.footer {
+	background-color: #f6f6f8;
+	height: 140px;
+}
+.footer .footCentro {
+	height: 125px;
+	width: 1140px;
+	margin-right: auto;
+	margin-left: auto;
+	padding-top: 15px;
+}
+.footer .footCentro .logoFooter {
+	float: left;
+	height: 100px;
+	width: 276px;
+	background-image: url(../img/logoFooter.jpg);
+	background-repeat: no-repeat;
+	background-position: left center;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #d2d2d4;
+}
+.footer .footCentro .direccionFooter {
+	height: 65px;
+	width: 467px;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #d2d2d4;
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #333334;
+	padding-top: 35px;
+	padding-left: 20px;
+}
+.footer .footCentro .horarioFooter {
+	float: left;
+	height: 65px;
+	width: 355px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #333334;
+	padding-top: 35px;
+	padding-left: 20px;
+	font-weight: bold;
+}
+.contenedorCentro .columnaCentral {
+	width: 660px;
+	float: left;
+}
+.tituloCentral {
+	height: 70px;
+	text-align: center;
+	line-height: 70px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	color: #333334;
+	font-size: 18px;
+	width: 630px;
+	margin-right: auto;
+	margin-left: auto;
+	border: 1px solid #e6e6e8;
+}
+.columnaCentral .bannerHerramientas {
+	width: 630px;
+	margin-right: auto;
+	margin-left: auto;
+	padding-top: 20px;
+	height: 100%;
+}
+.bannerHerra_izq {
+	width: 305px;
+	margin-right: 16px;
+	float: left;
+	border: 1px solid #e6e6e8;
+	margin-bottom: 16px;
+}
+.bannerHerra_izq_sh {
+	width: 305px;
+	margin-right: 16px;
+	float: left;
+	border: 1px solid #e6e6e8;
+	margin-bottom: 16px;
+}
+.bannerHerra_der {
+	width: 305px;
+	float: left;
+	border: 1px solid #e6e6e8;
+	margin-bottom: 16px;
+}
+.bannerHerra_der_sh {
+	width: 305px;
+	float: left;
+	border: 1px solid #e6e6e8;
+	margin-bottom: 16px;
+}
+.titBan a {
+	text-decoration: none;
+	color: #333334;
+}
+.titBan a:hover {
+	text-decoration: none;
+	color: #149DC9;
+}
+.icoBanner1 {
+	float: left;
+	width: 117px;
+}
+.icoBanner2 {
+	float: left;
+	height: 250px;
+	width: 117px;
+	background-image: url(../img/ico2.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.icoBanner3_sh {
+	float: left;
+	width: 117px;
+}
+.icoBanner4_sh {
+	float: left;
+	width: 117px;
+}
+.icoBannerDer {
+	float: left;
+	width: 188px;
+}
+.icoBannerIzq {
+	float: left;
+	width: 188px;
+}
+.icoBannerDer_sh {
+	float: left;
+	width: 188px;
+}
+.icoBannerIzq_sh {
+	float: left;
+	width: 188px;
+}
+.titBan {
+	height: 67px;
+	width: 188px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	color: #333334;
+	padding-top: 53px;
+}
+.bajaBan {
+	width: 178px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 14px;
+	color: #333334;
+	line-height: 18px;
+	padding-right: 10px;
+	padding-bottom: 20px;
+}
+.bajaBan_sh {
+	width: 178px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 14px;
+	color: #333334;
+	line-height: 18px;
+	padding-right: 10px;
+	padding-bottom: 20px;
+}
+.bajaBan_form {
+	width: 255px;
+	float: left;
+	padding-left: 25px;
+	height: 130px;
+	padding-right: 25px;
+}
+.columnaCentral .cajaOpciones {
+	width: 630px;
+	float: left;
+}
+.cajaOpciones .opciones {
+	height: 224px;
+	width: 210px;
+	float: left;
+}
+.cajaOpciones .separadorOpcione {
+	width: 630px;
+	height: 74px;
+	float: left;
+	background-image: url(../img/separador.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.cajaOpciones .tituloOpciones {
+	float: left;
+	height: 60px;
+	width: 628px;
+	line-height: 60px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	color: #333334;
+	text-align: center;
+	border: 1px solid #e6e6e8;
+}
+.mi-menu  {
+	list-style-type: none; /* si queremos centrarlo */
+	padding: 0;
+	/* la altura y su ancho dependerán de los textos */
+    height: 35px;
+	width: 510px;
+	margin-top: 0;
+	margin-right: 0px;
+	margin-bottom: 0;
+	margin-left: 0px;
+}
+.mi-menu li {
+	display: block;
+	float: left; /* la lista se ve horizontal */
+	height: 35px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+.mi-menu li a {
+	border-left: 1px solid #e6e6e8;
+	color: #000;
+	display: block;
+	font-family: 'Roboto', sans-serif;
+	font-weight:300;
+	font-size: 14px;
+	line-height: 35px;
+	text-decoration: none;
+	/* animamos el cambio de color de los textos */
+    -webkit-transition: color .2s ease-in-out;
+	-moz-transition: color .2s ease-in-out;
+	-o-transition: color .2s ease-in-out;
+	-ms-transition: color .2s ease-in-out;
+	transition: color .2s ease-in-out;
+	padding-top: 0;
+	padding-right: 14px;
+	padding-bottom: 0;
+	padding-left: 14px;
+}
+/* eliminamos los bordes del primer y el último */
+  .mi-menu li:first-child a {
+	border-left: none;
+}
+.mi-menu li:last-child a {
+	border-right: none;
+}
+/* efecto hover cambia el color */
+.mi-menu li:hover > a {
+	color: #f60;
+}
+/* los submenús */
+.mi-menu ul {
+	opacity: 0; /* no son visibles */
+	position: absolute;
+	width:148px;
+	top: 35px;
+	/* animamos su visibildiad */
+    -moz-transition: opacity .25s ease .1s;
+	-webkit-transition: opacity .25s ease .1s;
+	-o-transition: opacity .25s ease .1s;
+	-ms-transition: opacity .25s ease .1s;
+	transition: opacity .25s ease .1s;
+	background-color: #f1f1f3;
+	background-image: url(../img/fondoSubmenu1.jpg);
+	background-repeat: repeat-y;
+	background-position: right top;
+	box-shadow: 2px 2px 5px #ccc;
+}
+/* son visibes al poner el cursor encima */
+.mi-menu li:hover > ul {
+	opacity: 1;
+}
+/* cada un ode los items de los submenús */
+.mi-menu ul li {
+	margin-left: -40px;
+	height: 0; /* no son visibles */
+	overflow: hidden;
+	padding: 0;
+	/* animamos su visibildiad */
+    -moz-transition: height .25s ease .1s;
+	-webkit-transition: height .25s ease .1s;
+	-o-transition: height .25s ease .1s;
+	-ms-transition: height .25s ease .1s;
+	transition: height .25s ease .1s;
+}
+.mi-menu li:hover > ul li {
+	height: 35px; /* los mostramos */
+	overflow: visible;
+	padding: 0;
+}
+.mi-menu ul li a {
+	border: none;
+	margin: 0;
+	width: 160px;
+}
+.mi-menu ul li a:hover {
+	border: none;
+	margin: 0;
+	width: 160px;
+	background-image: url(../img/fondoSubmenu.jpg);
+	background-repeat: repeat-y;
+	background-position: left top;
+}
+/* el último n otiene un borde */
+  .mi-menu ul li:last-child a {
+	border: none;
+}
+.central_columnaDerecha .bannerDerecho {
+	height: 187px;
+	width: 218px;
+}

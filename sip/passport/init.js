@@ -1,18 +1,18 @@
 var login = require('./login');
 var signup = require('./signup');
-var User = require('../models/user');
+//var User = require('../models/user');
+var models  = require('../models');
 
 module.exports = function(passport){
 
 	// Passport needs to be able to serialize and deserialize users to support persistent login sessions
     passport.serializeUser(function(user, done) {
         console.log('serializing user: ');
-		console.log(user);
-        done(null, user._id);
+		done(null, user.uid);
     });
 
     passport.deserializeUser(function(id, done) {
-		User.find({where: {id: user.id}}).success(function(user){
+		models.User.find({ where: { 'uid': id }}).then(function(user){
                 done(null, user);
         }).error(function(err){
                 done(err, null)
