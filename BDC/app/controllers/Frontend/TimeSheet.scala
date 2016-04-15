@@ -1025,5 +1025,9 @@ object TimeSheet extends Controller {
     }
 
   }
+  def feriado(fecha: String) = Action { implicit request =>
+    var yesno = TimesheetService.validarFeriado(fecha)
+    Ok(yesno.toString())
+  }
 }
 

@@ -396,6 +396,7 @@ GET    /get-non-project-tasks                                                   
 GET    /validate-subtask-timesheet                                                                    controllers.Frontend.TimeSheet.getSubTaskValidation(subtask:String,tDate:String)
 GET    /book-time/:subtask_id                                                                         controllers.Frontend.TimeSheet.bookTime(subtask_id :String)
 GET    /time-booked                                                                                   controllers.Frontend.TimeSheet.timeBooked(sub_task :String,user:String,user_hour:String)
+GET    /feriado/:fecha																				  controllers.Frontend.TimeSheet.feriado(fecha:String)
 
 GET    /book-time-timesheet                                                                           controllers.Frontend.TimeSheet.bookedTimeTimeSheet(sub_task :String,user:String,user_type:String)				
 GET    /daleteTimesheetBookTime                                                                       controllers.Frontend.TimeSheet.daleteTimesheetBookTime

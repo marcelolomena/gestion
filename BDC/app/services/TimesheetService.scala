@@ -761,4 +761,11 @@ println(final_new_hour)*/
     final_new_hour.replace(".", ":")//otra tontera una coma en vez del punto
   }
 
+  def validarFeriado(fecha: String): Int = {
+    var sqlString = ""
+    sqlString = "EXEC art.validarFeriado {fecha}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('fecha -> fecha).as(scalar[Int].single)
+    }
+  }
 }
