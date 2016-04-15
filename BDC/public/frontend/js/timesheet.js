@@ -192,18 +192,24 @@ var timesheetCalendar = {
             if(i==0){
             	addBorder = "style='border-left:1px solid #CFD9DD;'";
             }
+            console.log(dt.getDay());
+            var addColor="";
+            if(dt.getDay() == 6 || dt.getDay() == 0){
+            	addColor = "style='color:rosybrown;'"
+            }
+            console.log(addBorder);
             //generate the inner html for a day_cell and append to table
-            var cell = $("<div "+addBorder+" ><div />").attr("index", i).addClass("calanderCell date_cell hide "+currentClass+" disabled").html('<div class="number numberCell">&nbsp;</div>');
+            var cell = $("<div "+addBorder+" ><div />").attr("index", i).addClass("calanderCell date_cell hide "+currentClass+" disabled").html('<div class="number numberCell" '+addColor+'>&nbsp;</div>');
             $(".map_data_detail").append(cell);
             //set the date number
             $(".map_data_detail").find("div.number").eq(i).html(date).attr("id", dt);
-            
+            console.log("1: "+dt.toString());
+            console.log("2: "+date.toString());
             //if the current day of week is exeeds the end_date then do not execute
             if(Util.getDateDiff(dt, $("#end_date").val()) >= 0){
                 $(".date_cell").eq(i).removeClass("disabled");
               
                 titleEndDt = dt.toString("MMMM d, yyyy");          
-                
                 //check the date with fetched data and append the matching events
                 var element = $(".map_data_detail").find("div.number").eq(i);
               
@@ -230,7 +236,8 @@ var timesheetCalendar = {
             }
             
             //show the generated cell
-            $(cell).fadeIn(2000);   
+            $(cell).fadeIn(2000);  
+            
         }
       
        // var initDate ="Jan 01 2013 00:00:00 GMT"
