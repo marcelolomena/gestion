@@ -1,0 +1,1 @@
+var Proveedor = require('../models/proveedor');

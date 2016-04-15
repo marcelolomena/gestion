@@ -12,10 +12,10 @@ module.exports = function(passport){
             // check in database if a user with username exists or not
 			models.User.find({ where: { 'uname': username }}).then(function(user) {
 			  if (!user) {
-				console.log('User Not Found with username '+username);
-                return done(null, false, req.flash('message', 'User Not found.'));       
+				console.log('Usuario no encontrado. '+username);
+                return done(null, false, req.flash('message', 'Usuario no encontrado.'));       
 			  } else if (!isValidPassword(user, password)) {
-				console.log('Invalid Password');
+				console.log('Clave inválida');
                 return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 			  } else {
 				return done(null, user);
