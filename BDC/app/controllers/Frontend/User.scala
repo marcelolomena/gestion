@@ -954,5 +954,21 @@ object User extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
+def getConsumoMes(employeeid: String,fecha: String) = Action { implicit request =>
+      //val fecha = request.getQueryString("fecha").get.toString()
+      val consumoMes = UserProfileServices.findConsumo(employeeid.toInt,fecha)
+      
+      var consumos = new JSONArray();
+      for(a <- consumoMes)
+      {
+         var consumo = new JSONObject();
+         consumo.put(a.fecha.toString(),a.horas)
+         consumos.put(consumo)
+      }
+      println(consumos)
+      
+      Ok(consumos.toString())
 
+    
+  }
 }

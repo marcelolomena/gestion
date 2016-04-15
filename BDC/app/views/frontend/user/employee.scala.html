@@ -5,6 +5,7 @@
 @import services._
 @import helper._
 @import utils._
+@import controllers.Frontend.User
 <style>
 
 .emp_img_container {
@@ -48,7 +49,7 @@
 				
 				<div class="emp_detail_discription">
 					<div class="left">
-					<div class="dash_detail_1_right " id="employee_project_list">
+					<div class="dash_detail_1_right " id="employee_project_list" style="border: 1px solid #fff;">
 						<h3 style="font-size:13px;height:26px;padding-left: 5px;">@Messages("employeeProfile.myprogram")</h3>
 						@for(p <- programs){
 							
@@ -80,7 +81,13 @@
 							</div>
 						}						
 						
+						<h3 style="font-size:13px;height:26px;padding-left: 5px;">Consumo de Horas</h3>
 						
+						<p align="center">
+						  <select id="chartType" style="width: 613px; margin-bottom: 5px;">
+						    <option value="esp" selected="selected">Ultimos 30 días</option>  
+						</select>
+						</p>
 						
 						<div class="dash_right_data_2">
 							<div id=container></div>
@@ -310,6 +317,19 @@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script type="text/javascript">
+var month = [
+             "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+             "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+         ],  
+         now = new Date(),
+         mes = document.getElementById( 'chartType' );
+         var numero = 0;
+	while(now.getFullYear()=='2016'){
+		
+     	mes.add( new Option( month[now.getMonth()]+' - '+now.getFullYear(), numero) );
+     	now.setMonth( now.getMonth() - 1 );
+     	numero++;
+     }
 	$(document)
 			.ready(
 					function() {
@@ -359,7 +379,6 @@
 					        
 					     });
 						 Highcharts.theme = {
-
 								    colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
 								             '#FF9655', '#FFF263', '#6AF9C4'],
 								    chart: {
@@ -383,7 +402,6 @@
 								            font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
 								        }
 								    },
-
 								    legend: {
 								        itemStyle: {
 								            font: '9pt Trebuchet MS, Verdana, sans-serif',
@@ -394,30 +412,41 @@
 								        }   
 								    }
 								};
-
 								// Apply the theme
-								var highchartsOptions = Highcharts.setOptions(Highcharts.theme);	
-								
-												     
-						 
-						 var dist = [];   
+						var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+							
+						 var dist = [];
 						 var consumo = '@consumos';  
 						 consumo=JSON.parse(consumo.replace(/&quot;/g,'"'));
 
+						 var now = new Date();
+						 now.setMonth( now.getMonth() - 1 );
+						 var dd = now.getDate();
+						 var mm = now.getMonth()+1; //January is 0!
+						 var yyyy = now.getFullYear();
+						 if(dd<10) {
+							    dd='0'+dd
+						} 
+						if(mm<10) {
+						    mm='0'+mm
+						} 
+						now = yyyy + '-'+mm+'-'+dd;
 						 for(var i=0;i<consumo.length;i++){
 							 var obj = consumo[i];
 						        for(var key in obj){
-						        	dist.push([key,obj[key]]);    
+						        	console.log(key);
+							        if(key>=now){
+						        		dist.push([key,obj[key]]);
+							        }    
 						        }
-								
 						 }
-						    
-						 $('#container').highcharts({
+						 var chart = new Highcharts.Chart({
 						        chart: {
+						        	renderTo: 'container',
 						            type: 'column'
 						        },
 						        title: {
-						            text: 'Consumo horas',
+						            text: 'Últimos 30 días',
 						        },
 						        xAxis: {
 							            type: 'category',
@@ -439,7 +468,6 @@
 										width: 1,
 										color: 'green',
 										dashStyle: 'dash'
-										
 									}]
 							        },
 							        legend: {
@@ -448,7 +476,6 @@
 									        tooltip: {
             pointFormat: 'Horas ingresadas: <b>{point.y:.1f} horas</b>'
         },
-						        
 						    series: [{
 				                name: 'Horas',
 				                data: dist,
@@ -467,8 +494,116 @@
 				                }
 				            }]
 						    });
-						    console.log(dist)					     
+						 	$("#chartType").change(function() {
+						 		chart.setTitle({text: $("#chartType option:selected").text()});
+						 		var seleccion = $("#chartType option:selected").val();
+						 		if(seleccion=='esp'){
+						 			var dist2 = [];   
+									 var consumo = '@consumos';  
+									 consumo=JSON.parse(consumo.replace(/&quot;/g,'"'));
 
+									 var now = new Date();
+									 now.setMonth( now.getMonth() - 1 );
+									 var dd = now.getDate();
+									 var mm = now.getMonth()+1; //January is 0!
+									 var yyyy = now.getFullYear();
+									 if(dd<10) {
+										    dd='0'+dd
+									} 
+
+									if(mm<10) {
+									    mm='0'+mm
+									} 
+									now = yyyy + '-'+mm+'-'+dd;
+
+									 for(var i=0;i<consumo.length;i++){
+										 var obj = consumo[i];
+									        for(var key in obj){
+									        	console.log(key);
+										        if(key>=now){
+									        		dist2.push([key,obj[key]]);
+										        }    
+									        }
+									 }
+									 console.log(dist2);
+								 		while (chart.series.length > 0) {
+								            chart.series[0].remove(true);
+								        }
+								 		chart.addSeries({
+								 			name: 'Horas',
+							                data: dist2,
+							                dataLabels: {
+							                    enabled: false,
+							                    rotation: -90,
+							                    color: '#FFFFFF',
+							                    align: 'right',
+							                    format: '{point.y:.1f}', // one decimal
+							                    y: 10, // 10 pixels down from the top
+							                    style: {
+							                        fontSize: '11px',
+							                        fontWeight: 'bold',
+							                        fontFamily: 'Verdana, sans-serif'
+							                    }
+							                }         
+							            });
+							 		}else{
+						 		var dist2 = [];   
+								 var consumo2 = '@consumos';  
+								 consumo2=JSON.parse(consumo2.replace(/&quot;/g,'"'));
+								 var now = new Date();
+								 var now2 = new Date();
+								 now.setMonth( now.getMonth()-seleccion+1);
+								 now2.setMonth( now.getMonth()-1);
+								 var dd = '01';
+								 var mm = now.getMonth()+1; //January is 0!
+								 var yyyy = now.getFullYear();
+								 var mm2 = now2.getMonth()+1; //January is 0!
+								 var yyyy2 = now2.getFullYear();
+
+								if(mm<10) {
+								    mm='0'+mm
+								} 
+								if(mm2<10) {
+								    mm2='0'+mm2
+								} 
+								now = yyyy + '-'+mm+'-'+dd;
+								now2 = yyyy2 + '-'+mm2+'-'+dd;
+								console.log(seleccion);
+								console.log('menor o igual que: '+now);
+								console.log('mayor o igual que: '+now2);
+								 for(var i=0;i<consumo2.length;i++){
+									 var obj2 = consumo2[i];
+								        for(var key in obj2){
+									        if(key<=now && key>=now2){
+								        		dist2.push([key,obj2[key]]);
+									        }    
+								        }
+								 }
+						 		console.log(dist2);
+						 		while (chart.series.length > 0) {
+						            chart.series[0].remove(true);
+						        }
+						 		chart.addSeries({
+						 			name: 'Horas',
+					                data: dist2,
+					                dataLabels: {
+					                    enabled: false,
+					                    rotation: -90,
+					                    color: '#FFFFFF',
+					                    align: 'right',
+					                    format: '{point.y:.1f}', // one decimal
+					                    y: 10, // 10 pixels down from the top
+					                    style: {
+					                        fontSize: '11px',
+					                        fontWeight: 'bold',
+					                        fontFamily: 'Verdana, sans-serif'
+					                    }
+					                }         
+					            });
+						    
+						    console.log(dist)					     
+						 	}
+						 	});
 						$('dt label').hide();
 						$('#uploadId')
 								.on(

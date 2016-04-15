@@ -111,4 +111,11 @@ object UserProfileServices {
         'uid -> uid.toInt).executeQuery().as(UserConsumo.userconsumo *)
     }
   }
+  
+  def findConsumo(uid: Integer,fecha: String): Seq[UserConsumo] = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.consumoEmpleado  {uid},{fecha}").on(
+        'uid -> uid.toInt, 'fecha ->fecha).executeQuery().as(UserConsumo.userconsumo *)
+    }
+  }
 }
