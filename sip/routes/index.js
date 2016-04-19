@@ -1,5 +1,5 @@
 var models  = require('../models');
-var db  = require('../models/index');
+//var db  = require('../models/index');
 var express = require('express');
 var router = express.Router();
 

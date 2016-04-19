@@ -10,6 +10,7 @@ module.exports = function(passport){
         },
         function(req, username, password, done) { 
             // check in database if a user with username exists or not
+			console.log("picoconchetumadre : " + models.User)
 			models.User.find({ where: { 'uname': username }}).then(function(user) {
 			  if (!user) {
 				console.log('Usuario no encontrado. '+username);

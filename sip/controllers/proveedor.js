@@ -1,4 +1,5 @@
-var Proveedor = require('../models/proveedor');
+//var Proveedor = require('../models/PROVEEDOR');
+var models  = require('../models');
 
 // Create endpoint /api/proveedores for POST
 exports.postProveedores = function(req, res) {
@@ -22,7 +23,8 @@ exports.postProveedores = function(req, res) {
 // Create endpoint /api/proveedores for GET
 exports.getProveedores = function(req, res) {
   // Use the Proveedores model to find all proveedores
-  Proveedor.find({ }, function(err, proveedores) {
+  console.log(models.Proveedor)
+  models.Proveedor.find({ }, function(err, proveedores) {
     if (err)
       res.send(err);
 
@@ -61,7 +63,7 @@ exports.getProveedoresPaginados = function(req, res) {
 // Create endpoint /api/proveedores/:id for GET
 exports.getProveedor = function(req, res) {
   // Use the Proveedor model to find a specific proveedor
-  Proveedor.find({ id: req.params.id }, function(err, proveedor) {
+  models.Proveedor.find({ id: req.params.id }, function(err, proveedor) {
     if (err)
       res.send(err);
 
@@ -72,7 +74,7 @@ exports.getProveedor = function(req, res) {
 // Create endpoint /api/proveedores/:id for PUT
 exports.putProveedor = function(req, res) {
   // Use the Proveedor model to find a specific proveedor
-  Proveedor.update({ id: req.params.id }, function(err, num, raw) {
+  models.Proveedor.update({ id: req.params.id }, function(err, num, raw) {
     if (err)
       res.send(err);
 
@@ -83,7 +85,7 @@ exports.putProveedor = function(req, res) {
 // Create endpoint /api/proveedores/:id for DELETE
 exports.deleteProveedor = function(req, res) {
   // Use the Proveedor model to find a specific proveedor and remove it
-  Proveedor.remove({ id: req.params.id }, function(err) {
+  models.Proveedor.remove({ id: req.params.id }, function(err) {
     if (err)
       res.send(err);
 
