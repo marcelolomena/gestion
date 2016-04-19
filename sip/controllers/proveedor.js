@@ -23,7 +23,7 @@ exports.postProveedores = function(req, res) {
 // Create endpoint /api/proveedores for GET
 exports.getProveedores = function(req, res) {
   // Use the Proveedores model to find all proveedores
-  console.log(models.Proveedor)
+  console.log("-->" + models.PROVEEDOR)
   models.Proveedor.find({ }, function(err, proveedores) {
     if (err)
       res.send(err);
