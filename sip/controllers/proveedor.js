@@ -1,8 +1,7 @@
-//var Proveedor = require('../models/PROVEEDOR');
-var models  = require('../models');
+var models = require('../models');
 
 // Create endpoint /api/proveedores for POST
-exports.postProveedores = function(req, res) {
+exports.postProveedores = function (req, res) {
   // Create a new instance of the Proveedor model
   var proveedor = new Proveedor();
 
@@ -12,7 +11,7 @@ exports.postProveedores = function(req, res) {
   proveedor.dvrut = req.body.dvrut;
 
   // Save the proveedor and check for errors
-  proveedor.save(function(err) {
+  proveedor.save(function (err) {
     if (err)
       res.send(err);
 
@@ -21,60 +20,56 @@ exports.postProveedores = function(req, res) {
 };
 
 // Create endpoint /api/proveedores for GET
-exports.getProveedores = function(req, res) {
-  // Use the Proveedores model to find all proveedores
-  console.log("-->" + models.PROVEEDOR)
-  models.Proveedor.find({ }, function(err, proveedores) {
-    if (err)
-      res.send(err);
-
+exports.getProveedores = function (req, res) {
+  models.Proveedor.findAll().then(function (proveedores) {
     res.json(proveedores);
+  }).error(function (err) {
+    res.send(err);
   });
 };
 
 // Create endpoint /api/proveedores for GET
-exports.getProveedoresPaginados = function(req, res) {
+exports.getProveedoresPaginados = function (req, res) {
   // Use the Proveedores model to find all proveedores
-  
-    var page = req.params.page || 2;
-    var rowsPerPage = req.params.perpage || 30;
 
-    if(rowsPerPage > 100){ 
-        rowsPerPage = 100; //this limits how many per page
-    }
-  
-    var theQuery = 'declare @rowsPerPage as bigint; '+
-            'declare @pageNum as bigint;'+
-            'set @rowsPerPage='+rowsPerPage+'; '+
-            'set @pageNum='+page+';   '+
-            'With SQLPaging As   ( '+
-            'Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY ID asc) '+
-            'as resultNum, * '+
-            'FROM proveedor )'+
-            'select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);';
+  var page = req.params.page || 2;
+  var rowsPerPage = req.params.perpage || 30;
+
+  if (rowsPerPage > 100) {
+    rowsPerPage = 100; //this limits how many per page
+  }
+
+  var theQuery = 'declare @rowsPerPage as bigint; ' +
+    'declare @pageNum as bigint;' +
+    'set @rowsPerPage=' + rowsPerPage + '; ' +
+    'set @pageNum=' + page + ';   ' +
+    'With SQLPaging As   ( ' +
+    'Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY ID asc) ' +
+    'as resultNum, * ' +
+    'FROM proveedor )' +
+    'select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);';
 
 
-    sequelize.sequelize.query(theQuery) 
-     .spread(function(result) {
-        res.json({result: result});
-      });
+  sequelize.sequelize.query(theQuery)
+    .spread(function (result) {
+      res.json({ result: result });
+    });
 };
 
 // Create endpoint /api/proveedores/:id for GET
-exports.getProveedor = function(req, res) {
+exports.getProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
-  models.Proveedor.find({ id: req.params.id }, function(err, proveedor) {
-    if (err)
-      res.send(err);
-
+  models.Proveedor.find({ where: { 'id': req.params.id } }).then(function (proveedor) {
     res.json(proveedor);
+  }).error(function (err) {
+    res.send(err);
   });
 };
 
 // Create endpoint /api/proveedores/:id for PUT
-exports.putProveedor = function(req, res) {
+exports.putProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
-  models.Proveedor.update({ id: req.params.id }, function(err, num, raw) {
+  models.Proveedor.update({ id: req.params.id }, function (err, num, raw) {
     if (err)
       res.send(err);
 
@@ -83,9 +78,9 @@ exports.putProveedor = function(req, res) {
 };
 
 // Create endpoint /api/proveedores/:id for DELETE
-exports.deleteProveedor = function(req, res) {
+exports.deleteProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor and remove it
-  models.Proveedor.remove({ id: req.params.id }, function(err) {
+  models.Proveedor.remove({ id: req.params.id }, function (err) {
     if (err)
       res.send(err);
 

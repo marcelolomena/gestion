@@ -1,5 +1,5 @@
-var models  = require('../models');
-var proveedorController  = require('../controllers/proveedor');
+var models = require('../models');
+var proveedorController = require('../controllers/proveedor');
 var express = require('express');
 var router = express.Router();
 
@@ -13,19 +13,32 @@ var isAuthenticated = function (req, res, next) {
 	res.redirect('/');
 }
 
-module.exports = function(passport){
-/* GET proveedores listing. */
-// Create endpoint handlers for /proveedores
-router.route('/proveedores')
-  .post(isAuthenticated, proveedorController.postProveedores)
-  .get(isAuthenticated, proveedorController.getProveedores);
+module.exports = function (passport) {
+	/* GET proveedores listing. */
+	// Create endpoint handlers for /proveedores
+		/* GET Home Page */
+	router.get('/proveedores', isAuthenticated, function (req, res) {
+		res.render('proveedores');
+	});
 
-// Create endpoint handlers for /proveedores/:id
-router.route('/proveedores/:id')
-  .get(isAuthenticated, proveedorController.getProveedor)
-  .put(isAuthenticated, proveedorController.putProveedor)
-  .delete(isAuthenticated, proveedorController.deleteProveedor);
+	/* GET Home Page */
+	/*
+	router.get('/proveedores/list', isAuthenticated, function (req, res) {
+		var proveedoresData = proveedorController.getProveedores;
+		res.render('proveedores', { proveedoresData: proveedoresData });
+	});
+*/
 
-//module.exports = router;
+router.route('/proveedoreslist')
+	.post(isAuthenticated, proveedorController.postProveedores)
+	.get(isAuthenticated, proveedorController.getProveedores);
+
+	// Create endpoint handlers for /proveedores/:id
+	router.route('/proveedores/:id')
+		.get(isAuthenticated, proveedorController.getProveedor)
+		.put(isAuthenticated, proveedorController.putProveedor)
+		.delete(isAuthenticated, proveedorController.deleteProveedor);
+
+	//module.exports = router;
 	return router;
 }

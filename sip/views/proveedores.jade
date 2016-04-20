@@ -1,18 +1,17 @@
 doctype html
 html
   head
-    link(rel='stylesheet', href='stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='stylesheets/jquery-ui.min.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='stylesheets/ui.jqgrid.css', title='menu css', type='text/css', media='screen', charset='utf-8')           
+    link(rel='stylesheet', href='/stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/jquery-ui.min.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/ui.jqgrid.css', title='menu css', type='text/css', media='screen', charset='utf-8')           
     title Menu Lateral Jampudia.com
-    script(type='text/javascript', src='javascripts/jquery-1.12.3.min.js')
-    script(type='text/javascript', src='javascripts/jsplug.js')
-    script(type='text/javascript', src='javascripts/jquery-ui.js')    
-    script(type='text/javascript', src='javascripts/grid.locale-es.js')  
-    script(type='text/javascript', src='javascripts/jquery.jqGrid.min.js')  
-    script(type='text/javascript', src='javascripts/jsplug.js')
-    script(type='text/javascript', src='javascripts/proveedor.js')        
+    script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
+    script(type='text/javascript', src='/javascripts/jsplug.js')
+    script(type='text/javascript', src='/javascripts/jquery-ui.js')    
+    script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
+    script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')  
+    script(type='text/javascript', src='/javascripts/proveedor.js')        
    body
     .container
       #sidebar
@@ -32,7 +31,7 @@ html
           li
             a(href='#') Facturas	
           li
-            a(href='#') Parámetros			
+            a(href='/proveedores') Proveedores			
           li
             a(href='signout') Salir
       .main-content

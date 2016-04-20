@@ -3,17 +3,17 @@
 var fs        = require("fs");
 var path      = require("path");
 var Sequelize = require("sequelize");
-var env       = process.env.NODE_ENV || "local";//
+var env       = process.env.NODE_ENV || "home";//
 var config    = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db        = {};
 
 var test = sequelize.authenticate()
     .then(function () {
-        console.log("BIEN! ");
+        console.log('Connection has been established successfully.');
     })
     .catch(function (err) {
-        console.log(err);
+        console.log('Unable to connect to the database:', err);
     })
     .done();
 
@@ -23,7 +23,6 @@ fs.readdirSync(__dirname)
   })
   .forEach(function(file) {
     var model = sequelize.import(path.join(__dirname, file));
-    console.log("modeleitor : " + model);
     db[model.name] = model;
   });
 
