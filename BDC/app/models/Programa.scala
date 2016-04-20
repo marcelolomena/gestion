@@ -343,3 +343,32 @@ object Asignado {
   }
   implicit val recursoWrites = Json.writes[Asignado]
 }
+case class Histograma(
+  programa: String,
+  proyecto: String,
+  tarea: String,
+  subtarea:String,
+  horas:String)
+
+object Histograma {
+  val histograma = {
+      get[String]("programa") ~
+      get[String]("proyecto") ~
+      get[String]("tarea") ~
+      get[String]("subtarea") ~
+      get[String]("horas") map {
+        case programa ~
+          proyecto ~
+          tarea ~
+          subtarea ~
+          horas  => Histograma(
+          programa,
+          proyecto,
+          tarea,
+          subtarea,
+          horas)
+      }
+
+  }
+  implicit val recursoWrites = Json.writes[Histograma]
+}
