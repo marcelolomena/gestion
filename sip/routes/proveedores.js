@@ -18,6 +18,7 @@ module.exports = function (passport) {
 	// Create endpoint handlers for /proveedores
 		/* GET Home Page */
 	router.get('/proveedores', isAuthenticated, function (req, res) {
+
 		res.render('proveedores');
 	});
 
@@ -27,11 +28,11 @@ module.exports = function (passport) {
 		var proveedoresData = proveedorController.getProveedores;
 		res.render('proveedores', { proveedoresData: proveedoresData });
 	});
-*/
+	*/
 
 router.route('/proveedoreslist')
 	.post(isAuthenticated, proveedorController.postProveedores)
-	.get(isAuthenticated, proveedorController.getProveedores);
+	.get(isAuthenticated, proveedorController.getProveedoresPaginados);
 
 	// Create endpoint handlers for /proveedores/:id
 	router.route('/proveedores/:id')
