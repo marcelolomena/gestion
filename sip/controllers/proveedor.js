@@ -1,5 +1,5 @@
 var models = require('../models');
-
+var sequelize = require('../models/index').sequelize;
 // Create endpoint /api/proveedores for POST
 exports.postProveedores = function (req, res) {
   // Create a new instance of the Proveedor model
@@ -19,7 +19,7 @@ exports.postProveedores = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores for GET
+// Create endpoint /proveedores for GET
 exports.getProveedores = function (req, res) {
   models.Proveedor.findAll().then(function (proveedores) {
     res.json(proveedores);
@@ -28,35 +28,35 @@ exports.getProveedores = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores for GET
+// Create endpoint /proveedores for GET
 exports.getProveedoresPaginados = function (req, res) {
   // Use the Proveedores model to find all proveedores
+  var page = req.query.page;
+  var rows = req.query.rows;
 
-  var page = req.params.page || 2;
-  var rowsPerPage = req.params.perpage || 30;
+  var sql = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rows + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
+    "as resultNum, * " +
+    "FROM proveedor )" +
+    "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-  if (rowsPerPage > 100) {
-    rowsPerPage = 100; //this limits how many per page
-  }
-
-  var theQuery = 'declare @rowsPerPage as bigint; ' +
-    'declare @pageNum as bigint;' +
-    'set @rowsPerPage=' + rowsPerPage + '; ' +
-    'set @pageNum=' + page + ';   ' +
-    'With SQLPaging As   ( ' +
-    'Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY ID asc) ' +
-    'as resultNum, * ' +
-    'FROM proveedor )' +
-    'select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);';
+  models.Proveedor.count().then(function (records) {
+    var total = Math.ceil(records / rows);
+    sequelize.query(sql)
+      .spread(function (rows) {
+        res.json({ records: records, total: total, page: page, rows: rows });
+      });
+  })
 
 
-  sequelize.sequelize.query(theQuery)
-    .spread(function (result) {
-      res.json({ result: result });
-    });
+
 };
 
-// Create endpoint /api/proveedores/:id for GET
+// Create endpoint /proveedores/:id for GET
 exports.getProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
   models.Proveedor.find({ where: { 'id': req.params.id } }).then(function (proveedor) {
@@ -66,7 +66,7 @@ exports.getProveedor = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores/:id for PUT
+// Create endpoint /proveedores/:id for PUT
 exports.putProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
   models.Proveedor.update({ id: req.params.id }, function (err, num, raw) {
@@ -77,7 +77,7 @@ exports.putProveedor = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores/:id for DELETE
+// Create endpoint /proveedores/:id for DELETE
 exports.deleteProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor and remove it
   models.Proveedor.remove({ id: req.params.id }, function (err) {
