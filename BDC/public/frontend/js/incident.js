@@ -599,7 +599,12 @@ $(document).ready(function(){
 		formatter: function (cellvalue, options, rowObject) {
 			var color;
 			var val = restaFechas(formatDate(),rowObject.date_end);
-			if (val > 0) {
+			var estadoincidente = rowObject.status_name.trim();
+			var resuelto = 'Resuelto';
+			if(estadoincidente==resuelto){
+				color = 'green';
+				
+			} else if (val > 0 ) {
 			   color = 'green';
 			} else if (val == 0) {
 			   color = 'yellow';
@@ -614,8 +619,7 @@ $(document).ready(function(){
 		name: 'task_title', 
 		width: 200,
 		editable: false,
-		formatter: returnTaskLink,
-		search:true 
+		formatter: returnTaskLink
 		},
 		{
 		label: 'incident_id', 

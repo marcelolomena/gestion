@@ -25,6 +25,7 @@ import org.apache.poi.xssf.usermodel._
 object Incident extends Controller {
 
   def fromIncidentName(choice: String, value: String): String = choice match {
+    
     case "dId"                => " '" + value + "' "
     case "status_id"          => " '" + value + "' "
     case "severity_id"        => " '" + value + "' "
@@ -32,10 +33,11 @@ object Incident extends Controller {
     case "program_name"       => " '%" + value + "%' "
     case "sponsor_name"       => " '%" + value + "%' "
     case "brief_description"  => " '%" + value + "%' "
+    case "task_title"         => " '%" + value + "%' "
     case "date_creation"      => " '" + value + "' "
     case "date_end"           => " '" + value + "' "
     case "ir_number"          => value
-    case "alm_number"         => value
+    case "alm_number"         => " '" + value + "' "
     case _                    => "error"
   }
 
@@ -552,7 +554,11 @@ object Incident extends Controller {
                   } else if (m.field.equals("department")) {
                     if (m.data.toInt != 0)
                       qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
-                  } else {
+                  } else if (m.field.equals("task_title")) {
+                    if (m.data!=null){
+                      qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                    }
+                  }else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
                   }
                 }
