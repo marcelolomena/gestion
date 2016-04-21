@@ -2,8 +2,8 @@ $(document).ready(function(){
      
 var modelProveedor=[
 	    { label: 'id', name: 'id',key: true, hidden:true },
-	    { label: 'RUT', name: 'numrut',width:100,align:'center' },
-	    { label: 'Razón Social', name: 'razonsocial',width:400,align:'left' },	    
+	    { label: 'RUT', name: 'numrut',width:100,align:'center',search:false },
+	    { label: 'Razón Social', name: 'razonsocial',width:400,align:'left',search:true },	    
 	];	    
     $("#table_proveedor").jqGrid({
         url: '/proveedoreslist',
@@ -24,5 +24,6 @@ var modelProveedor=[
         rowList: [5, 10, 20, 50],
         //gridview: true
     });
+    $("#table_proveedor").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 
 });
