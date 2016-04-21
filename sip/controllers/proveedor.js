@@ -36,6 +36,16 @@ exports.getProveedoresPaginados = function (req, res) {
   var filters = req.query.filters;
   var condition = "";
 
+  var sql0 = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rows + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
+    "as resultNum, * " +
+    "FROM proveedor )" +
+    "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
   if (filters) {
     var jsonObj = JSON.parse(filters);
 
@@ -66,19 +76,10 @@ exports.getProveedoresPaginados = function (req, res) {
       })
 
     } else {
-      var sql = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rows + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
-        "as resultNum, * " +
-        "FROM proveedor )" +
-        "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.Proveedor.count().then(function (records) {
         var total = Math.ceil(records / rows);
-        sequelize.query(sql)
+        sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
           });
@@ -86,19 +87,10 @@ exports.getProveedoresPaginados = function (req, res) {
     }
 
   } else {
-    var sql = "declare @rowsPerPage as bigint; " +
-      "declare @pageNum as bigint;" +
-      "set @rowsPerPage=" + rows + "; " +
-      "set @pageNum=" + page + ";   " +
-      "With SQLPaging As   ( " +
-      "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
-      "as resultNum, * " +
-      "FROM proveedor )" +
-      "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
     models.Proveedor.count().then(function (records) {
       var total = Math.ceil(records / rows);
-      sequelize.query(sql)
+      sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
         });

@@ -26,7 +26,8 @@ module.exports = function (sequelize, DataTypes) {
   }, {
       timestamps: false,
       tableName: 'PROVEEDOR'
-    });
+    }
+  );
 
   return Proveedor;
 };
