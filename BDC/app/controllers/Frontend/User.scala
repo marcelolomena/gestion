@@ -73,7 +73,7 @@ object User extends Controller {
          consumo.put(a.fecha.toString(),a.horas)
          consumos.put(consumo)
       }
-      println(consumos)
+      //println(consumos)
       
       /*
       var consumos = new JSONObject();

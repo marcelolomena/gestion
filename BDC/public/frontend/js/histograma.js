@@ -1,3 +1,28 @@
+var month = [
+             "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+             "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+         ];  
+         now = new Date();
+         selectMes= document.getElementById( 'mesHistograma' );
+var numeroMes = now.getMonth()+1;
+         var nombreMes = month[now.getMonth()];
+var opt = document.createElement('option');
+opt.value = numeroMes;
+    opt.innerHTML = nombreMes;
+selectMes.appendChild(opt);
+now.setMonth( now.getMonth() - 1 );
+	while(now.getFullYear()=='2016'){
+         numeroMes = now.getMonth()+1;
+         nombreMes = month[now.getMonth()];
+
+    opt = document.createElement('option');
+    opt.value = numeroMes;
+    opt.innerHTML = nombreMes;
+    selectMes.appendChild(opt);
+
+now.setMonth( now.getMonth() - 1 );
+
+     }
 $(document).ready(function(){
 	var jsonOptions = {
 		    type :"POST",
@@ -77,8 +102,10 @@ $(document).ready(function(){
 	           	{label:'30',name:'30',width: 20,editable:false,search:true},
 	           	{label:'31',name:'31',width: 20,editable:false,search:true},
 	           	];	
+	var now = new Date();
+	var numeroMes = now.getMonth()+1;
 	$("#jqGridHistograma").jqGrid({
-	        url: '/listadoHistograma?mes=04',
+	        url: '/listadoHistograma?mes='+numeroMes,
 	        mtype: 'GET',
 	        datatype: 'json',
 	        page: 1,

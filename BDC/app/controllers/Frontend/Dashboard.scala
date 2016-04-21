@@ -2299,7 +2299,7 @@ object Dashboard extends Controller {
             val task_issues = RiskService.findIssueList(t.tId.get.toString(), 0)
             if (task_issues.size > 0) {
               for (r <- task_issues) {
-                println("task_issues --------" + r.title)
+                //println("task_issues --------" + r.title)
               }
             }
 
@@ -2313,7 +2313,7 @@ object Dashboard extends Controller {
 
               if (sub_task_issues.size > 0) {
                 for (r <- sub_task_issues) {
-                  println("sub_task_issues --------" + r.title)
+                  //println("sub_task_issues --------" + r.title)
                 }
               }
             }
