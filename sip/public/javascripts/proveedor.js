@@ -3,7 +3,7 @@ $(document).ready(function(){
 var modelProveedor=[
 	    { label: 'id', name: 'id',key: true, hidden:true },
 	    { label: 'RUT', name: 'numrut',width:100,align:'center' },
-	    { label: 'Razón Social', name: 'razonsocial',width:300,align:'left' },	    
+	    { label: 'Razón Social', name: 'razonsocial',width:400,align:'left' },	    
 	];	    
     $("#table_proveedor").jqGrid({
         url: '/proveedoreslist',

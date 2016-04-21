@@ -19,7 +19,7 @@ exports.postProveedores = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores for GET
+// Create endpoint /proveedores for GET
 exports.getProveedores = function (req, res) {
   models.Proveedor.findAll().then(function (proveedores) {
     res.json(proveedores);
@@ -28,10 +28,9 @@ exports.getProveedores = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores for GET
+// Create endpoint /proveedores for GET
 exports.getProveedoresPaginados = function (req, res) {
   // Use the Proveedores model to find all proveedores
-  var records, total;
   var page = req.query.page;
   var rows = req.query.rows;
 
@@ -43,21 +42,21 @@ exports.getProveedoresPaginados = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
     "as resultNum, * " +
     "FROM proveedor )" +
-    "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";    
+    "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-  models.Proveedor.count().then(function (c) {
-    records = c;
-    total = Math.ceil(c / rows);
+  models.Proveedor.count().then(function (records) {
+    var total = Math.ceil(records / rows);
+    sequelize.query(sql)
+      .spread(function (rows) {
+        res.json({ records: records, total: total, page: page, rows: rows });
+      });
   })
-  
-  sequelize.query(sql)
-    .spread(function (rows) {
-      res.json({ records: records, total: total, page: page, rows: rows });
-    });
+
+
 
 };
 
-// Create endpoint /api/proveedores/:id for GET
+// Create endpoint /proveedores/:id for GET
 exports.getProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
   models.Proveedor.find({ where: { 'id': req.params.id } }).then(function (proveedor) {
@@ -67,7 +66,7 @@ exports.getProveedor = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores/:id for PUT
+// Create endpoint /proveedores/:id for PUT
 exports.putProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
   models.Proveedor.update({ id: req.params.id }, function (err, num, raw) {
@@ -78,7 +77,7 @@ exports.putProveedor = function (req, res) {
   });
 };
 
-// Create endpoint /api/proveedores/:id for DELETE
+// Create endpoint /proveedores/:id for DELETE
 exports.deleteProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor and remove it
   models.Proveedor.remove({ id: req.params.id }, function (err) {
