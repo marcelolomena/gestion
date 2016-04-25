@@ -44,7 +44,7 @@ exports.getProveedoresPaginados = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
     "as resultNum, * " +
     "FROM proveedor )" +
-    "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
     var jsonObj = JSON.parse(filters);

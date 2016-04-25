@@ -1,5 +1,6 @@
 var models = require('../models');
-//var db  = require('../models/index');
+var proveedorController = require('../controllers/proveedor');
+var iniciativaController = require('../controllers/iniciativa');
 var express = require('express');
 var router = express.Router();
 
@@ -50,6 +51,28 @@ module.exports = function (passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
+	router.get('/proveedores', isAuthenticated, function (req, res) {
+
+		res.render('proveedores');
+	});
+
+	router.route('/proveedoreslist')
+		.post(isAuthenticated, proveedorController.postProveedores)
+		.get(isAuthenticated, proveedorController.getProveedoresPaginados);
+
+	// Create endpoint handlers for /proveedores/:id
+	router.route('/proveedores/:id')
+		.get(isAuthenticated, proveedorController.getProveedor)
+		.put(isAuthenticated, proveedorController.putProveedor)
+		.delete(isAuthenticated, proveedorController.deleteProveedor);
+
+    router.get('/iniciativas', isAuthenticated, function (req, res) {
+        res.render('iniciativas');
+    });
+
+    router.route('/iniciativaslist')
+        .get(isAuthenticated, iniciativaController.getIniciativasPaginados);
 
 	return router;
 }

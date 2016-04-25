@@ -1,20 +1,22 @@
 doctype html
 
 html
-  head
-    link(rel='stylesheet', href='stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    title Menu Lateral Jampudia.com
-    script(type='text/javascript', src='javascripts/jquery-1.12.3.min.js')
-    script(type='text/javascript', src='javascripts/jsplug.js')
+  block head
+   head
+     link(rel='stylesheet', href='stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+     link(rel='stylesheet', href='stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+     title Proveedores
+     script(type='text/javascript', src='javascripts/jquery-1.12.3.min.js')
+     script(type='text/javascript', src='javascripts/jsplug.js')
   body
     .container
+     block menu
       #sidebar
         ul
           li
             a(href='#') Dashboard
           li
-            a(href='/iniciativas') Iniciativas
+            a(href='#') Iniciativas
           li
             a(href='#') Proyectos
           li

@@ -35,9 +35,6 @@ initPassport(passport);
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
 
-var proveedores = require('./routes/proveedores')(passport);
-app.use('/', proveedores);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
