@@ -15,6 +15,7 @@ $(document).ready(function () {
             ];
             turl = '/proveedoreslist';
         } else if (id === 'iniciativa') {
+
             model = [
                 { label: 'id', name: 'id', key: true, hidden: true },
                 { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false },
@@ -27,14 +28,6 @@ $(document).ready(function () {
             turl = '/iniciativaslist';
         }
 
-        $('#jqTable').jqGrid("clearGridData");
-        $('#jqTable').jqGrid("GridUnload");
-        $('#jqTable').remove();
-        $('#jqWrapper').empty();
-
-        var table = document.createElement('table');
-        table.id = 'jqTable';
-        $('#jqWrapper').append(table);
 
         $("#jqTable").jqGrid({
             url: turl,
@@ -52,7 +45,7 @@ $(document).ready(function () {
             viewrecords: true,
             rowList: [5, 10, 20, 50]
         });
-        //$("#jqPager").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+        $("#jqPager").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
         //$("#jqWrapper").show();
         /*
         $table.jqGrid('setGridParam', {
