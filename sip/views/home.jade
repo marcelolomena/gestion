@@ -4,9 +4,15 @@ html
   head
     link(rel='stylesheet', href='stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
     link(rel='stylesheet', href='stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/jquery-ui.min.css',  type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/ui.jqgrid.css', type='text/css', media='screen', charset='utf-8')      
     title Menu Lateral Jampudia.com
     script(type='text/javascript', src='javascripts/jquery-1.12.3.min.js')
     script(type='text/javascript', src='javascripts/jsplug.js')
+    script(type='text/javascript', src='/javascripts/jquery-ui.js')    
+    script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
+    script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')      
+    script(type='text/javascript', src='javascripts/menu.js')
   body
     .container
       #sidebar
@@ -14,7 +20,7 @@ html
           li
             a(href='#') Dashboard
           li
-            a(href='/iniciativas') Iniciativas
+            a#iniciativa(href='#') Iniciativas
           li
             a(href='#') Proyectos
           li
@@ -26,7 +32,7 @@ html
           li
             a(href='#') Facturas	
           li
-            a(href='/proveedores') Proveedores			
+            a#proveedor(href='#') Proveedores			
           li
             a(href='signout') Salir
       .main-content
@@ -50,3 +56,4 @@ html
            .crums
            .txt_bienvenida
            .contenedorCentro
+            #jqWrapper        

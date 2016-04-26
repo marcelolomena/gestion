@@ -15,7 +15,7 @@ exports.getIniciativasPaginados = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
     "as resultNum, * " +
-    "FROM iniciativas )" +
+    "FROM iniciativa )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -36,7 +36,7 @@ exports.getIniciativasPaginados = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
         "as resultNum, * " +
-        "FROM iniciativas WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "FROM iniciativa WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.Iniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
