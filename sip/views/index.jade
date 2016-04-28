@@ -1,18 +1,46 @@
-extends layout
-
-block content
-	div.container
-		div.row
-			div.col-sm-6.col-md-4.col-md-offset-4
-				h1.text-center.login-title Sistema Presupuestario
-					div.account-wall
-						img(class='profile-img', src='../images/user.jpg?sz=120')
-						form(class='form-signin', action='/login', method='POST')
-							input(type='text', name='username' class='form-control', placeholder='Email',required, autofocus)
-							input(type='password', name='password' class='form-control', placeholder='Password', required)
-							button(class='btn btn-lg btn-primary btn-block', type='submit') Ingresar
-							span.clearfix
-					a(href='/signup', class='text-center new-account') Crear una cuenta
-					#message
-					if message
-						h1.text-center.error-message #{message}
+html
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+    title Login
+    link(rel='stylesheet', href='stylesheets/log.css', type='text/css', media='screen', charset='utf-8')    
+    script(type='text/javascript').
+      function MM_swapImgRestore() { //v3.0
+      var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+      }
+      function MM_preloadImages() { //v3.0
+      var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+      var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+      if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+      }
+      function MM_findObj(n, d) { //v4.01
+      var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+      d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+      if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+      for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+      if(!x && d.getElementById) x=d.getElementById(n); return x;
+      }
+      function MM_swapImage() { //v3.0
+      var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+      if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+      }
+  body(onload="MM_preloadImages('../images/send2.png')")
+    .contenido
+      .logCentro
+      form(name='login',action='/login', method='POST')
+        .cajaLog
+          .caja1
+            .sep1
+            .usuario
+              .titUser Usuario:
+              label(for='username')
+                input#textfield(type='text', name='username')
+            .clave
+              .titUser Clave:
+              label(for='password')
+                input#textfield(type='password', name='password')
+          .send
+            a(href='#', onmouseout='MM_swapImgRestore()', onmouseover="MM_swapImage('Image1','','../images/send2.png',1)", onclick='document.login.submit();')
+              img#Image1(src='../images/send1.png', name='Image1', width='80', height='80', border='0', title='Ent')
+            #message
+             if message
+              h1.text-center.error-message #{message}              

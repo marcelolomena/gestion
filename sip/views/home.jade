@@ -1,51 +1,237 @@
-doctype html
 html
   head
-    link(rel='stylesheet', href='stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
+    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
     title Menu Lateral Jampudia.com
+    link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='stylesheets/styles.css', type='text/css', media='screen', charset='utf-8')      
+    link(rel='stylesheet', href='stylesheets/style.css', title='style css', type='text/css', media='screen', charset='utf-8')
+    link(href='stylesheets/google.css', rel='stylesheet', type='text/css')
     script(type='text/javascript', src='javascripts/jquery-1.12.3.min.js')
     script(type='text/javascript', src='javascripts/jsplug.js')
+    script(type='text/javascript', src='javascripts/script.js')    
   body
     .container
       #sidebar
-        ul
-          li
-            a(href='#') Dashboard
-          li
-            a(href='#') Iniciativas
-          li
-            a(href='#') Proyectos
-          li
-            a(href='#') Continuidad	
-          li
-            a(href='#') Contratos
-          li
-            a(href='#') Pre-Facturas
-          li
-            a(href='#') Facturas	
-          li
-            a(href='/proveedores') Proveedores			
-          li
-            a(href='signout') Salir
+        .perfil_sesion
+          .user
+          .usuario1 Juan Pablo Subercaseaux
+          .usuario2 Ültimo Acceso 21/06/2015 - 10:32
+          .usuario3
+            a(href='signout') Cerrar Sesión
+        #cssmenu
+          ul
+            li.has-sub
+              a(href='#')
+                span Dashboard
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li
+                  a(href='#')
+                    span SubMenu 2
+                li
+                  a(href='#')
+                    span SubMenu 3
+                li.last
+                  a(href='#')
+                    span SubMenu 4
+            li.has-sub
+              a(href='#')
+                span Proyectos
+              ul
+                li.last
+                  a(href='/iniciativas')
+                    span Iniciativas
+            li.has-sub
+              a(href='#')
+                span Continuidad
+              ul
+                li.last
+                  a(href='#')
+                    span SubMenu 1
+            li.has-sub
+              a(href='#')
+                span Contratos
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li
+                  a(href='#')
+                    span SubMenu 2
+                li
+                  a(href='#')
+                    span SubMenu 3
+                li.last
+                  a(href='#')
+                    span SubMenu 4
+            li.has-sub
+              a(href='#')
+                span Prefacturas
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li
+                  a(href='#')
+                    span SubMenu 2
+                li
+                  a(href='#')
+                    span SubMenu 3
+                li.last
+                  a(href='#')
+                    span SubMenu 4
+            li.has-sub
+              a(href='#')
+                span Factura
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+            li.has-sub
+              a(href='#')
+                span Parámetros
+              ul
+                li
+                  a(href='#')
+                    span Conceptos Presupuestarios
+                li
+                  a(href='#')
+                    span Cuentas Contables
+                li
+                  a(href='#')
+                    span Servicios Externos
+                li
+                  a(href='#')
+                    span Estructuras Jerarquicas de CUI
+                li
+                  a(href='#')
+                    span Planes de Cuentas Alternativas
+                li
+                  a(href='#')
+                    span Funciones Equivalentes
+                li
+                  a(href='/proveedores')
+                    span Proveedores
+                li
+                  a(href='#')
+                    span Monedas
+                li
+                  a(href='#')
+                    span Valores Proyectados por Moneda
+                li
+                  a(href='#')
+                    span Perfilamiento
+                li.last
+                  a(href='#')
+                    span Ejercicios Presupuestarios
+            li.has-sub
+              a(href='#')
+                span Reportes
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li.last
+                  a(href='#')
+                    span SubMenu 2
       .main-content
         .swipe-area
         a#sidebar-toggle(href='#', data-toggle='.container')
           span.bar
           span.bar
           span.bar
-        .content
-         .header
-          .headMain
-           .user
-            .usuario1 Juan Pablo Subercaseaux
-            .usuario2 Ültimo Acceso 21/06/2015 - 10:32
-            .usuario3
-            a(href='#') Cerrar Sesión
-            .tituloWeb SISTEMA DE PRESUPUESTO DIVOT
-          .headUnderline
-         .central
-          .cuerpoCentral
-           .crums
-           .txt_bienvenida
-           .contenedorCentro
+        .contenido
+          header.bg-theme
+            .wrap-header
+              .row
+                img(src='../../images/header.png', width='384', height='95')
+                img(src='../images/vacio.png', width='300', height='4', border='0')
+                img(src='../images/header_titulo.png', width='384', height='95', border='0')
+          p(style='color: #f1563a')  
+          .zerogrid
+            .header
+              h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:center") • BIENVENIDOS •
+            .row
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#')
+                        img(src='../images/dashboard.jpg', alt='Dashboard', width='200', height='170', border='0', title='DASHBOARD')
+                    .item-info
+                      h3 DASHBOARD
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/proyectos.jpg', alt='', width='200', height='170', border='0', title='PROYECTOS')
+                    .item-info
+                      h3 PROYECTOS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/continuidad.jpg', alt='', width='200', height='170', border='0', title='CONTINUIDAD')
+                    .item-info
+                      h3 CONTINUIDAD
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/contratos.jpg', alt='', width='200', height='170', border='0', title='CONTRATOS')
+                    .item-info
+                      h3 CONTRATOS
+                  .item.t-center
+          .zerogrid
+            .row
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/prefacturas.jpg', alt='', border='0', title='PRE FACTURAS')
+                    .item-info
+                      h3 PRE FACTURAS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/facturas.jpg', alt='', border='0', title='FACTURAS')
+                    .item-info
+                      h3 FACTURAS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/parametros.jpg', alt='', border='0', title='PARAMETROS')
+                    .item-info
+                      h3 PARAMETROS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/reportes.jpg', alt='', border='0', title='REPORTES')
+                    .item-info
+                      h3 REPORTES
+                  .item.t-center
+          .zerogrid
+            .row
+              br
+              br
+              br
+              br

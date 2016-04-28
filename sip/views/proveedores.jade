@@ -1,39 +1,149 @@
-doctype html
 html
   head
-    link(rel='stylesheet', href='/stylesheets/menu.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/gatoco.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/jquery-ui.min.css', title='menu css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/ui.jqgrid.css', title='menu css', type='text/css', media='screen', charset='utf-8')           
+    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
     title Menu Lateral Jampudia.com
+    link(rel='stylesheet', href='/stylesheets/styles.css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/style.css', title='style css', type='text/css', media='screen', charset='utf-8') 
+    link(rel='stylesheet', href='/stylesheets/jquery-ui.min.css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/ui.jqgrid.css', type='text/css', media='screen', charset='utf-8')
+             
+                      
+    link(rel='stylesheet', href='/stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8') 
     script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
-    script(type='text/javascript', src='/javascripts/jsplug.js')
     script(type='text/javascript', src='/javascripts/jquery-ui.js')    
     script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
-    script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')  
-    script(type='text/javascript', src='/javascripts/proveedor.js')        
-   body
+    script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
+    script(type='text/javascript', src='/javascripts/script.js') 
+    script(type='text/javascript', src='/javascripts/proveedor.js')
+    script(type='text/javascript', src='javascripts/jsplug.js')    
+  body
     .container
       #sidebar
-        ul
-          li
-            a(href='#') Dashboard
-          li
-            a(href='#') Iniciativas
-          li
-            a(href='#') Proyectos
-          li
-            a(href='#') Continuidad	
-          li
-            a(href='#') Contratos
-          li
-            a(href='#') Pre-Facturas
-          li
-            a(href='#') Facturas	
-          li
-            a(href='/proveedores') Proveedores			
-          li
-            a(href='signout') Salir
+        .perfil_sesion
+          .user
+          .usuario1 Juan Pablo Subercaseaux
+          .usuario2 Ültimo Acceso 21/06/2015 - 10:32
+          .usuario3
+            a(href='signout') Cerrar Sesión
+        #cssmenu
+          ul
+            li.has-sub
+              a(href='#')
+                span Dashboard
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li
+                  a(href='#')
+                    span SubMenu 2
+                li
+                  a(href='#')
+                    span SubMenu 3
+                li.last
+                  a(href='#')
+                    span SubMenu 4
+            li.has-sub
+              a(href='#')
+                span Proyectos
+              ul
+                li.last
+                  a(href='/iniciativas')
+                    span Iniciativas
+            li.has-sub
+              a(href='#')
+                span Continuidad
+              ul
+                li.last
+                  a(href='#')
+                    span SubMenu 1
+            li.has-sub
+              a(href='#')
+                span Contratos
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li
+                  a(href='#')
+                    span SubMenu 2
+                li
+                  a(href='#')
+                    span SubMenu 3
+                li.last
+                  a(href='#')
+                    span SubMenu 4
+            li.has-sub
+              a(href='#')
+                span Prefacturas
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li
+                  a(href='#')
+                    span SubMenu 2
+                li
+                  a(href='#')
+                    span SubMenu 3
+                li.last
+                  a(href='#')
+                    span SubMenu 4
+            li.has-sub
+              a(href='#')
+                span Factura
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+            li.has-sub
+              a(href='#')
+                span Parámetros
+              ul
+                li
+                  a(href='#')
+                    span Conceptos Presupuestarios
+                li
+                  a(href='#')
+                    span Cuentas Contables
+                li
+                  a(href='#')
+                    span Servicios Externos
+                li
+                  a(href='#')
+                    span Estructuras Jerarquicas de CUI
+                li
+                  a(href='#')
+                    span Planes de Cuentas Alternativas
+                li
+                  a(href='#')
+                    span Funciones Equivalentes
+                li
+                  a(href='/proveedores')
+                    span Proveedores
+                li
+                  a(href='#')
+                    span Monedas
+                li
+                  a(href='#')
+                    span Valores Proyectados por Moneda
+                li
+                  a(href='#')
+                    span Perfilamiento
+                li.last
+                  a(href='#')
+                    span Ejercicios Presupuestarios
+            li.has-sub
+              a(href='#')
+                span Reportes
+              ul
+                li
+                  a(href='#')
+                    span SubMenu 1
+                li.last
+                  a(href='#')
+                    span SubMenu 2
       .main-content
         .swipe-area
         a#sidebar-toggle(href='#', data-toggle='.container')
@@ -41,20 +151,15 @@ html
           span.bar
           span.bar
         .content
-         .header
-          .headMain
-           .user
-            .usuario1 Juan Pablo Subercaseaux
-            .usuario2 Ültimo Acceso 21/06/2015 - 10:32
-            .usuario3
-            a(href='#') Cerrar Sesión
-            .tituloWeb SISTEMA DE PRESUPUESTO DIVOT
-          .headUnderline
-         .central
-          .cuerpoCentral
-           .crums
-           .txt_bienvenida
-           .contenedorCentro
-            #proveedorWrapper
-             table#table_proveedor
-             #pager_proveedor
+          header.bg-theme
+            .wrap-header
+              .row
+                img(src='../images/header.png', width='384', height='95')
+                img(src='../images/vacio.png', width='300', height='4', border='0')
+                img(src='../images/header_titulo.png', width='384', height='95', border='0')
+          .zerogrid_b
+            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+              h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") DASHBOARD
+          .zerogrid_b
+           table#table_proveedor
+           #pager_proveedor            

@@ -1,3 +1,5 @@
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
 // Create endpoint /proveedores for GET
 exports.getIniciativasPaginados = function (req, res) {
   // Use the Proveedores model to find all proveedores
@@ -5,6 +7,16 @@ exports.getIniciativasPaginados = function (req, res) {
   var rows = req.query.rows;
   var filters = req.query.filters;
   var condition = "";
+
+  var sql0 = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rows + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+    "as resultNum, * " +
+    "FROM iniciativa )" +
+    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -22,12 +34,12 @@ exports.getIniciativasPaginados = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
         "as resultNum, * " +
-        "FROM proveedor WHERE " + condition.substring(0, condition.length - 4) + ")" +
-        "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+        "FROM iniciativa WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      models.Proveedor.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.Iniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -36,19 +48,10 @@ exports.getIniciativasPaginados = function (req, res) {
       })
 
     } else {
-      var sql = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rows + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
-        "as resultNum, * " +
-        "FROM proveedor )" +
-        "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      models.Proveedor.count().then(function (records) {
+      models.Iniciativa.count().then(function (records) {
         var total = Math.ceil(records / rows);
-        sequelize.query(sql)
+        sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
           });
@@ -56,19 +59,10 @@ exports.getIniciativasPaginados = function (req, res) {
     }
 
   } else {
-    var sql = "declare @rowsPerPage as bigint; " +
-      "declare @pageNum as bigint;" +
-      "set @rowsPerPage=" + rows + "; " +
-      "set @pageNum=" + page + ";   " +
-      "With SQLPaging As   ( " +
-      "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
-      "as resultNum, * " +
-      "FROM proveedor )" +
-      "select id,CAST(numrut AS VARCHAR) + '-' + dvrut numrut,razonsocial from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-    models.Proveedor.count().then(function (records) {
+    models.Iniciativa.count().then(function (records) {
       var total = Math.ceil(records / rows);
-      sequelize.query(sql)
+      sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
         });
