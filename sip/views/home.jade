@@ -3,9 +3,9 @@ html
     meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
     title Menu Lateral Jampudia.com
+    link(rel='stylesheet', href='stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')
     link(rel='stylesheet', href='stylesheets/style.css', type='text/css', media='screen', charset='utf-8')    
-    link(rel='stylesheet', href='stylesheets/styles.css', type='text/css', media='screen', charset='utf-8') 
-    link(rel='stylesheet', href='stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')                   
+    link(rel='stylesheet', href='stylesheets/menu.css', type='text/css', media='screen', charset='utf-8') 
     link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
     script(type='text/javascript', src='javascripts/jquery-1.12.3.min.js')
     script(type='text/javascript', src='javascripts/jsplug.js')
@@ -143,11 +143,12 @@ html
           span.bar
           span.bar
           span.bar
-        .contenido
+        .content
           header.bg-theme
             .wrap-header
               .row
-                img(src='../../images/header.png', width='384', height='95')
+                a(href='#', target='_blank')
+                  img(src='../../images/header.png', width='384', height='95')
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           p(style='color: #f1563a')  
@@ -215,7 +216,7 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
+                      a(href='/proveedores')
                         img(src='../images/parametros.jpg', alt='', border='0', title='PARAMETROS')
                     .item-info
                       h3 PARAMETROS
