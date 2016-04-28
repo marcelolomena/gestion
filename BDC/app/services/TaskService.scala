@@ -848,6 +848,7 @@ object TaskService extends CustomColumns {
     //println(form.get.task_depend +" " +form.get.dependencies_type);
     val format = new java.text.SimpleDateFormat("dd-MM-yyyy")
     val task_depend = form.data.get("task_depend")
+    println("validando task_depend: "+form.data.get("task_depend"))
     var newform: play.api.data.Form[models.TaskMaster] = null
     val projectDetail = ProjectService.findProject(Integer.parseInt(form.data.get("pId").get))
     if (!form.data.get("plan_start_date").get.isEmpty() && !form.data.get("plan_end_date").get.isEmpty()) {

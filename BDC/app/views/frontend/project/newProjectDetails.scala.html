@@ -232,15 +232,15 @@
 
 			    <ul class="width_full" id="t_data_list">
 			    	<li class="header_task">
-			    		<div class="task_title">@Messages("newProjectDeatils.task") </div>
-			    		<div class="task_owner_name">@Messages("newProjectDeatils.taskowner") </div>
-			    		<div class="task_plan_start_date">@Messages("newProjectDeatils.plannedstartdate") </div>
-			    		<div class="task_plan_end_date">@Messages("newProjectDeatils.plannedenddate")</div>
-			    		<div class="task_plan_time">@Messages("newProjectDeatils.assignedhrs")  </div>
-			    		<div class="task_staus" @if(!project.get.baseline) {style="width:8%"}else{style="width:7%"}>@Messages("newProjectDeatils.subtasks") </div>
-			    		<div class="baseline_status">@Messages("newProjectDeatils.trackchanges")</div>
-			    		<div class="left task_staus" @if(!project.get.baseline) {style="width:8%;float:left;"}else{style="width:7%;float:left;"} >@Messages("addDepartment.projectworkflowstatus")</div>
-			    		<div class="left task_action " style="margin-left:15px;">@Messages("newProjectDeatils.action") </div>
+			    		<div class="task_title" style="width: 320px;">@Messages("newProjectDeatils.task") </div>
+			    		<div class="task_owner_name" style="width: 100px;">@Messages("newProjectDeatils.taskowner") </div>
+			    		<div class="task_plan_start_date" style="width: 65px; text-align: left;">@Messages("newProjectDeatils.plannedstartdate") </div>
+			    		<div class="task_plan_end_date" style="width: 65px; text-align: left;">@Messages("newProjectDeatils.plannedenddate")</div>
+			    		<div class="task_plan_time" style="width: 65px; text-align: left;">@Messages("newProjectDeatils.assignedhrs")  </div>
+			    		<div class="task_staus" style="width: 65px;">@Messages("newProjectDeatils.subtasks") </div>
+			    		<div class="baseline_status" style="width: 50px;">@Messages("newProjectDeatils.trackchanges")</div>
+			    		<div class="left task_staus" @if(!project.get.baseline) {style="width: 50px;"}else{style="width: 40px;"} >@Messages("addDepartment.projectworkflowstatus")</div>
+			    		<div class="left task_action " style="margin-left:15px;width: 70px;">@Messages("newProjectDeatils.action") </div>
 			    	</li>
     			    @if(tasks.size>0){
 				    	@for( (m , index)<- tasks.zipWithIndex){
@@ -248,24 +248,25 @@
 				    	<li class='width_full task_data @{if((index+1)%2==0){"task_odd_row"}else{"task_even_row"}}'>
 				    	 	<div class="main_task_data">
 					    		<a href="/project-task-details/@m.tId">	
-					    		<div class="task_title">
+					    		<div class="task_title" style="width: 320px;">
 				    				<span class="status_@m.task_status"></span>
 					    			<span style="float:left;width:83%;word-wrap: break-word;" class="show-task-details" id="mt_@m.tId.get">
-					    				@if(m.task_title.length>17){@m.task_title.substring(0,17)...}else{ @m.task_title }
+					    				@if(m.task_title.length>42){@m.task_title.substring(0,42)...}else{ @m.task_title }
 					    			</span> 
 					    			<span class="display-none" id="task_@m.tId.get">@m.task_title </span>
 				    			</div>
 				    			
-					    		<div class="task_owner_name" >@if(m.owner != -1){@UserService.findUserDetailsById(m.owner.toLong).get.first_name}</div>
-					    		<div class="task_plan_start_date"  style="">@m.plan_start_date.format("dd-MM-yyyy") </div>
-					    		<div class="task_plan_end_date" style="">@m.plan_end_date.format("dd-MM-yyyy") </div>
+					    		<div class="task_owner_name" style="width: 100px;">@if(m.owner != -1){@UserService.findUserDetailsById(m.owner.toLong).get.first_name @UserService.findUserDetailsById(m.owner.toLong).get.last_name}</div>
+					    		<div class="task_plan_start_date" style="width: 65px; text-align: left;">@m.plan_start_date.format("dd-MM-yyyy") </div>
+					    		<div class="task_plan_end_date" style="width: 65px; text-align: left;">@m.plan_end_date.format("dd-MM-yyyy") </div>
 					    		
-					    		<div class="task_plan_time" style="">@allocatedForTasks.get(m.tId.toString())</div>
+					    		<div class="task_plan_time" style="width: 65px;text-align: center;">@allocatedForTasks.get(m.tId.toString())</div>
 					    		@*<div class="task_plan_time" style="">@m.milestone_status </div>*@
-					    		<div class="task_staus" @if(!project.get.baseline) {style="width:8%"}else{style="width:7%"}>@TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size </div>
+					    		<div class="task_staus" style="width: 65px;text-align: center;">@TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size </div>
 					    		
-					    		<div class="baseline_status change-status-base" >@if(!project.get.baseline){No} else {Yes}</div>
-					    		<div class="left task_staus" @if(!project.get.baseline) {style="margin-right:25px;width:8%"}else{style="margin-right:25px;width:7%;"} >
+					    		<div class="baseline_status change-status-base" style="width: 50px;text-align: center;">@if(!project.get.baseline){No} else {Yes}</div>
+					    		  
+					    		<div class="left task_staus" @if(!project.get.baseline) {style="margin-right:25px;width: 50px;"}else{style="margin-right:25px;width: 40px;"} >
 					    		@{
 						    			if(!TaskService.findTaskStatus(m.tId.get.toString()).isEmpty){
 						    				TaskService.findTaskStatus(m.tId.get.toString()).get.status match{
@@ -279,8 +280,9 @@
 					    		}
 					    		
 					    		</div>
+					    		
 					    		</a>
-					    		<div  class="left task_action">
+					    		<div  class="left task_action" style="width: 70px; float:right;">
 
 					    			<span id="st_@m.tId" class="show_tasks_details"></span>	
 					    			@if(utils.UserAccess.checkAccess(req,"task_delete") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString)){

@@ -263,7 +263,7 @@ object Task extends Controller {
 
         BadRequest(views.html.frontend.task.newTask(newform, project, username, users, descipline, userMap, stageMap, userRoleMap, deliverableMap, pTypes))
       },
-      success => {
+      success => {  
         val theForm = TaskService.validateForm(ARTForms.taskForm.fill(success), "")
         if (theForm.hasErrors) {
           val project = ProjectService.findProject(Integer.parseInt(theForm.data.get("pId").get))
@@ -278,24 +278,15 @@ object Task extends Controller {
             success.plan_start_date, success.plan_end_date, success.task_description, success.plan_time,
             new Date(), success.task_status, user_id.toInt, success.owner, Option(success.task_discipline), success.completion_percentage,
             success.remark, success.task_depend, success.dependencies_type, Option(success.task_details.stage), Option(success.task_details.user_role), success.task_details.deliverable, success.task_details.task_type, 1)
-
           val latest_task = TaskService.insertTask(milestoneDetails)
 
           if(success.project_mode==42){
-            println("sin plantilla:" + success.project_mode)
             val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
               success.plan_start_date, success.plan_end_date, success.plan_start_date, null, null, new Date(), success.task_status, success.completion_percentage, 0, Option(""), Option(0), Option(0))
             SubTaskServices.insertSubTask(subtask)
           }else{
             
             var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-            
-            println("con plantilla:" + success.project_mode)
-            println("pert:" + success.pert)
-            println("plan_start_date:" + formattedDate.format(success.plan_start_date))
-            println("latest_task:" + latest_task)
-            println("task_title:" + success.task_title)
-            println("task_description:" + success.task_description)
             
             if(success.pert==0){ //con plantilla pero sin pert
 
@@ -857,7 +848,7 @@ object Task extends Controller {
 
             for (t <- tasks) {
               var current_tId = t.tId.get.toString()
-              if (!t.task_depend.get.isEmpty) {
+              if (!t.task_depend.getOrElse("").isEmpty) {
                 var task_depend = t.task_depend.get
                 var new_task_depend = ""
                 var task_dpeend_aaray = task_depend.split(",")
