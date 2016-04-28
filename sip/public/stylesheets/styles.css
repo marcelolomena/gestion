@@ -1,5 +1,4 @@
-/*@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,300); */
-
+@import url('stylesheet.css'); 
 /* Base Styles */
 #cssmenu,
 #cssmenu ul,
@@ -11,7 +10,7 @@
 	list-style: none;
 	text-decoration: none;
 	line-height: 48px;
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'robotolight';
 	font-size: 14px;
 	position: relative;
 }
