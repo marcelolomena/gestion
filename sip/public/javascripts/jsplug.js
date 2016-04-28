@@ -5,7 +5,7 @@ $(document).ready(function () {
   });
   //$.mobile.loadingMessage = false;
 });
-/*
+
 $(".swipe-area").swipe({
   swipeStatus: function (event, phase, direction, distance, duration, fingers) {
     if (phase == "move" && direction == "right") {
@@ -18,4 +18,3 @@ $(".swipe-area").swipe({
     }
   }
 });
-*/
