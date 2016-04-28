@@ -16,13 +16,10 @@ var modelProveedor=[
         height: 'auto',
         autowidth:true, 
         shrinkToFit: false,
-        //forceFit:true,
-        //subGrid: true, 
         caption:'Lista de proveedores',
         pager: "#pager_proveedor",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        //gridview: true
     });
     $("#table_proveedor").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 

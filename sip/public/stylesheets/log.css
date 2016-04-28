@@ -119,3 +119,16 @@ body {
 	width: 55px;
 	float: left;
 }
+.fail    {
+	height: 60px;
+	width: 203px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 12px;
+	line-height: 25px;
+	color: #F60;
+	font-family: Verdana, Geneva, sans-serif;
+	padding-right: 15px;
+	padding-left: 15px;
+	padding-top: 10px;
+}

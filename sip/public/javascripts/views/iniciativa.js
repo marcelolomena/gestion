@@ -24,7 +24,6 @@ var modelIniciativa=[
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        //gridview: true
     });
     $("#table_iniciativa").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 

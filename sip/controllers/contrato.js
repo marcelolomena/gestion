@@ -1,8 +1,8 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-// Create endpoint /iniciativas for GET
-exports.getIniciativasPaginados = function (req, res) {
-  // Use the Iniciativas model to find all iniciativas
+// Create endpoint /contratos for GET
+exports.getContratosPaginados = function (req, res) {
+  // Use the Contratos model to find all contratos
   var page = req.query.page;
   var rows = req.query.rows;
   var filters = req.query.filters;
@@ -13,9 +13,9 @@ exports.getIniciativasPaginados = function (req, res) {
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombrecontrato asc) " +
     "as resultNum, * " +
-    "FROM iniciativa )" +
+    "FROM contrato )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -34,12 +34,12 @@ exports.getIniciativasPaginados = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombrecontrato asc) " +
         "as resultNum, * " +
-        "FROM iniciativa WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "FROM contrato WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      models.Iniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.Contrato.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -49,7 +49,7 @@ exports.getIniciativasPaginados = function (req, res) {
 
     } else {
 
-      models.Iniciativa.count().then(function (records) {
+      models.Contrato.count().then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -60,7 +60,7 @@ exports.getIniciativasPaginados = function (req, res) {
 
   } else {
 
-    models.Iniciativa.count().then(function (records) {
+    models.Contrato.count().then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {

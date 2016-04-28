@@ -41,6 +41,7 @@ html
           .send
             a(href='#', onmouseout='MM_swapImgRestore()', onmouseover="MM_swapImage('Image1','','../images/send2.png',1)", onclick='document.login.submit();')
               img#Image1(src='../images/send1.png', name='Image1', width='80', height='80', border='0', title='Ent')
-            #message
-             if message
-              h1.text-center.error-message #{message}              
+        .fail
+         if message
+          h1.text-center.error-message #{message}
+                           
