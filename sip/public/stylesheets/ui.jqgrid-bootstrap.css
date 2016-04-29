@@ -16,7 +16,7 @@
 
 /* Caption*/
 .ui-jqgrid .ui-jqgrid-titlebar {
-	font-weight: normal;
+	font-weight: bold;
 	min-height:37px; 
 	padding: 4px 8px; 
 	position: relative; 
@@ -188,6 +188,7 @@ div.tablediv > .table-bordered {
 	overflow: hidden; 
 	white-space: pre; 
 	padding-right: 2px;
+	font-size: 15px;
 }
 .ui-jqgrid tr.jqgfirstrow  td {
 	height:auto; 

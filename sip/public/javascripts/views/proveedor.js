@@ -3,7 +3,7 @@ $(document).ready(function(){
 var modelProveedor=[
 	    { label: 'id', name: 'id',key: true, hidden:true },
 	    { label: 'RUT', name: 'numrut',width:100,align:'center',search:false },
-	    { label: 'Razón Social', name: 'razonsocial',width:400,align:'left',search:true },	    
+	    { label: 'Razón Social', name: 'razonsocial',width:600,align:'left',search:true },	    
 	];	    
     $("#table_proveedor").jqGrid({
         url: '/proveedoreslist',
@@ -14,7 +14,7 @@ var modelProveedor=[
         rowNum: 10,
         regional : 'es',
         height: 'auto',
-        autowidth:true, 
+        width:null, 
         shrinkToFit: false,
         caption:'Lista de proveedores',
         pager: "#pager_proveedor",

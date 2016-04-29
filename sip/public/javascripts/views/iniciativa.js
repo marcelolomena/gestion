@@ -2,12 +2,12 @@ $(document).ready(function(){
      
 var modelIniciativa=[
 	    { label: 'id', name: 'id',key: true, hidden:true },
-	    { label: 'Art', name: 'codigoart',width:100,align:'center',search: false },
-	    { label: 'Proyecto', name: 'nombreproyecto',width:400,align:'left',search: true },
-        { label: 'División', name: 'divisionsponsor',width:200,align:'left',search: true }, 
-        { label: 'Sponsor', name: 'sponsor1',width:200,align:'left',search: true },   
-        { label: 'Gerente', name: 'gerenteresponsable',width:200,align:'left',search: true },
-        { label: 'PMO', name: 'pmoresponsable',width:200,align:'left',search: true },                               	    
+	    { label: 'Art', name: 'codigoart',width:90,align:'center',search: false },
+	    { label: 'Proyecto', name: 'nombreproyecto',width:500,align:'left',search: true },
+        { label: 'División', name: 'divisionsponsor',width:245,align:'left',search: true }, 
+        { label: 'Sponsor', name: 'sponsor1',width:180,align:'left',search: true },   
+        { label: 'Gerente', name: 'gerenteresponsable',width:180,align:'left',search: true },
+        { label: 'PMO', name: 'pmoresponsable',width:180,align:'left',search: true },                               	    
 	];	    
     $("#table_iniciativa").jqGrid({
         url: '/iniciativaslist',
@@ -18,7 +18,7 @@ var modelIniciativa=[
         rowNum: 10,
         regional : 'es',
         height: 'auto',
-        autowidth:true, 
+        width:null, 
         shrinkToFit: false,
         caption:'Lista de iniciativas',
         pager: "#pager_iniciativa",

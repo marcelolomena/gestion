@@ -6,9 +6,9 @@
 	box-sizing: content-box;
 }
 .ui-jqgrid .ui-jqgrid-view {position: relative;left:0; top: 0; padding: 0; font-size:11px; z-index:100;}
-.ui-jqgrid .ui-common-table {border-width: 0px; border-style: none; border-spacing: 0px; padding: 0;}
+.ui-jqgrid .ui-common-table {border-width: 0px; border-style: none; border-spacing: 0px; padding: 0;font-size: 15px;}
 /* caption*/
-.ui-jqgrid .ui-jqgrid-titlebar {height:19px; padding: .3em .2em .2em .3em; position: relative; font-size: 12px; border-left: 0 none;border-right: 0 none; border-top: 0 none;}
+.ui-jqgrid .ui-jqgrid-titlebar {height:19px; padding: .3em .2em .2em .3em; position: relative; font-size: 17px; border-left: 0 none;border-right: 0 none; border-top: 0 none;}
 .ui-jqgrid .ui-jqgrid-caption {text-align: left;}
 .ui-jqgrid .ui-jqgrid-title { margin: .1em 0 .2em; }
 .ui-jqgrid .ui-jqgrid-titlebar-close { position: absolute;top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height:18px; cursor:pointer;}
@@ -19,7 +19,7 @@
 .ui-jqgrid .ui-jqgrid-hbox {float: left; padding-right: 20px;}
 .ui-jqgrid .ui-jqgrid-htable {table-layout:fixed;margin:0;border-collapse: separate;}
 .ui-jqgrid .ui-jqgrid-htable th { height: 27px; padding: 0 2px 0 2px;}
-.ui-jqgrid .ui-jqgrid-htable th div {overflow: hidden; position:relative;margin: .1em 0em .1em 0em;}
+.ui-jqgrid .ui-jqgrid-htable th div {overflow: hidden; position:relative;margin: .1em 0em .5em 0em;}
 .ui-th-column, .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {overflow: hidden;white-space: nowrap;text-align:center;border-top : 0 none;border-bottom : 0 none;}
 .ui-th-column-header, .ui-jqgrid .ui-jqgrid-htable th.ui-th-column-header {overflow: hidden;white-space: nowrap;text-align:center;border-top : 0 none; height: 26px;}
 .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr {border-left : 0 none;}
@@ -85,7 +85,7 @@
 .ui-jqgrid .ui-jqgrid-pager .ui-pg-div  span.ui-icon,
 .ui-jqgrid .ui-jqgrid-toppager .ui-pg-div  span.ui-icon
 {float:left;margin: 2px; width:18px;}
-.ui-jqgrid td input, .ui-jqgrid td select, .ui-jqgrid td textarea { margin: 0; padding-top:5px;padding-bottom: 5px;}
+.ui-jqgrid td input, .ui-jqgrid td select, .ui-jqgrid td textarea { margin: 0; padding-top:5px;padding-bottom: 5px;height: 28px;}
 .ui-jqgrid td textarea {width:auto;height:auto;}
 .ui-jqgrid .ui-jqgrid-toppager {border-left: 0 none !important;border-right: 0 none !important; border-top: 0 none !important; margin: 0 !important; padding: 0 !important; position: relative;white-space: nowrap;overflow: hidden;}
 .ui-jqgrid .ui-jqgrid-pager .ui-pager-table {
@@ -248,7 +248,7 @@ a.g-menu-item, a.soptclass, a.clearsearchclass { cursor: pointer; }
 .ui-jqgrid .ui-jqgrid-view select,
 .ui-jqgrid .ui-jqgrid-view textarea,
 .ui-jqgrid .ui-jqgrid-view button {
-    font-size: 11px;
+    font-size: 13px;
 }
 .ui-jqgrid .ui-scroll-popup {width: 95px;}
 .ui-search-table select,
