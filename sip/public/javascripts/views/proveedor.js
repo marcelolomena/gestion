@@ -20,6 +20,7 @@ var modelProveedor=[
         pager: "#pager_proveedor",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
+        styleUI : "Bootstrap"
     });
     $("#table_proveedor").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 
