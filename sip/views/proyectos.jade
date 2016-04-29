@@ -7,16 +7,16 @@ html
     link(rel='stylesheet', href='/stylesheets/ui.jqgrid.css', type='text/css', media='screen', charset='utf-8')   
     link(rel='stylesheet', href='/stylesheets/ui.jqgrid-bootstrap.css', type='text/css', media='screen', charset='utf-8')   
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')                     
-    link(rel='stylesheet', href='/stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
-    link(rel='stylesheet', href='/stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')       
-    script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
-    script(type='text/javascript', src='/javascripts/jquery-ui.js')    
+    link(rel='stylesheet', href='stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
+    link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
+    script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+    script(type='text/javascript', src='/javascripts/jquery-ui.js')       
     script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
     script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
     script(type='text/javascript', src='/javascripts/script.js') 
-    script(type='text/javascript', src='/javascripts/views/iniciativa.js')
-    script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
-    script(type='text/javascript', src='/javascripts/jsplug.js')     
+    script(type='text/javascript', src='/javascripts/views/proyecto.js')
+    script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')    
+    script(type='text/javascript', src='/javascripts/jsplug.js')    
   body
     .container
       #sidebar
@@ -45,7 +45,7 @@ html
                   a(href='#')
                     span SubMenu 4
             li.has-sub
-              a(href='/contratos')
+              a(href='#')
                 span Proyectos
               ul
                 li.last
@@ -164,5 +164,5 @@ html
             .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
               h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") DASHBOARD
           .zerogrid_b
-           table#table_iniciativa
-           #pager_iniciativa          
+           table#grid
+           #pager            

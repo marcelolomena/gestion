@@ -2,6 +2,7 @@ var models = require('../models');
 var proveedorController = require('../controllers/proveedor');
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
+var proyectoController = require('../controllers/proyecto');
 var express = require('express');
 var router = express.Router();
 
@@ -80,6 +81,14 @@ module.exports = function (passport) {
 
     router.route('/contratoslist')
         .get(isAuthenticated, contratoController.getContratosPaginados);
+		
+    router.get('/proyectos', isAuthenticated, function (req, res) {
+        res.render('proyectos');
+    });
+
+    router.route('/proyectoslist')
+        .get(isAuthenticated, proyectoController.getProyectosPaginados);
+		
 
 	return router;
 }
