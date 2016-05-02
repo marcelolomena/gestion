@@ -54,7 +54,7 @@
 						@for(p <- programs){
 							
 							<div class="dash_right_data_2">
-							<span class="employee_project"  id="task_@p.program_id">@if(p.program_name.length()> 35){@p.program_name.substring(0, 35)&nbsp;...}else{@p.program_name}		 </span>
+							<span class="employee_project"  id="task_@p.program_id" style="width: 550px;">@if(p.program_name.length()> 70){@p.program_name.substring(0, 70)&nbsp;...}else{@p.program_name}		 </span>
 								<span class="show_tasks"  id="subtask_@p.program_id"></span>
 								<div class="width_full task_list_div" id="task_list_@p.program_id">
 									@for(s <- SubTaskServices.findSubTasksListForProgram(session.get("uId").get, p.program_id.get.toString())){
