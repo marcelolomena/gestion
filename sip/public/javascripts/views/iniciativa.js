@@ -28,14 +28,23 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: null,
-        shrinkToFit: false,
+        width:null, 
+        shrinkToFit: false,        
         caption: 'Lista de iniciativas',
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        styleUI: "Bootstrap"
+        styleUI: "Bootstrap"        
     });
     $("#table_iniciativa").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
+    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
+        search: false, // show search button on the toolbar
+        add: true,
+        edit: true,
+        del: true,
+        refresh: true
+    });
+
+    $("#pager_iniciativa_left").css("width", "");
 });
