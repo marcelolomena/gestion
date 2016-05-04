@@ -3,7 +3,7 @@ $(document).ready(function () {
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Art', name: 'codigoart', width: 90, align: 'center', search: false },
-        { label: 'Proyecto', name: 'nombreproyecto', width: 500, align: 'left', search: true },
+        { label: 'Proyecto', name: 'nombreproyecto', width: 500, align: 'left', search: true,editable: true },
         { label: 'División', name: 'divisionsponsor', width: 245, align: 'left', search: true },
         { label: 'Sponsor', name: 'sponsor1', width: 200, align: 'left', search: true },
         { label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true },

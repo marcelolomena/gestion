@@ -103,6 +103,7 @@ exports.getProveedoresPaginados = function (req, res) {
 exports.getProveedor = function (req, res) {
   // Use the Proveedor model to find a specific proveedor
   models.Proveedor.find({ where: { 'id': req.params.id } }).then(function (proveedor) {
+    console.log(proveedor);
     res.json(proveedor);
   }).error(function (err) {
     res.send(err);
