@@ -2,10 +2,10 @@ $(document).ready(function () {
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Contrato', name: 'nombrecontrato', width: 500, align: 'left', search: true },
+        { label: 'Contrato', name: 'nombrecontrato', width: 500, align: 'left', search: true, editable: true, formoptions: {rowpos:1,colpos:1} },
         {
-            label: 'Fecha Inicio', name: 'fechainicontrato', width: 110, align: 'left', search: true,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }, editable: true,
+            label: 'Fecha Inicio', name: 'fechainicontrato', width: 150, align: 'left', search: true,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }, editable: true, formoptions: {rowpos:1,colpos:2},
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
@@ -14,8 +14,9 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Fecha Termino', name: 'fechatercontrato', width: 110, align: 'left', search: true,
+            label: 'Fecha Termino', name: 'fechatercontrato', width: 150, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }, editable: true,
+            formoptions: {rowpos:2,colpos:1},
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
@@ -23,9 +24,9 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Solicitud', name: 'solicitudcontrato', width: 100, align: 'left', search: false },
-        { label: 'Estado', name: 'estado', width: 180, align: 'left', search: true },
-        { label: 'Plazo', name: 'plazocontrato', width: 100, align: 'left', search: true },
+        { label: 'Solicitud', name: 'solicitudcontrato', width: 100, align: 'left', search: true, editable: true, formoptions: {rowpos:2,colpos:2} },
+        { label: 'Estado', name: 'estado', width: 180, align: 'left', search: true, editable: true, formoptions: {rowpos:3,colpos:1} },
+        { label: 'Plazo', name: 'plazocontrato', width: 100, align: 'left', search: true, editable: true, formoptions: {rowpos:3,colpos:2} },
     ];
     $("#grid").jqGrid({
         url: '/contratoslist',
