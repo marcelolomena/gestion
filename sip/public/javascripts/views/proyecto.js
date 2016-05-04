@@ -83,5 +83,14 @@ $(document).ready(function () {
     });
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    
+    $('#grid').jqGrid('navGrid', "#pager", {
+        search: false, // show search button on the toolbar
+        add: true,
+        edit: true,
+        del: true,
+        refresh: true
+    });     
 
+    $("#pager_left").css("width", "");
 });

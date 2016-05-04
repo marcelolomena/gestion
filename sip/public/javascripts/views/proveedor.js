@@ -23,5 +23,14 @@ var modelProveedor=[
         styleUI : "Bootstrap"
     });
     $("#table_proveedor").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+    
+    $('#table_proveedor').jqGrid('navGrid', "#pager_proveedor_left", {
+        search: false, // show search button on the toolbar
+        add: true,
+        edit: true,
+        del: true,
+        refresh: true
+    });     
 
+    $("#pager_proveedor_left").css("width", "");
 });

@@ -23,7 +23,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Solicitud', name: 'solicitudcontrato', width: 70, align: 'left', search: false },
+        { label: 'Solicitud', name: 'solicitudcontrato', width: 100, align: 'left', search: false },
         { label: 'Estado', name: 'estado', width: 180, align: 'left', search: true },
         { label: 'Plazo', name: 'plazocontrato', width: 100, align: 'left', search: true },
     ];
@@ -46,5 +46,14 @@ $(document).ready(function () {
     });
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    
+    $('#grid').jqGrid('navGrid', "#pager", {
+        search: false, // show search button on the toolbar
+        add: true,
+        edit: true,
+        del: true,
+        refresh: true
+    });    
 
+    $("#pager_left").css("width", "");
 });
