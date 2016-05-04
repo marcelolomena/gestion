@@ -143,6 +143,7 @@ body .wrap-body{
 	position: relative;
 	padding-bottom: 10px;
 	padding-left: 5px;
+	padding-right: 10px;
 }
 .main-content .content{
 	box-sizing: border-box;
@@ -525,4 +526,23 @@ images{
 	max-width:100%;
 	height: auto;
 	width: auto\9;
+}
+/* Cambios a bootstrap */
+.ui-jqgrid .ui-jqgrid-htable .ui-th-div {
+	height: 22px;
+	margin-top: 0px;
+}
+img {
+	max-width: 100%;
+    height: auto;
+}
+.row {
+	margin-right: 0px;
+    margin-left: 0px;
+}
+.container {
+	padding-right: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
