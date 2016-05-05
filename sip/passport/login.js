@@ -18,7 +18,7 @@ module.exports = function (passport) {
 					console.log('Clave inválida');
 					return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 				} else {
-					req.session.user = user;
+					//req.session.user = user;
 					return done(null, user);
 				}
 			}).error(function (err) {

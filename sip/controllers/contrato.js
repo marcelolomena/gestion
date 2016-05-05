@@ -14,8 +14,8 @@ exports.getContratosPaginados = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombrecontrato asc) " +
-    "as resultNum, * " +
-    "FROM contrato )" +
+    "as resultNum, c.*,p.razonsocial " +
+    "FROM contrato c join proveedor p on c.idproveedor=p.id)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -35,9 +35,11 @@ exports.getContratosPaginados = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombrecontrato asc) " +
-        "as resultNum, * " +
-        "FROM contrato WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "as resultNum, c.*,p.razonsocial " +
+        "FROM contrato c join proveedor p on c.idproveedor=p.id WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+      console.log(sql);
 
       models.Contrato.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);

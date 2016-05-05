@@ -50,8 +50,15 @@ module.exports = function (passport) {
 
 	/* Handle Logout */
 	router.get('/signout', function (req, res) {
-		req.logout();
-		res.redirect('/');
+		req.session.destroy(function (err) {
+			if (err) {
+				console.log(err);
+			} else {
+				req.logout();
+				res.redirect('/');
+			}
+		});
+
 	});
 
 	router.get('/proveedores', isAuthenticated, function (req, res) {
@@ -75,20 +82,24 @@ module.exports = function (passport) {
     router.route('/iniciativaslist')
         .get(isAuthenticated, iniciativaController.getIniciativasPaginados);
 
+	// Create endpoint handlers for /proveedores/:id
+	router.route('/iniciativa/new')
+		.post(isAuthenticated, iniciativaController.postIniciativa);
+
     router.get('/contratos', isAuthenticated, function (req, res) {
         res.render('contratos');
     });
 
     router.route('/contratoslist')
         .get(isAuthenticated, contratoController.getContratosPaginados);
-		
+
     router.get('/proyectos', isAuthenticated, function (req, res) {
         res.render('proyectos');
     });
 
     router.route('/proyectoslist')
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
-		
+
 
 	return router;
 }
