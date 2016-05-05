@@ -83,7 +83,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, iniciativaController.getIniciativasPaginados);
 
 	// Create endpoint handlers for /proveedores/:id
-	router.route('/iniciativas/new')
+	router.route('/iniciativa/new')
 		.post(isAuthenticated, iniciativaController.postIniciativa);
 
     router.get('/contratos', isAuthenticated, function (req, res) {

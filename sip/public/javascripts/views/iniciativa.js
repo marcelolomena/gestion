@@ -34,6 +34,7 @@ $(document).ready(function () {
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
+        editurl: '/iniciativa/new',
         styleUI: "Bootstrap"
     });
     $("#table_iniciativa").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
@@ -42,16 +43,18 @@ $(document).ready(function () {
         {
             recreateForm: true,
             closeAfterEdit: true,
+    		mtype: 'POST',
+    		url: '/iniciativa/new',            
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.reateJSON,
-            editCaption: "Modifica Iniciativa",
+            addCaption: "Agrega Iniciativa",
             //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
         },
         {
-            editCaption: "Agrega Iniciativa",
+            editCaption: "Modifica Iniciativa",
             //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText

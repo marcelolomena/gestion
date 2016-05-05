@@ -101,7 +101,7 @@ $(document).ready(function () {
             }
         },
         {
-            editCaption: "Agrega Contrato",
+            addCaptionCaption: "Agrega Contrato",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
