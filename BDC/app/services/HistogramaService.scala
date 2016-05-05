@@ -18,7 +18,7 @@ object HistogramaService {
   def listadoHistograma(uid: String,mes: String): Seq[Histograma] = {
 
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.histogramaListado {uid},{mes}").on(
+      SQL("EXEC art.histogramaListado2 {uid},{mes}").on(
         'uid -> uid.toInt,
         'mes ->mes).executeQuery().as(Histograma.histograma *)
     }
