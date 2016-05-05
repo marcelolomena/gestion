@@ -4,7 +4,7 @@ var sequelize = require('../models/index').sequelize;
 
 exports.postIniciativa = function (req, res) {
   // Create a new instance of the Iniciativa model
-  var iniciativa = new models.Iniciativa();
+  var iniciativa = new Iniciativa();
 
   iniciativa.codigoart = req.body.codigoart;
   iniciativa.nombreproyecto = req.body.nombreproyecto;
