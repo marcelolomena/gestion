@@ -88,13 +88,18 @@ $(document).ready(function () {
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
-        add: true,
-        edit: true,
-        del: true,
-        refresh: true,
-        search: false
-    },
+    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, refresh: true, search: false },
+        {
+            recreateForm: true,
+            closeAfterEdit: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.reateJSON,
+            editCaption: "Modifica Contrato",
+            template: template,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }
+        },
         {
             editCaption: "Agrega Contrato",
             template: template,
@@ -103,14 +108,14 @@ $(document).ready(function () {
             }
         },
         {
-            editCaption: "Modifica Contrato",
-            template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
         },
         {
-        });
+            recreateFilter: true
+        }
+    );
 
     $("#pager_left").css("width", "");
 });
