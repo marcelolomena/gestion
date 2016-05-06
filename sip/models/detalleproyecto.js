@@ -1,89 +1,105 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('EROGACIONES', {
+  return sequelize.define('detalleproyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    sap: {
+    idproyecto: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'proyecto',
+        key: 'id'
+      }
+    },
+    numerotarea: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombretarea: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fechacreacion: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechainicio: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechacierre: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    idcui: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    cui: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    rutproveedor: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    razonsocial: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    factura: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechafactura: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechacontabilizacion: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    contrato: {
+    idcuentacontable: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    anexo: {
-      type: DataTypes.INTEGER,
+    tarea: {
+      type: DataTypes.STRING,
       allowNull: true
     },
-    codigoart: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    partida: {
+    idcuenta: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
     cuentacontable: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    cui: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idservicio: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    codigotarea: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    moneda: {
-      type: DataTypes.STRING,
+    presupuesto: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
-    periodo: {
+    presupuestopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    compromiso: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    compromisopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    realacumulado: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    realacumuladopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldo: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    borrado: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    montoporperiodo: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    montopesos: {
-      type: DataTypes.FLOAT,
       allowNull: true
     }
   }, {
-    tableName: 'EROGACIONES'
+    tableName: 'detalleproyecto'
   });
 };

@@ -1,45 +1,53 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('contrato', {
+  return sequelize.define('erogacionproyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    idproveedor: {
+    iddetalleproyecto: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'proveedor',
+        model: 'detalleproyecto',
         key: 'id'
       }
+    },
+    sap: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    idproveedor: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    rutproveedor: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    razonsocial: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    factura: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fechafactura: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechacontabilizacion: {
+      type: DataTypes.DATE,
+      allowNull: true
     },
     contrato: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
     anexo: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    solicitudcontrato: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    solicitudcontratoes: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nombrecontrato: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idsap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idpmo: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -47,60 +55,52 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    fechainicontrato: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechatercontrato: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechacontrol: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    meses: {
+    partida: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    estado: {
+    idcuenta: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    cuentacontable: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    plazocontrato: {
+    idcui: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    cui: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    idservicio: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    tarea: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    criticidad: {
+    idmoneda: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    moneda: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    montototal: {
+    periodo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    montoporperiodo: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    condicionnegociacion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    frecuenciafacturacion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    numero: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    uidpmo: {
-      type: DataTypes.INTEGER,
+    montopesos: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     borrado: {
@@ -108,6 +108,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'contrato'
+    tableName: 'erogacionproyecto'
   });
 };

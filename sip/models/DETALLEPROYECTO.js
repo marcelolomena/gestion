@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('DETALLEPROYECTO', {
+  return sequelize.define('detalleproyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'PROYECTO',
+        model: 'proyecto',
         key: 'id'
       }
     },
@@ -50,8 +50,56 @@ module.exports = function(sequelize, DataTypes) {
     idcuentacontable: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    tarea: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    idcuenta: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    cuentacontable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    presupuesto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    presupuestopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    compromiso: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    compromisopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    realacumulado: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    realacumuladopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldo: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
-    tableName: 'DETALLEPROYECTO'
+    tableName: 'detalleproyecto'
   });
 };

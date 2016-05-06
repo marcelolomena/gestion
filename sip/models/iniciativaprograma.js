@@ -1,41 +1,49 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('detallecompromiso', {
+  return sequelize.define('iniciativaprograma', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    iddetalleserviciocto: {
+    idiniciativa: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'detalleserviciocto',
+        model: 'iniciativa',
         key: 'id'
       }
     },
-    idperiodo: {
+    codigoart: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idmoneda: {
+    idestado: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'parametro',
+        key: 'id'
+      }
+    },
+    fechacreacion: {
+      type: DataTypes.DATE,
       allowNull: true
     },
-    montoorigen: {
+    program_id: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    montopesos: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'art_program',
+        key: 'program_id'
+      }
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    tableName: 'detallecompromiso'
+    tableName: 'iniciativaprograma'
   });
 };

@@ -1,27 +1,31 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('detallecompromiso', {
+  return sequelize.define('detalleplan', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    iddetalleserviciocto: {
+    iddetallepre: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'detalleserviciocto',
-        key: 'id'
-      }
+      allowNull: true
     },
     idperiodo: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'periodos',
+        key: 'id'
+      }
     },
     idmoneda: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'moneda',
+        key: 'id'
+      }
     },
     montoorigen: {
       type: DataTypes.INTEGER,
@@ -36,6 +40,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'detallecompromiso'
+    tableName: 'detalleplan'
   });
 };

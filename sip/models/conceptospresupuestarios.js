@@ -1,25 +1,17 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('proveedor', {
+  return sequelize.define('conceptospresupuestarios', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    numrut: {
+    conceptopresupuestario: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    dvrut: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    razonsocial: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    negociadordivot: {
+    glosaconcepto: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -28,6 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'proveedor'
+    tableName: 'conceptospresupuestarios'
   });
 };
