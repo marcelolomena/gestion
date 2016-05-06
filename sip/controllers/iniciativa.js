@@ -4,10 +4,9 @@ var sequelize = require('../models/index').sequelize;
 
 exports.postIniciativa = function (req, res) {
   // Save the iniciativa and check for errors
-  //console.log("nombreproyecto --->" + req.body.nombreproyecto);
   models.Iniciativa.create({
     codigoart: req.body.codigoart,
-    nombreproyecto: req.body.nombreproyecto,
+    nombre: req.body.nombre,
     iddivision: req.body.iddivision,
     divisionsponsor: req.body.divisionsponsor,
     uidsponsor1: req.body.uidsponsor1,
@@ -51,9 +50,9 @@ exports.getIniciativasPaginados = function (req, res) {
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
     "as resultNum, * " +
-    "FROM iniciativa )" +
+    "FROM sip.iniciativa )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -72,9 +71,9 @@ exports.getIniciativasPaginados = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
         "as resultNum, * " +
-        "FROM iniciativa WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "FROM sip.iniciativa WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.Iniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
@@ -100,6 +99,7 @@ exports.getIniciativasPaginados = function (req, res) {
 
     models.Iniciativa.count().then(function (records) {
       var total = Math.ceil(records / rows);
+      console.log("------->"+ total)
       sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
