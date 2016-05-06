@@ -3,41 +3,37 @@ var sequelize = require('../models/index').sequelize;
 
 
 exports.postIniciativa = function (req, res) {
-  // Create a new instance of the Iniciativa model
-  var iniciativa = new Iniciativa();
-
-  iniciativa.codigoart = req.body.codigoart;
-  iniciativa.nombreproyecto = req.body.nombreproyecto;
-  iniciativa.iddivision = req.body.iddivision;
-  iniciativa.divisionsponsor = req.body.divisionsponsor;
-  iniciativa.uidsponsor1 = req.body.uidsponsor1;
-  iniciativa.sponsor1 = req.body.sponsor1;
-  iniciativa.uidsponsor2 = req.body.uidsponsor2;
-  iniciativa.sponsor2 = req.body.sponsor2;
-  iniciativa.uidgerente = req.body.uidgerente;
-  iniciativa.gerenteresponsable = req.body.gerenteresponsable;
-  iniciativa.idpmo = req.body.idpmo;
-  iniciativa.pmoresponsable = req.body.pmoresponsable;
-  iniciativa.idtipo = req.body.idtipo;
-  iniciativa.tipo = req.body.tipo;
-  iniciativa.idcategoria = req.body.idcategoria;
-  iniciativa.categoria = req.body.categoria;
-  iniciativa.ano = req.body.ano;
-  iniciativa.anoq = req.body.anoq;
-  iniciativa.q1 = req.body.q1;
-  iniciativa.q2 = req.body.q2;
-  iniciativa.q3 = req.body.q3;
-  iniciativa.q4 = req.body.q4;
-  iniciativa.fechacomite = req.body.fechacomite;
-  iniciativa.pptoestimadousd = req.body.pptoestimadousd;
-
   // Save the iniciativa and check for errors
-  models.Iniciativa.save(function (err) {
-    if (err)
-      res.send(err);
 
+  models.Iniciativa.create({
+    codigoart: req.body.codigoart,
+    nombreproyecto = req.body.nombreproyecto,
+    iddivision = req.body.iddivision,
+    divisionsponsor = req.body.divisionsponsor,
+    uidsponsor1 = req.body.uidsponsor1,
+    sponsor1 = req.body.sponsor1,
+    uidsponsor2 = req.body.uidsponsor2,
+    sponsor2 = req.body.sponsor2,
+    uidgerente = req.body.uidgerente,
+    gerenteresponsable = req.body.gerenteresponsable,
+    idpmo = req.body.idpmo,
+    pmoresponsable = req.body.pmoresponsable,
+    idtipo = req.body.idtipo,
+    tipo = req.body.tipo,
+    idcategoria = req.body.idcategoria,
+    categoria = req.body.categoria,
+    ano = req.body.ano,
+    anoq = req.body.anoq,
+    q1 = req.body.q1,
+    q2 = req.body.q2,
+    q3 = req.body.q3,
+    q4 = req.body.q4,
+    fechacomite = req.body.fechacomite,
+    pptoestimadousd = req.body.pptoestimadousd
+  }).then(function (iniciativa) {
     res.json({ message: 'Iniciativa added!', data: iniciativa });
   });
+
 };
 
 // Create endpoint /iniciativas for GET
