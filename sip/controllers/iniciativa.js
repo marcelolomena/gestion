@@ -4,34 +4,36 @@ var sequelize = require('../models/index').sequelize;
 
 exports.postIniciativa = function (req, res) {
   // Save the iniciativa and check for errors
-
+  //console.log("nombreproyecto --->" + req.body.nombreproyecto);
   models.Iniciativa.create({
     codigoart: req.body.codigoart,
-    nombreproyecto = req.body.nombreproyecto,
-    iddivision = req.body.iddivision,
-    divisionsponsor = req.body.divisionsponsor,
-    uidsponsor1 = req.body.uidsponsor1,
-    sponsor1 = req.body.sponsor1,
-    uidsponsor2 = req.body.uidsponsor2,
-    sponsor2 = req.body.sponsor2,
-    uidgerente = req.body.uidgerente,
-    gerenteresponsable = req.body.gerenteresponsable,
-    idpmo = req.body.idpmo,
-    pmoresponsable = req.body.pmoresponsable,
-    idtipo = req.body.idtipo,
-    tipo = req.body.tipo,
-    idcategoria = req.body.idcategoria,
-    categoria = req.body.categoria,
-    ano = req.body.ano,
-    anoq = req.body.anoq,
-    q1 = req.body.q1,
-    q2 = req.body.q2,
-    q3 = req.body.q3,
-    q4 = req.body.q4,
-    fechacomite = req.body.fechacomite,
-    pptoestimadousd = req.body.pptoestimadousd
+    nombreproyecto: req.body.nombreproyecto,
+    iddivision: req.body.iddivision,
+    divisionsponsor: req.body.divisionsponsor,
+    uidsponsor1: req.body.uidsponsor1,
+    sponsor1: req.body.sponsor1,
+    uidsponsor2: req.body.uidsponsor2,
+    sponsor2: req.body.sponsor2,
+    uidgerente: req.body.uidgerente,
+    gerenteresponsable: req.body.gerenteresponsable,
+    idpmo: req.body.idpmo,
+    pmoresponsable: req.body.pmoresponsable,
+    idtipo: req.body.idtipo,
+    tipo: req.body.tipo,
+    idcategoria: req.body.idcategoria,
+    categoria: req.body.categoria,
+    ano: req.body.ano,
+    anoq: req.body.anoq,
+    q1: req.body.q1,
+    q2: req.body.q2,
+    q3: req.body.q3,
+    q4: req.body.q4,
+    fechacomite: req.body.fechacomite,
+    pptoestimadousd: req.body.pptoestimadousd
   }).then(function (iniciativa) {
-    res.json({ message: 'Iniciativa added!', data: iniciativa });
+    console.log("log --->" + iniciativa);
+    //res.json({ message: 'Iniciativa added!', data: iniciativa });
+     res.json({ error_code: 0});
   });
 
 };

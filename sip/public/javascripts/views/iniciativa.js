@@ -39,25 +39,38 @@ $(document).ready(function () {
     });
     $("#table_iniciativa").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", { add: true, edit: true, del: true, refresh: true, search: false },
+    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
+            height: 'auto',
+            width: 620,
+            editCaption: "Modifica Iniciativa",
             recreateForm: true,
             closeAfterEdit: true,
-    		mtype: 'POST',
-    		url: '/iniciativa/new',            
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.reateJSON,
-            addCaption: "Agrega Iniciativa",
-            //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
         },
         {
-            editCaption: "Modifica Iniciativa",
+            height: 'auto',
+            width: 620,
+            closeAfterAdd: true,
+            recreateForm: true,
+            mtype: 'POST',
+            url: '/iniciativa/new',
+            modal: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Agrega Iniciativa",
             //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },afterSubmit : function(response,postdata){
+                var json   = response.responseText; 
+                var result = JSON.parse(json); 
+                if(result.error_code!=0)
+                	return [false,result.error_text,""]; 
+                else
+                	return [true,"",""]
             }
         },
         {
