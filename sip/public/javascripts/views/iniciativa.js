@@ -51,7 +51,12 @@ $(document).ready(function () {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/iniciativas/new',
-        styleUI: "Bootstrap"
+        styleUI: "Bootstrap",
+        loadError: function (jqXHR, textStatus, errorThrown) {
+            alert('HTTP status code: ' + jqXHR.status + '\n' +
+                'textStatus: ' + textStatus + '\n' +
+                'errorThrown: ' + errorThrown);
+        }
     });
     $("#table_iniciativa").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
