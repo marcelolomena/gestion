@@ -36,6 +36,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'detallecompromiso'
+    schema: 'sip',timestamps: false,tableName: 'detallecompromiso'
   });
 };

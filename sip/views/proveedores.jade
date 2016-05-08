@@ -13,14 +13,14 @@ html
     script(type='text/javascript', src='/javascripts/script.js') 
     script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
     script(type='text/javascript', src='/javascripts/jsplug.js')  
+    script(type='text/javascript', src='/javascripts/sip.js') 
     script(type='text/javascript', src='/javascripts/views/proveedor.js')
   body
     .container
       #sidebar
         .perfil_sesion
           .user
-          .usuario1 Juan Pablo Subercaseaux
-          .usuario2 Ültimo Acceso 21/06/2015 - 10:32
+          .usuario1 #{user.first_name} #{user.last_name}
           .usuario3
             a(href='signout') Cerrar Sesión
         #cssmenu

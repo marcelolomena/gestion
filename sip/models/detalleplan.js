@@ -40,6 +40,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'detalleplan'
+    schema: 'sip',timestamps: false,tableName: 'detalleplan'
   });
 };

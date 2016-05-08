@@ -20,6 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'conceptospresupuestarios'
+    schema: 'sip',timestamps: false,tableName: 'conceptospresupuestarios'
   });
 };

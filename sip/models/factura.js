@@ -28,6 +28,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'factura'
+    schema: 'sip',timestamps: false,tableName: 'factura'
   });
 };

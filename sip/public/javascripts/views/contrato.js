@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var template = "<div style='margin-left:15px;'><div> Contrato <sup>*</sup>:</div><div> {nombrecontrato} </div>";
+    var template = "<div style='margin-left:15px;'><div> Contrato <sup>*</sup>:</div><div> {nombre} </div>";
     template += "<div> Fecha Inicio: </div><div>{fechainicontrato} </div>";
     template += "<div> Fecha Termino: </div><div>{fechatercontrato} </div>";
     template += "<div> Solicitud: </div><div>{solicitudcontrato} </div>";
@@ -12,19 +12,19 @@ $(document).ready(function () {
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
-        { label: 'Contrato', name: 'nombrecontrato', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Contrato', name: 'nombre', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         {
             label: 'Fecha Inicio', name: 'fechainicontrato', width: 150, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }, editable: true, formoptions: { rowpos: 2, colpos: 1 },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
-                        dateFormat: 'yy-mm-dd',
-                        changeYear: true,
-                        changeMonth: true,
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                $('#jqGridIncident')[0].triggerToolbar();
+                                $('#grid')[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -34,7 +34,7 @@ $(document).ready(function () {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'yy-mm-dd' })
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
@@ -45,12 +45,12 @@ $(document).ready(function () {
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
-                        dateFormat: 'yy-mm-dd',
-                        changeYear: true,
-                        changeMonth: true,
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                $('#jqGridIncident')[0].triggerToolbar();
+                                $('#grid')[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -60,7 +60,7 @@ $(document).ready(function () {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'yy-mm-dd' })
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
@@ -69,7 +69,7 @@ $(document).ready(function () {
         { label: 'Plazo', name: 'plazocontrato', width: 100, align: 'left', search: true, editable: true, formoptions: { rowpos: 4, colpos: 1 } },
     ];
     $("#grid").jqGrid({
-        url: '/contratoslist',
+        url: '/contratos/list',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -83,28 +83,43 @@ $(document).ready(function () {
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        styleUI: "Bootstrap"
+        styleUI: "Bootstrap",
+        loadError: function (jqXHR, textStatus, errorThrown) {
+            alert('HTTP status code: ' + jqXHR.status + '\n' +
+                'textStatus: ' + textStatus + '\n' +
+                'errorThrown: ' + errorThrown);
+        }
     });
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, refresh: true, search: false },
+    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
-            recreateForm: true,
-            closeAfterEdit: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.reateJSON,
-            editCaption: "Modifica Contrato",
+            addCaptionCaption: "Modifica Contrato",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
         },
         {
-            addCaptionCaption: "Agrega Contrato",
+            recreateForm: true,
+            closeAfterEdit: true,
+            mtype: 'POST',
+            url: '/contratos/new',
+            modal: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.reateJSON,
+            editCaption: "Agrega Contrato",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
             }
         },
         {

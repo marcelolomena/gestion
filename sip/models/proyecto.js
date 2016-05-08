@@ -116,6 +116,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'proyecto'
+    schema: 'sip',timestamps: false,tableName: 'proyecto'
   });
 };

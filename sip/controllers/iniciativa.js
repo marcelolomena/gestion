@@ -2,6 +2,15 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 
 
+exports.getGerentes = function (req, res) {
+  models.User.findAll().then(function (user) {
+    res.json(user);
+  }).error(function (err) {
+    res.send(err);
+  });
+};
+
+
 exports.postIniciativa = function (req, res) {
   // Save the iniciativa and check for errors
   models.Iniciativa.create({
@@ -9,7 +18,7 @@ exports.postIniciativa = function (req, res) {
     nombre: req.body.nombre,
     iddivision: req.body.iddivision,
     divisionsponsor: req.body.divisionsponsor,
-    uidsponsor1: req.body.uidsponsor1,
+    //uidsponsor1: req.body.uidsponsor1,
     sponsor1: req.body.sponsor1,
     uidsponsor2: req.body.uidsponsor2,
     sponsor2: req.body.sponsor2,
@@ -30,9 +39,8 @@ exports.postIniciativa = function (req, res) {
     fechacomite: req.body.fechacomite,
     pptoestimadousd: req.body.pptoestimadousd
   }).then(function (iniciativa) {
-    console.log("log --->" + iniciativa);
     //res.json({ message: 'Iniciativa added!', data: iniciativa });
-     res.json({ error_code: 0});
+    res.json({ error_code: 0 });
   });
 
 };
@@ -43,14 +51,24 @@ exports.getIniciativasPaginados = function (req, res) {
   var page = req.query.page;
   var rows = req.query.rows;
   var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
   var condition = "";
+
+  if (!sidx)
+    sidx = "nombre";
+
+  if (!sord)
+    sord = "asc";
+
+  var order = sidx + " " + sord;
 
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, * " +
     "FROM sip.iniciativa )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -71,7 +89,7 @@ exports.getIniciativasPaginados = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, * " +
         "FROM sip.iniciativa WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -99,7 +117,6 @@ exports.getIniciativasPaginados = function (req, res) {
 
     models.Iniciativa.count().then(function (records) {
       var total = Math.ceil(records / rows);
-      console.log("------->"+ total)
       sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });

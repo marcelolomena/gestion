@@ -28,6 +28,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'rol_func'
+    schema: 'sip',timestamps: false,tableName: 'rol_func'
   });
 };

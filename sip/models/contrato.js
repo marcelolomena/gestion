@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('contrato', {
+  return sequelize.define('Contrato', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -108,6 +108,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'contrato'
+    schema: 'sip',timestamps: false,tableName: 'contrato'
   });
 };

@@ -36,6 +36,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'presupuesto'
+    schema: 'sip',timestamps: false,tableName: 'presupuesto'
   });
 };

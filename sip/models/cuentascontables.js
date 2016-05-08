@@ -32,6 +32,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'cuentascontables'
+    schema: 'sip',timestamps: false,tableName: 'cuentascontables'
   });
 };

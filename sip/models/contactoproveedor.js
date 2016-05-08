@@ -44,6 +44,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'contactoproveedor'
+    schema: 'sip',timestamps: false,tableName: 'contactoproveedor'
   });
 };

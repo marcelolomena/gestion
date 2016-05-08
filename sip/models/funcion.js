@@ -20,6 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'funcion'
+    schema: 'sip',timestamps: false,tableName: 'funcion'
   });
 };
