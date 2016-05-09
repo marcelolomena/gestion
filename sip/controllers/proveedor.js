@@ -39,7 +39,7 @@ exports.getProveedoresPaginados = function (req, res) {
   var condition = "";
   try {
     if (!sidx)
-      sidx = "nombre";
+      sidx = "razonsocial";
 
     if (!sord)
       sord = "asc";
@@ -52,6 +52,7 @@ exports.getProveedoresPaginados = function (req, res) {
       "set @pageNum=" + page + ";   " +
       "With SQLPaging As   ( " +
       "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+      "as resultNum, * " +
       "FROM sip.proveedor )" +
       "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -92,7 +93,7 @@ exports.getProveedoresPaginados = function (req, res) {
             .spread(function (rows) {
               res.json({ records: records, total: total, page: page, rows: rows });
             }).catch(function (err) {
-              res.send(502);
+              res.sendStatus(500);
             });
         })
       }
@@ -101,19 +102,21 @@ exports.getProveedoresPaginados = function (req, res) {
 
       models.Proveedor.count().then(function (records) {
         var total = Math.ceil(records / rows);
+        console.log("total : " + total);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
           }).catch(function (err) {
-            res.send(502);
+            console.log("error : " + err);
+            res.sendStatus(500);
           });
       }).catch(function (err) {
-        res.send(502);
+        res.sendStatus(500);
       });
 
     }
   } catch (ex) {
-    console.log("pico : " + ex);
+    console.log("------> " + ex);
     res.sendStatus(500);
   }
 

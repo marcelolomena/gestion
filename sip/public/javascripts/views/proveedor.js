@@ -2,8 +2,8 @@ $(document).ready(function () {
 
     var modelProveedor = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'RUT', name: 'numrut', width: 100, align: 'center', search: false },
-        { label: 'Razón Social', name: 'razonsocial', width: 600, align: 'left', search: true },
+        { label: 'RUT', name: 'numrut', width: 100, align: 'center', search: false, editable: true, },
+        { label: 'Razón Social', name: 'razonsocial', width: 600, align: 'left', search: true, editable: true, },
     ];
     $("#table_proveedor").jqGrid({
         url: '/proveedores/list',
