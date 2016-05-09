@@ -90,7 +90,13 @@ module.exports = function (passport) {
 		
 	router.route('/gerentes')
 		.get(isAuthenticated, iniciativaController.getGerentes);
+		
+    router.get('/erogaciones', isAuthenticated, function (req, res) {
+        res.render('erogaciones');
+    });
 
+    router.route('/erogacioneslist')
+        .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
 
 	return router;
 }
