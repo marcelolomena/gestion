@@ -8,7 +8,7 @@ $(document).ready(function () {
         { label: 'Fecha Factura', name: 'fechafactura', width: 200, align: 'left', search: true },
         { label: 'Fecha Contabilizacion', name: 'fechacontabilizacion', width: 200, align: 'left', search: true },
         { label: 'Cuenta Contable', name: 'cuentacontable', width: 200, align: 'left', search: true },
-        { label: 'Codigo Tarea', name: 'codigotarea', width: 180, align: 'left', search: true },
+        { label: 'Tarea', name: 'tarea', width: 180, align: 'left', search: true },
         { label: 'Moneda', name: 'moneda', width: 50, align: 'left', search: true },
         { label: 'Monto Periodo', name: 'montoperiodo', width: 25, align: 'left', search: false },
         { label: 'Monto Pesos', name: 'montopesos', width: 25, align: 'left', search: false },

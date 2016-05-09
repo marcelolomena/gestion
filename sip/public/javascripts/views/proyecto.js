@@ -2,8 +2,8 @@ $(document).ready(function () {
 
     var modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Sap', name: 'sap', width: 50, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
-        { label: 'Proyecto', name: 'nombreproyecto', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: 'Proyecto', name: 'nombre', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'PMO', name: 'pmo', width: 150, align: 'left', search: true },
         {
             label: 'Fecha Creacion', name: 'fechacreacion', width: 110, align: 'left', search: true,
@@ -52,12 +52,12 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Pre Gasto', name: 'pregasto', width: 150, align: 'right', search: true,
+            label: 'Pre Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 4, colpos: 1 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Pre Inversion', name: 'preinversion', width: 150, align: 'right', search: true,
+            label: 'Pre Inversion', name: 'presupuestoinversion', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 4, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },

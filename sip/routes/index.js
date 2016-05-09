@@ -3,6 +3,7 @@ var proveedorController = require('../controllers/proveedor');
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
+var erogacionesController = require('../controllers/erogaciones');
 var express = require('express');
 var router = express.Router();
 

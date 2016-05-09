@@ -13,9 +13,9 @@ exports.getProyectosPaginados = function (req, res) {
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
     "as resultNum, * " +
-    "FROM proyecto )" +
+    "FROM sip.proyecto )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -34,9 +34,9 @@ exports.getProyectosPaginados = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombreproyecto asc) " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
         "as resultNum, * " +
-        "FROM proyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "FROM sip.proyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
         console.log(sql);

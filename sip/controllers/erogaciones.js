@@ -15,7 +15,7 @@ exports.getErogacionesPaginados = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
     "as resultNum, * " +
-    "FROM erogaciones )" +
+    "FROM sip.erogacionproyecto )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -36,7 +36,7 @@ exports.getErogacionesPaginados = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
         "as resultNum, * " +
-        "FROM erogaciones WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "FROM sip.erogacionproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.Erogaciones.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
