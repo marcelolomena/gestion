@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('iniciativa', {
+  return sequelize.define('Iniciativa', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
