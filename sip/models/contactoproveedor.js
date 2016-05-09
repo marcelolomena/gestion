@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('CONTACTOPROVEEDOR', {
+  return sequelize.define('contactoproveedor', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -23,11 +23,27 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'PROVEEDOR',
+        model: 'proveedor',
         key: 'id'
       }
+    },
+    contacto: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fono: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    correo: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
-    tableName: 'CONTACTOPROVEEDOR'
+    schema: 'sip',timestamps: false,tableName: 'contactoproveedor'
   });
 };

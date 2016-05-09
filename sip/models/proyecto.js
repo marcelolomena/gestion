@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Proyecto', {
+  return sequelize.define('proyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -40,7 +40,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     avance: {
-      type: DataTypes.FLOAT,
+      type: 'NUMERIC',
       allowNull: true
     },
     fechaultpago: {
@@ -78,8 +78,44 @@ module.exports = function(sequelize, DataTypes) {
     observacion: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    uidpmo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    presupuestogasto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    presupuestoinversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    comprometidogasto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    comprometidoinversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldogasto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldoinversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
-    tableName: 'PROYECTO'
+    schema: 'sip',timestamps: false,tableName: 'proyecto'
   });
 };

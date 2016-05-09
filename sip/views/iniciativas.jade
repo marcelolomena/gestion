@@ -1,29 +1,27 @@
-html
+doctype transitional
+html(xmlns='http://www.w3.org/1999/xhtml')
   head
     meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
     title SIP Banco de Chile - Sistema Integrado de Presupuesto
-    link(rel='stylesheet', href='/stylesheets/jquery-ui.min.css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/ui.jqgrid.css', type='text/css', media='screen', charset='utf-8')   
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')            
     link(rel='stylesheet', href='/stylesheets/ui.jqgrid-bootstrap.css', type='text/css', media='screen', charset='utf-8')   
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')                     
-    link(rel='stylesheet', href='/stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
-    link(rel='stylesheet', href='/stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')       
-    script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
-    script(type='text/javascript', src='/javascripts/jquery-ui.js')    
+    link(rel='stylesheet', href='stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
+    link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
+    script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
     script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
     script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
     script(type='text/javascript', src='/javascripts/script.js') 
-    script(type='text/javascript', src='/javascripts/views/iniciativa.js')
     script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
-    script(type='text/javascript', src='/javascripts/jsplug.js')     
+    script(type='text/javascript', src='/javascripts/jsplug.js')      
+    script(type='text/javascript', src='/javascripts/sip.js')       
+    script(type='text/javascript', src='/javascripts/views/iniciativa.js')
   body
     .container
       #sidebar
         .perfil_sesion
           .user
-          .usuario1 Juan Pablo Subercaseaux
-          .usuario2 Ültimo Acceso 21/06/2015 - 10:32
+          .usuario1 #{user.first_name} #{user.last_name}
           .usuario3
             a(href='signout') Cerrar Sesión
         #cssmenu
@@ -157,7 +155,8 @@ html
           header.bg-theme
             .wrap-header
               .row
-                img(src='../images/header.png', width='384', height='95')
+                a(href='/home')
+                  img(src='../../images/header.png', width='384', height='95') 
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           .zerogrid_b

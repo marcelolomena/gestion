@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idproveedor: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'proveedor',
+        key: 'id'
+      }
     },
     contrato: {
       type: DataTypes.INTEGER,
@@ -82,8 +86,28 @@ module.exports = function(sequelize, DataTypes) {
     frecuenciafacturacion: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    numero: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    sap: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    uidpmo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
-    tableName: 'CONTRATO'
+    schema: 'sip',timestamps: false,tableName: 'contrato'
   });
 };

@@ -6,16 +6,26 @@ exports.getContratosPaginados = function (req, res) {
   var page = req.query.page;
   var rows = req.query.rows;
   var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
   var condition = "";
+  
+  if (!sidx)
+    sidx = "nombre";
+
+  if (!sord)
+    sord = "asc";
+
+  var order = sidx + " " + sord;
 
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombrecontrato asc) " +
-    "as resultNum, * " +
-    "FROM contrato )" +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+    "as resultNum, c.*,p.razonsocial " +
+    "FROM sip.contrato c join sip.proveedor p on c.idproveedor=p.id)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -34,9 +44,9 @@ exports.getContratosPaginados = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombrecontrato asc) " +
-        "as resultNum, * " +
-        "FROM contrato WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        "as resultNum, c.*,p.razonsocial " +
+        "FROM sip.contrato c join sip.proveedor p on c.idproveedor=p.id WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.Contrato.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {

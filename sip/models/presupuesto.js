@@ -1,57 +1,41 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('DETALLEPROYECTO', {
+  return sequelize.define('presupuesto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    idproyecto: {
+    idejercicio: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'PROYECTO',
+        model: 'ejercicios',
         key: 'id'
       }
-    },
-    numerotarea: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nombretarea: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechacreacion: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechainicio: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechacierre: {
-      type: DataTypes.DATE,
-      allowNull: true
     },
     idcui: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    cui: {
+    descripcion: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    idproveedor: {
+    estado: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    version: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idcuentacontable: {
+    borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    tableName: 'DETALLEPROYECTO'
+    schema: 'sip',timestamps: false,tableName: 'presupuesto'
   });
 };

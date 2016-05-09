@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
-"use strict";
-module.exports = function (sequelize, DataTypes) {
-  var Proveedor = sequelize.define('Proveedor', {
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('Proveedor', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -12,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true
     },
     dvrut: {
-      type: 'CHAR',
+      type: DataTypes.STRING,
       allowNull: true
     },
     razonsocial: {
@@ -22,12 +22,12 @@ module.exports = function (sequelize, DataTypes) {
     negociadordivot: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
-      timestamps: false,
-      tableName: 'PROVEEDOR'
-    }
-  );
-
-  return Proveedor;
+    schema: 'sip',timestamps: false,tableName: 'proveedor'
+  });
 };

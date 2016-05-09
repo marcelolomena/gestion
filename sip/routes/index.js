@@ -3,7 +3,6 @@ var proveedorController = require('../controllers/proveedor');
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
-var erogacionesController = require('../controllers/erogaciones');
 var express = require('express');
 var router = express.Router();
 
@@ -32,18 +31,6 @@ module.exports = function (passport) {
 		failureFlash: true
 	}));
 
-	/* GET Registration Page */
-	router.get('/signup', function (req, res) {
-		res.render('register', { message: req.flash('message') });
-	});
-
-	/* Handle Registration POST */
-	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/home',
-		failureRedirect: '/signup',
-		failureFlash: true
-	}));
-
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function (req, res) {
 		res.render('home', { user: req.user });
@@ -51,15 +38,22 @@ module.exports = function (passport) {
 
 	/* Handle Logout */
 	router.get('/signout', function (req, res) {
-		req.logout();
-		res.redirect('/');
+		req.session.destroy(function (err) {
+			if (err) {
+				console.log(err);
+			} else {
+				req.logout();
+				res.redirect('/');
+			}
+		});
+
 	});
 
 	router.get('/proveedores', isAuthenticated, function (req, res) {
-		res.render('proveedores');
+		res.render('proveedores', { user: req.user });
 	});
 
-	router.route('/proveedoreslist')
+	router.route('/proveedores/list')
 		.post(isAuthenticated, proveedorController.postProveedores)
 		.get(isAuthenticated, proveedorController.getProveedoresPaginados);
 
@@ -70,32 +64,33 @@ module.exports = function (passport) {
 		.delete(isAuthenticated, proveedorController.deleteProveedor);
 
     router.get('/iniciativas', isAuthenticated, function (req, res) {
-        res.render('iniciativas');
+        res.render('iniciativas', { user: req.user });
     });
 
-    router.route('/iniciativaslist')
+    router.route('/iniciativas/list')
         .get(isAuthenticated, iniciativaController.getIniciativasPaginados);
 
+	// Create endpoint handlers for /proveedores/:id
+	router.route('/iniciativas/new')
+		.post(isAuthenticated, iniciativaController.postIniciativa);
+
     router.get('/contratos', isAuthenticated, function (req, res) {
-        res.render('contratos');
+        res.render('contratos', { user: req.user });
     });
 
-    router.route('/contratoslist')
+    router.route('/contratos/list')
         .get(isAuthenticated, contratoController.getContratosPaginados);
-		
+
     router.get('/proyectos', isAuthenticated, function (req, res) {
-        res.render('proyectos');
+        res.render('proyectos', { user: req.user });
     });
 
     router.route('/proyectoslist')
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
-	
-    router.get('/erogaciones', isAuthenticated, function (req, res) {
-        res.render('erogaciones');
-    });
+		
+	router.route('/gerentes')
+		.get(isAuthenticated, iniciativaController.getGerentes);
 
-    router.route('/erogacioneslist')
-        .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
+
 	return router;
-	
 }

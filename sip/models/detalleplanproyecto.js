@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('DETALLEPLANPROYECTO', {
+  return sequelize.define('detalleplanproyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'DETALLEPROYECTO',
+        model: 'detalleproyecto',
         key: 'id'
       }
     },
@@ -46,8 +46,12 @@ module.exports = function(sequelize, DataTypes) {
     compromisopesos: {
       type: DataTypes.FLOAT,
       allowNull: true
+    },
+    borrado: {
+      type: 'BIT',
+      allowNull: true
     }
   }, {
-    tableName: 'DETALLEPLANPROYECTO'
+    schema: 'sip',timestamps: false,tableName: 'detalleplanproyecto'
   });
 };

@@ -1,49 +1,21 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Erogaciones', {
+  return sequelize.define('detalleserviciocto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    sap: {
+    iddetallecto: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'contrato',
+        key: 'id'
+      }
     },
-    idproveedor: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    rutproveedor: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    razonsocial: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    factura: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechafactura: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechacontabilizacion: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    contrato: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    anexo: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    codigoart: {
+    idcui: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -51,39 +23,51 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    cuentacontable: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    cui: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
     idservicio: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    codigotarea: {
+    servicio: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    moneda: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    periodo: {
+    idcuenta: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    montoporperiodo: {
+    cuentacontable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    idmoneda: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    valorcuota: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    montopesos: {
+    impuesto: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    iva: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    factoriva: {
       type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montototal: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    tableName: 'EROGACIONES'
+    schema: 'sip',timestamps: false,tableName: 'detalleserviciocto'
   });
 };

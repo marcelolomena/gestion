@@ -17,6 +17,11 @@ import java.util.Calendar
 import java.io.File
 import java.io.FileOutputStream
 import org.apache.poi.xssf.usermodel._
+import org.apache.poi.hssf.usermodel.HSSFCell
+import org.apache.poi.hssf.util.HSSFCellUtil
+import org.apache.poi.hssf.usermodel.HSSFCellStyle
+import org.apache.poi.hssf.model.HSSFFormulaParser
+import org.apache.poi.ss.usermodel.Cell
 
 /**
  * @author Cristian
@@ -92,7 +97,8 @@ object Histograma extends Controller {
       }
 
   }
-
+  //def nextLetter(x:String) = (x(0) + 1).toChar.toString
+  
   def excel() = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -155,9 +161,10 @@ object Histograma extends Controller {
         rowhead.createCell(34).setCellValue("31")
         
 
-        for (j <- 0 to 10)
-          rowhead.getCell(j).setCellStyle(style);
-
+        for (j <- 0 to 34){
+          rowhead.getCell(j).setCellType(Cell.CELL_TYPE_STRING)
+          rowhead.getCell(j).setCellStyle(style);          
+        }
         for (s <- panel) {
           var row = sheet.createRow(rNum)
 
@@ -177,15 +184,35 @@ object Histograma extends Controller {
           var i = 3
           for (hora <- horas){
             i = i+1
-            val cel4 = row.createCell(cNum + i)
-            cel4.setCellValue(hora)
+            val cel4 = row.createCell(cNum + i)            
+            cel4.setCellType(Cell.CELL_TYPE_NUMERIC)
+            cel4.setCellValue(hora.toFloat)
           }
 
           rNum = rNum + 1
           cNum = 0
 
         }
-
+        var p = 4;
+        var row = sheet.createRow(rNum)
+        cNum = 0
+        var x = "A"
+        for (p <- 4 to 34) {
+          val celSuma = row.createCell(cNum + p)
+          celSuma.setCellType(Cell.CELL_TYPE_FORMULA)
+          var letra = ""
+          if(p<=25){
+            letra = celSuma.getReference().toString().charAt(0).toString();
+          }else{
+            letra = celSuma.getReference().toString().charAt(0).toString()+celSuma.getReference().toString().charAt(1).toString();
+          }
+          //var ref = (x(0) + p).toChar.toString
+          println(letra)
+          println("SUM("+letra+"2:"+letra+rNum+")")
+          celSuma.setCellFormula("SUM("+letra+"2:"+letra+rNum.toString()+")" );
+          celSuma.setCellStyle(style);
+        }
+        
         for (a <- 0 to 34) {
           sheet.autoSizeColumn((a.toInt));
         }
