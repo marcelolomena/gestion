@@ -15,20 +15,24 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idperiodo: {
+    periodo: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
     idmoneda: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'moneda',
+        key: 'id'
+      }
     },
     montoorigen: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     montopesos: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     borrado: {

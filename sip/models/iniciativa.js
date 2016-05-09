@@ -1,12 +1,11 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Iniciativa', {
+  return sequelize.define('iniciativa', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     nombre: {
       type: DataTypes.STRING,
@@ -18,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     divisionsponsor: {
       type: DataTypes.STRING,
+      allowNull: true
+    },
+    uidsponsor1: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     sponsor1: {
@@ -96,7 +99,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    pptoestimadousd: {
+    idmoneda: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'moneda',
+        key: 'id'
+      }
+    },
+    pptoestimadogasto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoestimadoinversion: {
       type: DataTypes.FLOAT,
       allowNull: true
     },

@@ -7,13 +7,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    iddetallecto: {
+    idcontrato: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'contrato',
-        key: 'id'
-      }
+      allowNull: true
     },
     idcui: {
       type: DataTypes.INTEGER,
@@ -41,6 +37,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     idmoneda: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'moneda',
+        key: 'id'
+      }
+    },
+    meses: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    frecuenciafacuracion: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     valorcuota: {

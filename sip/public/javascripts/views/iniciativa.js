@@ -52,6 +52,8 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         editurl: '/iniciativas/new',
         styleUI: "Bootstrap",
+        subGrid: true,
+        subGridRowExpanded: sipLibrary.showChildGrid,
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +

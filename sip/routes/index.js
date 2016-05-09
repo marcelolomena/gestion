@@ -4,6 +4,9 @@ var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
 var erogacionesController = require('../controllers/erogaciones');
+var programaController = require('../controllers/programa');
+var iniciativaprogramaController = require('../controllers/iniciativaprograma');
+
 var express = require('express');
 var router = express.Router();
 
@@ -92,12 +95,17 @@ module.exports = function (passport) {
 	router.route('/gerentes')
 		.get(isAuthenticated, iniciativaController.getGerentes);
 		
+
     router.get('/erogaciones', isAuthenticated, function (req, res) {
         res.render('erogaciones');
     });
 
     router.route('/erogacioneslist')
         .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
+
+	router.route('/programa/:id')
+		.get(isAuthenticated, iniciativaprogramaController.getIniciativaPrograma)
+
 
 	return router;
 }

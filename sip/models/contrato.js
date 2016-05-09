@@ -1,11 +1,43 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Contrato', {
+  return sequelize.define('contrato', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
+    },
+    tipocontrato: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    tipooc: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    solicitudcontrato: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    numero: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    anexo: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    solicitudcontratoes: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    sap: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
     idproveedor: {
       type: DataTypes.INTEGER,
@@ -15,31 +47,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    contrato: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    anexo: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    solicitudcontrato: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    solicitudcontratoes: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nombrecontrato: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idsap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idpmo: {
+    uidpmo: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -71,10 +79,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    criticidad: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     montototal: {
       type: DataTypes.FLOAT,
       allowNull: true
@@ -85,22 +89,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     frecuenciafacturacion: {
       type: DataTypes.STRING,
-      allowNull: true
-    },
-    numero: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    uidpmo: {
-      type: DataTypes.INTEGER,
       allowNull: true
     },
     borrado: {
