@@ -48,9 +48,10 @@ object Histograma extends Controller {
         var sidx = request.getQueryString("sidx").get.toString()
         val sord = request.getQueryString("sord").get.toString()
         val mes = request.getQueryString("mes").get.toString()
+        val uId = request.getQueryString("id").get.toString()
 
         var records: Int = 0
-        val uId = request.session.get("uId").get.toString()
+        //val uId = request.session.get("uId").get.toString()
         var node = new JSONObject()
         if (sidx.trim().size == 0) {
           sidx = "nombre"
@@ -114,7 +115,8 @@ object Histograma extends Controller {
         var tieneJson = true
         var qrystr = ""
         val mes = request.getQueryString("mes").get.toString()
-        val uId = request.session.get("uId").get.toString()
+        val uId = request.getQueryString("id").get.toString()
+        //val uId = request.session.get("uId").get.toString()
         
         val panel = HistogramaService.listadoHistograma(uId,mes)
         var rowhead = sheet.createRow(0)
@@ -207,8 +209,8 @@ object Histograma extends Controller {
             letra = celSuma.getReference().toString().charAt(0).toString()+celSuma.getReference().toString().charAt(1).toString();
           }
           //var ref = (x(0) + p).toChar.toString
-          println(letra)
-          println("SUM("+letra+"2:"+letra+rNum+")")
+          //println(letra)
+          //println("SUM("+letra+"2:"+letra+rNum+")")
           celSuma.setCellFormula("SUM("+letra+"2:"+letra+rNum.toString()+")" );
           celSuma.setCellStyle(style);
         }
