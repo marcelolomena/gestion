@@ -309,6 +309,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'RecursosHumanos'
+    timestamps: false,tableName: 'RecursosHumanos'
   });
 };

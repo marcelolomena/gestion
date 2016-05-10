@@ -3,28 +3,37 @@ var sequelize = require('../models/index').sequelize;
 
 
 exports.getGerentes = function (req, res) {
-  models.User.findAll().then(function (user) {
-    res.json(user);
-  }).error(function (err) {
-    res.send(err);
-  });
+
+  var term = req.query.term;
+
+  var sql = "SELECT LEFT(emailTrab, CHARINDEX('@', emailTrab) - 1 ) value," +
+    "RTRIM(LTRIM(nombre)) + ' ' + RTRIM(LTRIM(apellido)) label " +
+    "FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND " +
+    "periodo=(select max(periodo) from RecursosHumanos) AND " +
+	   "nombre+apellido like '%" + term + "%' order by nombre";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
 };
 
 
 exports.postIniciativa = function (req, res) {
   // Save the iniciativa and check for errors
   models.Iniciativa.create({
-    codigoart: req.body.codigoart,
+    //codigoart: req.body.codigoart,
     nombre: req.body.nombre,
     iddivision: req.body.iddivision,
     divisionsponsor: req.body.divisionsponsor,
-    //uidsponsor1: req.body.uidsponsor1,
+    uidsponsor1: req.body.uidsponsor1,
     sponsor1: req.body.sponsor1,
     uidsponsor2: req.body.uidsponsor2,
     sponsor2: req.body.sponsor2,
-    uidgerente: req.body.uidgerente,
+    uidgerente: req.body.uidgerente,//llave
     gerenteresponsable: req.body.gerenteresponsable,
-    idpmo: req.body.idpmo,
+    uidpmo: req.body.idpmo,
     pmoresponsable: req.body.pmoresponsable,
     idtipo: req.body.idtipo,
     tipo: req.body.tipo,
@@ -37,7 +46,11 @@ exports.postIniciativa = function (req, res) {
     q3: req.body.q3,
     q4: req.body.q4,
     fechacomite: req.body.fechacomite,
-    pptoestimadousd: req.body.pptoestimadousd
+    idmoneda:req.body.idmoneda,
+    pptoestimadogasto: req.body.pptoestimadogasto,
+    pptoestimadoinversion:req.body.pptoestimadoinversion,
+    idestado:1,
+    borrado:1
   }).then(function (iniciativa) {
     //res.json({ message: 'Iniciativa added!', data: iniciativa });
     res.json({ error_code: 0 });

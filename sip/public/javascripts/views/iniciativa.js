@@ -2,24 +2,36 @@ $(document).ready(function () {
 
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        //{ label: 'Art', name: 'codigoart', width: 90, align: 'center', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Proyecto', name: 'nombre', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'División', name: 'divisionsponsor', width: 245, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'Sponsor', name: 'sponsor1', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 1 } },
         {
             label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 2 },
             editrules: { edithidden: true },
-            edittype: "select",
+            edittype: "text",
             editoptions: {
-                dataUrl: '/gerentes',
-                buildSelect: function (response) {
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Gerente--</option>';
-                    $.each(data, function (i, item) {
-                        s += '<option value="' + data[i].uid + '">' + data[i].first_name + " " + data[i].last_name + '</option>';
-                    });
-                    return s + "</select>";
+                dataInit: function (element) {
+                    window.setTimeout(function () {
+                        $(element).width(200);
+                        $(element).attr("autocomplete", "off").typeahead({
+                            appendTo: "body",
+                            source: function (request, response) {
+                                $.ajax({
+                                    url: '/gerentes',
+                                    dataType: "json",
+                                    data: { term: request },
+                                    error: function (res, status) {
+                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
+                                    },
+                                    success: function (data) {
+                                        response(data);
+                                    }
+                                });
+                            }, displayText: function (item) {
+                                return item.label;
+                            }
+                        });
+                    }, 100);
                 }
             }
         },
@@ -35,6 +47,14 @@ $(document).ready(function () {
             formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
     ];
+
+    var modelIniciativaPrograma = [
+        { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: 'Nombre', name: 'nombre', width: 300, align: 'center', search: false, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+    ];
+
+
     $("#table_iniciativa").jqGrid({
         url: '/iniciativas/list',
         mtype: "GET",
@@ -53,7 +73,11 @@ $(document).ready(function () {
         editurl: '/iniciativas/new',
         styleUI: "Bootstrap",
         subGrid: true,
-        subGridRowExpanded: sipLibrary.showChildGrid,
+        subGridRowExpanded: gridIniciativaPrograma,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
@@ -105,6 +129,37 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
+
+    function gridIniciativaPrograma(parentRowID, parentRowKey) {
+        var childGridID = parentRowID + "_table";
+        var childGridPagerID = parentRowID + "_pager";
+        var childGridURL = "/programa/" + parentRowKey;
+
+        $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+
+        $("#" + childGridID).jqGrid({
+            url: childGridURL,
+            mtype: "GET",
+            datatype: "json",
+            page: 1,
+            colModel: modelIniciativaPrograma,
+            viewrecords: true,
+            styleUI: "Bootstrap",
+            regional: 'es',
+            height: 'auto',
+            pager: "#" + childGridPagerID,
+            gridComplete: function () {
+                var recs = $("#" + childGridID).getGridParam("reccount");
+                if (isNaN(recs) || recs == 0) {
+
+                    $("#" + childGridID).addRowData("blankRow", { "codigoart": "", "nombre": "No hay datos" });
+                }
+            }
+        });
+
+        $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { add: true, edit: true, del: true, search: false, refresh: true });
+    }
 
     $("#pager_iniciativa_left").css("width", "");
 });
