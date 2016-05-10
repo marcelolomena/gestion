@@ -19,6 +19,17 @@ exports.getGerentes = function (req, res) {
 
 };
 
+exports.getDivisiones = function (req, res) {
+
+  var sql = "select distinct codDivision,glosaDivision from RecursosHumanos " +
+    "where periodo=(select max(periodo) from RecursosHumanos) order by glosaDivision";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
 
 exports.postIniciativa = function (req, res) {
   // Save the iniciativa and check for errors

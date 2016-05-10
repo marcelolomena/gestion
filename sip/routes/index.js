@@ -94,11 +94,13 @@ module.exports = function (passport) {
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
 
     router.route('/proyectostareas/:id')
-        .get(isAuthenticated, proyectoTareasController.getProyectosTareas);		
-		
+        .get(isAuthenticated, proyectoTareasController.getProyectosTareas);
+
 	router.route('/gerentes')
 		.get(isAuthenticated, iniciativaController.getGerentes);
-		
+
+	router.route('/divisiones')
+		.get(isAuthenticated, iniciativaController.getDivisiones);
 
     router.get('/erogaciones', isAuthenticated, function (req, res) {
         res.render('erogaciones');

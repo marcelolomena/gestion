@@ -3,7 +3,36 @@ $(document).ready(function () {
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Proyecto', name: 'nombre', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
-        { label: 'División', name: 'divisionsponsor', width: 245, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        {
+            label: 'División', name: 'divisionsponsor', width: 245, align: 'left', search: true, editable: true, 
+        },
+        {
+            label: 'División', name: 'iddivision', editable: true,
+            hidden: true,
+            editrules: { edithidden: true },
+            edittype: "select",
+            formoptions: { rowpos: 1, colpos: 2 },
+            editoptions: {
+                dataUrl: '/divisiones',
+                buildSelect: function (response) {
+                    var grid = $("#jqGridIncident");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.program_name;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger División--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].program_name == thissid) {
+                            s += '<option value="' + data[i].codDivision + '" selected>' + data[i].glosaDivision + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            },
+        },
         { label: 'Sponsor', name: 'sponsor1', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 1 } },
         {
             label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 2 },
