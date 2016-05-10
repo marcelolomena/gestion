@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     var modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: 'SAP', name: 'sap', width: 130, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Proyecto', name: 'nombre', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'PMO', name: 'pmo', width: 150, align: 'left', search: true },
         {
@@ -129,34 +129,34 @@ function showProyectosTareas(parentRowID, parentRowKey) {
         colModel: [
                    { label: 'id',
                       name: 'id',
-                      width: 100,
+                      width: 50,
                       key: true,
                       hidden:true
                    },                   
                    { label: 'Cui',
-                     name: 'Cui',
-                     width: 100,
+                     name: 'cui',
+                     width: 150,
                    },
                    { label: 'Presupuesto',
                      name: 'presupuestopesos',
-                     width: 120,
+                     width: 150,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
                    { label: 'Real Acumulado',
                      name: 'realacumuladopesos',
-                     width: 120,
+                     width: 150,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
                    { label: 'Saldo',
                      name: 'saldopesos',
-                     width: 120,
+                     width: 150,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }            
         ],
         rowNum: 10,
  		height: 'auto',
         styleUI: "Bootstrap",         
-        autowidth:true,       
+        autowidth:false,       
         regional : "es",
         pager: "#" + childGridPagerID
     });
