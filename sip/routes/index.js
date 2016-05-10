@@ -3,6 +3,7 @@ var proveedorController = require('../controllers/proveedor');
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
+var proyectoTareasController = require('../controllers/proyectotareas');
 var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
@@ -91,6 +92,9 @@ module.exports = function (passport) {
 
     router.route('/proyectoslist')
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
+
+    router.route('/proyectostareas/:id')
+        .get(isAuthenticated, proyectoTareasController.getProyectosTareas);		
 		
 	router.route('/gerentes')
 		.get(isAuthenticated, iniciativaController.getGerentes);

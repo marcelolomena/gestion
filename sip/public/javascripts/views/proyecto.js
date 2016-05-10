@@ -88,6 +88,8 @@ $(document).ready(function () {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
+        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        subGridRowExpanded: showProyectosTareas, // javascript function that will take care of showing the child grid        
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
@@ -107,3 +109,56 @@ $(document).ready(function () {
 
     $("#pager_left").css("width", "");
 });
+
+
+function showProyectosTareas(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/proyectostareas/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'id',
+                      name: 'id',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Cui',
+                     name: 'Cui',
+                     width: 100,
+                   },
+                   { label: 'Presupuesto',
+                     name: 'presupuestopesos',
+                     width: 120,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                   },
+                   { label: 'Real Acumulado',
+                     name: 'realacumuladopesos',
+                     width: 120,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                   },
+                   { label: 'Saldo',
+                     name: 'saldopesos',
+                     width: 120,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                   }            
+        ],
+        rowNum: 10,
+ 		height: 'auto',
+        styleUI: "Bootstrap",         
+        autowidth:true,       
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+
+}
