@@ -17,11 +17,19 @@ var sipLibrary = {
         $.ajax({
             url: "/programa/" + parentRowKey,
             type: "GET",
-            success: function (html) {
-                $("#" + parentRowID).append(html);
+            success: function (json) {
+                console.log(json.codigoart);
+                var tr='<table>';
+                    tr+='<tr>';
+                    tr+="<td>ART</td>";                    
+                    tr+="<td>" + json.codigoart + "</td>";
+                    tr+='</tr>';
+                tr+='</table>';
+                console.log(tr);
+                $("#" + parentRowID).append(tr);
             }
         });
     }
-
+    
 }
 
