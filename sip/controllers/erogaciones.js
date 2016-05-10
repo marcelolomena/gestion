@@ -39,7 +39,7 @@ exports.getErogacionesPaginados = function (req, res) {
         "FROM sip.erogacionproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      models.Erogaciones.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.Erogacionproyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -49,7 +49,7 @@ exports.getErogacionesPaginados = function (req, res) {
 
     } else {
 
-      models.Erogaciones.count().then(function (records) {
+      models.Erogacionproyecto.count().then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -60,7 +60,7 @@ exports.getErogacionesPaginados = function (req, res) {
 
   } else {
 
-    models.Erogaciones.count().then(function (records) {
+    models.Erogacionproyecto.count().then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {
