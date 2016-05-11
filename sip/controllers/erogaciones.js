@@ -7,7 +7,8 @@ exports.getErogacionesPaginados = function (req, res) {
   var rows = req.query.rows;
   var filters = req.query.filters;
   var condition = "";
-
+  var id = req.params.id
+  alert("llego id:"+id);
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -15,7 +16,7 @@ exports.getErogacionesPaginados = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
     "as resultNum, * " +
-    "FROM sip.erogacionproyecto )" +
+    "FROM sip.erogacionproyecto where numtarea="+id+")" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -36,7 +37,7 @@ exports.getErogacionesPaginados = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY razonsocial asc) " +
         "as resultNum, * " +
-        "FROM sip.erogacionproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "FROM sip.erogacionproyecto WHERE numtarea="+id+" and " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.Erogacionproyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {

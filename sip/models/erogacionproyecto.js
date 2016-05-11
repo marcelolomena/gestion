@@ -23,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    numerotarea: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
     rutproveedor: {
       type: DataTypes.STRING,
       allowNull: true
@@ -39,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    fechacontabilizacion: {
+    fechagl: {
       type: DataTypes.DATE,
       allowNull: true
     },
@@ -99,14 +103,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    montopesos: {
+    montosum: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    toriginalactual: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'erogacionproyecto'
   });

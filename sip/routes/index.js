@@ -106,7 +106,7 @@ module.exports = function (passport) {
         res.render('erogaciones');
     });
 
-    router.route('/erogacioneslist')
+    router.route('/erogacioneslist/:id')
         .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
 
 	router.route('/programa/:id')

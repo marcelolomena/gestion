@@ -130,11 +130,15 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                    { label: 'id',
                       name: 'id',
                       width: 50,
-                      key: true,
                       hidden:true
-                   },                   
-                   { label: 'Cui',
-                     name: 'cui',
+                   },
+                   { label: 'Tarea',
+                     name: 'tarea',
+                     key: true,                     
+                     width: 200,
+                   },                                      
+                   { label: 'Nombre',
+                     name: 'nombre',
                      width: 200,
                    },
                    { label: 'Presupuesto',
@@ -152,6 +156,67 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                      width: 150,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }            
+        ],
+        rowNum: 10,
+ 		height: 'auto',
+        styleUI: "Bootstrap",         
+        autowidth:false,       
+        regional : "es",
+        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        subGridRowExpanded: showProyectoErogaciones, // javascript function that will take care of showing the child grid                
+        pager: "#" + childGridPagerID
+    });
+
+}
+
+function showProyectoErogaciones(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/erogacioneslist/" + parentRowKey;
+    
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'id',
+                      name: 'id',
+                      width: 50,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Proveedor',
+                     name: 'razonsocial',
+                     width: 200,
+                   },
+                   { label: 'Factura',
+                     name: 'factura',
+                     width: 150,
+                   },
+                   { label: 'Fecha GL',
+                     name: 'fechagl',
+                     width: 150,
+                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }
+                   },
+                   { label: 'Tarea',
+                     name: 'numerotarea',
+                     width: 150,
+                   },      
+                   { label: 'Tarea Original',
+                     name: 'toriginalactual',
+                     width: 150,
+                   },  
+                   { label: 'Total',
+                     name: 'montosum',
+                     width: 150,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                   }                                              
         ],
         rowNum: 10,
  		height: 'auto',

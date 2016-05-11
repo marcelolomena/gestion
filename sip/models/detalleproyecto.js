@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombretarea: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: true
     },
