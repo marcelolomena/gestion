@@ -31,7 +31,16 @@ exports.getDivisiones = function (req, res) {
 
 };
 
-exports.postIniciativa = function (req, res) {
+exports.get = function (req, res) {
+          models.Iniciativa.find({ where: { 'id': id } }).then(function (iniciativa) {
+            res.json(iniciativa);
+        }).catch(function(err) {
+    console.log(err);
+  res.json({ error_code: 1 });
+        });
+};
+
+exports.add = function (req, res) {
   // Save the iniciativa and check for errors
   models.Iniciativa.create({
     nombre: req.body.nombre,
@@ -64,9 +73,64 @@ exports.postIniciativa = function (req, res) {
   }).then(function (iniciativa) {
     //res.json({ message: 'Iniciativa added!', data: iniciativa });
     res.json({ error_code: 0 });
-  });
+  }).catch(function(err) {
+    console.log(err);
+  res.json({ error_code: 1 });
+});
 
 };
+
+
+exports.update = function (req, res) {
+  // Save the iniciativa and check for errors
+  models.Iniciativa.update({
+    nombre: req.body.nombre,
+    iddivision: req.body.iddivision,
+    divisionsponsor: req.body.divisionsponsor,
+    uidsponsor1: req.body.uidsponsor1,
+    sponsor1: req.body.sponsor1,
+    uidsponsor2: req.body.uidsponsor2,
+    sponsor2: req.body.sponsor2,
+    uidgerente: req.body.uidgerente,//llave
+    gerenteresponsable: req.body.gerenteresponsable,
+    uidpmo: req.body.idpmo,
+    pmoresponsable: req.body.pmoresponsable,
+    idtipo: req.body.idtipo,
+    tipo: req.body.tipo,
+    idcategoria: req.body.idcategoria,
+    categoria: req.body.categoria,
+    ano: req.body.ano,
+    anoq: req.body.anoq,
+    q1: req.body.q1,
+    q2: req.body.q2,
+    q3: req.body.q3,
+    q4: req.body.q4,
+    fechacomite: req.body.fechacomite,
+    idmoneda:req.body.idmoneda,
+    pptoestimadogasto: req.body.pptoestimadogasto,
+    pptoestimadoinversion:req.body.pptoestimadoinversion,
+    idestado:1,
+    borrado:1
+  }, {
+  where: {
+    id: req.body.id
+  }
+}).then(function (iniciativa) {
+    res.json({ error_code: 0 });
+  }).catch(function(err) {
+    console.log(err);
+  res.json({ error_code: 1 });
+});
+
+};
+
+exports.del = function (req, res) {
+  models.Iniciativa.destroy({
+  where: {
+    id: req.body.id
+  }
+});
+  };
 
 // Create endpoint /iniciativas for GET
 exports.getIniciativasPaginados = function (req, res) {

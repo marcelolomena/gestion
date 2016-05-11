@@ -3,30 +3,111 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Nombre {nombre}</div>";
-    tmpl += "<div class='column-half'>División {pmoresponsable}</div>";
+    tmpl += "<div class='column-half'>Proyecto {nombre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>División {divisionsponsor}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Sponsor 1 {sponsor1}</div>";
+    tmpl += "<div class='column-half'>Sponsor 2 {sponsor2}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>PMO {pmoresponsable}</div>";
     tmpl += "<div class='column-half'>Gerente {gerenteresponsable}</div>";
-    tmpl += "<div class='column-half'>Sponsor {sponsor1}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>División {iddivision}</div>";
+    tmpl += "<div class='column-half'>Tipo {tipo}</div>";
+    tmpl += "<div class='column-half'>Categoría {categoria}</div>";
     tmpl += "</div>";
 
-    //tmpl += "<div class='form-row'>";
-    //tmpl += "<div class='column-full'>Your message  [textarea your-message]</div>";
-    //tmpl += "</div>";
-
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Q1 {q1}</div>";
+    tmpl += "<div class='column-half'>Q2 {q2}</div>";
     tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Q3 {q3}</div>";
+    tmpl += "<div class='column-half'>Q4 {q4}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Fecha Comite {fechacomite}</div>";
+    tmpl += "<div class='column-half'>Año {ano}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Presupuesto Gasto {pptoestimadogasto}</div>";
+    tmpl += "<div class='column-half'>Presupuesto Inversión {pptoestimadoinversion}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<hr style='width:100%;'/>";
+    tmpl += "<div> {sData} {cData}  </div>";
+    tmpl += "</div>";
+
+
+    var tmplP = "<div id='responsive-form' class='clearfix'>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'>Proyecto {nombre}</div>";
+    tmplP += "<div class='column-half'>Art {codigoart}</div>";
+    tmplP += "</div>";
+    /*
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-full'>División {divisionsponsor}</div>";
+        tmplP += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>Sponsor 1 {sponsor1}</div>";
+        tmplP += "<div class='column-half'>Sponsor 2 {sponsor2}</div>";
+        tmplP += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>PMO {pmoresponsable}</div>";
+        tmplP += "<div class='column-half'>Gerente {gerenteresponsable}</div>";
+        tmpl += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>Tipo {tipo}</div>";
+        tmplP += "<div class='column-half'>Categoría {categoria}</div>";
+        tmplP += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>Q1 {q1}</div>";
+        tmplP += "<div class='column-half'>Q2 {q2}</div>";
+        tmplP += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>Q3 {q3}</div>";
+        tmplP += "<div class='column-half'>Q4 {q4}</div>";
+        tmplP += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>Fecha Comite {fechacomite}</div>";
+        tmplP += "<div class='column-half'>Año {ano}</div>";
+        tmplP += "</div>";
+    
+        tmplP += "<div class='form-row'>";
+        tmplP += "<div class='column-half'>Presupuesto Gasto {pptoestimadogasto}</div>";
+        tmplP += "<div class='column-half'>Presupuesto Inversión {pptoestimadoinversion}</div>";
+        tmplP += "</div>";
+    */
+    tmplP += "<hr style='width:100%;'/>";
+    tmplP += "<div> {sData} {cData}  </div>";
+    tmplP += "</div>";
 
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Proyecto', name: 'nombre', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         {
-            label: 'División', name: 'iddivision', search: false, editable: false,
+            label: 'Proyecto', name: 'nombre', width: 500, align: 'left',
+            search: true, editable: true, editrules: { required: true }, hidden: false
+        },
+        {
+            label: 'División', name: 'iddivision', search: false, editable: false, hidden: true
         },
         {
             label: 'División', name: 'divisionsponsor', editable: true,
@@ -53,16 +134,48 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 }
-            },dataInit: function(elem) {$(elem).width(200);}
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false,
-        },
-        { label: 'Sponsor', name: 'sponsor1', width: 200, align: 'left', search: true, editable: true,
+            label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 2 },
-            editrules: { edithidden: true },
+            label: 'Sponsor 1', name: 'sponsor1', width: 200, align: 'left', search: true,
+            editable: true, hidden: false,
+            edittype: "text",
+            editoptions: {
+                dataInit: function (element) {
+                    window.setTimeout(function () {
+                        $(element).width(200);
+                        $(element).attr("autocomplete", "off").typeahead({
+                            appendTo: "body",
+                            source: function (request, response) {
+                                $.ajax({
+                                    url: '/gerentes',
+                                    dataType: "json",
+                                    data: { term: request },
+                                    error: function (res, status) {
+                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
+                                    },
+                                    success: function (data) {
+                                        response(data);
+                                    }
+                                });
+                            }, displayText: function (item) {
+                                return item.label;
+                            }, items: 100
+                            , minLength: 2
+                        });
+                    }, 100);
+                }
+            }
+        },
+        {
+            label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true
+        },
+        {
+            label: 'Sponsor 2', name: 'sponsor2', width: 200, align: 'left', search: true,
+            editable: true, hidden: false,
             edittype: "text",
             editoptions: {
                 dataInit: function (element) {
@@ -90,21 +203,125 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 3, colpos: 1 } },
-        { label: 'Categoria', name: 'categoria', width: 180, align: 'left', search: true, editable: true, formoptions: { rowpos: 3, colpos: 2 } },
-        { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true, formoptions: { rowpos: 4, colpos: 1 } },
-        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, formoptions: { rowpos: 4, colpos: 2 } },
-        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, formoptions: { rowpos: 5, colpos: 1 } },
-        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, formoptions: { rowpos: 5, colpos: 2 } },
-        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, formoptions: { rowpos: 6, colpos: 1 } },
         {
-            label: 'Presupuesto Estimado', name: 'pptoestimadousd', width: 150, align: 'right', search: true,
+            label: 'Gerente', name: 'uidgerente', search: false, editable: false, hidden: true
+        },
+        {
+            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left',
+            search: true, editable: true, hidden: false,
+            //editrules: { edithidden: true },
+            edittype: "text",
+            editoptions: {
+                dataInit: function (element) {
+                    window.setTimeout(function () {
+                        $(element).width(200);
+                        $(element).attr("autocomplete", "off").typeahead({
+                            appendTo: "body",
+                            source: function (request, response) {
+                                $.ajax({
+                                    url: '/gerentes',
+                                    dataType: "json",
+                                    data: { term: request },
+                                    error: function (res, status) {
+                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
+                                    },
+                                    success: function (data) {
+                                        response(data);
+                                    }
+                                });
+                            }, displayText: function (item) {
+                                return item.label;
+                            }
+                        });
+                    }, 100);
+                }
+            }
+        },
+        { label: 'PMO', name: 'uidpmo', search: false, editable: false, hidden: true },
+        {
+            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
+            search: true, editable: true, hidden: false,
+            //editrules: { edithidden: true },
+            edittype: "text",
+            editoptions: {
+                dataInit: function (element) {
+                    window.setTimeout(function () {
+                        $(element).width(200);
+                        $(element).attr("autocomplete", "off").typeahead({
+                            appendTo: "body",
+                            source: function (request, response) {
+                                $.ajax({
+                                    url: '/gerentes',
+                                    dataType: "json",
+                                    data: { term: request },
+                                    error: function (res, status) {
+                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
+                                    },
+                                    success: function (data) {
+                                        response(data);
+                                    }
+                                });
+                            }, displayText: function (item) {
+                                return item.label;
+                            }
+                        });
+                    }, 100);
+                }
+            }
+        },
+        { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
+        { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Categoria', name: 'idcategoria', search: false, editable: false, hidden: true },
+        { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
+        { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
+        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: true, editable: true, hidden: false },
+        {
+            label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: true,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $('#table_iniciativa')[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
+        },
+        { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
+        {
+            label: 'Presupuesto Gasto', name: 'pptoestimadogasto', width: 150, align: 'right',
+            search: true, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
+        {
+            label: 'Presupuesto Inversión', name: 'pptoestimadoinversion', width: 150, align: 'right',
+            search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+        },
+        { label: 'Estado', name: 'idestado', search: false, editable: false, hidden: true },
     ];
 
     var modelIniciativaPrograma = [
         { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'id', name: 'id', key: true, hidden: true },        
         { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Nombre', name: 'nombre', width: 300, align: 'center', search: false, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
     ];
@@ -143,23 +360,33 @@ $(document).ready(function () {
 
     $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
-            height: 'auto',
+            //height: 'auto',
             //width: 620,
-            template: tmpl,
-            editCaption: "Modifica Iniciativa",
-            recreateForm: true,
             closeAfterEdit: true,
+            recreateForm: true,
+            mtype: 'POST',
+            url: '/iniciativas/update',
+            modal: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            editCaption: "Modifica Iniciativa",
+            template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
             }
         },
         {
-            height: 'auto',
-            //width: 620,
             closeAfterAdd: true,
             recreateForm: true,
             mtype: 'POST',
-            url: '/iniciativas/new',
+            url: '/iniciativas/add',
             modal: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
@@ -177,8 +404,20 @@ $(document).ready(function () {
             }
         },
         {
+            mtype: 'POST',
+            url: '/iniciativas/del',
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Elimina Iniciativa",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
             }
         },
         {
@@ -214,7 +453,84 @@ $(document).ready(function () {
             }
         });
 
-        $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { add: true, edit: true, del: true, search: false, refresh: true });
+
+        $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+            {
+                closeAfterEdit: true,
+                recreateForm: true,
+                mtype: 'POST',
+                url: '/iniciativas/update',
+                modal: true,
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                editCaption: "Modifica Iniciativa Programa",
+                template: tmplP,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                }, afterSubmit: function (response, postdata) {
+                    var json = response.responseText;
+                    var result = JSON.parse(json);
+                    if (result.error_code != 0)
+                        return [false, result.error_text, ""];
+                    else
+                        return [true, "", ""]
+                }
+            },
+            {
+                closeAfterAdd: true,
+                recreateForm: true,
+                mtype: 'POST',
+                url: '/iniciativas/add',
+                modal: true,
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                addCaption: "Agrega Iniciativa Programa",
+                template: tmplP,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                }, afterSubmit: function (response, postdata) {
+                    var json = response.responseText;
+                    var result = JSON.parse(json);
+                    if (result.error_code != 0)
+                        return [false, result.error_text, ""];
+                    else
+                        return [true, "", ""]
+                }, beforeShowForm: function (form) {
+                    console.log("conchatumadere " + parentRowID);
+                    $.ajax({
+                        type: "GET",
+                        url: '/iniciativas/' + parentRowID,
+                        async: false,
+                        success: function (data) {
+                            $("#codigoart", form).val('201603');
+                        }
+                    });
+
+
+                }
+            },
+            {
+                mtype: 'POST',
+                url: '/iniciativas/del',
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                addCaption: "Elimina Iniciativa",
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                }, afterSubmit: function (response, postdata) {
+                    var json = response.responseText;
+                    var result = JSON.parse(json);
+                    if (result.error_code != 0)
+                        return [false, result.error_text, ""];
+                    else
+                        return [true, "", ""]
+                }
+            },
+            {
+                recreateFilter: true
+            }
+        );
+
     }
 
     $("#pager_iniciativa_left").css("width", "");
