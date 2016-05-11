@@ -135,7 +135,7 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                    },                   
                    { label: 'Cui',
                      name: 'cui',
-                     width: 150,
+                     width: 200,
                    },
                    { label: 'Presupuesto',
                      name: 'presupuestopesos',
