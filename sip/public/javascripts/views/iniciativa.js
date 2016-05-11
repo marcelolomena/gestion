@@ -1,15 +1,37 @@
 $(document).ready(function () {
 
+    var tmpl = "<div id='responsive-form' class='clearfix'>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Nombre {nombre}</div>";
+    tmpl += "<div class='column-half'>División {pmoresponsable}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Gerente {gerenteresponsable}</div>";
+    tmpl += "<div class='column-half'>Sponsor {sponsor1}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>División {iddivision}</div>";
+    tmpl += "</div>";
+
+    //tmpl += "<div class='form-row'>";
+    //tmpl += "<div class='column-full'>Your message  [textarea your-message]</div>";
+    //tmpl += "</div>";
+
+    tmpl += "</div>";
+
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Proyecto', name: 'nombre', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         {
-            label: 'División', name: 'divisionsponsor', width: 245, align: 'left', search: true, editable: true, 
+            label: 'División', name: 'iddivision', search: false, editable: false,
         },
         {
-            label: 'División', name: 'iddivision', editable: true,
-            hidden: true,
-            editrules: { edithidden: true },
+            label: 'División', name: 'divisionsponsor', editable: true,
+            width: 200, align: 'left', hidden: false,
+            //editrules: { edithidden: true },
             edittype: "select",
             formoptions: { rowpos: 1, colpos: 2 },
             editoptions: {
@@ -31,9 +53,13 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 }
-            },
+            },dataInit: function(elem) {$(elem).width(200);}
         },
-        { label: 'Sponsor', name: 'sponsor1', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 1 } },
+        {
+            label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false,
+        },
+        { label: 'Sponsor', name: 'sponsor1', width: 200, align: 'left', search: true, editable: true,
+        },
         {
             label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 2, colpos: 2 },
             editrules: { edithidden: true },
@@ -119,6 +145,7 @@ $(document).ready(function () {
         {
             height: 'auto',
             //width: 620,
+            template: tmpl,
             editCaption: "Modifica Iniciativa",
             recreateForm: true,
             closeAfterEdit: true,
@@ -137,7 +164,7 @@ $(document).ready(function () {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agrega Iniciativa",
-            //template: template,
+            template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {

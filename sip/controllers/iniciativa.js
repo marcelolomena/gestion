@@ -34,7 +34,6 @@ exports.getDivisiones = function (req, res) {
 exports.postIniciativa = function (req, res) {
   // Save the iniciativa and check for errors
   models.Iniciativa.create({
-    //codigoart: req.body.codigoart,
     nombre: req.body.nombre,
     iddivision: req.body.iddivision,
     divisionsponsor: req.body.divisionsponsor,
