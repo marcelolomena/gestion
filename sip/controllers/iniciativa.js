@@ -31,8 +31,19 @@ exports.getDivisiones = function (req, res) {
 
 };
 
+exports.getProgramas = function (req, res) {
+
+          models.Programa.findAll({ where: { 'is_active': 1 } }).then(function (programa) {
+            res.json(programa);
+        }).catch(function(err) {
+    console.log(err);
+  res.json({ error_code: 1 });
+        });
+
+};
+
 exports.get = function (req, res) {
-          models.Iniciativa.find({ where: { 'id': id } }).then(function (iniciativa) {
+          models.Iniciativa.find({ where: { 'id': req.params.id  } }).then(function (iniciativa) {
             res.json(iniciativa);
         }).catch(function(err) {
     console.log(err);
