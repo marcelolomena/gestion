@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Erogacionproyecto', {
+  return sequelize.define('erogacionproyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -19,6 +19,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true
@@ -31,36 +35,29 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    razonsocial: {
+    numerotarea: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    factura: {
+    grupo: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    fechafactura: {
-      type: DataTypes.DATE,
+    estado: {
+      type: DataTypes.STRING,
       allowNull: true
     },
+<<<<<<< HEAD
     fechagl: {
       type: DataTypes.DATE,
+=======
+    tipoerogacion: {
+      type: DataTypes.STRING,
+>>>>>>> 9e0f05f97b7cb0566dec35598e4107313ed17557
       allowNull: true
     },
-    contrato: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    anexo: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    codigoart: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    partida: {
-      type: DataTypes.INTEGER,
+    empresa: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     idcuenta: {
@@ -79,11 +76,147 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idservicio: {
+    empresarelacionada: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    sucursalcontable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    sucursalorigen: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    usofuturo1: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    usofuturo2: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    razonsocial: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fechafactura: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    factura: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombretarea: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fuentetransaccion: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    transaccionorig: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    numerolinea: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    tarea: {
+    montosum: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    cantidadsum: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    indicadorinversion: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fechapa: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechagl: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    anno: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    tipo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    clase: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tipo2: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    mes: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    toriganterior: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tproviant: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    tfinalant: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    toriginalactual: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tproviactual: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tajustadaactual: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    toriginalactualfinal: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tproviactfinal: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tajustadaactualfinal: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    cadena: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    abierto: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    comentario: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+<<<<<<< HEAD
+    montosum: {
+      type: DataTypes.FLOAT,
+=======
+    detalle: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -93,18 +226,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     moneda: {
       type: DataTypes.STRING,
-      allowNull: true
-    },
-    periodo: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    montoporperiodo: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    montosum: {
-      type: DataTypes.FLOAT,
+>>>>>>> 9e0f05f97b7cb0566dec35598e4107313ed17557
       allowNull: true
     },
     borrado: {

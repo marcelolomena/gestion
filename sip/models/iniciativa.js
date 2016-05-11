@@ -39,10 +39,6 @@ module.exports = function(sequelize, DataTypes) {
     uidgerente: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'art_user',
-        key: 'uid'
-      }
     },
     gerenteresponsable: {
       type: DataTypes.STRING,

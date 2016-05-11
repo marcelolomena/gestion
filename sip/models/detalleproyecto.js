@@ -9,30 +9,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     idproyecto: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'proyecto',
-        key: 'id'
-      }
+      allowNull: true
     },
-    numerotarea: {
+    tarea: {
       type: DataTypes.STRING,
-      allowNull: true
-    },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechacreacion: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechainicio: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechacierre: {
-      type: DataTypes.DATE,
       allowNull: true
     },
     idcui: {
@@ -40,19 +20,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     cui: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     idproveedor: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idcuentacontable: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    tarea: {
-      type: DataTypes.STRING,
       allowNull: true
     },
     idcuenta: {
@@ -60,6 +32,26 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     cuentacontable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    presupuestooriginal: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    presupuestoactual: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    estado: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tipoproyecto: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -87,12 +79,64 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    realperiodo: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
     saldo: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
     saldopesos: {
       type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    wbslevel: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    fechacreacion: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechainicio: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechacierre: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    saldo2: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    clase: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    llave: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    divotabiertos: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    realajustado: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    saldoajustado: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    idcodex: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    ddd: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     borrado: {

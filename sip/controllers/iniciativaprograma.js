@@ -1,16 +1,5 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-// Create endpoint /iniciativaprograma/:id for GET
-/*
-exports.getIniciativaPrograma = function (req, res) {
-    // Use the IniciativaPrograma model to find a specific id programa
-    models.IniciativaPrograma.find({ where: { 'idiniciativa': req.params.id } }).then(function (iniciativaprograma) {
-        res.json(iniciativaprograma);
-    }).error(function (err) {
-        res.send(err);
-    });
-};
-*/
 
 // Create endpoint /iniciativaprograma for GET
 exports.getIniciativaPrograma = function (req, res) {
