@@ -30,7 +30,7 @@ $(document).ready(function () {
         },
         { label: 'Avance', name: 'avance', width: 100, align: 'left', search: true },
         {
-            label: 'Fecha Ultimo Pago', name: 'fechaultpago', width: 110, align: 'left', search: true,
+            label: 'Fecha Ultimo Pago', name: 'ultimopago', width: 110, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true, formoptions: { rowpos: 3, colpos: 1 },
             editoptions: {
@@ -41,7 +41,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Fecha Pap', name: 'fechapap', width: 100, align: 'left', search: true,
+            label: 'Fecha Pap', name: 'papcomprometido', width: 100, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true, formoptions: { rowpos: 3, colpos: 2 },
             editoptions: {
@@ -62,12 +62,12 @@ $(document).ready(function () {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Real Gasto', name: 'realgasto', width: 150, align: 'right', search: true,
+            label: 'Real Gasto', name: 'realacumuladogasto', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 5, colpos: 1 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Real Inversion', name: 'realinversion', width: 150, align: 'right', search: true,
+            label: 'Real Inversion', name: 'realacumuladoinversion', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
@@ -130,11 +130,11 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                    { label: 'id',
                       name: 'id',
                       width: 50,
+                      key: true, 
                       hidden:true
                    },
                    { label: 'Tarea',
-                     name: 'tarea',
-                     key: true,                     
+                     name: 'tarea',                   
                      width: 200,
                    },                                      
                    { label: 'Nombre',

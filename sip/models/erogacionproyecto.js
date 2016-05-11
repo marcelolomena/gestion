@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('erogacionproyecto', {
+  return sequelize.define('Erogacionproyecto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -26,11 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    numerotarea: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },    
+    },   
     rutproveedor: {
       type: DataTypes.STRING,
       allowNull: true
@@ -47,13 +43,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-<<<<<<< HEAD
-    fechagl: {
-      type: DataTypes.DATE,
-=======
     tipoerogacion: {
       type: DataTypes.STRING,
->>>>>>> 9e0f05f97b7cb0566dec35598e4107313ed17557
       allowNull: true
     },
     empresa: {
@@ -124,10 +115,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    montosum: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
     cantidadsum: {
       type: DataTypes.FLOAT,
       allowNull: true
@@ -176,10 +163,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    toriginalactual: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     tproviactual: {
       type: DataTypes.STRING,
       allowNull: true
@@ -212,10 +195,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-<<<<<<< HEAD
-    montosum: {
-      type: DataTypes.FLOAT,
-=======
     detalle: {
       type: DataTypes.STRING,
       allowNull: true
@@ -226,7 +205,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     moneda: {
       type: DataTypes.STRING,
->>>>>>> 9e0f05f97b7cb0566dec35598e4107313ed17557
       allowNull: true
     },
     borrado: {
