@@ -93,7 +93,7 @@ exports.get = function (req, res) {
 exports.add = function (req, res) {
   // Save the iniciativa and check for errors
   
-    var sql = "select distinct glosaDivision from RecursosHumanos where codDivision = " + req.body.iddivision;
+    //var sql = "select distinct glosaDivision from RecursosHumanos where codDivision = " + req.body.iddivision;
 
 
   var tmp = function(callback) {
@@ -114,19 +114,19 @@ var tmp3 = function(callback) {
         });
 }       
         var tmp4 = function(callback) { 
-        sequelize.query(sql)
-          .spread(function (rows) {
-            callback(glosaDivision)   
-          });
+      return models.RecursosHumanos.find({ limit: 1, where: { 'codDivision': req.body.iddivision } }).then(function (personal) {
+                      callback(personal.glosaDivision)       
+        });
 }
         
         tmp(function(estado){
                 tmp2(function(pmo){
                   tmp3(function(gerente){
+                    tmp4(function(personal){
                           models.Iniciativa.create({
     nombre: req.body.nombre,
     iddivision: req.body.iddivision,
-    divisionsponsor: req.body.iddivision,
+    divisionsponsor: personal,
     uidsponsor1: req.body.uidsponsor1,
     sponsor1: req.body.sponsor1,
     uidsponsor2: req.body.uidsponsor2,
@@ -158,7 +158,7 @@ var tmp3 = function(callback) {
     console.log(err);
   res.json({ error_code: 1 });
 });  
-                    
+                   });                   
                   });
                   
                 });
