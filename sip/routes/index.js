@@ -105,11 +105,20 @@ module.exports = function (passport) {
     router.route('/proyectostareas/:id')
         .get(isAuthenticated, proyectoTareasController.getProyectosTareas);
 
+	router.route('/personal')
+		.get(isAuthenticated, iniciativaController.getPersonal);
+		
+	router.route('/pmos')
+		.get(isAuthenticated, iniciativaController.getPMOS);	
+		
 	router.route('/gerentes')
-		.get(isAuthenticated, iniciativaController.getGerentes);
+		.get(isAuthenticated, iniciativaController.getGerentes);				
 		
 	router.route('/programas')
 		.get(isAuthenticated, iniciativaController.getProgramas);		
+		
+	router.route('/iniciativaestado')
+		.get(isAuthenticated, iniciativaController.getEstado);			
 
 	router.route('/divisiones')
 		.get(isAuthenticated, iniciativaController.getDivisiones);
