@@ -1,7 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 
-
 exports.getPersonal = function (req, res) {
 
   var term = req.query.term;
@@ -116,9 +115,8 @@ exports.add = function (req, res) {
         
         
         tmp(function(apiKey){
-                                      console.log("PICOOOOOOOOOOOOOOOOOOOO---------------->>>>>> " + apiKey);
+                                      console.log("---------------->>>>>> " + apiKey);
 });
-
 
                         
      
