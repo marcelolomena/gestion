@@ -8,6 +8,7 @@ exports.getProyectosTareas = function (req, res) {
   var filters = req.query.filters;
   var condition = "";
   var id = req.params.id
+  var filtrosubgrilla = "idproyecto="+id;
 
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
@@ -52,7 +53,7 @@ exports.getProyectosTareas = function (req, res) {
 
     } else {
 
-      models.detalleproyecto.count().then(function (records) {
+      models.detalleproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -63,7 +64,7 @@ exports.getProyectosTareas = function (req, res) {
 
   } else {
 
-    models.detalleproyecto.count().then(function (records) {
+    models.detalleproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {

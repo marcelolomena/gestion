@@ -2,65 +2,88 @@ $(document).ready(function () {
 
     var modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'SAP', name: 'sap', width: 130, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
-        { label: 'Proyecto', name: 'nombre', width: 200, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Numero Proyecto', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: 'Nombre Proyecto', name: 'nombre', width: 250, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Catergoria_2', name: 'categoria2', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'PMO', name: 'pmo', width: 150, align: 'left', search: true },
         {
             label: 'Fecha Creacion', name: 'fechacreacion', width: 110, align: 'left', search: true,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 1 },
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'yy-mm-dd' })
+                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
                 }
             }
         },
-        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: true },
+        { label: 'Estado2', name: 'estado', width: 100, align: 'left', search: true },
         {
             label: 'Fecha Vigencia', name: 'fechavigencia', width: 110, align: 'left', search: true,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 2 },
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'yy-mm-dd' })
+                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
                 }
             }
         },
-        { label: 'Avance', name: 'avance', width: 100, align: 'left', search: true },
+        { label: 'Avance %', name: 'avance2', width: 100, align: 'left', search: true, 
+        formatter: 'number', formatoptions: {suffix: '%', decimalPlaces: 0 }, sorttype: 'currency'
+        },
         {
-            label: 'Fecha Ultimo Pago', name: 'ultimopago', width: 110, align: 'left', search: true,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            label: 'Ultimo Pago', name: 'ultimopago', width: 110, align: 'left', search: true,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 3, colpos: 1 },
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'yy-mm-dd' })
+                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
                 }
             }
         },
         {
-            label: 'Fecha Pap', name: 'papcomprometido', width: 100, align: 'left', search: true,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            label: 'Paso Producción Comprometido', name: 'papcomprometido', width: 100, align: 'left', search: true,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 3, colpos: 2 },
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'yy-mm-dd' })
+                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
                 }
             }
         },
         {
-            label: 'Pre Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: true,
+            label: 'Cep', name: 'cep', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 4, colpos: 1 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },    
+        {
+            label: 'Acoplado', name: 'acoplado', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 4, colpos: 1 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },               
+        {
+            label: 'Presupuesto Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 4, colpos: 1 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Pre Inversion', name: 'presupuestoinversion', width: 150, align: 'right', search: true,
+            label: 'Presupuesto Inversion', name: 'presupuestoinversion', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 4, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
+        {
+            label: 'Compromiso Gasto', name: 'compromisogasto', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 4, colpos: 1 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Compromiso Inversion', name: 'compromisoinversion', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 4, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },        
         {
             label: 'Real Gasto', name: 'realacumuladogasto', width: 150, align: 'right', search: true,
             editable: true, formoptions: { rowpos: 5, colpos: 1 },
@@ -71,6 +94,36 @@ $(document).ready(function () {
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
+        {
+            label: 'Saldo2 Gasto', name: 'saldo2gasto', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Saldo2 Inversión', name: 'saldo2inversion', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },                
+        {
+            label: 'Total Presupuesto', name: 'totalpresupuesto', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },  
+        {
+            label: 'Total Compromiso', name: 'totalcompromiso', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        }, 
+        {
+            label: 'Total Acumulado', name: 'totalacumulado', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },   
+        {
+            label: 'Total Saldo', name: 'totalsaldo', width: 150, align: 'right', search: true,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        }            
     ];
     $("#grid").jqGrid({
         url: '/proyectoslist',
@@ -101,9 +154,9 @@ $(document).ready(function () {
 
     $('#grid').jqGrid('navGrid', "#pager", {
         search: false, // show search button on the toolbar
-        add: true,
-        edit: true,
-        del: true,
+        add: false,
+        edit: false,
+        del: false,
         refresh: true
     });
 
@@ -133,27 +186,36 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                       key: true, 
                       hidden:true
                    },
-                   { label: 'Tarea',
+                   { label: 'Numero Tarea',
                      name: 'tarea',                   
-                     width: 200,
+                     width: 100,
                    },                                      
-                   { label: 'Nombre',
+                   { label: 'Nombre Tarea',
                      name: 'nombre',
                      width: 200,
                    },
                    { label: 'Presupuesto',
                      name: 'presupuestopesos',
                      width: 150,
+                     align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
+                   { label: 'Compromisos',
+                     name: 'compromiso',
+                     width: 150,
+                     align: 'right',
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                   },                   
                    { label: 'Real Acumulado',
                      name: 'realacumuladopesos',
                      width: 150,
+                     align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
-                   { label: 'Saldo',
+                   { label: 'Total',
                      name: 'saldopesos',
                      width: 150,
+                     align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }            
         ],
@@ -191,30 +253,34 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
                       key: true,
                       hidden:true
                    },                   
-                   { label: 'Proveedor',
+                   { label: 'Nombre Proveedor',
                      name: 'razonsocial',
-                     width: 200,
+                     width: 250,
                    },
-                   { label: 'Factura',
+                   { label: 'Numero Factura',
                      name: 'factura',
-                     width: 150,
+                     align: 'center',
+                     width: 100,
                    },
                    { label: 'Fecha GL',
                      name: 'fechagl',
-                     width: 150,
+                     width: 100,
                      formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }
                    },
-                   { label: 'Tarea',
+                   { label: 'Tarea Ajustada',
                      name: 'numerotarea',
-                     width: 150,
+                     align: 'center',
+                     width: 100,
                    },      
                    { label: 'Tarea Original',
                      name: 'toriginalactual',
-                     width: 150,
+                     align: 'center',
+                     width: 100,
                    },  
                    { label: 'Total',
                      name: 'montosum',
                      width: 150,
+                     align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }                                              
         ],

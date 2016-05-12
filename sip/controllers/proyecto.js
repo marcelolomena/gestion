@@ -14,8 +14,11 @@ exports.getProyectosPaginados = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
-    "as resultNum, * " +
-    "FROM sip.proyecto )" +
+    "as resultNum, *, presupuestogasto+presupuestoinversion AS totalpresupuesto, "+
+    "compromisogasto+compromisoinversion AS totalcompromiso, "+ 
+    "realacumuladogasto+realacumuladoinversion AS totalacumulado,  "+
+    "saldogasto+saldoinversion AS totalsaldo, avance*100 AS avance2  " +
+    "FROM sip.proyecto ORDER BY sap)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -35,8 +38,11 @@ exports.getProyectosPaginados = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY nombre asc) " +
-        "as resultNum, * " +
-        "FROM sip.proyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "as resultNum, *, presupuestogasto+presupuestoinversion AS totalpresupuesto, "+
+        "compromisogasto+compromisoinversion AS totalcompromiso, "+ 
+        "realacumuladogasto+realacumuladoinversion AS totalacumulado, "+
+        "saldogasto+saldoinversion AS totalsaldo, avance*100 AS avance2 " +
+        "FROM sip.proyecto WHERE " + condition.substring(0, condition.length - 4) + " ORDER BY sap) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
         console.log(sql);

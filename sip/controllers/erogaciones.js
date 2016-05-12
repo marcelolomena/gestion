@@ -8,6 +8,7 @@ exports.getErogacionesPaginados = function (req, res) {
   var filters = req.query.filters;
   var condition = "";
   var id = req.params.id
+  var filtrosubgrilla="iddetalleproyecto="+id;
   
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
@@ -50,7 +51,7 @@ exports.getErogacionesPaginados = function (req, res) {
 
     } else {
 
-      models.Erogacionproyecto.count().then(function (records) {
+      models.Erogacionproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -61,7 +62,7 @@ exports.getErogacionesPaginados = function (req, res) {
 
   } else {
 
-    models.Erogacionproyecto.count().then(function (records) {
+    models.Erogacionproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {
