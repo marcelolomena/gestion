@@ -93,7 +93,7 @@ exports.get = function (req, res) {
 exports.add = function (req, res) {
   // Save the iniciativa and check for errors
   
-    //var sql = "select distinct glosaDivision from RecursosHumanos where codDivision = " + req.body.iddivision;
+    var sql = "select distinct glosaDivision from RecursosHumanos where codDivision = " + req.body.iddivision;
 
 
   var tmp = function(callback) {
@@ -102,26 +102,28 @@ exports.add = function (req, res) {
         });
   }
       
-      models.User.find({ where: { 'uid': req.body.uidpmo } }).then(function (user) {
-                     var pmo= user.first_name + ' ' + user.last_name;
-                            console.log("---------------->>>>>> " + pmo); 
+      var tmp2 = function(callback) { 
+       return models.User.find({ where: { 'uid': req.body.uidpmo } }).then(function (user) {
+                       callback(user.first_name + ' ' + user.last_name) 
         });
+      }
 
-
-      models.User.find({ where: { 'uid': req.body.uidgerente } }).then(function (user) {
-                      var gerente= user.first_name + ' ' + user.last_name;
-                      console.log("---------------->>>>>> " + gerente);           
+var tmp3 = function(callback) { 
+      return models.User.find({ where: { 'uid': req.body.uidgerente } }).then(function (user) {
+                      callback(user.first_name + ' ' + user.last_name)       
         });
+}       
+        var tmp4 = function(callback) { 
+        sequelize.query(sql)
+          .spread(function (rows) {
+            callback(glosaDivision)   
+          });
+}
         
-        
-        tmp(function(apiKey){
-                                      console.log("---------------->>>>>> " + apiKey);
-});
-
-                        
-     
-/* 
-        models.Iniciativa.create({
+        tmp(function(estado){
+                tmp2(function(pmo){
+                  tmp3(function(gerente){
+                          models.Iniciativa.create({
     nombre: req.body.nombre,
     iddivision: req.body.iddivision,
     divisionsponsor: req.body.iddivision,
@@ -131,7 +133,7 @@ exports.add = function (req, res) {
     sponsor2: req.body.sponsor2,
     uidgerente: req.body.uidgerente,
     gerenteresponsable: gerente,
-    uidpmo: req.body.idpmo,
+    uidpmo: req.body.uidpmo,
     pmoresponsable: pmo,
     idtipo: req.body.idtipo,
     tipo: req.body.tipo,
@@ -155,9 +157,16 @@ exports.add = function (req, res) {
   }).catch(function(err) {
     console.log(err);
   res.json({ error_code: 1 });
-});
-      
- */             
+});  
+                    
+                  });
+                  
+                });
+        });
+
+                        
+     
+             
 
   
 
