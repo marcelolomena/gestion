@@ -5,10 +5,10 @@ $(document).ready(function () {
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Proyecto {nombre}</div>";
     tmpl += "</div>";
-    
+
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>División {iddivision}</div>";    
-    tmpl += "</div>";    
+    tmpl += "<div class='column-full'>División {iddivision}</div>";
+    tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Sponsor 1 {sponsor1}</div>";
@@ -58,11 +58,8 @@ $(document).ready(function () {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-full'>División {iddivision}</div>";
-    tmplP += "</div>";
-
-    tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-full'>Programas {program_id}</div>";
+    tmplP += "<div class='column-half'>División {iddivision}</div>";
+    tmplP += "<div class='column-half'>Programas {program_id}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
@@ -73,11 +70,11 @@ $(document).ready(function () {
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-half'>PMO {uidpmo}</div>";
     tmplP += "<div class='column-half'>Gerente {uidgerente}</div>";
-    tmpl += "</div>";
+    tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-half'>Estado {idestado}</div>";
-    tmplP += "<div class='column-half'>Categoría {categoria}</div>";
+    tmplP += "<div class='column-half'>Categoría {idcategoria}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
@@ -148,7 +145,6 @@ $(document).ready(function () {
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
-                        //$(element).width(200);
                         $(element).attr("autocomplete", "off").typeahead({
                             appendTo: "body",
                             source: function (request, response) {
@@ -355,9 +351,6 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        //$('input#STID').val($('option:selected', this).text());
-                        //var thispid= $(this).val();
-                        //$("input#idestado").val($(this).val());
                         $("input#estado").val($('option:selected', this).text());
                         //console.log("id :" + $(this).val());
                         //console.log("text :" + $('option:selected', this).text());
@@ -481,18 +474,18 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    
-	$('#table_iniciativa').jqGrid('navButtonAdd','#pager_iniciativa',{
-		caption:"",
-		buttonicon : "silk-icon-page-excel",
-		title: "Exportar a Excel", 
-		onClickButton : function () { 
-			var grid = $('#table_iniciativa');
-			var rowKey = grid.getGridParam("selrow");
-			var url = 'iniciativa-excel';
-			$('#table_iniciativa').jqGrid('excelExport',{"url":url});
-	   } 
-	});    
+
+    $('#table_iniciativa').jqGrid('navButtonAdd', '#pager_iniciativa', {
+        caption: "",
+        buttonicon: "silk-icon-page-excel",
+        title: "Exportar a Excel",
+        onClickButton: function () {
+            var grid = $('#table_iniciativa');
+            var rowKey = grid.getGridParam("selrow");
+            var url = 'iniciativa-excel';
+            $('#table_iniciativa').jqGrid('excelExport', { "url": url });
+        }
+    });
 
     function gridIniciativaPrograma(parentRowID, parentRowKey) {
         var childGridID = parentRowID + "_table";
@@ -529,13 +522,12 @@ $(document).ready(function () {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true },
-            { label: 'Nombre', name: 'nombre', width: 300, align: 'center', search: false, editable: true },
             {
-                label: 'División', name: 'iddivision', search: false, editable: false, hidden: true
+                label: 'Proyecto', name: 'nombre', width: 500, align: 'left',
+                search: true, editable: true, editrules: { required: true }, hidden: false
             },
             {
-                label: 'División', name: 'divisionsponsor', editable: true,
-                width: 200, align: 'left', hidden: false,
+                label: 'División', name: 'iddivision', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
                     dataUrl: '/divisiones',
@@ -543,7 +535,7 @@ $(document).ready(function () {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.program_name;
+                        var thissid = rowData.divisionsponsor;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger División--</option>';
@@ -557,6 +549,10 @@ $(document).ready(function () {
                         return s + "</select>";
                     }
                 }, dataInit: function (elem) { $(elem).width(200); }
+
+            },
+            {
+                label: 'División', name: 'divisionsponsor', search: true, editable: false, width: 200, align: 'left', hidden: false,
             },
             {
                 label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
@@ -568,12 +564,11 @@ $(document).ready(function () {
                 editoptions: {
                     dataInit: function (element) {
                         window.setTimeout(function () {
-                            $(element).width(200);
                             $(element).attr("autocomplete", "off").typeahead({
                                 appendTo: "body",
                                 source: function (request, response) {
                                     $.ajax({
-                                        url: '/gerentes',
+                                        url: '/personal',
                                         dataType: "json",
                                         data: { term: request },
                                         error: function (res, status) {
@@ -602,12 +597,12 @@ $(document).ready(function () {
                 editoptions: {
                     dataInit: function (element) {
                         window.setTimeout(function () {
-                            $(element).width(200);
+                            //$(element).width(200);
                             $(element).attr("autocomplete", "off").typeahead({
                                 appendTo: "body",
                                 source: function (request, response) {
                                     $.ajax({
-                                        url: '/gerentes',
+                                        url: '/personal',
                                         dataType: "json",
                                         data: { term: request },
                                         error: function (res, status) {
@@ -626,73 +621,88 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'Gerente', name: 'uidgerente', search: false, editable: false, hidden: true
+                label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/gerentes',
+                    buildSelect: function (response) {
+                        var grid = $("#" + childGridID);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.uidgerente;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Gerente--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
                 label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left',
-                search: true, editable: true, hidden: false,
-                edittype: "text",
-                editoptions: {
-                    dataInit: function (element) {
-                        window.setTimeout(function () {
-                            $(element).width(200);
-                            $(element).attr("autocomplete", "off").typeahead({
-                                appendTo: "body",
-                                source: function (request, response) {
-                                    $.ajax({
-                                        url: '/gerentes',
-                                        dataType: "json",
-                                        data: { term: request },
-                                        error: function (res, status) {
-                                            alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                        },
-                                        success: function (data) {
-                                            response(data);
-                                        }
-                                    });
-                                }, displayText: function (item) {
-                                    return item.label;
-                                }
-                            });
-                        }, 100);
-                    }
-                }
+                search: true, editable: false, hidden: false
             },
-            { label: 'PMO', name: 'uidpmo', search: false, editable: false, hidden: true },
+            {
+                label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/pmos',
+                    buildSelect: function (response) {
+                        var grid = $("#" + childGridID);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.uidpmo;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger PMO--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }, dataInit: function (elem) { $(elem).width(200); }
+            },
             {
                 label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
                 search: true, editable: true, hidden: false,
-                edittype: "text",
-                editoptions: {
-                    dataInit: function (element) {
-                        window.setTimeout(function () {
-                            $(element).width(200);
-                            $(element).attr("autocomplete", "off").typeahead({
-                                appendTo: "body",
-                                source: function (request, response) {
-                                    $.ajax({
-                                        url: '/gerentes',
-                                        dataType: "json",
-                                        data: { term: request },
-                                        error: function (res, status) {
-                                            alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                        },
-                                        success: function (data) {
-                                            response(data);
-                                        }
-                                    });
-                                }, displayText: function (item) {
-                                    return item.label;
-                                }
-                            });
-                        }, 100);
-                    }
-                }
             },
             { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
             { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
-            { label: 'Categoria', name: 'idcategoria', search: false, editable: false, hidden: true },
-            { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: true, hidden: false },
+            {
+                label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/categorias',
+                    buildSelect: function (response) {
+                        var grid = $("#" + childGridID);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.id;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Categoría--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
             { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
             { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
             { label: 'Q1', name: 'q1', width: 50, align: 'left', search: true, editable: true, hidden: false },
@@ -711,7 +721,7 @@ $(document).ready(function () {
                             autoclose: true,
                             onSelect: function (dateText, inst) {
                                 setTimeout(function () {
-                                    $('#table_iniciativa')[0].triggerToolbar();
+                                    $("#" + childGridID)[0].triggerToolbar();
                                 }, 100);
                             }
                         });
@@ -736,7 +746,40 @@ $(document).ready(function () {
                 search: true, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
-            { label: 'Estado', name: 'idestado', search: false, editable: false, hidden: true },
+            {
+                label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/iniciativaestado',
+                    buildSelect: function (response) {
+                        var grid = $("#" + childGridID);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.divisionsponsor;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Estado--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#estado").val($('option:selected', this).text());
+                            //console.log("id :" + $(this).val());
+                            //console.log("text :" + $('option:selected', this).text());
+                        }
+                    }],
+                }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            {
+                label: 'Estado', name: 'estado', search: true, editable: false, hidden: false
+            }
         ];
 
         $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
