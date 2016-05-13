@@ -481,6 +481,18 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
+    
+	$('#table_iniciativa').jqGrid('navButtonAdd','#pager_iniciativa',{
+		caption:"",
+		buttonicon : "silk-icon-page-excel",
+		title: "Exportar a Excel", 
+		onClickButton : function () { 
+			var grid = $('#table_iniciativa');
+			var rowKey = grid.getGridParam("selrow");
+			var url = 'iniciativa-excel';
+			$('#table_iniciativa').jqGrid('excelExport',{"url":url});
+	   } 
+	});    
 
     function gridIniciativaPrograma(parentRowID, parentRowKey) {
         var childGridID = parentRowID + "_table";
