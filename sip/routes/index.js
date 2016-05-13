@@ -112,7 +112,10 @@ module.exports = function (passport) {
 		.get(isAuthenticated, iniciativaController.getPMOS);	
 		
 	router.route('/gerentes')
-		.get(isAuthenticated, iniciativaController.getGerentes);				
+		.get(isAuthenticated, iniciativaController.getGerentes);		
+		
+	router.route('/categorias')
+		.get(isAuthenticated, iniciativaController.getCategoria);					
 		
 	router.route('/programas')
 		.get(isAuthenticated, iniciativaController.getProgramas);		

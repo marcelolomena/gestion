@@ -3,12 +3,12 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Proyecto {nombre}</div>";
+    tmpl += "<div class='column-full'>Proyecto {nombre}</div>";
     tmpl += "</div>";
-
+    
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>División {iddivision}</div>";
-    tmpl += "</div>";
+    tmpl += "<div class='column-full'>División {iddivision}</div>";    
+    tmpl += "</div>";    
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Sponsor 1 {sponsor1}</div>";
@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Estado {idestado}</div>";
-    tmpl += "<div class='column-half'>Categoría {categoria}</div>";
+    tmpl += "<div class='column-half'>Categoría {idcategoria}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -148,7 +148,7 @@ $(document).ready(function () {
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
-                        $(element).width(200);
+                        //$(element).width(200);
                         $(element).attr("autocomplete", "off").typeahead({
                             appendTo: "body",
                             source: function (request, response) {
@@ -182,7 +182,7 @@ $(document).ready(function () {
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
-                        $(element).width(200);
+                        //$(element).width(200);
                         $(element).attr("autocomplete", "off").typeahead({
                             appendTo: "body",
                             source: function (request, response) {
@@ -260,37 +260,34 @@ $(document).ready(function () {
         {
             label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
             search: true, editable: true, hidden: false,
-            edittype: "text",
-            editoptions: {
-                dataInit: function (element) {
-                    window.setTimeout(function () {
-                        $(element).width(200);
-                        $(element).attr("autocomplete", "off").typeahead({
-                            appendTo: "body",
-                            source: function (request, response) {
-                                $.ajax({
-                                    url: '/gerentes',
-                                    dataType: "json",
-                                    data: { term: request },
-                                    error: function (res, status) {
-                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                    },
-                                    success: function (data) {
-                                        response(data);
-                                    }
-                                });
-                            }, displayText: function (item) {
-                                return item.label;
-                            }
-                        });
-                    }, 100);
-                }
-            }
         },
         { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
         { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
-        { label: 'Categoria', name: 'idcategoria', search: false, editable: false, hidden: true },
-        { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: true, hidden: false },
+        {
+            label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/categorias',
+                buildSelect: function (response) {
+                    var grid = $("#table_iniciativa");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.id;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Categoría--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
         { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
         { label: 'Q1', name: 'q1', width: 50, align: 'left', search: true, editable: true, hidden: false },
@@ -449,6 +446,8 @@ $(document).ready(function () {
                     return [false, "PMO: Debe escoger un valor", ""];
                 } if (postdata.idestado == 0) {
                     return [false, "Estado: Debe escoger un valor", ""];
+                } if (postdata.idcategoria == 0) {
+                    return [false, "Categoría: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }

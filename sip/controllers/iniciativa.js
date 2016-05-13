@@ -1,5 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
+var userService = require('../service/user');
 
 exports.getPersonal = function (req, res) {
 
@@ -81,6 +82,17 @@ exports.getEstado = function (req, res) {
 
 };
 
+exports.getCategoria = function (req, res) {
+
+  models.Parametro.findAll({ where: { 'tipo': 'categoria' } }).then(function (estado) {
+    res.json(estado);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
+  });
+
+};
+
 exports.get = function (req, res) {
   models.Iniciativa.find({ where: { 'id': req.params.id } }).then(function (iniciativa) {
     res.json(iniciativa);
@@ -91,9 +103,16 @@ exports.get = function (req, res) {
 };
 
 exports.add = function (req, res) {
-  // Save the iniciativa and check for errors
 
-  //var sql = "select distinct glosaDivision from RecursosHumanos where codDivision = " + req.body.iddivision;
+  /*
+      userService.findByPrimaryKey(req.body.uidpmo, function (err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("------------------>>> " + data.first_name + ' ' + data.last_name);
+        }
+      });
+    */
 
 
   var tmp = function (callback) {
@@ -163,12 +182,6 @@ exports.add = function (req, res) {
 
     });
   });
-
-
-
-
-
-
 
 
 };

@@ -1,9 +1,17 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 
-module.exports.findByPrimaryKey = function (id,callback){
+module.exports = (function () {
 
-      models.User.find({ where: { 'uid': id } }).then(function (user) {
-                  callback(user);
-        });
-} 
+      var findByPrimaryKey = function (id, callback) {
+            models.User.find({ where: { 'uid': id } }).then(function (user) {
+                  callback(undefined, user);
+            }).catch(function (err) {
+                  callback(err, undefined);
+            });
+      }
+      return {
+            //Métodos públicos
+            findByPrimaryKey: findByPrimaryKey
+      };
+})();
