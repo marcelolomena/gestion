@@ -134,6 +134,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
+        sortable: "true",
         width: null,
         shrinkToFit: false,
         caption: 'Lista de proyectos',
@@ -219,16 +220,28 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }            
         ],
+        viewrecords: true,
+        styleUI: "Bootstrap", 
+        regional: 'es',
+        sortable: "true",
         rowNum: 10,
- 		height: 'auto',
-        styleUI: "Bootstrap",         
+ 		height: 'auto',  
         autowidth:false,       
-        regional : "es",
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showProyectoErogaciones, // javascript function that will take care of showing the child grid                
         pager: "#" + childGridPagerID
     });
+    
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
+    $("#" + childGridID).jqGrid('navGrid', "#"+ childGridPagerID, {
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    });    
+    
 }
 
 function showProyectoErogaciones(parentRowID, parentRowKey) {
@@ -287,9 +300,19 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
         rowNum: 10,
  		height: 'auto',
         styleUI: "Bootstrap",         
-        autowidth:false,       
+        autowidth:false, 
+        sortable: "true",      
         regional : "es",
         pager: "#" + childGridPagerID
     });
 
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
+    $("#" + childGridID).jqGrid('navGrid', "#"+ childGridPagerID, {
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    });  
 }

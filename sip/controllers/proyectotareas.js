@@ -5,17 +5,27 @@ exports.getProyectosTareas = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
   var rows = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;    
   var filters = req.query.filters;
   var condition = "";
   var id = req.params.id
   var filtrosubgrilla = "idproyecto="+id;
 
+  if (!sidx)
+    sidx = "cui";
+
+  if (!sord)
+    sord = "asc";
+
+  var order = sidx + " " + sord;
+  
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY cui asc) " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, * " +
     "FROM sip.detalleproyecto where idproyecto="+id+")" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -36,7 +46,7 @@ exports.getProyectosTareas = function (req, res) {
         "set @rowsPerPage=" + rows + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY cui asc) " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, * " +
         "FROM sip.detalleproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
