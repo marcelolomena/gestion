@@ -1,5 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
+var nodeExcel = require('excel-export');
 // Create endpoint /proyecto for GET
 exports.getProyectosPaginados = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -24,10 +25,10 @@ exports.getProyectosPaginados = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, *, presupuestogasto+presupuestoinversion AS totalpresupuesto, "+
-    "compromisogasto+compromisoinversion AS totalcompromiso, "+ 
-    "realacumuladogasto+realacumuladoinversion AS totalacumulado,  "+
-    "saldogasto+saldoinversion AS totalsaldo, avance*100 AS avance2  " +
+    "as resultNum, *, isnull(presupuestogasto,0)+isnull(presupuestoinversion,0) AS totalpresupuesto, " +
+    "isnull(compromisogasto,0)+isnull(compromisoinversion,0) AS totalcompromiso, " +
+    "isnull(realacumuladogasto,0)+isnull(realacumuladoinversion,0) AS totalacumulado,  " +
+    "isnull(saldogasto,0)+isnull(saldoinversion,0) AS totalsaldo, avance*100 AS avance2  " +
     "FROM sip.proyecto)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -48,10 +49,10 @@ exports.getProyectosPaginados = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, *, presupuestogasto+presupuestoinversion AS totalpresupuesto, "+
-        "compromisogasto+compromisoinversion AS totalcompromiso, "+ 
-        "realacumuladogasto+realacumuladoinversion AS totalacumulado, "+
-        "saldogasto+saldoinversion AS totalsaldo, avance*100 AS avance2 " +
+        "as resultNum, *, isnull(presupuestogasto,0)+isnull(presupuestoinversion,0) AS totalpresupuesto, " +
+        "isnull(compromisogasto,0)+isnull(compromisoinversion,0) AS totalcompromiso, " +
+        "isnull(realacumuladogasto,0)+isnull(realacumuladoinversion,0) AS totalacumulado,  " +
+        "isnull(saldogasto,0)+isnull(saldoinversion,0) AS totalsaldo, avance*100 AS avance2 " +
         "FROM sip.proyecto WHERE " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
@@ -61,6 +62,10 @@ exports.getProyectosPaginados = function (req, res) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
+            
+            
+            
+            
             res.json({ records: records, total: total, page: page, rows: rows });
           });
       })
@@ -87,4 +92,260 @@ exports.getProyectosPaginados = function (req, res) {
     })
 
   }
+};
+
+exports.getExcel = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
+  console.log("En getExcel");
+  var conf = {}
+  conf.cols = [{
+    caption: 'id',
+    type: 'number',
+    width: 3
+  },
+    {
+      caption: 'Numero Proyecto',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Nombre Proyecto',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Categoria_2',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'PMO',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Fecha Creación',
+      type: 'string',  
+      width: 15
+    },
+    {
+      caption: 'Estado2',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Fecha Vigencia',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Avance %',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Ultimo Pago',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Paso Producción Comprometido',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Cep',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Acoplado',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Presupuesto Gasto',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Presupuesto Inversion',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Compromiso Gasto',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Compromiso Inversion',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Real Gasto',
+      type: 'number',
+      width: 15
+    },    
+    {
+      caption: 'Real Inversion',
+      type: 'number',
+      width: 15
+    },
+        {
+      caption: 'Saldo2 Gastoo',
+      type: 'number',
+      width: 15
+    },
+        {
+      caption: 'Saldo2 Inversión',
+      type: 'number',
+      width: 15
+    },
+        {
+      caption: 'Total Presupuesto',
+      type: 'number',
+      width: 15
+    },   
+    {
+      caption: 'Total Compromiso',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Total Acumulado',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Total Saldo',
+      type: 'number',
+      width: 15
+    }           
+  ];
+
+  if (!sidx)
+    sidx = "sap";
+
+  if (!sord)
+    sord = "asc";
+
+  var order = sidx + " " + sord;
+
+  if (filters) {
+    console.log("Con filtros");
+    var jsonObj = JSON.parse(filters);
+
+    jsonObj.rules.forEach(function (item) {
+
+      if (item.op === 'cn')
+        condition += item.field + " like '%" + item.data + "%' AND"
+    });
+
+    models.Proyecto.findAll().then(function (proyecto) {
+
+      conf.rows = proyecto;
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "Proyectos.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 1 });
+    });
+
+  } else {
+    console.log("Sin filtros");
+   
+    var sql = "SELECT id, sap, nombre, numerotarea, nombretarea, presupuestooriginal, presupuestoactual, estado, tipoproyecto,  " +
+    "presupuestogasto, presupuestoinversion, compromisogasto, compromisoinversion, realacumuladogasto,  " +
+    "realacumuladoinversion, realperiodo, saldogasto, saldoinversion, wbslevel, CONVERT(VARCHAR(10),fechacreacion,110) AS fechacreacion, " +
+    "CONVERT(VARCHAR(10),fechainicio,110) AS fechainicio, CONVERT(VARCHAR(10),fechacierre,110) AS fechacierre, cui, saldo2gasto,  " +
+    "saldo2inversion, avance, llave, tareanum, creacion, tarea, categoria2,  " +
+    "CONVERT(VARCHAR(10),primerpago,110) AS primerpago, CONVERT(VARCHAR(10),ultimopago,110) AS ultimopago, estado2,  " +
+    "CONVERT(VARCHAR(10),fechavigencia,110) AS fechavigencia, contabgasto, cep, acoplado, gtodiferido, divotabiertos,  " +
+    "CONVERT(VARCHAR(10),papcomprometido,110) AS papcomprometido, abierto, pmo, borrado, " +
+    "isnull(presupuestogasto,0)+isnull(presupuestoinversion,0) AS totalpresupuesto, " +
+    "isnull(compromisogasto,0)+isnull(compromisoinversion,0) AS totalcompromiso,  " +
+    "isnull(realacumuladogasto,0)+isnull(realacumuladoinversion,0) AS totalacumulado,   " +
+    "isnull(saldogasto,0)+isnull(saldoinversion,0) AS totalsaldo, avance*100 AS avance2   " +
+    "FROM sip.proyecto ";
+    
+    //models.Proyecto.findAll().then(function (proyecto) {
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+      var arr = []
+      for (var i = 0; i < proyecto.length; i++) {
+
+        a = [i + 1, proyecto[i].sap,
+          proyecto[i].nombre,
+          proyecto[i].categoria2,
+          proyecto[i].pmo,
+          proyecto[i].fechacreacion,
+          proyecto[i].estado,
+          proyecto[i].fechavigencia,
+          proyecto[i].avance2,
+          proyecto[i].ultimopago,
+          proyecto[i].papcomprometido,
+          proyecto[i].cep,
+          proyecto[i].acoplado,
+          proyecto[i].presupuestogasto,
+          proyecto[i].presupuestoinversion,
+          proyecto[i].compromisogasto,
+          proyecto[i].compromisoinversion,
+          proyecto[i].realacumuladogasto,
+          proyecto[i].realacumuladoinversion,
+          proyecto[i].saldo2gasto,
+          proyecto[i].saldo2inversion,
+          proyecto[i].totalpresupuesto,
+          proyecto[i].totalcompromiso,
+          proyecto[i].totalacumulado,
+          proyecto[i].totalsaldo          
+        ];
+        arr.push(a);
+      }
+      conf.rows = arr;
+
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "Proyectos.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+  }
+
+};
+
+exports.getUsersByRol = function (req, res) {
+  //console.log(req.query.rol);
+  console.log(req.params.rol);
+
+  models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
+  models.Rol.belongsToMany(models.User, { foreignKey: 'id', through: models.UsrRol });
+  //{through: 'UserRole', constraints: true}
+  models.User.findAll({
+    include: [{
+      model: models.Rol,
+      //attributes:['first_name'],
+      where: { 'glosarol': req.params.rol },
+      order: ['"first_name" ASC', '"last_name" ASC']
+    }]
+  }).then(function (gerentes) {
+    //gerentes.forEach(log)
+    res.json(gerentes);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
+  });
+
 };

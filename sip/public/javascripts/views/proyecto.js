@@ -161,10 +161,24 @@ $(document).ready(function () {
         refresh: true
     });
 
+
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "Excel",
+        buttonicon: "silk-icon-page-excel",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/proyectosexcel';
+            $('#grid').jqGrid('excelExport', { "url": url });
+        }
+    });
+
     $("#pager_left").css("width", "");
 });
 
-
+    
 function showProyectosTareas(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";

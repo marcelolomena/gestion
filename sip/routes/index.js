@@ -104,6 +104,9 @@ module.exports = function (passport) {
 
     router.route('/proyectostareas/:id')
         .get(isAuthenticated, proyectoTareasController.getProyectosTareas);
+		
+	router.route('/proyectosexcel')
+		.get(isAuthenticated, proyectoController.getExcel);
 
 	router.route('/personal')
 		.get(isAuthenticated, iniciativaController.getPersonal);
