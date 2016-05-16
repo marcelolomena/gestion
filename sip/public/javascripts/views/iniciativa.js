@@ -812,7 +812,7 @@ $(document).ready(function () {
                 closeAfterEdit: true,
                 recreateForm: true,
                 mtype: 'POST',
-                url: '/iniciativas/update',
+                url: '/iniciativasprograma/update',
                 modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
@@ -877,7 +877,7 @@ $(document).ready(function () {
             },
             {
                 mtype: 'POST',
-                url: '/iniciativas/del',
+                url: '/iniciativasprograma/del',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 addCaption: "Elimina Iniciativa",

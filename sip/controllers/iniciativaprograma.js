@@ -80,8 +80,58 @@ exports.add = function (req, res) {
       });
     });
   });
+};
 
+exports.update = function (req, res) {
+  // Save the iniciativa and check for errors
+  models.IniciativaPrograma.update({
+    program_id: req.body.program_id,
+    nombre: req.body.nombre,
+    iddivision: req.body.iddivision,
+    divisionsponsor: req.body.divisionsponsor,
+    uidsponsor1: req.body.uidsponsor1,
+    sponsor1: req.body.sponsor1,
+    uidsponsor2: req.body.uidsponsor2,
+    sponsor2: req.body.sponsor2,
+    uidgerente: req.body.uidgerente,//llave
+    gerenteresponsable: req.body.gerenteresponsable,
+    uidpmo: req.body.idpmo,
+    pmoresponsable: req.body.pmoresponsable,
+    idtipo: req.body.idtipo,
+    tipo: req.body.tipo,
+    idcategoria: req.body.idcategoria,
+    categoria: req.body.categoria,
+    ano: req.body.ano,
+    anoq: req.body.anoq,
+    q1: req.body.q1,
+    q2: req.body.q2,
+    q3: req.body.q3,
+    q4: req.body.q4,
+    fechacomite: req.body.fechacomite,
+    idmoneda: req.body.idmoneda,
+    pptoestimadogasto: req.body.pptoestimadogasto,
+    pptoestimadoinversion: req.body.pptoestimadoinversion,
+    idestado: 1,
+    borrado: 1
+  }, {
+      where: {
+        id: req.body.id
+      }
+    }).then(function (iniciativa) {
+      res.json({ error_code: 0 });
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 1 });
+    });
 
+};
+
+exports.del = function (req, res) {
+  models.IniciativaPrograma.destroy({
+    where: {
+      id: req.body.id
+    }
+  });
 };
 
 // Create endpoint /iniciativaprograma for GET

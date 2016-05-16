@@ -47,37 +47,37 @@ exports.getExcel = function (req, res) {
     {
       caption: 'División',
       type: 'string',
-      width: 15
+      width: 100
     },
     {
       caption: 'Sponsor 1',
       type: 'string',
-      width: 15
+      width: 50
     },
     {
       caption: 'Sponsor 2',
       type: 'string',
-      width: 15
+      width: 50
     },
     {
       caption: 'PMO',
       type: 'string',
-      width: 15
+      width: 50
     },
     {
       caption: 'Gerente',
       type: 'string',
-      width: 15
+      width: 50
     },
     {
       caption: 'Estado',
       type: 'string',
-      width: 15
+      width: 50
     },
     {
       caption: 'Categoría',
       type: 'string',
-      width: 15
+      width: 50
     },
     {
       caption: 'Q1',
@@ -100,28 +100,23 @@ exports.getExcel = function (req, res) {
       width: 15
     },
     {
-      caption: 'Q4',
-      type: 'string',
-      width: 15
-    },
-    {
       caption: 'Fecha Comite',
       type: 'string',
       width: 15
     },
     {
       caption: 'Año',
-      type: 'string',
+      type: 'number',
       width: 15
     },
     {
       caption: 'Presupuesto Gasto',
-      type: 'string',
+      type: 'number',
       width: 15
     },
     {
       caption: 'Presupuesto Inversión',
-      type: 'string',
+      type: 'number',
       width: 15
     }
 
@@ -162,7 +157,7 @@ exports.getExcel = function (req, res) {
 
       var arr = []
       for (var i = 0; i < iniciativa.length; i++) {
-        console.log(iniciativa[i].nombre);
+
         a = [i + 1, iniciativa[i].nombre,
           iniciativa[i].divisionsponsor,
           iniciativa[i].sponsor1,

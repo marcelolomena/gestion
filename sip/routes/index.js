@@ -113,6 +113,12 @@ module.exports = function (passport) {
 
 	router.route('/iniciativasprograma/add/:id')
 		.post(isAuthenticated, iniciativaprogramaController.add);
+		
+	router.route('/iniciativasprograma/update')
+		.post(isAuthenticated, iniciativaprogramaController.update);
+
+	router.route('/iniciativasprograma/del')
+		.post(isAuthenticated, iniciativaprogramaController.del);		
 
 	router.route('/usuarios_por_rol/:rol')
 		.get(isAuthenticated, iniciativaController.getUsersByRol);
