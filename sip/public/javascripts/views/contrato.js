@@ -11,8 +11,8 @@ $(document).ready(function () {
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Contrato', name: 'nombre', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Proveedor', name: 'Proveedor.razonsocial', width: 300, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },        
         {
             label: 'Fecha Inicio', name: 'fechainicontrato', width: 150, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }, editable: true, formoptions: { rowpos: 2, colpos: 1 },
