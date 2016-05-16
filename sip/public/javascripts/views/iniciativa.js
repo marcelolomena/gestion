@@ -458,12 +458,12 @@ $(document).ready(function () {
             url: '/iniciativas/del',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Iniciativa",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
+                console.log("pico : " + result.error_code);
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
@@ -876,6 +876,8 @@ $(document).ready(function () {
                 }
             },
             {
+                closeAfterDelete: true,
+                recreateForm: true,
                 mtype: 'POST',
                 url: '/iniciativasprograma/del',
                 ajaxEditOptions: sipLibrary.jsonOptions,
