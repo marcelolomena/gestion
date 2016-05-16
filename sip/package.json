@@ -23,6 +23,7 @@
 	"sequelize": "latest",
 	"express-flash": "0.0.2",
 	"tedious": "latest",
-	"bcrypt-nodejs": "latest"
+	"bcrypt-nodejs": "latest",
+    "excel-export": "0.5.1"
   }
 }

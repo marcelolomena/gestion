@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('rol', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define('Rol', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -20,6 +20,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'rol'
-  });
+      schema: 'sip', timestamps: false, tableName: 'rol'
+    }, {
+      classMethods: {
+        associate: function (models) {
+
+          //UsrRol.belongsTo(models.User, { foreignKey: 'uid' })
+        }
+      }
+    });
 };

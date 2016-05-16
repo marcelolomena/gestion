@@ -107,21 +107,24 @@ module.exports = function (passport) {
 
 	router.route('/personal')
 		.get(isAuthenticated, iniciativaController.getPersonal);
-		
-	router.route('/pmos')
-		.get(isAuthenticated, iniciativaController.getPMOS);	
-		
-	router.route('/gerentes')
-		.get(isAuthenticated, iniciativaController.getGerentes);		
-		
+
+	router.route('/iniciativasexcel')
+		.get(isAuthenticated, iniciativaController.getExcel);
+
+	router.route('/iniciativasprograma/add/:id')
+		.post(isAuthenticated, iniciativaprogramaController.add);
+
+	router.route('/usuarios_por_rol/:rol')
+		.get(isAuthenticated, iniciativaController.getUsersByRol);
+
 	router.route('/categorias')
-		.get(isAuthenticated, iniciativaController.getCategoria);					
-		
+		.get(isAuthenticated, iniciativaController.getCategoria);
+
 	router.route('/programas')
-		.get(isAuthenticated, iniciativaController.getProgramas);		
-		
+		.get(isAuthenticated, iniciativaController.getProgramas);
+
 	router.route('/iniciativaestado')
-		.get(isAuthenticated, iniciativaController.getEstado);			
+		.get(isAuthenticated, iniciativaController.getEstado);
 
 	router.route('/divisiones')
 		.get(isAuthenticated, iniciativaController.getDivisiones);

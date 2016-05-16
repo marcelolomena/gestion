@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('usr_rol', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define('UsrRol', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'art_user',
+        model: 'User',
         key: 'uid'
       }
     },
@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'rol',
+        model: 'Rol',
         key: 'id'
       }
     },
@@ -28,6 +28,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'usr_rol'
-  });
+      schema: 'sip', timestamps: false, tableName: 'usr_rol'
+    }, {
+      classMethods: {
+        associate: function (models) {
+         }
+      }
+    });
 };

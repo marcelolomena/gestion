@@ -1,11 +1,12 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('IniciativaPrograma', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idiniciativa: {
       type: DataTypes.INTEGER,
@@ -142,7 +143,7 @@ module.exports = function(sequelize, DataTypes) {
     estado: {
       type: DataTypes.STRING,
       allowNull: true
-    },      
+    },
     fechacreacion: {
       type: DataTypes.DATE,
       allowNull: true
@@ -152,6 +153,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'iniciativaprograma'
-  });
+      schema: 'sip', timestamps: false, tableName: 'iniciativaprograma'
+    });
 };

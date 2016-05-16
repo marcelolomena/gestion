@@ -1,6 +1,12 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var userService = require('../service/user');
+var nodeExcel = require('excel-export');
+
+var log = function (inst) {
+  console.dir(inst.get())
+}
+
 
 exports.getPersonal = function (req, res) {
 
@@ -19,34 +25,202 @@ exports.getPersonal = function (req, res) {
 
 };
 
+exports.getExcel = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
 
-exports.getPMOS = function (req, res) {
+  var conf = {}
+  conf.cols = [{
+    caption: 'id',
+    type: 'number',
+    width: 3
+  },
+    {
+      caption: 'Nombre',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'División',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Sponsor 1',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Sponsor 2',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'PMO',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Gerente',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Estado',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Categoría',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q1',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q2',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q3',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q4',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q4',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Fecha Comite',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Año',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Presupuesto Gasto',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Presupuesto Inversión',
+      type: 'string',
+      width: 15
+    }
 
+  ];
 
+  if (!sidx)
+    sidx = "nombre";
 
-  var sql = "select a.uid,a.first_name + ' '  + a.last_name nombre from art_user a join sip.usr_rol  b on a.uid=b.uid join sip.rol r on r.rid=b.rid where glosarol='PMO' order by nombre;"
+  if (!sord)
+    sord = "asc";
 
-  sequelize.query(sql).spread(function (response) {
-    res.json(response);
-  }).error(function (err) {
-    res.json(err);
+  var order = sidx + " " + sord;
+
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+
+    jsonObj.rules.forEach(function (item) {
+
+      if (item.op === 'cn')
+        condition += item.field + " like '%" + item.data + "%' AND"
+    });
+
+    models.Iniciativa.findAll().then(function (iniciativa) {
+
+      conf.rows = iniciativa;
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "iniciativas.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 1 });
+    });
+
+  } else {
+    models.Iniciativa.findAll().then(function (iniciativa) {
+
+      var arr = []
+      for (var i = 0; i < iniciativa.length; i++) {
+        console.log(iniciativa[i].nombre);
+        a = [i + 1, iniciativa[i].nombre,
+          iniciativa[i].divisionsponsor,
+          iniciativa[i].sponsor1,
+          iniciativa[i].sponsor2,
+          iniciativa[i].pmoresponsable,
+          iniciativa[i].gerenteresponsable,
+          iniciativa[i].estado,
+          iniciativa[i].categoria,
+          iniciativa[i].q1,
+          iniciativa[i].q2,
+          iniciativa[i].q3,
+          iniciativa[i].q4,
+          iniciativa[i].fechacomite,
+          iniciativa[i].ano,
+          iniciativa[i].pptoestimadogasto,
+          iniciativa[i].pptoestimadoinversion
+        ];
+        arr.push(a);
+      }
+      conf.rows = arr;
+
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "iniciativas.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+  }
+
+};
+
+exports.getUsersByRol = function (req, res) {
+  //console.log(req.query.rol);
+  console.log(req.params.rol);
+
+  models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
+  models.Rol.belongsToMany(models.User, { foreignKey: 'id', through: models.UsrRol });
+  //{through: 'UserRole', constraints: true}
+  models.User.findAll({
+    include: [{
+      model: models.Rol,
+      //attributes:['first_name'],
+      where: { 'glosarol': req.params.rol },
+      order: ['"first_name" ASC', '"last_name" ASC']
+    }]
+  }).then(function (gerentes) {
+    //gerentes.forEach(log)
+    res.json(gerentes);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
   });
 
 };
 
-
-exports.getGerentes = function (req, res) {
-
-
-  var sql = "select a.uid,a.first_name + ' '  + a.last_name nombre from art_user a join sip.usr_rol  b on a.uid=b.uid join sip.rol r on r.rid=b.rid where glosarol='Gerente' order by nombre;"
-
-  sequelize.query(sql).spread(function (response) {
-    res.json(response);
-  }).error(function (err) {
-    res.json(err);
-  });
-
-};
 
 exports.getDivisiones = function (req, res) {
 

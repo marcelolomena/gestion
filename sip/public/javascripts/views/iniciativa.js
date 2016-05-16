@@ -205,7 +205,7 @@ $(document).ready(function () {
             label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/gerentes',
+                dataUrl: '/usuarios_por_rol/Gerente',
                 buildSelect: function (response) {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
@@ -215,10 +215,10 @@ $(document).ready(function () {
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Gerente--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].nombre == thissid) {
-                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
-                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -233,7 +233,7 @@ $(document).ready(function () {
             label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/pmos',
+                dataUrl: '/usuarios_por_rol/PMO',
                 buildSelect: function (response) {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
@@ -243,10 +243,10 @@ $(document).ready(function () {
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger PMO--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].nombre == thissid) {
-                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
-                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -476,13 +476,14 @@ $(document).ready(function () {
     );
 
     $('#table_iniciativa').jqGrid('navButtonAdd', '#pager_iniciativa', {
-        caption: "",
+        caption: "Excel",
         buttonicon: "silk-icon-page-excel",
-        title: "Exportar a Excel",
+        title: "Excel",
+        position: "last",
         onClickButton: function () {
             var grid = $('#table_iniciativa');
             var rowKey = grid.getGridParam("selrow");
-            var url = 'iniciativa-excel';
+            var url = '/iniciativasexcel';
             $('#table_iniciativa').jqGrid('excelExport', { "url": url });
         }
     });
@@ -494,7 +495,7 @@ $(document).ready(function () {
 
         var modelIniciativaPrograma = [
             { label: 'id', name: 'id', key: true, hidden: true },
-            { label: 'idiniciativa', name: 'idiniciativa', hidden: true },
+            //{ label: 'idiniciativa', name: 'idiniciativa', hidden: true, editable: true, editrules: {edithidden: false} },
             {
                 label: 'program_id', name: 'program_id', hidden: true, editable: true,
                 width: 200, align: 'left',
@@ -524,7 +525,7 @@ $(document).ready(function () {
             { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true },
             {
                 label: 'Proyecto', name: 'nombre', width: 500, align: 'left',
-                search: true, editable: true, editrules: { required: true }, hidden: false
+                search: true, editable: true, editrules: { required: false }, hidden: false
             },
             {
                 label: 'División', name: 'iddivision', search: false, editable: true, hidden: true,
@@ -624,7 +625,7 @@ $(document).ready(function () {
                 label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/gerentes',
+                    dataUrl: '/usuarios_por_rol/Gerente',
                     buildSelect: function (response) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
@@ -634,10 +635,10 @@ $(document).ready(function () {
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Gerente--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].nombre == thissid) {
-                                s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                            if (data[i].uid == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                             } else {
-                                s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                             }
                         });
                         return s + "</select>";
@@ -652,7 +653,7 @@ $(document).ready(function () {
                 label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/pmos',
+                    dataUrl: '/usuarios_por_rol/PMO',
                     buildSelect: function (response) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
@@ -662,10 +663,10 @@ $(document).ready(function () {
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger PMO--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].nombre == thissid) {
-                                s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                            if (data[i].uid == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                             } else {
-                                s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                             }
                         });
                         return s + "</select>";
@@ -832,7 +833,7 @@ $(document).ready(function () {
                 closeAfterAdd: true,
                 recreateForm: true,
                 mtype: 'POST',
-                url: '/iniciativas/add',
+                url: '/iniciativasprograma/add/' + parentRowKey,
                 modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
@@ -853,6 +854,7 @@ $(document).ready(function () {
                         url: '/iniciativas/' + parentRowKey,
                         async: false,
                         success: function (data) {
+                            //$("#idiniciativa", form).val(parentRowKey);
                             $("#nombre", form).val(data.nombre);
                             $("#sponsor1", form).val(data.sponsor1);
                             $("#sponsor2", form).val(data.sponsor2);
