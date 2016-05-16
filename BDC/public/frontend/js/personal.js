@@ -46,7 +46,7 @@ $(document).ready(function(){
         modal: true,
         resizable: true,
         width: 'auto',
-        minHeight:'auto',
+        minHeight:'550',
         open: function(event, ui) {
         	$('.ui-widget-overlay').addClass('overlay-hidden');
            	$("#jqGridHistograma").setGridWidth($(this).width(), true);
@@ -347,6 +347,7 @@ $(document).ready(function(){
 	           	{label:'29',name:'29',width: 20,editable:false,search:true},
 	           	{label:'30',name:'30',width: 20,editable:false,search:true},
 	           	{label:'31',name:'31',width: 20,editable:false,search:true},
+	           	{label:'Total',name:'32',width: 25,editable:false,search:true},
 	           	];	
 	
 		
@@ -397,6 +398,7 @@ $(document).ready(function(){
 			var colSum = $grid.jqGrid('getCol','32',false,'sum'); $grid.jqGrid('footerData','set',{29 : colSum});
 			var colSum = $grid.jqGrid('getCol','33',false,'sum'); $grid.jqGrid('footerData','set',{30 : colSum});
 			var colSum = $grid.jqGrid('getCol','34',false,'sum'); $grid.jqGrid('footerData','set',{31 : colSum});
+			var colSum = $grid.jqGrid('getCol','35',false,'sum'); $grid.jqGrid('footerData','set',{32 : colSum});
 			
 			$("#mesHistograma").change(function() {
 				var elmes = $("#mesHistograma option:selected").val();

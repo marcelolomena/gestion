@@ -161,9 +161,10 @@ object Histograma extends Controller {
         rowhead.createCell(32).setCellValue("29")
         rowhead.createCell(33).setCellValue("30")
         rowhead.createCell(34).setCellValue("31")
+        rowhead.createCell(35).setCellValue("Total")
         
 
-        for (j <- 0 to 34){
+        for (j <- 0 to 35){
           rowhead.getCell(j).setCellType(Cell.CELL_TYPE_STRING)
           rowhead.getCell(j).setCellStyle(style);          
         }
@@ -188,7 +189,9 @@ object Histograma extends Controller {
             i = i+1
             val cel4 = row.createCell(cNum + i)            
             cel4.setCellType(Cell.CELL_TYPE_NUMERIC)
-            cel4.setCellValue(hora.toFloat)
+            if(hora!=""){
+              cel4.setCellValue(hora.toFloat)
+            }
           }
 
           rNum = rNum + 1
@@ -199,7 +202,7 @@ object Histograma extends Controller {
         var row = sheet.createRow(rNum)
         cNum = 0
         var x = "A"
-        for (p <- 4 to 34) {
+        for (p <- 4 to 35) {
           val celSuma = row.createCell(cNum + p)
           celSuma.setCellType(Cell.CELL_TYPE_FORMULA)
           var letra = ""
@@ -215,7 +218,7 @@ object Histograma extends Controller {
           celSuma.setCellStyle(style);
         }
         
-        for (a <- 0 to 34) {
+        for (a <- 0 to 35) {
           sheet.autoSizeColumn((a.toInt));
         }
 
