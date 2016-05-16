@@ -463,7 +463,6 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                console.log("pico : " + result.error_code);
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
