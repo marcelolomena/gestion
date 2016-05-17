@@ -104,7 +104,10 @@ module.exports = function (passport) {
 
     router.route('/proyectostareas/:id')
         .get(isAuthenticated, proyectoTareasController.getProyectosTareas);
-		
+
+    router.route('/proyectostareasexcel/:id')
+        .get(isAuthenticated, proyectoTareasController.getExcel);
+				
 	router.route('/proyectosexcel')
 		.get(isAuthenticated, proyectoController.getExcel);
 
@@ -143,8 +146,11 @@ module.exports = function (passport) {
     });
 
     router.route('/erogacioneslist/:id')
-        .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
+        .get(isAuthenticated, erogacionesController.getErogacionesPaginados);	
 
+    router.route('/erogacionesexcel/:id')
+        .get(isAuthenticated, erogacionesController.getExcel);
+		
 	router.route('/programa/:id')
 		.get(isAuthenticated, iniciativaprogramaController.getIniciativaPrograma)
 

@@ -1,5 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
+var nodeExcel = require('excel-export');
 // Create endpoint /iniciativas for GET
 exports.getErogacionesPaginados = function (req, res) {
   // Use the Iniciativas model to find all iniciativas
@@ -81,4 +82,135 @@ exports.getErogacionesPaginados = function (req, res) {
     })
 
   }
+};
+
+exports.getExcel = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
+  var id = req.params.id
+  var filtrosubgrilla = "idproyecto="+id;
+    
+  console.log("En getExcel");
+  var conf = {}
+  conf.cols = [{
+    caption: 'id',
+    type: 'number',
+    width: 3
+  },
+    {
+      caption: 'SAP',
+      type: 'string',
+      width: 10
+    },  
+    {
+      caption: 'Nombre Proyecto',
+      type: 'string',
+      width: 30
+    },  
+    {
+      caption: 'Nombre Proveedor',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Numero Factura',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Fecha GL',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Tarea Ajustada',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Tarea Original',
+      type: 'string',  
+      width: 15
+    },
+    {
+      caption: 'Total',
+      type: 'number',
+      width: 15
+    }
+  ];
+
+  if (!sidx)
+    sidx = "sap";
+
+  if (!sord)
+    sord = "asc";
+
+  var order = sidx + " " + sord;
+
+  if (filters) {
+    console.log("Con filtros");
+    var jsonObj = JSON.parse(filters);
+
+    jsonObj.rules.forEach(function (item) {
+
+      if (item.op === 'cn')
+        condition += item.field + " like '%" + item.data + "%' AND"
+    });
+
+    models.Proyecto.findAll().then(function (proyecto) {
+
+      conf.rows = proyecto;
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "Proyectos.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 1 });
+    });
+
+  } else {
+    console.log("Sin filtros");
+   
+    var sql = "SELECT sap, nombre, id, razonsocial, factura,  CONVERT(VARCHAR(10),fechagl, 110) AS fechagl, "+
+    "numerotarea, toriginalactual, montosum "+
+    "FROM sip.erogacionproyecto WHERE iddetalleproyecto="+id;
+    
+    //models.Proyecto.findAll().then(function (proyecto) {
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+      var arr = []
+      for (var i = 0; i < proyecto.length; i++) {
+
+        a = [i + 1,
+          proyecto[i].sap,
+          proyecto[i].nombre, 
+          proyecto[i].razonsocial,
+          proyecto[i].factura,
+          proyecto[i].fechagl,
+          proyecto[i].numerotarea,
+          proyecto[i].toriginalactual,
+          proyecto[i].montosum
+        ];
+        //console.log("compromiso:"+proyecto[i].compromiso)
+        arr.push(a);
+      }
+      conf.rows = arr;
+
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "ErogacionesProyectos.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+  }
+
 };
