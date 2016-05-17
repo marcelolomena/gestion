@@ -396,13 +396,11 @@ $(document).ready(function () {
 
     $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
-            //height: 'auto',
-            //width: 620,
             closeAfterEdit: true,
             recreateForm: true,
             mtype: 'POST',
             url: '/iniciativas/update',
-            modal: true,
+            //modal: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             editCaption: "Modifica Iniciativa",
@@ -416,6 +414,8 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
+            }, beforeShowForm: function (form) {
+                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
             }
         },
         {
@@ -447,13 +447,15 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0){
+                if (result.error_code != 0) {
                     return [false, result.error_text, ""];
-                }else{
-                    var filters="{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\""+    postdata.nombre   + "\"}]}";
+                } else {
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
                     $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
+            }, beforeShowForm: function (form) {
+                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
             }
         },
         {
@@ -829,6 +831,8 @@ $(document).ready(function () {
                         return [false, result.error_text, ""];
                     else
                         return [true, "", ""]
+                }, beforeShowForm: function (form) {
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 }
             },
             {
@@ -851,6 +855,7 @@ $(document).ready(function () {
                     else
                         return [true, "", ""]
                 }, beforeShowForm: function (form) {
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                     $.ajax({
                         type: "GET",
                         url: '/iniciativas/' + parentRowKey,
