@@ -110,12 +110,12 @@ exports.getExcel = function (req, res) {
       width: 15
     },
     {
-      caption: 'Presupuesto Gasto',
+      caption: 'Presupuesto Gasto (USD)',
       type: 'number',
       width: 15
     },
     {
-      caption: 'Presupuesto Inversión',
+      caption: 'Presupuesto Inversión (USD)',
       type: 'number',
       width: 15
     }

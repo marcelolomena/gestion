@@ -41,8 +41,8 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Presupuesto Gasto {pptoestimadogasto}</div>";
-    tmpl += "<div class='column-half'>Presupuesto Inversión {pptoestimadoinversion}</div>";
+    tmpl += "<div class='column-half'>Presupuesto Gasto (USD) {pptoestimadogasto}</div>";
+    tmpl += "<div class='column-half'>Presupuesto Inversión (USD) {pptoestimadoinversion}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -742,12 +742,12 @@ $(document).ready(function () {
             },
             { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
             {
-                label: 'Presupuesto Gasto', name: 'pptoestimadogasto', width: 150, align: 'right',
+                label: 'Presupuesto Gasto (USD)', name: 'pptoestimadogasto', width: 150, align: 'right',
                 search: true, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             {
-                label: 'Presupuesto Inversión', name: 'pptoestimadoinversion', width: 150, align: 'right',
+                label: 'Presupuesto Inversión (USD)', name: 'pptoestimadoinversion', width: 150, align: 'right',
                 search: true, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
