@@ -284,14 +284,14 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
-        { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
+        { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q3', name: 'q3', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q4', name: 'q4', width: 100, align: 'left', search: false, editable: true, hidden: false },
         {
-            label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: true,
+            label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -708,14 +708,14 @@ $(document).ready(function () {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
-            { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
+            { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true },
             { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-            { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
-            { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
-            { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
-            { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q3', name: 'q3', width: 100, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q4', name: 'q4', width: 100, align: 'left', search: false, editable: true, hidden: false },
             {
-                label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: true,
+                label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 editable: true,
                 searchoptions: {
