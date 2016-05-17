@@ -41,7 +41,8 @@ exports.getContratosPaginados = function (req, res) {
         var total = Math.ceil(records / rows);
 
         models.Contrato.findAll({
-          offset: parseInt(page), limit: parseInt(rows),
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
           order: ['[Contrato].nombre'],
           where: condition,
           include: [{
@@ -65,7 +66,9 @@ exports.getContratosPaginados = function (req, res) {
         var total = Math.ceil(records / rows);
 
         models.Contrato.findAll({
-          offset: parseInt(page), limit: parseInt(rows), order: ['[Contrato].nombre'],
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: ['[Contrato].nombre'],
           include: [{
             model: models.Proveedor
           }]
@@ -89,7 +92,9 @@ exports.getContratosPaginados = function (req, res) {
       var total = Math.ceil(records / rows);
 
       models.Contrato.findAll({
-        offset: parseInt(page), limit: parseInt(rows), order: ['[Contrato].nombre'],
+        offset: parseInt(rows * (page - 1)),
+        limit: parseInt(rows),
+        order: ['[Contrato].nombre'],
         include: [{
           model: models.Proveedor
         }]

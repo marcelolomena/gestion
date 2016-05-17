@@ -194,7 +194,7 @@ exports.getExcel = function (req, res) {
 
 exports.getUsersByRol = function (req, res) {
   //console.log(req.query.rol);
-  console.log(req.params.rol);
+  //console.log(req.params.rol);
 
   models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
   models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
@@ -283,7 +283,6 @@ exports.add = function (req, res) {
       });
     */
 
-
   var tmp = function (callback) {
     return models.Parametro.find({ where: { 'id': req.body.idestado } }).then(function (parametro) {
       callback(parametro.nombre)
@@ -358,10 +357,7 @@ exports.add = function (req, res) {
       });
     });
   });
-
-
 };
-
 
 exports.update = function (req, res) {
   // Save the iniciativa and check for errors
@@ -449,18 +445,16 @@ exports.getIniciativasPaginados = function (req, res) {
 
         if (item.op === 'cn') {
           condition.push(item.field + " like '%" + item.data + "%'");
+          //console.log("item.op--------------->" + item.op);
         }
       });
 
-      console.log("--------------->" + condition);
+      models.Iniciativa.count({ where: condition }).then(function (records) {
 
-      //models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
-
-      models.Iniciativa.count().then(function (records) {
         var total = Math.ceil(records / rows);
-
         models.Iniciativa.findAll({
-          offset: parseInt(page), limit: parseInt(rows),
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
           order: orden,
           where: condition
         }).then(function (iniciativas) {
@@ -471,17 +465,17 @@ exports.getIniciativasPaginados = function (req, res) {
           res.json({ error_code: 1 });
         });
 
+
       })
 
     } else {
-
-      //models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
 
       models.Iniciativa.count().then(function (records) {
         var total = Math.ceil(records / rows);
 
         models.Iniciativa.findAll({
-          offset: parseInt(page), limit: parseInt(rows),
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
           order: orden
         }).then(function (iniciativas) {
           //iniciativas.forEach(log)
@@ -497,13 +491,13 @@ exports.getIniciativasPaginados = function (req, res) {
 
   } else {
 
-    //models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
-
     models.Iniciativa.count().then(function (records) {
+
       var total = Math.ceil(records / rows);
 
       models.Iniciativa.findAll({
-        offset: parseInt(page), limit: parseInt(rows),
+        offset: parseInt(rows * (page - 1)),
+        limit: parseInt(rows),
         order: orden
       }).then(function (iniciativas) {
         //iniciativas.forEach(log)

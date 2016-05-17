@@ -268,7 +268,7 @@ $(document).ready(function () {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.id;
+                    var thissid = rowData.tipo;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Categoría--</option>';
@@ -286,10 +286,10 @@ $(document).ready(function () {
         { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
         { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
         {
             label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
@@ -319,12 +319,12 @@ $(document).ready(function () {
         { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
         {
             label: 'Presupuesto Gasto', name: 'pptoestimadogasto', width: 150, align: 'right',
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
         {
             label: 'Presupuesto Inversión', name: 'pptoestimadoinversion', width: 150, align: 'right',
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
         {
@@ -447,10 +447,13 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                if (result.error_code != 0){
                     return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
+                }else{
+                    var filters="{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\""+    postdata.nombre   + "\"}]}";
+                    $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    return [true, "", ""];
+                }
             }
         },
         {
@@ -687,7 +690,7 @@ $(document).ready(function () {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.id;
+                        var thissid = rowData.categoria;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Categoría--</option>';
@@ -705,10 +708,10 @@ $(document).ready(function () {
             { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
             { label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true },
             { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-            { label: 'Q1', name: 'q1', width: 50, align: 'left', search: true, editable: true, hidden: false },
-            { label: 'Q2', name: 'q2', width: 50, align: 'left', search: true, editable: true, hidden: false },
-            { label: 'Q3', name: 'q3', width: 50, align: 'left', search: true, editable: true, hidden: false },
-            { label: 'Q4', name: 'q4', width: 50, align: 'left', search: true, editable: true, hidden: false },
+            { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
             {
                 label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: true,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
@@ -755,7 +758,7 @@ $(document).ready(function () {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.divisionsponsor;
+                        var thissid = rowData.estado;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Estado--</option>';
@@ -857,10 +860,10 @@ $(document).ready(function () {
                             $("#nombre", form).val(data.nombre);
                             $("#sponsor1", form).val(data.sponsor1);
                             $("#sponsor2", form).val(data.sponsor2);
-                            $("#pmoresponsable", form).val(data.pmoresponsable);
-                            $("#gerenteresponsable", form).val(data.gerenteresponsable);
-                            $("#tipo", form).val(data.tipo);
-                            $("#categoria", form).val(data.categoria);
+                            //$("#pmoresponsable", form).val(data.pmoresponsable);
+                            //$("#gerenteresponsable", form).val(data.gerenteresponsable);
+                            //$("#tipo", form).val(data.tipo);
+                            //$("#categoria", form).val(data.categoria);
                             $("#q1", form).val(data.q1);
                             $("#q2", form).val(data.q2);
                             $("#q3", form).val(data.q3);
