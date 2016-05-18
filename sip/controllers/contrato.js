@@ -6,37 +6,6 @@ var log = function (inst) {
 }
 // Create endpoint /contratos for GET
 
-exports.add = function (req, res) {
-  models.Contrato.create({
-    tipocontrato: req.body.tipocontrato,
-    tipooc: req.body.tipooc,
-    solicitudcontrato: req.body.solicitudcontrato,
-    numero: req.body.numero,
-    anexo: req.body.anexo,
-    nombre: req.body.nombre,
-    solicitudcontratoes: req.body.solicitudcontratoes,
-    sap: req.body.sap,
-    idproveedor: req.body.idproveedor,
-    uidpmo: req.body.uidpmo,
-    codigoart: req.body.codigoart,
-    fechainicontrato: req.body.fechainicontrato,
-    fechatercontrato: req.body.fechatercontrato,
-    fechacontrol: req.body.fechacontrol,
-    meses: req.body.meses,
-    estado: req.body.estado,
-    plazocontrato: req.body.plazocontrato,
-    montototal: req.body.montototal,
-    condicionnegociacion: req.body.condicionnegociacion,
-    frecuenciafacturacion: req.body.frecuenciafacturacion,
-    borrado: 1
-  }).then(function (contrato) {
-    res.json({ error_code: 0 });
-  }).catch(function (err) {
-    console.log(err);
-    res.json({ error_code: 1 });
-  });
-}
-
 exports.action = function (req, res) {
   var action = req.body.oper;
 
@@ -128,59 +97,6 @@ exports.action = function (req, res) {
   }
 }
 
-exports.update = function (req, res) {
-  // Save the iniciativa and check for errors
-  models.Contrato.update({
-    tipocontrato: req.body.tipocontrato,
-    tipooc: req.body.tipooc,
-    solicitudcontrato: req.body.solicitudcontrato,
-    numero: req.body.numero,
-    anexo: req.body.anexo,
-    nombre: req.body.nombre,
-    solicitudcontratoes: req.body.solicitudcontratoes,
-    sap: req.body.sap,
-    idproveedor: req.body.idproveedor,
-    uidpmo: req.body.uidpmo,
-    codigoart: req.body.codigoart,
-    fechainicontrato: req.body.fechainicontrato,
-    fechatercontrato: req.body.fechatercontrato,
-    fechacontrol: req.body.fechacontrol,
-    meses: req.body.meses,
-    estado: req.body.estado,
-    plazocontrato: req.body.plazocontrato,
-    montototal: req.body.montototal,
-    condicionnegociacion: req.body.condicionnegociacion,
-    frecuenciafacturacion: req.body.frecuenciafacturacion,
-    borrado: 1
-  }, {
-      where: {
-        id: req.body.id
-      }
-    }).then(function (contrato) {
-      res.json({ error_code: 0 });
-    }).catch(function (err) {
-      console.log(err);
-      res.json({ error_code: 1 });
-    });
-
-};
-
-exports.del = function (req, res) {
-  models.Contrato.destroy({
-    where: {
-      id: req.body.id
-    }
-  }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-    if (rowDeleted === 1) {
-      console.log('Deleted successfully');
-    }
-    res.json({ error_code: 0 });
-  }).catch(function (err) {
-    console.log(err);
-    res.json({ error_code: 1 });
-  });
-};
-
 exports.list = function (req, res) {
   // Use the Contratos model to find all contratos
   var page = req.body.page;
@@ -209,8 +125,6 @@ exports.list = function (req, res) {
           condition.push(item.field + " like '%" + item.data + "%'");
         }
       });
-
-      //console.log("-------------->" + condition);
 
       models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
 
