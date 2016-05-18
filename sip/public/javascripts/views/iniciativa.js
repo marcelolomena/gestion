@@ -396,14 +396,13 @@ $(document).ready(function () {
 
     $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
+            editCaption: "Modifica Iniciativa",
             closeAfterEdit: true,
             recreateForm: true,
             mtype: 'POST',
             url: '/iniciativas/update',
-            //modal: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modifica Iniciativa",
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -419,14 +418,13 @@ $(document).ready(function () {
             }
         },
         {
+            addCaption: "Agrega Iniciativa",
             closeAfterAdd: true,
             recreateForm: true,
             mtype: 'POST',
             url: '/iniciativas/add',
-            modal: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agrega Iniciativa",
+            serializeEditData: sipLibrary.createJSON,            
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText

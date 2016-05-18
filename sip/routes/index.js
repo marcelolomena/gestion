@@ -60,6 +60,7 @@ module.exports = function (passport) {
 
 	router.route('/proveedores/list')
 		.post(isAuthenticated, proveedorController.postProveedores)
+		.get(isAuthenticated, proveedorController.getProveedores)
 		.get(isAuthenticated, proveedorController.getProveedoresPaginados);
 
 	// Create endpoint handlers for /proveedores/:id
@@ -94,7 +95,7 @@ module.exports = function (passport) {
 
     router.route('/contratos/list')
         .get(isAuthenticated, contratoController.getContratosPaginados);
-
+		
     router.get('/proyectos', isAuthenticated, function (req, res) {
         res.render('proyectos', { user: req.user });
     });

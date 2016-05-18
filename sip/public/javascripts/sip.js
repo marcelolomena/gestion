@@ -19,11 +19,14 @@ var sipLibrary = {
         var parentWidth = parentDiv.width();
         var dlgHeight = dlgDiv.height();
         var parentHeight = parentDiv.height();
-
         var parentTop = parentDiv.offset().top;
         var parentLeft = parentDiv.offset().left;
 
-        dlgDiv[0].style.top = Math.round(parentTop + (parentHeight - dlgHeight) / 2) + "px";
+        var height = parentTop + (parentHeight - dlgHeight) / 2
+        if (height < 0)
+            height = 0;
+
+        dlgDiv[0].style.top = Math.round(height) + "px";
         dlgDiv[0].style.left = Math.round(parentLeft + (parentWidth - dlgWidth) / 2) + "px";
 
     }

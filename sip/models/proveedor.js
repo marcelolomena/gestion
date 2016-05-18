@@ -1,11 +1,12 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('Proveedor', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     numrut: {
       type: DataTypes.INTEGER,
@@ -28,6 +29,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'proveedor'
-  });
+      schema: 'sip', timestamps: false, tableName: 'proveedor'
+    });
 };
