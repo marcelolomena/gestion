@@ -94,7 +94,10 @@ module.exports = function (passport) {
     });
 
     router.route('/contratos/list')
-        .get(isAuthenticated, contratoController.getContratosPaginados);
+        .post(isAuthenticated, contratoController.list);
+		
+    router.route('/contratos/action')
+        .post(isAuthenticated, contratoController.action);		
 		
     router.get('/proyectos', isAuthenticated, function (req, res) {
         res.render('proyectos', { user: req.user });

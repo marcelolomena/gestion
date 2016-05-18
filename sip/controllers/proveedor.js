@@ -21,7 +21,9 @@ exports.postProveedores = function (req, res) {
 
 // Create endpoint /proveedores for GET
 exports.getProveedores = function (req, res) {
-  models.Proveedor.findAll().then(function (proveedores) {
+  models.Proveedor.findAll({
+    order: 'razonsocial'
+  }).then(function (proveedores) {
     res.json(proveedores);
   }).error(function (err) {
     res.send(err);
