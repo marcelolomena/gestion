@@ -151,9 +151,12 @@ exports.codigoart = function (req, res) {
     }
   }).then(function (iniciativas) {
     //gerentes.forEach(log)
-    res.json(iniciativas);
+    if (iniciativas)
+      res.json(iniciativas)
+    else
+      throw new Error('no data');
   }).catch(function (err) {
-    console.log(err);
+    //console.log(err);
     res.json({ error_code: 1 });
   });
 };

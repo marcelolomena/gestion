@@ -612,7 +612,6 @@ $(document).ready(function () {
                 editoptions: {
                     dataInit: function (element) {
                         window.setTimeout(function () {
-                            //$(element).width(200);
                             $(element).attr("autocomplete", "off").typeahead({
                                 appendTo: "body",
                                 source: function (request, response) {
@@ -843,7 +842,7 @@ $(document).ready(function () {
                         return [true, "", ""]
                 }, beforeShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                    $('input#codigoart',form).attr('readonly','readonly');
+                    $('input#codigoart', form).attr('readonly', 'readonly');
                 }
             },
             {
@@ -885,18 +884,16 @@ $(document).ready(function () {
                             $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion);
                         }
                     });
-
                     $.ajax({
                         type: "GET",
                         url: '/iniciativasprograma/codigoart/' + parentRowKey,
                         async: false,
                         success: function (data) {
-                            $("#codigoart", form).val(data.codigoart);
+                            if (data.error_code == 0)
+                                $("#codigoart", form).val(data.codigoart);
                         }
                     });
-   
-                    $('input#codigoart',form).attr('readonly','readonly');                 
-
+                    $('input#codigoart', form).attr('readonly', 'readonly');
                 }
             },
             {

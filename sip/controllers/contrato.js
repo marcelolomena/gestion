@@ -18,6 +18,7 @@ exports.action = function (req, res) {
         numero: req.body.numero,
         anexo: req.body.anexo,
         nombre: req.body.nombre,
+        idestadosol:req.body.idestadosol,
         solicitudcontratoes: req.body.solicitudcontratoes,
         sap: req.body.sap,
         idproveedor: req.body.idproveedor,
@@ -27,10 +28,14 @@ exports.action = function (req, res) {
         fechatercontrato: req.body.fechatercontrato,
         fechacontrol: req.body.fechacontrol,
         meses: req.body.meses,
+        idestadocto:req.body.idestadocto,//
         estado: req.body.estado,
+        idplazocontrato:req.body.idplazocontrato,
         plazocontrato: req.body.plazocontrato,
         montototal: req.body.montototal,
+        idcondicion:req.body.idcondicion,
         condicionnegociacion: req.body.condicionnegociacion,
+        idfrecuencia:req.body.idfrecuencia,
         frecuenciafacturacion: req.body.frecuenciafacturacion,
         borrado: 1
       }).then(function (contrato) {
@@ -49,6 +54,7 @@ exports.action = function (req, res) {
         numero: req.body.numero,
         anexo: req.body.anexo,
         nombre: req.body.nombre,
+        idestadosol:req.body.idestadosol,        
         solicitudcontratoes: req.body.solicitudcontratoes,
         sap: req.body.sap,
         idproveedor: req.body.idproveedor,
@@ -58,10 +64,14 @@ exports.action = function (req, res) {
         fechatercontrato: req.body.fechatercontrato,
         fechacontrol: req.body.fechacontrol,
         meses: req.body.meses,
+        idestadocto:req.body.idestadocto,//        
         estado: req.body.estado,
+        idplazocontrato:req.body.idplazocontrato,
         plazocontrato: req.body.plazocontrato,
         montototal: req.body.montototal,
+        idcondicion:req.body.idcondicion,
         condicionnegociacion: req.body.condicionnegociacion,
+        idfrecuencia:req.body.idfrecuencia,
         frecuenciafacturacion: req.body.frecuenciafacturacion,
         borrado: 1
       }, {

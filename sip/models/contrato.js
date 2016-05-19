@@ -32,6 +32,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    idestadosol: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },    
     solicitudcontratoes: {
       type: DataTypes.STRING,
       allowNull: true
@@ -72,10 +76,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    idestadocto: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },    
     estado: {
       type: DataTypes.STRING,
       allowNull: true
     },
+    idplazocontrato: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },     
     plazocontrato: {
       type: DataTypes.STRING,
       allowNull: true
@@ -84,10 +96,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    idcondicion: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },    
     condicionnegociacion: {
       type: DataTypes.STRING,
       allowNull: true
     },
+    idfrecuencia: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },       
     frecuenciafacturacion: {
       type: DataTypes.STRING,
       allowNull: true
