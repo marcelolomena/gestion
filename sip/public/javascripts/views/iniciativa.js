@@ -263,7 +263,7 @@ $(document).ready(function () {
             label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/categorias',
+                dataUrl: '/parameters/categoria',
                 buildSelect: function (response) {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
@@ -331,7 +331,7 @@ $(document).ready(function () {
             label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/iniciativaestado',
+                dataUrl: '/parameters/estadoiniciativa',
                 buildSelect: function (response) {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
@@ -424,7 +424,7 @@ $(document).ready(function () {
             mtype: 'POST',
             url: '/iniciativas/add',
             ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,            
+            serializeEditData: sipLibrary.createJSON,
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -493,11 +493,10 @@ $(document).ready(function () {
     function gridIniciativaPrograma(parentRowID, parentRowKey) {
         var childGridID = parentRowID + "_table";
         var childGridPagerID = parentRowID + "_pager";
-        var childGridURL = "/programa/" + parentRowKey;
+        var childGridURL = "/iniciativaprograma/" + parentRowKey;
 
         var modelIniciativaPrograma = [
             { label: 'id', name: 'id', key: true, hidden: true },
-            //{ label: 'idiniciativa', name: 'idiniciativa', hidden: true, editable: true, editrules: {edithidden: false} },
             {
                 label: 'program_id', name: 'program_id', hidden: true, editable: true,
                 width: 200, align: 'left',
@@ -521,7 +520,20 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thispid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/programa/' + thispid,
+                                async: false,
+                                success: function (data) {
+                                    $("input#codigoart").val(data.program_code);
+                                }
+                            });
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true },
@@ -685,7 +697,7 @@ $(document).ready(function () {
                 label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/categorias',
+                    dataUrl: '/parameters/categoria',
                     buildSelect: function (response) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
@@ -753,7 +765,7 @@ $(document).ready(function () {
                 label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/iniciativaestado',
+                    dataUrl: '/parameters/estadoiniciativa',
                     buildSelect: function (response) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
@@ -831,6 +843,7 @@ $(document).ready(function () {
                         return [true, "", ""]
                 }, beforeShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                    $('input#codigoart',form).attr('readonly','readonly');
                 }
             },
             {
@@ -859,14 +872,9 @@ $(document).ready(function () {
                         url: '/iniciativas/' + parentRowKey,
                         async: false,
                         success: function (data) {
-                            //$("#idiniciativa", form).val(parentRowKey);
                             $("#nombre", form).val(data.nombre);
                             $("#sponsor1", form).val(data.sponsor1);
                             $("#sponsor2", form).val(data.sponsor2);
-                            //$("#pmoresponsable", form).val(data.pmoresponsable);
-                            //$("#gerenteresponsable", form).val(data.gerenteresponsable);
-                            //$("#tipo", form).val(data.tipo);
-                            //$("#categoria", form).val(data.categoria);
                             $("#q1", form).val(data.q1);
                             $("#q2", form).val(data.q2);
                             $("#q3", form).val(data.q3);
@@ -877,6 +885,17 @@ $(document).ready(function () {
                             $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion);
                         }
                     });
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/iniciativasprograma/codigoart/' + parentRowKey,
+                        async: false,
+                        success: function (data) {
+                            $("#codigoart", form).val(data.codigoart);
+                        }
+                    });
+   
+                    $('input#codigoart',form).attr('readonly','readonly');                 
 
                 }
             },

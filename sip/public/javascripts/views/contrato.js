@@ -28,7 +28,7 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Tipo {tipocontrato}</div>";
-    template += "<div class='column-half'>Condición Negociación {id_condicionnegociacion}</div>";    
+    template += "<div class='column-half'>Condición Negociación {id_condicionnegociacion}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -134,7 +134,7 @@ $(document).ready(function () {
                 custom_element: sipLibrary.createTipoContratoEditElement
             }
         },
-        { label: 'Condición Negociación', name: 'condicionnegociacion', width: 100, align: 'left', search: true, editable: false },        
+        { label: 'Condición Negociación', name: 'condicionnegociacion', width: 100, align: 'left', search: true, editable: false },
         {
             label: 'Id_Plazo', name: 'id_plazocontrato', editable: true, hidden: true,
             edittype: "select",
@@ -205,7 +205,7 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 }
-            }, dataInit: function (elem) { $(elem).width(200); }            
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Id_CondicionNegociacion', name: 'id_condicionnegociacion', editable: true, hidden: true,
@@ -229,8 +229,8 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 }
-            }, dataInit: function (elem) { $(elem).width(200); }            
-        }                 
+            }, dataInit: function (elem) { $(elem).width(200); }
+        }
     ];
     $("#grid").jqGrid({
         url: '/contratos/list',

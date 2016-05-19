@@ -41,6 +41,7 @@ exports.add = function (req, res) {
             models.IniciativaPrograma.create({
               idiniciativa: req.params.id,
               program_id: req.body.program_id,
+              codigoart: req.body.codigoart,
               nombre: req.body.nombre,
               iddivision: req.body.iddivision,
               divisionsponsor: personal,
@@ -141,6 +142,22 @@ exports.del = function (req, res) {
     res.json({ error_code: 1 });
   });
 };
+
+exports.codigoart = function (req, res) {
+
+  models.IniciativaPrograma.find({
+    where: {
+      idiniciativa: req.params.id
+    }
+  }).then(function (iniciativas) {
+    //gerentes.forEach(log)
+    res.json(iniciativas);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
+  });
+};
+
 
 // Create endpoint /iniciativaprograma for GET
 exports.getIniciativaPrograma = function (req, res) {

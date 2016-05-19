@@ -229,39 +229,6 @@ exports.getDivisiones = function (req, res) {
 
 };
 
-exports.getProgramas = function (req, res) {
-
-  models.Programa.findAll({ where: { 'is_active': 1 } }).then(function (programa) {
-    res.json(programa);
-  }).catch(function (err) {
-    console.log(err);
-    res.json({ error_code: 1 });
-  });
-
-};
-
-exports.getEstado = function (req, res) {
-
-  models.Parametro.findAll({ where: { 'tipo': 'estadoiniciativa' } }).then(function (estado) {
-    res.json(estado);
-  }).catch(function (err) {
-    console.log(err);
-    res.json({ error_code: 1 });
-  });
-
-};
-
-exports.getCategoria = function (req, res) {
-
-  models.Parametro.findAll({ where: { 'tipo': 'categoria' } }).then(function (estado) {
-    res.json(estado);
-  }).catch(function (err) {
-    console.log(err);
-    res.json({ error_code: 1 });
-  });
-
-};
-
 exports.get = function (req, res) {
   models.Iniciativa.find({ where: { 'id': req.params.id } }).then(function (iniciativa) {
     res.json(iniciativa);
@@ -272,16 +239,6 @@ exports.get = function (req, res) {
 };
 
 exports.add = function (req, res) {
-
-  /*
-      userService.findByPrimaryKey(req.body.uidpmo, function (err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("------------------>>> " + data.first_name + ' ' + data.last_name);
-        }
-      });
-    */
 
   var tmp = function (callback) {
     return models.Parametro.find({ where: { 'id': req.body.idestado } }).then(function (parametro) {
@@ -441,14 +398,20 @@ exports.getIniciativasPaginados = function (req, res) {
     if (JSON.stringify(jsonObj.rules) != '[]') {
 
       var condition = [];
+      //var condition=''
       jsonObj.rules.forEach(function (item) {
 
         if (item.op === 'cn') {
           condition.push(item.field + " like '%" + item.data + "%'");
         }
+        //condition.push(' $and:')
       });
 
-      models.Iniciativa.count({ where: condition }).then(function (records) {
+      //console.log("---------------->" + condition);
+
+      models.Iniciativa.count({
+         where: condition
+         }).then(function (records) {
 
         var total = Math.ceil(records / rows);
         models.Iniciativa.findAll({
@@ -463,9 +426,8 @@ exports.getIniciativasPaginados = function (req, res) {
           //console.log(err);
           res.json({ error_code: 1 });
         });
-
-
       })
+
 
     } else {
 
@@ -475,7 +437,8 @@ exports.getIniciativasPaginados = function (req, res) {
         models.Iniciativa.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
-          order: orden
+          order: orden,
+          where: { borrado: 1 }
         }).then(function (iniciativas) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: iniciativas });
@@ -497,7 +460,8 @@ exports.getIniciativasPaginados = function (req, res) {
       models.Iniciativa.findAll({
         offset: parseInt(rows * (page - 1)),
         limit: parseInt(rows),
-        order: orden
+        order: orden,
+        where: { borrado: 1 }
       }).then(function (iniciativas) {
         //iniciativas.forEach(log)
         res.json({ records: records, total: total, page: page, rows: iniciativas });
