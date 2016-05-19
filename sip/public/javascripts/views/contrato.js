@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Contrato {nombre}</div>";
-    template += "<div class='column-full'>Proveedor {pid}</div>";
+    template += "<div class='column-full'>Proveedor {idproveedor}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -13,12 +13,22 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
-    template += "<div class='column-half'>Estado {estado}</div>";
+    template += "<div class='column-half'>Estado Solicitud {solicitudcontratoes}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Plazo {plazocontrato}</div>";
-    template += "<div class='column-half'></div>";
+    template += "<div class='column-half'>Plazo {id_plazocontrato}</div>";
+    template += "<div class='column-half'>Estado {id_estado}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Frecuencia {id_frecuenciafacturacion}</div>";
+    template += "<div class='column-half'>Número {numero}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo {tipocontrato}</div>";
+    template += "<div class='column-half'>Condición Negociación {id_condicionnegociacion}</div>";    
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -28,9 +38,9 @@ $(document).ready(function () {
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Contrato', name: 'nombre', width: 500, align: 'left', search: true, editable: true },
+        { label: 'Contrato', name: 'nombre', width: 300, align: 'left', search: true, editable: true },
         {
-            label: 'Proveedor', name: 'pid', search: false, editable: true, hidden: true, jsonmap: "Proveedor.id",
+            label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "Proveedor.id",
             edittype: "select",
             editoptions: {
                 dataUrl: '/proveedores/list',
@@ -38,7 +48,7 @@ $(document).ready(function () {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.pid;
+                    var thissid = rowData.idproveedor;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Proveedor--</option>';
@@ -85,7 +95,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Fecha Término', name: 'fechatercontrato', width: 100, align: 'left', search: true,
+            label: 'Fecha Término', name: 'fechatercontrato', width: 150, align: 'left', search: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }, editable: true,
             formoptions: { rowpos: 2, colpos: 2 },
             searchoptions: {
@@ -110,13 +120,121 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Solicitud', name: 'solicitudcontrato', width: 100, align: 'left', search: true, editable: true },
-        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: true, editable: true },
-        { label: 'Plazo', name: 'plazocontrato', width: 100, align: 'left', search: true, editable: true },
+        { label: 'Estado Solicitud', name: 'solicitudcontratoes', width: 150, align: 'left', search: true, editable: true },
+        { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true },
+        { label: 'Estado', name: 'estado', width: 200, align: 'left', search: true, editable: true },
+        { label: 'Plazo', name: 'plazocontrato', width: 150, align: 'left', search: true, editable: true },
+        { label: 'Frecuencia', name: 'frecuenciafacturacion', width: 100, align: 'left', search: true, editable: true },
+        { label: 'Número', name: 'numero', width: 100, align: 'left', search: true, editable: true },
+        {
+            label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: true,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.createTipoContratoEditElement
+            }
+        },
+        { label: 'Condición Negociación', name: 'condicionnegociacion', width: 100, align: 'left', search: true, editable: false },        
+        {
+            label: 'Id_Plazo', name: 'id_plazocontrato', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/plazocontrato',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.plazocontrato;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Plazo--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Id_Estado', name: 'id_estado', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/estadocontrato',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.estado;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Estado--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Id_FrecuenciaFacturacion', name: 'id_frecuenciafacturacion', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/frecuenciafacturacion',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.frecuenciafacturacion;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Frecuencia Facturación--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }            
+        },
+        {
+            label: 'Id_CondicionNegociacion', name: 'id_condicionnegociacion', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/condicionnegociacion',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.condicionnegociacion;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Condición Negociación--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }            
+        }                 
     ];
     $("#grid").jqGrid({
         url: '/contratos/list',
-        mtype: "GET",
+        mtype: "POST",
         datatype: "json",
         page: 1,
         colModel: modelContrato,
@@ -130,6 +248,7 @@ $(document).ready(function () {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
+        editurl: '/contratos/action',
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
@@ -147,11 +266,10 @@ $(document).ready(function () {
 
     $("#grid").jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
-            addCaptionCaption: "Modifica Contrato",
+            editCaption: "Modifica Contrato",
             closeAfterEdit: true,
             recreateForm: true,
-            mtype: 'POST',
-            url: '/contratos/update',
+            //url: '/contratos/update',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: template,
@@ -169,19 +287,18 @@ $(document).ready(function () {
             }
         },
         {
-            editCaption: "Agrega Contrato",
+            addCaption: "Agrega Contrato",
             closeAfterAdd: true,
             recreateForm: true,
-            mtype: 'POST',
-            url: '/contratos/new',
+            //url: '/contratos/new',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.iddivision == 0) {
-                    return [false, "División: Debe escoger un valor", ""];
+                if (postdata.pid == 0) {
+                    return [false, "Proveedor: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -200,8 +317,8 @@ $(document).ready(function () {
             }
         },
         {
-            mtype: 'POST',
-            url: '/contratos/del',
+            //mtype: 'POST',
+            //url: '/contratos/del',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             errorTextFormat: function (data) {
@@ -220,9 +337,9 @@ $(document).ready(function () {
         }
     );
 
-    $('#grid').jqGrid('navButtonAdd', '#grid', {
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "Excel",
-        //buttonicon: "silk-icon-page-excel",
+        buttonicon: "silk-icon-page-excel",
         title: "Excel",
         position: "last",
         onClickButton: function () {

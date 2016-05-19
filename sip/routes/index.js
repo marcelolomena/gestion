@@ -7,6 +7,7 @@ var proyectoTareasController = require('../controllers/proyectotareas');
 var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
+var paramController = require('../controllers/param');
 
 var express = require('express');
 var router = express.Router();
@@ -94,8 +95,14 @@ module.exports = function (passport) {
     });
 
     router.route('/contratos/list')
-        .get(isAuthenticated, contratoController.getContratosPaginados);
+        .post(isAuthenticated, contratoController.list);
+
+    router.route('/contratos/action')
+        .post(isAuthenticated, contratoController.action);
 		
+	router.route('/parameters/:param')
+		.get(isAuthenticated, paramController.getListParam);		
+
     router.get('/proyectos', isAuthenticated, function (req, res) {
         res.render('proyectos', { user: req.user });
     });
@@ -108,7 +115,7 @@ module.exports = function (passport) {
 
     router.route('/proyectostareasexcel/:id')
         .get(isAuthenticated, proyectoTareasController.getExcel);
-				
+
 	router.route('/proyectosexcel')
 		.get(isAuthenticated, proyectoController.getExcel);
 
@@ -120,12 +127,12 @@ module.exports = function (passport) {
 
 	router.route('/iniciativasprograma/add/:id')
 		.post(isAuthenticated, iniciativaprogramaController.add);
-		
+
 	router.route('/iniciativasprograma/update')
 		.post(isAuthenticated, iniciativaprogramaController.update);
 
 	router.route('/iniciativasprograma/del')
-		.post(isAuthenticated, iniciativaprogramaController.del);		
+		.post(isAuthenticated, iniciativaprogramaController.del);
 
 	router.route('/usuarios_por_rol/:rol')
 		.get(isAuthenticated, iniciativaController.getUsersByRol);
@@ -147,11 +154,11 @@ module.exports = function (passport) {
     });
 
     router.route('/erogacioneslist/:id')
-        .get(isAuthenticated, erogacionesController.getErogacionesPaginados);	
+        .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
 
     router.route('/erogacionesexcel/:id')
         .get(isAuthenticated, erogacionesController.getExcel);
-		
+
 	router.route('/programa/:id')
 		.get(isAuthenticated, iniciativaprogramaController.getIniciativaPrograma)
 
