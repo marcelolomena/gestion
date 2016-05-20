@@ -415,6 +415,8 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
@@ -454,6 +456,8 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
@@ -853,7 +857,7 @@ $(document).ready(function () {
                 modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                addCaption: "Agrega Iniciativa Programa",
+                addCaption: "Agregar Iniciativa Programa",
                 template: tmplP,
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
@@ -894,6 +898,8 @@ $(document).ready(function () {
                         }
                     });
                     $('input#codigoart', form).attr('readonly', 'readonly');
+                }, afterShowForm: function (form) {
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 }
             },
             {
