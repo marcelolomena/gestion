@@ -51,6 +51,17 @@ var sipLibrary = {
         div.append(label1).append(label2);
 
         return div;
+    }, createTipoDocumentoEditElement: function (value, editOptions) {
+        var div = $("<div style='margin-top:5px'></div>");
+        var label1 = $("<label class='radio-inline'></label>");
+        var radio1 = $("<input>", { type: "radio", value: "0", name: "tipodocumento", id: "cero", checked: value == 0 });
+        label1.append(radio1).append("Fctura");
+        var label2 = $("<label class='radio-inline'></label>");
+        var radio2 = $("<input>", { type: "radio", value: "1", name: "tipodocumento", id: "uno", checked: value == 1 });
+        label2.append(radio2).append("Orden de Compra");
+        div.append(label1).append(label2);
+
+        return div;
     }
 
 }

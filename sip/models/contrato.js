@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    tipooc: {
+    tipodocumento: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -20,11 +20,23 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    numero: {
+    idtiposolicitud: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    anexo: {
+    tiposolicitud: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    idestadosol: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    estadosolicitud: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    numero: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -32,23 +44,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    idestadosol: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },    
-    solicitudcontratoes: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Proveedor',
+        model: 'proveedor',
         key: 'id'
       }
     },
@@ -56,62 +56,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    codigoart: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    fechainicontrato: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechatercontrato: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechacontrol: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    meses: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idestadocto: {
-      type: DataTypes.INTEGER,
+    pmoresponsable: {
+      type: DataTypes.STRING,
       allowNull: true
     },    
-    estado: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idplazocontrato: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },     
-    plazocontrato: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    montototal: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    idcondicion: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },    
-    condicionnegociacion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idfrecuencia: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },       
-    frecuenciafacturacion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
