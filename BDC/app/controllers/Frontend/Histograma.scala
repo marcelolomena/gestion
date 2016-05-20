@@ -27,7 +27,7 @@ import org.apache.poi.ss.usermodel.Cell
  * @author Cristian
  */
 object Histograma extends Controller {
-
+/*
   def home = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -38,7 +38,7 @@ object Histograma extends Controller {
       }
 
   }
-
+*/
   def listadoHistograma = Action {
     implicit request =>
       request.session.get("username").map { user =>
