@@ -6,13 +6,114 @@ var log = function (inst) {
 }
 // Create endpoint /contratos for GET
 
-exports.getContratosPaginados = function (req, res) {
+exports.action = function (req, res) {
+  var action = req.body.oper;
+
+  switch (action) {
+    case "add":
+      models.Contrato.create({
+        tipocontrato: req.body.tipocontrato,
+        tipooc: req.body.tipooc,
+        solicitudcontrato: req.body.solicitudcontrato,
+        numero: req.body.numero,
+        anexo: req.body.anexo,
+        nombre: req.body.nombre,
+        idestadosol:req.body.idestadosol,
+        solicitudcontratoes: req.body.solicitudcontratoes,
+        sap: req.body.sap,
+        idproveedor: req.body.idproveedor,
+        uidpmo: req.body.uidpmo,
+        codigoart: req.body.codigoart,
+        fechainicontrato: req.body.fechainicontrato,
+        fechatercontrato: req.body.fechatercontrato,
+        fechacontrol: req.body.fechacontrol,
+        meses: req.body.meses,
+        idestadocto:req.body.idestadocto,//
+        estado: req.body.estado,
+        idplazocontrato:req.body.idplazocontrato,
+        plazocontrato: req.body.plazocontrato,
+        montototal: req.body.montototal,
+        idcondicion:req.body.idcondicion,
+        condicionnegociacion: req.body.condicionnegociacion,
+        idfrecuencia:req.body.idfrecuencia,
+        frecuenciafacturacion: req.body.frecuenciafacturacion,
+        borrado: 1
+      }).then(function (contrato) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+    case "edit":
+      models.Contrato.update({
+        tipocontrato: req.body.tipocontrato,
+        tipooc: req.body.tipooc,
+        solicitudcontrato: req.body.solicitudcontrato,
+        numero: req.body.numero,
+        anexo: req.body.anexo,
+        nombre: req.body.nombre,
+        idestadosol:req.body.idestadosol,        
+        solicitudcontratoes: req.body.solicitudcontratoes,
+        sap: req.body.sap,
+        idproveedor: req.body.idproveedor,
+        uidpmo: req.body.uidpmo,
+        codigoart: req.body.codigoart,
+        fechainicontrato: req.body.fechainicontrato,
+        fechatercontrato: req.body.fechatercontrato,
+        fechacontrol: req.body.fechacontrol,
+        meses: req.body.meses,
+        idestadocto:req.body.idestadocto,//        
+        estado: req.body.estado,
+        idplazocontrato:req.body.idplazocontrato,
+        plazocontrato: req.body.plazocontrato,
+        montototal: req.body.montototal,
+        idcondicion:req.body.idcondicion,
+        condicionnegociacion: req.body.condicionnegociacion,
+        idfrecuencia:req.body.idfrecuencia,
+        frecuenciafacturacion: req.body.frecuenciafacturacion,
+        borrado: 1
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+
+
+      break;
+    case "del":
+      models.Contrato.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          console.log('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+}
+
+exports.list = function (req, res) {
   // Use the Contratos model to find all contratos
-  var page = req.query.page;
-  var rows = req.query.rows;
-  var filters = req.query.filters;
-  var sidx = req.query.sidx;
-  var sord = req.query.sord;
+  var page = req.body.page;
+  var rows = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
 
   if (!sidx)
     sidx = "nombre";
@@ -20,7 +121,7 @@ exports.getContratosPaginados = function (req, res) {
   if (!sord)
     sord = "asc";
 
-  var order = sidx + " " + sord;
+  var orden = "[Contrato]." + sidx + " " + sord;
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -37,13 +138,13 @@ exports.getContratosPaginados = function (req, res) {
 
       models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
 
-      models.Contrato.count().then(function (records) {
+      models.Contrato.count({ where: condition }).then(function (records) {
         var total = Math.ceil(records / rows);
 
         models.Contrato.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
-          order: ['[Contrato].nombre'],
+          order: orden,
           where: condition,
           include: [{
             model: models.Proveedor
@@ -68,7 +169,7 @@ exports.getContratosPaginados = function (req, res) {
         models.Contrato.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
-          order: ['[Contrato].nombre'],
+          order: orden,
           include: [{
             model: models.Proveedor
           }]
@@ -94,7 +195,7 @@ exports.getContratosPaginados = function (req, res) {
       models.Contrato.findAll({
         offset: parseInt(rows * (page - 1)),
         limit: parseInt(rows),
-        order: ['[Contrato].nombre'],
+        order: orden,
         include: [{
           model: models.Proveedor
         }]
@@ -110,85 +211,3 @@ exports.getContratosPaginados = function (req, res) {
 
   }
 };
-
-/*
-exports.getContratosPaginados = function (req, res) {
-  // Use the Contratos model to find all contratos
-  var page = req.query.page;
-  var rows = req.query.rows;
-  var filters = req.query.filters;
-  var sidx = req.query.sidx;
-  var sord = req.query.sord;
-  var condition = "";
-  
-  if (!sidx)
-    sidx = "nombre";
-
-  if (!sord)
-    sord = "asc";
-
-  var order = sidx + " " + sord;
-
-  var sql0 = "declare @rowsPerPage as bigint; " +
-    "declare @pageNum as bigint;" +
-    "set @rowsPerPage=" + rows + "; " +
-    "set @pageNum=" + page + ";   " +
-    "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, c.*,p.razonsocial " +
-    "FROM sip.contrato c join sip.proveedor p on c.idproveedor=p.id)" +
-    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
-
-    if (JSON.stringify(jsonObj.rules) != '[]') {
-
-      jsonObj.rules.forEach(function (item) {
-
-        if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
-      });
-
-      var sql = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rows + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, c.*,p.razonsocial " +
-        "FROM sip.contrato c join sip.proveedor p on c.idproveedor=p.id WHERE " + condition.substring(0, condition.length - 4) + ")" +
-        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-      models.Contrato.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        sequelize.query(sql)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-
-    } else {
-
-      models.Contrato.count().then(function (records) {
-        var total = Math.ceil(records / rows);
-        sequelize.query(sql0)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-    }
-
-  } else {
-
-    models.Contrato.count().then(function (records) {
-      var total = Math.ceil(records / rows);
-      sequelize.query(sql0)
-        .spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
-    })
-
-  }
-};
-*/

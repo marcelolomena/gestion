@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('cuentascontables', {
+  return sequelize.define('CuentasContables', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'conceptospresupuestarios',
         key: 'id'
       }
+    },
+    cuentaorigen: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,

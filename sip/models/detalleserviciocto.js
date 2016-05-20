@@ -1,27 +1,36 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('detalleserviciocto', {
+  return sequelize.define('DetalleServicioCto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idcontrato: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idcui: {
-      type: DataTypes.INTEGER,
+    anexo: {
+      type: DataTypes.STRING,
       allowNull: true
     },
-    partida: {
+    idcui: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'estructuracui',
+        key: 'id'
+      }
     },
     idservicio: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'servicio',
+        key: 'id'
+      }
     },
     servicio: {
       type: DataTypes.STRING,
@@ -29,10 +38,42 @@ module.exports = function(sequelize, DataTypes) {
     },
     idcuenta: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'cuentascontables',
+        key: 'id'
+      }
     },
     cuentacontable: {
       type: DataTypes.STRING,
+      allowNull: true
+    },
+    sap: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    tarea: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    codigoart: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    fechainicio: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechatermino: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechacontrol: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    valorcuota: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     idmoneda: {
@@ -43,32 +84,56 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    meses: {
+    idfrecuencia: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    frecuenciafacuracion: {
+    frecuenciafacturacion: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    valorcuota: {
-      type: DataTypes.FLOAT,
+    idplazocontrato: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    plazocontrato: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    idcondicion: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    condicionnegociacion: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     impuesto: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    iva: {
+    factorimpuesto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    idcontactoproveedor: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'contactoproveedor',
+        key: 'id'
+      }
+    },
+    idestadocto: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    estadocontrato: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    factoriva: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    montototal: {
-      type: DataTypes.FLOAT,
+    glosaservicio: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {
