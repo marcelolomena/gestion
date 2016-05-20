@@ -45,6 +45,14 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>Presupuesto Inversión (USD) {pptoestimadoinversion}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row' style='display: none;'>";
+    tmpl += "<div class='column-half'>estado {estado}</div>";
+    tmpl += "<div class='column-half'>categoria {categoria}</div>";
+    tmpl += "<div class='column-half'>pmoresponsable {pmoresponsable}</div>";
+    tmpl += "<div class='column-half'>gerenteresponsable {gerenteresponsable}</div>";
+    tmpl += "<div class='column-half'>divisionsponsor {divisionsponsor}</div>";
+    tmpl += "</div>";
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -97,6 +105,14 @@ $(document).ready(function () {
     tmplP += "<div class='column-half'>Presupuesto Inversión {pptoestimadoinversion}</div>";
     tmplP += "</div>";
 
+    tmplP += "<div class='form-row' style='display: none;'>";
+    tmplP += "<div class='column-half'>estado {estado}</div>";
+    tmplP += "<div class='column-half'>categoria {categoria}</div>";
+    tmplP += "<div class='column-half'>pmoresponsable {pmoresponsable}</div>";
+    tmplP += "<div class='column-half'>gerenteresponsable {gerenteresponsable}</div>";
+    tmplP += "<div class='column-half'>divisionsponsor {divisionsponsor}</div>";
+    tmplP += "</div>";
+
     tmplP += "<hr style='width:100%;'/>";
     tmplP += "<div> {sData} {cData}  </div>";
     tmplP += "</div>";
@@ -128,12 +144,18 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#divisionsponsor").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
         {
-            label: 'División', name: 'divisionsponsor', search: true, editable: false, width: 200, align: 'left', hidden: false,
+            label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         {
             label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
@@ -222,12 +244,17 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#gerenteresponsable").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left',
-            search: true, editable: false, hidden: false
+            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         {
             label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
@@ -250,12 +277,17 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#pmoresponsable").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
-            search: true, editable: true, hidden: false,
+            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
         { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
@@ -280,11 +312,31 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#categoria").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
-        { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true },
+        {
+            label: 'Categoria', name: 'categoria', width: 150, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Estado', name: 'estado', width: 150, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }
+            }
+        },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
         { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
         { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
@@ -312,20 +364,31 @@ $(document).ready(function () {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
         { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
         {
-            label: 'Presupuesto Gasto', name: 'pptoestimadogasto', width: 150, align: 'right',
+            label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
         {
-            label: 'Presupuesto Inversión', name: 'pptoestimadoinversion', width: 150, align: 'right',
+            label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
         {
             label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
@@ -352,20 +415,15 @@ $(document).ready(function () {
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#estado").val($('option:selected', this).text());
-                        //console.log("id :" + $(this).val());
-                        //console.log("text :" + $('option:selected', this).text());
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        {
-            label: 'Estado', name: 'estado', search: true, editable: false, hidden: false
         },
     ];
 
     $("#table_iniciativa").jqGrid({
         url: '/iniciativas/list',
-        mtype: "GET",
+        mtype: "POST",
         datatype: "json",
         page: 1,
         colModel: modelIniciativa,
@@ -378,7 +436,7 @@ $(document).ready(function () {
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        editurl: '/iniciativas/new',
+        editurl: '/iniciativas/action',
         styleUI: "Bootstrap",
         subGrid: true,
         subGridRowExpanded: gridIniciativaPrograma,
@@ -399,8 +457,8 @@ $(document).ready(function () {
             editCaption: "Modifica Iniciativa",
             closeAfterEdit: true,
             recreateForm: true,
-            mtype: 'POST',
-            url: '/iniciativas/update',
+            //mtype: 'POST',
+            //url: '/iniciativas/update',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: tmpl,
@@ -423,8 +481,8 @@ $(document).ready(function () {
             addCaption: "Agrega Iniciativa",
             closeAfterAdd: true,
             recreateForm: true,
-            mtype: 'POST',
-            url: '/iniciativas/add',
+            //mtype: 'POST',
+            //url: '/iniciativas/add',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: tmpl,
@@ -461,8 +519,8 @@ $(document).ready(function () {
             }
         },
         {
-            mtype: 'POST',
-            url: '/iniciativas/del',
+            //mtype: 'POST',
+            //url: '/iniciativas/del',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             errorTextFormat: function (data) {
@@ -566,12 +624,18 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#divisionsponsor").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
 
             },
             {
-                label: 'División', name: 'divisionsponsor', search: true, editable: false, width: 200, align: 'left', hidden: false,
+                label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
             },
             {
                 label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
@@ -659,12 +723,17 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#gerenteresponsable").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left',
-                search: true, editable: false, hidden: false
+                label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
             },
             {
                 label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
@@ -687,12 +756,17 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#pmoresponsable").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
-                search: true, editable: true, hidden: false,
+                label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
             },
             { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
             { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
@@ -717,11 +791,31 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#categoria").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
-            { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
-            { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true },
+            {
+                label: 'Categoria', name: 'categoria', width: 150, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            },
+            {
+                label: 'Estado', name: 'estado', width: 150, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            },
+            {
+                label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true,
+                editoptions: {
+                    dataInit: function (element) {
+                        $(element).mask("0000", { placeholder: "____" });
+
+                    }
+                }
+            },
             { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
             { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
             { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
@@ -749,20 +843,31 @@ $(document).ready(function () {
                 editoptions: {
                     size: 10, maxlengh: 10,
                     dataInit: function (element) {
+                        $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                         $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                     }
                 }
             },
             { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
             {
-                label: 'Presupuesto Gasto (USD)', name: 'pptoestimadogasto', width: 150, align: 'right',
+                label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
                 search: true, editable: true, hidden: false,
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
             },
             {
-                label: 'Presupuesto Inversión (USD)', name: 'pptoestimadoinversion', width: 150, align: 'right',
+                label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
                 search: true, editable: true, hidden: false,
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
             },
             {
                 label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
@@ -789,14 +894,9 @@ $(document).ready(function () {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
                             $("input#estado").val($('option:selected', this).text());
-                            //console.log("id :" + $(this).val());
-                            //console.log("text :" + $('option:selected', this).text());
                         }
                     }],
                 }, dataInit: function (elem) { $(elem).width(200); }
-            },
-            {
-                label: 'Estado', name: 'estado', search: true, editable: false, hidden: false
             }
         ];
 
@@ -822,7 +922,6 @@ $(document).ready(function () {
                 }
             }
         });
-
 
         $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
             {

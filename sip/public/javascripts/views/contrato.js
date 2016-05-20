@@ -242,7 +242,7 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        var thistid = $(this).val();
+                        //var thistid = $(this).val();
                         $("input#estado").val($('option:selected', this).text());
                     }
                 }],

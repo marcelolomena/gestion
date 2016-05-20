@@ -75,20 +75,14 @@ module.exports = function (passport) {
     });
 
     router.route('/iniciativas/list')
-        .get(isAuthenticated, iniciativaController.getIniciativasPaginados);
+        .post(isAuthenticated, iniciativaController.list);
 
 	// Create endpoint handlers for /iniciativas/:id
 	router.route('/iniciativas/:id')
 		.get(isAuthenticated, iniciativaController.get)
 
-	router.route('/iniciativas/add')
-		.post(isAuthenticated, iniciativaController.add);
-
-	router.route('/iniciativas/update')
-		.post(isAuthenticated, iniciativaController.update);
-
-	router.route('/iniciativas/del')
-		.post(isAuthenticated, iniciativaController.del);
+	router.route('/iniciativas/action')
+		.post(isAuthenticated, iniciativaController.action);
 
     router.get('/contratos', isAuthenticated, function (req, res) {
         res.render('contratos', { user: req.user });
