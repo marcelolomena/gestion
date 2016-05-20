@@ -8,6 +8,8 @@ var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var paramController = require('../controllers/param');
+var presupuestoController = require('../controllers/presupuesto');
+var presupuestoServiciosController = require('../controllers/presupuestoservicio');
 
 var express = require('express');
 var router = express.Router();
@@ -156,6 +158,20 @@ module.exports = function (passport) {
 	router.route('/iniciativaprograma/:id')
 		.get(isAuthenticated, iniciativaprogramaController.getIniciativaPrograma)
 
+    router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
+        res.render('presupuesto');
+    });
+    router.route('/presupuestolist')
+        .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
+		
+    router.route('/presupuestosexcel')
+        .get(isAuthenticated, presupuestoController.getExcel);		
+		
+    router.route('/presupuestoservicios/:id')
+        .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);				
 
+    router.route('/presupuestoserviciosexcel/:id')
+        .get(isAuthenticated, presupuestoServiciosController.getExcel);				
+		
 	return router;
 }

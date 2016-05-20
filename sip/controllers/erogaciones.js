@@ -103,7 +103,7 @@ exports.getExcel = function (req, res) {
   },
     {
       caption: 'SAP',
-      type: 'string',
+      type: 'number',
       width: 10
     },  
     {
@@ -151,32 +151,6 @@ exports.getExcel = function (req, res) {
 
   var order = sidx + " " + sord;
 
-  if (filters) {
-    console.log("Con filtros");
-    var jsonObj = JSON.parse(filters);
-
-    jsonObj.rules.forEach(function (item) {
-
-      if (item.op === 'cn')
-        condition += item.field + " like '%" + item.data + "%' AND"
-    });
-
-    models.Proyecto.findAll().then(function (proyecto) {
-
-      conf.rows = proyecto;
-      var result = nodeExcel.execute(conf);
-      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "Proyectos.xlsx");
-      res.end(result, 'binary');
-
-    }).catch(function (err) {
-      console.log(err);
-      res.json({ error_code: 1 });
-    });
-
-  } else {
-    console.log("Sin filtros");
-   
     var sql = "SELECT sap, nombre, id, razonsocial, factura,  CONVERT(VARCHAR(10),fechagl, 110) AS fechagl, "+
     "numerotarea, toriginalactual, montosum "+
     "FROM sip.erogacionproyecto WHERE iddetalleproyecto="+id;
@@ -211,6 +185,5 @@ exports.getExcel = function (req, res) {
       console.log(err);
       res.json({ error_code: 100 });
     });
-  }
 
 };

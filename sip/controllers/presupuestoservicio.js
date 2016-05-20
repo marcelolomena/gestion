@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 // Create endpoint /proyecto for GET
-exports.getProyectosTareas = function (req, res) {
+exports.getPresupuestoServicios = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
   var rows = req.query.rows;
@@ -11,10 +11,10 @@ exports.getProyectosTareas = function (req, res) {
   var filters = req.query.filters;
   var condition = "";
   var id = req.params.id
-  var filtrosubgrilla = "idproyecto="+id;
+  var filtrosubgrilla = "idpresupuesto="+id;
 
   if (!sidx)
-    sidx = "cui";
+    sidx = "a.idcuenta";
 
   if (!sord)
     sord = "asc";
@@ -27,8 +27,11 @@ exports.getProyectosTareas = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, * " +
-    "FROM sip.detalleproyecto where idproyecto="+id+")" +
+    "as resultNum, c.nombre, b.cuentacontable, b.nombrecuenta, d.moneda, a.montoforecast, a.montoanual " +
+    "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta  " +
+    "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
+    "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
+    "WHERE a.idpresupuesto="+id+")" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -48,13 +51,16 @@ exports.getProyectosTareas = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, * " +
-        "FROM sip.detalleproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "as resultNum, c.nombre, b.cuentacontable, b.nombrecuenta, d.moneda, a.montoforecast, a.montoanual " +
+        "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta  " +
+        "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
+        "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
+        "WHERE a.idpresupuesto=" +id+" "+ condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
         console.log(sql);
 
-      models.detalleproyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.detallepre.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -63,8 +69,8 @@ exports.getProyectosTareas = function (req, res) {
       })
 
     } else {
-
-      models.detalleproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
+      console.log(sql0);
+      models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -74,8 +80,8 @@ exports.getProyectosTareas = function (req, res) {
     }
 
   } else {
-
-    models.detalleproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
+    console.log(sql0);
+    models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {
@@ -94,7 +100,7 @@ exports.getExcel = function (req, res) {
   var sord = req.query.sord;
   var condition = "";
   var id = req.params.id
-  var filtrosubgrilla = "idproyecto="+id;
+  var filtrosubgrilla = "idpresupuesto="+id;
     
   console.log("En getExcel");
   var conf = {}
@@ -104,82 +110,71 @@ exports.getExcel = function (req, res) {
     width: 3
   },
     {
-      caption: 'SAP',
+      caption: 'CUI',
       type: 'number',
       width: 10
     },  
     {
-      caption: 'Nombre',
-      type: 'string',
+      caption: 'Cuenta Contable',
+      type: 'number',
       width: 15
     },    
     {
-      caption: 'Numero Tarea',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Nombre Tarea',
+      caption: 'Nombre Cuenta',
       type: 'string',
       width: 50
     },
     {
-      caption: 'Presupuesto',
+      caption: 'Nombre Servicio',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Moneda',
       type: 'number',
       width: 20
     },
     {
-      caption: 'Compromisos',
+      caption: 'Monto Forecast',
       type: 'number',
-      width: 20
+      width: 10
     },
     {
-      caption: 'Real Acumulado',
+      caption: 'Monto Anual',
       type: 'number',  
-      width: 15
-    },
-    {
-      caption: 'Total',
-      type: 'number',
       width: 15
     }
   ];
-
-  if (!sidx)
-    sidx = "sap";
-
-  if (!sord)
-    sord = "asc";
-
-  var order = sidx + " " + sord;
-
   
-    var sql = "SELECT b.sap, b.nombre, a.* FROM sip.detalleproyecto a join sip.proyecto b ON a.idproyecto=b.id where idproyecto="+id;
+    var sql = "SELECT a.id, f.CUI, b.cuentacontable, b.nombrecuenta, c.nombre, d.moneda, a.montoforecast, a.montoanual "+
+        "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta "+ 
+        "LEFT JOIN sip.servicio c ON c.id = a.idservicio  "+
+        "LEFT JOIN sip.moneda d ON a.idmoneda = d.id "+
+        "LEFT JOIN sip.presupuesto e ON a.idpresupuesto=e.id LEFT JOIN sip.cuidivot f ON e.idcui=f.secuencia "+
+        "WHERE a.idpresupuesto="+id+ " order by cuentacontable";
     
-    //models.Proyecto.findAll().then(function (proyecto) {
+    console.log("sql:"+sql);
     sequelize.query(sql)
       .spread(function (proyecto) {
       var arr = []
       for (var i = 0; i < proyecto.length; i++) {
 
         a = [i + 1,
-          proyecto[i].sap,
+          proyecto[i].CUI,
+          proyecto[i].cuentacontable,
+          proyecto[i].nombrecuenta,
           proyecto[i].nombre,
-          proyecto[i].tarea,
-          proyecto[i].nombre,
-          (proyecto[i].presupuestopesos=='0')?'0':proyecto[i].presupuestopesos,
-          (proyecto[i].compromiso=='0')? '0':proyecto[i].compromiso,
-          (proyecto[i].realacumuladopesos=='0')?'0':proyecto[i].realacumuladopesos,
-          proyecto[i].saldopesos
+          proyecto[i].moneda,
+          (proyecto[i].montoforecast=='0')?'0':proyecto[i].montoforecast,
+          (proyecto[i].montoanual=='0')? '0':proyecto[i].montoanual
         ];
-        //console.log("compromiso:"+proyecto[i].compromiso)
         arr.push(a);
       }
       conf.rows = arr;
 
       var result = nodeExcel.execute(conf);
       res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "TareasProyecto.xlsx");
+      res.setHeader("Content-Disposition", "attachment;filename=" + "ServiciosPresupuesto.xlsx");
       res.end(result, 'binary');
 
     }).catch(function (err) {

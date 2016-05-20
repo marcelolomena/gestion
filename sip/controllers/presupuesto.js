@@ -2,19 +2,17 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 // Create endpoint /proyecto for GET
-exports.getProyectosTareas = function (req, res) {
+exports.getPresupuestoPaginados = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
   var rows = req.query.rows;
   var sidx = req.query.sidx;
-  var sord = req.query.sord;    
+  var sord = req.query.sord;  
   var filters = req.query.filters;
   var condition = "";
-  var id = req.params.id
-  var filtrosubgrilla = "idproyecto="+id;
 
   if (!sidx)
-    sidx = "cui";
+    sidx = "idcui";
 
   if (!sord)
     sord = "asc";
@@ -27,8 +25,9 @@ exports.getProyectosTareas = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, * " +
-    "FROM sip.detalleproyecto where idproyecto="+id+")" +
+    "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
+    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
+    "JOIN sip.ejercicios c ON c.id=a.idejercicio) "+
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -48,23 +47,26 @@ exports.getProyectosTareas = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, * " +
-        "FROM sip.detalleproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
+        "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
+        "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
+        "JOIN sip.ejercicios c ON c.id=a.idejercicio "+
+        "WHERE " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
         console.log(sql);
 
-      models.detalleproyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.presupuesto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
+
             res.json({ records: records, total: total, page: page, rows: rows });
           });
       })
 
     } else {
 
-      models.detalleproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
+      models.presupuesto.count().then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -75,7 +77,7 @@ exports.getProyectosTareas = function (req, res) {
 
   } else {
 
-    models.detalleproyecto.count({ where: [filtrosubgrilla] }).then(function (records) {
+    models.presupuesto.count().then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {
@@ -93,9 +95,6 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  var id = req.params.id
-  var filtrosubgrilla = "idproyecto="+id;
-    
   console.log("En getExcel");
   var conf = {}
   conf.cols = [{
@@ -104,87 +103,89 @@ exports.getExcel = function (req, res) {
     width: 3
   },
     {
-      caption: 'SAP',
+      caption: 'CUI',
       type: 'number',
       width: 10
-    },  
-    {
-      caption: 'Nombre',
-      type: 'string',
-      width: 15
-    },    
-    {
-      caption: 'Numero Tarea',
-      type: 'string',
-      width: 15
     },
     {
-      caption: 'Nombre Tarea',
+      caption: 'Nombre CUI',
       type: 'string',
       width: 50
     },
     {
-      caption: 'Presupuesto',
+      caption: 'Responsable',
+      type: 'string',
+      width: 50
+    },    
+    {
+      caption: 'Ejercicio',
       type: 'number',
       width: 20
     },
     {
-      caption: 'Compromisos',
+      caption: 'Versión',
       type: 'number',
-      width: 20
+      width: 10
     },
     {
-      caption: 'Real Acumulado',
-      type: 'number',  
-      width: 15
-    },
-    {
-      caption: 'Total',
-      type: 'number',
-      width: 15
+      caption: 'Descripción',
+      type: 'string',  
+      width: 30
     }
   ];
 
-  if (!sidx)
-    sidx = "sap";
-
-  if (!sord)
-    sord = "asc";
-
-  var order = sidx + " " + sord;
-
-  
-    var sql = "SELECT b.sap, b.nombre, a.* FROM sip.detalleproyecto a join sip.proyecto b ON a.idproyecto=b.id where idproyecto="+id;
+    var sql = "SELECT a.*, b.CUI, b.nombre, b.responsable, c.ejercicio "+
+    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia "+
+    "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
     
-    //models.Proyecto.findAll().then(function (proyecto) {
     sequelize.query(sql)
       .spread(function (proyecto) {
       var arr = []
       for (var i = 0; i < proyecto.length; i++) {
 
-        a = [i + 1,
-          proyecto[i].sap,
+        a = [i + 1, proyecto[i].CUI,
           proyecto[i].nombre,
-          proyecto[i].tarea,
-          proyecto[i].nombre,
-          (proyecto[i].presupuestopesos=='0')?'0':proyecto[i].presupuestopesos,
-          (proyecto[i].compromiso=='0')? '0':proyecto[i].compromiso,
-          (proyecto[i].realacumuladopesos=='0')?'0':proyecto[i].realacumuladopesos,
-          proyecto[i].saldopesos
+          proyecto[i].responsable,
+          proyecto[i].ejercicio,
+          proyecto[i].version,
+          proyecto[i].descripcion
         ];
-        //console.log("compromiso:"+proyecto[i].compromiso)
         arr.push(a);
       }
       conf.rows = arr;
 
       var result = nodeExcel.execute(conf);
       res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "TareasProyecto.xlsx");
+      res.setHeader("Content-Disposition", "attachment;filename=" + "Presupuestos.xlsx");
       res.end(result, 'binary');
 
     }).catch(function (err) {
       console.log(err);
       res.json({ error_code: 100 });
     });
-  
+
+};
+
+exports.getUsersByRol = function (req, res) {
+  //console.log(req.query.rol);
+  console.log(req.params.rol);
+
+  models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
+  models.Rol.belongsToMany(models.User, { foreignKey: 'id', through: models.UsrRol });
+  //{through: 'UserRole', constraints: true}
+  models.User.findAll({
+    include: [{
+      model: models.Rol,
+      //attributes:['first_name'],
+      where: { 'glosarol': req.params.rol },
+      order: ['"first_name" ASC', '"last_name" ASC']
+    }]
+  }).then(function (gerentes) {
+    //gerentes.forEach(log)
+    res.json(gerentes);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
+  });
+
 };
