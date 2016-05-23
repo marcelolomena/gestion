@@ -1,6 +1,15 @@
 function showSubGrids(subgrid_id, row_id) {
-    showSubGrid_JQGrid2(subgrid_id, row_id, "JQGrid2");
-    showSubGrid_JQGrid3(subgrid_id, row_id, "JQGrid3");
+    //console.log("row_id----->> " + row_id)
+    var rowData = $("#grid").getRowData(row_id);
+    var tipocontrato = rowData.tipocontrato;
+
+    console.log("tipocontrato----->> " + tipocontrato)
+    if (tipocontrato == 1){
+        showSubGrid_JQGrid2(subgrid_id, row_id, "JQGrid2");
+    }
+    else{
+        showSubGrid_JQGrid3(subgrid_id, row_id, "JQGrid3");
+    }
 }
 
 
@@ -363,7 +372,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
             { label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true },
             { label: 'Estado', name: 'idestadocto', search: false, editable: true, hidden: true },
             { label: 'Estado', name: 'estadocontrato', search: true, editable: false, hidden: false },
-            { label: 'Glosa', name: 'glosaservicio', search: true, editable: false, hidden: false }            
+            { label: 'Glosa', name: 'glosaservicio', search: true, editable: false, hidden: false }
         ],
         viewrecords: true,
         shrinkToFit: false,

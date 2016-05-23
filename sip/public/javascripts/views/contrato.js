@@ -220,7 +220,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/PMO',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;

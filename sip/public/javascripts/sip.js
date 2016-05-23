@@ -54,7 +54,7 @@ var sipLibrary = {
         var div = $("<div style='margin-top:5px'></div>");
         var label1 = $("<label class='radio-inline'></label>");
         var radio1 = $("<input>", { type: "radio", value: "1", name: "tipodocumento", id: "tipodocumento_uno", checked: value == 0 });
-        label1.append(radio1).append("Factura");
+        label1.append(radio1).append("Contrato");
         var label2 = $("<label class='radio-inline'></label>");
         var radio2 = $("<input>", { type: "radio", value: "0", name: "tipodocumento", id: "tipodocumento_cero" });
         label2.append(radio2).append("Orden de Compra");
