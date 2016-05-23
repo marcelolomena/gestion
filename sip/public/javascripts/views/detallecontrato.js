@@ -30,11 +30,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
     templateServicio += "</div>";
     
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Cui{anexo}</div>";
-    templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
-    templateServicio += "</div>";    
-
     templateServicio += "<hr style='width:100%;'/>";
     templateServicio += "<div> {sData} {cData}  </div>";
     templateServicio += "</div>";
