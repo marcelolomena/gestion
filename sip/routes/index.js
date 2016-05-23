@@ -12,6 +12,7 @@ var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
+var servicioController = require('../controllers/servicio');
 
 var express = require('express');
 var router = express.Router();
@@ -185,7 +186,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);				
 
     router.route('/presupuestoserviciosexcel/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getExcel);				
+        .get(isAuthenticated, presupuestoServiciosController.getExcel);	
+		
+    router.route('/servicios')
+        .get(isAuthenticated, servicioController.getServicios);						
 		
 	return router;
 }

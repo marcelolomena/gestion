@@ -3,11 +3,11 @@ function showSubGrids(subgrid_id, row_id) {
     var rowData = $("#grid").getRowData(row_id);
     var tipocontrato = rowData.tipocontrato;
 
-    console.log("tipocontrato----->> " + tipocontrato)
-    if (tipocontrato == 1){
+    //console.log("tipocontrato----->> " + tipocontrato)
+    if (tipocontrato == 1) {
         showSubGrid_JQGrid2(subgrid_id, row_id, "JQGrid2");
     }
-    else{
+    else {
         showSubGrid_JQGrid3(subgrid_id, row_id, "JQGrid3");
     }
 }
@@ -23,7 +23,21 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         pager_id += suffix;
     }
 
-    //console.log("{1} pager_id : " + pager_id);
+    var templateServicio = "<div id='responsive-form' class='clearfix'>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
+    templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
+    templateServicio += "</div>";
+    
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Cui{anexo}</div>";
+    templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
+    templateServicio += "</div>";    
+
+    templateServicio += "<hr style='width:100%;'/>";
+    templateServicio += "<div> {sData} {cData}  </div>";
+    templateServicio += "</div>";
 
     $('#' + subgrid_id).append('<table id=' + subgrid_table_id + ' class=scroll></table><div id=' + pager_id + ' class=scroll></div>');
 
@@ -36,8 +50,44 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },
-            { label: 'idcui', name: 'idcui', search: false, editable: false, hidden: true },
-            { label: 'idservicio', name: 'idservicio', search: false, editable: false, hidden: true },
+            {
+                label: 'idcui', name: 'idcui', search: false, editable: false, hidden: true,
+                
+            },
+            {
+                label: 'cui', name: 'cui', search: true, editable: false, hidden: false,
+                jsonmap: "EstructuraCui.cui"
+            },
+            {
+                label: 'idservicio', name: 'idservicio', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/servicios',
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.servicio;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Servicio--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thistid = $(this).val();
+                            $("input#estadosolicitud").val($('option:selected', this).text());
+                        }
+                    }],
+                }, dataInit: function (elem) { $(elem).width(200); }
+            },
             { label: 'Servicio', name: 'servicio', width: 300, align: 'left', search: true, editable: true },
             { label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true },
             { label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true, hidden: false },
@@ -155,10 +205,76 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         },
     });
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
-        {},
-        {},
-        {},
-        {}
+        {
+            editCaption: "Modifica Servicio",
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            template: templateServicio,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }, beforeShowForm: function (form) {
+                sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
+            }
+        },
+        {
+            addCaption: "Agrega Servicio",
+            closeAfterAdd: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            template: templateServicio,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, beforeSubmit: function (postdata, formid) {
+                if (postdata.idservicio == 0) {
+                    return [false, "Servicio: Debe escoger un valor", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0) {
+                    return [false, result.error_text, ""];
+                } else {
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                    $('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    return [true, "", ""];
+                }
+            }, beforeShowForm: function (form) {
+                sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
+            }
+        },
+        {
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }
+        },
+        {
+            recreateFilter: true
+        }
     );
 
     $('#' + subgrid_table_id).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").children("span.ui-jqgrid-title").css("background-color", "Gold");
