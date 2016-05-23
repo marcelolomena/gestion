@@ -6,6 +6,8 @@ var proyectoController = require('../controllers/proyecto');
 var proyectoTareasController = require('../controllers/proyectotareas');
 var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
+var contratoproyectoController = require('../controllers/contratoproyecto');
+var contratoservicioController = require('../controllers/contratoservicio');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
@@ -95,6 +97,18 @@ module.exports = function (passport) {
 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
+		
+    router.route('/contratoproyecto/:id')
+        .post(isAuthenticated, contratoproyectoController.list);
+
+    router.route('/contratoproyecto/action/:id')
+        .post(isAuthenticated, contratoproyectoController.action);
+		
+    router.route('/contratoservicio/:id')
+        .post(isAuthenticated, contratoservicioController.list);
+
+    router.route('/contratoservicio/action/:id')
+        .post(isAuthenticated, contratoservicioController.action);
 
 	router.route('/parameters/:param')
 		.get(isAuthenticated, paramController.getListParam);

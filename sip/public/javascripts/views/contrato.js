@@ -21,6 +21,10 @@ $(document).ready(function () {
     template += "<div class='column-half'>Documento {tipodocumento}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>PMO {uidpmo}</div>";
+    template += "</div>";
+
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>razonsocial{razonsocial}</div>";
     template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
@@ -31,11 +35,48 @@ $(document).ready(function () {
     template += "<hr style='width:100%;'/>";
     template += "<div> {sData} {cData}  </div>";
     template += "</div>";
+    
+    var templateServicio = "<div id='responsive-form' class='clearfix'>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-full'>Anexo{anexo}</div>";
+    templateServicio += "<div class='column-full'>Proveedor{idproveedor}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Tipo Solicitud{idtiposolicitud}</div>";
+    templateServicio += "<div class='column-half'>Estado Solicitud{idestadosol}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
+    templateServicio += "<div class='column-half'>Número  {numero}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Tipo {tipocontrato}</div>";
+    templateServicio += "<div class='column-half'>Documento {tipodocumento}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>PMO {uidpmo}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row' style='display: none;'>";
+    templateServicio += "<div class='column-half'>razonsocial{razonsocial}</div>";
+    templateServicio += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
+    templateServicio += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
+    templateServicio += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<hr style='width:100%;'/>";
+    templateServicio += "<div> {sData} {cData}  </div>";
+    templateServicio += "</div>";    
 
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Contrato', name: 'nombre', width: 300, align: 'left', search: true, editable: true },
+        { label: 'Contrato', name: 'nombre', width: 400, align: 'left', search: true, editable: true },
         {
             label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "Proveedor.id",
             edittype: "select",
@@ -67,8 +108,21 @@ $(document).ready(function () {
         },
         { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true },
         {
-            label: 'Proveedor', name: 'razonsocial', width: 200, align: 'left', search: true,
-            editable: true, jsonmap: "Proveedor.razonsocial"
+            label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left', search: true,
+            editable: true, jsonmap: "Proveedor.razonsocial",
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/proveedores/list',
+                buildSelect: function (response) {
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger Proveedor--</option>';
+                    $.each(data, function (i, item) {
+                        s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
+                    });
+                    return s + "</select>";
+                }
+            },
         },
         {
             label: 'Estado Solicitud', name: 'idestadosol', hidden: true, search: true, editable: true,
@@ -104,7 +158,12 @@ $(document).ready(function () {
             label: 'Estado Solicitud', name: 'estadosolicitud', width: 100, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
-        { label: 'Número', name: 'numero', width: 100, align: 'left', search: true, editable: true },
+        {
+            label: 'Número', name: 'numero', width: 150, align: 'left', search: true, editable: true,
+            searchoptions: {
+                sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
+            }
+        },
         {
             label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: true,
             edittype: "custom",
@@ -206,20 +265,37 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
         editurl: '/contratos/action',
-        loadError: function (jqXHR, textStatus, errorThrown) {
-            alert('HTTP status code: ' + jqXHR.status + '\n' +
-                'textStatus: ' + textStatus + '\n' +
-                'errorThrown: ' + errorThrown);
-        }, gridComplete: function () {
+        loadError: sipLibrary.jqGrid_loadErrorHandler,
+        gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
             }
+        },
+        subGrid: true,
+        subGridRowExpanded: showSubGrids
+    }).jqGrid('filterToolbar', {
+        stringResult: true,
+        searchOnEnter: true,
+        defaultSearch: "cn",
+        searchOperators: true,
+        beforeSearch: function () {
+            var postData = $("#grid").jqGrid('getGridParam', 'postData');
+            var searchData = jQuery.parseJSON(postData.filters);
+            for (var iRule = 0; iRule < searchData.rules.length; iRule++) {
+                if (searchData.rules[iRule].field === "razonsocial") {
+                    var valueToSearch = searchData.rules[iRule].data;
+                    searchData.rules[iRule].field = 'idproveedor'
+                }
+            }
+            //return false;
+            postData.filters = JSON.stringify(searchData);
+        },
+        afterSearch: function () {
+
         }
     });
-
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {

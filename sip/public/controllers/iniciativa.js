@@ -2,6 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var userService = require('../service/user');
 var nodeExcel = require('excel-export');
+var utilSeq = require('../utils/seq');
 
 var log = function (inst) {
   console.dir(inst.get())
@@ -30,7 +31,6 @@ exports.getExcel = function (req, res) {
   var filters = req.query.filters;
   var sidx = req.query.sidx;
   var sord = req.query.sord;
-  var condition = "";
 
   var conf = {}
   conf.cols = [{
@@ -129,74 +129,64 @@ exports.getExcel = function (req, res) {
 
   var order = sidx + " " + sord;
 
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
+  utilSeq.buildCondition(filters, function (err, data) {
+    if (err) {
+      log(err)
+    } else {
+      models.Iniciativa.count({
+        where: data
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        models.Iniciativa.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data
+        }).then(function (iniciativas) {
+          var arr = []
+          for (var i = 0; i < iniciativa.length; i++) {
 
-    jsonObj.rules.forEach(function (item) {
+            a = [i + 1, iniciativa[i].nombre,
+              iniciativa[i].divisionsponsor,
+              iniciativa[i].sponsor1,
+              iniciativa[i].sponsor2,
+              iniciativa[i].pmoresponsable,
+              iniciativa[i].gerenteresponsable,
+              iniciativa[i].estado,
+              iniciativa[i].categoria,
+              iniciativa[i].q1,
+              iniciativa[i].q2,
+              iniciativa[i].q3,
+              iniciativa[i].q4,
+              iniciativa[i].fechacomite,
+              iniciativa[i].ano,
+              iniciativa[i].pptoestimadogasto,
+              iniciativa[i].pptoestimadoinversion
+            ];
+            arr.push(a);
+          }
+          conf.rows = arr;
+          var result = nodeExcel.execute(conf);
+          res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+          res.setHeader("Content-Disposition", "attachment;filename=" + "iniciativas.xlsx");
+          res.end(result, 'binary');
 
-      if (item.op === 'cn')
-        condition += item.field + " like '%" + item.data + "%' AND"
-    });
+        }).catch(function (err) {
+          //console.log(err);
+          res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
 
-    models.Iniciativa.findAll().then(function (iniciativa) {
-
-      conf.rows = iniciativa;
-      var result = nodeExcel.execute(conf);
-      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "iniciativas.xlsx");
-      res.end(result, 'binary');
-
-    }).catch(function (err) {
-      console.log(err);
-      res.json({ error_code: 1 });
-    });
-
-  } else {
-    models.Iniciativa.findAll().then(function (iniciativa) {
-
-      var arr = []
-      for (var i = 0; i < iniciativa.length; i++) {
-
-        a = [i + 1, iniciativa[i].nombre,
-          iniciativa[i].divisionsponsor,
-          iniciativa[i].sponsor1,
-          iniciativa[i].sponsor2,
-          iniciativa[i].pmoresponsable,
-          iniciativa[i].gerenteresponsable,
-          iniciativa[i].estado,
-          iniciativa[i].categoria,
-          iniciativa[i].q1,
-          iniciativa[i].q2,
-          iniciativa[i].q3,
-          iniciativa[i].q4,
-          iniciativa[i].fechacomite,
-          iniciativa[i].ano,
-          iniciativa[i].pptoestimadogasto,
-          iniciativa[i].pptoestimadoinversion
-        ];
-        arr.push(a);
-      }
-      conf.rows = arr;
-
-      var result = nodeExcel.execute(conf);
-      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "iniciativas.xlsx");
-      res.end(result, 'binary');
-
-    }).catch(function (err) {
-      console.log(err);
-      res.json({ error_code: 100 });
-    });
-  }
 
 };
 
 exports.getUsersByRol = function (req, res) {
   models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
   models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
-  //{through: 'UserRole', constraints: true}
+
   models.User.findAll({
-    //attributes:['[User].first_name', '[User].last_name'],
     order: ['[User].first_name', '[User].last_name'],
     include: [{
       model: models.Rol,
@@ -250,33 +240,19 @@ exports.list = function (req, res) {
 
   var orden = sidx + " " + sord;
 
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
-
-    if (JSON.stringify(jsonObj.rules) != '[]') {
-
-      var condition = [];
-      //var condition=''
-      jsonObj.rules.forEach(function (item) {
-
-        if (item.op === 'cn') {
-          condition.push(item.field + " like '%" + item.data + "%'");
-        }
-        //condition.push(' $and:')
-      });
-
-      //console.log("---------------->" + condition);
-
+  utilSeq.buildCondition(filters, function (err, data) {
+    if (err) {
+      console.log("->>> " + err)
+    } else {
       models.Iniciativa.count({
-        where: condition
+        where: data
       }).then(function (records) {
-
         var total = Math.ceil(records / rows);
         models.Iniciativa.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: condition
+          where: data
         }).then(function (iniciativas) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: iniciativas });
@@ -285,68 +261,17 @@ exports.list = function (req, res) {
           res.json({ error_code: 1 });
         });
       })
-
-
-    } else {
-
-      models.Iniciativa.count().then(function (records) {
-        var total = Math.ceil(records / rows);
-
-        models.Iniciativa.findAll({
-          offset: parseInt(rows * (page - 1)),
-          limit: parseInt(rows),
-          order: orden,
-          where: { borrado: 1 }
-        }).then(function (iniciativas) {
-          //iniciativas.forEach(log)
-          res.json({ records: records, total: total, page: page, rows: iniciativas });
-        }).catch(function (err) {
-          console.log(err);
-          //res.json({ error_code: 1 });
-        });
-
-      })
-
     }
+  });
 
-  } else {
-
-    models.Iniciativa.count().then(function (records) {
-
-      var total = Math.ceil(records / rows);
-
-      models.Iniciativa.findAll({
-        offset: parseInt(rows * (page - 1)),
-        limit: parseInt(rows),
-        order: orden,
-        where: { borrado: 1 }
-      }).then(function (iniciativas) {
-        //iniciativas.forEach(log)
-        res.json({ records: records, total: total, page: page, rows: iniciativas });
-      }).catch(function (err) {
-        console.log(err);
-        //res.json({ error_code: 1 });
-      });
-
-    })
-
-  }
 }
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-/*
-  console.log("action : " + action)
-  console.log("req.body.pptoestimadogasto : " + req.body.pptoestimadogasto.split(".").join("").replace(",", "."))
-  console.log("req.body.pptoestimadoinversion : " + req.body.pptoestimadoinversion.split(".").join("").replace(",", "."))
-  console.log("req.body.pmoresponsable : " + req.body.pmoresponsable)
-  console.log("req.body.gerenteresponsable : " + req.body.gerenteresponsable)
-*/
 
   switch (action) {
     case "add":
       models.Iniciativa.create({
-        
         nombre: req.body.nombre,
         iddivision: req.body.iddivision,
         divisionsponsor: req.body.divisionsponsor,
@@ -422,8 +347,6 @@ exports.action = function (req, res) {
           console.log(err);
           res.json({ error_code: 1 });
         });
-
-
       break;
     case "del":
       models.Iniciativa.destroy({

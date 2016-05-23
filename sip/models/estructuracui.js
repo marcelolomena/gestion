@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('estructuracui', {
+  return sequelize.define('EstructuraCui', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,

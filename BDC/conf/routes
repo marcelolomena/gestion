@@ -656,6 +656,9 @@ GET    /listadoAsignacion																			  controllers.Frontend.Personal.list
 GET	   /listSubTaskFromUser/$uid<[A-Za-z0-9_-]+>																				  controllers.Frontend.Personal.listadoSubTareasDeUsuario(uid:String)
 
 #Histograma
-GET		/histograma																						controllers.Frontend.Histograma.home
 GET    	/listadoHistograma																			  	controllers.Frontend.Histograma.listadoHistograma
 GET    /histograma-excel 			                                                                    controllers.Frontend.Histograma.excel
+
+# User Story
+GET	   /userStory																				  		controllers.Frontend.UserStory.home
+GET	   /userStoryList																				 	controllers.Frontend.UserStory.list

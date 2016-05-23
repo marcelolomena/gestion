@@ -329,12 +329,15 @@ $(document).ready(function () {
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true,
+            label: 'Año', name: 'ano', width: 150, align: 'left', search: true, editable: true,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
 
                 }
+            }, searchoptions: {
+                // show search options
+                sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
         },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
@@ -369,7 +372,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
+        { label: 'Moneda', name: 'idmoneda', search: true, editable: false, hidden: true },
         {
             label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
             search: false, editable: true, hidden: false,
