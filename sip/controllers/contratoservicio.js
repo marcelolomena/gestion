@@ -33,6 +33,7 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
+            models.DetalleServicioCto.belongsTo(models.Contrato, { foreignKey: 'idcontrato' });
             models.DetalleServicioCto.count({
                 where: data
             }).then(function (records) {
@@ -41,7 +42,10 @@ exports.list = function (req, res) {
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: orden,
-                    where: data
+                    where: data,
+                    include: [{
+                        model: models.Contrato
+                    }]
                 }).then(function (contratos) {
                     //Contrato.forEach(log)
                     res.json({ records: records, total: total, page: page, rows: contratos });
