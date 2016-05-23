@@ -10,7 +10,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idcontrato: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Contrato',
+        key: 'id'
+      }
     },
     anexo: {
       type: DataTypes.STRING,
@@ -20,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'estructuracui',
+        model: 'EstructuraCui',
         key: 'id'
       }
     },
@@ -28,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'servicio',
+        model: 'Servicio',
         key: 'id'
       }
     },
@@ -40,7 +44,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'cuentascontables',
+        model: 'CuentasContables',
         key: 'id'
       }
     },
@@ -80,7 +84,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'moneda',
+        model: 'Moneda',
         key: 'id'
       }
     },
@@ -120,7 +124,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'contactoproveedor',
+        model: 'ContactoProveedor',
         key: 'id'
       }
     },
