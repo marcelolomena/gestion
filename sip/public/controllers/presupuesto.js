@@ -189,3 +189,15 @@ exports.getUsersByRol = function (req, res) {
   });
 
 };
+
+exports.getCUIs = function (req, res) {
+
+  var sql = "select distinct codDivision,glosaDivision from RecursosHumanos " +
+    "where periodo=(select max(periodo) from RecursosHumanos) order by glosaDivision";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};

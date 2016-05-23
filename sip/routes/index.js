@@ -161,17 +161,23 @@ module.exports = function (passport) {
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
         res.render('presupuesto');
     });
+
     router.route('/presupuestolist')
         .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
-		
+
     router.route('/presupuestosexcel')
-        .get(isAuthenticated, presupuestoController.getExcel);		
-		
+        .get(isAuthenticated, presupuestoController.getExcel);
+    
+    router.route('/CUIs')
+        .get(isAuthenticated, presupuestoController.getCUIs);        
+
     router.route('/presupuestoservicios/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);				
+        .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);
 
     router.route('/presupuestoserviciosexcel/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getExcel);				
-		
-	return router;
+        .get(isAuthenticated, presupuestoServiciosController.getExcel);
+
+
+
+return router;
 }

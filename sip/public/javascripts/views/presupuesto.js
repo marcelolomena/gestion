@@ -1,15 +1,64 @@
 $(document).ready(function () {
+    var tmpl = "<div id='responsive-form' class='clearfix'>";
 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>CUI {CUI}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Ejercicio {idejercicio}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Versión {version}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Descripción {descripcion}</div>";
+    tmpl += "</div>";
+            
+    tmpl += "<hr style='width:100%;'/>";
+    tmpl += "<div> {sData} {cData}  </div>";
+    tmpl += "</div>";    
+    
     var modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'CUI', name: 'CUI', width: 80, align: 'left', search: false, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: 'CUI', name: 'CUI', width: 80, align: 'left', search: false, editable: true, formoptions: { rowpos: 1, colpos: 1 },
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/CUIs',
+                buildSelect: function (response) {
+                    var grid = $("#presupuesto");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.divisionsponsor;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger CUI--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].glosaDivision == thissid) {
+                            s += '<option value="' + data[i].codDivision + '" selected>' + data[i].glosaDivision + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#divisionsponsor").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+         
+        },
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Responsable CUI', name: 'responsable', width: 250, align: 'left', search: false, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Ejercicio', name: 'ejercicio', width: 100, align: 'left', search: false, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'Versión', name: 'version', width: 100, align: 'left', search: false, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
-        { label: 'Nombre', name: 'descripcion', width: 150, align: 'left', search: false }
+        { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false }
     ];
-    $("#grid").jqGrid({
+    $("#presupuesto").jqGrid({
         url: '/presupuestolist',
         mtype: "GET",
         datatype: "json",
@@ -35,15 +84,56 @@ $(document).ready(function () {
         }
     });
 
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#presupuesto").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
+    $('#presupuesto').jqGrid('navGrid', "#pager", {
         search: false, // show search button on the toolbar
-        add: false,
+        add: true,
         edit: false,
         del: false,
         refresh: true
-    });
+    },
+    {
+        addCaption: "Agrega Presupuesto",
+        closeAfterAdd: true,
+        recreateForm: true,
+        //mtype: 'POST',
+        //url: '/iniciativas/add',
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        template: tmpl,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        }, beforeSubmit: function (postdata, formid) {
+            if (postdata.CUI == 0) {
+                return [false, "División: Debe escoger un CUI", ""];
+            } if (postdata.idejercicio == 0) {
+                return [false, "Gerente: Debe escoger un Ejercicio", ""];
+            } if (postdata.version == 0) {
+                return [false, "PMO: Debe ingresar una versión", ""];
+            } if (postdata.descripcion == 0) {
+                return [false, "Estado: Debe ingresar una descripción", ""];
+            } else {
+                return [true, "", ""]
+            }
+        }, afterSubmit: function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (result.error_code != 0) {
+                return [false, result.error_text, ""];
+            } else {
+                var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                $("#presupuesto").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                return [true, "", ""];
+            }
+        }, beforeShowForm: function (form) {
+            sipLibrary.centerDialog($('#presupuesto').attr('id'));
+        }, afterShowForm: function (form) {
+            sipLibrary.centerDialog($("#presupuesto").attr('id'));
+        }
+    }
+    
+    );
 
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
