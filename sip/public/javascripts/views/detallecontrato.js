@@ -14,7 +14,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         pager_id += suffix;
     }
 
-    console.log("{1} pager_id : " + pager_id);
+    //console.log("{1} pager_id : " + pager_id);
 
     $('#' + subgrid_id).append('<table id=' + subgrid_table_id + ' class=scroll></table><div id=' + pager_id + ' class=scroll></div>');
 
@@ -31,7 +31,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             { label: 'idservicio', name: 'idservicio', search: false, editable: false, hidden: true },
             { label: 'Servicio', name: 'servicio', width: 300, align: 'left', search: true, editable: true },
             { label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true },
-            { label: 'cuentacontable', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true, hidden: false },
+            { label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true, hidden: false },
             {
                 label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
@@ -112,6 +112,19 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             { label: 'Valor Cuota', name: 'valorcuota', width: 100, align: 'left', search: true, editable: true, hidden: false },
+            { label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true },
+            { label: 'idfrecuencia', name: 'idfrecuencia', search: false, editable: true, hidden: true },
+            { label: 'Frecuencia', name: 'frecuenciafacturacion', search: true, editable: false, hidden: false },
+            { label: 'Plazo Contrato', name: 'idplazocontrato', search: false, editable: true, hidden: true },
+            { label: 'Plazo Contrato', name: 'plazocontrato', search: true, editable: false, hidden: false },
+            { label: 'Condición', name: 'idcondicion', search: false, editable: true, hidden: true },
+            { label: 'Condición', name: 'condicionnegociacion', search: true, editable: false, hidden: false },
+            { label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false },
+            { label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
+            { label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true },
+            { label: 'Estado', name: 'idestadocto', search: false, editable: true, hidden: true },
+            { label: 'Estado', name: 'estadocontrato', search: true, editable: false, hidden: false },
+            { label: 'Glosa', name: 'glosaservicio', search: true, editable: false, hidden: false }
         ],
         shrinkToFit: false,
         caption: 'Servicios',
@@ -138,6 +151,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         {},
         {}
     );
+
+    $('#' + subgrid_table_id).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").children("span.ui-jqgrid-title").css("background-color", "Gold");
 
     $("#" + pager_id + "_left").css("width", "");
 
@@ -235,7 +250,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
         pager_id += suffix;
     }
 
-    console.log("{2} pager_id : " + pager_id);
+    //console.log("{2} pager_id : " + pager_id);
 
     $('#' + subgrid_id).append('<table id=' + subgrid_table_id + ' class=scroll></table><div id=' + pager_id + ' class=scroll></div>');
 
@@ -252,10 +267,10 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
             { label: 'idservicio', name: 'idservicio', search: false, editable: false, hidden: true },
             { label: 'Servicio', name: 'servicio', width: 300, align: 'left', search: true, editable: true },
             { label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true },
-            { label: 'cuentacontable', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true, hidden: false },
+            { label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true, hidden: false },
             { label: 'Sap', name: 'sap', width: 100, align: 'left', search: true, editable: true, hidden: false },
             { label: 'Tarea', name: 'tarea', width: 100, align: 'left', search: true, editable: true, hidden: false },
-            { label: 'ART', name: 'codigoart', width: 100, align: 'left', search: true, editable: true, hidden: false },
+            { label: 'Nº ART', name: 'codigoart', width: 100, align: 'left', search: true, editable: true, hidden: false },
             {
                 label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
@@ -336,6 +351,19 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 }
             },
             { label: 'Valor Cuota', name: 'valorcuota', width: 100, align: 'left', search: true, editable: true, hidden: false },
+            { label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true },
+            { label: 'idfrecuencia', name: 'idfrecuencia', search: false, editable: true, hidden: true },
+            { label: 'Frecuencia', name: 'frecuenciafacturacion', search: true, editable: false, hidden: false },
+            { label: 'Plazo Contrato', name: 'idplazocontrato', search: false, editable: true, hidden: true },
+            { label: 'Plazo Contrato', name: 'plazocontrato', search: true, editable: false, hidden: false },
+            { label: 'Condición', name: 'idcondicion', search: false, editable: true, hidden: true },
+            { label: 'Condición', name: 'condicionnegociacion', search: true, editable: false, hidden: false },
+            { label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false },
+            { label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
+            { label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true },
+            { label: 'Estado', name: 'idestadocto', search: false, editable: true, hidden: true },
+            { label: 'Estado', name: 'estadocontrato', search: true, editable: false, hidden: false },
+            { label: 'Glosa', name: 'glosaservicio', search: true, editable: false, hidden: false }            
         ],
         viewrecords: true,
         shrinkToFit: false,
@@ -364,6 +392,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
         {},
         {}
     );
+    $('#' + subgrid_table_id).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").children("span.ui-jqgrid-title").css("background-color", "Lime");
 
     $("#" + pager_id + "_left").css("width", "");
 
