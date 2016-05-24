@@ -27,7 +27,7 @@ exports.getPresupuestoPaginados = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
     "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
-    "JOIN sip.ejercicios c ON c.id=a.idejercicio) "+
+    "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) "+
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -50,7 +50,7 @@ exports.getPresupuestoPaginados = function (req, res) {
         "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
         "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
         "JOIN sip.ejercicios c ON c.id=a.idejercicio "+
-        "WHERE " + condition.substring(0, condition.length - 4) + ") " +
+        "WHERE " + condition.substring(0, condition.length - 4) + "  ORDER BY id desc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
         console.log(sql);
@@ -192,7 +192,7 @@ exports.getUsersByRol = function (req, res) {
 
 exports.getCUIs = function (req, res) {
 
-  var sql = "SELECT cui, nombre FROM sip.estructuracui "+ 
+  var sql = "SELECT id, nombre FROM sip.estructuracui "+ 
     "ORDER BY nombre";
       
   sequelize.query(sql)
@@ -223,7 +223,7 @@ exports.action = function (req, res) {
         idejercicio: req.body.idejercicio,
         idcui: req.body.idcui,
         descripcion: req.body.descripcion,
-        estado: 1,
+        estado: 'ingresado',
         version: 1, 
         borrado: 1
       }).then(function (iniciativa) {
@@ -235,13 +235,10 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.Iniciativa.update({
+      models.presupuesto.update({
         idejercicio: req.body.idejercicio,
         idcui: req.body.idcui,
-        descripcion: req.body.descripcion,
-        estado: 1,
-        version: 1, 
-        borrado: 1
+        descripcion: req.body.descripcion
       }, {
           where: {
             id: req.body.id
@@ -254,7 +251,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.Iniciativa.destroy({
+      models.presupuesto.destroy({
         where: {
           id: req.body.id
         }

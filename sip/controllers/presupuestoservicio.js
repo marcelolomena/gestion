@@ -27,7 +27,7 @@ exports.getPresupuestoServicios = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, c.nombre, b.cuentacontable, b.nombrecuenta, d.moneda, a.montoforecast, a.montoanual " +
+    "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
     "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta  " +
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
@@ -51,7 +51,7 @@ exports.getPresupuestoServicios = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, c.nombre, b.cuentacontable, b.nombrecuenta, d.moneda, a.montoforecast, a.montoanual " +
+        "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
         "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta  " +
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
@@ -183,3 +183,87 @@ exports.getExcel = function (req, res) {
     });
   
 };
+
+
+exports.getServicios = function (req, res) {
+
+  var sql = "SELECT id, nombre FROM sip.servicio "+ 
+    "ORDER BY nombre";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+
+exports.getMonedas = function (req, res) {
+
+  var sql = "SELECT id, moneda FROM sip.moneda";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.action = function (req, res) {
+  var action = req.body.oper;
+  var idPre = req.params.id
+  
+  switch (action) {
+    case "add":
+      models.detallepre.create({
+        idpresupuesto: idPre,
+        idservicio: req.body.idservicio,
+        idmoneda: req.body.idmoneda,
+        montoforecast: req.body.montoforecast,
+        montoanual: req.body.montoanual, 
+        borrado: 1
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+    case "edit":
+      models.detallepre.update({
+        idservicio: req.body.idservicio,
+        idmoneda: req.body.idmoneda,
+        montoforecast: req.body.montoforecast,
+        montoanual: req.body.montoanual 
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      models.detallepre.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          console.log('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+
+}
