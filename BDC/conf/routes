@@ -662,3 +662,4 @@ GET    /histograma-excel 			                                                    
 # User Story
 GET	   /userStory																				  		controllers.Frontend.UserStory.home
 GET	   /userStoryList																				 	controllers.Frontend.UserStory.list
+GET	   /listScenario/$id<[A-Za-z0-9_-]+>											  	          		controllers.Frontend.UserStory.listScenario(id:String)
