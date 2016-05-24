@@ -28,6 +28,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
     templateServicio += "</div>";
+    
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Cui{idcui}</div>";
+    templateServicio += "<div class='column-half'>Cuenta{cuentacontable}</div>";
+    templateServicio += "</div>";    
 
     templateServicio += "<hr style='width:100%;'/>";
     templateServicio += "<div> {sData} {cData}  </div>";
@@ -65,13 +70,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             }
                         });
                         return s + "</select>";
-                    },
-                    dataEvents: [{
-                        type: 'change', fn: function (e) {
-                            var thistid = $(this).val();
-                            $("input#estadosolicitud").val($('option:selected', this).text());
-                        }
-                    }],
+                    }
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
