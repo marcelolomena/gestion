@@ -12,6 +12,7 @@ var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
+var cuiController = require('../controllers/estructuracui');
 var servicioController = require('../controllers/servicio');
 
 var express = require('express');
@@ -144,7 +145,6 @@ module.exports = function (passport) {
 	router.route('/iniciativaprograma/:id')
 		.post(isAuthenticated, iniciativaprogramaController.list)
 
-
 	router.route('/usuarios_por_rol/:rol')
 		.get(isAuthenticated, iniciativaController.getUsersByRol);
 
@@ -188,6 +188,9 @@ module.exports = function (passport) {
 
     router.route('/servicios')
         .get(isAuthenticated, servicioController.getServicios);
+		
+    router.route('/cui')
+        .get(isAuthenticated, cuiController.getEstructuraCui);		
 
 	return router;
 

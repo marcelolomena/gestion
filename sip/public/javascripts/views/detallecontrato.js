@@ -12,7 +12,6 @@ function showSubGrids(subgrid_id, row_id) {
     }
 }
 
-
 function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
@@ -29,7 +28,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
     templateServicio += "</div>";
-    
+
     templateServicio += "<hr style='width:100%;'/>";
     templateServicio += "<div> {sData} {cData}  </div>";
     templateServicio += "</div>";
@@ -46,12 +45,38 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             { label: 'id', name: 'id', key: true, hidden: true },
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },
             {
-                label: 'idcui', name: 'idcui', search: false, editable: false, hidden: true,
-                
+                label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/cui',
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.cui;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Cui--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].cui + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].cui + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thistid = $(this).val();
+                            $("input#estadosolicitud").val($('option:selected', this).text());
+                        }
+                    }],
+                }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'cui', name: 'cui', search: true, editable: false, hidden: false,
-                jsonmap: "EstructuraCui.cui"
+                label: 'Cui', name: 'cui', search: true, editable: false, hidden: false,
+                jsonmap: "EstructuraCui.nombre"
             },
             {
                 label: 'idservicio', name: 'idservicio', search: false, editable: true, hidden: true,
@@ -276,88 +301,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     $("#" + pager_id + "_left").css("width", "");
 
-    /*
-        $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
-            {
-                editCaption: "Modifica Servicio",
-                closeAfterEdit: true,
-                recreateForm: true,
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                template: tmpl,
-                errorTextFormat: function (data) {
-                    return 'Error: ' + data.responseText
-                }, afterSubmit: function (response, postdata) {
-                    var json = response.responseText;
-                    var result = JSON.parse(json);
-                    if (result.error_code != 0)
-                        return [false, result.error_text, ""];
-                    else
-                        return [true, "", ""]
-                }, beforeShowForm: function (form) {
-                    sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
-                }, afterShowForm: function (form) {
-                    sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
-                }
-            },
-            {
-                addCaption: "Agrega Servicio",
-                closeAfterAdd: true,
-                recreateForm: true,
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                template: tmpl,
-                errorTextFormat: function (data) {
-                    return 'Error: ' + data.responseText
-                }, beforeSubmit: function (postdata, formid) {
-                    if (postdata.iddivision == 0) {
-                        return [false, "División: Debe escoger un valor", ""];
-                    } if (postdata.uidgerente == 0) {
-                        return [false, "Gerente: Debe escoger un valor", ""];
-                    } if (postdata.uidpmo == 0) {
-                        return [false, "PMO: Debe escoger un valor", ""];
-                    } if (postdata.idestado == 0) {
-                        return [false, "Estado: Debe escoger un valor", ""];
-                    } if (postdata.idcategoria == 0) {
-                        return [false, "Categoría: Debe escoger un valor", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                }, afterSubmit: function (response, postdata) {
-                    var json = response.responseText;
-                    var result = JSON.parse(json);
-                    if (result.error_code != 0) {
-                        return [false, result.error_text, ""];
-                    } else {
-                        var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                        $('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
-                        return [true, "", ""];
-                    }
-                }, beforeShowForm: function (form) {
-                    sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
-                }, afterShowForm: function (form) {
-                    sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
-                }
-            },
-            {
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                errorTextFormat: function (data) {
-                    return 'Error: ' + data.responseText
-                }, afterSubmit: function (response, postdata) {
-                    var json = response.responseText;
-                    var result = JSON.parse(json);
-                    if (result.error_code != 0)
-                        return [false, result.error_text, ""];
-                    else
-                        return [true, "", ""]
-                }
-            },
-            {
-                recreateFilter: true
-            }
-        );
-    */
 }
 
 function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
@@ -369,8 +312,6 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
         subgrid_table_id += suffix;
         pager_id += suffix;
     }
-
-    //console.log("{2} pager_id : " + pager_id);
 
     $('#' + subgrid_id).append('<table id=' + subgrid_table_id + ' class=scroll></table><div id=' + pager_id + ' class=scroll></div>');
 
@@ -516,5 +457,4 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
 
     $("#" + pager_id + "_left").css("width", "");
 
-    //$('#' + subgrid_table_id).bindKeys();
 }
