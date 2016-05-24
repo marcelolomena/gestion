@@ -1,5 +1,9 @@
 var models = require('../models');
 var proveedorController = require('../controllers/proveedor');
+
+
+var contactoController = require("../controllers/contacto")
+
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
@@ -59,10 +63,22 @@ module.exports = function (passport) {
 		res.render('proveedores', { user: req.user });
 	});
 
-	router.route('/proveedores/list')
-		.post(isAuthenticated, proveedorController.postProveedores)
-		.get(isAuthenticated, proveedorController.getProveedores)
-		.get(isAuthenticated, proveedorController.getProveedoresPaginados);
+	//router.route('/proveedores/list')
+	//	.post(isAuthenticated, proveedorController.postProveedores)
+	//	.get(isAuthenticated, proveedorController.getProveedores)
+	//	.get(isAuthenticated, proveedorController.getProveedoresPaginados);
+		
+    router.route('/proveedores/list')
+        .get(isAuthenticated, proveedorController.getProveedoresPaginados);
+		
+	router.route('/proveedores/del')
+		.post(isAuthenticated, proveedorController.del);
+		
+	router.route('/proveedores/update')
+		.post(isAuthenticated, proveedorController.update);
+			
+    router.route('/contactos/list/:id')
+       .get(isAuthenticated, contactoController.getContacto);
 
 	// Create endpoint handlers for /proveedores/:id
 	router.route('/proveedores/:id')
