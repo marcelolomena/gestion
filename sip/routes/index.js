@@ -198,7 +198,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, presupuestoController.getCUIs);        
 
     router.route('/presupuesto/action')
-        .get(isAuthenticated, presupuestoController.action);  
+        .post(isAuthenticated, presupuestoController.action);  
 		
     router.route('/ejercicios')
         .get(isAuthenticated, presupuestoController.getEjercicios);   
