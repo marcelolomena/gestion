@@ -8,3 +8,14 @@ exports.getPrograma = function (req, res) {
         res.send(err);
     });
 };
+
+exports.getProgramas = function (req, res) {
+
+    models.Programa.findAll({ where: { 'is_active': 1 }, order: 'program_name' }).then(function (programa) {
+        res.json(programa);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+};

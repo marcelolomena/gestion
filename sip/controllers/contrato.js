@@ -1,10 +1,10 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
+var utilSeq = require('../utils/seq');
 
 var log = function (inst) {
   console.dir(inst.get())
 }
-// Create endpoint /contratos for GET
 
 exports.action = function (req, res) {
   var action = req.body.oper;
@@ -13,25 +13,17 @@ exports.action = function (req, res) {
     case "add":
       models.Contrato.create({
         tipocontrato: req.body.tipocontrato,
-        tipooc: req.body.tipooc,
+        tipodocumento: req.body.tipodocumento,
         solicitudcontrato: req.body.solicitudcontrato,
+        idtiposolicitud: req.body.idtiposolicitud,
+        tiposolicitud: req.body.tiposolicitud,
+        idestadosol: req.body.idestadosol,
+        estadosolicitud: req.body.estadosolicitud,
         numero: req.body.numero,
-        anexo: req.body.anexo,
         nombre: req.body.nombre,
-        solicitudcontratoes: req.body.solicitudcontratoes,
-        sap: req.body.sap,
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
-        codigoart: req.body.codigoart,
-        fechainicontrato: req.body.fechainicontrato,
-        fechatercontrato: req.body.fechatercontrato,
-        fechacontrol: req.body.fechacontrol,
-        meses: req.body.meses,
-        estado: req.body.estado,
-        plazocontrato: req.body.plazocontrato,
-        montototal: req.body.montototal,
-        condicionnegociacion: req.body.condicionnegociacion,
-        frecuenciafacturacion: req.body.frecuenciafacturacion,
+        pmoresponsable: req.body.pmoresponsable,
         borrado: 1
       }).then(function (contrato) {
         res.json({ error_code: 0 });
@@ -44,26 +36,17 @@ exports.action = function (req, res) {
     case "edit":
       models.Contrato.update({
         tipocontrato: req.body.tipocontrato,
-        tipooc: req.body.tipooc,
+        tipodocumento: req.body.tipodocumento,
         solicitudcontrato: req.body.solicitudcontrato,
+        idtiposolicitud: req.body.idtiposolicitud,
+        tiposolicitud: req.body.tiposolicitud,
+        idestadosol: req.body.idestadosol,
+        estadosolicitud: req.body.estadosolicitud,
         numero: req.body.numero,
-        anexo: req.body.anexo,
         nombre: req.body.nombre,
-        solicitudcontratoes: req.body.solicitudcontratoes,
-        sap: req.body.sap,
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
-        codigoart: req.body.codigoart,
-        fechainicontrato: req.body.fechainicontrato,
-        fechatercontrato: req.body.fechatercontrato,
-        fechacontrol: req.body.fechacontrol,
-        meses: req.body.meses,
-        estado: req.body.estado,
-        plazocontrato: req.body.plazocontrato,
-        montototal: req.body.montototal,
-        condicionnegociacion: req.body.condicionnegociacion,
-        frecuenciafacturacion: req.body.frecuenciafacturacion,
-        borrado: 1
+        pmoresponsable: req.body.pmoresponsable
       }, {
           where: {
             id: req.body.id
@@ -74,8 +57,6 @@ exports.action = function (req, res) {
           console.log(err);
           res.json({ error_code: 1 });
         });
-
-
       break;
     case "del":
       models.Contrato.destroy({
@@ -98,7 +79,7 @@ exports.action = function (req, res) {
 }
 
 exports.list = function (req, res) {
-  // Use the Contratos model to find all contratos
+
   var page = req.body.page;
   var rows = req.body.rows;
   var filters = req.body.filters;
@@ -113,91 +94,32 @@ exports.list = function (req, res) {
 
   var orden = "[Contrato]." + sidx + " " + sord;
 
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
-
-    if (JSON.stringify(jsonObj.rules) != '[]') {
-
-      var condition = [];
-      jsonObj.rules.forEach(function (item) {
-
-        if (item.op === 'cn') {
-          condition.push(item.field + " like '%" + item.data + "%'");
-        }
-      });
-
+  utilSeq.buildCondition(filters, function (err, data) {
+    if (err) {
+      console.log("->>> " + err)
+    } else {
       models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
-
-      models.Contrato.count({ where: condition }).then(function (records) {
+      models.Contrato.count({
+        where: data
+      }).then(function (records) {
         var total = Math.ceil(records / rows);
-
         models.Contrato.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: condition,
+          where: data,
           include: [{
             model: models.Proveedor
           }]
         }).then(function (contratos) {
-          //contratos.forEach(log)
+          //Contrato.forEach(log)
           res.json({ records: records, total: total, page: page, rows: contratos });
         }).catch(function (err) {
           //console.log(err);
           res.json({ error_code: 1 });
         });
-
       })
-
-    } else {
-
-      models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
-
-      models.Contrato.count().then(function (records) {
-        var total = Math.ceil(records / rows);
-
-        models.Contrato.findAll({
-          offset: parseInt(rows * (page - 1)),
-          limit: parseInt(rows),
-          order: orden,
-          include: [{
-            model: models.Proveedor
-          }]
-        }).then(function (contratos) {
-          //contratos.forEach(log)
-          res.json({ records: records, total: total, page: page, rows: contratos });
-        }).catch(function (err) {
-          console.log(err);
-          //res.json({ error_code: 1 });
-        });
-
-      })
-
     }
+  });
 
-  } else {
-
-    models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
-
-    models.Contrato.count().then(function (records) {
-      var total = Math.ceil(records / rows);
-
-      models.Contrato.findAll({
-        offset: parseInt(rows * (page - 1)),
-        limit: parseInt(rows),
-        order: orden,
-        include: [{
-          model: models.Proveedor
-        }]
-      }).then(function (contratos) {
-        //contratos.forEach(log)
-        res.json({ records: records, total: total, page: page, rows: contratos });
-      }).catch(function (err) {
-        console.log(err);
-        //res.json({ error_code: 1 });
-      });
-
-    })
-
-  }
 };

@@ -45,6 +45,14 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>Presupuesto Inversión (USD) {pptoestimadoinversion}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row' style='display: none;'>";
+    tmpl += "<div class='column-half'>estado {estado}</div>";
+    tmpl += "<div class='column-half'>categoria {categoria}</div>";
+    tmpl += "<div class='column-half'>pmoresponsable {pmoresponsable}</div>";
+    tmpl += "<div class='column-half'>gerenteresponsable {gerenteresponsable}</div>";
+    tmpl += "<div class='column-half'>divisionsponsor {divisionsponsor}</div>";
+    tmpl += "</div>";
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -97,6 +105,14 @@ $(document).ready(function () {
     tmplP += "<div class='column-half'>Presupuesto Inversión {pptoestimadoinversion}</div>";
     tmplP += "</div>";
 
+    tmplP += "<div class='form-row' style='display: none;'>";
+    tmplP += "<div class='column-half'>estado {estado}</div>";
+    tmplP += "<div class='column-half'>categoria {categoria}</div>";
+    tmplP += "<div class='column-half'>pmoresponsable {pmoresponsable}</div>";
+    tmplP += "<div class='column-half'>gerenteresponsable {gerenteresponsable}</div>";
+    tmplP += "<div class='column-half'>divisionsponsor {divisionsponsor}</div>";
+    tmplP += "</div>";
+
     tmplP += "<hr style='width:100%;'/>";
     tmplP += "<div> {sData} {cData}  </div>";
     tmplP += "</div>";
@@ -128,12 +144,18 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#divisionsponsor").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
         {
-            label: 'División', name: 'divisionsponsor', search: true, editable: false, width: 200, align: 'left', hidden: false,
+            label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         {
             label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
@@ -222,12 +244,17 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#gerenteresponsable").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left',
-            search: true, editable: false, hidden: false
+            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         {
             label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
@@ -250,12 +277,17 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#pmoresponsable").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
-            search: true, editable: true, hidden: false,
+            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
         { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
@@ -263,7 +295,7 @@ $(document).ready(function () {
             label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/categorias',
+                dataUrl: '/parameters/categoria',
                 buildSelect: function (response) {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
@@ -280,11 +312,34 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#categoria").val($('option:selected', this).text());
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
-        { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true },
+        {
+            label: 'Categoria', name: 'categoria', width: 150, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Estado', name: 'estado', width: 150, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Año', name: 'ano', width: 150, align: 'left', search: true, editable: true,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }
+            }, searchoptions: {
+                // show search options
+                sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
+            }
+        },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
         { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
         { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
@@ -312,26 +367,37 @@ $(document).ready(function () {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
-        { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
+        { label: 'Moneda', name: 'idmoneda', search: true, editable: false, hidden: true },
         {
-            label: 'Presupuesto Gasto', name: 'pptoestimadogasto', width: 150, align: 'right',
+            label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
         {
-            label: 'Presupuesto Inversión', name: 'pptoestimadoinversion', width: 150, align: 'right',
+            label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
         {
             label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/iniciativaestado',
+                dataUrl: '/parameters/estadoiniciativa',
                 buildSelect: function (response) {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
@@ -352,20 +418,15 @@ $(document).ready(function () {
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#estado").val($('option:selected', this).text());
-                        //console.log("id :" + $(this).val());
-                        //console.log("text :" + $('option:selected', this).text());
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        {
-            label: 'Estado', name: 'estado', search: true, editable: false, hidden: false
         },
     ];
 
     $("#table_iniciativa").jqGrid({
         url: '/iniciativas/list',
-        mtype: "GET",
+        mtype: "POST",
         datatype: "json",
         page: 1,
         colModel: modelIniciativa,
@@ -378,7 +439,7 @@ $(document).ready(function () {
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        editurl: '/iniciativas/new',
+        editurl: '/iniciativas/action',
         styleUI: "Bootstrap",
         subGrid: true,
         subGridRowExpanded: gridIniciativaPrograma,
@@ -399,8 +460,8 @@ $(document).ready(function () {
             editCaption: "Modifica Iniciativa",
             closeAfterEdit: true,
             recreateForm: true,
-            mtype: 'POST',
-            url: '/iniciativas/update',
+            //mtype: 'POST',
+            //url: '/iniciativas/update',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: tmpl,
@@ -415,16 +476,18 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
             addCaption: "Agrega Iniciativa",
             closeAfterAdd: true,
             recreateForm: true,
-            mtype: 'POST',
-            url: '/iniciativas/add',
+            //mtype: 'POST',
+            //url: '/iniciativas/add',
             ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,            
+            serializeEditData: sipLibrary.createJSON,
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -454,11 +517,11 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
-            mtype: 'POST',
-            url: '/iniciativas/del',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             errorTextFormat: function (data) {
@@ -493,11 +556,10 @@ $(document).ready(function () {
     function gridIniciativaPrograma(parentRowID, parentRowKey) {
         var childGridID = parentRowID + "_table";
         var childGridPagerID = parentRowID + "_pager";
-        var childGridURL = "/programa/" + parentRowKey;
+        var childGridURL = "/iniciativaprograma/" + parentRowKey;
 
         var modelIniciativaPrograma = [
             { label: 'id', name: 'id', key: true, hidden: true },
-            //{ label: 'idiniciativa', name: 'idiniciativa', hidden: true, editable: true, editrules: {edithidden: false} },
             {
                 label: 'program_id', name: 'program_id', hidden: true, editable: true,
                 width: 200, align: 'left',
@@ -521,7 +583,20 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thispid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/programa/' + thispid,
+                                async: false,
+                                success: function (data) {
+                                    $("input#codigoart").val(data.program_code);
+                                }
+                            });
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true },
@@ -550,12 +625,18 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#divisionsponsor").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
 
             },
             {
-                label: 'División', name: 'divisionsponsor', search: true, editable: false, width: 200, align: 'left', hidden: false,
+                label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
             },
             {
                 label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
@@ -600,7 +681,6 @@ $(document).ready(function () {
                 editoptions: {
                     dataInit: function (element) {
                         window.setTimeout(function () {
-                            //$(element).width(200);
                             $(element).attr("autocomplete", "off").typeahead({
                                 appendTo: "body",
                                 source: function (request, response) {
@@ -644,12 +724,17 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#gerenteresponsable").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left',
-                search: true, editable: false, hidden: false
+                label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
             },
             {
                 label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
@@ -672,12 +757,17 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#pmoresponsable").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
-                search: true, editable: true, hidden: false,
+                label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
             },
             { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
             { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
@@ -685,7 +775,7 @@ $(document).ready(function () {
                 label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/categorias',
+                    dataUrl: '/parameters/categoria',
                     buildSelect: function (response) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
@@ -702,11 +792,31 @@ $(document).ready(function () {
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#categoria").val($('option:selected', this).text());
+                        }
+                    }],
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
-            { label: 'Categoria', name: 'categoria', width: 100, align: 'left', search: true, editable: false, hidden: false },
-            { label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true },
+            {
+                label: 'Categoria', name: 'categoria', width: 150, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            },
+            {
+                label: 'Estado', name: 'estado', width: 150, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            },
+            {
+                label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true,
+                editoptions: {
+                    dataInit: function (element) {
+                        $(element).mask("0000", { placeholder: "____" });
+
+                    }
+                }
+            },
             { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
             { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
             { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
@@ -734,26 +844,37 @@ $(document).ready(function () {
                 editoptions: {
                     size: 10, maxlengh: 10,
                     dataInit: function (element) {
+                        $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                         $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                     }
                 }
             },
             { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
             {
-                label: 'Presupuesto Gasto (USD)', name: 'pptoestimadogasto', width: 150, align: 'right',
+                label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
                 search: true, editable: true, hidden: false,
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
             },
             {
-                label: 'Presupuesto Inversión (USD)', name: 'pptoestimadoinversion', width: 150, align: 'right',
+                label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
                 search: true, editable: true, hidden: false,
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
             },
             {
                 label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/iniciativaestado',
+                    dataUrl: '/parameters/estadoiniciativa',
                     buildSelect: function (response) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
@@ -774,14 +895,9 @@ $(document).ready(function () {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
                             $("input#estado").val($('option:selected', this).text());
-                            //console.log("id :" + $(this).val());
-                            //console.log("text :" + $('option:selected', this).text());
                         }
                     }],
                 }, dataInit: function (elem) { $(elem).width(200); }
-            },
-            {
-                label: 'Estado', name: 'estado', search: true, editable: false, hidden: false
             }
         ];
 
@@ -790,7 +906,7 @@ $(document).ready(function () {
 
         $("#" + childGridID).jqGrid({
             url: childGridURL,
-            mtype: "GET",
+            mtype: "POST",
             datatype: "json",
             page: 1,
             colModel: modelIniciativaPrograma,
@@ -799,6 +915,7 @@ $(document).ready(function () {
             regional: 'es',
             height: 'auto',
             pager: "#" + childGridPagerID,
+            editurl: '/iniciativaprograma/action',
             gridComplete: function () {
                 var recs = $("#" + childGridID).getGridParam("reccount");
                 if (isNaN(recs) || recs == 0) {
@@ -808,14 +925,10 @@ $(document).ready(function () {
             }
         });
 
-
         $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
             {
                 closeAfterEdit: true,
                 recreateForm: true,
-                mtype: 'POST',
-                url: '/iniciativasprograma/update',
-                modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 editCaption: "Modifica Iniciativa Programa",
@@ -831,21 +944,25 @@ $(document).ready(function () {
                         return [true, "", ""]
                 }, beforeShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                    $('input#codigoart', form).attr('readonly', 'readonly');
+                }, afterShowForm: function (form) {
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 }
             },
             {
                 closeAfterAdd: true,
                 recreateForm: true,
-                mtype: 'POST',
-                url: '/iniciativasprograma/add/' + parentRowKey,
-                modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                addCaption: "Agrega Iniciativa Programa",
+                addCaption: "Agregar Iniciativa Programa",
                 template: tmplP,
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
-                }, afterSubmit: function (response, postdata) {
+                },
+                onclickSubmit: function (rowid) {
+                    return {  parent_id: parentRowKey,kaka:'algo'};
+                },
+                afterSubmit: function (response, postdata) {
                     var json = response.responseText;
                     var result = JSON.parse(json);
                     if (result.error_code != 0)
@@ -859,14 +976,9 @@ $(document).ready(function () {
                         url: '/iniciativas/' + parentRowKey,
                         async: false,
                         success: function (data) {
-                            //$("#idiniciativa", form).val(parentRowKey);
                             $("#nombre", form).val(data.nombre);
                             $("#sponsor1", form).val(data.sponsor1);
                             $("#sponsor2", form).val(data.sponsor2);
-                            //$("#pmoresponsable", form).val(data.pmoresponsable);
-                            //$("#gerenteresponsable", form).val(data.gerenteresponsable);
-                            //$("#tipo", form).val(data.tipo);
-                            //$("#categoria", form).val(data.categoria);
                             $("#q1", form).val(data.q1);
                             $("#q2", form).val(data.q2);
                             $("#q3", form).val(data.q3);
@@ -877,14 +989,23 @@ $(document).ready(function () {
                             $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion);
                         }
                     });
-
+                    $.ajax({
+                        type: "GET",
+                        url: '/iniciativasprograma/codigoart/' + parentRowKey,
+                        async: false,
+                        success: function (data) {
+                            if (data.error_code == 0)
+                                $("#codigoart", form).val(data.codigoart);
+                        }
+                    });
+                    $('input#codigoart', form).attr('readonly', 'readonly');
+                }, afterShowForm: function (form) {
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 }
             },
             {
                 closeAfterDelete: true,
                 recreateForm: true,
-                mtype: 'POST',
-                url: '/iniciativasprograma/del',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 addCaption: "Elimina Iniciativa",

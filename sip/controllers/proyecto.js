@@ -110,7 +110,7 @@ exports.getExcel = function (req, res) {
   },
     {
       caption: 'Numero Proyecto',
-      type: 'string',
+      type: 'number',
       width: 15
     },
     {
@@ -237,32 +237,6 @@ exports.getExcel = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-
-  if (filters) {
-    console.log("Con filtros");
-    var jsonObj = JSON.parse(filters);
-
-    jsonObj.rules.forEach(function (item) {
-
-      if (item.op === 'cn')
-        condition += item.field + " like '%" + item.data + "%' AND"
-    });
-
-    models.Proyecto.findAll().then(function (proyecto) {
-
-      conf.rows = proyecto;
-      var result = nodeExcel.execute(conf);
-      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "Proyectos.xlsx");
-      res.end(result, 'binary');
-
-    }).catch(function (err) {
-      console.log(err);
-      res.json({ error_code: 1 });
-    });
-
-  } else {
-    console.log("Sin filtros");
    
     var sql = "SELECT id, sap, nombre, numerotarea, nombretarea, presupuestooriginal, presupuestoactual, estado, tipoproyecto,  " +
     "presupuestogasto, presupuestoinversion, compromisogasto, compromisoinversion, realacumuladogasto,  " +
@@ -322,7 +296,6 @@ exports.getExcel = function (req, res) {
       console.log(err);
       res.json({ error_code: 100 });
     });
-  }
 
 };
 
