@@ -925,7 +925,8 @@ $(document).ready(function () {
             }
         });
 
-        $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+        $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+             edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
             {
                 closeAfterEdit: true,
                 recreateForm: true,

@@ -2,15 +2,11 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>CUIiii {idcui}</div>";
+    tmpl += "<div class='column-full'>CUI {idcui}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Ejercicio {ejercicio}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Versión {version}</div>";
+    tmpl += "<div class='column-full'>Ejercicio {idejercicio}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -25,7 +21,7 @@ $(document).ready(function () {
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
 
-    var modelProyecto = [
+    var modelPresupuesto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
             label: 'CUI', name: 'CUI', width: 200, align: 'left', search: false, editable: true,
@@ -41,12 +37,11 @@ $(document).ready(function () {
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.CUI;
-                    console.log(response);
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].CUI == thissid) {
+                        if (data[i].cui == thissid) {
                             s += '<option value="' + data[i].cui + '" selected>' + data[i].nombre + '</option>';
                         } else {
                             s += '<option value="' + data[i].cui + '">' + data[i].nombre + '</option>';
@@ -63,16 +58,43 @@ $(document).ready(function () {
         },
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
         { label: 'Responsable CUI', name: 'responsable', width: 250, align: 'left', search: false, editable: true },
-        { label: 'Ejercicio', name: 'ejercicio', width: 100, align: 'left', search: false, editable: true },
+        {
+            label: 'Ejercicio', name: 'ejercicio', width: 200, align: 'left', search: false, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },        
+        { label: 'Ejercicio', name: 'idejercicio', width: 100, align: 'left', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/ejercicios',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idejercicio;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Ejercicio--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].ejercicio + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].ejercicio + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }    
+        },
         { label: 'Versión', name: 'version', width: 100, align: 'left', search: false, editable: true },
-        { label: 'Nombre', name: 'descripcion', width: 150, align: 'left', search: false }
+        { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false, editable: true }
     ];
     $("#grid").jqGrid({
         url: '/presupuestolist',
         mtype: "GET",
         datatype: "json",
         page: 1,
-        colModel: modelProyecto,
+        colModel: modelPresupuesto,
         rowNum: 10,
         regional: 'es',
         height: 'auto',
@@ -98,14 +120,14 @@ $(document).ready(function () {
 
     $('#grid').jqGrid('navGrid', "#pager", {
         add: true,
-        edit: false,
+        edit: true,
         del: false,
         refresh: true,
         search: false, // show search button on the toolbar        
         cloneToTop: false
     },
         {
-            addCaption: "Agrega Presupuesto0000",
+            addCaption: "Agrega Presupuesto",
             closeAfterAdd: true,
             recreateForm: true,
             //mtype: 'POST',
@@ -131,7 +153,7 @@ $(document).ready(function () {
             }
         },
         {
-            addCaption: "Modifica Presupuesto",
+            editCaption: "Modifica Presupuesto",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -141,6 +163,23 @@ $(document).ready(function () {
                 return 'Error: ' + data.responseText
             }
         },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Elimina Presupuesto",
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }
+        },        
         {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText

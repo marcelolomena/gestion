@@ -201,3 +201,75 @@ exports.getCUIs = function (req, res) {
     });
 
 };
+
+
+exports.getEjercicios = function (req, res) {
+
+  var sql = "SELECT id, ejercicio FROM sip.ejercicios";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.action = function (req, res) {
+  var action = req.body.oper;
+
+  switch (action) {
+    case "add":
+      models.presupuesto.create({
+        idejercicio: req.body.idejercicio,
+        idcui: req.body.idcui,
+        descripcion: req.body.descripcion,
+        estado: 1,
+        version: 1, 
+        borrado: 1
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+    case "edit":
+      models.Iniciativa.update({
+        idejercicio: req.body.idejercicio,
+        idcui: req.body.idcui,
+        descripcion: req.body.descripcion,
+        estado: 1,
+        version: 1, 
+        borrado: 1
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      models.Iniciativa.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          console.log('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+
+}

@@ -180,6 +180,12 @@ module.exports = function (passport) {
     router.route('/CUIs')
         .get(isAuthenticated, presupuestoController.getCUIs);        
 
+    router.route('/presupuesto/action')
+        .get(isAuthenticated, presupuestoController.action);  
+		
+    router.route('/ejercicios')
+        .get(isAuthenticated, presupuestoController.getEjercicios);   
+ 
     router.route('/presupuestoservicios/:id')
         .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);
 
