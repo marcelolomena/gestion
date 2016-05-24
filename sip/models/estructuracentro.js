@@ -1,54 +1,54 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('EstructuraCui', {
+  return sequelize.define('EstructuraCentro', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    idestructura: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'EstructuraCentro',
-        key: 'id'
-      }
-    },
-    secuencia: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    cui: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
     nombre: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    cuipadre: {
+    iddivision: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    uid: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    nombreresponsable: {
+    division: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    idgerencia: {
+    niveles: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    gerencia: {
+    glosanivel1: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombregerente: {
-      type: 'CHAR',
+    glosanivel2: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    glosanivel3: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    glosanivel4: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    glosanivel5: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    glosanivel6: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    glosanivel7: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {
@@ -56,6 +56,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'estructuracui'
+    schema: 'sip',timestamps: false,tableName: 'estructuracentro'
   });
 };
