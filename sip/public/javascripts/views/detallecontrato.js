@@ -323,7 +323,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Plazo', name: 'plazocontrato', search: true, editable: false, hidden: false,
+                label: 'Plazo', name: 'plazocontrato', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -350,13 +350,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            $("input#plazocontrato").val($('option:selected', this).text());
+                            $("input#condicionnegociacion").val($('option:selected', this).text());
                         }
                     }],
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Condición', name: 'condicionnegociacion', search: true, editable: false, hidden: false,
+                label: 'Condición', name: 'condicionnegociacion', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             { label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false },
@@ -416,7 +416,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Estado', name: 'estadocontrato', search: true, editable: false, hidden: false,
+                label: 'Estado', name: 'estadocontrato', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             { label: 'Glosa', name: 'glosaservicio', search: true, editable: true, hidden: false }
@@ -487,7 +487,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"servicio\",\"op\":\"cn\",\"data\":\"" + postdata.servicio + "\"}]}";
                     $('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
