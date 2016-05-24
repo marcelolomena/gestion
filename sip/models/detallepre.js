@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idpresupuesto: {
       type: DataTypes.INTEGER,
@@ -17,23 +18,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idcui: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    anexo: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    codigoart: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    partida: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'estructuracui',
+        key: 'id'
+      }
     },
     idservicio: {
       type: DataTypes.INTEGER,
@@ -45,22 +34,22 @@ module.exports = function(sequelize, DataTypes) {
     },
     idcuenta: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'cuentascontables',
-        key: 'id'
-      }
+      allowNull: true
     },
-    idproveedor: {
+    idmoneda: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'proveedor',
+        model: 'moneda',
         key: 'id'
       }
     },
-    contrato: {
-      type: DataTypes.INTEGER,
+    montoforecast: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoanual: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     borrado: {
