@@ -26,22 +26,22 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
-    templateServicio += "<div class='column-half'>Cuenta{idcuenta}</div>";      
+    templateServicio += "<div class='column-half'>Cuenta{idcuenta}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Cui{idcui}</div>";
-    templateServicio += "<div class='column-half'>Contacto{idcontactoproveedor}</div>";    
+    templateServicio += "<div class='column-half'>Contacto{idcontactoproveedor}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";    
+    templateServicio += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
     templateServicio += "<div class='column-half'>Fecha Término{fechatermino}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Fecha Control{fechacontrol}</div>";
-    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";    
+    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
@@ -55,8 +55,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";   
-    templateServicio += "<div class='column-half'>Descripción{glosaservicio}</div>";     
+    templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
+    templateServicio += "<div class='column-half'>Descripción{glosaservicio}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row' style='display: none;'>";
@@ -92,15 +92,15 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.cui;
+                        var thissid = rowData.id;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Cui--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].nombre == thissid) {
-                                s += '<option value="' + data[i].cui + '" selected>' + data[i].nombre + '</option>';
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                             } else {
-                                s += '<option value="' + data[i].cui + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                             }
                         });
                         return s + "</select>";

@@ -9,7 +9,7 @@ exports.action = function (req, res) {
     switch (action) {
         case "add":
             models.DetalleServicioCto.create({
-                idcontrato: req.body.idcontrato,
+                idcontrato: req.body.parent_id,
                 anexo: req.body.anexo,
                 idcui: req.body.idcui,
                 idservicio: req.body.idservicio,
