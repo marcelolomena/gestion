@@ -945,6 +945,8 @@ $(document).ready(function () {
                 }, beforeShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                     $('input#codigoart', form).attr('readonly', 'readonly');
+                }, afterShowForm: function (form) {
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 }
             },
             {

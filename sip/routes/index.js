@@ -13,6 +13,7 @@ var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
 var cuiController = require('../controllers/estructuracui');
+var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
 
 var express = require('express');
@@ -190,7 +191,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, servicioController.getServicios);
 		
     router.route('/cui')
-        .get(isAuthenticated, cuiController.getEstructuraCui);		
+        .get(isAuthenticated, cuiController.getEstructuraCui);
+
+    router.route('/cuentas')
+        .get(isAuthenticated, cuentaController.getCuentas);				
 
 	return router;
 
