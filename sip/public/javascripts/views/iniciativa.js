@@ -926,7 +926,8 @@ $(document).ready(function () {
         });
 
         $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-             edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+            edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        },
             {
                 closeAfterEdit: true,
                 recreateForm: true,
@@ -961,7 +962,7 @@ $(document).ready(function () {
                     return 'Error: ' + data.responseText
                 },
                 onclickSubmit: function (rowid) {
-                    return {  parent_id: parentRowKey,kaka:'algo'};
+                    return { parent_id: parentRowKey };
                 },
                 afterSubmit: function (response, postdata) {
                     var json = response.responseText;

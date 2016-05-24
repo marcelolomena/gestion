@@ -1,17 +1,33 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+
+
+exports.getContactos = function (req, res) {
+  //var idContrato = req.params.id
+
+
+  models.ContactoProveedor.findAll({ where: [{ 'borrado': 1 }, { 'idproveedor': req.params.id }], order: 'contacto' }).then(function (contacto) {
+    res.json(contacto);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
+  });
+
+
+};
+
 // Create endpoint /proyecto for GET
 exports.getContacto = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
   var rows = req.query.rows;
   var sidx = req.query.sidx;
-  var sord = req.query.sord;    
+  var sord = req.query.sord;
   var filters = req.query.filters;
   var condition = "";
   var id = req.params.id
-  var filtrosubgrilla = "idproveedor="+id;
+  var filtrosubgrilla = "idproveedor=" + id;
 
   if (!sidx)
     sidx = "contacto";
@@ -20,7 +36,7 @@ exports.getContacto = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-  
+
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -28,7 +44,7 @@ exports.getContacto = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, contacto,fono,correo " +
-    "FROM sip.contactoproveedor where idproveedor="+id+")" +
+    "FROM sip.contactoproveedor where idproveedor=" + id + ")" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -51,10 +67,10 @@ exports.getContacto = function (req, res) {
         "as resultNum, contacto,fono,correo " +
         "FROM sip.contactoproveedor WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-        
-        console.log(sql);
 
-      models.contactoproveedor.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      console.log(sql);
+
+      models.ContactoProveedor.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -64,7 +80,7 @@ exports.getContacto = function (req, res) {
 
     } else {
 
-      models.contactoproveedor.count({ where: [filtrosubgrilla] }).then(function (records) {
+      models.ContactoProveedor.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -75,7 +91,7 @@ exports.getContacto = function (req, res) {
 
   } else {
 
-    models.contactoproveedor.count({ where: [filtrosubgrilla] }).then(function (records) {
+    models.ContactoProveedor.count({ where: [filtrosubgrilla] }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {

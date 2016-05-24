@@ -1,9 +1,6 @@
 var models = require('../models');
 var proveedorController = require('../controllers/proveedor');
-
-
 var contactoController = require("../controllers/contacto")
-
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
@@ -216,7 +213,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, cuiController.getEstructuraCui);
 
     router.route('/cuentas')
-        .get(isAuthenticated, cuentaController.getCuentas);				
+        .get(isAuthenticated, cuentaController.getCuentas);	
+
+    router.route('/contactos/:id')
+        .get(isAuthenticated, contactoController.getContactos);						
 
 	return router;
 
