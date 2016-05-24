@@ -958,7 +958,7 @@ $(document).ready(function () {
                     return 'Error: ' + data.responseText
                 },
                 onclickSubmit: function (rowid) {
-                    return {  parent_id: parentRowKey};
+                    return {  parent_id: parentRowKey,kaka:'algo'};
                 },
                 afterSubmit: function (response, postdata) {
                     var json = response.responseText;

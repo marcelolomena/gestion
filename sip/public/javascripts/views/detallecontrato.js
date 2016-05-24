@@ -29,7 +29,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
     templateServicio += "</div>";
-    
+
     templateServicio += "<hr style='width:100%;'/>";
     templateServicio += "<div> {sData} {cData}  </div>";
     templateServicio += "</div>";
@@ -46,12 +46,38 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             { label: 'id', name: 'id', key: true, hidden: true },
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },
             {
-                label: 'idcui', name: 'idcui', search: false, editable: false, hidden: true,
-                
+                label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/cui',
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.cui;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Cui--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].cui + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].cui + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thistid = $(this).val();
+                            $("input#estadosolicitud").val($('option:selected', this).text());
+                        }
+                    }],
+                }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'cui', name: 'cui', search: true, editable: false, hidden: false,
-                jsonmap: "EstructuraCui.cui"
+                label: 'Cui', name: 'cui', search: true, editable: false, hidden: false,
+                jsonmap: "EstructuraCui.nombre"
             },
             {
                 label: 'idservicio', name: 'idservicio', search: false, editable: true, hidden: true,
