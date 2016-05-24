@@ -976,6 +976,7 @@ $(document).ready(function () {
                         type: "GET",
                         url: '/iniciativas/' + parentRowKey,
                         async: false,
+                        recreateForm:true,
                         success: function (data) {
                             $("#nombre", form).val(data.nombre);
                             $("#sponsor1", form).val(data.sponsor1);
@@ -984,10 +985,27 @@ $(document).ready(function () {
                             $("#q2", form).val(data.q2);
                             $("#q3", form).val(data.q3);
                             $("#q4", form).val(data.q4);
-                            $("#fechacomite", form).val(data.fechacomite);
+                            if(data.fechacomite){
+                                var fecha = new Date(data.fechacomite);
+                                $("#fechacomite", form).val(fecha.toISOString().substr(0,10));
+                            }
                             $("#ano", form).val(data.ano);
-                            $("#pptoestimadogasto", form).val(data.pptoestimadogasto);
-                            $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion);
+                            if(data.pptoestimadogasto){
+                                $("#pptoestimadogasto", form).val(data.pptoestimadogasto.toFixed(2).toString().replace(".", ","));
+                            }
+                            if(data.pptoestimadoinversion){
+                                $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion.toFixed(2).toString().replace(".", ","));
+                            }
+                            setTimeout(function(){$("#iddivision option[value=1900]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#uidpmo option[value="+data.uidpmo+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#uidgerente option[value="+data.uidgerente+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#idestado option[value="+data.idestado+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#idcategoria option[value="+data.idcategoria+"]", form).attr("selected",true);},2000)
+                            $("#iddivision", form).val('1900');
+                            $("#uidpmo", form).val(data.uidpmo);
+                            $("#uidgerente", form).val(data.uidgerente);
+                            $("#idestado", form).val(data.idestado);
+                            $("#idcategoria", form).val(data.idcategoria);
                         }
                     });
                     $.ajax({
@@ -1002,6 +1020,21 @@ $(document).ready(function () {
                     $('input#codigoart', form).attr('readonly', 'readonly');
                 }, afterShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                    /*
+                    $.ajax({
+                        type: "GET",
+                        url: '/iniciativas/' + parentRowKey,
+                        async: true,
+                        recreateForm:true,
+                        success: function (data) {
+                            setTimeout(function(){$("#iddivision option[value=1900]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#uidpmo option[value="+data.uidpmo+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#uidgerente option[value="+data.uidgerente+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#idestado option[value="+data.idestado+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#idcategoria option[value="+data.idcategoria+"]", form).attr("selected",true);},2000)
+                            //setTimeout(function(){$("#pptoestimadogasto", form).val(data.pptoestimadogasto.toFixed(2));},2000)
+                        }
+                    }); */
                 }
             },
             {
