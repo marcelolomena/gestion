@@ -12,14 +12,14 @@ exports.action = function (req, res) {
   if (req.body.pptoestimadoinversion != "")
     inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
 
-  console.log("gasto : " + gasto);
-  console.log("inversion : " + inversion);
+  //console.log("gasto : " + gasto);
+  //console.log("inversion : " + inversion);
 
   switch (action) {
     case "add":
       models.IniciativaPrograma.create({
         idiniciativa: req.body.parent_id,
-        program_id: req.body.program_id,
+        program_id: null,//req.body.program_id
         codigoart: req.body.codigoart,
         nombre: req.body.nombre,
         iddivision: req.body.iddivision,
