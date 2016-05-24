@@ -314,7 +314,17 @@ object UserStory extends Controller {
 
   }
 */
-  
+  def listScenario(id: String) = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        val log = UserStoryService.listScenario(id)
+
+        Ok(play.api.libs.json.Json.toJson(log)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
   def list = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -380,10 +390,11 @@ object UserStory extends Controller {
           campo.put("rol", p.rol)
           campo.put("funcion", p.funcion)
           campo.put("resultado", p.resultado)
-          campo.put("descripcion", p.descripcion)
-          campo.put("epica", p.epica)
-          campo.put("tema", p.tema)
+          campo.put("descripcion", p.descripcion.getOrElse(""))
+          campo.put("epica", p.epica.getOrElse(""))
+          campo.put("tema", p.tema.getOrElse(""))
           campo.put("created_by", p.created_by)
+          campo.put("created_by_name", p.created_by_name)
           //campo.put("created_by_name", p.created_by_name)
 
           registro.put(campo)
