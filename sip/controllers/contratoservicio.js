@@ -34,6 +34,9 @@ exports.list = function (req, res) {
             console.log("->>> " + err)
         } else {
             models.DetalleServicioCto.belongsTo(models.Contrato, { foreignKey: 'idcontrato' });
+            models.DetalleServicioCto.belongsTo(models.EstructuraCui, { foreignKey: 'id' });
+            models.DetalleServicioCto.belongsTo(models.Servicio, { foreignKey: 'id' });
+            models.DetalleServicioCto.belongsTo(models.CuentasContables, { foreignKey: 'id' });            
             models.DetalleServicioCto.count({
                 where: data
             }).then(function (records) {
@@ -45,7 +48,11 @@ exports.list = function (req, res) {
                     where: data,
                     include: [{
                         model: models.Contrato
-                    }]
+                    }, {
+                            model: models.EstructuraCui
+                        }, {
+                            model: models.Servicio
+                        }]
                 }).then(function (contratos) {
                     //Contrato.forEach(log)
                     res.json({ records: records, total: total, page: page, rows: contratos });

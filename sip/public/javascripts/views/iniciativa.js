@@ -522,8 +522,6 @@ $(document).ready(function () {
             }
         },
         {
-            //mtype: 'POST',
-            //url: '/iniciativas/del',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             errorTextFormat: function (data) {
@@ -908,7 +906,7 @@ $(document).ready(function () {
 
         $("#" + childGridID).jqGrid({
             url: childGridURL,
-            mtype: "GET",
+            mtype: "POST",
             datatype: "json",
             page: 1,
             colModel: modelIniciativaPrograma,
@@ -917,6 +915,7 @@ $(document).ready(function () {
             regional: 'es',
             height: 'auto',
             pager: "#" + childGridPagerID,
+            editurl: '/iniciativaprograma/action',
             gridComplete: function () {
                 var recs = $("#" + childGridID).getGridParam("reccount");
                 if (isNaN(recs) || recs == 0) {
@@ -930,9 +929,6 @@ $(document).ready(function () {
             {
                 closeAfterEdit: true,
                 recreateForm: true,
-                mtype: 'POST',
-                url: '/iniciativasprograma/update',
-                modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 editCaption: "Modifica Iniciativa Programa",
@@ -954,16 +950,17 @@ $(document).ready(function () {
             {
                 closeAfterAdd: true,
                 recreateForm: true,
-                mtype: 'POST',
-                url: '/iniciativasprograma/add/' + parentRowKey,
-                modal: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 addCaption: "Agregar Iniciativa Programa",
                 template: tmplP,
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
-                }, afterSubmit: function (response, postdata) {
+                },
+                onclickSubmit: function (rowid) {
+                    return {  parent_id: parentRowKey};
+                },
+                afterSubmit: function (response, postdata) {
                     var json = response.responseText;
                     var result = JSON.parse(json);
                     if (result.error_code != 0)
@@ -1007,8 +1004,6 @@ $(document).ready(function () {
             {
                 closeAfterDelete: true,
                 recreateForm: true,
-                mtype: 'POST',
-                url: '/iniciativasprograma/del',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 addCaption: "Elimina Iniciativa",

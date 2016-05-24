@@ -35,44 +35,6 @@ $(document).ready(function () {
     template += "<hr style='width:100%;'/>";
     template += "<div> {sData} {cData}  </div>";
     template += "</div>";
-    
-    var templateServicio = "<div id='responsive-form' class='clearfix'>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-full'>Anexo{anexo}</div>";
-    templateServicio += "<div class='column-full'>Proveedor{idproveedor}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Tipo Solicitud{idtiposolicitud}</div>";
-    templateServicio += "<div class='column-half'>Estado Solicitud{idestadosol}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
-    templateServicio += "<div class='column-half'>Número  {numero}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Tipo {tipocontrato}</div>";
-    templateServicio += "<div class='column-half'>Documento {tipodocumento}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>PMO {uidpmo}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row' style='display: none;'>";
-    templateServicio += "<div class='column-half'>razonsocial{razonsocial}</div>";
-    templateServicio += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
-    templateServicio += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
-    templateServicio += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<hr style='width:100%;'/>";
-    templateServicio += "<div> {sData} {cData}  </div>";
-    templateServicio += "</div>";    
-
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },

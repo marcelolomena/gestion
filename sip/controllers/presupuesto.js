@@ -192,9 +192,9 @@ exports.getUsersByRol = function (req, res) {
 
 exports.getCUIs = function (req, res) {
 
-  var sql = "select distinct codDivision,glosaDivision from RecursosHumanos " +
-    "where periodo=(select max(periodo) from RecursosHumanos) order by glosaDivision";
-
+  var sql = "SELECT cui, nombre FROM sip.estructuracui "+ 
+    "ORDER BY nombre";
+      
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
