@@ -6,20 +6,23 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var gasto, inversion = 0
 
-  if (req.body.pptoestimadogasto != "")
-    gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
+  if (action != "del") {
+    if (req.body.pptoestimadogasto != "")
+      gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
 
-  if (req.body.pptoestimadoinversion != "")
-    inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+    if (req.body.pptoestimadoinversion != "")
+      inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+  }
 
   //console.log("gasto : " + gasto);
   //console.log("inversion : " + inversion);
 
   switch (action) {
     case "add":
+    if(req.body.program_id=="0"){
       models.IniciativaPrograma.create({
         idiniciativa: req.body.parent_id,
-        program_id: null,//req.body.program_id
+        program_id: null,
         codigoart: req.body.codigoart,
         nombre: req.body.nombre,
         iddivision: req.body.iddivision,
@@ -55,10 +58,91 @@ exports.action = function (req, res) {
         console.log(err);
         res.json({ error_code: 1 });
       });
-
+    }else{
+      models.IniciativaPrograma.create({
+        idiniciativa: req.body.parent_id,
+        program_id: req.body.program_id,
+        codigoart: req.body.codigoart,
+        nombre: req.body.nombre,
+        iddivision: req.body.iddivision,
+        divisionsponsor: req.body.divisionsponsor,
+        uidsponsor1: req.body.uidsponsor1,
+        sponsor1: req.body.sponsor1,
+        uidsponsor2: req.body.uidsponsor2,
+        sponsor2: req.body.sponsor2,
+        uidgerente: req.body.uidgerente,
+        gerenteresponsable: req.body.gerenteresponsable,
+        uidpmo: req.body.uidpmo,
+        pmoresponsable: req.body.pmoresponsable,
+        idtipo: req.body.idtipo,
+        tipo: req.body.tipo,
+        idcategoria: req.body.idcategoria,
+        categoria: req.body.categoria,
+        ano: req.body.ano,
+        anoq: req.body.anoq,
+        q1: req.body.q1,
+        q2: req.body.q2,
+        q3: req.body.q3,
+        q4: req.body.q4,
+        fechacomite: req.body.fechacomite,
+        idmoneda: req.body.idmoneda,
+        pptoestimadogasto: gasto,
+        pptoestimadoinversion: inversion,
+        idestado: req.body.idestado,
+        estado: req.body.estado,
+        borrado: 1
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+    }
       break;
     case "edit":
+    if(req.body.program_id=="0"){
       models.IniciativaPrograma.update({
+        program_id: null,
+        codigoart: req.body.codigoart,
+        nombre: req.body.nombre,
+        iddivision: req.body.iddivision,
+        divisionsponsor: req.body.divisionsponsor,
+        uidsponsor1: req.body.uidsponsor1,
+        sponsor1: req.body.sponsor1,
+        uidsponsor2: req.body.uidsponsor2,
+        sponsor2: req.body.sponsor2,
+        uidgerente: req.body.uidgerente,
+        gerenteresponsable: req.body.gerenteresponsable,
+        uidpmo: req.body.uidpmo,
+        pmoresponsable: req.body.pmoresponsable,
+        idtipo: req.body.idtipo,
+        tipo: req.body.tipo,
+        idcategoria: req.body.idcategoria,
+        categoria: req.body.categoria,
+        ano: req.body.ano,
+        anoq: req.body.anoq,
+        q1: req.body.q1,
+        q2: req.body.q2,
+        q3: req.body.q3,
+        q4: req.body.q4,
+        fechacomite: req.body.fechacomite,
+        idmoneda: req.body.idmoneda,
+        pptoestimadogasto: gasto,
+        pptoestimadoinversion: inversion,
+        idestado: req.body.idestado,
+        estado: req.body.estado
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+    }else{
+        models.IniciativaPrograma.update({
         program_id: req.body.program_id,
         codigoart: req.body.codigoart,
         nombre: req.body.nombre,
@@ -98,6 +182,8 @@ exports.action = function (req, res) {
           console.log(err);
           res.json({ error_code: 1 });
         });
+    }
+    
       break;
     case "del":
       models.IniciativaPrograma.destroy({

@@ -17,6 +17,7 @@ var presupuestoperiodosController = require('../controllers/presupuestoperiodos'
 var cuiController = require('../controllers/estructuracui');
 var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
+var monedaController = require('../controllers/moneda');
 
 var express = require('express');
 var router = express.Router();
@@ -165,7 +166,10 @@ module.exports = function (passport) {
 
 	router.route('/programa/:id')
 		.get(isAuthenticated, programaController.getPrograma);
-
+	
+	router.route('/programas/:id')
+		.get(isAuthenticated, programaController.getProgramasId);
+	
 	router.route('/programas')
 		.get(isAuthenticated, programaController.getProgramas);
 
@@ -224,6 +228,9 @@ module.exports = function (passport) {
 
     router.route('/cuentas')
         .get(isAuthenticated, cuentaController.getCuentas);	
+		
+    router.route('/monedas')
+        .get(isAuthenticated, monedaController.getMonedas);			
 
     router.route('/contactos/:id')
         .get(isAuthenticated, contactoController.getContactos);						

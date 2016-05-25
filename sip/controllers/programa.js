@@ -1,4 +1,5 @@
 var models = require('../models');
+var sequelize = require('../models/index').sequelize;
 // Create endpoint /programa/:id for GET
 exports.getPrograma = function (req, res) {
     // Use the Proveedor model to find a specific programa
@@ -19,3 +20,16 @@ exports.getProgramas = function (req, res) {
     });
 
 };
+
+exports.getProgramasId = function (req, res) {
+
+  var sql = "select * from art_program a join art_division_master b on a.devison=b.dId" +
+    " where a.is_active=1 and b.idRRHH="+req.params.id+" order by a.program_name";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+

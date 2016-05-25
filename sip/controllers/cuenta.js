@@ -1,4 +1,6 @@
 var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var utilSeq = require('../utils/seq');
 
 exports.getCuentas = function (req, res) {
 
