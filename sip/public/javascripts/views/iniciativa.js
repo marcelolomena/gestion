@@ -622,10 +622,10 @@ $(document).ready(function () {
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger División--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].glosaDivision == thissid) {
-                                s += '<option value="' + data[i].codDivision + '" selected>' + data[i].glosaDivision + '</option>';
+                            if (data[i].division == thissid) {
+                                s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
                             } else {
-                                s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                                s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
                             }
                         });
                         return s + "</select>";
@@ -633,6 +633,35 @@ $(document).ready(function () {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
                             $("input#divisionsponsor").val($('option:selected', this).text());
+                            var idRRHH = $('option:selected', this).val()
+                            if(idRRHH!="0"){
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/programas/' + idRRHH,
+                                    async: false,
+                                    success: function (data) {
+                                        var grid = $("#" + childGridID);
+                                        var rowKey = grid.getGridParam("selrow");
+                                        var rowData = grid.getRowData(rowKey);
+                                        var thissid = rowData.program_name;
+                                        var s = "<select>";//el default
+                                        s += '<option value="0">--Escoger Programa--</option>';
+                                         $.each(data, function (i, item) {
+                                            if (data[i].program_name == thissid) {
+                                                 s += '<option value="' + data[i].program_id + '" selected>' + data[i].program_name + '</option>';
+                                            } else {
+                                                s += '<option value="' + data[i].program_id + '">' + data[i].program_name + '</option>';
+                                             }
+                                         });
+                                            s +="</select>";
+                                            $("select#program_id").html(s);
+                                        $("input#codigoart").val(data.program_code);
+                                    }
+                                });
+                            }else{
+                                $("input#codigoart").val(null);
+                            }
+                            
                         }
                     }],
                 }, dataInit: function (elem) { $(elem).width(200); }
@@ -1026,21 +1055,6 @@ $(document).ready(function () {
                     $('input#codigoart', form).attr('readonly', 'readonly');
                 }, afterShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                    /*
-                    $.ajax({
-                        type: "GET",
-                        url: '/iniciativas/' + parentRowKey,
-                        async: true,
-                        recreateForm:true,
-                        success: function (data) {
-                            setTimeout(function(){$("#iddivision option[value=1900]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#uidpmo option[value="+data.uidpmo+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#uidgerente option[value="+data.uidgerente+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#idestado option[value="+data.idestado+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#idcategoria option[value="+data.idcategoria+"]", form).attr("selected",true);},2000)
-                            //setTimeout(function(){$("#pptoestimadogasto", form).val(data.pptoestimadogasto.toFixed(2));},2000)
-                        }
-                    }); */
                 }
             },
             {
