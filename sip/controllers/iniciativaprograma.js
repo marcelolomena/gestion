@@ -6,11 +6,13 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var gasto, inversion = 0
 
-  if (req.body.pptoestimadogasto != "")
-    gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
+  if (action != "del") {
+    if (req.body.pptoestimadogasto != "")
+      gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
 
-  if (req.body.pptoestimadoinversion != "")
-    inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+    if (req.body.pptoestimadoinversion != "")
+      inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+  }
 
   //console.log("gasto : " + gasto);
   //console.log("inversion : " + inversion);
@@ -19,7 +21,7 @@ exports.action = function (req, res) {
     case "add":
       models.IniciativaPrograma.create({
         idiniciativa: req.body.parent_id,
-        program_id: null,//req.body.program_id
+        program_id: req.body.program_id,
         codigoart: req.body.codigoart,
         nombre: req.body.nombre,
         iddivision: req.body.iddivision,

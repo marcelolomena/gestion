@@ -56,6 +56,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
     templateServicio += "<div class='column-half'>Descripción{glosaservicio}</div>";
     templateServicio += "</div>";
+    
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Moneda{idmoneda}</div>";
+    templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
+    templateServicio += "</div>";
 
     templateServicio += "<div class='form-row' style='display: none;'>";
     templateServicio += "<div class='column-half'>servicio{servicio}</div>";
@@ -257,7 +262,30 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'Valor Cuota', name: 'valorcuota', width: 100, align: 'left',
                 search: true, editable: true, hidden: false
             },
-            { label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true },
+            {
+                label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/monedas',
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.idmoneda;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Moneda--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].moneda + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].moneda + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }, dataInit: function (elem) {/* $(elem).width(200);*/ }                
+            },
             {
                 label: 'idfrecuencia', name: 'idfrecuencia', search: false, editable: true, hidden: true,
                 edittype: "select",

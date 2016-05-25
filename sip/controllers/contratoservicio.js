@@ -132,10 +132,19 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
+            /*
             models.DetalleServicioCto.belongsTo(models.Contrato, { foreignKey: 'idcontrato' });
             models.DetalleServicioCto.belongsTo(models.EstructuraCui, { foreignKey: 'id' });
             models.DetalleServicioCto.belongsTo(models.Servicio, { foreignKey: 'id' });
             models.DetalleServicioCto.belongsTo(models.CuentasContables, { foreignKey: 'id' });
+            models.DetalleServicioCto.belongsTo(models.Moneda, { foreignKey: 'id' });
+            */
+            models.DetalleServicioCto.hasMany(models.Contrato, { foreignKey: 'id' });
+            models.DetalleServicioCto.hasMany(models.EstructuraCui, { foreignKey: 'id' });
+            models.DetalleServicioCto.hasMany(models.Servicio, { foreignKey: 'id' });
+            models.DetalleServicioCto.hasMany(models.CuentasContables, { foreignKey: 'id' });
+            models.DetalleServicioCto.hasMany(models.Moneda, { foreignKey: 'id' });
+            
             models.DetalleServicioCto.count({
                 where: data
             }).then(function (records) {
