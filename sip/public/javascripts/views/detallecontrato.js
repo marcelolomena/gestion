@@ -56,7 +56,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
     templateServicio += "<div class='column-half'>Descripción{glosaservicio}</div>";
     templateServicio += "</div>";
-    
+
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Moneda{idmoneda}</div>";
     templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
@@ -111,8 +111,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Cui', name: 'cui', search: true, editable: false, hidden: false,
-                jsonmap: "EstructuraCui.nombre"
+                label: 'Cui', name: 'EstructuraCui.cui', search: true, editable: false, hidden: false,
+                //jsonmap: "EstructuraCui.nombre"
             },
             {
                 label: 'idservicio', name: 'idservicio', search: false, editable: true, hidden: true,
@@ -284,7 +284,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         });
                         return s + "</select>";
                     }
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }                
+                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
                 label: 'idfrecuencia', name: 'idfrecuencia', search: false, editable: true, hidden: true,
@@ -385,7 +385,16 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'Condición', name: 'condicionnegociacion', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
-            { label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false },
+            {
+                label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false,
+                formatter: function (cellvalue, options, rowObject) {
+                    if(rowObject.impuesto===1) {
+                        return 'Si';
+                    }else{ 
+                        return 'No';
+                    }
+                }
+            },
             { label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
             {
                 label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true,
