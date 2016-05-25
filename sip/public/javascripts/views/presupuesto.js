@@ -273,6 +273,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         label: 'Cuenta',
         name: 'cuentacontable',
         search: false,
+        hidden: true,
         width: 120
     },
     {
@@ -280,6 +281,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         name: 'nombrecuenta',
         width: 130,
         search: false,
+        hidden: true,
         align: 'right'
     },            
     {
@@ -354,7 +356,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         autowidth: false,
         editurl: '/presupuestoservicios/action/'+ parentRowKey,
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
-        subGridRowExpanded: showProyectoErogaciones, // javascript function that will take care of showing the child grid                
+        subGridRowExpanded: showPresupuestoPeriodos, // javascript function that will take care of showing the child grid                
         pager: "#" + childGridPagerID
     });
 
@@ -454,12 +456,12 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
 }
 
-function showProyectoErogaciones(parentRowID, parentRowKey) {
+function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
 
     // send the parent row primary key to the server so that we know which grid to show
-    var childGridURL = "/erogacioneslist/" + parentRowKey;
+    var childGridURL = "/presupuestoperiodoslist/" + parentRowKey;
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -478,44 +480,38 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
                 hidden: true
             },
             {
-                label: 'Nombre Proveedor',
-                name: 'razonsocial',
-                width: 250,
-            },
-            {
-                label: 'Numero Factura',
-                name: 'factura',
-                align: 'center',
-                width: 100,
-            },
-            {
-                label: 'Fecha GL',
-                name: 'fechagl',
+                label: 'Periodo',
+                name: 'periodo',
                 search: false,
+                editable: true,
                 sortable: false,
                 width: 100,
-                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }
             },
             {
-                label: 'Tarea Ajustada',
-                name: 'numerotarea',
-                align: 'center',
+                label: 'Presupuesto',
+                name: 'presupuestobasepesos',
+                align: 'right',
+                width: 150,
                 search: false,
-                width: 100,
+                sortable: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Tarea Original',
-                name: 'toriginalactual',
-                align: 'center',
+                label: 'Contrato',
+                name: 'compromisopesos',
+                align: 'right',
                 search: false,
-                width: 100,
+                sortable: false,
+                width: 150,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Total',
-                name: 'montosum',
+                label: 'Valor Presupuesto',
+                name: 'presupuestopesos',
+                editable: true,
+                align: 'right',
                 search: false,
                 width: 150,
-                align: 'right',
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             }
         ],
@@ -527,15 +523,17 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
         sortable: "true",
         rowList: [5, 10, 20, 50],
         regional: "es",
+        editurl: '/presupuestoperiodos/action/'+ parentRowKey,
         pager: "#" + childGridPagerID
     });
 
-    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, 
+        defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         search: false, // show search button on the toolbar
         add: false,
-        edit: false,
+        edit: true,
         del: false,
         refresh: true
     });
@@ -548,7 +546,7 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
         onClickButton: function () {
             var grid = $("#" + childGridID);
             var rowKey = grid.getGridParam("selrow");
-            var url = '/erogacionesexcel/' + parentRowKey;
+            var url = '/presupuestoperiodosexcel/' + parentRowKey;
             $("#" + childGridID).jqGrid('excelExport', { "url": url });
         }
     });

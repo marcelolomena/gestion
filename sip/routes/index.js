@@ -13,6 +13,7 @@ var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
+var presupuestoperiodosController = require('../controllers/presupuestoperiodos');
 var cuiController = require('../controllers/estructuracui');
 var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
@@ -226,6 +227,12 @@ module.exports = function (passport) {
 
     router.route('/contactos/:id')
         .get(isAuthenticated, contactoController.getContactos);						
+
+    router.route('/presupuestoperiodoslist/:id')
+        .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);						
+
+    router.route('/presupuestoperiodos/action/:id')
+        .post(isAuthenticated, presupuestoServiciosController.action);  
 
 	return router;
 
