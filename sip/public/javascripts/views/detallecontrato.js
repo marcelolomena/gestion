@@ -526,6 +526,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Estado: Debe escoger un valor", ""];
                 } if (postdata.idcontactoproveedor == 0) {
                     return [false, "Contacto: Debe escoger un valor", ""];
+                } if (postdata.idmoneda == 0) {
+                    return [false, "Moneda: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
