@@ -19,6 +19,7 @@ var cuiController = require('../controllers/estructuracui');
 var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
+var compromisoController = require('../controllers/detallecompromiso');
 
 var express = require('express');
 var router = express.Router();
@@ -235,6 +236,9 @@ module.exports = function (passport) {
 
     router.route('/cuentas')
         .get(isAuthenticated, cuentaController.getCuentas);	
+		
+    router.route('/compromisos/:id')
+        .post(isAuthenticated, compromisoController.list);			
 		
     router.route('/monedas')
         .get(isAuthenticated, monedaController.getMonedas);			
