@@ -6,14 +6,16 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var gasto, inversion = 0
 
-  if (req.body.pptoestimadogasto != "")
-    gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
+  if (action != "del") {
+    if (req.body.pptoestimadogasto != "")
+      gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
 
-  if (req.body.pptoestimadoinversion != "")
-    inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+    if (req.body.pptoestimadoinversion != "")
+      inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+  }
 
-  console.log("gasto : " + gasto);
-  console.log("inversion : " + inversion);
+  //console.log("gasto : " + gasto);
+  //console.log("inversion : " + inversion);
 
   switch (action) {
     case "add":

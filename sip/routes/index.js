@@ -1,9 +1,6 @@
 var models = require('../models');
 var proveedorController = require('../controllers/proveedor');
-
-
 var contactoController = require("../controllers/contacto")
-
 var iniciativaController = require('../controllers/iniciativa');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
@@ -19,6 +16,7 @@ var presupuestoServiciosController = require('../controllers/presupuestoservicio
 var cuiController = require('../controllers/estructuracui');
 var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
+var monedaController = require('../controllers/moneda');
 
 var express = require('express');
 var router = express.Router();
@@ -209,6 +207,15 @@ module.exports = function (passport) {
     router.route('/presupuestoserviciosexcel/:id')
         .get(isAuthenticated, presupuestoServiciosController.getExcel);
 
+    router.route('/presupuestoservicios/action/:id')
+        .post(isAuthenticated, presupuestoServiciosController.action);  
+
+    router.route('/monedas')
+        .get(isAuthenticated, presupuestoServiciosController.getMonedas);   
+
+    router.route('/serviciospre')
+        .get(isAuthenticated, presupuestoServiciosController.getServicios);   
+
     router.route('/servicios')
         .get(isAuthenticated, servicioController.getServicios);
 		
@@ -216,7 +223,13 @@ module.exports = function (passport) {
         .get(isAuthenticated, cuiController.getEstructuraCui);
 
     router.route('/cuentas')
-        .get(isAuthenticated, cuentaController.getCuentas);				
+        .get(isAuthenticated, cuentaController.getCuentas);	
+		
+    router.route('/monedas')
+        .get(isAuthenticated, monedaController.getMonedas);			
+
+    router.route('/contactos/:id')
+        .get(isAuthenticated, contactoController.getContactos);						
 
 	return router;
 
