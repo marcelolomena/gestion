@@ -388,13 +388,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false,
                 formatter: function (cellvalue, options, rowObject) {
-                    if(rowObject.impuesto===1) {
+                    if (rowObject.impuesto === 1) {
                         return 'Si';
-                    }else{ 
+                    } else {
                         return 'No';
                     }
                 },
-                edittype:'checkbox', editoptions: { value:"1:0"}, 
+                edittype: 'checkbox', editoptions: { value: "1:0" },
             },
             //{ label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
             {
@@ -473,6 +473,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
             }
         },
+        subGrid: true,
+        subGridRowExpanded: gridDetail
     });
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false },
         {
