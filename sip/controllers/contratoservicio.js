@@ -8,9 +8,7 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            //console.log("IM>>>>>>>>>>>>>>>>>" + req.body.impuesto)
             var factor = req.body.impuesto == 1 ? 1.19 : 1;
-
             var valorcuota
 
             if (action != "del") {
