@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    
+    $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+    
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";

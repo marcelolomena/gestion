@@ -1,5 +1,4 @@
 function showSubGrids(subgrid_id, row_id) {
-    //console.log("row_id----->> " + row_id)
     var rowData = $("#grid").getRowData(row_id);
     var tipocontrato = rowData.tipocontrato;
 
@@ -12,7 +11,6 @@ function showSubGrids(subgrid_id, row_id) {
 }
 
 function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
-    //console.log("row_id----->> " + row_id)
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
     pager_id = 'p_' + subgrid_table_id;
@@ -365,7 +363,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    //dataUrl: '/contactos/' + row_id,
                     dataUrl: '/contactos/' + $('#grid').getRowData(row_id).idproveedor,
                     buildSelect: function (response) {
                         var grid = $('#' + subgrid_table_id);
@@ -435,12 +432,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         gridComplete: function () {
             var recs = $('#' + subgrid_table_id).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
-
                 $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
             }
         },
     });
-    $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false },
         {
             editCaption: "Modifica Servicio",
             closeAfterEdit: true,
@@ -476,8 +472,22 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.idservicio == 0) {
+                if (postdata.idcui == 0) {
+                    return [false, "CUI: Debe escoger un valor", ""];
+                } if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
+                } if (postdata.idcuenta == 0) {
+                    return [false, "Cuenta: Debe escoger un valor", ""];
+                } if (postdata.idfrecuencia == 0) {
+                    return [false, "Frecuencia: Debe escoger un valor", ""];
+                } if (postdata.idplazocontrato == 0) {
+                    return [false, "Plazo: Debe escoger un valor", ""];
+                } if (postdata.idcondicion == 0) {
+                    return [false, "Condición: Debe escoger un valor", ""];
+                } if (postdata.idestadocto == 0) {
+                    return [false, "Estado: Debe escoger un valor", ""];
+                } if (postdata.idcontactoproveedor == 0) {
+                    return [false, "Contacto: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -655,7 +665,6 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
         width: null,
         pager: $('#' + pager_id),
         styleUI: "Bootstrap",
-        //responsive: true,
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $('#' + subgrid_table_id).getGridParam("reccount");
