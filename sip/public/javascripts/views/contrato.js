@@ -262,7 +262,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#grid").jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $("#grid").jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false,
+         refresh: true, view: true, position: "left", cloneToTop: false },
         {
             editCaption: "Modifica Contrato",
             closeAfterEdit: true,
