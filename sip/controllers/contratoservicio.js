@@ -8,6 +8,9 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
+            //console.log("IM>>>>>>>>>>>>>>>>>" + req.body.impuesto)
+            var factor = req.body.impuesto == 1 ? 1.19 : 1;
+
             models.DetalleServicioCto.create({
                 idcontrato: req.body.parent_id,
                 anexo: req.body.anexo,
@@ -31,7 +34,7 @@ exports.action = function (req, res) {
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
                 impuesto: req.body.impuesto,
-                factorimpuesto: req.body.factorimpuesto,
+                factorimpuesto: factor,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,
@@ -132,7 +135,7 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
-            
+
             models.DetalleServicioCto.belongsTo(models.Contrato, { foreignKey: 'idcontrato' });
             models.DetalleServicioCto.belongsTo(models.EstructuraCui, { foreignKey: 'idcui' });
             models.DetalleServicioCto.belongsTo(models.Servicio, { foreignKey: 'idservicio' });

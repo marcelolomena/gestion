@@ -393,9 +393,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     }else{ 
                         return 'No';
                     }
-                }
+                },
+                edittype:'checkbox', editoptions: { value:"1:0"}, 
             },
-            { label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
+            //{ label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
             {
                 label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true,
                 edittype: "select",
