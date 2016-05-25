@@ -10,6 +10,7 @@ var programaController = require('../controllers/programa');
 var contratoproyectoController = require('../controllers/contratoproyecto');
 var contratoservicioController = require('../controllers/contratoservicio');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
+var iniciativafechaController = require('../controllers/iniciativafecha');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
@@ -159,7 +160,13 @@ module.exports = function (passport) {
 		.post(isAuthenticated, iniciativaprogramaController.action);
 
 	router.route('/iniciativaprograma/:id')
-		.post(isAuthenticated, iniciativaprogramaController.list)
+		.post(isAuthenticated, iniciativaprogramaController.list);
+		
+	router.route('/iniciativafecha/action')
+		.post(isAuthenticated, iniciativafechaController.action);
+
+	router.route('/iniciativafecha/:id')
+		.post(isAuthenticated, iniciativafechaController.list);
 
 	router.route('/usuarios_por_rol/:rol')
 		.get(isAuthenticated, iniciativaController.getUsersByRol);

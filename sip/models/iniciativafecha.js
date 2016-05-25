@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     tipofecha: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true
     },
     fecha: {
