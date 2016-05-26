@@ -526,7 +526,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         sortable: "true",
         rowList: [5, 10, 20, 50],
         regional: "es",
-        editurl:'/presupuestoperiodos/action/'+ rowKey,
+        editurl: '/presupuestoperiodos/action',
         pager: "#" + childGridPagerID
     });
 

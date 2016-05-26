@@ -10,6 +10,7 @@ var programaController = require('../controllers/programa');
 var contratoproyectoController = require('../controllers/contratoproyecto');
 var contratoservicioController = require('../controllers/contratoservicio');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
+var iniciativafechaController = require('../controllers/iniciativafecha');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
@@ -18,6 +19,7 @@ var cuiController = require('../controllers/estructuracui');
 var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
+var compromisoController = require('../controllers/detallecompromiso');
 
 var express = require('express');
 var router = express.Router();
@@ -159,8 +161,17 @@ module.exports = function (passport) {
 		.post(isAuthenticated, iniciativaprogramaController.action);
 
 	router.route('/iniciativaprograma/:id')
-		.post(isAuthenticated, iniciativaprogramaController.list)
+		.post(isAuthenticated, iniciativaprogramaController.list);
+		
+	router.route('/iniciativafecha/action')
+		.post(isAuthenticated, iniciativafechaController.action);
 
+	router.route('/iniciativafecha/:id')
+		.post(isAuthenticated, iniciativafechaController.list);
+
+	router.route('/actualizaduracion/:id')
+		.get(isAuthenticated, iniciativafechaController.actualizaDuracion);
+	
 	router.route('/usuarios_por_rol/:rol')
 		.get(isAuthenticated, iniciativaController.getUsersByRol);
 
@@ -229,6 +240,9 @@ module.exports = function (passport) {
     router.route('/cuentas')
         .get(isAuthenticated, cuentaController.getCuentas);	
 		
+    router.route('/compromisos/:id')
+        .post(isAuthenticated, compromisoController.list);			
+		
     router.route('/monedas')
         .get(isAuthenticated, monedaController.getMonedas);			
 
@@ -238,7 +252,7 @@ module.exports = function (passport) {
     router.route('/presupuestoperiodoslist/:id')
         .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);						
 
-    router.route('/presupuestoperiodos/action/:id')
+    router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoServiciosController.action);  
 
 	return router;

@@ -1,17 +1,18 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('detallecompromiso', {
+  return sequelize.define('DetalleCompromiso', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     iddetalleserviciocto: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'detalleserviciocto',
+        model: 'DetalleServicioCto',
         key: 'id'
       }
     },

@@ -260,7 +260,12 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             },
             {
                 label: 'Valor Cuota', name: 'valorcuota', width: 100, align: 'left',
-                search: true, editable: true, hidden: false
+                search: true, editable: true, hidden: false,
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
             },
             {
                 label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true,
@@ -388,13 +393,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false,
                 formatter: function (cellvalue, options, rowObject) {
-                    if(rowObject.impuesto===1) {
+                    if (rowObject.impuesto === 1) {
                         return 'Si';
-                    }else{ 
+                    } else {
                         return 'No';
                     }
                 },
-                edittype:'checkbox', editoptions: { value:"1:0"}, 
+                edittype: 'checkbox', editoptions: { value: "1:0" },
             },
             //{ label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
             {
@@ -473,8 +478,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
             }
         },
+        subGrid: true,
+        subGridRowExpanded: gridDetail
     });
-    $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false },
+    $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
+        edit: true, add: true,
+        del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false
+    },
         {
             editCaption: "Modifica Servicio",
             closeAfterEdit: true,
