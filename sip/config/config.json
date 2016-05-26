@@ -41,5 +41,20 @@
             "minConnections": 0,
             "maxIdleTime": 10000
         }
+    },
+	"local2": {
+        "username": "biometria",
+        "password": "biometria123",
+        "database": "art_live",
+        "host": "K-NOTE",
+        "dialect": "mssql",
+        "dialectOptions": {
+            "instanceName": "SQLEXPRESS"
+        },
+        "pool": {
+            "maxConnections": 10,
+            "minConnections": 0,
+            "maxIdleTime": 10000
+        }
     }
 }
