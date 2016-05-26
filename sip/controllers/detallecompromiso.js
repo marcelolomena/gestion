@@ -101,17 +101,18 @@ exports.list = function (req, res) {
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = []
                     var d = new Date();
-                    var anio = d.getFullYear()
-                    var mes = d.getMonth() + 1
+                    var anio = parseInt(d.getFullYear())
+                    var mes = parseInt(d.getMonth() + 1)
 
                     for (var i = 0; i < param.valor; i++) {
-                        var mm = mes + i
-                        if (mm === 12) {
-                            anio = anio + 1 // incrementa el año en uno si el mes actual es DIC
-                            mm = 1 // coloca el mes en enero
+                        if ((mes + i) > 12) {
+                            anio = parseInt(anio) + 1 // incrementa el año en uno si el mes actual es DIC
+                            mes = 1 // coloca el mes en enero
                         }
-                        var mmm = mm < 10 ? '0' + mm : mm
-                        var periodo = anio + mmm
+
+                        var mmm = (mes + i) < 10 ? '0' + (mes + i) : (mes + i)
+                        var periodo = anio + '' + mmm
+                        //console.log("periodo : "  + periodo)
 
                         var newPromise = models.DetalleCompromiso.create({
                             'iddetalleserviciocto': req.params.id,
