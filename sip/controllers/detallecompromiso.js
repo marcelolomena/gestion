@@ -85,32 +85,100 @@ exports.list = function (req, res) {
 
     var orden = sidx + " " + sord;
 
-    utilSeq.buildCondition(filters, function (err, data) {
-        if (err) {
-            console.log("->>> " + err)
-        } else {
-            models.DetalleCompromiso.belongsTo(models.DetalleServicioCto, { foreignKey: 'iddetalleserviciocto' });
-            models.DetalleCompromiso.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.DetalleCompromiso.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    where: data,
-                    include: [{
-                        model: models.DetalleServicioCto
-                    }]
-                }).then(function (detalles) {
-                    //Contrato.forEach(log)
-                    res.json({ records: records, total: total, page: page, rows: detalles });
+    var additional = [{
+        "field": "iddetalleserviciocto",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    //
+    var tmp = function (callback) {
+        models.DetalleCompromiso.count({
+            where: { iddetalleserviciocto: req.params.id }
+        }).then(function (cant) {
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cant)
+            if (cant === 0) {
+                models.DetalleServicioCto.find({
+                    where: { id: req.params.id }
+                }).then(function (detallecto) {
+                    models.Parametro.find({
+                        where: { id: detallecto.idfrecuencia }
+                    }).then(function (param) {
+                        console.log(">>>>>>>>>>>>>>>>>>>>> " + param.nombre)
+                        console.log(">>>>>>>>>>>>>>>>>>>>> " + param.valor)
+
+
+                        models.sequelize.transaction({ autocommit: true }, function (t) {
+                            var promises = []
+                            for (var i = 0; i < param.valor; i++) {
+                                var newPromise = models.DetalleCompromiso.create({
+                                    'iddetalleserviciocto': req.params.id,
+                                    'periodo': 201701, 'borrado': 1, 'pending': true
+                                }, { transaction: t });
+                                promises.push(newPromise);
+                            };
+
+                            return Promise.all(promises).then(function (compromisos) {
+                                var compromisoPromises = [];
+                                for (var i = 0; i < compromisos.length; i++) {
+                                    compromisoPromises.push(compromisos[i]);
+                                }
+                                return Promise.all(compromisoPromises);
+                            });
+
+                        }).then(function (result) {
+
+                            console.log("YAY ---> " + result);
+                            callback(result)
+                            //res.json({ records: 12, total: 12, page: 1, rows: result });
+                        }).catch(function (err) {
+                            console.log("NO!!! ---> " + err);
+                            return next(err);
+                        });
+
+                    }).catch(function (err) {
+                        console.log(err);
+                        //res.json({ error_code: 1 });
+                    });
+
                 }).catch(function (err) {
-                    //console.log(err);
-                    res.json({ error_code: 1 });
+                    console.log(err);
+                    //res.json({ error_code: 1 });
                 });
-            })
-        }
+            }
+
+        })
+
+    }
+
+    tmp(function (resultado) {
+        /*
+        utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+            if (err) {
+                console.log("->>> " + err)
+            } else {
+                console.log("PICOCON ---> " + filters);
+                models.DetalleCompromiso.count({
+                    where: data
+                }).then(function (records) {
+                    var total = Math.ceil(records / rows);
+                    models.DetalleCompromiso.findAll({
+                        offset: parseInt(rows * (page - 1)),
+                        limit: parseInt(rows),
+                        order: orden,
+                        where: data
+                    }).then(function (detalles) {
+                        //Contrato.forEach(log)
+                        res.json({ records: records, total: total, page: page, rows: detalles });
+                    }).catch(function (err) {
+                        //console.log(err);
+                        res.json({ error_code: 1 });
+                    });
+                })
+            }
+        });
+        */
+        res.json({ records: 12, total: 12, page: 1, rows: resultado });
     });
 
 };
