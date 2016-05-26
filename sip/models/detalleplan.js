@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('detalleplan', {
+  return sequelize.define('DetallePlan', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,28 +11,48 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idperiodo: {
+    periodo: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'periodos',
-        key: 'id'
-      }
+      allowNull: true
     },
     idmoneda: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'moneda',
+        model: 'Moneda',
         key: 'id'
       }
     },
-    montoorigen: {
-      type: DataTypes.INTEGER,
+    presupuestoorigen: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
-    montopesos: {
-      type: DataTypes.INTEGER,
+    presupuestopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    presupuestobaseorigen: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    presupuestobasepesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    compromisoorigen: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    compromisopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    provisionorigen: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    provisionpesos: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     borrado: {
