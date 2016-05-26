@@ -36,7 +36,7 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Fecha Comite {fechacomite}</div>";
+    tmpl += "<div class='column-half'>Fecha Último Comité {fechacomite}</div>";
     tmpl += "<div class='column-half'>Año {ano}</div>";
     tmpl += "</div>";
 
@@ -96,13 +96,27 @@ $(document).ready(function () {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Fecha Comite {fechacomite}</div>";
+    tmplP += "<div class='column-half'>Fecha Último Comité {fechacomite}</div>";
     tmplP += "<div class='column-half'>Año {ano}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-half'>Presupuesto Gasto {pptoestimadogasto}</div>";
     tmplP += "<div class='column-half'>Presupuesto Inversión {pptoestimadoinversion}</div>";
+    tmplP += "</div>";
+    
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'>Presupuesto Estimado {pptoestimadoprevisto}</div>";
+    tmplP += "</div>";
+    
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'>Subcategoría {subcategoria}</div>";
+    tmplP += "<div class='column-half'>Duración Prevista {duracionprevista}</div>";
+    tmplP += "</div>";
+    
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'>Mes inicio Proyectado {mesinicioprevisto}</div>";
+    tmplP += "<div class='column-half'>Año inicio Proyectado {anoinicioprevisto}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row' style='display: none;'>";
@@ -361,7 +375,7 @@ $(document).ready(function () {
         { label: 'Q3', name: 'q3', width: 100, align: 'left', search: false, editable: true, hidden: false },
         { label: 'Q4', name: 'q4', width: 100, align: 'left', search: false, editable: true, hidden: false },
         {
-            label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: false,
+            label: 'Fecha Último Comite', name: 'fechacomite', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -871,7 +885,7 @@ $(document).ready(function () {
             { label: 'Q3', name: 'q3', width: 100, align: 'left', search: false, editable: true, hidden: false },
             { label: 'Q4', name: 'q4', width: 100, align: 'left', search: false, editable: true, hidden: false },
             {
-                label: 'Fecha Comite', name: 'fechacomite', width: 150, align: 'left', search: false,
+                label: 'Fecha Último Comité', name: 'fechacomite', width: 150, align: 'left', search: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 editable: true,
                 searchoptions: {
@@ -899,7 +913,7 @@ $(document).ready(function () {
             },
             { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
             {
-                label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
+                label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
                 search: true, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
@@ -909,7 +923,17 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
+                label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 190, align: 'right',
+                search: true, editable: true, hidden: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
+            },
+            {
+                label: 'Presupuesto Estimado Total (US$)', name: 'pptoestimadoprevisto', width: 225, align: 'left',
                 search: true, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
@@ -948,9 +972,13 @@ $(document).ready(function () {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Duracion', name: 'duracion', width: 100, align: 'left', search: true, editable: false,
+                label: 'Duracion', name: 'duracion', width: 78, align: 'left', search: true, editable: false,
                 editrules: { edithidden: false }, hidedlg: true
-            }
+            },
+            { label: 'Subcategoría', name: 'subcategoria', width: 200, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left', search: false, editable: true, hidden: false },
+            { label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left', search: false, editable: true, hidden: false }
         ];
 
         $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');

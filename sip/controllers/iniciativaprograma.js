@@ -4,7 +4,7 @@ var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  var gasto, inversion = 0
+  var gasto, inversion,pptoestimadoprevisto = 0
 
   if (action != "del") {
     if (req.body.pptoestimadogasto != "")
@@ -12,6 +12,9 @@ exports.action = function (req, res) {
 
     if (req.body.pptoestimadoinversion != "")
       inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+      
+    if (req.body.pptoestimadoprevisto != "")
+      pptoestimadoprevisto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
   }
 
   //console.log("gasto : " + gasto);
@@ -49,8 +52,13 @@ exports.action = function (req, res) {
         idmoneda: req.body.idmoneda,
         pptoestimadogasto: gasto,
         pptoestimadoinversion: inversion,
+        pptoestimadoprevisto: pptoestimadoprevisto,
         idestado: req.body.idestado,
         estado: req.body.estado,
+        subcategoria: req.body.subcategoria,
+        duracionprevista: req.body.duracionprevista,
+        mesinicioprevisto: req.body.mesinicioprevisto,
+        anoinicioprevisto: req.body.anoinicioprevisto,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -88,8 +96,13 @@ exports.action = function (req, res) {
         idmoneda: req.body.idmoneda,
         pptoestimadogasto: gasto,
         pptoestimadoinversion: inversion,
+        pptoestimadoprevisto: pptoestimadoprevisto,
         idestado: req.body.idestado,
         estado: req.body.estado,
+        subcategoria: req.body.subcategoria,
+        duracionprevista: req.body.duracionprevista,
+        mesinicioprevisto: req.body.mesinicioprevisto,
+        anoinicioprevisto: req.body.anoinicioprevisto,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -129,8 +142,13 @@ exports.action = function (req, res) {
         idmoneda: req.body.idmoneda,
         pptoestimadogasto: gasto,
         pptoestimadoinversion: inversion,
+        pptoestimadoprevisto: pptoestimadoprevisto,
         idestado: req.body.idestado,
-        estado: req.body.estado
+        estado: req.body.estado,
+        subcategoria: req.body.subcategoria,
+        duracionprevista: req.body.duracionprevista,
+        mesinicioprevisto: req.body.mesinicioprevisto,
+        anoinicioprevisto: req.body.anoinicioprevisto
       }, {
           where: {
             id: req.body.id
@@ -170,8 +188,13 @@ exports.action = function (req, res) {
         idmoneda: req.body.idmoneda,
         pptoestimadogasto: gasto,
         pptoestimadoinversion: inversion,
+        pptoestimadoprevisto: pptoestimadoprevisto,
         idestado: req.body.idestado,
-        estado: req.body.estado
+        estado: req.body.estado,
+        subcategoria: req.body.subcategoria,
+        duracionprevista: req.body.duracionprevista,
+        mesinicioprevisto: req.body.mesinicioprevisto,
+        anoinicioprevisto: req.body.anoinicioprevisto
       }, {
           where: {
             id: req.body.id
