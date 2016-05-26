@@ -102,20 +102,38 @@ exports.list = function (req, res) {
   });
 
 };
+
+
 exports.actualizaDuracion = function (req, res) {
   var nuevaduracion = 0;
-  models.IniciativaFecha.count({
-  },{
+  var fechamenor = new Date (2099,12,30);
+  var fechamayor = new Date (1900,01,01);
+  var fechaok = false;
+  models.IniciativaFecha.findAll({
     where: {
       idiniciativaprograma: req.params.id
     }
-  }).then(function (records) {
-          //console.log("nueva duracion: "+records);
-          nuevaduracion = records;
-      })
-  
-  models.IniciativaPrograma.update({
-        duracion: nuevaduracion,
+  }).then(function (iniciativasp) {
+          iniciativasp.forEach(function(element) {
+            if(element.tipofecha=="Inicio Trabajo Mesa Multidisciplinaria"){
+              fechamenor=element.fecha;
+              fechaok = true;
+            }
+            if(element.fecha>fechamayor){
+              fechamayor=element.fecha;
+            } 
+          }, this);
+          //console.log("fecha menor: "+fechamenor);
+          //console.log("fecha mayor: "+fechamayor);
+          //console.log("fecha ok?: "+fechaok);
+          if(fechaok){
+            var resta = fechamayor.getTime() - fechamenor.getTime(); 
+            nuevaduracion = Math.floor(resta / (1000 * 60 * 60 * 24));
+            //console.log("nueva duracion: "+nuevaduracion);
+          }
+      }).then(function (records) { 
+        models.IniciativaPrograma.update({
+        duracion: nuevaduracion
       }, {
           where: {
             id: req.params.id
@@ -126,5 +144,5 @@ exports.actualizaDuracion = function (req, res) {
           console.log(err);
           res.json({ error_code: 1 });
         });
-
+})
 };

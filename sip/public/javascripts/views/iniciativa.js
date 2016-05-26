@@ -1227,8 +1227,17 @@ $(document).ready(function () {
                     if (result.error_code != 0)
                         return [false, result.error_text, ""];
                     else
+                        $.ajax({
+                        type: "GET",
+                        url: '/actualizaduracion/'+parentRowKey,
+                        async: false,
+                        success: function (data) {
+                             return [true, "", ""]
+                        }
+                    });
                         return [true, "", ""]
-                }, beforeShowForm: function (form) {
+                },
+                 beforeShowForm: function (form) {
                         var grid = $("#" + childGridID);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
