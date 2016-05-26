@@ -155,6 +155,26 @@ module.exports = function (sequelize, DataTypes) {
     duracion: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    subcategoria: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    duracionprevista: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    pptoestimadoprevisto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    mesinicioprevisto: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    anoinicioprevisto: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
       schema: 'sip', timestamps: false, tableName: 'iniciativaprograma'
