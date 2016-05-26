@@ -252,7 +252,7 @@ module.exports = function (passport) {
     router.route('/presupuestoperiodoslist/:id')
         .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);						
 
-    router.route('/presupuestoperiodos/action/:id')
+    router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoServiciosController.action);  
 
 	return router;
