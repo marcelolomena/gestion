@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('Parametro', {
     id: {
       type: DataTypes.INTEGER,
@@ -14,12 +14,15 @@ module.exports = function(sequelize, DataTypes) {
     nombre: {
       type: DataTypes.STRING,
       allowNull: true
+    }, valor: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'parametro'
-  });
+      schema: 'sip', timestamps: false, tableName: 'parametro'
+    });
 };

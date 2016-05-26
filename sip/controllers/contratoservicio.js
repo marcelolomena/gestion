@@ -8,8 +8,13 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            //console.log("IM>>>>>>>>>>>>>>>>>" + req.body.impuesto)
             var factor = req.body.impuesto == 1 ? 1.19 : 1;
+            var valorcuota
+
+            if (action != "del") {
+                if (req.body.valorcuota != "")
+                    valorcuota = req.body.valorcuota.split(".").join("").replace(",", ".")
+            }
 
             models.DetalleServicioCto.create({
                 idcontrato: req.body.parent_id,
@@ -25,7 +30,7 @@ exports.action = function (req, res) {
                 fechainicio: req.body.fechainicio,
                 fechatermino: req.body.fechatermino,
                 fechacontrol: req.body.fechacontrol,
-                valorcuota: req.body.valorcuota,
+                valorcuota: valorcuota,
                 idmoneda: req.body.idmoneda,
                 idfrecuencia: req.body.idfrecuencia,
                 frecuenciafacturacion: req.body.frecuenciafacturacion,

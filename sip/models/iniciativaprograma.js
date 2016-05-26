@@ -151,6 +151,10 @@ module.exports = function (sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    duracion: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
       schema: 'sip', timestamps: false, tableName: 'iniciativaprograma'

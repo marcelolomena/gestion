@@ -460,6 +460,9 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
 
+    var grid = $("#" + childGridID);
+    var rowKey = grid.getGridParam("selrow");            
+
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/presupuestoperiodoslist/" + parentRowKey;
 
@@ -523,7 +526,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         sortable: "true",
         rowList: [5, 10, 20, 50],
         regional: "es",
-        editurl: '/presupuestoperiodos/action/'+ parentRowKey,
+        editurl: '/presupuestoperiodos/action',
         pager: "#" + childGridPagerID
     });
 
