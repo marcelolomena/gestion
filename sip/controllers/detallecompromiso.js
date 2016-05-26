@@ -91,94 +91,85 @@ exports.list = function (req, res) {
         "data": req.params.id
     }];
 
-    //
-    var tmp = function (callback) {
-        models.DetalleCompromiso.count({
-            where: { iddetalleserviciocto: req.params.id }
-        }).then(function (cant) {
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cant)
-            if (cant === 0) {
-                models.DetalleServicioCto.find({
-                    where: { id: req.params.id }
-                }).then(function (detallecto) {
-                    models.Parametro.find({
-                        where: { id: detallecto.idfrecuencia }
-                    }).then(function (param) {
-                        console.log(">>>>>>>>>>>>>>>>>>>>> " + param.nombre)
-                        console.log(">>>>>>>>>>>>>>>>>>>>> " + param.valor)
+    var insertaPeriodos = function (callback) {
+        models.DetalleServicioCto.find({
+            where: { id: req.params.id }
+        }).then(function (detallecto) {
+            models.Parametro.find({
+                where: { id: detallecto.idfrecuencia }
+            }).then(function (param) {
+                models.sequelize.transaction({ autocommit: true }, function (t) {
+                    var promises = []
+                    var d = new Date();
+                    var anio = d.getFullYear()
+                    var mes = d.getMonth() + 1
+                    if (mes === 12) {
+                        anio = anio + 1 // incrementa el año en uno si el mes actual es DIC
+                        mes = 1 // coloca el mes en enero
+                    }
 
+                    for (var i = 0; i < param.valor; i++) {
 
-                        models.sequelize.transaction({ autocommit: true }, function (t) {
-                            var promises = []
-                            for (var i = 0; i < param.valor; i++) {
-                                var newPromise = models.DetalleCompromiso.create({
-                                    'iddetalleserviciocto': req.params.id,
-                                    'periodo': 201701, 'borrado': 1, 'pending': true
-                                }, { transaction: t });
-                                promises.push(newPromise);
-                            };
+                        var mm = mes < 10 ? '0' + mes : mes
 
-                            return Promise.all(promises).then(function (compromisos) {
-                                var compromisoPromises = [];
-                                for (var i = 0; i < compromisos.length; i++) {
-                                    compromisoPromises.push(compromisos[i]);
-                                }
-                                return Promise.all(compromisoPromises);
-                            });
+                        var newPromise = models.DetalleCompromiso.create({
+                            'iddetalleserviciocto': req.params.id,
+                            'periodo': 201701, 'borrado': 1,
+                            'montoorigen': 0,
+                            'montopesos': 0, 'pending': true
+                        }, { transaction: t });
 
-                        }).then(function (result) {
-
-                            console.log("YAY ---> " + result);
-                            callback(result)
-                            //res.json({ records: 12, total: 12, page: 1, rows: result });
-                        }).catch(function (err) {
-                            console.log("NO!!! ---> " + err);
-                            return next(err);
-                        });
-
-                    }).catch(function (err) {
-                        console.log(err);
-                        //res.json({ error_code: 1 });
+                        promises.push(newPromise);
+                    };
+                    return Promise.all(promises).then(function (compromisos) {
+                        var compromisoPromises = [];
+                        for (var i = 0; i < compromisos.length; i++) {
+                            compromisoPromises.push(compromisos[i]);
+                        }
+                        return Promise.all(compromisoPromises);
                     });
 
+                }).then(function (result) {
+                    callback(result)
                 }).catch(function (err) {
-                    console.log(err);
-                    //res.json({ error_code: 1 });
+                    return next(err);
                 });
-            }
 
-        })
+            }).catch(function (err) {
+                console.log(err);
+            });
 
+        }).catch(function (err) {
+            console.log(err);
+        });
     }
 
-    tmp(function (resultado) {
-        /*
-        utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-            if (err) {
-                console.log("->>> " + err)
-            } else {
-                console.log("PICOCON ---> " + filters);
-                models.DetalleCompromiso.count({
-                    where: data
-                }).then(function (records) {
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (err) {
+            console.log("->>> " + err)
+        } else {
+            models.DetalleCompromiso.count({
+                where: data
+            }).then(function (records) {
+                if (records > 0) {
                     var total = Math.ceil(records / rows);
                     models.DetalleCompromiso.findAll({
                         offset: parseInt(rows * (page - 1)),
                         limit: parseInt(rows),
                         order: orden,
                         where: data
-                    }).then(function (detalles) {
-                        //Contrato.forEach(log)
-                        res.json({ records: records, total: total, page: page, rows: detalles });
+                    }).then(function (compromisos) {
+                        res.json({ records: records, total: total, page: page, rows: compromisos });
                     }).catch(function (err) {
-                        //console.log(err);
+                        console.log(err);
                         res.json({ error_code: 1 });
                     });
-                })
-            }
-        });
-        */
-        res.json({ records: 12, total: 12, page: 1, rows: resultado });
+                } else {
+                    insertaPeriodos(function (compromisos) {
+                        res.json({ records: 12, total: 12, page: 1, rows: compromisos });
+                    });
+                }
+            })
+        }
     });
-
 };
