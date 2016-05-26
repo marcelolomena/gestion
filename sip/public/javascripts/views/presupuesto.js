@@ -539,7 +539,18 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         edit: true,
         del: false,
         refresh: true
-    });
+    },
+        {
+            editCaption: "Modifica Presupuesto Periodo",
+            closeAfterEdit: false,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }
+        }   
+    );
 
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "Excel",

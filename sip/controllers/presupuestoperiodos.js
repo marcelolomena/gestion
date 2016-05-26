@@ -163,7 +163,7 @@ exports.getExcel = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var idServ = req.params.id
-  console.log("***ActionPeriodos:"+action);
+  console.log("***ActionPeriodos:"+req.body.id);
   switch (action) {
     case "add":
         console.log("No se puede agregar");
@@ -171,7 +171,7 @@ exports.action = function (req, res) {
     case "edit":
       console.log("Edit:"+req.body.presupuestopesos);
       models.detalleplan.update({
-        presupuestopesos: req.body.presupuestopesos,
+        presupuestopesos: req.body.presupuestopesos
       }, {
           where: {
             id: req.body.id
