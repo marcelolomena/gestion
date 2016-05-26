@@ -21,6 +21,50 @@ exports.getPresupuestoServicios = function (req, res) {
 
   var order = sidx + " " + sord;
   
+  var insertaPeriodos = function (callback) {
+
+      models.sequelize.transaction({ autocommit: true }, function (t) {
+          var promises = []
+          var d = new Date();
+          var anio = d.getFullYear()
+          var mes = d.getMonth() + 1
+
+          for (var i = 0; i < 12; i++) {
+              var mm = mes + i
+              if (mm === 12) {
+                  anio = anio + 1 // incrementa el año en uno si el mes actual es DIC
+                  mm = 1 // coloca el mes en enero
+              }
+              var mmm = mm < 10 ? '0' + mm : mm
+              var periodo = anio + mmm
+
+              var newPromise = models.detalleplan.create({
+                  'iddetallepre': req.params.id,
+                  'periodo': periodo, 
+                  'presupuestopesos': 0,
+                  'presupuestobasepesos': 0, 
+                  'compromisopesos': 0,
+                  'borrado':1
+              }, { transaction: t });
+
+              promises.push(newPromise);
+          };
+          return Promise.all(promises).then(function (compromisos) {
+              var compromisoPromises = [];
+              for (var i = 0; i < compromisos.length; i++) {
+                  compromisoPromises.push(compromisos[i]);
+              }
+              return Promise.all(compromisoPromises);
+          });
+
+      }).then(function (result) {
+          callback(result)
+      }).catch(function (err) {
+          return next(err);
+      });
+
+  }  
+  
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +

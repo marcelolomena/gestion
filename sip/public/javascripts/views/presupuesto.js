@@ -233,7 +233,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         label: 'id', name: 'id', width: 50, key: true, hidden: true
     },
     {
-        label: 'Servicio',name: 'nombre',search: false, width: 200,  
+        label: 'Servicio',name: 'nombre',search: false, width: 300,  
         editable: true,
         editrules: { edithidden: false }, hidedlg: true
     },
@@ -519,7 +519,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             }
         ],
         viewrecords: true,
-        rowNum: 10,
+        rowNum: 16,
         height: 'auto',
         styleUI: "Bootstrap",
         autowidth: false,

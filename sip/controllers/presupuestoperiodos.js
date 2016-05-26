@@ -11,7 +11,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
   var filters = req.query.filters;
   var condition = "";
   var id = req.params.id
-  var filtrosubgrilla = "idpresupuesto="+id;
+  var filtrosubgrilla = "iddetallepre="+id;
 
   if (!sidx)
     sidx = "periodo";
@@ -20,7 +20,64 @@ exports.getPresupuestoPeriodos = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-  
+  var insertaPeriodos = function (callback) {
+
+    models.sequelize.transaction({ autocommit: true }, function (t) {
+        var promises = []
+        var d = new Date();
+        var anio = d.getFullYear()
+        var mes = 9;
+
+        for (var i = 0; i < 4; i++) {
+            var mm = mes + i
+            var mmm = mm < 10 ? '0' + mm : mm
+            var periodo = anio +''+ mmm
+
+            var newPromise = models.detalleplan.create({
+                'iddetallepre': req.params.id,
+                'periodo': periodo, 
+                'presupuestopesos': 0,
+                'presupuestobasepesos': 0, 
+                'compromisopesos': 0,
+                'borrado':1
+            }, { transaction: t });
+
+            promises.push(newPromise);
+        };
+        mes = 1;
+        anio = anio+1;
+        for (var i = 0; i < 12; i++) {
+            var mm = mes + i
+            var mmm = mm < 10 ? '0' + mm : mm
+            var periodo = anio +''+ mmm
+
+            var newPromise = models.detalleplan.create({
+                'iddetallepre': req.params.id,
+                'periodo': periodo, 
+                'presupuestopesos': 0,
+                'presupuestobasepesos': 0, 
+                'compromisopesos': 0,
+                'borrado':1
+            }, { transaction: t });
+
+            promises.push(newPromise);
+        };
+        return Promise.all(promises).then(function (compromisos) {
+            var compromisoPromises = [];
+            for (var i = 0; i < compromisos.length; i++) {
+                compromisoPromises.push(compromisos[i]);
+            }
+            return Promise.all(compromisoPromises);
+        });
+
+    }).then(function (result) {
+        callback(result)
+    }).catch(function (err) {
+        return next(err);
+    });
+
+  }  
+
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -29,7 +86,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, * " +
     "FROM sip.detalleplan " +
-    "WHERE iddetallepre="+id+")" +
+    "WHERE iddetallepre="+id+" order by id asc)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -56,7 +113,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
         
         console.log(sql);
 
-      models.detallepre.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.detalleplan.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -66,7 +123,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
 
     } else {
       console.log(sql0);
-      models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
+      models.detalleplan.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -77,12 +134,18 @@ exports.getPresupuestoPeriodos = function (req, res) {
 
   } else {
     console.log(sql0);
-    models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
-      var total = Math.ceil(records / rows);
-      sequelize.query(sql0)
-        .spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
+    models.detalleplan.count({ where: [filtrosubgrilla] }).then(function (records) {
+      if (records > 0) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      } else {
+          insertaPeriodos(function (compromisos) {
+              res.json({ records: 16, total: 16, page: 1, rows: compromisos });
+          });           
+      }
     })
 
   }
