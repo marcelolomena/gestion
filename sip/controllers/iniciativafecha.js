@@ -102,3 +102,29 @@ exports.list = function (req, res) {
   });
 
 };
+exports.actualizaDuracion = function (req, res) {
+  var nuevaduracion = 0;
+  models.IniciativaFecha.count({
+  },{
+    where: {
+      idiniciativaprograma: req.params.id
+    }
+  }).then(function (records) {
+          //console.log("nueva duracion: "+records);
+          nuevaduracion = records;
+      })
+  
+  models.IniciativaPrograma.update({
+        duracion: nuevaduracion,
+      }, {
+          where: {
+            id: req.params.id
+          }
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+
+};

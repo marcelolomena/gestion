@@ -169,6 +169,9 @@ module.exports = function (passport) {
 	router.route('/iniciativafecha/:id')
 		.post(isAuthenticated, iniciativafechaController.list);
 
+	router.route('/actualizaduracion/:id')
+		.get(isAuthenticated, iniciativafechaController.actualizaDuracion);
+	
 	router.route('/usuarios_por_rol/:rol')
 		.get(isAuthenticated, iniciativaController.getUsersByRol);
 

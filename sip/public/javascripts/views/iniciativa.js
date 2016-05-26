@@ -946,6 +946,10 @@ $(document).ready(function () {
                         }
                     }],
                 }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            {
+                label: 'Duracion', name: 'duracion', width: 100, align: 'left', search: true, editable: false,
+                editrules: { edithidden: false }, hidedlg: true
             }
         ];
 
@@ -1207,7 +1211,17 @@ $(document).ready(function () {
                 template: tmplPF,
                 errorTextFormat: function (data) {
                     return 'Error: ' + data.responseText
-                }, afterSubmit: function (response, postdata) {
+                }, 
+                beforeSubmit: function (postdata, formid) {
+                    if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
+                        return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
+                    } if (postdata.fecha == 0) {
+                        return [false, "Fecha: Debe agregar una fecha", ""];
+                    } else {
+                        return [true, "", ""]
+                    }                    
+                },
+                afterSubmit: function (response, postdata) {
                     var json = response.responseText;
                     var result = JSON.parse(json);
                     if (result.error_code != 0)
@@ -1242,12 +1256,48 @@ $(document).ready(function () {
                 onclickSubmit: function (rowid) {
                     return { parent_id: parentRowKey };
                 },
+                beforeSubmit: function (postdata, formid) {
+                    var fechamal = false;
+                    var fechamala = "";
+                    $.ajax({
+                        type: "POST",
+                        url: childGridURL,
+                        async: false,
+                        success: function (data) {
+                            $.each(data.rows, function (i, item) {
+                                if(data.rows[i].fecha>postdata.fecha){
+                                    fechamal=true;
+                                    fechamala=data.rows[i].fecha;
+                                }
+                            });
+                        }
+                    });
+                    if(fechamal){
+                        return [false, "Fecha: La fecha debe ser mayor a la última ingresada ("+fechamala.substr(0,10)+")", ""];
+                    }
+                    
+                    if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
+                        return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
+                    } if (postdata.fecha == 0) {
+                        return [false, "Fecha: Debe agregar una fecha", ""];
+                    } else {
+                        return [true, "", ""]
+                    }                    
+                },
                 afterSubmit: function (response, postdata) {
                     var json = response.responseText;
                     var result = JSON.parse(json);
                     if (result.error_code != 0)
                         return [false, result.error_text, ""];
                     else
+                        $.ajax({
+                        type: "GET",
+                        url: '/actualizaduracion/'+parentRowKey,
+                        async: false,
+                        success: function (data) {
+                             return [true, "", ""]
+                        }
+                    });
                         return [true, "", ""]
                 }, beforeShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -1277,8 +1327,6 @@ $(document).ready(function () {
                 recreateFilter: true
             }
         );
-
     }
-
     $("#pager_iniciativa_left").css("width", "");
 });
