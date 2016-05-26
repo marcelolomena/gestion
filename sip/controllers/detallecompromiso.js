@@ -103,18 +103,19 @@ exports.list = function (req, res) {
                     var d = new Date();
                     var anio = d.getFullYear()
                     var mes = d.getMonth() + 1
-                    if (mes === 12) {
-                        anio = anio + 1 // incrementa el año en uno si el mes actual es DIC
-                        mes = 1 // coloca el mes en enero
-                    }
 
                     for (var i = 0; i < param.valor; i++) {
-
-                        var mm = mes < 10 ? '0' + mes : mes
+                        var mm = mes + i
+                        if (mm === 12) {
+                            anio = anio + 1 // incrementa el año en uno si el mes actual es DIC
+                            mm = 1 // coloca el mes en enero
+                        }
+                        var mmm = mm < 10 ? '0' + mm : mm
+                        var periodo = anio + mmm
 
                         var newPromise = models.DetalleCompromiso.create({
                             'iddetalleserviciocto': req.params.id,
-                            'periodo': 201701, 'borrado': 1,
+                            'periodo': periodo, 'borrado': 1,
                             'montoorigen': 0,
                             'montopesos': 0, 'pending': true
                         }, { transaction: t });
