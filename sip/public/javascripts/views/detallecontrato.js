@@ -265,7 +265,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
-                }                
+                }
             },
             {
                 label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true,
@@ -481,8 +481,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         subGrid: true,
         subGridRowExpanded: gridDetail
     });
-    $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, { edit: true, add: true,
-         del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false },
+    $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
+        edit: true, add: true,
+        del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false
+    },
         {
             editCaption: "Modifica Servicio",
             closeAfterEdit: true,

@@ -5,7 +5,12 @@
         "database": "art_live",
         "host": "200.14.166.182",
         "dialect": "mssql",
-        "port": "1433"
+        "port": "1433",
+        "pool": {
+            "maxConnections": 15,
+            "minConnections": 5,
+            "maxIdleTime": 50000
+        }
     },
     "home": {
         "username": "pi",
@@ -15,6 +20,11 @@
         "dialect": "mssql",
         "dialectOptions": {
             "instanceName": "SQLEXPRESS"
+        },
+        "pool": {
+            "maxConnections": 10,
+            "minConnections": 0,
+            "maxIdleTime": 10000
         }
     },
     "local": {
@@ -25,6 +35,11 @@
         "dialect": "mssql",
         "dialectOptions": {
             "instanceName": "SQLEXPRESS"
+        },
+        "pool": {
+            "maxConnections": 10,
+            "minConnections": 0,
+            "maxIdleTime": 10000
         }
     }
 }
