@@ -76,7 +76,26 @@ module.exports = (function () {
         }
         callback(undefined, condition);
     }
+    var getDateRange = function (startDate, callback) {
+        var range = [];
+        try {
+            var theDate = new Date(startDate.getTime());
 
+            var now = new Date();
+
+            while (theDate.getTime() < now.getTime()) {
+                var string = theDate.getFullYear() + "-" +
+                    (theDate.getMonth() + 1) + "-" +
+                    theDate.getDate();
+                range.push(string);
+                theDate.setTime(theDate.getTime() + 86400000);
+            }
+
+        } catch (e) {
+            return callback(e);
+        }
+        callback(undefined, range);
+    }
     return {
         buildCondition: buildCondition,
         buildAdditionalCondition: buildAdditionalCondition

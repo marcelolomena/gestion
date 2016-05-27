@@ -72,7 +72,7 @@ module.exports = function (passport) {
 	});
 		
     router.route('/proveedores/list')
-        .get(isAuthenticated, proveedorController.getProveedoresPaginados);
+        .get(isAuthenticated, proveedorController.list);
 		
 	router.route('/proveedores/action')
 		.post(isAuthenticated, proveedorController.action);	
@@ -83,12 +83,6 @@ module.exports = function (passport) {
     router.route('/contactos/action')
        .post(isAuthenticated, contactoController.action);
 	   
-	// Create endpoint handlers for /proveedores/:id
-	router.route('/proveedores/:id')
-		.get(isAuthenticated, proveedorController.getProveedor)
-		.put(isAuthenticated, proveedorController.putProveedor)
-		.delete(isAuthenticated, proveedorController.deleteProveedor);
-
     router.get('/iniciativas', isAuthenticated, function (req, res) {
         res.render('iniciativas', { user: req.user });
     });

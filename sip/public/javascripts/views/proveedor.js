@@ -262,7 +262,10 @@ $(document).ready(function () {
             }, 
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
+            },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentRowKey };
+            },
         },
         {
             closeAfterDelete: true,

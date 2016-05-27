@@ -104,10 +104,11 @@ exports.getContactos = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-
+//parent_id
   switch (action) {
     case "add":
        models.ContactoProveedor.create({
+         idproveedor:req.body.parent_id,
        contacto: req.body.contacto,
        fono: req.body.fono,
        correo: req.body.correo,
