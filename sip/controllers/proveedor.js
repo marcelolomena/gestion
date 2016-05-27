@@ -65,6 +65,19 @@ exports.action = function (req, res) {
 
 };
 
+exports.combobox = function (req, res) {
+  console.log("PICOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+  models.Proveedor.findAll({
+    order: 'razonsocial'
+  }).then(function (proveedores) {
+    //iniciativas.forEach(log)
+    res.json(proveedores);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+
 exports.list = function (req, res) {
 
   var page = req.body.page;
