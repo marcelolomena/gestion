@@ -81,7 +81,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, proveedorController.action);
 
     router.route('/contactos/list/:id')
-        .get(isAuthenticated, contactoController.getContactos);
+        .get(isAuthenticated, contactoController.list);
 
     router.route('/contactos/action')
         .post(isAuthenticated, contactoController.action);
