@@ -504,6 +504,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
             }, afterShowForm: function (form) {
+                //$('#idcontactoproveedor',form).attr('disabled','disabled');
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
             }
         },
