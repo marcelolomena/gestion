@@ -20,7 +20,7 @@ $(document).ready(function () {
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
-    
+
     var modelPresupuesto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
@@ -154,8 +154,8 @@ $(document).ready(function () {
             beforeSubmit: function (postdata, formid) {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
-                console.log("*** selrow:"+rowKey);                
-                postdata.id= rowKey;
+                console.log("*** selrow:" + rowKey);
+                postdata.id = rowKey;
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (postdata.idejercicio == 0) {
@@ -166,11 +166,11 @@ $(document).ready(function () {
                     return [true, "", ""]
                 }
             },
-            beforeShowForm:function (formid) {
+            beforeShowForm: function (formid) {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
-                if (rowKey==null){
-                    alert("Debe seleccionar una versión de presupuesto:"+rowKey);
+                if (rowKey == null) {
+                    alert("Debe seleccionar una versión de presupuesto:" + rowKey);
                     return [false, "", ""];
                 }
                 return [true, "", ""];
@@ -239,116 +239,116 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "<hr style='width:100%;'/>";
     tmplServ += "<div> {sData} {cData}  </div>";
     tmplServ += "</div>";
-    
+
     var modelPresupuestoServ = [
-    {
-        label: 'id', name: 'id', width: 50, key: true, hidden: true
-    },
-    {
-        label: 'Servicio',name: 'nombre',search: false, width: 300,  
-        editable: true,
-        editrules: { edithidden: false }, hidedlg: true
-    },
-    {
-        label: 'Servicio', name: 'idservicio', search: false, width: 200,
-        editable: true, hidden: true,
-        edittype: "select",
-        editoptions: {
-            dataUrl: '/serviciospre',
-            buildSelect: function (response) {
-                var grid = $("#grid");
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.idservicio;
-                var data = JSON.parse(response);
-                var s = "<select>";//el default
-                s += '<option value="0">--Escoger Servicio--</option>';
-                $.each(data, function (i, item) {
-                    console.log("***data:"+data[i].id+", "+thissid);
-                    if (data[i].id == thissid) {
-                        s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                    } else {
-                        s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                    }
-                });
-                return s + "</select>";
-            }/*
+        {
+            label: 'id', name: 'id', width: 50, key: true, hidden: true
+        },
+        {
+            label: 'Servicio', name: 'nombre', search: false, width: 300,
+            editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Servicio', name: 'idservicio', search: false, width: 200,
+            editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/serviciospre',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idservicio;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Servicio--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***data:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }/*
             dataEvents: [{
                 type: 'change', fn: function (e) {
                     $("input#divisionsponsor").val($('option:selected', this).text());
                 }
             }],*/
-        }, dataInit: function (elem) { $(elem).width(200); }
-         
-    },            
-    {
-        label: 'Cuenta',
-        name: 'cuentacontable',
-        search: false,
-        hidden: true,
-        width: 120
-    },
-    {
-        label: 'Nombre Cuenta',
-        name: 'nombrecuenta',
-        width: 130,
-        search: false,
-        hidden: true,
-        align: 'right'
-    },            
-    {
-        label: 'Moneda', name: 'moneda', width: 100, align: 'right',
-        search: false, editable: true,
-        editrules: { edithidden: false }, hidedlg: true
-    },
-    {
-        label: 'Moneda',name: 'idmoneda',width: 100,align: 'right',
-        search: false, editable: true, hidden: true,
-        edittype: "select",
-        editoptions: {
-            dataUrl: '/monedas',
-            buildSelect: function (response) {
-                var grid = $("#grid");
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.idmoneda;
-                console.log(response);
-                var data = JSON.parse(response);
-                var s = "<select>";//el default
-                s += '<option value="0">--Escoger Moneda--</option>';
-                $.each(data, function (i, item) {
-                    console.log("***monedas:"+data[i].id+", "+thissid);
-                    if (data[i].id == thissid) {
-                        s += '<option value="' + data[i].id + '" selected>' + data[i].moneda + '</option>';
-                    } else {
-                        s += '<option value="' + data[i].id + '">' + data[i].moneda + '</option>';
-                    }
-                });
-                return s + "</select>";
-            }
-        }, dataInit: function (elem) { $(elem).width(200); }
-        
-    },            
-    {
-        label: 'Monto Forecast',
-        name: 'montoforecast',
-        width: 130,
-        align: 'right',
-        search: false,
-        editable: true,
-        formatter: 'number', formatoptions: { decimalPlaces: 0 }
-    },
-    {
-        label: 'Monto Anual',
-        name: 'montoanual',
-        width: 130,
-        align: 'right',
-        search: false,
-        editable: true,
-        formatter: 'number', formatoptions: { decimalPlaces: 0 }
-    }
-];
-    
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'Cuenta',
+            name: 'cuentacontable',
+            search: false,
+            hidden: true,
+            width: 120
+        },
+        {
+            label: 'Nombre Cuenta',
+            name: 'nombrecuenta',
+            width: 130,
+            search: false,
+            hidden: true,
+            align: 'right'
+        },
+        {
+            label: 'Moneda', name: 'moneda', width: 100, align: 'right',
+            search: false, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Moneda', name: 'idmoneda', width: 100, align: 'right',
+            search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/monedas',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idmoneda;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Moneda--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***monedas:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].moneda + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].moneda + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'Monto Forecast',
+            name: 'montoforecast',
+            width: 130,
+            align: 'right',
+            search: false,
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Monto Anual',
+            name: 'montoanual',
+            width: 130,
+            align: 'right',
+            search: false,
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        }
+    ];
+
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -361,12 +361,12 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
-        sortable: "true",
-        rowNum: 10,
         height: 'auto',
+        width: null,
+        shrinkToFit: false,
+        rowNum: 10,
         rowList: [5, 10, 20, 50],
-        autowidth: false,
-        editurl: '/presupuestoservicios/action/'+ parentRowKey,
+        editurl: '/presupuestoservicios/action/' + parentRowKey,
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showPresupuestoPeriodos, // javascript function that will take care of showing the child grid                
         pager: "#" + childGridPagerID
@@ -375,11 +375,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,        
+        edit: true,
         add: true,
-        del: true,        
+        del: true,
         refresh: false,
-        search: false        
+        search: false
     },
         {
             editCaption: "Modifica Servicio",
@@ -404,7 +404,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                 } else {
                     return [true, "", ""]
                 }
-            }            
+            }
         },
         {
             addCaption: "Agrega Servicio",
@@ -449,23 +449,23 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                 else
                     return [true, "", ""]
             }
-        }, {}   
-    
+        }, {}
+
     );
-/*
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
-        title: "Excel",
-        position: "last",
-        onClickButton: function () {
-            var grid = $("#" + childGridID);
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/presupuestoserviciosexcel/' + parentRowKey;
-            $("#" + childGridID).jqGrid('excelExport', { "url": url });
-        }
-    });
-*/
+    /*
+        $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
+            caption: "Excel",
+            buttonicon: "silk-icon-page-excel",
+            title: "Excel",
+            position: "last",
+            onClickButton: function () {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var url = '/presupuestoserviciosexcel/' + parentRowKey;
+                $("#" + childGridID).jqGrid('excelExport', { "url": url });
+            }
+        });
+    */
 }
 
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
@@ -473,7 +473,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     var childGridPagerID = parentRowID + "_pager";
 
     var grid = $("#" + childGridID);
-    var rowKey = grid.getGridParam("selrow");            
+    var rowKey = grid.getGridParam("selrow");
 
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/presupuestoperiodoslist/" + parentRowKey;
@@ -485,7 +485,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         url: childGridURL,
         mtype: "GET",
         datatype: "json",
-        page: 1,
+        //page: 1,
         colModel: [
             {
                 label: 'id',
@@ -530,25 +530,25 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             }
         ],
-        viewrecords: true,
-        rowNum: 16,
-        height: 'auto',
+        //viewrecords: true,
+        //rowNum: 16,
         styleUI: "Bootstrap",
-        autowidth: false,
-        sortable: "true",
-        rowList: [5, 10, 20, 50],
         regional: "es",
+        height: 'auto',
+        width: null,
+        shrinkToFit: false,
         editurl: '/presupuestoperiodos/action',
         pager: "#" + childGridPagerID
     });
-
-    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: false, searchOperators: true, searchOnEnter: false, 
-        defaultSearch: 'cn' });
-
+    /*
+        $("#" + childGridID).jqGrid('filterToolbar', {
+            stringResult: false, searchOperators: true, searchOnEnter: false,
+            defaultSearch: 'cn'
+        });
+    */
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        search: false, // show search button on the toolbar
-        add: false,
         edit: true,
+        add: false,
         del: false,
         refresh: true
     },
@@ -561,9 +561,9 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
-        }   
+        }
     );
-
+/*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "Excel",
         buttonicon: "silk-icon-page-excel",
@@ -576,4 +576,5 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             $("#" + childGridID).jqGrid('excelExport', { "url": url });
         }
     });
+*/    
 }
