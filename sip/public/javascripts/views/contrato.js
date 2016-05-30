@@ -120,7 +120,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Estado Solicitud', name: 'estadosolicitud', width: 100, align: 'left', search: true, editable: true,
+            label: 'Estado Solicitud', name: 'estadosolicitud', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -147,7 +147,20 @@ $(document).ready(function () {
         },
         {
             label: 'Tipo Solicitud', name: 'tiposolicitud', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            editrules: { edithidden: false }, hidedlg: true,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/parameters/tiposolicitud',
+                buildSelect: function (response) {
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger Tipo Solicitud--</option>';
+                    $.each(data, function (i, item) {
+                        s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                    });
+                    return s + "</select>";
+                }
+            },
         },
         {
             label: 'Tipo Solicitud', name: 'idtiposolicitud', editable: true, hidden: true,

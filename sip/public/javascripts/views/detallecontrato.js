@@ -110,7 +110,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Cui', name: 'EstructuraCui.cui', search: true, editable: false, hidden: false,
+                label: 'Cui', name: 'EstructuraCui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
                 //jsonmap: "EstructuraCui.nombre"
             },
             {
@@ -362,7 +362,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
-                label: 'Impuesto', name: 'impuesto', search: true, editable: true, hidden: false,
+                label: 'Impuesto', name: 'impuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
                 formatter: function (cellvalue, options, rowObject) {
                     if (rowObject.impuesto === 1) {
                         return 'Si';
@@ -427,11 +427,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Estado', name: 'estadocontrato', search: true, editable: true, hidden: false,
+                label: 'Estado', name: 'estadocontrato', width: 150, align: 'left', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
-                label: 'Glosa', name: 'glosaservicio', search: true, editable: true, hidden: false,
+                label: 'Descripción', name: 'glosaservicio', search: true, editable: true, hidden: false,
                 edittype: "textarea"
             }
         ],
