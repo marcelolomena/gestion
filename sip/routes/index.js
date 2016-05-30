@@ -250,11 +250,6 @@ module.exports = function (passport) {
     router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoperiodosController.action);
 
-    var testController = require('../controllers/test');
-
-    router.route('/test')
-        .get(isAuthenticated, testController.test);
-
     return router;
 
 }
