@@ -24,12 +24,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
-    templateServicio += "<div class='column-half'>Cuenta{idcuenta}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Cui{idcui}</div>";
-    templateServicio += "<div class='column-half'>Contacto{idcontactoproveedor}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
@@ -39,7 +34,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Fecha Control{fechacontrol}</div>";
-    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
+    templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
@@ -53,18 +48,22 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
-    templateServicio += "<div class='column-half'>Descripción{glosaservicio}</div>";
+    templateServicio += "<div class='column-half'>Contacto{idcontactoproveedor}</div>";
+    templateServicio += "<div class='column-half'>Moneda{idmoneda}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Moneda{idmoneda}</div>";
+    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-full'>Descripción{glosaservicio}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row' style='display: none;'>";
     templateServicio += "<div class='column-half'>servicio{servicio}</div>";
-    templateServicio += "<div class='column-half'>cuentacontable{cuentacontable}</div>";
+    //templateServicio += "<div class='column-half'>cuentacontable{cuentacontable}</div>";
     templateServicio += "<div class='column-half'>frecuenciafacturacion {frecuenciafacturacion}</div>";
     templateServicio += "<div class='column-half'>plazocontrato {plazocontrato}</div>";
     templateServicio += "<div class='column-half'>condicionnegociacion {condicionnegociacion}</div>";
@@ -149,38 +148,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
-                label: 'idcuenta', name: 'idcuenta', search: false, editable: true, hidden: true,
-                edittype: "select",
-                editoptions: {
-                    dataUrl: '/cuentas',
-                    buildSelect: function (response) {
-                        var grid = $('#' + subgrid_table_id);
-                        var rowKey = grid.getGridParam("selrow");
-                        var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.servicio;
-                        var data = JSON.parse(response);
-                        var s = "<select>";//el default
-                        s += '<option value="0">--Escoger Cuenta--</option>';
-                        $.each(data, function (i, item) {
-                            if (data[i].nombre == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].cuentacontable + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].cuentacontable + '</option>';
-                            }
-                        });
-                        return s + "</select>";
-                    },
-                    dataEvents: [{
-                        type: 'change', fn: function (e) {
-                            var thistid = $(this).val();
-                            $("input#cuentacontable").val($('option:selected', this).text());
-                        }
-                    }],
-                }, dataInit: function (elem) { /*$(elem).width(200);*/ }
+                label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true,
             },
             {
-                label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true, hidden: false,
-                editrules: { edithidden: false }, hidedlg: true
+                label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: false, hidden: false,
             },
             {
                 label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: true, editable: true, hidden: false,
@@ -459,7 +430,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'Estado', name: 'estadocontrato', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
-            { label: 'Glosa', name: 'glosaservicio', search: true, editable: true, hidden: false }
+            {
+                label: 'Glosa', name: 'glosaservicio', search: true, editable: true, hidden: false,
+                edittype: "textarea"
+            }
         ],
         shrinkToFit: false,
         caption: 'Servicios',
@@ -479,7 +453,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             }
         },
         subGrid: true,
-        subGridRowExpanded: gridDetail
+        subGridRowExpanded: gridDetail,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        }
     });
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
         edit: true, add: true,
@@ -525,8 +503,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
-                } if (postdata.idcuenta == 0) {
-                    return [false, "Cuenta: Debe escoger un valor", ""];
                 } if (postdata.idfrecuencia == 0) {
                     return [false, "Frecuencia: Debe escoger un valor", ""];
                 } if (postdata.idplazocontrato == 0) {

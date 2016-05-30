@@ -11,8 +11,8 @@ exports.action = function (req, res) {
     var montoorigen
 
     if (action != "del") {
-        if (req.body.montoorigen != "")
-            montoorigen = req.body.montoorigen.split(".").join("").replace(",", ".")
+        if (req.body.montopesos != "")
+            montopesos = req.body.montopesos.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
@@ -34,15 +34,15 @@ exports.action = function (req, res) {
             break;
         case "edit":
             models.DetalleCompromiso.update({
-                iddetalleserviciocto: req.body.iddetalleserviciocto,
+                //iddetalleserviciocto: req.body.iddetalleserviciocto,
                 periodo: req.body.periodo,
-                idmoneda: req.body.idmoneda,
-                montoorigen: montoorigen,
+                //idmoneda: req.body.idmoneda,
+                //montoorigen: montoorigen,
                 montopesos: req.body.montopesos,
             }, {
-                    where: {
-                        id: req.body.id
-                    }
+                where: {
+                    id: req.body.id
+                }
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
@@ -66,7 +66,6 @@ exports.action = function (req, res) {
             });
 
             break;
-
     }
 }
 
@@ -91,32 +90,27 @@ exports.list = function (req, res) {
         "data": req.params.id
     }];
 
+    var buscaParamValue = function (detallecto, callback) {
+        return models.Parametro.find({
+            where: { id: detallecto.idfrecuencia }
+        }).then(function (param) {
+            utilSeq.getDateRange(detallecto.fechainicio, function (err, range) {
+                callback([param.valor, range])
+            });
+        });
+    }
+
     var insertaPeriodos = function (callback) {
         models.DetalleServicioCto.find({
             where: { id: req.params.id }
         }).then(function (detallecto) {
-            models.Parametro.find({
-                where: { id: detallecto.idfrecuencia }
-            }).then(function (param) {
+            buscaParamValue(detallecto, function (param) {
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = []
-                    var d = new Date();
-                    var anio = parseInt(d.getFullYear())
-                    var mes = parseInt(d.getMonth() + 1)
-
-                    for (var i = 0; i < param.valor; i++) {
-                        if ((mes + i) > 12) {
-                            anio = parseInt(anio) + 1 // incrementa el año en uno si el mes actual es DIC
-                            mes = 1 // coloca el mes en enero
-                        }
-
-                        var mmm = (mes + i) < 10 ? '0' + (mes + i) : (mes + i)
-                        var periodo = anio + '' + mmm
-                        //console.log("periodo : "  + periodo)
-
+                    for (var i = 0; i < param[0]; i++) {
                         var newPromise = models.DetalleCompromiso.create({
                             'iddetalleserviciocto': req.params.id,
-                            'periodo': periodo, 'borrado': 1,
+                            'periodo': param[1][i], 'borrado': 1,
                             'montoorigen': 0,
                             'montopesos': 0, 'pending': true
                         }, { transaction: t });
@@ -134,13 +128,10 @@ exports.list = function (req, res) {
                 }).then(function (result) {
                     callback(result)
                 }).catch(function (err) {
-                    return next(err);
+                    console.log("--------> " + err);
                 });
 
-            }).catch(function (err) {
-                console.log(err);
-            });
-
+            })
         }).catch(function (err) {
             console.log(err);
         });

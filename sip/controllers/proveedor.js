@@ -66,7 +66,6 @@ exports.action = function (req, res) {
 };
 
 exports.combobox = function (req, res) {
-  console.log("PICOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
   models.Proveedor.findAll({
     order: 'razonsocial'
   }).then(function (proveedores) {

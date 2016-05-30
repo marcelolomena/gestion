@@ -70,9 +70,9 @@ module.exports = function (passport) {
     router.get('/proveedores', isAuthenticated, function (req, res) {
         res.render('proveedores', { user: req.user });
     });
-    
+
     router.route('/proveedores/combobox')
-        .get(isAuthenticated, proveedorController.combobox);    
+        .get(isAuthenticated, proveedorController.combobox);
 
     router.route('/proveedores/list')
         .get(isAuthenticated, proveedorController.list);
@@ -235,6 +235,9 @@ module.exports = function (passport) {
     router.route('/compromisos/:id')
         .post(isAuthenticated, compromisoController.list);
 
+    router.route('/compromisos/:idd/action')
+        .post(isAuthenticated, compromisoController.action);
+
     router.route('/monedas')
         .get(isAuthenticated, monedaController.getMonedas);
 
@@ -246,6 +249,11 @@ module.exports = function (passport) {
 
     router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoperiodosController.action);
+
+    var testController = require('../controllers/test');
+
+    router.route('/test')
+        .get(isAuthenticated, testController.test);
 
     return router;
 

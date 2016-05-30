@@ -6,6 +6,9 @@ var log = function (inst) {
   console.dir(inst.get())
 }
 
+exports.excel = function (req, res) {
+}
+
 exports.action = function (req, res) {
   var action = req.body.oper;
 

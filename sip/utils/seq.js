@@ -79,16 +79,16 @@ module.exports = (function () {
     var getDateRange = function (startDate, callback) {
         var range = [];
         try {
-            var theDate = new Date(startDate.getTime());
+            var tmpDate = startDate.toISOString().slice(0, 10).split("-");
+            var iniDate = new Date(parseInt(tmpDate[0]), parseInt(tmpDate[1]) - 1, 15);
+            var endDate = new Date(parseInt(tmpDate[0]) + 1, parseInt(tmpDate[1]) - 1, 15);
 
-            var now = new Date();
-
-            while (theDate.getTime() < now.getTime()) {
-                var string = theDate.getFullYear() + "-" +
-                    (theDate.getMonth() + 1) + "-" +
-                    theDate.getDate();
-                range.push(string);
-                theDate.setTime(theDate.getTime() + 86400000);
+            while (iniDate.getTime() < endDate.getTime()) {
+                var mes = parseInt(iniDate.getMonth()) + 1
+                var mm = mes < 10 ? '0' + mes : mes;
+                var period = iniDate.getFullYear() + '' + mm;
+                range.push(parseInt(period));
+                iniDate.setTime(iniDate.getTime() + 86400000 * 30);//1 mes
             }
 
         } catch (e) {
@@ -98,7 +98,8 @@ module.exports = (function () {
     }
     return {
         buildCondition: buildCondition,
-        buildAdditionalCondition: buildAdditionalCondition
+        buildAdditionalCondition: buildAdditionalCondition,
+        getDateRange: getDateRange
     };
 
 

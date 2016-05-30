@@ -239,7 +239,11 @@ $(document).ready(function () {
             }
         },
         subGrid: true,
-        subGridRowExpanded: showSubGrids
+        subGridRowExpanded: showSubGrids,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },        
     }).jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,
@@ -333,8 +337,8 @@ $(document).ready(function () {
     );
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
