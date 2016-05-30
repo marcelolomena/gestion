@@ -41,9 +41,9 @@ exports.getPresupuestoServicios = function (req, res) {
               var newPromise = models.detalleplan.create({
                   'iddetallepre': req.params.id,
                   'periodo': periodo, 
-                  'presupuestopesos': 0,
-                  'presupuestobasepesos': 0, 
-                  'compromisopesos': 0,
+                  'presupuestopesos': 5000,
+                  'presupuestobasepesos': 5000, 
+                  'compromisopesos': 5000,
                   'borrado':1
               }, { transaction: t });
 
@@ -117,8 +117,7 @@ exports.getPresupuestoServicios = function (req, res) {
       models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
+          .spread(function (rows) {        
           });
       })
     }

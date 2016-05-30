@@ -162,6 +162,15 @@ $(document).ready(function () {
                 } else {
                     return [true, "", ""]
                 }
+            },
+            beforeShowForm:function (formid) {
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                if (rowKey==null){
+                    alert("Debe seleccionar una versión de presupuesto:"+rowKey);
+                    return [false, "", ""];
+                }
+                return [true, "", ""];
             }
         },
         {
@@ -366,7 +375,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         edit: true,        
         add: true,
         del: true,        
-        refresh: true,
+        refresh: false,
         search: false        
     },
         {
@@ -440,7 +449,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         }, {}   
     
     );
-
+/*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "Excel",
         buttonicon: "silk-icon-page-excel",
@@ -453,7 +462,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             $("#" + childGridID).jqGrid('excelExport', { "url": url });
         }
     });
-
+*/
 }
 
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
@@ -530,7 +539,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         pager: "#" + childGridPagerID
     });
 
-    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, 
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: false, searchOperators: true, searchOnEnter: false, 
         defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
