@@ -152,7 +152,10 @@ $(document).ready(function () {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                console.log("*** selrow:"+rowKey);                
+                postdata.id= rowKey;
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (postdata.idejercicio == 0) {

@@ -216,9 +216,10 @@ exports.getEjercicios = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-
+  var idpre = req.body.id;
+  console.log("Id Prep:"+idpre);
   switch (action) {
-    case "add":
+    case "add":        
       models.presupuesto.create({
         idejercicio: req.body.idejercicio,
         idcui: req.body.idcui,
@@ -226,8 +227,28 @@ exports.action = function (req, res) {
         estado: 'ingresado',
         version: 1, 
         borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+      }).then(function (presupuesto) {
+          models.detallepre.find({
+              where: { 'idpresupuesto': idpre }
+          }).then(function (servicio) {
+            models.detallepre.create({
+              idpresupuesto: presupuesto.id,
+              //idcui: servicio.idcui, 
+              idservicio: servicio.idservicio,
+              idmoneda: servicio.idmoneda,
+              montoforecast: servicio.montoforecast,
+              montoanual: servicio.montoanual, 
+              borrado: 1
+            }).then(function (iniciativa) {
+              res.json({ error_code: 0 });
+            }).catch(function (err) {
+              console.log(err);
+              res.json({ error_code: 1 });
+            });
+          }).error(function (err) {
+
+          });        
+        //res.json({ error_code: 0 });
       }).catch(function (err) {
         console.log(err);
         res.json({ error_code: 1 });
