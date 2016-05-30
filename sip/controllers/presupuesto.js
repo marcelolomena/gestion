@@ -1,13 +1,17 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+
+var log = function (inst) {
+  console.dir(inst.get())
+}
 // Create endpoint /proyecto for GET
 exports.getPresupuestoPaginados = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
   var rows = req.query.rows;
   var sidx = req.query.sidx;
-  var sord = req.query.sord;  
+  var sord = req.query.sord;
   var filters = req.query.filters;
   var condition = "";
 
@@ -18,7 +22,7 @@ exports.getPresupuestoPaginados = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-  
+
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -27,7 +31,7 @@ exports.getPresupuestoPaginados = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
     "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
-    "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) "+
+    "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -49,11 +53,11 @@ exports.getPresupuestoPaginados = function (req, res) {
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
         "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
-        "JOIN sip.ejercicios c ON c.id=a.idejercicio "+
+        "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
         "WHERE " + condition.substring(0, condition.length - 4) + "  ORDER BY id desc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-        
-        console.log(sql);
+
+      console.log(sql);
 
       models.presupuesto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -116,7 +120,7 @@ exports.getExcel = function (req, res) {
       caption: 'Responsable',
       type: 'string',
       width: 50
-    },    
+    },
     {
       caption: 'Ejercicio',
       type: 'number',
@@ -129,17 +133,17 @@ exports.getExcel = function (req, res) {
     },
     {
       caption: 'Descripción',
-      type: 'string',  
+      type: 'string',
       width: 30
     }
   ];
 
-    var sql = "SELECT a.*, b.CUI, b.nombre, b.responsable, c.ejercicio "+
-    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia "+
+  var sql = "SELECT a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
+    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
     "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
-    
-    sequelize.query(sql)
-      .spread(function (proyecto) {
+
+  sequelize.query(sql)
+    .spread(function (proyecto) {
       var arr = []
       for (var i = 0; i < proyecto.length; i++) {
 
@@ -192,9 +196,9 @@ exports.getUsersByRol = function (req, res) {
 
 exports.getCUIs = function (req, res) {
 
-  var sql = "SELECT id, nombre FROM sip.estructuracui "+ 
+  var sql = "SELECT id, nombre FROM sip.estructuracui " +
     "ORDER BY nombre";
-      
+
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -206,7 +210,7 @@ exports.getCUIs = function (req, res) {
 exports.getEjercicios = function (req, res) {
 
   var sql = "SELECT id, ejercicio FROM sip.ejercicios";
-      
+
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -217,27 +221,31 @@ exports.getEjercicios = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var idpre = req.body.id;
-  console.log("Id Prep:"+idpre);
+  console.log("Id Prep:" + idpre);
   switch (action) {
-    case "add":        
+    case "add":
       models.presupuesto.create({
         idejercicio: req.body.idejercicio,
         idcui: req.body.idcui,
         descripcion: req.body.descripcion,
         estado: 'ingresado',
-        version: 1, 
+        version: 1,
         borrado: 1
       }).then(function (presupuesto) {
-          models.detallepre.find({
-              where: { 'idpresupuesto': idpre }
-          }).then(function (servicio) {
+        models.detallepre.findAll({
+          where: { 'idpresupuesto': idpre }
+        }).then(function (servicio) {
+
+          for (var i = 0; i < servicio.length; i++) {
+            console.log("----->" + servicio[i].idservicio)
+
             models.detallepre.create({
               idpresupuesto: presupuesto.id,
               //idcui: servicio.idcui, 
-              idservicio: servicio.idservicio,
-              idmoneda: servicio.idmoneda,
-              montoforecast: servicio.montoforecast,
-              montoanual: servicio.montoanual, 
+              idservicio: servicio[i].idservicio,
+              idmoneda: servicio[i].idmoneda,
+              montoforecast: servicio[i].montoforecast,
+              montoanual: servicio[i].montoanual,
               borrado: 1
             }).then(function (iniciativa) {
               res.json({ error_code: 0 });
@@ -245,9 +253,12 @@ exports.action = function (req, res) {
               console.log(err);
               res.json({ error_code: 1 });
             });
-          }).error(function (err) {
 
-          });        
+          }
+          res.json({ error_code: 0 });
+        }).error(function (err) {
+          res.json({ error_code: 1 });
+        });
         //res.json({ error_code: 0 });
       }).catch(function (err) {
         console.log(err);
