@@ -20,6 +20,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    uid: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     negociadordivot: {
       type: DataTypes.STRING,
       allowNull: true
