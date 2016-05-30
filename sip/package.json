@@ -20,7 +20,7 @@
 	"squel": "latest",
 	"passport": "latest",
     "passport-local": "latest",
-	"sequelize": "latest",
+	"sequelize": "3.23.3",
 	"express-flash": "0.0.2",
 	"tedious": "latest",
 	"bcrypt-nodejs": "latest",

@@ -14,14 +14,12 @@ exports.action = function (req, res) {
         if (montopesos != "")
             montopesos = montopesos.split(".").join("").replace(",", ".")
     }
-    console.log("pico conchetumare : " + montopesos);
+
     switch (action) {
         case "add":
             models.DetalleCompromiso.create({
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
-                //idmoneda: req.body.idmoneda,
-                //montoorigen: montoorigen,
                 montopesos: montopesos,
                 borrado: 1
             }).then(function (detalle) {
@@ -34,15 +32,12 @@ exports.action = function (req, res) {
             break;
         case "edit":
             models.DetalleCompromiso.update({
-                //iddetalleserviciocto: req.body.iddetalleserviciocto,
                 periodo: req.body.periodo,
-                //idmoneda: req.body.idmoneda,
-                //montoorigen: montoorigen,
                 montopesos: montopesos,
             }, {
-                    where: {
-                        id: req.body.id
-                    }
+                where: {
+                    id: req.body.id
+                }
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {

@@ -3,18 +3,17 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
-
     var action = req.body.oper;
+    var valorcuota = req.body.valorcuota
 
     if (action != "del") {
-        if (req.body.valorcuota != "")
-            valorcuota = req.body.valorcuota.split(".").join("").replace(",", ".")
+        if (valorcuota != "")
+            valorcuota = valorcuota.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
         case "add":
             var factor = req.body.impuesto == 1 ? 1.19 : 1;
-            var valorcuota
 
             models.Servicio.belongsTo(models.CuentasContables, { foreignKey: 'idcuenta' });
             models.Servicio.find({
@@ -92,9 +91,9 @@ exports.action = function (req, res) {
                 estadocontrato: req.body.estadocontrato,
                 glosaservicio: req.body.glosaservicio
             }, {
-                    where: {
-                        id: req.body.id
-                    }
+                where: {
+                    id: req.body.id
+                }
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
