@@ -76,10 +76,30 @@ module.exports = (function () {
         }
         callback(undefined, condition);
     }
+    var getDateRange = function (startDate, callback) {
+        var range = [];
+        try {
+            var tmpDate = startDate.toISOString().slice(0, 10).split("-");
+            var iniDate = new Date(parseInt(tmpDate[0]), parseInt(tmpDate[1]) - 1, 15);
+            var endDate = new Date(parseInt(tmpDate[0]) + 1, parseInt(tmpDate[1]) - 1, 15);
 
+            while (iniDate.getTime() < endDate.getTime()) {
+                var mes = parseInt(iniDate.getMonth()) + 1
+                var mm = mes < 10 ? '0' + mes : mes;
+                var period = iniDate.getFullYear() + '' + mm;
+                range.push(parseInt(period));
+                iniDate.setTime(iniDate.getTime() + 86400000 * 30);//1 mes
+            }
+
+        } catch (e) {
+            return callback(e);
+        }
+        callback(undefined, range);
+    }
     return {
         buildCondition: buildCondition,
-        buildAdditionalCondition: buildAdditionalCondition
+        buildAdditionalCondition: buildAdditionalCondition,
+        getDateRange: getDateRange
     };
 
 

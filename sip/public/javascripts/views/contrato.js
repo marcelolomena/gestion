@@ -46,7 +46,7 @@ $(document).ready(function () {
             label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "Proveedor.id",
             edittype: "select",
             editoptions: {
-                dataUrl: '/proveedores/list',
+                dataUrl: '/proveedores/combobox',
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
@@ -77,7 +77,7 @@ $(document).ready(function () {
             editable: true, jsonmap: "Proveedor.razonsocial",
             stype: 'select',
             searchoptions: {
-                dataUrl: '/proveedores/list',
+                dataUrl: '/proveedores/combobox',
                 buildSelect: function (response) {
                     var data = JSON.parse(response);
                     var s = "<select>";
@@ -239,7 +239,11 @@ $(document).ready(function () {
             }
         },
         subGrid: true,
-        subGridRowExpanded: showSubGrids
+        subGridRowExpanded: showSubGrids,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },        
     }).jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,
@@ -333,8 +337,8 @@ $(document).ready(function () {
     );
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {

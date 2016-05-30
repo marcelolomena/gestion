@@ -25,69 +25,66 @@ var express = require('express');
 var router = express.Router();
 
 var isAuthenticated = function (req, res, next) {
-	// if user is authenticated in the session, call the next() to call the next request handler 
-	// Passport adds this method to request object. A middleware is allowed to add properties to
-	// request and response objects
-	if (req.isAuthenticated())
-		return next();
-	// if the user is not authenticated then redirect him to the login page
-	res.redirect('/');
+    // if user is authenticated in the session, call the next() to call the next request handler 
+    // Passport adds this method to request object. A middleware is allowed to add properties to
+    // request and response objects
+    if (req.isAuthenticated())
+        return next();
+    // if the user is not authenticated then redirect him to the login page
+    res.redirect('/');
 }
 
 module.exports = function (passport) {
 
-	/* GET login page. */
-	router.get('/', function (req, res) {
-		// Display the Login page with any flash message, if any
-		res.render('index', { message: req.flash('message') });
-	});
+    /* GET login page. */
+    router.get('/', function (req, res) {
+        // Display the Login page with any flash message, if any
+        res.render('index', { message: req.flash('message') });
+    });
 
-	/* Handle Login POST */
-	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/home',
-		failureRedirect: '/',
-		failureFlash: true
-	}));
+    /* Handle Login POST */
+    router.post('/login', passport.authenticate('login', {
+        successRedirect: '/home',
+        failureRedirect: '/',
+        failureFlash: true
+    }));
 
-	/* GET Home Page */
-	router.get('/home', isAuthenticated, function (req, res) {
-		res.render('home', { user: req.user });
-	});
+    /* GET Home Page */
+    router.get('/home', isAuthenticated, function (req, res) {
+        res.render('home', { user: req.user });
+    });
 
-	/* Handle Logout */
-	router.get('/signout', function (req, res) {
-		req.session.destroy(function (err) {
-			if (err) {
-				console.log(err);
-			} else {
-				req.logout();
-				res.redirect('/');
-			}
-		});
+    /* Handle Logout */
+    router.get('/signout', function (req, res) {
+        req.session.destroy(function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                req.logout();
+                res.redirect('/');
+            }
+        });
 
-	});
+    });
 
-	router.get('/proveedores', isAuthenticated, function (req, res) {
-		res.render('proveedores', { user: req.user });
-	});
-		
+    router.get('/proveedores', isAuthenticated, function (req, res) {
+        res.render('proveedores', { user: req.user });
+    });
+
+    router.route('/proveedores/combobox')
+        .get(isAuthenticated, proveedorController.combobox);
+
     router.route('/proveedores/list')
-        .get(isAuthenticated, proveedorController.getProveedoresPaginados);
-		
-	router.route('/proveedores/action')
-		.post(isAuthenticated, proveedorController.action);	
-			
+        .get(isAuthenticated, proveedorController.list);
+
+    router.route('/proveedores/action')
+        .post(isAuthenticated, proveedorController.action);
+
     router.route('/contactos/list/:id')
-       .get(isAuthenticated, contactoController.getContactos);
+        .get(isAuthenticated, contactoController.list);
 
     router.route('/contactos/action')
-       .post(isAuthenticated, contactoController.action);
-	   
-	// Create endpoint handlers for /proveedores/:id
-	router.route('/proveedores/:id')
-		.get(isAuthenticated, proveedorController.getProveedor)
-		.put(isAuthenticated, proveedorController.putProveedor)
-		.delete(isAuthenticated, proveedorController.deleteProveedor);
+        .post(isAuthenticated, contactoController.action);
 
     router.get('/iniciativas', isAuthenticated, function (req, res) {
         res.render('iniciativas', { user: req.user });
@@ -96,11 +93,11 @@ module.exports = function (passport) {
     router.route('/iniciativas/list')
         .post(isAuthenticated, iniciativaController.list);
 
-	router.route('/iniciativas/:id')
-		.get(isAuthenticated, iniciativaController.get)
+    router.route('/iniciativas/:id')
+        .get(isAuthenticated, iniciativaController.get)
 
-	router.route('/iniciativas/action')
-		.post(isAuthenticated, iniciativaController.action);
+    router.route('/iniciativas/action')
+        .post(isAuthenticated, iniciativaController.action);
 
     router.get('/contratos', isAuthenticated, function (req, res) {
         res.render('contratos', { user: req.user });
@@ -124,8 +121,8 @@ module.exports = function (passport) {
     router.route('/contratoservicio/action/:id')
         .post(isAuthenticated, contratoservicioController.action);
 
-	router.route('/parameters/:param')
-		.get(isAuthenticated, paramController.getListParam);
+    router.route('/parameters/:param')
+        .get(isAuthenticated, paramController.getListParam);
 
     router.get('/proyectos', isAuthenticated, function (req, res) {
         res.render('proyectos', { user: req.user });
@@ -140,47 +137,47 @@ module.exports = function (passport) {
     router.route('/proyectostareasexcel/:id')
         .get(isAuthenticated, proyectoTareasController.getExcel);
 
-	router.route('/proyectosexcel')
-		.get(isAuthenticated, proyectoController.getExcel);
+    router.route('/proyectosexcel')
+        .get(isAuthenticated, proyectoController.getExcel);
 
-	router.route('/personal')
-		.get(isAuthenticated, iniciativaController.getPersonal);
+    router.route('/personal')
+        .get(isAuthenticated, iniciativaController.getPersonal);
 
-	router.route('/iniciativasexcel')
-		.get(isAuthenticated, iniciativaController.getExcel);
+    router.route('/iniciativasexcel')
+        .get(isAuthenticated, iniciativaController.getExcel);
 
-	router.route('/iniciativasprograma/codigoart/:id')
-		.get(isAuthenticated, iniciativaprogramaController.codigoart);
+    router.route('/iniciativasprograma/codigoart/:id')
+        .get(isAuthenticated, iniciativaprogramaController.codigoart);
 
-	router.route('/iniciativaprograma/action')
-		.post(isAuthenticated, iniciativaprogramaController.action);
+    router.route('/iniciativaprograma/action')
+        .post(isAuthenticated, iniciativaprogramaController.action);
 
-	router.route('/iniciativaprograma/:id')
-		.post(isAuthenticated, iniciativaprogramaController.list);
-		
-	router.route('/iniciativafecha/action')
-		.post(isAuthenticated, iniciativafechaController.action);
+    router.route('/iniciativaprograma/:id')
+        .post(isAuthenticated, iniciativaprogramaController.list);
 
-	router.route('/iniciativafecha/:id')
-		.post(isAuthenticated, iniciativafechaController.list);
+    router.route('/iniciativafecha/action')
+        .post(isAuthenticated, iniciativafechaController.action);
 
-	router.route('/actualizaduracion/:id')
-		.get(isAuthenticated, iniciativafechaController.actualizaDuracion);
-	
-	router.route('/usuarios_por_rol/:rol')
-		.get(isAuthenticated, iniciativaController.getUsersByRol);
+    router.route('/iniciativafecha/:id')
+        .post(isAuthenticated, iniciativafechaController.list);
 
-	router.route('/programa/:id')
-		.get(isAuthenticated, programaController.getPrograma);
-	
-	router.route('/programas/:id')
-		.get(isAuthenticated, programaController.getProgramasId);
-	
-	router.route('/programas')
-		.get(isAuthenticated, programaController.getProgramas);
+    router.route('/actualizaduracion/:id')
+        .get(isAuthenticated, iniciativafechaController.actualizaDuracion);
 
-	router.route('/divisiones')
-		.get(isAuthenticated, iniciativaController.getDivisiones);
+    router.route('/usuarios_por_rol/:rol')
+        .get(isAuthenticated, iniciativaController.getUsersByRol);
+
+    router.route('/programa/:id')
+        .get(isAuthenticated, programaController.getPrograma);
+
+    router.route('/programas/:id')
+        .get(isAuthenticated, programaController.getProgramasId);
+
+    router.route('/programas')
+        .get(isAuthenticated, programaController.getProgramas);
+
+    router.route('/divisiones')
+        .get(isAuthenticated, iniciativaController.getDivisiones);
 
     router.get('/erogaciones', isAuthenticated, function (req, res) {
         res.render('erogaciones');
@@ -201,16 +198,16 @@ module.exports = function (passport) {
 
     router.route('/presupuestosexcel')
         .get(isAuthenticated, presupuestoController.getExcel);
-    
+
     router.route('/CUIs')
-        .get(isAuthenticated, presupuestoController.getCUIs);        
+        .get(isAuthenticated, presupuestoController.getCUIs);
 
     router.route('/presupuesto/action')
-        .post(isAuthenticated, presupuestoController.action);  
-		
+        .post(isAuthenticated, presupuestoController.action);
+
     router.route('/ejercicios')
-        .get(isAuthenticated, presupuestoController.getEjercicios);   
- 
+        .get(isAuthenticated, presupuestoController.getEjercicios);
+
     router.route('/presupuestoservicios/:id')
         .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);
 
@@ -218,38 +215,41 @@ module.exports = function (passport) {
         .get(isAuthenticated, presupuestoServiciosController.getExcel);
 
     router.route('/presupuestoservicios/action/:id')
-        .post(isAuthenticated, presupuestoServiciosController.action);  
+        .post(isAuthenticated, presupuestoServiciosController.action);
 
     router.route('/monedas')
-        .get(isAuthenticated, presupuestoServiciosController.getMonedas);   
+        .get(isAuthenticated, presupuestoServiciosController.getMonedas);
 
     router.route('/serviciospre')
-        .get(isAuthenticated, presupuestoServiciosController.getServicios);   
+        .get(isAuthenticated, presupuestoServiciosController.getServicios);
 
     router.route('/servicios')
         .get(isAuthenticated, servicioController.getServicios);
-		
+
     router.route('/cui')
         .get(isAuthenticated, cuiController.getEstructuraCui);
 
     router.route('/cuentas')
-        .get(isAuthenticated, cuentaController.getCuentas);	
-		
+        .get(isAuthenticated, cuentaController.getCuentas);
+
     router.route('/compromisos/:id')
-        .post(isAuthenticated, compromisoController.list);			
-		
+        .post(isAuthenticated, compromisoController.list);
+
+    router.route('/compromisos/:idd/action')
+        .post(isAuthenticated, compromisoController.action);
+
     router.route('/monedas')
-        .get(isAuthenticated, monedaController.getMonedas);			
+        .get(isAuthenticated, monedaController.getMonedas);
 
     router.route('/contactos/:id')
-        .get(isAuthenticated, contactoController.getContactos);						
+        .get(isAuthenticated, contactoController.getContactos);
 
     router.route('/presupuestoperiodoslist/:id')
-        .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);						
+        .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);
 
     router.route('/presupuestoperiodos/action')
-        .post(isAuthenticated, presupuestoperiodosController.action);  
+        .post(isAuthenticated, presupuestoperiodosController.action);
 
-	return router;
+    return router;
 
 }

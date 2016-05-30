@@ -21,7 +21,7 @@ function gridDetail(parentRowID, parentRowKey) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        rowNum: 10,
+        rowNum: 20,
         regional: 'es',
         height: 'auto',
         width: null,
@@ -51,7 +51,7 @@ function gridDetail(parentRowID, parentRowKey) {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
-        editurl: '/contratos/action',
+        editurl: '/compromisos/' + parentRowKey + '/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");
@@ -62,28 +62,8 @@ function gridDetail(parentRowID, parentRowKey) {
         }
     });
 
-    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
-            editCaption: "Modifica Periodo",
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: templateDetalle,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }, beforeShowForm: function (form) {
-                //sipLibrary.centerDialog($('#grid').attr('id'));
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
         },
         {
             addCaption: "Agrega Periodo",
@@ -128,6 +108,36 @@ function gridDetail(parentRowID, parentRowKey) {
             recreateFilter: true
         }
     );
+
+    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-pencil",
+        title: "Editar",
+        position: "last",
+        onClickButton: function () {
+            var subgrid = $("#" + childGridID);
+            var ids = subgrid.jqGrid('getDataIDs');
+            for (var i = 0; i < ids.length; i++) {
+                subgrid.jqGrid('editRow', ids[i]);
+            }
+        }
+    });
+
+    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
+        caption: "",
+        buttonicon: 'glyphicon glyphicon-save-file',
+        title: "Grabar",
+        iconsOverText: true,
+        position: "last",
+        onClickButton: function () {
+            var subgrid = $("#" + childGridID);
+            var ids = subgrid.jqGrid('getDataIDs');
+            for (var i = 0; i < ids.length; i++) {
+                subgrid.jqGrid('saveRow', ids[i]);
+            }
+        }
+    });
+
 
     $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").children("span.ui-jqgrid-title").css("background-color", "Gold");
 

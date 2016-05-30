@@ -7,9 +7,9 @@
         "dialect": "mssql",
         "port": "1433",
         "pool": {
-            "maxConnections": 15,
-            "minConnections": 5,
-            "maxIdleTime": 50000
+            "maxConnections": 10,
+            "minConnections": 1,
+            "maxIdleTime": 10000
         }
     },
     "home": {
