@@ -7,9 +7,9 @@
         "dialect": "mssql",
         "port": "1433",
         "pool": {
-            "maxConnections": 10,
-            "minConnections": 1,
-            "maxIdleTime": 10000
+            "min": 5,
+            "max": 100,
+            "idleTimeout": 500000
         }
     },
     "home": {
@@ -22,9 +22,9 @@
             "instanceName": "SQLEXPRESS"
         },
         "pool": {
-            "maxConnections": 10,
-            "minConnections": 0,
-            "maxIdleTime": 10000
+            "min": 5,
+            "max": 100,
+            "idleTimeout": 500000
         }
     },
     "local": {
@@ -37,12 +37,12 @@
             "instanceName": "SQLEXPRESS"
         },
         "pool": {
-            "maxConnections": 10,
-            "minConnections": 0,
-            "maxIdleTime": 10000
+            "min": 5,
+            "max": 100,
+            "idleTimeout": 500000
         }
     },
-	"local2": {
+    "local2": {
         "username": "biometria",
         "password": "biometria123",
         "database": "art_live",
@@ -52,9 +52,9 @@
             "instanceName": "SQLEXPRESS"
         },
         "pool": {
-            "maxConnections": 10,
-            "minConnections": 0,
-            "maxIdleTime": 10000
+            "min": 5,
+            "max": 100,
+            "idleTimeout": 500000
         }
     }
 }

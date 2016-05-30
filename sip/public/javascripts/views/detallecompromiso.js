@@ -1,7 +1,7 @@
 function gridDetail(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-    var childGridURL = "/compromisos/" + parentRowKey;
+    //var childGridURL = "/compromisos/" + parentRowKey;
 
     var templateDetalle = "<div id='responsive-form' class='clearfix'>";
 
@@ -17,7 +17,7 @@ function gridDetail(parentRowID, parentRowKey) {
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     $("#" + childGridID).jqGrid({
-        url: childGridURL,
+        url: '/compromisos/' + parentRowKey,
         mtype: "POST",
         datatype: "json",
         page: 1,
@@ -36,15 +36,15 @@ function gridDetail(parentRowID, parentRowKey) {
                         $(element).mask("000000", { placeholder: "______" });
 
                     }
-                }
+                }, editrules: { required: true, number: true }
             },
             {
-                label: 'Monto', name: 'montopesos', width: 100, editable: true,
+                label: 'Monto', name: 'montopesos', width: 150, editable: true,
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
-                }
+                }, editrules: { required: true }
             }
         ],
         pager: "#" + childGridPagerID,
@@ -79,11 +79,15 @@ function gridDetail(parentRowID, parentRowKey) {
                 var result = JSON.parse(json);
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
-                } else {
+                } else{
+                    $("#" + childGridID).trigger("reloadGrid");
+                    return [true, "", ""];
+                } 
+                /*else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
                     $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
-                }
+                }*/
             }, beforeShowForm: function (form) {
                 //sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {

@@ -8,26 +8,26 @@ var log = function (inst) {
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var montoorigen
+    var montopesos = req.body.montopesos
 
     if (action != "del") {
-        if (req.body.montopesos != "")
-            montopesos = req.body.montopesos.split(".").join("").replace(",", ".")
+        if (montopesos != "")
+            montopesos = montopesos.split(".").join("").replace(",", ".")
     }
-
+    console.log("pico conchetumare : " + montopesos);
     switch (action) {
         case "add":
             models.DetalleCompromiso.create({
-                iddetalleserviciocto: req.body.iddetalleserviciocto,
+                iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
-                idmoneda: req.body.idmoneda,
-                montoorigen: montoorigen,
-                montopesos: req.body.montopesos,
+                //idmoneda: req.body.idmoneda,
+                //montoorigen: montoorigen,
+                montopesos: montopesos,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                //console.log(err);
                 res.json({ error_code: 1 });
             });
 
@@ -38,11 +38,11 @@ exports.action = function (req, res) {
                 periodo: req.body.periodo,
                 //idmoneda: req.body.idmoneda,
                 //montoorigen: montoorigen,
-                montopesos: req.body.montopesos,
+                montopesos: montopesos,
             }, {
-                where: {
-                    id: req.body.id
-                }
+                    where: {
+                        id: req.body.id
+                    }
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
