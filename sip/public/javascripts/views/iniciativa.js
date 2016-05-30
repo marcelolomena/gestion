@@ -110,7 +110,7 @@ $(document).ready(function () {
     tmplP += "</div>";
     
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Subcategoría {subcategoria}</div>";
+    tmplP += "<div class='column-half'>Subcategoría {idsubcategoria}</div>";
     tmplP += "<div class='column-half'>Duración Prevista {duracionprevista}</div>";
     tmplP += "</div>";
     
@@ -122,6 +122,7 @@ $(document).ready(function () {
     tmplP += "<div class='form-row' style='display: none;'>";
     tmplP += "<div class='column-half'>estado {estado}</div>";
     tmplP += "<div class='column-half'>categoria {categoria}</div>";
+    tmplP += "<div class='column-half'>subcategoria {subcategoria}</div>";
     tmplP += "<div class='column-half'>pmoresponsable {pmoresponsable}</div>";
     tmplP += "<div class='column-half'>gerenteresponsable {gerenteresponsable}</div>";
     tmplP += "<div class='column-half'>divisionsponsor {divisionsponsor}</div>";
@@ -975,7 +976,41 @@ $(document).ready(function () {
                 label: 'Duracion', name: 'duracion', width: 78, align: 'left', search: true, editable: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
-            { label: 'Subcategoría', name: 'subcategoria', width: 200, align: 'left', search: false, editable: true, hidden: false },
+            
+            { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
+            {
+                label: 'Subcategoría', name: 'idsubcategoria', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/parameters/subcategoria',
+                    buildSelect: function (response) {
+                        var grid = $("#" + childGridID);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.categoria;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Subcategoría--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#subcategoria").val($('option:selected', this).text());
+                        }
+                    }],
+                }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            {
+                label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left', search: true, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            },
             { label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left', search: false, editable: true, hidden: false },
             { label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left', search: false, editable: true, hidden: false },
             { label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left', search: false, editable: true, hidden: false }
