@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    
+
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
-    
+
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
@@ -142,7 +142,7 @@ $(document).ready(function () {
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.createTipoDocumentoEditElement
+                custom_element: sipLibrary.radioElemDocumento
             }
         },
         {
@@ -256,7 +256,7 @@ $(document).ready(function () {
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
-        },        
+        },
     }).jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,
@@ -279,8 +279,10 @@ $(document).ready(function () {
         }
     });
 
-    $("#grid").jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false,
-         refresh: true, view: true, position: "left", cloneToTop: false },
+    $("#grid").jqGrid('navGrid', "#pager", {
+        edit: true, add: true, del: true, search: false,
+        refresh: true, view: true, position: "left", cloneToTop: false
+    },
         {
             editCaption: "Modifica Contrato",
             closeAfterEdit: true,

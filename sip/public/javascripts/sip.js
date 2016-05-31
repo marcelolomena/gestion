@@ -40,40 +40,33 @@ var sipLibrary = {
         if (oper === "get") {
             return $(elem).find("input:radio:checked").val();
         }
-    }, createTipoContratoEditElement: function (value, editOptions) {
-        var div = $("<div style='margin-top:5px'></div>");
-        var label0 = $("<label class='radio-inline'></label>");
-        var radio0 = $("<input>", { type: "radio", value: "1", name: "tipocontrato", id: "tipocontrato_uno", checked: value == 0 });
-        label0.append(radio0).append("Continuidad");
-        var label1 = $("<label class='radio-inline'></label>");
-        var radio1 = $("<input>", { type: "radio", value: "0", name: "tipocontrato", id: "tipocontrato_cero" });
-        label1.append(radio1).append("Proyecto");
-        div.append(label0).append(label1);
-        return div;
-    }, createTipoDocumentoEditElement: function (value, editOptions) {
-        var div = $("<div style='margin-top:5px'></div>");
-        var label1 = $("<label class='radio-inline'></label>");
-        var radio1 = $("<input>", { type: "radio", value: "1", name: "tipodocumento", id: "tipodocumento_uno", checked: value == 0 });
-        label1.append(radio1).append("Contrato");
-        var label2 = $("<label class='radio-inline'></label>");
-        var radio2 = $("<input>", { type: "radio", value: "0", name: "tipodocumento", id: "tipodocumento_cero" });
-        label2.append(radio2).append("Orden de Compra");
-        div.append(label1).append(label2);
-        return div;
     }, jqGrid_loadErrorHandler: function (xht, st, handler) {
         jQuery(document.body).css('font-size', '100%');
         jQuery(document.body).html(xht.responseText);
     }, radioElemContrato: function (value, options) {
-        var receivedradio = '<input type="radio" name="tipocontrato" value="1"',
-            breakline = '/>Continuidad',
-            naradio = '<input type="radio" name="tipocontrato" value="0"',
-            endnaradio = '/>Proyecto';
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="1"',
+            breakline = '/>Continuidad</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="0"',
+            endnaradio = '/>Proyecto</label>';
 
         if (value === '1') {
-            return "<div style='margin-top:5px'><label class='radio-inline'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</label></div>";
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
         }
         if (value === '0') {
-            return "<div style='margin-top:5px'><label class='radio-inline'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</label></div>";
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    }, radioElemDocumento: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="tipodocumento" value="1"',
+            breakline = '/>Contrato</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="tipodocumento" value="0"',
+            endnaradio = '/>Orden de Compra</label>';
+
+        if (value === '1') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === '0') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
     }

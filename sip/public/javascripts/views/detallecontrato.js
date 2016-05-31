@@ -274,6 +274,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var thissid = rowData.idfrecuencia;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
+                        
                         s += '<option value="0">--Escoger Frecuencia--</option>';
                         $.each(data, function (i, item) {
                             if (data[i].id == thissid) {
@@ -282,6 +283,15 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                                 s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                             }
                         });
+                                                
+                        setTimeout(function () {
+                            if (needDisable) {
+                                $('#idfrecuencia').prop('disabled', true);
+                            } else {
+                                $('#idfrecuencia').removeAttr('disabled');
+                            }
+                        }, 100);
+
                         return s + "</select>";
                     },
                     dataEvents: [{
@@ -480,9 +490,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
+                needDisable = true;
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
             }, afterShowForm: function (form) {
-                //$('#idcontactoproveedor',form).attr('disabled','disabled');
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
             }
         },
@@ -529,6 +539,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                needDisable = false;
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
