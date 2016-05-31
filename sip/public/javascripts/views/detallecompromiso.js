@@ -20,12 +20,14 @@ function gridDetail(parentRowID, parentRowKey) {
         url: '/compromisos/' + parentRowKey,
         mtype: "POST",
         datatype: "json",
-        page: 1,
-        rowNum: 20,
-        regional: 'es',
+        //page: 1,
+        //rowNum: 20,
+        //regional: 'es',
         height: 'auto',
-        width: null,
-        shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
+        //width: null,
+        //shrinkToFit: false,
         caption: 'Compromisos',
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
@@ -48,8 +50,11 @@ function gridDetail(parentRowID, parentRowKey) {
             }
         ],
         pager: "#" + childGridPagerID,
-        viewrecords: true,
-        rowList: [5, 10, 20, 50],
+        regional: "es",
+        rowList: [],
+        pgbuttons: false,
+        pgtext: null,
+        viewrecords: false,
         styleUI: "Bootstrap",
         editurl: '/compromisos/' + parentRowKey + '/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
@@ -79,10 +84,10 @@ function gridDetail(parentRowID, parentRowKey) {
                 var result = JSON.parse(json);
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
-                } else{
+                } else {
                     $("#" + childGridID).trigger("reloadGrid");
                     return [true, "", ""];
-                } 
+                }
                 /*else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
                     $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
