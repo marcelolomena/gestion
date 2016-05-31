@@ -248,28 +248,7 @@ exports.action = function (req, res) {
               montoanual: servicio[i].montoanual,
               borrado: 1
             }).then(function (detallepre) {
-              console.log("***Id servicio:"+servicio[i].id ); 
-                           
-              /*models.detalleplan.findAll({
-                where: { 'iddetallepre': servicio[i].id }
-              }).then(function (periodos) {
-                for (var j = 0; j < periodos.length; j++) {
-                  console.log("***Id detallepre:"+detallepre.id );
-                  models.detalleplan.create({
-                    'iddetallepre': detallepre.id,
-                    'periodo': periodos[j].periodo,
-                    'presupuestopesos': periodos[j].presupuestopesos,
-                    'presupuestobasepesos': periodos[j].presupuestobasepesos,
-                    'compromisopesos': periodos[j].compromisopesos,
-                    'borrado': 1
-                  })                      
-                }
-                  
-              }).catch(function (err) {
-                console.log(err);
-                res.json({ error_code: 1 });
-              });*/
-              res.json({ error_code: 0 });
+              //res.json({ error_code: 0 });
             }).catch(function (err) {
               console.log(err);
               res.json({ error_code: 1 });
@@ -277,10 +256,11 @@ exports.action = function (req, res) {
 
           }
           res.json({ error_code: 0 });
-        }).error(function (err) {
+
+        }).catch(function (err) {
+          console.log(err);
           res.json({ error_code: 1 });
         });
-        //res.json({ error_code: 0 });
       }).catch(function (err) {
         console.log(err);
         res.json({ error_code: 1 });
