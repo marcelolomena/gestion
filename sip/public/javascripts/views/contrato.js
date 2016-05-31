@@ -134,7 +134,7 @@ $(document).ready(function () {
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.createTipoContratoEditElement
+                custom_element: sipLibrary.radioElemContrato
             }
         },
         {

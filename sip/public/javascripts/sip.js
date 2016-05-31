@@ -63,6 +63,19 @@ var sipLibrary = {
     }, jqGrid_loadErrorHandler: function (xht, st, handler) {
         jQuery(document.body).css('font-size', '100%');
         jQuery(document.body).html(xht.responseText);
+    }, radioElemContrato: function (value, options) {
+        var receivedradio = '<input type="radio" name="tipocontrato" value="1"',
+            breakline = '/>Continuidad<br>',
+            naradio = '<input type="radio" name="tipocontrato" value="0"',
+            endnaradio = '/>Proyecto<br>';
+
+        if (value === '1') {
+            return "<span>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</span>";
+        }
+        if (value === '0') {
+            return "<span>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</span>";
+        }
+        return "<span>" + receivedradio + breakline + naradio + endnaradio + "</span>";
     }
 }
 
