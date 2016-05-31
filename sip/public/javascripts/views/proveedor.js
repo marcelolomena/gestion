@@ -69,14 +69,10 @@ function validaRut(campo,colname){
     var modelProveedor = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'RUT', name: 'numrut', width: 150, align: 'right', search: false, editable: true,
+            formatter: { function (cellvalue, options, rowObject) {var rut = rowObject.numrut + "-" + rowObject.dvrut;  return rut}},
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { required: true, custom: true, custom_func: validaRut }, 
-         //   formoptions: { elmsuffix: '<span class="required">*</span>' }, 
-           
-            formatter: {string: function (cellvalue, options, rowObject) {                
-                return rowObject.numrut + '-' + rowObject.dvrut;
-            }
-          }
+            formoptions: { elmsuffix: '<span class="required">*</span>' },                        
         },
         { label: 'DV', name: 'dvrut', search: false, editable: false, hidden: true },
         { label: 'Razón Social', name: 'razonsocial', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
