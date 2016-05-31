@@ -69,20 +69,6 @@ var sipLibrary = {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
-    }, checkElemImpuesto: function (value, options) {
-        var chk0 = '<label class="radio-inline"><input type="checkbox" name="impuesto" value="0"',
-            endchk0 = '/>Impuesto</label>',
-            chk1 = '<label class="radio-inline"><input type="checkbox" name="impuesto" value="1"',
-            endchk1 = '/>Impuesto</label>';
-
-        if (value === '0') {
-            return "<div style='margin-top:5px'>" + chk0 + endchk0 + "</div>";
-        }
-        if (value === '1') {
-            return "<div style='margin-top:5px'>" + chk1 + ' checked="checked"' + endchk1 + "</div>";
-        }
-
-        return "<div style='margin-top:5px'>" + chk0 + endchk0 + "</div>";
     }
 }
 
