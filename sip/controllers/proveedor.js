@@ -14,7 +14,7 @@ exports.action = function (req, res) {
       var digito = req.body.numrut.substring(req.body.numrut.length - 1, req.body.numrut.length);
 
       models.Proveedor.create({
-        numrut: rut,
+        numrut: rut.split(".").join("").replace(",", "."),
         dvrut: digito,
         razonsocial: req.body.razonsocial,
         uid:req.body.uid,
@@ -31,7 +31,7 @@ exports.action = function (req, res) {
       var rut = req.body.numrut.substring(0, req.body.numrut.length - 2);
       var digito = req.body.numrut.substring(req.body.numrut.length - 1, req.body.numrut.length);
       models.Proveedor.update({
-        numrut: rut,
+        numrut: rut.split(".").join("").replace(",", "."),
         dvrut: digito,
         razonsocial: req.body.razonsocial,
         uid:req.body.uid,
