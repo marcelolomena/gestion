@@ -1,5 +1,5 @@
 #responsive-form{
-	max-width:600px /*-- change this to get your desired form width --*/;
+	max-width:1000px /*-- change this to get your desired form width --*/;
 	margin:0 auto;
         width:100%;
 }
@@ -9,7 +9,25 @@
 .column-half, .column-full{
 	float: left;
 	position: relative;
-	padding: 0.65rem;
+	padding: 0.20rem 0.65rem;
+	width:100%;
+	-webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box
+}
+.column-three, .column-full{
+	float: left;
+	position: relative;
+	padding: 0.20rem 0.65rem;
+	width:100%;
+	-webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box
+}
+.column-four, .column-full{
+	float: left;
+	position: relative;
+	padding: 0.20rem 0.65rem;
 	width:100%;
 	-webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -25,5 +43,11 @@
 @media only screen and (min-width: 48em) { 
 	.column-half{
 		width: 50%;
+	}
+	.column-three{
+		width: 33%;
+	}
+	.column-four{
+		width: 25%;
 	}
 }
