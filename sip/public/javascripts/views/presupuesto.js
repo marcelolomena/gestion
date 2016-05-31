@@ -154,8 +154,10 @@ $(document).ready(function () {
             beforeSubmit: function (postdata, formid) {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
                 console.log("*** selrow:" + rowKey);
                 postdata.id = rowKey;
+                postdata.version = parseInt(rowData.version) + 1;
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (postdata.idejercicio == 0) {

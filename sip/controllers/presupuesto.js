@@ -221,7 +221,9 @@ exports.getEjercicios = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var idpre = req.body.id;
+  var version = req.body.version;
   console.log("Id Prep:" + idpre);
+  console.log("Id Prep:" + version);
   switch (action) {
     case "add":
       models.presupuesto.create({
@@ -229,7 +231,7 @@ exports.action = function (req, res) {
         idcui: req.body.idcui,
         descripcion: req.body.descripcion,
         estado: 'ingresado',
-        version: 1,
+        version: version,
         borrado: 1
       }).then(function (presupuesto) {
         models.detallepre.findAll({
