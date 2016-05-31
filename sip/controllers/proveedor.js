@@ -17,6 +17,7 @@ exports.action = function (req, res) {
         numrut: rut,
         dvrut: digito,
         razonsocial: req.body.razonsocial,
+        uid:req.body.uid,
         negociadordivot: req.body.negociadordivot,
         borrado: 1
       }).then(function (proveedor) {
@@ -33,6 +34,7 @@ exports.action = function (req, res) {
         numrut: rut,
         dvrut: digito,
         razonsocial: req.body.razonsocial,
+        uid:req.body.uid,
         negociadordivot: req.body.negociadordivot,
         borrado: 1
       }, {
@@ -117,4 +119,63 @@ exports.list = function (req, res) {
     }
   });
 
-}
+};
+
+exports.getExcel = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
+  console.log("En getExcel");
+  var conf = {}
+  conf.cols = [{
+    caption: 'id',
+    type: 'number',
+    width: 3
+  },
+    {
+      caption: 'Rut',
+      type: 'number',
+      width: 10
+    },
+    {
+      caption: 'Razon Social',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Negociador DIVOT',
+      type: 'string',
+      width: 50
+    }
+  ];
+  
+ var sql = "SELECT a.*, CAST(numrut AS VARCHAR) +'-'+a.dvrut as numrut, a.razonsocial, b.first_name+' '+b.last_name as negociadordivot "+
+    "FROM sip.proveedor a left join dbo.art_user b on a.uid = b.uid order by a.numrut"
+    
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+      var arr = []
+      for (var i = 0; i < proyecto.length; i++) {
+
+        a = [i + 1, proyecto[i].numrut,
+          proyecto[i].razonsocial,
+          proyecto[i].negociadordivot
+        ];
+        arr.push(a);
+      }
+      conf.rows = arr;
+
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "Proveedores.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+
+};

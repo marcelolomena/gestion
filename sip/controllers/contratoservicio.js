@@ -91,9 +91,9 @@ exports.action = function (req, res) {
                 estadocontrato: req.body.estadocontrato,
                 glosaservicio: req.body.glosaservicio
             }, {
-                where: {
-                    id: req.body.id
-                }
+                    where: {
+                        id: req.body.id
+                    }
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
@@ -102,22 +102,29 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-            models.DetalleServicioCto.destroy({
+            models.DetalleCompromiso.destroy({
                 where: {
-                    id: req.body.id
+                    iddetalleserviciocto: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    console.log('Deleted successfully');
-                }
-                res.json({ error_code: 0 });
+            }).then(function (rowDeleted) { 
+
+                models.DetalleServicioCto.destroy({
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (rowDeleted) { 
+                    res.json({ error_code: 0 });
+                }).catch(function (err) {
+                    console.log(err);
+                    res.json({ error_code: 1 });
+                });
+
             }).catch(function (err) {
                 console.log(err);
                 res.json({ error_code: 1 });
             });
 
             break;
-
     }
 }
 

@@ -1,5 +1,49 @@
 $(document).ready(function () {
 
+   $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+   
+function validaRut(campo,colname){
+    
+    var result;
+    
+	if ( campo.length == 0 ){ result = [ false, colname + ": rut invalido"] }
+	//if ( campo.length < 8 ){ result = [ false, colname + ": rut invalido"] }
+
+	campo = campo.replace('-','')
+	campo = campo.replace(/\./g,'')
+
+	var suma = 0;
+	var caracteres = "1234567890kK";
+	var contador = 0;    
+	for (var i=0; i < campo.length; i++){
+		u = campo.substring(i, i + 1);
+		if (caracteres.indexOf(u) != -1)
+		contador ++;
+	}
+	if ( contador==0 ) { result = [ false, colname + ": rut invalido"] }
+	
+	var rut = campo.substring(0,campo.length-1)
+	var drut = campo.substring( campo.length-1 )
+	var dvr = '0';
+	var mul = 2;
+	
+	for (i= rut.length -1 ; i >= 0; i--) {
+		suma = suma + rut.charAt(i) * mul
+                if (mul == 7) 	mul = 2
+		        else	mul++
+	}
+	res = suma % 11
+	if (res==1)		dvr = 'k'
+                else if (res==0) dvr = '0'
+	else {
+		dvi = 11-res
+		dvr = dvi + ""
+	}
+	if ( dvr != drut.toLowerCase() ) { result = [ false, colname + ": rut invalido"]; }
+	else { result=[ true, colname + ""]; }
+    return result
+}
+
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
@@ -11,24 +55,59 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Negociador DIVOT {negociadordivot}</div>";
+    tmpl += "<div class='column-full'>Negociador DIVOT {uid}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row' style='display: none;'>";
+    tmpl += "<div class='column-half'>Negociador {negociadordivot}</div>";
+    tmpl += "</div>";
+    
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
 
     var modelProveedor = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        {
-            label: 'RUT', name: 'numrut', width: 150, align: 'right', search: false, editable: true,
-            formatter: function (cellvalue, options, rowObject) {
-                return rowObject.numrut + '-' + rowObject.dvrut;
-            }
+        { label: 'RUT', name: 'numrut', width: 150, align: 'right', search: false, editable: true,
+            formatter: { function (cellvalue, options, rowObject) {var rut = rowObject.numrut + "-" + rowObject.dvrut;  return rut}},
+            editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
+            editrules: { required: true, custom: true, custom_func: validaRut }, 
+            formoptions: { elmsuffix: '<span class="required">*</span>' },                        
         },
         { label: 'DV', name: 'dvrut', search: false, editable: false, hidden: true },
         { label: 'Razón Social', name: 'razonsocial', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
-        { label: 'Negociador DIVOT', name: 'negociadordivot', width: 300, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Negociador DIVOT uid', name: 'uid', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/usuarios_por_rol/Negociador',
+                buildSelect: function (response) {
+                    var grid = $("#table_proveedor");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.uid;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Negociador--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#negociadordivot").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Negociador Divot', name: 'negociadordivot', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        }
     ];
 
     var tmpc = "<div id='responsive-form' class='clearfix'>";
@@ -51,14 +130,14 @@ $(document).ready(function () {
 
     $("#table_proveedor").jqGrid({
         url: '/proveedores/list',
-        mtype: "GET",
+        mtype: "POST",
         datatype: "json",
         page: 1,
         colModel: modelProveedor,
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: null,
+        width: 950,
         shrinkToFit: false,
         caption: 'Lista de proveedores',
         pager: "#pager_proveedor",
@@ -116,8 +195,8 @@ $(document).ready(function () {
                     return [false, "Rut: Debe escoger un valor", ""];
                 } if (postdata.razonsocial == 0) {
                     return [false, "Razon Social: Debe escoger un valor", ""];
-                } if (postdata.negociadordivot == 0) {
-                    return [false, "Negociador DIVOT: Debe escoger un valor", ""];
+            //    } if (postdata.negociadordivot == 0) {
+            //        return [false, "Negociador DIVOT: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -157,8 +236,8 @@ $(document).ready(function () {
     );
 
     $('#table_proveedor').jqGrid('navButtonAdd', '#pager_proveedor', {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
@@ -179,12 +258,16 @@ $(document).ready(function () {
             {
                 label: 'Telefono', name: 'fono', width: 100, align: 'center', search: false, editable: true,
                 editoptions: {
-                    dataInit: function (element) {
+                         dataInit: function (element) {
                         $(element).mask("00000000000", { placeholder: "___________" });
                     }
                 }
             },
-            { label: 'Correo', name: 'correo', width: 300, align: 'left', search: false, editable: true, }
+            { label: 'Correo', name: 'correo',index: "email", width: 300, align: 'left', search: false, editable: true,                   
+                 editoptions: { maxlength: 80, size: 32 }, 
+                 editrules: { email: true, required: false} 
+            }
+            
         ];
 
         $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -201,6 +284,7 @@ $(document).ready(function () {
             styleUI: "Bootstrap",
             regional: 'es',
             height: 'auto',
+            width: 850,
             pager: "#" + childGridPagerID,
             editurl: '/contactos/action',
             gridComplete: function () {

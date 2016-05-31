@@ -75,10 +75,13 @@ module.exports = function (passport) {
         .get(isAuthenticated, proveedorController.combobox);
 
     router.route('/proveedores/list')
-        .get(isAuthenticated, proveedorController.list);
+        .post(isAuthenticated, proveedorController.list);
 
     router.route('/proveedores/action')
         .post(isAuthenticated, proveedorController.action);
+        
+    router.route('/proveedoresexcel')
+        .get(isAuthenticated, proveedorController.getExcel);        
 
     router.route('/contactos/list/:id')
         .get(isAuthenticated, contactoController.list);
