@@ -1107,17 +1107,17 @@ $(document).ready(function () {
                             if(data.pptoestimadoinversion){
                                 $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion.toFixed(2).toString().replace(".", ","));
                             }
-                            setTimeout(function(){$("#iddivision option[value="+data.iddivision+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#uidpmo option[value="+data.uidpmo+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#uidgerente option[value="+data.uidgerente+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#idestado option[value="+data.idestado+"]", form).attr("selected",true);},2000)
-                            setTimeout(function(){$("#idcategoria option[value="+data.idcategoria+"]", form).attr("selected",true);},2000)
+                            setTimeout(function(){$("#iddivision option[value="+data.iddivision+"]", form).attr("selected",true);},500)
+                            setTimeout(function(){$("#uidpmo option[value="+data.uidpmo+"]", form).attr("selected",true);},500)
+                            setTimeout(function(){$("#uidgerente option[value="+data.uidgerente+"]", form).attr("selected",true);},500)
+                            setTimeout(function(){$("#idestado option[value="+data.idestado+"]", form).attr("selected",true);},500)
+                            setTimeout(function(){$("#idcategoria option[value="+data.idcategoria+"]", form).attr("selected",true);},500)
                             
-                            setTimeout(function(){$("#divisionsponsor", form).val(data.divisionsponsor);},2000);
-                            setTimeout(function(){$("#pmoresponsable", form).val(data.pmoresponsable);},2000);
-                            setTimeout(function(){$("#gerenteresponsable", form).val(data.gerenteresponsable);},2000);
-                            setTimeout(function(){$("#estado", form).val(data.estado);},2000);
-                            setTimeout(function(){$("#categoria", form).val(data.categoria);},2000);
+                            setTimeout(function(){$("#divisionsponsor", form).val(data.divisionsponsor);},500);
+                            setTimeout(function(){$("#pmoresponsable", form).val(data.pmoresponsable);},500);
+                            setTimeout(function(){$("#gerenteresponsable", form).val(data.gerenteresponsable);},500);
+                            setTimeout(function(){$("#estado", form).val(data.estado);},500);
+                            setTimeout(function(){$("#categoria", form).val(data.categoria);},500);
                         }
                     });
                     $.ajax({
@@ -1318,6 +1318,7 @@ $(document).ready(function () {
                     return { parent_id: parentRowKey };
                 },
                 beforeSubmit: function (postdata, formid) {
+                    /*
                     var fechamal = false;
                     var fechamala = "";
                     $.ajax({
@@ -1336,7 +1337,7 @@ $(document).ready(function () {
                     if(fechamal){
                         return [false, "Fecha: La fecha debe ser mayor a la última ingresada ("+fechamala.substr(0,10)+")", ""];
                     }
-                    
+                    */
                     if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
                         return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
                     } if (postdata.fecha == 0) {

@@ -12,7 +12,7 @@ exports.getPrograma = function (req, res) {
 
 exports.getProgramas = function (req, res) {
 
-    models.Programa.findAll({ where: { 'is_active': 1 }, order: 'program_name' }).then(function (programa) {
+    models.Programa.findAll({ attributes: ['program_id', 'program_name'], where: { $or: [{work_flow_status: 1},{work_flow_status: 3},{work_flow_status: 4}, {work_flow_status: 5}], 'is_active': 1 }, order: 'program_name' }).then(function (programa) {
         res.json(programa);
     }).catch(function (err) {
         console.log(err);
