@@ -65,17 +65,17 @@ var sipLibrary = {
         jQuery(document.body).html(xht.responseText);
     }, radioElemContrato: function (value, options) {
         var receivedradio = '<input type="radio" name="tipocontrato" value="1"',
-            breakline = '/>Continuidad<br>',
+            breakline = '/>Continuidad',
             naradio = '<input type="radio" name="tipocontrato" value="0"',
-            endnaradio = '/>Proyecto<br>';
+            endnaradio = '/>Proyecto';
 
         if (value === '1') {
-            return "<span>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</span>";
+            return "<div style='margin-top:5px'><label class='radio-inline'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</label></div>";
         }
         if (value === '0') {
-            return "<span>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</span>";
+            return "<div style='margin-top:5px'><label class='radio-inline'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</label></div>";
         }
-        return "<span>" + receivedradio + breakline + naradio + endnaradio + "</span>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
     }
 }
 
