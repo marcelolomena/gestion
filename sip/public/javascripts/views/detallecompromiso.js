@@ -24,10 +24,9 @@ function gridDetail(parentRowID, parentRowKey) {
         //rowNum: 20,
         //regional: 'es',
         height: 'auto',
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        //autowidth: false,  // set 'true' here
+        //shrinkToFit: true, // well, it's 'true' by default
         //width: null,
-        //shrinkToFit: false,
         caption: 'Compromisos',
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
