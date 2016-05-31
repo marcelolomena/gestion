@@ -235,8 +235,10 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: null,
-        shrinkToFit: false,
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default        
         caption: 'Lista de contratos',
         pager: "#pager",
         viewrecords: true,
