@@ -2,6 +2,7 @@ var models = require('../models');
 var proveedorController = require('../controllers/proveedor');
 var contactoController = require('../controllers/contacto')
 var iniciativaController = require('../controllers/iniciativa');
+var parametroController = require('../controllers/parametro');
 var contratoController = require('../controllers/contrato');
 var proyectoController = require('../controllers/proyecto');
 var proyectoTareasController = require('../controllers/proyectotareas');
@@ -92,6 +93,18 @@ module.exports = function (passport) {
     router.get('/iniciativas', isAuthenticated, function (req, res) {
         res.render('iniciativas', { user: req.user });
     });
+    
+    router.get('/parametros', isAuthenticated, function (req, res) {
+        res.render('parametros', { user: req.user });
+    });
+    router.route('/parametros/list')
+        .post(isAuthenticated, parametroController.list);
+    
+    router.route('/parametros/list')
+        .post(isAuthenticated, parametroController.list);
+
+    router.route('/parametros/action')
+        .post(isAuthenticated, parametroController.action);
 
     router.route('/iniciativas/list')
         .post(isAuthenticated, iniciativaController.list);
@@ -179,6 +192,9 @@ module.exports = function (passport) {
     router.route('/programas')
         .get(isAuthenticated, programaController.getProgramas);
 
+    router.route('/tipos')
+        .get(isAuthenticated, parametroController.getTipos);
+    
     router.route('/divisiones')
         .get(isAuthenticated, iniciativaController.getDivisiones);
 
