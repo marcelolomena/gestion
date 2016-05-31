@@ -149,11 +149,27 @@ exports.getExcel = function (req, res) {
       caption: 'Negociador DIVOT',
       type: 'string',
       width: 50
+    },
+    {
+      caption: 'Contacto',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Telefono',
+      type: 'number',
+      width: 10
+    },
+    {
+      caption: 'Correo',
+      type: 'string',
+      width: 50
     }
   ];
   
- var sql = "SELECT a.*, CAST(numrut AS VARCHAR) +'-'+a.dvrut as numrut, a.razonsocial, b.first_name+' '+b.last_name as negociadordivot "+
-    "FROM sip.proveedor a left join dbo.art_user b on a.uid = b.uid order by a.numrut"
+ var sql = "SELECT CAST(numrut AS VARCHAR) +'-'+a.dvrut as numrut, a.razonsocial as razonsocial, b.first_name+' '+b.last_name as negociadordivot "+
+    ",isnull(c.contacto,' ') as contacto,c.fono as fono,isnull(c.correo,' ') as correo "+
+    "FROM sip.proveedor a left join dbo.art_user b on a.uid = b.uid left join sip.contactoproveedor c on a.id = c.idproveedor order by a.numrut"
     
     sequelize.query(sql)
       .spread(function (proyecto) {
@@ -162,8 +178,12 @@ exports.getExcel = function (req, res) {
 
         a = [i + 1, proyecto[i].numrut,
           proyecto[i].razonsocial,
-          proyecto[i].negociadordivot
+          proyecto[i].negociadordivot,
+          proyecto[i].contacto,
+          proyecto[i].fono,
+          proyecto[i].correo
         ];
+        console.log(a);
         arr.push(a);
       }
       conf.rows = arr;
