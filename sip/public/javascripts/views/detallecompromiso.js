@@ -147,7 +147,7 @@ function gridDetail(parentRowID, parentRowKey) {
     });
 
 
-    $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#CECEF6");
+    $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#CED8F6");
 
     $("#" + childGridPagerID + "_left").css("width", "");
 }
