@@ -26,7 +26,28 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         {   
             label: 'Tipo', name: 'tipo', width: 300, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            editrules: { edithidden: false }, hidedlg: true,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/tipos',
+                buildSelect: function (response) {
+                    var grid = $("#table_parametro");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.tipo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].tipo == thissid) {
+                            s += '<option value="' + data[i].tipo + '" selected>' + data[i].tipo + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].tipo + '">' + data[i].tipo + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
         },
         {
             
