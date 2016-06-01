@@ -719,7 +719,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
         {},
         {}
     );
-    $('#' + subgrid_table_id).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").children("span.ui-jqgrid-title").css("background-color", "Lime");
+    $('#' + subgrid_table_id).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#08298A");
 
     $("#" + pager_id + "_left").css("width", "");
 

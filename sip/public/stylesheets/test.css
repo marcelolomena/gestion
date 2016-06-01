@@ -573,3 +573,13 @@ img {
 	background-color: #0B2161;
 	color: white;
 }
+.table>tbody>tr.success>td{
+	background-color: #D8DFF0;
+}
+.ui-jqdialog .ui-jqdialog-titlebar {
+	background-color: #0B2161;
+	color: white;
+}
+.ui-jqdialog .ui-jqdialog-titlebar-close span {
+	color: white;
+}
