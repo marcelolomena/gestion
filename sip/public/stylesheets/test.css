@@ -569,3 +569,7 @@ img {
 	line-height: 2;
 	font-size: 14px;
 }
+.ui-jqgrid .ui-jqgrid-titlebar{
+	background-color: #0B2161;
+	color: white;
+}
