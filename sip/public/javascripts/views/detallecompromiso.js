@@ -20,12 +20,12 @@ function gridDetail(parentRowID, parentRowKey) {
         url: '/compromisos/' + parentRowKey,
         mtype: "POST",
         datatype: "json",
-        //page: 1,
-        //rowNum: 20,
-        //regional: 'es',
+        page: 1,
+        rowNum: 20,
+        regional: 'es',
         height: 'auto',
-        //autowidth: false,  // set 'true' here
-        //shrinkToFit: true, // well, it's 'true' by default
+        autowidth: true,  // set 'true' here
+        shrinkToFit: false, // well, it's 'true' by default
         //width: null,
         caption: 'Compromisos',
         colModel: [
@@ -49,7 +49,7 @@ function gridDetail(parentRowID, parentRowKey) {
             }
         ],
         pager: "#" + childGridPagerID,
-        regional: "es",
+        //regional: "es",
         rowList: [],
         pgbuttons: false,
         pgtext: null,
