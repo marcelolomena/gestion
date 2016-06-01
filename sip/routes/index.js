@@ -80,9 +80,9 @@ module.exports = function (passport) {
 
     router.route('/proveedores/action')
         .post(isAuthenticated, proveedorController.action);
-        
+
     router.route('/proveedoresexcel')
-        .get(isAuthenticated, proveedorController.getExcel);        
+        .get(isAuthenticated, proveedorController.getExcel);
 
     router.route('/contactos/list/:id')
         .get(isAuthenticated, contactoController.list);
@@ -93,13 +93,13 @@ module.exports = function (passport) {
     router.get('/iniciativas', isAuthenticated, function (req, res) {
         res.render('iniciativas', { user: req.user });
     });
-    
+
     router.get('/parametros', isAuthenticated, function (req, res) {
         res.render('parametros', { user: req.user });
     });
     router.route('/parametros/list')
         .post(isAuthenticated, parametroController.list);
-    
+
     router.route('/parametros/list')
         .post(isAuthenticated, parametroController.list);
 
@@ -130,6 +130,9 @@ module.exports = function (passport) {
 
     router.route('/contratoproyecto/action/:id')
         .post(isAuthenticated, contratoproyectoController.action);
+        
+    router.route('/sap')
+        .get(isAuthenticated, contratoproyectoController.sap);        
 
     router.route('/contratoservicio/:id')
         .post(isAuthenticated, contratoservicioController.list);
@@ -194,7 +197,7 @@ module.exports = function (passport) {
 
     router.route('/tipos')
         .get(isAuthenticated, parametroController.getTipos);
-    
+
     router.route('/divisiones')
         .get(isAuthenticated, iniciativaController.getDivisiones);
 
