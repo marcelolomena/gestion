@@ -209,7 +209,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, erogacionesController.getExcel);
 
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
-        res.render('presupuesto');
+        res.render('presupuesto', { user: req.user });
     });
 
     router.route('/presupuestolist')

@@ -20,14 +20,13 @@ function gridDetail(parentRowID, parentRowKey) {
         url: '/compromisos/' + parentRowKey,
         mtype: "POST",
         datatype: "json",
-        //page: 1,
-        //rowNum: 20,
-        //regional: 'es',
+        page: 1,
+        rowNum: 20,
+        regional: 'es',
         height: 'auto',
         autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        shrinkToFit: false, // well, it's 'true' by default
         //width: null,
-        //shrinkToFit: false,
         caption: 'Compromisos',
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
@@ -50,7 +49,7 @@ function gridDetail(parentRowID, parentRowKey) {
             }
         ],
         pager: "#" + childGridPagerID,
-        regional: "es",
+        //regional: "es",
         rowList: [],
         pgbuttons: false,
         pgtext: null,
@@ -150,7 +149,7 @@ function gridDetail(parentRowID, parentRowKey) {
     });
 
 
-    $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#CECEF6");
+    $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#0431B4");
 
     $("#" + childGridPagerID + "_left").css("width", "");
 }
