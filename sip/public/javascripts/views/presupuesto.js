@@ -172,7 +172,7 @@ $(document).ready(function () {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 if (rowKey == null) {
-                    alert("Debe seleccionar una versión de presupuesto:" + rowKey);
+                    alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
                     return [false, "", ""];
                 }
                 return [true, "", ""];
@@ -399,9 +399,9 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Servicio: Debe escoger un valor", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
-                } if (postdata.montoforecast == 0) {
+                } if (postdata.montoforecast < 0) {
                     return [false, "Monto Forecast: Debe escoger un valor", ""];
-                } if (postdata.montoanual == 0) {
+                } if (postdata.montoanual < 0) {
                     return [false, "Monto Anual: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
@@ -500,7 +500,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 label: 'Periodo',
                 name: 'periodo',
                 search: false,
-                editable: true,
+                editable: false,
                 sortable: false,
                 width: 100,
             },
@@ -529,17 +529,21 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 150,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }           
             }
         ],
         //viewrecords: true,
         //rowNum: 16,
         styleUI: "Bootstrap",
         regional: "es",
+        pgbuttons: false,
+        pgtext: null,
         height: 'auto',
+        viewrecords: false,
         width: null,
         shrinkToFit: false,
         editurl: '/presupuestoperiodos/action',
+        loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID
     });
     /*
@@ -549,22 +553,48 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         });
     */
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
+        edit: false,
         add: false,
         del: false,
-        refresh: true
+        search: false,
+        refresh: false,
+        view: false, position: "left", cloneToTop: false
+    },
+    {
+        
     },
         {
-            editCaption: "Modifica Presupuesto Periodo",
-            closeAfterEdit: false,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
+            recreateFilter: true
+        }    
+    );
+    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-pencil",
+        title: "Editar",
+        position: "last",
+        onClickButton: function () {
+            var subgrid = $("#" + childGridID);
+            var ids = subgrid.jqGrid('getDataIDs');
+            for (var i = 0; i < ids.length; i++) {
+                subgrid.jqGrid('editRow', ids[i]);
             }
         }
-    );
+    });
+
+    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
+        caption: "",
+        buttonicon: 'glyphicon glyphicon-save-file',
+        title: "Grabar",
+        iconsOverText: true,
+        position: "last",
+        onClickButton: function () {
+            var subgrid = $("#" + childGridID);
+            var ids = subgrid.jqGrid('getDataIDs');
+            for (var i = 0; i < ids.length; i++) {
+                subgrid.jqGrid('saveRow', ids[i]);
+            }
+        }
+    });    
 /*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "Excel",

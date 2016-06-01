@@ -67,7 +67,9 @@ function gridDetail(parentRowID, parentRowKey) {
         }
     });
 
-    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { 
+        edit: false, add: true, del: true, search: false, refresh: true, 
+        view: false, position: "left", cloneToTop: false },
         {
         },
         {

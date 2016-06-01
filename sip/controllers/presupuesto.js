@@ -222,6 +222,7 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var idpre = req.body.id;
   var version = req.body.version;
+  var id_cui = req.body.idcui;
   console.log("Id Prep:" + idpre);
   console.log("Id Prep:" + version);
   switch (action) {
@@ -241,6 +242,7 @@ exports.action = function (req, res) {
             var idservorig=servicio[i].id;
             console.log("----->" + servicio[i].id)
             sequelize.query('EXECUTE spInsertaPeriodo '+servicio[i].id
+            +","+id_cui
             +","+presupuesto.id
             +","+servicio[i].idservicio
             +","+servicio[i].idmoneda
