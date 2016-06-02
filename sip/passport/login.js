@@ -25,6 +25,7 @@ module.exports = function (passport) {
 						return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 					} else {
 						//console.log("----ZZZZZZZZZZZZZZZZ " + user.Rols.glosarol)
+						//console.dir("EL ROL: "+resultado.Rols[0].glosarol)
 						console.dir(user)
 						return done(null, user);
 					}
