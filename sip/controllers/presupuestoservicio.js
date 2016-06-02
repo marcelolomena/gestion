@@ -14,10 +14,10 @@ exports.getPresupuestoServicios = function (req, res) {
   var filtrosubgrilla = "idpresupuesto="+id;
 
   if (!sidx)
-    sidx = "a.idcuenta";
+    sidx = "a.id";
 
   if (!sord)
-    sord = "asc";
+    sord = "desc";
 
   var order = sidx + " " + sord;
   
@@ -71,8 +71,8 @@ exports.getPresupuestoServicios = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
-    "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta  " +
+    "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
+    "FROM sip.detallepre a " +
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
     "WHERE a.idpresupuesto="+id+")" +
@@ -96,7 +96,7 @@ exports.getPresupuestoServicios = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
-        "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta  " +
+        "FROM sip.detallepre a " +
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
         "WHERE a.idpresupuesto=" +id+" "+ condition.substring(0, condition.length - 4) + ")" +
@@ -189,8 +189,8 @@ exports.getExcel = function (req, res) {
     }
   ];
   
-    var sql = "SELECT a.id, f.CUI, b.cuentacontable, b.nombrecuenta, c.nombre, d.moneda, a.montoforecast, a.montoanual "+
-        "FROM sip.detallepre a LEFT JOIN sip.cuentascontables b ON b.id = a.idcuenta "+ 
+    var sql = "SELECT a.id, f.CUI, c.nombre, d.moneda, a.montoforecast, a.montoanual "+
+        "FROM sip.detallepre a "+ 
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  "+
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id "+
         "LEFT JOIN sip.presupuesto e ON a.idpresupuesto=e.id LEFT JOIN sip.cuidivot f ON e.idcui=f.secuencia "+
@@ -204,8 +204,6 @@ exports.getExcel = function (req, res) {
 
         a = [i + 1,
           proyecto[i].CUI,
-          proyecto[i].cuentacontable,
-          proyecto[i].nombrecuenta,
           proyecto[i].nombre,
           proyecto[i].moneda,
           (proyecto[i].montoforecast=='0')?'0':proyecto[i].montoforecast,
@@ -229,9 +227,13 @@ exports.getExcel = function (req, res) {
 
 
 exports.getServicios = function (req, res) {
-
-  var sql = "SELECT id, nombre FROM sip.servicio "+ 
-    "ORDER BY nombre";
+  var id = req.params.id;
+  
+  var sql = "DECLARE @cui INT; "+
+  "SELECT @cui=idcui FROM sip.presupuesto WHERE id="+id+" "+
+  "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id "+
+  "WHERE a.idcui=@cui "+
+  "ORDER BY b.nombre";
       
   sequelize.query(sql)
     .spread(function (rows) {
@@ -240,6 +242,22 @@ exports.getServicios = function (req, res) {
 
 };
 
+exports.getProveedores = function (req, res) {
+  var id = req.params.id;
+  
+  var sql = "DECLARE @cui INT; "+
+  "SELECT @cui=idcui FROM sip.presupuesto WHERE id="+id+" "+
+  "SELECT a.idproveedor AS id, b.razonsocial AS nombreproveedor FROM sip.plantillapresupuesto a JOIN sip.proveedor b ON a.idproveedor=b.id "+
+  "WHERE a.idcui=@cui "+
+  "GROUP BY a.idproveedor, b.razonsocial  "+
+  "ORDER BY b.razonsocial";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
 
 exports.getMonedas = function (req, res) {
 
@@ -262,8 +280,6 @@ exports.action = function (req, res) {
         idpresupuesto: idPre,
         idservicio: req.body.idservicio,
         idmoneda: req.body.idmoneda,
-        montoforecast: req.body.montoforecast,
-        montoanual: req.body.montoanual, 
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });

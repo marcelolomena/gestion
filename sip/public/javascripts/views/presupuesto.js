@@ -219,6 +219,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
     var childGridURL = "/presupuestoservicios/" + parentRowKey;
+    var urlServicios = '/serviciospre/'+parentRowKey;
+    var urlProveedores = '/proveedorespre/'+parentRowKey;
 
     var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -227,17 +229,29 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Glosa Servicio {glosaservicio}</div>";
+    tmplServ += "</div>";
+    
+    tmplServ += "<div class='form-row'>";
     tmplServ += "<div class='column-full'>Moneda {idmoneda}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-full'>Proveedor {idproveedor}</div>";
+    tmplServ += "</div>";
+    
+    tmplServ += "<div class='form-row' style='display: none;'>";
     tmplServ += "<div class='column-full'>Monto Forecast {montoforecast}</div>";
     tmplServ += "</div>";
 
-    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='form-row' style='display: none;'>";
     tmplServ += "<div class='column-half'>Monto Anual {montoanual}</div>";
     tmplServ += "</div>";
 
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Comentario {comentario}</div>";
+    tmplServ += "</div>";
+    
     tmplServ += "<hr style='width:100%;'/>";
     tmplServ += "<div> {sData} {cData}  </div>";
     tmplServ += "</div>";
@@ -256,7 +270,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/serviciospre',
+                dataUrl: urlServicios,
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
@@ -284,20 +298,9 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
         },
         {
-            label: 'Cuenta',
-            name: 'cuentacontable',
-            search: false,
-            hidden: true,
-            width: 120
-        },
-        {
-            label: 'Nombre Cuenta',
-            name: 'nombrecuenta',
-            width: 130,
-            search: false,
-            hidden: true,
-            align: 'right'
-        },
+            label: 'Glosa Servicio', name: 'glosaservicio',
+            search: false, editable: true, edittype: "textarea"
+        },        
         {
             label: 'Moneda', name: 'moneda', width: 100, align: 'right',
             search: false, editable: true,
@@ -331,6 +334,42 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
+        {
+            label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'right',
+            search: false, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Proveedor', name: 'idproveedor', width: 100, align: 'right',
+            search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: urlProveedores,
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idmoneda;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Proveedor--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***proveedor:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombreproveedor + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },     
+        {
+            label: 'Comentario', name: 'comentario',
+            search: false, editable: true, edittype: "textarea"
+        },             
         {
             label: 'Monto Forecast',
             name: 'montoforecast',
@@ -399,10 +438,6 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Servicio: Debe escoger un valor", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
-                } if (postdata.montoforecast < 0) {
-                    return [false, "Monto Forecast: Debe escoger un valor", ""];
-                } if (postdata.montoanual < 0) {
-                    return [false, "Monto Anual: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -426,10 +461,6 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Servicio: Debe escoger un valor", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
-                } if (postdata.montoforecast == 0) {
-                    return [false, "Monto Forecast: Debe escoger un valor", ""];
-                } if (postdata.montoanual == 0) {
-                    return [false, "Monto Anual: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }

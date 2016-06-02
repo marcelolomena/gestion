@@ -239,8 +239,11 @@ module.exports = function (passport) {
     router.route('/monedas')
         .get(isAuthenticated, presupuestoServiciosController.getMonedas);
 
-    router.route('/serviciospre')
+    router.route('/serviciospre/:id')
         .get(isAuthenticated, presupuestoServiciosController.getServicios);
+
+    router.route('/proveedorespre/:id')
+        .get(isAuthenticated, presupuestoServiciosController.getProveedores);
 
     router.route('/servicios')
         .get(isAuthenticated, servicioController.getServicios);
