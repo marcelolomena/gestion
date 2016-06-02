@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idproyecto: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Proyecto',
+        key: 'id'
+      }
     },
     tarea: {
       type: DataTypes.STRING,

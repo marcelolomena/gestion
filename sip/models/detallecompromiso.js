@@ -20,14 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idmoneda: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'moneda',
-        key: 'id'
-      }
-    },
     montoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
@@ -36,6 +28,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    costoorigen: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },    
+    costopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },       
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

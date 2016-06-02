@@ -58,7 +58,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Factor{factor}</div>";
+    templateServicio += "<div class='column-half'>Factor{factorimpuesto}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
@@ -383,7 +383,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             {
-                label: 'Factor', name: 'factor', width: 100, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Factor', name: 'factorimpuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -644,8 +644,10 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
 
     $('#' + subgrid_table_id).jqGrid({
         mtype: "POST",
-        url: '/contratoproyecto/' + row_id,
-        editurl: '/contratoproyecto/action' + row_id,
+        //url: '/contratoproyecto/' + row_id,
+        //editurl: '/contratoproyecto/action/' + row_id,
+        url: '/contratoservicio/' + row_id,
+        editurl: '/contratoservicio/action/' + row_id,
         datatype: 'json',
         page: 1,
         colModel: [
@@ -685,9 +687,9 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                         s += '<option value="0">--Escoger Sap--</option>';
                         $.each(data, function (i, item) {
                             if (data[i].sap == thissid) {
-                                s += '<option value="' + data[i].idproyecto + '" selected>' + data[i].sap + '</option>';
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].sap + '</option>';
                             } else {
-                                s += '<option value="' + data[i].idproyecto + '">' + data[i].sap + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].sap + '</option>';
                             }
                         });
                         return s + "</select>";
@@ -697,10 +699,18 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                             var thispid = $(this).val();
                             $.ajax({
                                 type: "GET",
-                                url: '/incidentNoBusinessMember/' + thispid,
+                                url: '/tarea/' + thispid,
                                 async: false,
                                 success: function (data) {
-                                    ///$("select#task_owner_id").html(data);
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Tarea--</option>';
+                                    $.each(data, function (i, item) {
+                                        s += '<option value="' + data[i].tarea + '">' + data[i].tarea + '</option>';
+                                    });
+                                    s += "</select>";
+                                    //console.log(s)
+                                    $("#tarea").html(s);
+
                                 }
                             });
                         }
@@ -708,7 +718,10 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Tarea', name: 'tarea', editable: true, hidden: false
+                label: 'Tarea', name: 'tarea', editable: true, hidden: false, edittype: "select",
+                editoptions: {
+                    value: "0:--Escoger Tarea--"
+                }
             },
             {
                 label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left',
@@ -940,7 +953,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 }
             },
             {
-                label: 'Factor', name: 'factor', width: 100, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Factor', name: 'factorimpuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -1069,10 +1082,10 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.idcui == 0) {
-                    return [false, "CUI: Debe escoger un valor", ""];
-                } if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un valor", ""];
+                if (postdata.sap == 0) {
+                    return [false, "SAP: Debe escoger un valor", ""];
+                } if (postdata.tarea == 0) {
+                    return [false, "Tarea: Debe escoger un valor", ""];
                 } if (postdata.idfrecuencia == 0) {
                     return [false, "Frecuencia: Debe escoger un valor", ""];
                 } if (postdata.idplazocontrato == 0) {
@@ -1094,7 +1107,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"servicio\",\"op\":\"cn\",\"data\":\"" + postdata.servicio + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"sap\",\"op\":\"cn\",\"data\":\"" + postdata.sap + "\"}]}";
                     $('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }

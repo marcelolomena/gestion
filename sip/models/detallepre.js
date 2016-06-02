@@ -1,18 +1,17 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('detallepre', {
+  return sequelize.define('DetallePre', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     idpresupuesto: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'presupuesto',
+        model: 'Presupuesto',
         key: 'id'
       }
     },
@@ -20,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'estructuracui',
+        model: 'EstructuraCui',
         key: 'id'
       }
     },
@@ -28,19 +27,27 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'servicio',
+        model: 'Servicio',
         key: 'id'
       }
     },
-    idcuenta: {
-      type: DataTypes.INTEGER,
+    glosaservicio: {
+      type: DataTypes.STRING,
       allowNull: true
+    },
+    idproveedor: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Proveedor',
+        key: 'id'
+      }
     },
     idmoneda: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'moneda',
+        model: 'Moneda',
         key: 'id'
       }
     },
@@ -50,6 +57,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     montoanual: {
       type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    comentario: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {

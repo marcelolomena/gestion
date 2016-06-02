@@ -116,7 +116,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    factor: {
+    factorimpuesto: {
       type: DataTypes.FLOAT,
       allowNull: true
     },

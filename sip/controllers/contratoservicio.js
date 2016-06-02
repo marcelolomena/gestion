@@ -6,7 +6,7 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var valorcuota = req.body.valorcuota
     var impuesto = req.body.impuesto
-    var factor = req.body.factor
+    var factorimpuesto = req.body.factorimpuesto
 
     if (action != "del") {
         if (valorcuota != "")
@@ -15,8 +15,8 @@ exports.action = function (req, res) {
         if (impuesto != "")
             impuesto = impuesto.split(".").join("").replace(",", ".")
 
-        if (factor != "")
-            factor = factor.split(".").join("").replace(",", ".")
+        if (factorimpuesto != "")
+            factorimpuesto = factorimpuesto.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
@@ -53,7 +53,7 @@ exports.action = function (req, res) {
                     idcondicion: req.body.idcondicion,
                     condicionnegociacion: req.body.condicionnegociacion,
                     impuesto: impuesto,
-                    factor: factor,
+                    factor: factorimpuesto,
                     idcontactoproveedor: req.body.idcontactoproveedor,
                     idestadocto: req.body.idestadocto,
                     estadocontrato: req.body.estadocontrato,
@@ -93,15 +93,15 @@ exports.action = function (req, res) {
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
                 impuesto: impuesto,
-                factor: factor,
+                factor: factorimpuesto,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,
                 glosaservicio: req.body.glosaservicio
             }, {
-                where: {
-                    id: req.body.id
-                }
+                    where: {
+                        id: req.body.id
+                    }
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
@@ -134,6 +134,30 @@ exports.action = function (req, res) {
 
             break;
     }
+}
+
+exports.sap = function (req, res) {
+    models.Proyecto.findAll({
+        attributes: ['id', 'sap']
+    }).then(function (proyecto) {
+        console.dir(proyecto)
+        res.json(proyecto);
+    }).catch(function (err) {
+        //console.log(err);
+        res.json({ error_code: 1 });
+    });
+}
+
+exports.tarea = function (req, res) {
+    models.DetalleProyecto.findAll({
+        attributes: ['id', 'tarea'],
+        where: { idproyecto: req.params.id }
+    }).then(function (proyecto) {
+        res.json(proyecto);
+    }).catch(function (err) {
+        //console.log(err);
+        res.json({ error_code: 1 });
+    });
 }
 
 exports.list = function (req, res) {
