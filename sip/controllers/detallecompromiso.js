@@ -8,11 +8,11 @@ var log = function (inst) {
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var montopesos = req.body.montopesos
+    var montoorigen = req.body.montoorigen
 
     if (action != "del") {
-        if (montopesos != "")
-            montopesos = montopesos.split(".").join("").replace(",", ".")
+        if (montoorigen != "")
+            montoorigen = montoorigen.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
@@ -20,7 +20,7 @@ exports.action = function (req, res) {
             models.DetalleCompromiso.create({
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
-                montopesos: montopesos,
+                montoorigen: montoorigen,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
@@ -33,7 +33,7 @@ exports.action = function (req, res) {
         case "edit":
             models.DetalleCompromiso.update({
                 periodo: req.body.periodo,
-                montopesos: montopesos,
+                montoorigen: montoorigen,
             }, {
                 where: {
                     id: req.body.id

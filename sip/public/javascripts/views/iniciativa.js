@@ -174,7 +174,28 @@ $(document).ready(function () {
         },
         {
             label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            editrules: { edithidden: false }, hidedlg: true,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/divisiones',
+                buildSelect: function (response) {
+                    var grid = $("#table_iniciativa");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.divisionsponsor;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger División--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].division == thissid) {
+                            s += '<option value="' + data[i].dId + '" selected>' + data[i].division + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].dId + '">' + data[i].division + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            },
         },
         {
             label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
@@ -210,7 +231,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true
+            label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true,
         },
         {
             label: 'Sponsor 2', name: 'sponsor2', width: 200, align: 'left', search: true,

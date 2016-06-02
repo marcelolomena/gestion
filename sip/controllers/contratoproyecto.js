@@ -6,6 +6,28 @@ exports.action = function (req, res) {
     var action = req.body.oper;
 }
 
+exports.sap = function (req, res) {
+    models.Proyecto.findAll({
+        attributes: ['idproyecto', 'sap']
+    }).then(function (proyecto) {
+        res.json(proyecto);
+    }).catch(function (err) {
+        //console.log(err);
+        res.json({ error_code: 1 });
+    });
+}
+
+exports.tarea = function (req, res) {
+    models.DetalleProyecto.findAll({
+        attributes: ['id', 'tarea']
+    }).then(function (proyecto) {
+        res.json(proyecto);
+    }).catch(function (err) {
+        //console.log(err);
+        res.json({ error_code: 1 });
+    });
+}
+
 exports.list = function (req, res) {
 
     var page = req.body.page;
