@@ -56,6 +56,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
     templateServicio += "</div>";
+    
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Factor{factor}</div>";
+    templateServicio += "</div>";    
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-full'>Descripción{glosaservicio}</div>";
@@ -372,16 +376,20 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             },
             {
                 label: 'Impuesto', name: 'impuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (rowObject.impuesto === 1) {
-                        return 'Si';
-                    } else {
-                        return 'No';
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
-                },
-                edittype: 'checkbox', editoptions: { value: "1:0" },
+                }
             },
-            //{ label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
+            {
+                label: 'Factor', name: 'factor', width: 100, align: 'left', search: true, editable: true, hidden: false,
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
+            },
             {
                 label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true,
                 edittype: "select",
@@ -663,7 +671,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 label: 'Cuenta', name: 'cuentacontable', editable: false, hidden: true
             },
             {
-                label: 'Sap', name: 'sap', hidden: false,editable: true, 
+                label: 'Sap', name: 'sap', hidden: false, editable: true,
                 edittype: "select",
                 editoptions: {
                     dataUrl: '/sap',

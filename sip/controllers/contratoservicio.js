@@ -5,15 +5,23 @@ var utilSeq = require('../utils/seq');
 exports.action = function (req, res) {
     var action = req.body.oper;
     var valorcuota = req.body.valorcuota
+    var impuesto = req.body.impuesto
+    var factor = req.body.factor
 
     if (action != "del") {
         if (valorcuota != "")
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
+
+        if (impuesto != "")
+            impuesto = impuesto.split(".").join("").replace(",", ".")
+
+        if (factor != "")
+            factor = factor.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
         case "add":
-            var factor = req.body.impuesto == 1 ? 1.19 : 1;
+            //var factor = req.body.impuesto == 1 ? 1.19 : 1;
 
             models.Servicio.belongsTo(models.CuentasContables, { foreignKey: 'idcuenta' });
             models.Servicio.find({
@@ -44,8 +52,8 @@ exports.action = function (req, res) {
                     plazocontrato: req.body.plazocontrato,
                     idcondicion: req.body.idcondicion,
                     condicionnegociacion: req.body.condicionnegociacion,
-                    impuesto: req.body.impuesto,
-                    factorimpuesto: factor,
+                    impuesto: impuesto,
+                    factor: factor,
                     idcontactoproveedor: req.body.idcontactoproveedor,
                     idestadocto: req.body.idestadocto,
                     estadocontrato: req.body.estadocontrato,
@@ -84,16 +92,16 @@ exports.action = function (req, res) {
                 plazocontrato: req.body.plazocontrato,
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
-                impuesto: req.body.impuesto,
-                factorimpuesto: req.body.factorimpuesto,
+                impuesto: impuesto,
+                factor: factor,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,
                 glosaservicio: req.body.glosaservicio
             }, {
-                    where: {
-                        id: req.body.id
-                    }
+                where: {
+                    id: req.body.id
+                }
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
@@ -106,13 +114,13 @@ exports.action = function (req, res) {
                 where: {
                     iddetalleserviciocto: req.body.id
                 }
-            }).then(function (rowDeleted) { 
+            }).then(function (rowDeleted) {
 
                 models.DetalleServicioCto.destroy({
                     where: {
                         id: req.body.id
                     }
-                }).then(function (rowDeleted) { 
+                }).then(function (rowDeleted) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
                     console.log(err);
@@ -150,7 +158,7 @@ exports.list = function (req, res) {
         "data": req.params.id
     }];
 
-    console.log(")))))))))))))))))))))) " + req.user.last_name)
+    //console.log(")))))))))))))))))))))) " + req.user.last_name)
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
 
