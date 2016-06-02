@@ -56,10 +56,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
     templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
     templateServicio += "</div>";
-    
+
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Factor{factor}</div>";
-    templateServicio += "</div>";    
+    templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-full'>Descripción{glosaservicio}</div>";
@@ -590,8 +590,8 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
     var templateTarea = "<div id='responsive-form' class='clearfix'>";
 
     templateTarea += "<div class='form-row'>";
-    templateTarea += "<div class='column-half'>Servicio{idservicio}</div>";
-    templateTarea += "<div class='column-half'>Cui{idcui}</div>";
+    templateTarea += "<div class='column-half'>Sap{sap}</div>";
+    templateTarea += "<div class='column-half'>Tarea{tarea}</div>";
     templateTarea += "</div>";
 
     templateTarea += "<div class='form-row'>";
@@ -679,19 +679,32 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.idmoneda;
+                        var thissid = rowData.sap;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
-                        s += '<option value="0">--Escoger Moneda--</option>';
+                        s += '<option value="0">--Escoger Sap--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].moneda + '</option>';
+                            if (data[i].sap == thissid) {
+                                s += '<option value="' + data[i].idproyecto + '" selected>' + data[i].sap + '</option>';
                             } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].moneda + '</option>';
+                                s += '<option value="' + data[i].idproyecto + '">' + data[i].sap + '</option>';
                             }
                         });
                         return s + "</select>";
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thispid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/incidentNoBusinessMember/' + thispid,
+                                async: false,
+                                success: function (data) {
+                                    ///$("select#task_owner_id").html(data);
+                                }
+                            });
+                        }
+                    }]
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
@@ -920,16 +933,20 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
             },
             {
                 label: 'Impuesto', name: 'impuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
-                formatter: function (cellvalue, options, rowObject) {
-                    if (rowObject.impuesto === 1) {
-                        return 'Si';
-                    } else {
-                        return 'No';
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
-                },
-                edittype: 'checkbox', editoptions: { value: "1:0" },
+                }
             },
-            //{ label: 'Factor', name: 'factorimpuesto', search: true, editable: true, hidden: false },
+            {
+                label: 'Factor', name: 'factor', width: 100, align: 'left', search: true, editable: true, hidden: false,
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }
+            },
             {
                 label: 'idcontactoproveedor', name: 'idcontactoproveedor', search: false, editable: true, hidden: true,
                 edittype: "select",

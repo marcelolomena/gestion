@@ -302,6 +302,7 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
+                $("input[type=radio]").attr('disabled', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },

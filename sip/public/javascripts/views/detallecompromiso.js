@@ -7,7 +7,7 @@ function gridDetail(parentRowID, parentRowKey) {
 
     templateDetalle += "<div class='form-row'>";
     templateDetalle += "<div class='column-half'>Periodo{periodo}</div>";
-    templateDetalle += "<div class='column-half'>Monto{montopesos}</div>";
+    templateDetalle += "<div class='column-half'>Monto{montoorigen}</div>";
     templateDetalle += "</div>";
 
     templateDetalle += "<hr style='width:100%;'/>";
@@ -40,7 +40,7 @@ function gridDetail(parentRowID, parentRowKey) {
                 }, editrules: { required: true, number: true }
             },
             {
-                label: 'Monto', name: 'montopesos', width: 150, editable: true,
+                label: 'Monto', name: 'montoorigen', width: 150, editable: true,
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });

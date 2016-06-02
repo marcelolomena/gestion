@@ -194,6 +194,7 @@ exports.getUsersByRol = function (req, res) {
     }]
   }).then(function (gerentes) {
     //gerentes.forEach(log)
+    console.dir(gerentes)
     res.json(gerentes);
   }).catch(function (err) {
     console.log(err);
