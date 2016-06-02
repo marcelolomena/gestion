@@ -6,11 +6,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
-    },
+    },/*
     fid: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
+    },*/
     glosafuncion: {
       type: DataTypes.STRING,
       allowNull: true

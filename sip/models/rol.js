@@ -6,11 +6,11 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
-    },
+    },/*
     rid: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
+    },*/
     glosarol: {
       type: DataTypes.STRING,
       allowNull: true

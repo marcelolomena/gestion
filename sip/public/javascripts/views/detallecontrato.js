@@ -644,8 +644,6 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
 
     $('#' + subgrid_table_id).jqGrid({
         mtype: "POST",
-        //url: '/contratoproyecto/' + row_id,
-        //editurl: '/contratoproyecto/action/' + row_id,
         url: '/contratoservicio/' + row_id,
         editurl: '/contratoservicio/action/' + row_id,
         datatype: 'json',
