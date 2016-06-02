@@ -71,8 +71,8 @@ exports.getPresupuestoServicios = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
-    "FROM sip.detallepre a " +
+    "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
+    "a.comentario, a.glosaservicio FROM sip.detallepre a " +
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
     "WHERE a.idpresupuesto="+id+")" +
@@ -95,8 +95,8 @@ exports.getPresupuestoServicios = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual " +
-        "FROM sip.detallepre a " +
+        "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
+        "a.comentario, a.glosaservicio FROM sip.detallepre a " +
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
         "WHERE a.idpresupuesto=" +id+" "+ condition.substring(0, condition.length - 4) + ")" +
@@ -280,6 +280,8 @@ exports.action = function (req, res) {
         idpresupuesto: idPre,
         idservicio: req.body.idservicio,
         idmoneda: req.body.idmoneda,
+        comentario:req.body.comentario,
+        glosaservicio:req.body.glosaservicio,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
