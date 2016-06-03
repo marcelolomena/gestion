@@ -9,7 +9,11 @@ module.exports = function (passport) {
     });
 
     passport.deserializeUser(function (id, done) {
-        models.User.find({ where: { 'uid': id } }).then(function (user) {
+        models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
+		models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
+        models.User.find({ where: { 'uid': id },
+    include: [{model: models.Rol}]
+}).then(function (user) {
             done(null, user);
         }).error(function (err) {
             done(err, null)

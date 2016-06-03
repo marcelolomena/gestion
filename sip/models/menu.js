@@ -1,37 +1,33 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('rol_func', {
+  return sequelize.define('Menu', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    rid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Rol',
-        key: 'id'
-      }
+    descripcion: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
-    fid: {
+    url: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    pid: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    mid: {
+    nivel: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Menu',
-        key: 'id'
-      }
+      allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'rol_func'
+    schema: 'sip',timestamps: false,tableName: 'menu'
   });
 };
