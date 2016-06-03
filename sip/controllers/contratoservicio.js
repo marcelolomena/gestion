@@ -53,7 +53,7 @@ exports.action = function (req, res) {
                     idcondicion: req.body.idcondicion,
                     condicionnegociacion: req.body.condicionnegociacion,
                     impuesto: impuesto,
-                    factor: factorimpuesto,
+                    factorimpuesto: factorimpuesto,
                     idcontactoproveedor: req.body.idcontactoproveedor,
                     idestadocto: req.body.idestadocto,
                     estadocontrato: req.body.estadocontrato,
@@ -93,7 +93,7 @@ exports.action = function (req, res) {
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
                 impuesto: impuesto,
-                factor: factorimpuesto,
+                factorimpuesto: factorimpuesto,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,
@@ -141,7 +141,8 @@ exports.oper = function (req, res) {
     var valorcuota = req.body.valorcuota
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
-
+console.log(")))))))))))))))))impuesto : " + impuesto)    
+console.log(")))))))))))factorimpuesto : " + factorimpuesto)
     if (action != "del") {
         if (valorcuota != "")
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
@@ -181,7 +182,7 @@ exports.oper = function (req, res) {
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
                 impuesto: impuesto,
-                factor: factorimpuesto,
+                factorimpuesto: factorimpuesto,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,
@@ -219,7 +220,7 @@ exports.oper = function (req, res) {
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
                 impuesto: impuesto,
-                factor: factorimpuesto,
+                factorimpuesto: factorimpuesto,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,
