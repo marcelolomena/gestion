@@ -625,11 +625,14 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
     templateTarea += "</div>";
 
     templateTarea += "<div class='form-row'>";
+    templateTarea += "<div class='column-half'>Factor{factorimpuesto}</div>";
+    templateTarea += "</div>";
+
+    templateTarea += "<div class='form-row'>";
     templateTarea += "<div class='column-full'>Descripción{glosaservicio}</div>";
     templateTarea += "</div>";
 
     templateTarea += "<div class='form-row' style='display: none;'>";
-    templateTarea += "<div class='column-half'>servicio{servicio}</div>";
     templateTarea += "<div class='column-half'>frecuenciafacturacion {frecuenciafacturacion}</div>";
     templateTarea += "<div class='column-half'>plazocontrato {plazocontrato}</div>";
     templateTarea += "<div class='column-half'>condicionnegociacion {condicionnegociacion}</div>";
@@ -645,7 +648,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
     $('#' + subgrid_table_id).jqGrid({
         mtype: "POST",
         url: '/contratoservicio/' + row_id,
-        editurl: '/contratoservicio/action/' + row_id,
+        editurl: '/contratoproyecto/action/' + row_id,
         datatype: 'json',
         page: 1,
         colModel: [
@@ -1038,6 +1041,12 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
             }
         },
+        subGrid: true,
+        subGridRowExpanded: gridDetail,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        }
     });
 
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {

@@ -53,7 +53,7 @@ exports.action = function (req, res) {
                     idcondicion: req.body.idcondicion,
                     condicionnegociacion: req.body.condicionnegociacion,
                     impuesto: impuesto,
-                    factor: factorimpuesto,
+                    factorimpuesto: factorimpuesto,
                     idcontactoproveedor: req.body.idcontactoproveedor,
                     idestadocto: req.body.idestadocto,
                     estadocontrato: req.body.estadocontrato,
@@ -93,7 +93,134 @@ exports.action = function (req, res) {
                 idcondicion: req.body.idcondicion,
                 condicionnegociacion: req.body.condicionnegociacion,
                 impuesto: impuesto,
-                factor: factorimpuesto,
+                factorimpuesto: factorimpuesto,
+                idcontactoproveedor: req.body.idcontactoproveedor,
+                idestadocto: req.body.idestadocto,
+                estadocontrato: req.body.estadocontrato,
+                glosaservicio: req.body.glosaservicio
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (contrato) {
+                    res.json({ error_code: 0 });
+                }).catch(function (err) {
+                    console.log(err);
+                    res.json({ error_code: 1 });
+                });
+            break;
+        case "del":
+            models.DetalleCompromiso.destroy({
+                where: {
+                    iddetalleserviciocto: req.body.id
+                }
+            }).then(function (rowDeleted) {
+
+                models.DetalleServicioCto.destroy({
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (rowDeleted) {
+                    res.json({ error_code: 0 });
+                }).catch(function (err) {
+                    console.log(err);
+                    res.json({ error_code: 1 });
+                });
+
+            }).catch(function (err) {
+                console.log(err);
+                res.json({ error_code: 1 });
+            });
+
+            break;
+    }
+}
+
+exports.oper = function (req, res) {
+    var action = req.body.oper;
+    var valorcuota = req.body.valorcuota
+    var impuesto = req.body.impuesto
+    var factorimpuesto = req.body.factorimpuesto
+console.log(")))))))))))))))))impuesto : " + impuesto)    
+console.log(")))))))))))factorimpuesto : " + factorimpuesto)
+    if (action != "del") {
+        if (valorcuota != "")
+            valorcuota = valorcuota.split(".").join("").replace(",", ".")
+
+        if (impuesto != "")
+            impuesto = impuesto.split(".").join("").replace(",", ".")
+
+        if (factorimpuesto != "")
+            factorimpuesto = factorimpuesto.split(".").join("").replace(",", ".")
+    }
+
+    switch (action) {
+        case "add":
+            //var factor = req.body.impuesto == 1 ? 1.19 : 1;
+            //console.log("idcuenta ------------------> " + servicio.idcuenta);
+            //console.log("cuentacontable ------------------> " + servicio.CuentasContable.cuentacontable);
+            models.DetalleServicioCto.create({
+                idcontrato: req.body.parent_id,
+                anexo: req.body.anexo,
+                idcui: req.body.idcui,
+                idservicio: null,
+                servicio: null,
+                idcuenta: null,
+                cuentacontable: null,
+                sap: req.body.sap,
+                tarea: req.body.tarea,
+                codigoart: req.body.codigoart,
+                fechainicio: req.body.fechainicio,
+                fechatermino: req.body.fechatermino,
+                fechacontrol: req.body.fechacontrol,
+                valorcuota: valorcuota,
+                idmoneda: req.body.idmoneda,
+                idfrecuencia: req.body.idfrecuencia,
+                frecuenciafacturacion: req.body.frecuenciafacturacion,
+                idplazocontrato: req.body.idplazocontrato,
+                plazocontrato: req.body.plazocontrato,
+                idcondicion: req.body.idcondicion,
+                condicionnegociacion: req.body.condicionnegociacion,
+                impuesto: impuesto,
+                factorimpuesto: factorimpuesto,
+                idcontactoproveedor: req.body.idcontactoproveedor,
+                idestadocto: req.body.idestadocto,
+                estadocontrato: req.body.estadocontrato,
+                glosaservicio: req.body.glosaservicio,
+                borrado: 1
+            }).then(function (contrato) {
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                console.log(err);
+                res.json({ error_code: 1 });
+            });
+
+            break;
+        case "edit":
+            models.DetalleServicioCto.update({
+                idcontrato: req.body.idcontrato,
+                anexo: req.body.anexo,
+                idcui: req.body.idcui,
+                idservicio: req.body.idservicio,
+                servicio: req.body.servicio,
+                idcuenta: req.body.idcuenta,
+                cuentacontable: req.body.cuentacontable,
+                sap: req.body.sap,
+                tarea: req.body.tarea,
+                codigoart: req.body.codigoart,
+                fechainicio: req.body.fechainicio,
+                fechatermino: req.body.fechatermino,
+                fechacontrol: req.body.fechacontrol,
+                valorcuota: req.body.valorcuota,
+                idmoneda: req.body.idmoneda,
+                idfrecuencia: req.body.idfrecuencia,
+                frecuenciafacturacion: req.body.frecuenciafacturacion,
+                idplazocontrato: req.body.idplazocontrato,
+                plazocontrato: req.body.plazocontrato,
+                idcondicion: req.body.idcondicion,
+                condicionnegociacion: req.body.condicionnegociacion,
+                impuesto: impuesto,
+                factorimpuesto: factorimpuesto,
                 idcontactoproveedor: req.body.idcontactoproveedor,
                 idestadocto: req.body.idestadocto,
                 estadocontrato: req.body.estadocontrato,

@@ -124,13 +124,13 @@ module.exports = function (passport) {
 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
-
+/*
     router.route('/contratoproyecto/:id')
         .post(isAuthenticated, contratoproyectoController.list);
 
     router.route('/contratoproyecto/action/:id')
         .post(isAuthenticated, contratoproyectoController.action);
-        
+*/        
     router.route('/sap')
         .get(isAuthenticated, contratoservicioController.sap);        
 
@@ -142,6 +142,9 @@ module.exports = function (passport) {
 
     router.route('/contratoservicio/action/:id')
         .post(isAuthenticated, contratoservicioController.action);
+        
+    router.route('/contratoproyecto/action/:id')
+        .post(isAuthenticated, contratoservicioController.oper);        
 
     router.route('/parameters/:param')
         .get(isAuthenticated, paramController.getListParam);

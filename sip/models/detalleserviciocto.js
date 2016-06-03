@@ -57,7 +57,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     tarea: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true
     },
     codigoart: {
