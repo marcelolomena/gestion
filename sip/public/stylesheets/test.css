@@ -297,16 +297,21 @@ body .wrap-body{
 	color: #CCC;
 }
 .container #sidebar .perfil_sesion .user {
+	padding-left: 74px;
 	height: 76px;
 	width: 240px;
 	background-image: url(../images/pic_user.png);
 	background-repeat: no-repeat;
 	background-position: 17px center;
 }
+.container #sidebar .perfil_sesion .user #p {
+	padding-top: 28px;
+	font-size: 12px;
+}
 .container #sidebar .perfil_sesion .usuario1 {
 	font-family: 'robotolight';
 	font-weight:300;
-	font-size: 14px;
+	font-size: 11px;
 	height: 48px;
 	width: 240px;
 	color: #FFF;
