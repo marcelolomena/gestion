@@ -29,8 +29,8 @@ exports.getPresupuestoPaginados = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
-    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
+    "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+    "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
     "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -51,8 +51,8 @@ exports.getPresupuestoPaginados = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
-        "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
+        "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+        "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
         "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
         "WHERE " + condition.substring(0, condition.length - 4) + "  ORDER BY id desc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -138,8 +138,8 @@ exports.getExcel = function (req, res) {
     }
   ];
 
-  var sql = "SELECT a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
-    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
+  var sql = "SELECT a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+    "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
     "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
 
   sequelize.query(sql)
