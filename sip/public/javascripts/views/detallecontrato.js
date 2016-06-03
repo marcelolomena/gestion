@@ -1041,6 +1041,12 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
             }
         },
+        subGrid: true,
+        subGridRowExpanded: gridDetail,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        }
     });
 
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
