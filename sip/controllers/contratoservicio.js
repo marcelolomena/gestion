@@ -141,8 +141,7 @@ exports.oper = function (req, res) {
     var valorcuota = req.body.valorcuota
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
-console.log(")))))))))))))))))impuesto : " + impuesto)    
-console.log(")))))))))))factorimpuesto : " + factorimpuesto)
+
     if (action != "del") {
         if (valorcuota != "")
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
