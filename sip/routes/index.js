@@ -286,6 +286,19 @@ module.exports = function (passport) {
     router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoperiodosController.action);
 
+    router.get('/serviciosext', isAuthenticated, function (req, res) {
+        res.render('servicios', { user: req.user });
+    });
+    
+    router.route('/serviciosext/list')
+        .post(isAuthenticated, servicioController.list);
+
+    router.route('/serviciosext/action')
+        .post(isAuthenticated, servicioController.action);
+        
+    router.route('/serviciosext/cuentas')
+        .get(isAuthenticated, servicioController.cuentas);
+    
     return router;
 
 }
