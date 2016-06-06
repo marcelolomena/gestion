@@ -9,10 +9,13 @@ var log = function (inst) {
 exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
+    var costoorigen = req.body.costoorigen
 
     if (action != "del") {
         if (montoorigen != "")
             montoorigen = montoorigen.split(".").join("").replace(",", ".")
+        if (costoorigen != "")
+            costoorigen = costoorigen.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
@@ -21,6 +24,7 @@ exports.action = function (req, res) {
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
+                costoorigen: costoorigen,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
@@ -34,6 +38,7 @@ exports.action = function (req, res) {
             models.DetalleCompromiso.update({
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
+                costoorigen: costoorigen
             }, {
                 where: {
                     id: req.body.id
@@ -107,6 +112,7 @@ exports.list = function (req, res) {
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
                             'montoorigen': 0,
+                            'costoorigen': 0,
                             'montopesos': 0, 'pending': true
                         }, { transaction: t });
 

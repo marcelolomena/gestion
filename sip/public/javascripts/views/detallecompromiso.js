@@ -6,8 +6,9 @@ function gridDetail(parentRowID, parentRowKey) {
     var templateDetalle = "<div id='responsive-form' class='clearfix'>";
 
     templateDetalle += "<div class='form-row'>";
-    templateDetalle += "<div class='column-half'>Periodo{periodo}</div>";
-    templateDetalle += "<div class='column-half'>Monto{montoorigen}</div>";
+    templateDetalle += "<div class='column-three'>Periodo{periodo}</div>";
+    templateDetalle += "<div class='column-three'>Monto{montoorigen}</div>";
+    templateDetalle += "<div class='column-three'>Costo{costoorigen}</div>";
     templateDetalle += "</div>";
 
     templateDetalle += "<hr style='width:100%;'/>";
@@ -41,11 +42,21 @@ function gridDetail(parentRowID, parentRowKey) {
             },
             {
                 label: 'Monto', name: 'montoorigen', width: 150, editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
-                }, editrules: { required: true }
+                }, editrules: { required: false }
+            },
+            {
+                label: 'Costo', name: 'costoorigen', width: 150, editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }, editrules: { required: false }
             }
         ],
         pager: "#" + childGridPagerID,
@@ -145,6 +156,7 @@ function gridDetail(parentRowID, parentRowKey) {
             for (var i = 0; i < ids.length; i++) {
                 subgrid.jqGrid('saveRow', ids[i]);
             }
+            subgrid.trigger( 'reloadGrid' );
         }
     });
 
