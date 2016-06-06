@@ -30,18 +30,12 @@ $(document).ready(function () {
 
     var modelServicio = [
         {   label: 'id', name: 'id', key: true, hidden: true },
-        {   label: 'idcuenta', name: 'idcuenta', hidden: true },
         {
-            label: 'Nombre', name: 'nombre', width: 300, align: 'left',
+            label: 'Nombre', name: 'nombre', width: 600, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
-        {
-            label: 'Cuenta contable', name: 'cuentacontable', search: false, width: 300,
-            editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
         {   
-            label: 'Cuenta contable', name: 'cuentacontable', width: 300, align: 'left', search: true, editable: true,
+            label: 'Cuenta contable', name: 'cuentacontable', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
             stype: 'select',
             searchoptions: {
@@ -50,15 +44,15 @@ $(document).ready(function () {
                     var grid = $("#table_parametro");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.cuentacontable;
+                    var thissid = rowData.idcuenta;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Cuenta--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].cuentacontable == thissid) {
-                            s += '<option value="' + data[i].cuentacontable + '" selected>' + data[i].cuentacontable + '</option>';
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].cuentacontable + '</option>';
                         } else {
-                            s += '<option value="' + data[i].cuentacontable + '">' + data[i].cuentacontable + '</option>';
+                            s += '<option value="' + data[i].id + '">' + data[i].cuentacontable + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -80,10 +74,10 @@ $(document).ready(function () {
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Cuenta--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].idcuenta == thissid) {
-                            s += '<option value="' + data[i].idcuenta + '" selected>' + data[i].cuentacontable + '</option>';
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].cuentacontable + '</option>';
                         } else {
-                            s += '<option value="' + data[i].idcuenta + '">' + data[i].cuentacontable + '</option>';
+                            s += '<option value="' + data[i].id + '">' + data[i].cuentacontable + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -96,11 +90,11 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Criticidad', name: 'criticidad', width: 300, align: 'left',
+            label: 'Criticidad', name: 'criticidad', width: 200, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
         {
-            label: 'Tarea', name: 'tarea', width: 300, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 200, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
     ];

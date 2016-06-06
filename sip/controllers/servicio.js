@@ -21,7 +21,7 @@ exports.getServicios = function (req, res) {
 
 exports.cuentas = function (req, res) {
 
-  var sql = "SELECT id as idcuenta, cuentacontable FROM sip.cuentascontables " +
+  var sql = "SELECT id , cuentacontable FROM sip.cuentascontables " +
     "ORDER BY cuentacontable";
 
   sequelize.query(sql)
