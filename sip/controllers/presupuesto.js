@@ -241,7 +241,7 @@ exports.action = function (req, res) {
           for (var i = 0; i < servicio.length; i++) {
             var idservorig=servicio[i].id;
             console.log("----->" + servicio[i].id)
-            sequelize.query('EXECUTE spInsertaPeriodo '+servicio[i].id
+            sequelize.query('EXECUTE sip.InsertaPeriodo '+servicio[i].id
             +","+id_cui
             +","+presupuesto.id
             +","+servicio[i].idservicio
