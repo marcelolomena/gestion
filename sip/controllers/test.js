@@ -7,6 +7,7 @@ var log = function (inst) {
 
 exports.test = function (req, res) {
 
+/*
     var Menu = function (id, desc, callback) {
         var opt = [];
         var item = {}
@@ -31,7 +32,7 @@ exports.test = function (req, res) {
             return callback(e);
         }
     }
-
+*/
     var subMenu = function (op, menu, callback) {
         return models.Menu.findAll({
             where: { 'pid': menu.id }
@@ -51,14 +52,14 @@ exports.test = function (req, res) {
         });
     }
 
-    var SuperMenu = function (user, callback) {
+    var Menu = function (user, callback) {
         var opt = [];
         var tot = [];
         try {
-            var i = 0
+            //var i = 0
             var nombre = {}
             nombre["nombre"] = user.first_name + " " + user.last_name
-            tot[0] = nombre
+            //tot[0] = nombre
             //console.dir(tot)
             user.Rols.forEach(function (rol) {
                 //console.log("Rol-------------> " + rol.glosarol)
@@ -98,8 +99,11 @@ exports.test = function (req, res) {
         ]
     }).then(function (user) {
         console.log("usuario-------------> " + user.uname)
-        SuperMenu(user, function (submenu) {
+        Menu(user, function (submenu) {
+            //var tot =[]
+            //tot.push(submenu)
             console.dir(submenu)
+            //console.log(JSON.stringify(submenu))
         });
         /*
                 user.Rols.forEach(function (rol) {
