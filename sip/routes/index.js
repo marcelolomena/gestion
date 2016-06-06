@@ -21,6 +21,7 @@ var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
+var plantillaController = require('../controllers/plantilla');
 
 var express = require('express');
 var router = express.Router();
@@ -221,6 +222,10 @@ module.exports = function (passport) {
         res.render('presupuesto', { user: req.user });
     });
 
+    router.get('/plantillapresupuestaria', isAuthenticated, function (req, res) {
+        res.render('plantilla', { user: req.user });
+    });
+    
     router.route('/presupuestolist')
         .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
 
