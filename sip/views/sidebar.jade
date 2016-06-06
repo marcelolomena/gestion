@@ -1,7 +1,12 @@
 #sidebar
   .perfil_sesion
     .user
-    .usuario1 #{user.first_name} #{user.last_name}
+     #p #{user.first_name} #{user.last_name}
+    .usuario1 
+      ul
+        li
+          each val in user.Rols
+            li= val.glosarol
     .usuario3
       a(href='signout') Cerrar Sesión
   #cssmenu
@@ -31,7 +36,7 @@
               span Iniciativas
           li.last
             a(href='/proyectos')
-              span Proyectos en Curso                       
+              span Erogaciones                       
       li.has-sub
         a(href='#')
           span Continuidad

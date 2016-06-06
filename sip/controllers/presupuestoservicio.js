@@ -189,11 +189,11 @@ exports.getExcel = function (req, res) {
     }
   ];
   
-    var sql = "SELECT a.id, f.CUI, c.nombre, d.moneda, a.montoforecast, a.montoanual "+
+    var sql = "SELECT a.id, f.cui, c.nombre, d.moneda, a.montoforecast, a.montoanual "+
         "FROM sip.detallepre a "+ 
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  "+
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id "+
-        "LEFT JOIN sip.presupuesto e ON a.idpresupuesto=e.id LEFT JOIN sip.cuidivot f ON e.idcui=f.secuencia "+
+        "LEFT JOIN sip.presupuesto e ON a.idpresupuesto=e.id LEFT JOIN sip.estructuracui f ON e.idcui=f.id "+
         "WHERE a.idpresupuesto="+id+ " order by cuentacontable";
     
     console.log("sql:"+sql);

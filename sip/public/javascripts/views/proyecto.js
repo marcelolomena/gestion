@@ -163,8 +163,8 @@ $(document).ready(function () {
 
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
@@ -264,8 +264,8 @@ function showProyectosTareas(parentRowID, parentRowKey) {
     });    
     
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-    caption: "Excel",
-    buttonicon: "silk-icon-page-excel",
+    caption: "",
+    buttonicon: "glyphicon glyphicon-download-alt",
     title: "Excel",
     position: "last",
     onClickButton: function () {
@@ -358,8 +358,8 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
     });  
 
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-    caption: "Excel",
-    buttonicon: "silk-icon-page-excel",
+    caption: "",
+    buttonicon: "glyphicon glyphicon-download-alt",
     title: "Excel",
     position: "last",
     onClickButton: function () {

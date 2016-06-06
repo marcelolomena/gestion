@@ -199,8 +199,8 @@ $(document).ready(function () {
 
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
@@ -545,15 +545,6 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Contrato',
-                name: 'compromisopesos',
-                align: 'right',
-                search: false,
-                sortable: false,
-                width: 150,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 }
-            },
-            {
                 label: 'Valor Presupuesto',
                 name: 'presupuestopesos',
                 editable: true,
@@ -588,7 +579,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         add: false,
         del: false,
         search: false,
-        refresh: false,
+        refresh: true,
         view: false, position: "left", cloneToTop: false
     },
     {
