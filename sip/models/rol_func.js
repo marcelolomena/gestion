@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('rol_func', {
+  return sequelize.define('RolFunc', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,

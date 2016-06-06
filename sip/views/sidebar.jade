@@ -4,9 +4,8 @@
      #p #{user.first_name} #{user.last_name}
     .usuario1 
       ul
-        li
-          each val in user.Rols
-            li= val.glosarol
+        each val in user.Rols
+          li= val.glosarol
     .usuario3
       a(href='signout') Cerrar Sesión
   #cssmenu
