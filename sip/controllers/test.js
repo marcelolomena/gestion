@@ -94,10 +94,9 @@ exports.test = function (req, res) {
             return Promise.all(promises).then(function (compromisos) {
                 var compromisoPromises = [];
                 for (var i = 0; i < compromisos.length; i++) {
-                    console.log("lala " + compromisos[i])
                     compromisoPromises.push(compromisos[i]);
                 }
-                console.log("loc " + compromisoPromises)
+                console.dir(compromisoPromises)
                 return Promise.all(compromisoPromises);
             });
 
