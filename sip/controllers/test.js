@@ -8,6 +8,48 @@ var log = function (inst) {
 
 exports.test = function (req, res) {
 
+    /*
+        var subMenu = function (op, menu, callback) {
+            return models.Menu.findAll({
+                where: { 'pid': menu.id }
+            }).then(function (submenu) {
+                var opt = {}
+                opt["menu"] = op
+                var subsub = []
+                submenu.forEach(function (opcion) {
+                    //console.log("opcion-------------> " + opcion.descripcion)
+                    subsub.push({ [opcion.id]: opcion.descripcion })
+                });
+                opt["submenu"] = subsub
+                callback(opt)
+            }).catch(function (err) {
+                console.log("--------> " + err);
+            });
+        }
+    */
+    /*
+        var Menu = function (user, callback) {
+            try {
+                var nombre = {}
+                nombre["nombre"] = user.first_name + " " + user.last_name
+                user.Rols.forEach(function (rol) {
+                    rol.Menus.forEach(function (menu) {
+                        //console.log("menu-------------> " + menu.id + " , " + menu.descripcion)
+                        var item = {}
+                        item["id"] = menu.id
+                        item["menu"] = menu.descripcion;
+    
+                        subMenu(item, menu, function (submenu) {
+                            callback(submenu)
+                        });
+                    });
+                });
+             } catch (e) {
+                return callback(e);
+            }
+        }
+    */
+
     var subMenu = function (op, menu, callback) {
         return models.Menu.findAll({
             where: { 'pid': menu.id }
@@ -27,33 +69,40 @@ exports.test = function (req, res) {
     }
 
     var Menu = function (user, callback) {
-        var promises = [];
         try {
             var nombre = {}
             nombre["nombre"] = user.first_name + " " + user.last_name
+            var promises = []
             user.Rols.forEach(function (rol) {
+
                 rol.Menus.forEach(function (menu) {
                     //console.log("menu-------------> " + menu.id + " , " + menu.descripcion)
+
                     var item = {}
                     item["id"] = menu.id
                     item["menu"] = menu.descripcion;
 
-                    subMenu(item, menu, function (submenu) {
-                        //console.dir(submenu)
-
-                        //callback(submenu)
-                        promises.push(submenu)
+                    var promise = new Promise(function (resolve, reject) {
+                        subMenu(item, menu, function (submenu) {
+                            resolve(submenu);
+                        });
                     });
-
+                    promises.push(promise);
                 });
-
             });
-            
-            return Promise.resolve(promises)
+
+            return Promise.all(promises).then(function (compromisos) {
+                var compromisoPromises = [];
+                for (var i = 0; i < compromisos.length; i++) {
+                    console.log("lala " + compromisos[i])
+                    compromisoPromises.push(compromisos[i]);
+                }
+                console.log("loc " + compromisoPromises)
+                return Promise.all(compromisoPromises);
+            });
 
         } catch (e) {
-            //return callback(e);
-            console.log(e)
+            return callback(e);
         }
     }
 
@@ -74,7 +123,8 @@ exports.test = function (req, res) {
         console.log("usuario-------------> " + user.uname)
 
         Menu(user, function (menu) {
-            console.dir(menu)
+            console.log("pico " + menu)
+            //console.dir(menu)
             //console.log(JSON.stringify(submenu))
         });
 
