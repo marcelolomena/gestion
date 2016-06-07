@@ -8,7 +8,6 @@ var proyectoController = require('../controllers/proyecto');
 var proyectoTareasController = require('../controllers/proyectotareas');
 var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
-//var contratoproyectoController = require('../controllers/contratoproyecto');
 var contratoservicioController = require('../controllers/contratoservicio');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var iniciativafechaController = require('../controllers/iniciativafecha');
@@ -22,8 +21,12 @@ var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var plantillaController = require('../controllers/plantilla');
+<<<<<<< HEAD
 var graficoController = require('../controllers/graficotest');
 
+=======
+var testController = require('../controllers/test');
+>>>>>>> 611bbc71d8702ff173e031c79664eb3ae52b5502
 
 var express = require('express');
 var router = express.Router();
@@ -127,27 +130,27 @@ module.exports = function (passport) {
 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
-/*
-    router.route('/contratoproyecto/:id')
-        .post(isAuthenticated, contratoproyectoController.list);
-
-    router.route('/contratoproyecto/action/:id')
-        .post(isAuthenticated, contratoproyectoController.action);
-*/        
+    /*
+        router.route('/contratoproyecto/:id')
+            .post(isAuthenticated, contratoproyectoController.list);
+    
+        router.route('/contratoproyecto/action/:id')
+            .post(isAuthenticated, contratoproyectoController.action);
+    */
     router.route('/sap')
-        .get(isAuthenticated, contratoservicioController.sap);        
+        .get(isAuthenticated, contratoservicioController.sap);
 
     router.route('/tarea/:id')
-        .get(isAuthenticated, contratoservicioController.tarea);        
+        .get(isAuthenticated, contratoservicioController.tarea);
 
     router.route('/contratoservicio/:id')
         .post(isAuthenticated, contratoservicioController.list);
 
     router.route('/contratoservicio/action/:id')
         .post(isAuthenticated, contratoservicioController.action);
-        
+
     router.route('/contratoproyecto/action/:id')
-        .post(isAuthenticated, contratoservicioController.oper);        
+        .post(isAuthenticated, contratoservicioController.oper);
 
     router.route('/parameters/:param')
         .get(isAuthenticated, paramController.getListParam);
@@ -227,7 +230,7 @@ module.exports = function (passport) {
     router.get('/plantillapresupuestaria', isAuthenticated, function (req, res) {
         res.render('plantilla', { user: req.user });
     });
-    
+
     router.route('/presupuestolist')
         .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
 
@@ -287,6 +290,22 @@ module.exports = function (passport) {
 
     router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoperiodosController.action);
+
+    router.get('/serviciosext', isAuthenticated, function (req, res) {
+        res.render('servicios', { user: req.user });
+    });
+
+    router.route('/serviciosext/list')
+        .post(isAuthenticated, servicioController.list);
+
+    router.route('/serviciosext/action')
+        .post(isAuthenticated, servicioController.action);
+
+    router.route('/serviciosext/cuentas')
+        .get(isAuthenticated, servicioController.cuentas);
+
+    router.route('/test')
+        .get(isAuthenticated, testController.test);
 
     router.get('/graficotest', isAuthenticated, function (req, res) {
         res.render('grafico', { user: req.user });

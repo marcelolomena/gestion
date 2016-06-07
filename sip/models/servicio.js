@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     nombre: {
       type: DataTypes.STRING,
@@ -24,6 +25,10 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     cuentacontable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tarea: {
       type: DataTypes.STRING,
       allowNull: true
     },
