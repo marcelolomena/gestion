@@ -47,15 +47,14 @@ module.exports = function (passport) {
                     });
                 });
 
-                return Promise.all(promises).then(function (compromisos) {
-                    var compromisoPromises = [];
-                    for (var i = 0; i < compromisos.length; i++) {
-                        compromisoPromises.push(compromisos[i]);
+                return Promise.all(promises).then(function (items) {
+                    var menuPromises = [];
+                    for (var i = 0; i < items.length; i++) {
+                        menuPromises.push(items[i]);
                     }
-                    //return Promise.all(compromisoPromises);
-                    callback(compromisoPromises);
+                    //return Promise.all(menuPromises);
+                    callback(menuPromises);
                 });
-
             } catch (e) {
                 return callback(e);
             }
