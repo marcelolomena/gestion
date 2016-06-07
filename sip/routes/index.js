@@ -22,6 +22,8 @@ var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var plantillaController = require('../controllers/plantilla');
+var graficoController = require('../controllers/graficotest');
+
 
 var express = require('express');
 var router = express.Router();
@@ -286,6 +288,13 @@ module.exports = function (passport) {
     router.route('/presupuestoperiodos/action')
         .post(isAuthenticated, presupuestoperiodosController.action);
 
+    router.get('/graficotest', isAuthenticated, function (req, res) {
+        res.render('grafico', { user: req.user });
+    });
+
+    router.route('/graficodata')
+        .get(isAuthenticated, graficoController.graficoData);    
+        
     return router;
 
 }
