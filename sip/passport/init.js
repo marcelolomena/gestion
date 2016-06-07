@@ -19,7 +19,7 @@ module.exports = function (passport) {
                 opt["menu"] = op
                 var subsub = []
                 submenu.forEach(function (opcion) {
-                    subsub.push({ [opcion.id]: opcion.descripcion })
+                    subsub.push({ "opt": opcion.descripcion })
                 });
                 opt["submenu"] = subsub
                 callback(opt)
@@ -67,32 +67,32 @@ module.exports = function (passport) {
         models.Menu.belongsToMany(models.Rol, { foreignKey: 'mid', through: models.RolFunc });
 
         models.User.find({
-            where: { 'uid': 1 },
+            where: { 'uid': id },
             include: [
                 {
                     model: models.Rol,
                     include: [{ model: models.Menu, where: { 'pid': { $eq: null } }, required: false }]
                 }
             ]
-        }).then(function (user) {
+        }).then(function (usr) {
             var usuario = []
             var nombre = {}
-            nombre["nombre"] = user.first_name + " " + user.last_name
+            nombre["nombre"] = usr.first_name + " " + usr.last_name
             usuario.push(nombre)
 
-            Menu(user, function (menu) {
+            Menu(usr, function (menu) {
                 var menus = {}
                 menus["menus"] = menu
-                var toti = usuario.concat(menus);
-                console.log(JSON.stringify(toti))
-                done(null, toti);
+                var user = usuario.concat(menus);
+                console.log(JSON.stringify(user))
+                done(null, user);
             });
 
         }).catch(function (err) {
             console.log("--------> " + err);
             done(err, null)
         });
-        
+
         /*
                 models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
                 models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
@@ -104,7 +104,7 @@ module.exports = function (passport) {
                 }).error(function (err) {
                     done(err, null)
                 });
-        */        
+        */
 
     });
 

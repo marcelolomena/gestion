@@ -1,11 +1,13 @@
 #sidebar
   .perfil_sesion
     .user
-     #p #{user.first_name} #{user.last_name}
+     #p #{JSON.stringify(user[0].nombre)}
     .usuario1 
       ul
-        each val in user.Rols
-          li= val.glosarol
+        each val in user[1].menus
+          li= val.menu.menu
+          each vol in val.submenu
+            li=vol.opt
     .usuario3
       a(href='signout') Cerrar Sesión
   #cssmenu
