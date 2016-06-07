@@ -31,7 +31,7 @@ exports.graficoData = function (req, res) {
       data = data.substring(0,data.length-1);
       data = data + "\"],\"showInLegend\":false}";
       console.log(data);
-      res.json(data);
+      res.json(JSON.stringify(data));
     }).catch(function (err) {
       console.log(err);
       res.json({ error_code: 100 });

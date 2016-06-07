@@ -21,12 +21,8 @@ var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var plantillaController = require('../controllers/plantilla');
-<<<<<<< HEAD
 var graficoController = require('../controllers/graficotest');
-
-=======
-var testController = require('../controllers/test');
->>>>>>> 611bbc71d8702ff173e031c79664eb3ae52b5502
+var testController = require('../controllers/test')
 
 var express = require('express');
 var router = express.Router();
