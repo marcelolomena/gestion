@@ -20,16 +20,27 @@ exports.getServicios = function (req, res) {
 };
 
 exports.cuentas = function (req, res) {
+  models.CuentasContables.findAll({
+    order: 'cuentacontable'
+  }).then(function (cuentas) {
+    //iniciativas.forEach(log)
+    res.json(cuentas);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+//exports.cuentas = function (req, res) {
 
-  var sql = "SELECT id , cuentacontable FROM sip.cuentascontables " +
-    "ORDER BY cuentacontable";
+//  var sql = "SELECT id , cuentacontable FROM sip.cuentascontables " +
+//    "ORDER BY cuentacontable";
 
-  sequelize.query(sql)
-    .spread(function (rows) {
-      res.json(rows);
-    });
+ // sequelize.query(sql)
+  //  .spread(function (rows) {
+   //   res.json(rows);
+  //  });
 
-};
+//};
 
 exports.list = function (req, res) {
 
@@ -51,6 +62,7 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
+      models.Servicio.belongsTo(models.CuentasContables, { foreignKey: 'idcuenta' });
       models.Servicio.count({
         where: data
       }).then(function (records) {
@@ -59,7 +71,10 @@ exports.list = function (req, res) {
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data
+          where: data,
+           include: [{
+            model: models.CuentasContables
+          }]
         }).then(function (servicios) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: servicios });

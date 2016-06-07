@@ -6,11 +6,9 @@ $(document).ready(function () {
     tmpl += "<div class='column-full'>Nombre {nombre}</div>";
     tmpl += "</div>";
 
-
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Cuenta {idcuenta}</div>";
     tmpl += "</div>";
-
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Criticidad {criticidad}</div>";
@@ -21,7 +19,7 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' style='display: none;'>";
-    tmpl += "<div class='column-half'>Cuenta {cuentacontable}</div>";
+    tmpl += "<div class='column-half'>cuentacontable {cuentacontable}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -34,39 +32,13 @@ $(document).ready(function () {
             label: 'Nombre', name: 'nombre', width: 600, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
-        {   
-            label: 'Cuenta contable', name: 'cuentacontable', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true,
-            stype: 'select',
-            searchoptions: {
-                dataUrl: '/serviciosext/cuentas',
-                buildSelect: function (response) {
-                    var grid = $("#table_parametro");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idcuenta;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Cuenta--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].cuentacontable + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].cuentacontable + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }
-        },
         {
-            
-            label: 'idcuenta', name: 'idcuenta', search: false, editable: true, hidden: true,
+            label: 'Cuenta Contable', name: 'idcuenta', search: false, editable: true, hidden: true, jsonmap: "CuentasContables.id",
             edittype: "select",
             editoptions: {
                 dataUrl: '/serviciosext/cuentas',
                 buildSelect: function (response) {
-                    var grid = $("#table_parametro");
+                    var grid = $("#table_servicio");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idcuenta;
@@ -90,6 +62,23 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
+            label: 'Cuenta Contable', name: 'cuentacontable', width: 300, align: 'left', search: true,
+            editable: true, jsonmap: "CuentasContables.cuentacontable",
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/serviciosext/cuentas',
+                buildSelect: function (response) {
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger Cuenta--</option>';
+                    $.each(data, function (i, item) {
+                        s += '<option value="' + data[i].id + '">' + data[i].cuentacontable + '</option>';
+                    });
+                    return s + "</select>";
+                }
+            },
+        },
+        {
             label: 'Criticidad', name: 'criticidad', width: 200, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
@@ -108,23 +97,42 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: null,
-        shrinkToFit: false,
+       // width: null,
+        autowidth: true,
+        shrinkToFit: true,
         caption: 'Lista de servicios',
         pager: "#pager_servicio",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/serviciosext/action',
         styleUI: "Bootstrap",
-        loadError: function (jqXHR, textStatus, errorThrown) {
-            alert('HTTP status code: ' + jqXHR.status + '\n' +
-                'textStatus: ' + textStatus + '\n' +
-                'errorThrown: ' + errorThrown);
-        }
-    });
-    $("#table_servicio").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+        loadError: sipLibrary.jqGrid_loadErrorHandler,
+        gridComplete: function () {
+            var recs = $("#table_servicio").getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
 
-    $('#table_servicio').jqGrid('navGrid', "#pager_servicio", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+                $("#table_servicio").addRowData("blankRow", { "nombre": "No hay datos" });
+            }
+        }
+    }).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: true, defaultSearch: 'cn'
+              ,beforeSearch: function () {
+            var postData = $("#table_servicio").jqGrid('getGridParam', 'postData');
+            var searchData = jQuery.parseJSON(postData.filters);
+            for (var iRule = 0; iRule < searchData.rules.length; iRule++) {
+                if (searchData.rules[iRule].field === "cuentacontable") {
+                    var valueToSearch = searchData.rules[iRule].data;
+                    searchData.rules[iRule].field = 'idcuenta'
+                }
+            }
+            //return false;
+            postData.filters = JSON.stringify(searchData);
+        },
+            afterSearch: function () {
+
+        } });
+
+    $('#table_servicio').jqGrid('navGrid', "#pager_servicio",
+     { edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false },           
         {
             editCaption: "Modifica Servicio",
             closeAfterEdit: true,
