@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+   $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+   
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
@@ -28,12 +30,14 @@ $(document).ready(function () {
 
     var modelServicio = [
         {   label: 'id', name: 'id', key: true, hidden: true },
+        {   label: 'idcuenta', name: 'idcuenta', hidden: true },
         {
             label: 'Nombre', name: 'nombre', width: 600, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
         {
-            label: 'Cuenta Contable', name: 'idcuenta', search: false, editable: true, hidden: true, jsonmap: "CuentasContables.id",
+            label: 'Cuenta Contable', name: 'idcuenta', search: false, editable: true,editrules: { required: true },
+            hidden: true, jsonmap: "CuentasContables.id",
             edittype: "select",
             editoptions: {
                 dataUrl: '/serviciosext/cuentas',
@@ -84,7 +88,7 @@ $(document).ready(function () {
         },
         {
             label: 'Tarea', name: 'tarea', width: 200, align: 'left',
-            search: true, editable: true, editrules: { required: true }, hidden: false
+            search: true, editable: true, editrules: { required: false }, hidden: false
         },
     ];
 
@@ -114,8 +118,12 @@ $(document).ready(function () {
                 $("#table_servicio").addRowData("blankRow", { "nombre": "No hay datos" });
             }
         }
-    }).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: true, defaultSearch: 'cn'
-              ,beforeSearch: function () {
+    }).jqGrid('filterToolbar', { 
+         stringResult: true, 
+         searchOnEnter: true,
+         defaultSearch: 'cn',         
+         searchOperators: true, 
+         beforeSearch: function () {
             var postData = $("#table_servicio").jqGrid('getGridParam', 'postData');
             var searchData = jQuery.parseJSON(postData.filters);
             for (var iRule = 0; iRule < searchData.rules.length; iRule++) {
@@ -165,12 +173,13 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.idcuenta == 0) {
-                    return [false, "Cuenta: Debe escoger un valor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            }, afterSubmit: function (response, postdata) {
+                    if (postdata.pid == 0) {
+                        return [false, "CuentasContables: Debe escoger un valor", ""];
+                    } else {
+                        return [true, "", ""]
+                    }
+                },
+               afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0) {
@@ -182,8 +191,6 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_servicio').attr('id'));
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_servicio").attr('id'));
             }
         },
         {
@@ -205,5 +212,18 @@ $(document).ready(function () {
         }
     );
 
+    $('#table_servicio').jqGrid('navButtonAdd', '#pager_servicio', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#table_servicio');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/serviciosext/excel';
+            $('#table_servicio').jqGrid('excelExport', { "url": url });
+        }
+    });
+    
     $("#pager_servicio_left").css("width", "");
 });

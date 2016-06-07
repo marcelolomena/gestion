@@ -56,7 +56,7 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
-  var orden = sidx + " " + sord;
+    var orden = "[Servicio]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
@@ -144,5 +144,78 @@ exports.action = function (req, res) {
       break;
 
   }
+
+}
+exports.getExcel = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
+  console.log("En getExcel");
+  var conf = {}
+  conf.cols = [
+    {
+      caption: 'id',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'nombre',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'tarea',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'criticidad',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Cuenta Contable',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Nombre Cuenta',
+      type: 'string',
+      width: 50
+    }
+  ];
+  
+ var sql = "SELECT a.id, a.nombre, a.tarea "+
+    ",a.criticidad,b.cuentacontable,b.nombrecuenta "+
+    "FROM sip.servicio a left join sip.cuentascontables b on a.idcuenta = b.id order by a.nombre"
+    
+    sequelize.query(sql)
+      .spread(function (servicio) {
+      var arr = []
+      for (var i = 0; i < servicio.length; i++) {
+
+        a = [i + 1, servicio[i].nombre,
+          servicio[i].tarea,
+          servicio[i].criticidad,
+          servicio[i].cuentacontable,
+          servicio[i].nombrecuenta
+        ];
+        console.log(a);
+        arr.push(a);
+      }
+      conf.rows = arr;
+
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "Servicios.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
 
 };
