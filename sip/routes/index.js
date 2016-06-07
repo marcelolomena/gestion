@@ -21,7 +21,8 @@ var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var plantillaController = require('../controllers/plantilla');
-var testController = require('../controllers/test');
+var graficoController = require('../controllers/graficotest');
+var testController = require('../controllers/test')
 
 var express = require('express');
 var router = express.Router();
@@ -125,6 +126,9 @@ module.exports = function (passport) {
 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
+        
+    router.route('/contratos/excel')
+        .get(isAuthenticated, contratoController.excel);
     /*
         router.route('/contratoproyecto/:id')
             .post(isAuthenticated, contratoproyectoController.list);
@@ -305,6 +309,13 @@ module.exports = function (passport) {
     router.route('/test')
         .get(isAuthenticated, testController.test);
 
+    router.get('/graficotest', isAuthenticated, function (req, res) {
+        res.render('grafico', { user: req.user });
+    });
+
+    router.route('/graficodata')
+        .get(isAuthenticated, graficoController.graficoData);    
+        
     return router;
 
 }
