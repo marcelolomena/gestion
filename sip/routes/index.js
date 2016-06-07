@@ -126,6 +126,9 @@ module.exports = function (passport) {
 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
+        
+    router.route('/contratos/excel')
+        .get(isAuthenticated, contratoController.excel);
     /*
         router.route('/contratoproyecto/:id')
             .post(isAuthenticated, contratoproyectoController.list);

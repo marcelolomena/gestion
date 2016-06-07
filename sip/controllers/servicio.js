@@ -10,12 +10,12 @@ var log = function (inst) {
 
 exports.getServicios = function (req, res) {
 
-    models.Servicio.findAll({ where: { 'borrado': 1 }, order: 'nombre' }).then(function (programa) {
-        res.json(programa);
-    }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-    });
+  models.Servicio.findAll({ where: { 'borrado': 1 }, order: 'nombre' }).then(function (programa) {
+    res.json(programa);
+  }).catch(function (err) {
+    console.log(err);
+    res.json({ error_code: 1 });
+  });
 
 };
 
@@ -35,10 +35,10 @@ exports.cuentas = function (req, res) {
 //  var sql = "SELECT id , cuentacontable FROM sip.cuentascontables " +
 //    "ORDER BY cuentacontable";
 
- // sequelize.query(sql)
-  //  .spread(function (rows) {
-   //   res.json(rows);
-  //  });
+// sequelize.query(sql)
+//  .spread(function (rows) {
+//   res.json(rows);
+//  });
 
 //};
 
@@ -72,7 +72,7 @@ exports.list = function (req, res) {
           limit: parseInt(rows),
           order: orden,
           where: data,
-           include: [{
+          include: [{
             model: models.CuentasContables
           }]
         }).then(function (servicios) {

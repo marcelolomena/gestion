@@ -63,7 +63,7 @@ $(document).ready(function () {
         },
         {
             label: 'Cuenta Contable', name: 'cuentacontable', width: 300, align: 'left', search: true,
-            editable: true, jsonmap: "CuentasContables.cuentacontable",
+            editable: true, jsonmap: "cuentacontable",
             stype: 'select',
             searchoptions: {
                 dataUrl: '/serviciosext/cuentas',
