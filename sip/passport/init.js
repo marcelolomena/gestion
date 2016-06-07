@@ -31,21 +31,24 @@ module.exports = function (passport) {
         var Menu = function (user, callback) {
             try {
                 var promises = []
-                user.Rols.forEach(function (rol) {
+                //console.log("--->>>>>>> " + user.Rols.length);
+                //console.dir(user.Rols[0])
+                var rol = user.Rols[0];
+                //user.Rols[0].forEach(function (rol) {
 
-                    rol.Menus.forEach(function (menu) {
-                        var item = {}
-                        item["id"] = menu.id
-                        item["menu"] = menu.descripcion;
+                rol.Menus.forEach(function (menu) {
+                    var item = {}
+                    item["id"] = menu.id
+                    item["menu"] = menu.descripcion;
 
-                        var promise = new Promise(function (resolve, reject) {
-                            subMenu(item, menu, function (submenu) {
-                                resolve(submenu);
-                            });
+                    var promise = new Promise(function (resolve, reject) {
+                        subMenu(item, menu, function (submenu) {
+                            resolve(submenu);
                         });
-                        promises.push(promise);
                     });
+                    promises.push(promise);
                 });
+                //});
 
                 return Promise.all(promises).then(function (items) {
                     var menuPromises = [];
@@ -73,6 +76,7 @@ module.exports = function (passport) {
                     include: [{ model: models.Menu, where: { 'pid': { $eq: null } }, required: false }]
                 }
             ]
+            //group: ['[User].[first_name]', '[User].[last_name]', '[Rols.Menus].[descripcion]' , '[Rols.Menus].[url]' ]
         }).then(function (usr) {
             var usuario = []
             var nombre = {}
