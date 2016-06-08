@@ -56,14 +56,14 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
-    var orden = "[Servicio]." + sidx + " " + sord;
+    var orden = "[servicio]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.Servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
-      models.Servicio.count({
+      models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
+      models.servicio.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);

@@ -72,7 +72,7 @@ module.exports = function (passport) {
             where: { 'uid': id },
             include: [
                 {
-                    model: models.Rol,
+                    model: models.rol,
                     include: [{ model: models.menu, where: { 'pid': { $eq: null } }, required: false }]
                 }
             ]

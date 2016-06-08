@@ -187,7 +187,7 @@ exports.getUsersByRol = function (req, res) {
   models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
 
   models.User.findAll({
-    order: ['[User].first_name', '[User].last_name'],
+    order: ['[user].first_name', '[user].last_name'],
     include: [{
       model: models.rol,
       where: { 'glosarol': req.params.rol },
