@@ -186,7 +186,7 @@ exports.getUsersByRol = function (req, res) {
   models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
   models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
 
-  models.User.findAll({
+  models.user.findAll({
     order: ['[user].first_name', '[user].last_name'],
     include: [{
       model: models.rol,
