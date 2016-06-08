@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('RecursosHumanos', {
+  return sequelize.define('recursoshumanos', {
     periodo: {
       type: DataTypes.INTEGER,
       allowNull: false,

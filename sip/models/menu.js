@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Menu', {
+  return sequelize.define('menu', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
