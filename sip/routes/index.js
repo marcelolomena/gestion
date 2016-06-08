@@ -310,8 +310,11 @@ module.exports = function (passport) {
         res.render('grafico', { user: req.user });
     });
 
-    router.route('/graficodata')
-        .get(isAuthenticated, graficoController.graficoData);    
+    router.route('/graficodatareal')
+        .get(isAuthenticated, graficoController.graficoDataReal);    
+
+    router.route('/graficodatapres')
+        .get(isAuthenticated, graficoController.graficoDataPres);    
         
     return router;
 

@@ -8,7 +8,7 @@ exports.graficoDataOld = function (req, res) {
 };
 
 
-exports.graficoData = function (req, res) {
+exports.graficoDataPres = function (req, res) {
   var page = req.query.page;
   var rows = req.query.rows;
   var filters = req.query.filters;
@@ -22,16 +22,49 @@ exports.graficoData = function (req, res) {
     
     sequelize.query(sql)
       .spread(function (proyecto) {
-      var data = "{\"titulo\":\"Erogaciones por SAP\",\"data\":[";
+      var data = '{"titulo":"Erogaciones por SAP","data":[';
       for (var i = 0; i < proyecto.length; i++) {
-        var linea = "{\"name\":\""+proyecto[i].nombre+"\",\"y\":"+proyecto[i].presupuestopesos+",\"dId\":6079},"
+        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].presupuestopesos+',"dId":6079},'
         console.log(linea);
         data = data + linea;
       }
       data = data.substring(0,data.length-1);
-      data = data + "\"],\"showInLegend\":false}";
+      data = data + '],"showInLegend":false}';
       console.log(data);
-      res.json(JSON.stringify(data));
+      var obj = JSON.parse(data);
+      res.json(obj);
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+
+};
+
+exports.graficoDataReal = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
+  
+ var sql = " SELECT nombre, realacumuladopesos "+
+ "FROM sip.detalleproyecto "+
+ "WHERE idproyecto=237";
+    
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+      var data = '{"titulo":"REAL Erogaciones por SAP","data":[';
+      for (var i = 0; i < proyecto.length; i++) {
+        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].realacumuladopesos+',"dId":6079},'
+        console.log(linea);
+        data = data + linea;
+      }
+      data = data.substring(0,data.length-1);
+      data = data + '],"showInLegend":false}';
+      console.log(data);
+      var obj = JSON.parse(data);
+      res.json(obj);
     }).catch(function (err) {
       console.log(err);
       res.json({ error_code: 100 });
