@@ -65,7 +65,7 @@ exports.graficoDataReal = function (req, res) {
 };
 
 exports.sapgrafico = function (req, res) {
-    models.Proyecto.findAll({
+    models.proyecto.findAll({
         attributes: ['id', 'nombre']
     }).then(function (proyecto) {
         console.dir(proyecto)

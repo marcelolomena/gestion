@@ -106,10 +106,25 @@ $(document).ready(function () {
 
 			}
 		});
-		showProyectoErogaciones(idsap);
+		//showProyectoErogaciones(idsap);
+		loadGrid(idsap);
+		$("#grid2").jqGrid('setGridState', 'hidden');
+		$("#grid2").jqGrid('setCaption', ' ');
+		
 	});
 	
 });
+
+var leida = false;
+function loadGrid(parentID) {
+	var url = "/proyectostareas/" + parentID;
+	var formatter = new Intl.NumberFormat();
+	if (leida){
+		$("#grid").jqGrid('setCaption', "Tareas SAP ").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
+	} else {
+		showProyectoErogaciones(parentID);
+	}
+}
 
 function showProyectoErogaciones(parentID) {
 
@@ -191,6 +206,7 @@ function loadGrid2(parentID, parentNombre, monto) {
 	var url = "/erogacioneslist/" + parentID;
 	var formatter = new Intl.NumberFormat();
 	if (leida2){
+		$("#grid2").jqGrid('setGridState', 'visible');
 		$("#grid2").jqGrid('setCaption', "FACTURAS - "+parentNombre+" - "+ formatter.format(monto)).jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
 	} else {
 		showProyectoErogaciones2(parentID, parentNombre, monto);
