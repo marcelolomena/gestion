@@ -36,10 +36,12 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+/*    
     servicio: {
       type: DataTypes.STRING,
       allowNull: true
     },
+*/    
     idcuenta: {
       type: DataTypes.INTEGER,
       allowNull: true,
