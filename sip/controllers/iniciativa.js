@@ -133,11 +133,11 @@ exports.getExcel = function (req, res) {
     if (err) {
       log(err)
     } else {
-      models.Iniciativa.count({
+      models.iniciativa.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.Iniciativa.findAll({
+        models.iniciativa.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
@@ -183,13 +183,13 @@ exports.getExcel = function (req, res) {
 };
 
 exports.getUsersByRol = function (req, res) {
-  models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
-  models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
+  models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
+  models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
 
-  models.User.findAll({
-    order: ['[User].first_name', '[User].last_name'],
+  models.user.findAll({
+    order: ['[user].first_name', '[user].last_name'],
     include: [{
-      model: models.Rol,
+      model: models.rol,
       where: { 'glosarol': req.params.rol },
     }]
   }).then(function (gerentes) {
@@ -217,7 +217,7 @@ exports.getDivisiones = function (req, res) {
 };
 
 exports.get = function (req, res) {
-  models.Iniciativa.find({ where: { 'id': req.params.id } }).then(function (iniciativa) {
+  models.iniciativa.find({ where: { 'id': req.params.id } }).then(function (iniciativa) {
     res.json(iniciativa);
   }).catch(function (err) {
     console.log(err);
@@ -245,11 +245,11 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.Iniciativa.count({
+      models.iniciativa.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.Iniciativa.findAll({
+        models.iniciativa.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
@@ -272,7 +272,7 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.Iniciativa.create({
+      models.iniciativa.create({
         nombre: req.body.nombre,
         iddivision: req.body.iddivision,
         divisionsponsor: req.body.divisionsponsor,
@@ -310,7 +310,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.Iniciativa.update({
+      models.iniciativa.update({
         nombre: req.body.nombre,
         iddivision: req.body.iddivision,
         divisionsponsor: req.body.divisionsponsor,
@@ -350,7 +350,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.Iniciativa.destroy({
+      models.iniciativa.destroy({
         where: {
           id: req.body.id
         }

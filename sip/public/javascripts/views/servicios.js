@@ -37,7 +37,7 @@ $(document).ready(function () {
         },
         {
             label: 'Cuenta Contable', name: 'idcuenta', search: false, editable: true,editrules: { required: true },
-            hidden: true, jsonmap: "CuentasContables.id",
+            hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/serviciosext/cuentas',
@@ -66,8 +66,8 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Cuenta Contable', name: 'cuentacontable', width: 300, align: 'left', search: true,
-            editable: true, jsonmap: "cuentacontable",
+            label: 'Cuenta Contable', name: 'cuentascontable.cuentacontable', width: 300, align: 'left', search: true,
+            editable: true, 
             stype: 'select',
             searchoptions: {
                 dataUrl: '/serviciosext/cuentas',

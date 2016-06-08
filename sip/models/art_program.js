@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Programa', {
+  return sequelize.define('programa', {
     program_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

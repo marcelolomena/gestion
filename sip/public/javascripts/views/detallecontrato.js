@@ -113,7 +113,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Cui', name: 'EstructuraCui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
+                label: 'Cui', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
                 //jsonmap: "EstructuraCui.nombre"
             },
             {
@@ -147,7 +147,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Servicio', name: 'servicio', width: 300, align: 'left', search: true, editable: true,
+                label: 'Servicio', name: 'servicio.nombre', width: 300, align: 'left', search: true, editable: true,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -658,7 +658,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 label: 'idcui', name: 'idcui', search: true, editable: false, hidden: true,
             },
             {
-                label: 'Cui', name: 'EstructuraCui.cui', width: 50, align: 'left',
+                label: 'Cui', name: 'estructuracui.cui', width: 50, align: 'left',
                 search: true, editable: false, hidden: false,
             },
             {

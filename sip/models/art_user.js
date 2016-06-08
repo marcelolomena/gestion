@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('User', {
+  return sequelize.define('user', {
     uid: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -119,16 +119,5 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
       schema: 'dbo', timestamps: false, tableName: 'art_user'
-    }/*, {
-      instanceMethods: {
-        getFullname: function () {
-          return [this.first_name, this.last_name].join(' ')
-        }
-      }
-    }, {
-      classMethods: {
-        associate: function (models) {
-        }
-      }
-    }*/);
+    });
 };

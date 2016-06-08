@@ -7,7 +7,7 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.IniciativaFecha.create({
+      models.iniciativafecha.create({
         idiniciativaprograma: req.body.parent_id,
         tipofecha: req.body.tipofecha,
         fecha: req.body.fecha,
@@ -21,7 +21,7 @@ exports.action = function (req, res) {
     
       break;
     case "edit":
-      models.IniciativaFecha.update({
+      models.iniciativafecha.update({
         idiniciativaprograma: req.body.parent_id,
         idtipofecha: req.body.idtipofecha,
         fecha: req.body.fecha,
@@ -37,7 +37,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.IniciativaFecha.destroy({
+      models.iniciativafecha.destroy({
         where: {
           id: req.body.id
         }
@@ -81,12 +81,12 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.IniciativaFecha.count({
+      models.iniciativafecha.count({
         where: data
       }).then(function (records) {
           console.log("campos: "+records);
         var total = Math.ceil(records / rows);
-        models.IniciativaFecha.findAll({
+        models.iniciativafecha.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
@@ -109,7 +109,7 @@ exports.actualizaDuracion = function (req, res) {
   var fechamenor = new Date (2099,12,30);
   var fechamayor = new Date (1900,01,01);
   var fechaok = false;
-  models.IniciativaFecha.findAll({
+  models.iniciativafecha.findAll({
     where: {
       idiniciativaprograma: req.params.id
     }
@@ -132,7 +132,7 @@ exports.actualizaDuracion = function (req, res) {
             //console.log("nueva duracion: "+nuevaduracion);
           }
       }).then(function (records) { 
-        models.IniciativaPrograma.update({
+        models.iniciativaprograma.update({
         duracion: nuevaduracion
       }, {
           where: {

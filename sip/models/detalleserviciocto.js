@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('DetalleServicioCto', {
+  return sequelize.define('detalleserviciocto', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Contrato',
+        model: 'contrato',
         key: 'id'
       }
     },
@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'EstructuraCui',
+        model: 'estructuracui',
         key: 'id'
       }
     },
@@ -32,19 +32,21 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Servicio',
+        model: 'servicio',
         key: 'id'
       }
     },
+/*    
     servicio: {
       type: DataTypes.STRING,
       allowNull: true
     },
+*/    
     idcuenta: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'CuentasContables',
+        model: 'cuentascontables',
         key: 'id'
       }
     },
@@ -84,7 +86,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Moneda',
+        model: 'moneda',
         key: 'id'
       }
     },
@@ -124,7 +126,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'ContactoProveedor',
+        model: 'contactoproveedor',
         key: 'id'
       }
     },
