@@ -221,7 +221,7 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.Contrato.create({
+      models.contrato.create({
         tipocontrato: req.body.tipocontrato,
         tipodocumento: req.body.tipodocumento,
         solicitudcontrato: req.body.solicitudcontrato,
@@ -244,7 +244,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.Contrato.update({
+      models.contrato.update({
         tipocontrato: req.body.tipocontrato,
         tipodocumento: req.body.tipodocumento,
         solicitudcontrato: req.body.solicitudcontrato,
@@ -269,7 +269,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.Contrato.destroy({
+      models.contrato.destroy({
         where: {
           id: req.body.id
         }
@@ -308,18 +308,18 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.Contrato.belongsTo(models.Proveedor, { foreignKey: 'idproveedor' });
-      models.Contrato.count({
+      models.contrato.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+      models.contrato.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.Contrato.findAll({
+        models.contrato.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
           where: data,
           include: [{
-            model: models.Proveedor
+            model: models.proveedor
           }]
         }).then(function (contratos) {
           //Contrato.forEach(log)

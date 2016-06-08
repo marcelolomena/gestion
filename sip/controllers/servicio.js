@@ -10,7 +10,7 @@ var log = function (inst) {
 
 exports.getServicios = function (req, res) {
 
-  models.Servicio.findAll({ where: { 'borrado': 1 }, order: 'nombre' }).then(function (programa) {
+  models.servicio.findAll({ where: { 'borrado': 1 }, order: 'nombre' }).then(function (programa) {
     res.json(programa);
   }).catch(function (err) {
     console.log(err);
@@ -20,7 +20,7 @@ exports.getServicios = function (req, res) {
 };
 
 exports.cuentas = function (req, res) {
-  models.CuentasContables.findAll({
+  models.cuentascontables.findAll({
     order: 'cuentacontable'
   }).then(function (cuentas) {
     //iniciativas.forEach(log)
@@ -62,18 +62,18 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.Servicio.belongsTo(models.CuentasContables, { foreignKey: 'idcuenta' });
+      models.Servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
       models.Servicio.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.Servicio.findAll({
+        models.servicio.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
           where: data,
           include: [{
-            model: models.CuentasContables
+            model: models.cuentascontables
           }]
         }).then(function (servicios) {
           //iniciativas.forEach(log)
@@ -93,7 +93,7 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.Servicio.create({
+      models.servicio.create({
         criticidad: req.body.criticidad,
         nombre: req.body.nombre,
         tarea: req.body.tarea,
@@ -109,7 +109,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.Servicio.update({
+      models.servicio.update({
         criticidad: req.body.criticidad,
         nombre: req.body.nombre,
         tarea: req.body.tarea,
@@ -127,7 +127,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.Servicio.destroy({
+      models.servicio.destroy({
         where: {
           id: req.body.id
         }

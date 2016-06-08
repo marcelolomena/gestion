@@ -3,7 +3,7 @@ var sequelize = require('../models/index').sequelize;
 // Create endpoint /programa/:id for GET
 exports.getPrograma = function (req, res) {
     // Use the Proveedor model to find a specific programa
-    models.Programa.find({ where: { 'program_id': req.params.id } }).then(function (programa) {
+    models.programa.find({ where: { 'program_id': req.params.id } }).then(function (programa) {
         res.json(programa);
     }).error(function (err) {
         res.send(err);
@@ -12,7 +12,7 @@ exports.getPrograma = function (req, res) {
 
 exports.getProgramas = function (req, res) {
 
-    models.Programa.findAll({ attributes: ['program_id', 'program_name'], where: { $or: [{work_flow_status: 1},{work_flow_status: 3},{work_flow_status: 4}, {work_flow_status: 5}], 'is_active': 1 }, order: 'program_name' }).then(function (programa) {
+    models.programa.findAll({ attributes: ['program_id', 'program_name'], where: { $or: [{work_flow_status: 1},{work_flow_status: 3},{work_flow_status: 4}, {work_flow_status: 5}], 'is_active': 1 }, order: 'program_name' }).then(function (programa) {
         res.json(programa);
     }).catch(function (err) {
         console.log(err);

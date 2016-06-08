@@ -6,7 +6,7 @@ var utilSeq = require('../utils/seq');
 exports.getContactos = function (req, res) {
   //var idContrato = req.params.id
   console.log(">>>>>>>>>>>>>>>>>>>>>>> idproveedor [" + req.params.id + "]");
-  models.ContactoProveedor.findAll({ where: [{ 'borrado': 1 }, { 'idproveedor': req.params.id }], order: 'contacto' }).then(function (contacto) {
+  models.contactoproveedor.findAll({ where: [{ 'borrado': 1 }, { 'idproveedor': req.params.id }], order: 'contacto' }).then(function (contacto) {
     res.json(contacto);
   }).catch(function (err) {
     console.log(err);
@@ -19,7 +19,7 @@ exports.action = function (req, res) {
   //parent_id
   switch (action) {
     case "add":
-      models.ContactoProveedor.create({
+      models.contactoproveedor.create({
         idproveedor: req.body.parent_id,
         contacto: req.body.contacto,
         fono: req.body.fono,
@@ -33,7 +33,7 @@ exports.action = function (req, res) {
       });
       break;
     case "edit":
-      models.ContactoProveedor.update({
+      models.contactoproveedor.update({
         contacto: req.body.contacto,
         fono: req.body.fono,
         correo: req.body.correo,
@@ -50,7 +50,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.ContactoProveedor.destroy({
+      models.contactoproveedor.destroy({
         where: {
           id: req.body.id
         }
@@ -92,11 +92,11 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.ContactoProveedor.count({
+      models.contactoproveedor.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.ContactoProveedor.findAll({
+        models.contactoproveedor.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,

@@ -174,10 +174,10 @@ exports.getUsersByRol = function (req, res) {
   //console.log(req.query.rol);
   console.log(req.params.rol);
 
-  models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
-  models.Rol.belongsToMany(models.User, { foreignKey: 'id', through: models.UsrRol });
+  models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
+  models.rol.belongsToMany(models.user, { foreignKey: 'id', through: models.usrrol });
   //{through: 'UserRole', constraints: true}
-  models.User.findAll({
+  models.user.findAll({
     include: [{
       model: models.Rol,
       //attributes:['first_name'],

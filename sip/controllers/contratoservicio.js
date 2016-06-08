@@ -23,21 +23,21 @@ exports.action = function (req, res) {
         case "add":
             //var factor = req.body.impuesto == 1 ? 1.19 : 1;
 
-            models.Servicio.belongsTo(models.CuentasContables, { foreignKey: 'idcuenta' });
-            models.Servicio.find({
+            models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
+            models.servicio.find({
                 where: { 'id': req.body.idservicio },
-                include: { model: models.CuentasContables }
+                include: { model: models.cuentascontables }
             }).then(function (servicio) {
                 //console.log("idcuenta ------------------> " + servicio.idcuenta);
                 //console.log("cuentacontable ------------------> " + servicio.CuentasContable.cuentacontable);
-                models.DetalleServicioCto.create({
+                models.detalleserviciocto.create({
                     idcontrato: req.body.parent_id,
                     anexo: req.body.anexo,
                     idcui: req.body.idcui,
                     idservicio: req.body.idservicio,
                     servicio: req.body.servicio,
                     idcuenta: servicio.idcuenta,
-                    cuentacontable: servicio.CuentasContable.cuentacontable,
+                    cuentacontable: servicio.cuentascontable.cuentacontable,
                     sap: req.body.sap,
                     tarea: req.body.tarea,
                     codigoart: req.body.codigoart,
@@ -70,7 +70,7 @@ exports.action = function (req, res) {
             });
             break;
         case "edit":
-            models.DetalleServicioCto.update({
+            models.detalleserviciocto.update({
                 idcontrato: req.body.idcontrato,
                 anexo: req.body.anexo,
                 idcui: req.body.idcui,
@@ -110,13 +110,13 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-            models.DetalleCompromiso.destroy({
+            models.detallecompromiso.destroy({
                 where: {
                     iddetalleserviciocto: req.body.id
                 }
             }).then(function (rowDeleted) {
 
-                models.DetalleServicioCto.destroy({
+                models.detalleserviciocto.destroy({
                     where: {
                         id: req.body.id
                     }
@@ -158,7 +158,7 @@ exports.oper = function (req, res) {
             //var factor = req.body.impuesto == 1 ? 1.19 : 1;
             //console.log("idcuenta ------------------> " + servicio.idcuenta);
             //console.log("cuentacontable ------------------> " + servicio.CuentasContable.cuentacontable);
-            models.DetalleServicioCto.create({
+            models.detalleserviciocto.create({
                 idcontrato: req.body.parent_id,
                 anexo: req.body.anexo,
                 idcui: req.body.idcui,
@@ -196,7 +196,7 @@ exports.oper = function (req, res) {
 
             break;
         case "edit":
-            models.DetalleServicioCto.update({
+            models.detalleserviciocto.update({
                 idcontrato: req.body.idcontrato,
                 anexo: req.body.anexo,
                 idcui: req.body.idcui,
@@ -236,13 +236,13 @@ exports.oper = function (req, res) {
                 });
             break;
         case "del":
-            models.DetalleCompromiso.destroy({
+            models.detallecompromiso.destroy({
                 where: {
                     iddetalleserviciocto: req.body.id
                 }
             }).then(function (rowDeleted) {
 
-                models.DetalleServicioCto.destroy({
+                models.detalleserviciocto.destroy({
                     where: {
                         id: req.body.id
                     }
@@ -263,7 +263,7 @@ exports.oper = function (req, res) {
 }
 
 exports.sap = function (req, res) {
-    models.Proyecto.findAll({
+    models.proyecto.findAll({
         attributes: ['id', 'sap']
     }).then(function (proyecto) {
         console.dir(proyecto)
@@ -275,7 +275,7 @@ exports.sap = function (req, res) {
 }
 
 exports.tarea = function (req, res) {
-    models.DetalleProyecto.findAll({
+    models.detalleproyecto.findAll({
         attributes: ['id', 'tarea'],
         where: { idproyecto: req.params.id }
     }).then(function (proyecto) {
@@ -316,27 +316,27 @@ exports.list = function (req, res) {
             console.log("->>> " + err)
         } else {
 
-            models.DetalleServicioCto.belongsTo(models.Contrato, { foreignKey: 'idcontrato' });
-            models.DetalleServicioCto.belongsTo(models.EstructuraCui, { foreignKey: 'idcui' });
-            models.DetalleServicioCto.belongsTo(models.Servicio, { foreignKey: 'idservicio' });
-            models.DetalleServicioCto.belongsTo(models.CuentasContables, { foreignKey: 'idcuenta' });
-            models.DetalleServicioCto.belongsTo(models.Moneda, { foreignKey: 'idmoneda' });
+            models.detalleserviciocto.belongsTo(models.contrato, { foreignKey: 'idcontrato' });
+            models.detalleserviciocto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+            models.detalleserviciocto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+            models.detalleserviciocto.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
+            models.detalleserviciocto.belongsTo(models.moneda, { foreignKey: 'idmoneda' });
 
-            models.DetalleServicioCto.count({
+            models.detalleserviciocto.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.DetalleServicioCto.findAll({
+                models.detalleserviciocto.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: orden,
                     where: data,
                     include: [{
-                        model: models.Contrato
+                        model: models.contrato
                     }, {
-                            model: models.EstructuraCui
+                            model: models.estructuracui
                         }, {
-                            model: models.Servicio
+                            model: models.servicio
                         }]
                 }).then(function (contratos) {
                     //Contrato.forEach(log)

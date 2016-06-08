@@ -12,7 +12,7 @@ module.exports = function (passport) {
 
 
         var subMenu = function (op, menu, callback) {
-            return models.Menu.findAll({
+            return models.menu.findAll({
                 where: { 'pid': menu.id }
             }).then(function (submenu) {
                 var opt = {}
@@ -33,10 +33,10 @@ module.exports = function (passport) {
                 var promises = []
                 //console.log("--->>>>>>> " + user.Rols.length);
                 //console.dir(user.Rols[0])
-                var rol = user.Rols[0];
+                var rol = user.rols[0];
                 //user.Rols[0].forEach(function (rol) {
 
-                rol.Menus.forEach(function (menu) {
+                rol.menus.forEach(function (menu) {
                     var item = {}
                     item["id"] = menu.id
                     item["menu"] = menu.descripcion;
@@ -63,17 +63,17 @@ module.exports = function (passport) {
             }
         }
 
-        models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
-        models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
-        models.Rol.belongsToMany(models.Menu, { foreignKey: 'rid', through: models.RolFunc });
-        models.Menu.belongsToMany(models.Rol, { foreignKey: 'mid', through: models.RolFunc });
+        models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
+        models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
+        models.rol.belongsToMany(models.menu, { foreignKey: 'rid', through: models.rolfunc });
+        models.menu.belongsToMany(models.rol, { foreignKey: 'mid', through: models.rolfunc });
 
-        models.User.find({
+        models.user.find({
             where: { 'uid': id },
             include: [
                 {
                     model: models.Rol,
-                    include: [{ model: models.Menu, where: { 'pid': { $eq: null } }, required: false }]
+                    include: [{ model: models.menu, where: { 'pid': { $eq: null } }, required: false }]
                 }
             ]
             //group: ['[User].[first_name]', '[User].[last_name]', '[Rols.Menus].[descripcion]' , '[Rols.Menus].[url]' ]

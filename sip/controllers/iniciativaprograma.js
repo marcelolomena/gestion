@@ -23,7 +23,7 @@ exports.action = function (req, res) {
   switch (action) {
     case "add":
     if(req.body.program_id=="0"){
-      models.IniciativaPrograma.create({
+      models.iniciativaprograma.create({
         idiniciativa: req.body.parent_id,
         program_id: null,
         codigoart: req.body.codigoart,
@@ -67,7 +67,7 @@ exports.action = function (req, res) {
         res.json({ error_code: 1 });
       });
     }else{
-      models.IniciativaPrograma.create({
+      models.iniciativaprograma.create({
         idiniciativa: req.body.parent_id,
         program_id: req.body.program_id,
         codigoart: req.body.codigoart,
@@ -114,7 +114,7 @@ exports.action = function (req, res) {
       break;
     case "edit":
     if(req.body.program_id=="0"){
-      models.IniciativaPrograma.update({
+      models.iniciativaprograma.update({
         program_id: null,
         codigoart: req.body.codigoart,
         nombre: req.body.nombre,
@@ -160,7 +160,7 @@ exports.action = function (req, res) {
           res.json({ error_code: 1 });
         });
     }else{
-        models.IniciativaPrograma.update({
+        models.iniciativaprograma.update({
         program_id: req.body.program_id,
         codigoart: req.body.codigoart,
         nombre: req.body.nombre,
@@ -209,7 +209,7 @@ exports.action = function (req, res) {
     
       break;
     case "del":
-      models.IniciativaPrograma.destroy({
+      models.iniciativaprograma.destroy({
         where: {
           id: req.body.id
         }
@@ -229,7 +229,7 @@ exports.action = function (req, res) {
 
 exports.codigoart = function (req, res) {
 
-  models.IniciativaPrograma.find({
+  models.iniciativaprograma.find({
     where: {
       idiniciativa: req.params.id
     }
@@ -271,11 +271,11 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.IniciativaPrograma.count({
+      models.iniciativaprograma.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.IniciativaPrograma.findAll({
+        models.iniciativaprograma.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,

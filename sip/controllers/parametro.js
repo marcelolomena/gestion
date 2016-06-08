@@ -28,11 +28,11 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.Parametro.count({
+      models.parametro.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.Parametro.findAll({
+        models.parametro.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
@@ -55,7 +55,7 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.Parametro.create({
+      models.parametro.create({
         tipo: req.body.tipo,
         nombre: req.body.nombre,
         valor: req.body.valor,
@@ -69,7 +69,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.Parametro.update({
+      models.parametro.update({
         tipo: req.body.tipo,
         nombre: req.body.nombre,
         valor: req.body.valor
@@ -85,7 +85,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.Parametro.destroy({
+      models.parametro.destroy({
         where: {
           id: req.body.id
         }

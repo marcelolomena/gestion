@@ -7,7 +7,7 @@ var log = function (inst) {
 exports.test = function (req, res) {
 
     var subMenu = function (op, menu, callback) {
-        return models.Menu.findAll({
+        return models.menu.findAll({
             where: { 'pid': menu.id }
         }).then(function (submenu) {
             var opt = {}
@@ -26,9 +26,9 @@ exports.test = function (req, res) {
     var Menu = function (user, callback) {
         try {
             var promises = []
-            user.Rols.forEach(function (rol) {
+            user.rols.forEach(function (rol) {
 
-                rol.Menus.forEach(function (menu) {
+                rol.menus.forEach(function (menu) {
                     var item = {}
                     item["id"] = menu.id
                     item["menu"] = menu.descripcion;
@@ -56,17 +56,17 @@ exports.test = function (req, res) {
         }
     }
 
-    models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
-    models.Rol.belongsToMany(models.User, { foreignKey: 'rid', through: models.UsrRol });
-    models.Rol.belongsToMany(models.Menu, { foreignKey: 'rid', through: models.RolFunc });
-    models.Menu.belongsToMany(models.Rol, { foreignKey: 'mid', through: models.RolFunc });
+    models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
+    models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
+    models.rol.belongsToMany(models.menu, { foreignKey: 'rid', through: models.rolfunc });
+    models.menu.belongsToMany(models.rol, { foreignKey: 'mid', through: models.rolfunc });
 
-    models.User.find({
+    models.user.find({
         where: { 'uid': 1 },
         include: [
             {
-                model: models.Rol,
-                include: [{ model: models.Menu, where: { 'pid': { $eq: null } }, required: false }]
+                model: models.rol,
+                include: [{ model: models.menu, where: { 'pid': { $eq: null } }, required: false }]
             }
         ]
     }).then(function (user) {

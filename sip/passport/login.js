@@ -9,7 +9,7 @@ module.exports = function (passport) {
 		passReqToCallback: true
 	},
         function (req, username, password, done) {
-			models.User.find({
+			models.user.find({
 				where: { 'uname': username }
 			}).then(function (user) {
 					if (!user) {

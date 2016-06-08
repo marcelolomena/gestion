@@ -20,7 +20,7 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            models.DetalleCompromiso.create({
+            models.detallecompromiso.create({
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
@@ -35,7 +35,7 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            models.DetalleCompromiso.update({
+            models.detallecompromiso.update({
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen
@@ -51,7 +51,7 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-            models.DetalleCompromiso.destroy({
+            models.detallecompromiso.destroy({
                 where: {
                     id: req.body.id
                 }
@@ -101,14 +101,14 @@ exports.list = function (req, res) {
     }
 
     var insertaPeriodos = function (callback) {
-        models.DetalleServicioCto.find({
+        models.detalleserviciocto.find({
             where: { id: req.params.id }
         }).then(function (detallecto) {
             buscaParamValue(detallecto, function (param) {
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = []
                     for (var i = 0; i < param[0]; i++) {
-                        var newPromise = models.DetalleCompromiso.create({
+                        var newPromise = models.detallecompromiso.create({
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
                             'montoorigen': 0,
@@ -142,12 +142,12 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
-            models.DetalleCompromiso.count({
+            models.detallecompromiso.count({
                 where: data
             }).then(function (records) {
                 if (records > 0) {
                     var total = Math.ceil(records / rows);
-                    models.DetalleCompromiso.findAll({
+                    models.detallecompromiso.findAll({
                         offset: parseInt(rows * (page - 1)),
                         limit: parseInt(rows),
                         order: orden,

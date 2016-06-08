@@ -13,7 +13,7 @@ exports.action = function (req, res) {
       var rut = req.body.numrut.substring(0, req.body.numrut.length - 2);
       var digito = req.body.numrut.substring(req.body.numrut.length - 1, req.body.numrut.length);
 
-      models.Proveedor.create({
+      models.proveedor.create({
         numrut: rut.split(".").join("").replace(",", "."),
         dvrut: digito,
         razonsocial: req.body.razonsocial,
@@ -30,7 +30,7 @@ exports.action = function (req, res) {
     case "edit":
       var rut = req.body.numrut.substring(0, req.body.numrut.length - 2);
       var digito = req.body.numrut.substring(req.body.numrut.length - 1, req.body.numrut.length);
-      models.Proveedor.update({
+      models.proveedor.update({
         numrut: rut.split(".").join("").replace(",", "."),
         dvrut: digito,
         razonsocial: req.body.razonsocial,
@@ -49,7 +49,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.Proveedor.destroy({
+      models.proveedor.destroy({
         where: {
           id: req.body.id
         }
@@ -68,7 +68,7 @@ exports.action = function (req, res) {
 };
 
 exports.combobox = function (req, res) {
-  models.Proveedor.findAll({
+  models.proveedor.findAll({
     order: 'razonsocial'
   }).then(function (proveedores) {
     //iniciativas.forEach(log)
@@ -99,11 +99,11 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.Proveedor.count({
+      models.proveedor.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.Proveedor.findAll({
+        models.proveedor.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,

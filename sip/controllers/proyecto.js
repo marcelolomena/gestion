@@ -58,7 +58,7 @@ exports.getProyectosPaginados = function (req, res) {
         
         console.log(sql);
 
-      models.Proyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.proyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
@@ -72,7 +72,7 @@ exports.getProyectosPaginados = function (req, res) {
 
     } else {
 
-      models.Proyecto.count().then(function (records) {
+      models.proyecto.count().then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -83,7 +83,7 @@ exports.getProyectosPaginados = function (req, res) {
 
   } else {
 
-    models.Proyecto.count().then(function (records) {
+    models.proyecto.count().then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {
@@ -303,12 +303,12 @@ exports.getUsersByRol = function (req, res) {
   //console.log(req.query.rol);
   console.log(req.params.rol);
 
-  models.User.belongsToMany(models.Rol, { foreignKey: 'uid', through: models.UsrRol });
-  models.Rol.belongsToMany(models.User, { foreignKey: 'id', through: models.UsrRol });
+  models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
+  models.rol.belongsToMany(models.user, { foreignKey: 'id', through: models.usrrol });
   //{through: 'UserRole', constraints: true}
   models.User.findAll({
     include: [{
-      model: models.Rol,
+      model: models.rol,
       //attributes:['first_name'],
       where: { 'glosarol': req.params.rol },
       order: ['"first_name" ASC', '"last_name" ASC']
