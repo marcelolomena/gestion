@@ -1,16 +1,24 @@
-html
-  head
-    meta(http-equiv='Content-Type', content='text/html; charset=iso-8859-1')
-    title Grafico Ejemplo
-    script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+extends base.jade
+block titulo
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Contratos
+block jsgrilla
     script(src='/javascripts/highcharts/highcharts.js')
     script(type='text/javascript', src='/javascripts/views/grafico2.js')
-  body
+block titulogrilla
+  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") EROGACIONES
+block grilla
     div
+      | SAP  
       select#sap
-        option(value='0') --Escoger SAP--
-        option(value='237') Motor de Pagos
-        option(value='238') Migración Tarjetas
+        option(value='0' selected) --Escoger SAP--
     div(style='width: 100%')
       #container(style='width: 50%; float: left; display: inline-block;')
       #container2(style='width: 50%; display: inline-block;')
+    div(style='width: 100%')
+      #container(style='width: 50%; float: left; display: inline-block;')
+        table#grid
+        #pager        
+      #container2(style='width: 50%; display: inline-block;')
+        table#grid2
+        #pager2        

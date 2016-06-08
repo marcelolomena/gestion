@@ -313,11 +313,14 @@ module.exports = function (passport) {
         res.render('grafico', { user: req.user });
     });
 
-    router.route('/graficodatareal')
+    router.route('/graficodatareal/:idsap')
         .get(isAuthenticated, graficoController.graficoDataReal);    
 
-    router.route('/graficodatapres')
+    router.route('/graficodatapres/:idsap')
         .get(isAuthenticated, graficoController.graficoDataPres);    
+        
+    router.route('/sapgrafico')
+        .get(isAuthenticated, graficoController.sapgrafico);            
         
     return router;
 

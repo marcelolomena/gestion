@@ -9,22 +9,18 @@ exports.graficoDataOld = function (req, res) {
 
 
 exports.graficoDataPres = function (req, res) {
-  var page = req.query.page;
-  var rows = req.query.rows;
-  var filters = req.query.filters;
-  var sidx = req.query.sidx;
-  var sord = req.query.sord;
-  var condition = "";
+  var id = req.params.idsap
+  console.log("sap:"+id);
   
- var sql = " SELECT nombre, presupuestopesos "+
+ var sql = " SELECT nombre, presupuestopesos as monto, id "+
  "FROM sip.detalleproyecto "+
- "WHERE idproyecto=237";
+ "WHERE idproyecto="+id;
     
     sequelize.query(sql)
       .spread(function (proyecto) {
       var data = '{"titulo":"Erogaciones por SAP","data":[';
       for (var i = 0; i < proyecto.length; i++) {
-        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].presupuestopesos+',"dId":6079},'
+        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].monto+',"dId":'+proyecto[i].id+'},'
         console.log(linea);
         data = data + linea;
       }
@@ -41,22 +37,18 @@ exports.graficoDataPres = function (req, res) {
 };
 
 exports.graficoDataReal = function (req, res) {
-  var page = req.query.page;
-  var rows = req.query.rows;
-  var filters = req.query.filters;
-  var sidx = req.query.sidx;
-  var sord = req.query.sord;
-  var condition = "";
+  var id = req.params.idsap
+  console.log("sap:"+id);
   
- var sql = " SELECT nombre, realacumuladopesos "+
+ var sql = " SELECT nombre, realacumuladopesos as monto, id "+
  "FROM sip.detalleproyecto "+
- "WHERE idproyecto=237";
+ "WHERE idproyecto="+id;
     
     sequelize.query(sql)
       .spread(function (proyecto) {
       var data = '{"titulo":"REAL Erogaciones por SAP","data":[';
       for (var i = 0; i < proyecto.length; i++) {
-        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].realacumuladopesos+',"dId":6079},'
+        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].monto+',"dId":'+proyecto[i].id+'},'
         console.log(linea);
         data = data + linea;
       }
@@ -71,3 +63,15 @@ exports.graficoDataReal = function (req, res) {
     });
 
 };
+
+exports.sapgrafico = function (req, res) {
+    models.Proyecto.findAll({
+        attributes: ['id', 'nombre']
+    }).then(function (proyecto) {
+        console.dir(proyecto)
+        res.json(proyecto);
+    }).catch(function (err) {
+        //console.log(err);
+        res.json({ error_code: 1 });
+    });
+}
