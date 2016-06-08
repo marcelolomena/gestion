@@ -22,8 +22,9 @@ module.exports = function (passport) {
                     subsub.push({ "opt": opcion.descripcion, "url": opcion.url })
                 });
                 opt["submenu"] = subsub
-                callback(opt)
+                callback(undefined, opt)
             }).catch(function (err) {
+                callback(err, undefined)
                 console.log("--------> " + err);
             });
         }
@@ -42,8 +43,11 @@ module.exports = function (passport) {
                     item["menu"] = menu.descripcion;
 
                     var promise = new Promise(function (resolve, reject) {
-                        subMenu(item, menu, function (submenu) {
-                            resolve(submenu);
+                        subMenu(item, menu, function (err, submenu) {
+                            if (submenu)
+                                resolve(submenu);
+                            else
+                                reject(err)
                         });
                     });
                     promises.push(promise);
