@@ -24,10 +24,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    cuentacontable: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     tarea: {
       type: DataTypes.STRING,
       allowNull: true

@@ -303,6 +303,9 @@ module.exports = function (passport) {
     router.route('/serviciosext/cuentas')
         .get(isAuthenticated, servicioController.cuentas);
 
+    router.route('/serviciosext/excel')
+        .get(isAuthenticated, servicioController.getExcel);        
+        
     router.route('/test')
         .get(isAuthenticated, testController.test);
 
