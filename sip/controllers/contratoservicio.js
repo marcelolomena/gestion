@@ -339,7 +339,7 @@ exports.list = function (req, res) {
                             model: models.servicio
                         }]
                 }).then(function (contratos) {
-                    console.dir(contratos)
+                    //console.dir(contratos)
                     res.json({ records: records, total: total, page: page, rows: contratos });
                 }).catch(function (err) {
                     console.log(err);

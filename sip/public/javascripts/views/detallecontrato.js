@@ -541,7 +541,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"servicio\",\"op\":\"cn\",\"data\":\"" + postdata.servicio + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"idservicio\",\"op\":\"cn\",\"data\":\"" + postdata.idservicio + "\"}]}";
                     $('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
