@@ -23,6 +23,7 @@ var compromisoController = require('../controllers/detallecompromiso');
 var plantillaController = require('../controllers/plantilla');
 var graficoController = require('../controllers/graficotest');
 var testController = require('../controllers/test')
+var proyectosenvueloController = require('../controllers/proyectosenvuelo');
 
 var express = require('express');
 var router = express.Router();
@@ -126,7 +127,7 @@ module.exports = function (passport) {
 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
-        
+
     router.route('/contratos/excel')
         .get(isAuthenticated, contratoController.excel);
     /*
@@ -304,8 +305,8 @@ module.exports = function (passport) {
         .get(isAuthenticated, servicioController.cuentas);
 
     router.route('/serviciosext/excel')
-        .get(isAuthenticated, servicioController.getExcel);        
-        
+        .get(isAuthenticated, servicioController.getExcel);
+
     router.route('/test')
         .get(isAuthenticated, testController.test);
 
@@ -314,14 +315,21 @@ module.exports = function (passport) {
     });
 
     router.route('/graficodatareal/:idsap')
-        .get(isAuthenticated, graficoController.graficoDataReal);    
+        .get(isAuthenticated, graficoController.graficoDataReal);
 
     router.route('/graficodatapres/:idsap')
-        .get(isAuthenticated, graficoController.graficoDataPres);    
-        
+        .get(isAuthenticated, graficoController.graficoDataPres);
+
     router.route('/sapgrafico')
-        .get(isAuthenticated, graficoController.sapgrafico);            
-        
+        .get(isAuthenticated, graficoController.sapgrafico);
+
+    router.get('/proyectosenvuelo', isAuthenticated, function (req, res) {
+        res.render('proyectosenvuelo', { user: req.user });
+    });
+
+    router.route('/proyectosenvuelo/list')
+        .post(isAuthenticated, proyectosenvueloController.list);
+
     return router;
 
 }

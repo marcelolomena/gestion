@@ -10,7 +10,6 @@ module.exports = function (passport) {
 
     passport.deserializeUser(function (id, done) {
 
-
         var subMenu = function (op, menu, callback) {
             return models.menu.findAll({
                 where: { 'pid': menu.id }
@@ -91,7 +90,7 @@ module.exports = function (passport) {
                 var menus = {}
                 menus["menus"] = menu
                 var user = usuario.concat(menus);
-                console.log(JSON.stringify(user))
+                //console.log(JSON.stringify(user))
                 done(null, user);
             });
 
