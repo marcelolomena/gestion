@@ -100,6 +100,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'detalleenvuelo'
+    schema: 'sip',timestamps: false,tableName: 'detalleenvuelo'
   });
 };
