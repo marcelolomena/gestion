@@ -140,28 +140,28 @@ exports.getExcel = function (req, res) {
         models.iniciativa.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
-          order: orden,
+          order: order,
           where: data
         }).then(function (iniciativas) {
           var arr = []
-          for (var i = 0; i < iniciativa.length; i++) {
+          for (var i = 0; i < iniciativas.length; i++) {
 
-            a = [i + 1, iniciativa[i].nombre,
-              iniciativa[i].divisionsponsor,
-              iniciativa[i].sponsor1,
-              iniciativa[i].sponsor2,
-              iniciativa[i].pmoresponsable,
-              iniciativa[i].gerenteresponsable,
-              iniciativa[i].estado,
-              iniciativa[i].categoria,
-              iniciativa[i].q1,
-              iniciativa[i].q2,
-              iniciativa[i].q3,
-              iniciativa[i].q4,
-              iniciativa[i].fechacomite,
-              iniciativa[i].ano,
-              iniciativa[i].pptoestimadogasto,
-              iniciativa[i].pptoestimadoinversion
+            a = [i + 1, iniciativas[i].nombre,
+              iniciativas[i].divisionsponsor,
+              iniciativas[i].sponsor1,
+              iniciativas[i].sponsor2,
+              iniciativas[i].pmoresponsable,
+              iniciativas[i].gerenteresponsable,
+              iniciativas[i].estado,
+              iniciativas[i].categoria,
+              iniciativas[i].q1,
+              iniciativas[i].q2,
+              iniciativas[i].q3,
+              iniciativas[i].q4,
+              iniciativas[i].fechacomite,
+              iniciativas[i].ano,
+              iniciativas[i].pptoestimadogasto,
+              iniciativas[i].pptoestimadoinversion
             ];
             arr.push(a);
           }
@@ -172,7 +172,7 @@ exports.getExcel = function (req, res) {
           res.end(result, 'binary');
 
         }).catch(function (err) {
-          //console.log(err);
+          console.log(err);
           res.json({ error_code: 1 });
         });
       })
