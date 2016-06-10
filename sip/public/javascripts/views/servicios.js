@@ -66,8 +66,8 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Cuenta Contable', name: 'cuentascontable.cuentacontable', width: 300, align: 'left', search: true,
-            editable: true, 
+            label: 'Cuenta Contable', name: 'cuentacontable', width: 300, align: 'left', search: true,
+            editable: true, jsonmap: "cuentascontable.cuentacontable",
             stype: 'select',
             searchoptions: {
                 dataUrl: '/serviciosext/cuentas',
@@ -120,7 +120,7 @@ $(document).ready(function () {
         }
     }).jqGrid('filterToolbar', { 
          stringResult: true, 
-         searchOnEnter: true,
+         searchOnEnter: false,
          defaultSearch: 'cn',         
          searchOperators: true, 
          beforeSearch: function () {

@@ -30,17 +30,6 @@ exports.cuentas = function (req, res) {
     res.json({ error_code: 1 });
   });
 }
-//exports.cuentas = function (req, res) {
-
-//  var sql = "SELECT id , cuentacontable FROM sip.cuentascontables " +
-//    "ORDER BY cuentacontable";
-
-// sequelize.query(sql)
-//  .spread(function (rows) {
-//   res.json(rows);
-//  });
-
-//};
 
 exports.list = function (req, res) {
 
@@ -56,7 +45,7 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
-    var orden = "[servicio]." + sidx + " " + sord;
+    var orden = sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
