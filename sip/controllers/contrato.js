@@ -159,14 +159,16 @@ exports.excel = function (req, res) {
   ];
 
   var sql = "SELECT a.*,b.razonsocial as proveedor, "+
-  " c.id as idservicio, c.anexo, c.idcui, c.servicio, c.cuentacontable, c.fechainicio, c.fechatermino, "+
+  " c.id as idservicio, c.anexo, c.idcui, f.nombre as servicio, c.cuentacontable, c.fechainicio, c.fechatermino, "+ 
   " c.fechacontrol, c.valorcuota, c.frecuenciafacturacion, c.plazocontrato, c.condicionnegociacion, "+
-  " c.impuesto, c.factorimpuesto, c.estadocontrato, c.glosaservicio, " +
-  " d.id as idcompromiso, d.periodo, d.montoorigen, d.costoorigen " +
-    " FROM sip.contrato a JOIN sip.proveedor b ON a.idproveedor=b.id " +
-    " JOIN sip.detalleserviciocto c ON a.id=c.idcontrato "+
-    " JOIN sip.detallecompromiso d ON c.id=d.iddetalleserviciocto " +
-    " order by a.id ";
+  " c.impuesto, c.factorimpuesto, c.estadocontrato, c.glosaservicio, "+
+  " d.id as idcompromiso, d.periodo, d.montoorigen, d.costoorigen "+
+  "   FROM sip.contrato a JOIN sip.proveedor b ON a.idproveedor=b.id "+
+   "  JOIN sip.detalleserviciocto c ON a.id=c.idcontrato "+
+    " JOIN sip.detallecompromiso d ON c.id=d.iddetalleserviciocto "+ 
+	" JOIN sip.detalleserviciocto e ON d.iddetalleserviciocto=e.id "+
+	" JOIN sip.servicio f ON f.id=e.idservicio "+
+   "  order by a.id";
 
   sequelize.query(sql)
     .spread(function (proyecto) {
