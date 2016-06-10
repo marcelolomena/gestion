@@ -21,7 +21,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idcui: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'estructuracui',
+        key: 'id'
+      }
     },
     cui: {
       type: DataTypes.INTEGER,
