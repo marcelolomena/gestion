@@ -1,3 +1,8 @@
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var utilSeq = require('../utils/seq');
+var nodeExcel = require('excel-export');
+
 exports.list = function (req, res) {
 
     var page = req.body.page;

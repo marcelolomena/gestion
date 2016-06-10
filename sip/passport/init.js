@@ -84,6 +84,7 @@ module.exports = function (passport) {
             var usuario = []
             var nombre = {}
             nombre["nombre"] = usr.first_name + " " + usr.last_name
+            nombre["uid"] = usr.uid
             usuario.push(nombre)
 
             Menu(usr, function (menu) {
