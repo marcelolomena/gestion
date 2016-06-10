@@ -24,7 +24,7 @@ var plantillaController = require('../controllers/plantilla');
 var graficoController = require('../controllers/graficotest');
 var testController = require('../controllers/test')
 var proyectosenvueloController = require('../controllers/proyectosenvuelo');
-
+var troyaController = require('../controllers/troya');
 var express = require('express');
 var router = express.Router();
 
@@ -330,6 +330,19 @@ module.exports = function (passport) {
     router.route('/proyectosenvuelo/list')
         .post(isAuthenticated, proyectosenvueloController.list);
 
+    router.get('/consultatroya', isAuthenticated, function (req, res) {
+        res.render('troya', { user: req.user });
+    });
+    
+    router.route('/cuiuser')
+        .get(isAuthenticated, troyaController.getcui);
+    
+    router.route('/troyacui/:id')
+        .get(isAuthenticated, troyaController.cuitroya);
+        
+    router.route('/proveedorcui/:id')
+        .get(isAuthenticated, troyaController.proveedorcui);
+                    
     return router;
 
 }
