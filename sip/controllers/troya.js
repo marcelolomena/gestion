@@ -46,9 +46,9 @@ exports.proveedorcui = function (req, res) {
 };
 
 exports.getcui = function (req, res) {
-  
-  console.log("******usr*********:"+req.param.user[0].uid);
-  var sql = "SELECT cui FROM sip.estructuracui WHERE uid="+req.param.user[0].uid;
+console.log('user:'+req.user[0].nombre);  
+  console.log("******usr*********:"+req.user[0].id);
+  var sql = "SELECT cui FROM sip.estructuracui WHERE uid="+req.user[0].uid;
   console.log("query:"+sql);
   sequelize.query(sql)
     .spread(function (rows) {
