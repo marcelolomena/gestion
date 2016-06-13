@@ -44,12 +44,20 @@ $(document).ready(function () {
 
     var modelProyectosEnVuelo = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: true, editable: true },
+        {
+            label: 'SAP', name: 'sap', width: 60, align: 'center', search: true, editable: true,
+            searchoptions: {
+                sopt: ["eq", "le", "ge"]
+            },
+        },
         { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true },
         { label: 'ART', name: 'codigoart', width: 50, align: 'right', search: true, editable: true },
         {
-            label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
-            //jsonmap: "EstructuraCui.nombre"
+            label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'center', search: true, editable: false,
+            hidden: false, searchoptions: {
+                sopt: ["eq", "le", "ge"]
+            },
+            //jsonmap: "estructuracui.cui"
         },
         {
             label: 'CUI', name: 'idcui', search: false, editable: true, hidden: true,
@@ -231,13 +239,27 @@ $(document).ready(function () {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-    });
+    }).jqGrid('filterToolbar', {
+        stringResult: true,
+        searchOnEnter: true,
+        defaultSearch: "cn",
+        searchOperators: true,
+        beforeSearch: function () {
+        },
+        afterSearch: function () {
 
-    $("#grid").jqGrid("setLabel", "codigoart", "", { "text-align": "right" });
-    $("#grid").jqGrid("setLabel", "porcentajeavance", "", { "text-align": "right" });
+        }
+    });
+    $("#grid").jqGrid("setLabel", "sap", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "nombre", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "codigoart", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "estructuracui.cui", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "porcentajeavance", "", { "text-align": "center" });
     $("#grid").jqGrid("setLabel", "fechainicio", "", { "text-align": "center" });
     $("#grid").jqGrid("setLabel", "fechapap", "", { "text-align": "center" });
     $("#grid").jqGrid("setLabel", "fechacierresap", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "liderproyecto", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "pmoresponsable", "", { "text-align": "center" });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: true, del: true, search: false,
