@@ -14,7 +14,6 @@ var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
-var plantillaController = require('../controllers/plantilla');
 var graficoController = require('../controllers/graficotest');
 var testController = require('../controllers/test')
 var express=require('express')
@@ -100,10 +99,6 @@ module.exports = function (passport) {
 
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
         res.render('presupuesto', { user: req.user });
-    });
-
-    router.get('/plantillapresupuestaria', isAuthenticated, function (req, res) {
-        res.render('plantilla', { user: req.user });
     });
 
     router.route('/presupuestolist')
