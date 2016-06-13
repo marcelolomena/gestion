@@ -13,16 +13,16 @@ function showChildGrid(parentRowID, parentRowKey) {
         { label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'left', search: true, editable: true },
         { label: 'idcuenta', name: 'idcuenta', search: false, hidden: true, editable: true },
         { label: 'Cuenta', name: 'cuentacontable', width: 50, align: 'left', search: true, editable: true },
-        { label: 'Presupuesto', name: 'presupuesto', width: 50, align: 'left', search: true, editable: true },
+        { label: 'Presupuesto', name: 'presupuesto', width: 100, align: 'right', search: true, editable: true },
         { label: 'presupuestopesos', name: 'presupuestopesos', hidden: true, search: false, editable: true },
-        { label: 'Compromiso', name: 'compromiso', width: 100, align: 'left', search: true, editable: true },
+        { label: 'Compromiso', name: 'compromiso', width: 100, align: 'right', search: true, editable: true },
         { label: 'compromisopesos', name: 'compromisopesos', hidden: true, search: false, editable: true },
-        { label: 'Real Ajustado', name: 'realajustado', width: 50, align: 'left', search: true, editable: true },
+        { label: 'Real', name: 'realajustado', width: 50, align: 'right', search: true, editable: true },
         { label: 'realajustadopesos', name: 'realajustadopesos', hidden: true, search: false, editable: true },
-        { label: 'Saldo', name: 'saldotarea', width: 50, align: 'left', search: true, editable: true },
+        { label: 'Saldo', name: 'saldotarea', width: 50, align: 'right', search: true, editable: true },
         { label: 'saldotareapesos', name: 'saldotareapesos', search: false, hidden: true, editable: true },
         { label: 'idcontrato', name: 'idcontrato', hidden: true, editable: true },
-        { label: 'Contrato', name: 'numerocontrato', width: 100, align: 'left', search: true, editable: true },
+        { label: 'Contrato', name: 'numerocontrato', width: 100, align: 'center', search: true, editable: true },
         { label: 'Solicitud', name: 'solicitudcontrato', width: 100, align: 'left', search: true, editable: true },
     ];
 
@@ -51,4 +51,9 @@ function showChildGrid(parentRowID, parentRowKey) {
         pager: "#" + childGridPagerID
     });
 
+    $("#" + childGridID).jqGrid("setLabel", "presupuesto", "", { "text-align": "right" });
+    $("#" + childGridID).jqGrid("setLabel", "compromiso", "", { "text-align": "right" });
+    $("#" + childGridID).jqGrid("setLabel", "realajustado", "", { "text-align": "right" });
+    $("#" + childGridID).jqGrid("setLabel", "saldotarea", "", { "text-align": "right" });
+    $("#" + childGridID).jqGrid("setLabel", "numerocontrato", "", { "text-align": "center" });
 }

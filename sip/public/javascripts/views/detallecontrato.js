@@ -113,7 +113,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Cui', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
+                label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
                 //jsonmap: "EstructuraCui.nombre"
             },
             {
@@ -157,7 +157,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: false, hidden: false,
             },
             {
-                label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'center', search: true, editable: true, hidden: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 searchoptions: {
                     dataInit: function (el) {
@@ -182,7 +182,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     }
                 }
             }, {
-                label: 'Fecha Término', name: 'fechatermino', width: 150, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Fecha Término', name: 'fechatermino', width: 160, align: 'center', search: true, editable: true, hidden: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 searchoptions: {
                     dataInit: function (el) {
@@ -207,7 +207,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     }
                 }
             }, {
-                label: 'Fecha Control', name: 'fechacontrol', width: 150, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Fecha Control', name: 'fechacontrol', width: 150, align: 'center', search: true, editable: true, hidden: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 searchoptions: {
                     dataInit: function (el) {
@@ -233,7 +233,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             {
-                label: 'Valor Cuota', name: 'valorcuota', width: 100, align: 'left',
+                label: 'Cuota', name: 'valorcuota', width: 100, align: 'right',
                 search: true, editable: true, hidden: false,
                 editoptions: {
                     dataInit: function (el) {
@@ -305,7 +305,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Frecuencia', name: 'frecuenciafacturacion', search: true, editable: true, hidden: false,
+                label: 'Frecuencia', name: 'frecuenciafacturacion', align: 'center', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -338,7 +338,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Plazo', name: 'plazocontrato', search: true, editable: true, hidden: false,
+                label: 'Plazo', name: 'plazocontrato', align: 'center', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -371,11 +371,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }, dataInit: function (elem) {/* $(elem).width(200);*/ }
             },
             {
-                label: 'Condición', name: 'condicionnegociacion', search: true, editable: true, hidden: false,
+                label: 'Condición', name: 'condicionnegociacion', align: 'center', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
-                label: 'Impuesto', name: 'impuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Impuesto', name: 'impuesto', width: 100, align: 'right', search: true, editable: true, hidden: false,
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -383,7 +383,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             {
-                label: 'Factor', name: 'factorimpuesto', width: 100, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Factor', name: 'factorimpuesto', width: 100, align: 'right', search: true, editable: true, hidden: false,
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -480,6 +480,18 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             "selectOnExpand": true
         }
     });
+
+    $('#' + subgrid_table_id).jqGrid("setLabel", "fechainicio", "", { "text-align": "center" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "fechatermino", "", { "text-align": "center" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "fechacontrol", "", { "text-align": "center" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "valorcuota", "", { "text-align": "right" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "frecuenciafacturacion", "", { "text-align": "center" });
+    
+    $('#' + subgrid_table_id).jqGrid("setLabel", "plazocontrato", "", { "text-align": "center" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "condicionnegociacion", "", { "text-align": "center" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "impuesto", "", { "text-align": "right" });
+    $('#' + subgrid_table_id).jqGrid("setLabel", "factorimpuesto", "", { "text-align": "right" });
+
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
         edit: true, add: true,
         del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false

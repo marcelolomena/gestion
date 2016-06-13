@@ -44,11 +44,11 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'SAP', name: 'sap', width: 50, align: 'left', search: true, editable: true },
         { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true },
-        { label: 'ART', name: 'codigoart', width: 50, align: 'left', search: true, editable: true },
+        { label: 'ART', name: 'codigoart', width: 50, align: 'right', search: true, editable: true },
         { label: 'idcui', name: 'idcui', width: 100, align: 'left', search: true, editable: true, hidden: true },
-        { label: '% Avance', name: 'porcentajeavance', width: 50, align: 'left', search: true, editable: true },
+        { label: '% Avance', name: 'porcentajeavance', width: 50, align: 'right', search: true, editable: true },
         {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 120, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Inicio', name: 'fechainicio', width: 120, align: 'center', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -62,7 +62,7 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Fecha Aprobación', name: 'fechapap', width: 100, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Aprobación', name: 'fechapap', width: 100, align: 'center', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -76,21 +76,7 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Fecha Aprobación', name: 'fechapap', width: 100, align: 'left', search: true, editable: true, hidden: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-        },
-        {
-            label: 'Fecha Cierre SAP', name: 'fechacierresap', width: 100, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Cierre SAP', name: 'fechacierresap', width: 100, align: 'center', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -173,8 +159,8 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default        
+        autowidth: true,
+        shrinkToFit: true,
         caption: 'Lista de proyectos en vuelo',
         pager: "#pager",
         viewrecords: true,
@@ -196,6 +182,12 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
     });
+
+    $("#grid").jqGrid("setLabel", "codigoart", "", { "text-align": "right" });
+    $("#grid").jqGrid("setLabel", "porcentajeavance", "", { "text-align": "right" });
+    $("#grid").jqGrid("setLabel", "fechainicio", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "fechapap", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "fechacierresap", "", { "text-align": "center" });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: true, del: true, search: false,
