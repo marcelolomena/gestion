@@ -28,12 +28,12 @@ exports.list = function (req, res) {
             console.log("->>> " + err)
         } else {
             models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-
             models.plantillapresupuesto.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.plantillapresupuesto.findAll({
+                    distinct: 'idcui',
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: orden,
