@@ -1,13 +1,10 @@
 var proveedorController = require('../controllers/proveedor');
 var contactoController = require('../controllers/contacto')
-var iniciativaController = require('../controllers/iniciativa');
 var parametroController = require('../controllers/parametro');
 var proyectoController = require('../controllers/proyecto');
 var proyectoTareasController = require('../controllers/proyectotareas');
 var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
-var iniciativaprogramaController = require('../controllers/iniciativaprograma');
-var iniciativafechaController = require('../controllers/iniciativafecha');
 var paramController = require('../controllers/param');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
@@ -48,10 +45,6 @@ module.exports = function (passport) {
     router.route('/contactos/action')
         .post(isAuthenticated, contactoController.action);
 
-    router.get('/iniciativas', isAuthenticated, function (req, res) {
-        res.render('iniciativas', { user: req.user });
-    });
-
     router.get('/parametros', isAuthenticated, function (req, res) {
         res.render('parametros', { user: req.user });
     });
@@ -63,15 +56,6 @@ module.exports = function (passport) {
 
     router.route('/parametros/action')
         .post(isAuthenticated, parametroController.action);
-
-    router.route('/iniciativas/list')
-        .post(isAuthenticated, iniciativaController.list);
-
-    router.route('/iniciativas/:id')
-        .get(isAuthenticated, iniciativaController.get)
-
-    router.route('/iniciativas/action')
-        .post(isAuthenticated, iniciativaController.action);
 
     router.route('/parameters/:param')
         .get(isAuthenticated, paramController.getListParam);
@@ -92,33 +76,6 @@ module.exports = function (passport) {
     router.route('/proyectosexcel')
         .get(isAuthenticated, proyectoController.getExcel);
 
-    router.route('/personal')
-        .get(isAuthenticated, iniciativaController.getPersonal);
-
-    router.route('/iniciativasexcel')
-        .get(isAuthenticated, iniciativaController.getExcel);
-
-    router.route('/iniciativasprograma/codigoart/:id')
-        .get(isAuthenticated, iniciativaprogramaController.codigoart);
-
-    router.route('/iniciativaprograma/action')
-        .post(isAuthenticated, iniciativaprogramaController.action);
-
-    router.route('/iniciativaprograma/:id')
-        .post(isAuthenticated, iniciativaprogramaController.list);
-
-    router.route('/iniciativafecha/action')
-        .post(isAuthenticated, iniciativafechaController.action);
-
-    router.route('/iniciativafecha/:id')
-        .post(isAuthenticated, iniciativafechaController.list);
-
-    router.route('/actualizaduracion/:id')
-        .get(isAuthenticated, iniciativafechaController.actualizaDuracion);
-
-    router.route('/usuarios_por_rol/:rol')
-        .get(isAuthenticated, iniciativaController.getUsersByRol);
-
     router.route('/programa/:id')
         .get(isAuthenticated, programaController.getPrograma);
 
@@ -130,9 +87,6 @@ module.exports = function (passport) {
 
     router.route('/tipos')
         .get(isAuthenticated, parametroController.getTipos);
-
-    router.route('/divisiones')
-        .get(isAuthenticated, iniciativaController.getDivisiones);
 
     router.get('/erogaciones', isAuthenticated, function (req, res) {
         res.render('erogaciones');
