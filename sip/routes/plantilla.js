@@ -1,7 +1,8 @@
+var plantillaController = require('../controllers/plantilla');
 var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
-var plantillaController = require('../controllers/plantilla');
+
 
 module.exports = function (passport) {
 
