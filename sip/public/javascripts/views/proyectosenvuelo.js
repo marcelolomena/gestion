@@ -4,36 +4,38 @@ $(document).ready(function () {
 
     var template = "<div id='responsive-form' class='clearfix'>";
 
-
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Contrato{nombre}</div>";
-    template += "<div class='column-full'>Proveedor{idproveedor}</div>";
+    template += "<div class='column-full'>Nombre{nombre}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Solicitud{idtiposolicitud}</div>";
-    template += "<div class='column-half'>Estado Solicitud{idestadosol}</div>";
+    template += "<div class='column-half'>SAP{sap}</div>";
+    template += "<div class='column-half'>ART{codigoart}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
-    template += "<div class='column-half'>Número  {numero}</div>";
+    template += "<div class='column-half'>CUI{idcui}</div>";
+    template += "<div class='column-half'>% Avance{porcentajeavance}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo {tipocontrato}</div>";
-    template += "<div class='column-half'>Documento {tipodocumento}</div>";
+    template += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
+    template += "<div class='column-half'>Fecha Aprobación{fechapap}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-half'>Fecha Cierre SAP {fechacierresap}</div>";
+    template += "<div class='column-half'></div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Lider Proyecto {uidlider}</div>";
     template += "<div class='column-half'>PMO {uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>razonsocial{razonsocial}</div>";
+    template += "<div class='column-half'>liderproyecto{liderproyecto}</div>";
     template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
-    template += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
-    template += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -45,7 +47,34 @@ $(document).ready(function () {
         { label: 'SAP', name: 'sap', width: 50, align: 'left', search: true, editable: true },
         { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true },
         { label: 'ART', name: 'codigoart', width: 50, align: 'right', search: true, editable: true },
-        { label: 'idcui', name: 'idcui', width: 100, align: 'left', search: true, editable: true, hidden: true },
+        {
+            label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
+            //jsonmap: "EstructuraCui.nombre"
+        },
+        {
+            label: 'CUI', name: 'idcui', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/cui',
+                buildSelect: function (response) {
+                    var grid = $('#grid');
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.id;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Cui--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
         { label: '% Avance', name: 'porcentajeavance', width: 50, align: 'right', search: true, editable: true },
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 120, align: 'center', search: true, editable: true, hidden: false,
@@ -60,6 +89,13 @@ $(document).ready(function () {
                 },
                 sopt: ["eq", "le", "ge"]
             },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
         },
         {
             label: 'Fecha Aprobación', name: 'fechapap', width: 100, align: 'center', search: true, editable: true, hidden: false,
@@ -74,6 +110,13 @@ $(document).ready(function () {
                 },
                 sopt: ["eq", "le", "ge"]
             },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
         },
         {
             label: 'Fecha Cierre SAP', name: 'fechacierresap', width: 100, align: 'center', search: true, editable: true, hidden: false,
@@ -88,6 +131,13 @@ $(document).ready(function () {
                 },
                 sopt: ["eq", "le", "ge"]
             },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
         },
         {
             label: 'Lider Proyecto', name: 'uidlider', search: false, editable: true, hidden: true,
@@ -209,9 +259,6 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }, beforeShowForm: function (form) {
-                $("input[type=radio]").attr('disabled', true);
-                sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },
         {
@@ -224,8 +271,10 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.pid == 0) {
-                    return [false, "Proveedor: Debe escoger un valor", ""];
+                if (postdata.uidlider == 0) {
+                    return [false, "Lider: Debe escoger un valor", ""];
+                } else if (postdata.uidpmo == 0) {
+                    return [false, "PMO: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
