@@ -26,18 +26,30 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.estructuracui.count({
+      models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+      models.plantillapresupuesto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+      models.plantillapresupuesto.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+      models.plantillapresupuesto.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.estructuracui.findAll({
+        models.plantillapresupuesto.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data
-        }).then(function (centros) {
+          where: data,
+          include: [
+          {
+            model: models.estructuracui
+          },
+          {
+            model: models.servicio
+          },
+          { model: models.proveedor
+          }]
+        }).then(function (plantillas) {
           //iniciativas.forEach(log)
-          res.json({ records: records, total: total, page: page, rows: centros });
+          res.json({ records: records, total: total, page: page, rows: plantillas });
         }).catch(function (err) {
           //console.log(err);
           res.json({ error_code: 1 });
@@ -181,20 +193,6 @@ exports.getExcel = function (req, res) {
     }).catch(function (err) {
       console.log(err);
       res.json({ error_code: 100 });
-    });
-
-};
-
-
-
-exports.getCUIs = function (req, res) {
-
-  var sql = "SELECT id, nombre FROM sip.estructuracui " +
-    "ORDER BY nombre";
-
-  sequelize.query(sql)
-    .spread(function (rows) {
-      res.json(rows);
     });
 
 };

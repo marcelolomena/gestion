@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
@@ -28,9 +29,8 @@ $(document).ready(function () {
     var modelPlantilla = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'CUI', name: 'CUI', width: 200, align: 'left', search: false, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
+         label: 'CUI', name: 'CUI', width: 250, align: 'left', search: true, 
+          editable: true, jsonmap: "estructuracui.cui"},
         {
             label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -56,13 +56,16 @@ $(document).ready(function () {
 
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-        { label: 'Nombre Responsable', name: 'nombreresponsable', width: 250, align: 'left', search: false, editable: true },
-        { label: 'Nombre Gerente', name: 'nombregerente', width: 250, align: 'left', search: false, editable: true },       
+        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, 
+          editable: true, jsonmap: "estructuracui.nombre"},
+        { label: 'Nombre Responsable', name: 'nombreresponsable', width: 250, align: 'left', search: true, 
+          editable: true, jsonmap: "estructuracui.nombreresponsable"},  
+        { label: 'Nombre Gerente', name: 'nombreresponsable', width: 250, align: 'left', search: true, 
+          editable: true, jsonmap: "estructuracui.nombregerente"}    
     ];
     $("#grid").jqGrid({
-        url: '/plantillalist',
-        mtype: "GET",
+        url: '/plantilla/list',
+        mtype: "POST",
         datatype: "json",
         page: 1,
         colModel: modelPlantilla,
