@@ -10,11 +10,11 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Servicio {idservicio}</div>";
+    tmpl += "<div class='column-full'>Nombre Responsable {nombreresponsable}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Proveedor {idproveedor}</div>";
+    tmpl += "<div class='column-full'>Nombre Gerente {nombregerente}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' style='display: none;'>";
@@ -57,65 +57,8 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-        {
-            label: 'Servicio', name: 'nombre', width: 200, align: 'left', search: false, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Servicio', name: 'idservicio', width: 80, align: 'left', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/Servicios',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.id;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Servicio--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
-         {
-            label: 'Servicio', name: 'nombre', width: 200, align: 'left', search: false, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Servicio', name: 'idservicio', width: 80, align: 'left', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/Servicios',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idcui;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Servicio--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        { label: 'Razon Social', name: 'razonsocial', width: 250, align: 'left', search: false, editable: true },
-        
+        { label: 'Nombre Responsable', name: 'nombreresponsable', width: 250, align: 'left', search: false, editable: true },
+        { label: 'Nombre Gerente', name: 'nombregerente', width: 250, align: 'left', search: false, editable: true },       
     ];
     $("#grid").jqGrid({
         url: '/plantillalist',
