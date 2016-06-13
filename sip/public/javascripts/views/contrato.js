@@ -41,7 +41,7 @@ $(document).ready(function () {
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Contrato', name: 'nombre', width: 400, align: 'left', search: true, editable: true },
+        { label: 'Contrato', name: 'nombre', width: 250, align: 'left', search: true, editable: true },
         {
             label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "proveedor.id",
             edittype: "select",
@@ -368,4 +368,9 @@ $(document).ready(function () {
     });
 
     $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
 });

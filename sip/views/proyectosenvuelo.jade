@@ -2,12 +2,24 @@ extends base.jade
 block titulo
   title SIP Banco de Chile - Sistema Integrado de Presupuesto - Proyectos en Vuelo
 block jsgrilla
-  script(type='text/javascript', src='/javascripts/views/contrato.js')
-  script(type='text/javascript', src='/javascripts/views/detallecontrato.js')
-  script(type='text/javascript', src='/javascripts/views/detallecompromiso.js')
+  script(type='text/javascript', src='/javascripts/views/proyectosenvuelo.js')
+  script(type='text/javascript', src='/javascripts/views/detalleenvuelo.js')
+  script(type='text/javascript', src='/javascripts/views/flujoenvuelo.js')  
+  style(type='text/css').
+      th.ui-th-column div{
+      word-wrap: break-word; /* IE 5.5+ and CSS3 */
+      white-space: pre-wrap; /* CSS3 */
+      white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+      white-space: -pre-wrap; /* Opera 4-6 */
+      white-space: -o-pre-wrap; /* Opera 7 */
+      overflow: hidden;
+      height: auto !important;
+      vertical-align: middle;
+      }
 block titulogrilla
   .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") CONTRATOS
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Proyectos en Vuelo
 block grilla
-  table#grid
-  #pager
+  .gcontainer
+   table#grid
+   #pager

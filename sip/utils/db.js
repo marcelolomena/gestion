@@ -6,7 +6,7 @@ module.exports  = (function () {
 var connection;
 var request;
 
-    //Configuración de conexión SQL Server
+    //Configuraciï¿½n de conexiï¿½n SQL Server
     /*
 	var config = {
 		user: 'biometria',
@@ -38,17 +38,17 @@ var request;
         }
     }
 
-//Métodos Privados
+//Mï¿½todos Privados
 
 /**
  * abrirConexion
- * @author Marcelo Lomeña
+ * @author Marcelo Lomeï¿½a
  * @version 0.0.1
  * @since 01/04/2016
  * @syntax abrirConexion();
- * Este metodo establece la conexión a la base de datos.
+ * Este metodo establece la conexiï¿½n a la base de datos.
  * @param {function} callback
- * @returns {request} Método y funciones para interactuar con sql server.
+ * @returns {request} Mï¿½todo y funciones para interactuar con sql server.
  */
 var abrirConexion = function (callback) {
     console.log('abrirConexion - abstractSql');
@@ -59,7 +59,7 @@ var abrirConexion = function (callback) {
                 console.log(
                     ' Nombre: ' + err.name +
                     ' - Mensaje: ' + err.message +
-                    ' - Código: ' + err.code +
+                    ' - Cï¿½digo: ' + err.code +
                     ' - SQL Errores Anteriores: ' + err.precedingErrors +
                     ' - Fecha: ' + Date() + '\n'
                     );
@@ -72,11 +72,11 @@ var abrirConexion = function (callback) {
 
 /**
  * cerrarConexion
- * @author Marcelo Lomeña
+ * @author Marcelo Lomeï¿½a
  * @version 0.0.1
  * @since 01/04/2016
  * @syntax cerrarConexion();
- * Este método desconecta la base de datos.
+ * Este mï¿½todo desconecta la base de datos.
  * @return {undefined}
  */
 
@@ -86,8 +86,8 @@ var cerrarConexion = function () {
 
 /**
  * devolverConsultaQuery
- * Este método devuelve los resultados de una consulta en un array.
- * @author Marcelo Lomeña
+ * Este mï¿½todo devuelve los resultados de una consulta en un array.
+ * @author Marcelo Lomeï¿½a
  * @version 0.0.1
  * @since 01/04/2016
  * @syntax devolverConsultaQuery('select * from tabla', function(){...});
@@ -102,7 +102,7 @@ var devolverConsultaQuery = function (strQuery, callback) {
                     console.log(
                         ' Nombre: ' + err.name +
                         ' - Mensaje: ' + err.message +
-                        ' - Código: ' + err.code +
+                        ' - Cï¿½digo: ' + err.code +
                         ' - SQL Errores Anteriores: ' + err.precedingErrors +
                         ' - Fecha: ' + Date() + '\n'
                         );
@@ -117,10 +117,10 @@ var devolverConsultaQuery = function (strQuery, callback) {
 
 /**
  * devolverConsultaSp
- * Método que se encarga de la ejecución de cualquier tipo de procedimiento
- * almacenado solo indicando nombre del mismo y parámetros. Devuelve un json
- * con todos los registros de la ejecución.
- * @author Marcelo Lomeña
+ * Mï¿½todo que se encarga de la ejecuciï¿½n de cualquier tipo de procedimiento
+ * almacenado solo indicando nombre del mismo y parï¿½metros. Devuelve un json
+ * con todos los registros de la ejecuciï¿½n.
+ * @author Marcelo Lomeï¿½a
  * @version 0.0.1
  * @since 2014-10-13
  * @param {string} sp nombre del sp que se requiere ejecutar.
@@ -129,7 +129,7 @@ var devolverConsultaQuery = function (strQuery, callback) {
  * @returns {undefined}
  */
 var devolverConsultaSp = function (sp, arrParam, callback) {
-        console.log('devolverConsultaSp - abstracSql');
+        //console.log('devolverConsultaSp - abstracSql');
     abrirConexion(function (request) {
         for (var key in arrParam) {
             var parametro = key;
@@ -142,7 +142,7 @@ var devolverConsultaSp = function (sp, arrParam, callback) {
                     console.log(
                         ' Nombre: ' + err.name +
                         ' - Mensaje: ' + err.message +
-                        ' - Código: ' + err.code +
+                        ' - Cï¿½digo: ' + err.code +
                         ' - SQL Errores Anteriores: ' + err.precedingErrors +
                         ' - Fecha: ' + Date() + '\n'
                         );
@@ -160,10 +160,10 @@ return {
     AdministrarData: (function () {
         /**
          * CargarMaestro
-         * Método público que en base al origen de datos que se le pase como
-         * parámetro trae la información de las tablas, vistas o procedimientos
-         * almacenado según el tipo de origén solicitado.
-         * @author Marcelo Lomeña
+         * Mï¿½todo pï¿½blico que en base al origen de datos que se le pase como
+         * parï¿½metro trae la informaciï¿½n de las tablas, vistas o procedimientos
+         * almacenado segï¿½n el tipo de origï¿½n solicitado.
+         * @author Marcelo Lomeï¿½a
          * @version 0.0.1
          * @since 2014-08-10
          * @syntax CargarMaestro('TB', function(err, data) { ... });
@@ -217,7 +217,7 @@ return {
 
         /**
          * CargarMaestroCampo
-         * Este método público se encarga de cargar los campos y su tipo de
+         * Este mï¿½todo pï¿½blico se encarga de cargar los campos y su tipo de
          * dato de sql server filtrandolos por el nombre del catalogo (tabla,
          * vista, procedimiento almacenado)
          * @param {string} strTipo
@@ -265,14 +265,14 @@ return {
 
         /**
          * CargarSpDatos
-         * Método público que se encarga de ejecutar cualquier procedimiento
+         * Mï¿½todo pï¿½blico que se encarga de ejecutar cualquier procedimiento
          * almacenado solicitando el nombre del sp y los parametros.
-         * @author Marcelo Lomeña
+         * @author Marcelo Lomeï¿½a
          * @version 0.0.1
          * @since 2014-10-13
          * @syntax CargarSpCampos('sp_test', 'json', function(data) { ... });
          * @param {string} sp nombre del procedimiento almacenado
-         * @param {array} arrParam json con el nombre y valor de los parámetros del procedimiento almacenado.
+         * @param {array} arrParam json con el nombre y valor de los parï¿½metros del procedimiento almacenado.
          * @param {function} callback
          * @returns {undefined}
          */
@@ -299,7 +299,7 @@ return {
             };
 
         return {
-            //Métodos públicos
+            //Mï¿½todos pï¿½blicos
             CargarMaestros: CargarMaestros,
             CargarMaestrosCampos: CargarMaestrosCampos,
             CargarSpDatos: CargarSpDatos,
