@@ -32,8 +32,10 @@ app.use(passport.session());
 var initPassport = require('./passport/init');
 initPassport(passport);
 
-var routes = require('./routes/index')(passport);
-app.use('/', routes);
+//var routes = require('./routes/index')(passport);
+//app.use('/', require('./routes')(passport));
+
+var routes = require('./routes')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

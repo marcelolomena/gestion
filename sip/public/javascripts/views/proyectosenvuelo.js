@@ -1,8 +1,9 @@
 $(document).ready(function () {
-console.log("pico");
+
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
     var template = "<div id='responsive-form' class='clearfix'>";
+
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Contrato{nombre}</div>";
@@ -41,13 +42,13 @@ console.log("pico");
 
     var modelProyectosEnVuelo = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'sap', name: 'sap', width: 100, align: 'left', search: true, editable: true },
-        { label: 'nombre', name: 'nombre', width: 100, align: 'left', search: true, editable: true },
-        { label: 'codigoart', name: 'codigoart', width: 100, align: 'left', search: true, editable: true },
-        { label: 'idcui', name: 'idcui', width: 100, align: 'left', search: true, editable: true },
-        { label: 'Porcentaje Avance', name: 'porcentajeavance', width: 100, align: 'left', search: true, editable: true },
+        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: true, editable: true },
+        { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true },
+        { label: 'ART', name: 'codigoart', width: 50, align: 'left', search: true, editable: true },
+        { label: 'idcui', name: 'idcui', width: 100, align: 'left', search: true, editable: true, hidden: true },
+        { label: '% Avance', name: 'porcentajeavance', width: 50, align: 'left', search: true, editable: true },
         {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Inicio', name: 'fechainicio', width: 120, align: 'left', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -61,7 +62,7 @@ console.log("pico");
             },
         },
         {
-            label: 'Fecha Aprobación', name: 'fechapap', width: 150, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Aprobación', name: 'fechapap', width: 100, align: 'left', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -75,7 +76,7 @@ console.log("pico");
             },
         },
         {
-            label: 'Fecha Aprobación', name: 'fechapap', width: 150, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Aprobación', name: 'fechapap', width: 100, align: 'left', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -89,7 +90,7 @@ console.log("pico");
             },
         },
         {
-            label: 'Fecha Cierre Sap', name: 'fechacierresap', width: 150, align: 'left', search: true, editable: true, hidden: false,
+            label: 'Fecha Cierre SAP', name: 'fechacierresap', width: 100, align: 'left', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -161,7 +162,7 @@ console.log("pico");
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'pmoresponsable', name: 'pmoresponsable', width: 100, align: 'left', search: true, editable: true },
+        { label: 'PMO', name: 'pmoresponsable', width: 100, align: 'left', search: true, editable: true },
     ];
     $("#grid").jqGrid({
         url: '/proyectosenvuelo/list',
@@ -172,8 +173,6 @@ console.log("pico");
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        //width: null,
-        //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default        
         caption: 'Lista de proyectos en vuelo',
@@ -181,7 +180,7 @@ console.log("pico");
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
-        editurl: '/contratos/action',
+        editurl: '/proyectosenvuelo/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");
@@ -190,12 +189,12 @@ console.log("pico");
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
             }
         },
-        //subGrid: true,
-        //subGridRowExpanded: showSubGrids,
-        //subGridOptions: {
-        //    plusicon: "glyphicon-hand-right",
-        //    minusicon: "glyphicon-hand-down"
-        //},
+        subGrid: true,
+        subGridRowExpanded: showChildGrid,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
     });
 
     $("#grid").jqGrid('navGrid', "#pager", {
@@ -203,7 +202,7 @@ console.log("pico");
         refresh: true, view: true, position: "left", cloneToTop: false
     },
         {
-            editCaption: "Modifica Contrato",
+            editCaption: "Modifica Proyecto",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -224,7 +223,7 @@ console.log("pico");
             }
         },
         {
-            addCaption: "Agrega Contrato",
+            addCaption: "Agrega Proyecto",
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -279,10 +278,15 @@ console.log("pico");
         onClickButton: function () {
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
-            var url = '/contratos/excel';
+            var url = '/proyectosenvuelo/excel';
             $('#grid').jqGrid('excelExport', { "url": url });
         }
     });
 
     $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
 });

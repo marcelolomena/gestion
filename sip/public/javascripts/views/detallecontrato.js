@@ -452,14 +452,16 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 edittype: "textarea"
             }
         ],
-        shrinkToFit: false,
+        shrinkToFit: true,
+        autowidth: true,
         caption: 'Servicios',
         viewrecords: true,
         rowNum: 10,
         rowList: [10, 20, 30],
         regional: 'es',
         height: 'auto',
-        width: null,
+        //height: '100%',
+        //width: null,
         pager: $('#' + pager_id),
         styleUI: "Bootstrap",
         loadError: sipLibrary.jqGrid_loadErrorHandler,
@@ -473,7 +475,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         subGridRowExpanded: gridDetail,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
+            minusicon: "glyphicon-hand-down",
+            "reloadOnExpand": true,
+            "selectOnExpand": true
         }
     });
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {

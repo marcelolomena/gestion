@@ -2,23 +2,23 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 
 exports.cuitroya = function (req, res) {
-  var idcui = req.params.idsap
-  var sql = "select a.cui, a.nombre "+
+  var idcui = req.params.id
+  var sql = "select a.id, a.nombre "+
     "from   sip.estructuracui a "+
     "where  a.cui = "+idcui +" "+
     "union "+
-    "select b.cui, b.nombre "+
+    "select b.id, b.nombre "+
     "from   sip.estructuracui a,sip.estructuracui b "+
     "where  a.cui = "+idcui +" "+
     "  and  a.cui = b.cuipadre "+
     "union "+
-    "select c.cui, c.nombre "+
+    "select c.id, c.nombre "+
     "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c "+
     "where  a.cui = "+idcui +" "+
     "  and  a.cui = b.cuipadre "+
     "  and  b.cui = c.cuipadre "+
     "union "+
-    "select d.cui, d.nombre "+
+    "select d.id, d.nombre "+
     "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d "+
     "where  a.cui = "+idcui +" "+
     "  and  a.cui = b.cuipadre "+
@@ -32,10 +32,10 @@ exports.cuitroya = function (req, res) {
 };
 
 exports.proveedorcui = function (req, res) {
-  var idcui = req.params.idsap
+  var idcui = req.params.id
   var sql = "SELECT a.idproveedor, b.razonsocial "+
     "FROM sip.plantillapresupuesto a JOIN sip.proveedor b ON a.idproveedor=b.id "+
-    "where  a.cui = "+idcui +
+    "where  a.idcui = "+idcui +" "+
     "GROUP BY a.idproveedor, b.razonsocial "+
     "ORDER BY b.razonsocial ";
     
@@ -47,7 +47,7 @@ exports.proveedorcui = function (req, res) {
 
 exports.getcui = function (req, res) {
 console.log('user:'+req.user[0].nombre);  
-  console.log("******usr*********:"+req.user[0].id);
+  console.log("******usr*********:"+req.user[0].uid);
   var sql = "SELECT cui FROM sip.estructuracui WHERE uid="+req.user[0].uid;
   console.log("query:"+sql);
   sequelize.query(sql)
