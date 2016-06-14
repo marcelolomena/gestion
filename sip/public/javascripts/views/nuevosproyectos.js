@@ -1,89 +1,73 @@
- $(document).ready(function () {
+$(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Nombre{nombre}</div>";
+    template += "<div class='column-full'>Contrato{nombre}</div>";
+    template += "<div class='column-full'>Proveedor{idproveedor}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI{idcui}</div>";
-    template += "<div class='column-half'>% Avance{porcentajeavance}</div>";
+    template += "<div class='column-half'>Tipo Solicitud{idtiposolicitud}</div>";
+    template += "<div class='column-half'>Estado Solicitud{idestadosol}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Lider Proyecto {uidlider}</div>";
+    template += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
+    template += "<div class='column-half'>Número  {numero}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo {tipocontrato}</div>";
+    template += "<div class='column-half'>Documento {tipodocumento}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
     template += "<div class='column-half'>PMO {uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>liderproyecto{liderproyecto}</div>";
+    template += "<div class='column-half'>razonsocial{razonsocial}</div>";
     template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
+    template += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
+    template += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
     template += "<div> {sData} {cData}  </div>";
     template += "</div>";
-    
- var modelPlantilla = [
+
+    var modelNuevosProyectos = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idcui', name: 'idcui', hidden: true },
-        { label: 'idservicio', name: 'idservicio', hidden: true },
-        { label: 'idproveedor', name: 'idproveedor', hidden: true },
-        {
-            label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
-            //jsonmap: "EstructuraCui.nombre"
-        },
-                {
-            label: 'Nombre', name: 'estructuracui.nombre', width: 50, align: 'left', search: true, editable: false, hidden: false,
-            //jsonmap: "EstructuraCui.nombre"
-        },
-        {
-            label: 'CUI', name: 'idcui', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/cui',
-                buildSelect: function (response) {
-                    var grid = $('#grid');
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.id;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Cui--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        { label: 'Nombre Responsable', name: 'estructuracui.nombreresponsable', width: 100, align: 'left', search: true, editable: true },       
-        { label: 'Nombre Gerente', name: 'estructuracui.nombregerente', width: 100, align: 'left', search: true, editable: true },
+        { label: 'Id Iniciativa', name: 'iniciativaprograma.idiniciativaprograma', hidden: true, editable: true },
+        { label: 'Iniciativa', name: 'iniciativaprograma.nombre', width: 250, align: 'left', search: true, editable: true },
+        { label: 'División Iniciativa', name: 'iniciativaprograma.divisionsponsor', width: 250, align: 'left', search: true, editable: true },
+        { label: 'Gerente Iniciativa', name: 'iniciativaprograma.gerenteresponsable', width: 250, align: 'left', search: true, editable: true },
+        { label: 'PMO Iniciativa', name: 'iniciativaprograma.pmoresponsable', width: 250, align: 'left', search: true, editable: true },
+        { label: 'Id Moneda', name: 'moneda.idmoneda', hidden: true, editable: true },
+        { label: 'Moneda', name: 'moneda.glosamoneda', width: 250, align: 'left', search: true, editable: true },
     ];
     $("#grid").jqGrid({
-        url: '/plantilla/list',
+        url: '/nuevosproyectos/list',
         mtype: "POST",
         datatype: "json",
         page: 1,
-        colModel: modelPlantilla,
+        colModel: modelNuevosProyectos,
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
-        caption: 'Lista de plantillas Presupuestarias',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default        
+        caption: 'Lista de Nuevos Proyectos',
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
-        editurl: '/plantilla/action',
+        editurl: '/nuevosproyectos/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");
@@ -92,26 +76,34 @@
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
             }
         },
-        subGrid: true,
-       // subGridRowExpanded: showChildGrid,
-        subGridOptions: {
-            plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
+    }).jqGrid('filterToolbar', {
+        stringResult: true,
+        searchOnEnter: true,
+        defaultSearch: "cn",
+        searchOperators: true,
+        beforeSearch: function () {
+            var postData = $("#grid").jqGrid('getGridParam', 'postData');
+            var searchData = jQuery.parseJSON(postData.filters);
+            for (var iRule = 0; iRule < searchData.rules.length; iRule++) {
+                if (searchData.rules[iRule].field === "idiniciativaprograma") {
+                    var valueToSearch = searchData.rules[iRule].data;
+                    searchData.rules[iRule].field = 'idmoneda'
+                }
+            }
+            //return false;
+            postData.filters = JSON.stringify(searchData);
         },
-    });
+        afterSearch: function () {
 
-    $("#grid").jqGrid("setLabel", "codigoart", "", { "text-align": "right" });
-    $("#grid").jqGrid("setLabel", "porcentajeavance", "", { "text-align": "right" });
-    $("#grid").jqGrid("setLabel", "fechainicio", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "fechapap", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "fechacierresap", "", { "text-align": "center" });
+        }
+    });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: true, del: true, search: false,
         refresh: true, view: true, position: "left", cloneToTop: false
     },
         {
-            editCaption: "Modifica Proyecto",
+            editCaption: "Modifica Nuevo Proyecto",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -126,10 +118,13 @@
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
+            }, beforeShowForm: function (form) {
+                $("input[type=radio]").attr('disabled', true);
+                sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },
         {
-            addCaption: "Agrega Proyecto",
+            addCaption: "Agrega Nuevo Proyecto",
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -138,10 +133,8 @@
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.uidlider == 0) {
-                    return [false, "Lider: Debe escoger un valor", ""];
-                } else if (postdata.uidpmo == 0) {
-                    return [false, "PMO: Debe escoger un valor", ""];
+                if (postdata.idiniciativa == 0) {
+                    return [false, "Iniciativa: Debe escoger una iniciativa", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -186,7 +179,7 @@
         onClickButton: function () {
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
-            var url = '/proyectosenvuelo/excel';
+            var url = '/nuevosproyectos/excel';
             $('#grid').jqGrid('excelExport', { "url": url });
         }
     });
