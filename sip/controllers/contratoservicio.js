@@ -342,7 +342,7 @@ exports.list = function (req, res) {
                     //console.dir(contratos)
                     res.json({ records: records, total: total, page: page, rows: contratos });
                 }).catch(function (err) {
-                    console.log(err);
+                    //console.log(err);
                     res.json({ error_code: 1 });
                 });
             })

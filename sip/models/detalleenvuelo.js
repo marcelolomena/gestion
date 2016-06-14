@@ -23,6 +23,22 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    idcui: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'estructuracui',
+        key: 'id'
+      }
+    },
+    uid: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'uid'
+      }
+    },
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true,

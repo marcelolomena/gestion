@@ -9,33 +9,17 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>SAP{sap}</div>";
-    template += "<div class='column-half'>ART{codigoart}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tarea{tarea}</div>";
     template += "<div class='column-half'>CUI{idcui}</div>";
-    template += "<div class='column-half'>% Avance{porcentajeavance}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
-    template += "<div class='column-half'>Fecha Aprobación{fechapap}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>Fecha Cierre SAP {fechacierresap}</div>";
-    template += "<div class='column-half'></div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>Lider Proyecto {uidlider}</div>";
-    template += "<div class='column-half'>PMO {uidpmo}</div>";
+    template += "<div class='column-half'>Proveedor{idproveedor}</div>";
+    //template += "<div class='column-half'>CUI{idcui}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>liderproyecto{liderproyecto}</div>";
-    template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
+    template += "<div class='column-half'>nombreproveedor{nombreproveedor}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -47,9 +31,98 @@ function showChildGrid(parentRowID, parentRowKey) {
     var modelDetalleProyectosEnVuelo = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idproyectoenvuelo', name: 'idproyectoenvuelo', hidden: true },
-        { label: 'Tarea', name: 'tarea', width: 50, align: 'left', search: true, editable: true },
+        {
+            label: 'Tarea', name: 'tarea', width: 50, align: 'left', search: true, editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/tareasap/' + $('#grid').getRowData(parentRowKey).sap,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.tarea;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tarea--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].tarea == thissid) {
+                            s += '<option value="' + data[i].tarea + '" selected>' + data[i].tarea + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].tarea + '">' + data[i].tarea + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thispid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/tarea/' + thispid,
+                            async: false,
+                            success: function (data) {
+                                //$("#tarea").html(s);
+                            }
+                        });
+                    }
+                }]
+            }
+        },
         { label: 'Nombre', name: 'nombre', width: 150, align: 'left', search: true, editable: true },
-        { label: 'idproveedor', name: 'idproveedor', search: false, hidden: true, editable: true },
+        {
+            label: 'idcui', name: 'idcui', search: false, hidden: true, editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/CUIs',
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idcui;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger CUI--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+            }
+        },
+        { label: 'uid', name: 'uid', search: false, hidden: true, editable: true },
+        {
+            label: 'idproveedor', name: 'idproveedor', search: false, hidden: true, editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/proveedores/combobox',
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idproveedor;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Proveedor--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#nombreproveedor").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },
         { label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'left', search: true, editable: true },
         { label: 'idcuenta', name: 'idcuenta', search: false, hidden: true, editable: true },
         { label: 'Cuenta', name: 'cuentacontable', width: 50, align: 'left', search: true, editable: true },
@@ -147,7 +220,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
