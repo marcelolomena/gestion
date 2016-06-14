@@ -15,11 +15,12 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Proveedor{idproveedor}</div>";
-    //template += "<div class='column-half'>CUI{idcui}</div>";
+    template += "<div class='column-half'>Cuenta{cuentacontable}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>nombreproveedor{nombreproveedor}</div>";
+    template += "<div class='column-half'>idcuenta{idcuenta}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -58,10 +59,14 @@ function showChildGrid(parentRowID, parentRowKey) {
                         var thispid = $(this).val();
                         $.ajax({
                             type: "GET",
-                            url: '/tarea/' + thispid,
+                            url: '/tareaservicio/' + thispid,
                             async: false,
                             success: function (data) {
-                                //$("#tarea").html(s);
+                                //console.log(data[0].cuentascontable.id)
+                                //console.log(data[0].cuentascontable.cuentacontable)
+                                //console.log(data[0].cuentascontable.nombrecuenta)
+                                $("input#idcuenta").val(data[0].cuentascontable.id);
+                                $("input#cuentacontable").val(data[0].cuentascontable.cuentacontable);
                             }
                         });
                     }
@@ -220,6 +225,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                $('input#cuentacontable',form).attr('readonly','readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },

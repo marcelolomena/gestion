@@ -21,6 +21,26 @@ exports.tareasap = function (req, res) {
 
 }
 
+exports.tareaservicio = function (req, res) {
+
+    models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
+    models.servicio.findAll({
+        where: { tarea: req.params.id },
+        //attributes: ['idproyecto', 'tarea'],
+        include: [{
+            model: models.cuentascontables,
+        }]
+    }).then(function (proyecto) {
+        res.json(proyecto);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+}
+
+
+
 exports.list = function (req, res) {
 
     var page = req.body.page;

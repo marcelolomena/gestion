@@ -727,7 +727,6 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                                     s += "</select>";
                                     //console.log(s)
                                     $("#tarea").html(s);
-
                                 }
                             });
                         }
