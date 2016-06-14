@@ -5,34 +5,21 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Contrato{nombre}</div>";
-    template += "<div class='column-full'>Proveedor{idproveedor}</div>";
+    template += "<div class='column-full'>Iniciativa{idiniciativapadre}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Solicitud{idtiposolicitud}</div>";
-    template += "<div class='column-half'>Estado Solicitud{idestadosol}</div>";
+    template += "<div class='column-full'>Iniciativa Programa{idiniciativaprograma}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
-    template += "<div class='column-half'>Número  {numero}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo {tipocontrato}</div>";
-    template += "<div class='column-half'>Documento {tipodocumento}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>PMO {uidpmo}</div>";
+    template += "<div class='column-full'>Moneda{idmoneda}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>razonsocial{razonsocial}</div>";
-    template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
-    template += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
-    template += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
+    template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
+    template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
+    template += "<div class='column-half'>idmoneda{glosamoneda}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -40,14 +27,178 @@ $(document).ready(function () {
     template += "</div>";
 
     var modelNuevosProyectos = [
-        { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Id Iniciativa', name: 'iniciativaprograma.idiniciativaprograma', hidden: true, editable: true },
-        { label: 'Iniciativa', name: 'iniciativaprograma.nombre', width: 250, align: 'left', search: true, editable: true },
-        { label: 'División Iniciativa', name: 'iniciativaprograma.divisionsponsor', width: 250, align: 'left', search: true, editable: true },
-        { label: 'Gerente Iniciativa', name: 'iniciativaprograma.gerenteresponsable', width: 250, align: 'left', search: true, editable: true },
-        { label: 'PMO Iniciativa', name: 'iniciativaprograma.pmoresponsable', width: 250, align: 'left', search: true, editable: true },
-        { label: 'Id Moneda', name: 'moneda.idmoneda', hidden: true, editable: true },
-        { label: 'Moneda', name: 'moneda.glosamoneda', width: 250, align: 'left', search: true, editable: true },
+        {
+            label: 'id',
+            name: 'id',
+            key: true,
+            hidden: true
+        },
+        {
+            label: 'Id Iniciativa Padre',
+            name: 'idiniciativapadre',
+            jsonmap: "iniciativaprograma.iniciativa.id",
+            hidden: true, editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/iniciativa/combobox',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idiniciativapadre;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Selecciona iniciativa--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#nombreiniciativapadre").val($('option:selected', this).text());
+                        var idpadre = $('option:selected', this).val()
+                        if (idpadre != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/iniciativaprograma/combobox/' + idpadre,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#grid");
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idiniciativaprograma;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Selecciona iniciativa programa--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].id == thissid) {
+                                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idiniciativaprograma").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Iniciativa Padre',
+            name: 'nombreiniciativapadre',
+            jsonmap: "iniciativaprograma.iniciativa.nombre",
+            hidden: true,
+            editable: true
+        },
+        {
+            label: 'Id Iniciativa',
+            name: 'idiniciativaprograma',
+            hidden: true,
+            editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/iniciativaprograma/comboboxtotal',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idiniciativaprograma;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Selecciona iniciativa programa--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#nombreiniciativa").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Iniciativa',
+            name: 'nombreiniciativa',
+            jsonmap: "iniciativaprograma.nombre",
+            width: 250, align: 'left',
+            search: true,
+            editable: true
+        },
+        {
+            label: 'División Iniciativa',
+            name: 'iniciativaprograma.divisionsponsor',
+            width: 250, align: 'left',
+            search: true,
+            editable: true
+        },
+        {
+            label: 'Gerente Iniciativa',
+            name: 'iniciativaprograma.gerenteresponsable',
+            width: 250, align: 'left',
+            search: true,
+            editable: true
+        },
+        {
+            label: 'PMO Iniciativa',
+            name: 'iniciativaprograma.pmoresponsable',
+            width: 250, align: 'left',
+            search: true,
+            editable: true
+        },
+        {
+            label: 'Id Moneda',
+            name: 'idmoneda',
+            hidden: true,
+            editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/monedas',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idmoneda;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Moneda--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].moneda + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].moneda + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) {/* $(elem).width(200);*/ },
+            dataEvents: [{
+                type: 'change', fn: function (e) {
+                    $("input#glosamoneda").val($('option:selected', this).text());
+                }
+            }],
+        },
+        {
+            label: 'Moneda',
+            name: 'glosamoneda',
+            jsonmap: "moneda.glosamoneda",
+            width: 250, align: 'left',
+            search: true,
+            editable: true
+        },
     ];
     $("#grid").jqGrid({
         url: '/nuevosproyectos/list',
@@ -119,7 +270,6 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                $("input[type=radio]").attr('disabled', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },

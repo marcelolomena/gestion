@@ -267,6 +267,18 @@ exports.list = function (req, res) {
 
 }
 
+exports.combobox = function (req, res) {
+  models.iniciativa.findAll({
+    order: 'nombre'
+  }).then(function (iniciativas) {
+    //iniciativas.forEach(log)
+    res.json(iniciativas);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+
 exports.action = function (req, res) {
   var action = req.body.oper;
 
