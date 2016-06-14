@@ -1,4 +1,14 @@
+
 $(document).ready(function () {
+
+    $('#fechaini').datepicker({
+        format: "dd/mm/yyyy"
+    }); 
+    
+    $('#fechafin').datepicker({
+        format: "dd/mm/yyyy"
+    });      
+                
     var cuiusr;
    
     $.ajax({ 
@@ -30,6 +40,16 @@ $(document).ready(function () {
             });
         });
     });
+    
+    $("#buscar").click(function(){
+       alert('Click'); 
+       cui = $('#cui').val();
+       proveedor = $('#proveedor').val();
+       factura = $('#factura').val();
+       fechaini = $('#fechaini').val();
+       fechafin = $('#fechafin').val();
+       showDocumentos(cui, proveedor, factura, fechaini, fechafin);
+    });
 
 });
 
@@ -47,12 +67,28 @@ function loadGrid(parentID) {
 function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
 
     // send the parent row primary key to the server so that we know which grid to show
-    var childGridURL = "/proyectostareas/" + parentID;
-    
+    var childGridURL = "/troyafacturas";   
     $("#grid").jqGrid({
         url: childGridURL,
         mtype: "GET",
         datatype: "json",
+        postData: {
+            cui : function () {
+                return cui;
+            },
+            proveedor : function () {
+                return proveedor;
+            },
+            factura: function () {
+                return factura;
+            },            
+            fechaini: function () {
+                return fechaini;
+            },
+            fechafin: function () {
+                return fechafin;
+            }            
+        },        
         page: 1,
         colModel: [
                    { label: 'id',
@@ -105,7 +141,7 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
         pager: "#pager"
     });
 
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#grid").jqGrid('filterToolbar', {cui:cui, proveedor:proveedor, factura:factura, fechaini:fechaini, fechafin:fechafin, stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         search: false, // show search button on the toolbar
@@ -118,95 +154,3 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
 	leida = true;
 }
 
-var leida2 = false;
-
-function loadGrid2(parentID, parentNombre, monto) {
-	var url = "/erogacioneslist/" + parentID;
-	var formatter = new Intl.NumberFormat();
-	if (leida2){
-		$("#grid2").jqGrid('setGridState', 'visible');
-		$("#grid2").jqGrid('setCaption', "FACTURAS - "+parentNombre+" - "+ formatter.format(monto)).jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
-	} else {
-		showProyectoErogaciones2(parentID, parentNombre, monto);
-	}
-}
-
-function showProyectoErogaciones2(parentID, parentNombre, monto) {
-	var formatter = new Intl.NumberFormat();
-	
-    // send the parent row primary key to the server so that we know which grid to show
-    var childGridURL = "/erogacioneslist/" + parentID;
-    
-    $("#grid2").jqGrid({
-        url: childGridURL,
-        mtype: "GET",
-        datatype: "json",
-        page: 1,
-        colModel: [
-                   { label: 'id',
-                      name: 'id',
-                      width: 50,
-                      key: true,
-                      hidden:true
-                   },                   
-                   { label: 'Nombre Proveedor',
-                     name: 'razonsocial',
-                     width: 250,
-                   },
-                   { label: 'Numero Factura',
-                     name: 'factura',
-                     align: 'center',
-                     width: 100,
-                   },
-                   { label: 'Fecha GL',
-                     name: 'fechagl',
-                     search: false,
-                     sortable: false,
-                     width: 100,
-                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }
-                   },
-                   { label: 'Total',
-                     name: 'montosum',
-                     search: false,
-                     width: 150,
-                     align: 'right',
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   }                                              
-        ],
-        viewrecords: true,
-		caption: "FACTURAS - "+parentNombre+" - "+ formatter.format(monto),
-        rowNum: 10,
- 		height: 'auto',
-        styleUI: "Bootstrap",         
-        autowidth:false, 
-        sortable: "true",  
-        rowList: [5, 10, 20, 50],    
-        regional : "es",
-        pager: "#pager2"
-    });
-
-    $("#grid2").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
-    $("#grid2").jqGrid('navGrid', "#pager2", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    });  
-
-    $("#grid2").jqGrid('navButtonAdd', "#pager2", {
-    caption: "",
-    buttonicon: "glyphicon glyphicon-download-alt",
-    title: "Excel",
-    position: "last",
-    onClickButton: function () {
-        var grid = $("#" + childGridID);
-        var rowKey = grid.getGridParam("selrow");
-        var url = '/erogacionesexcel/'+ parentRowKey;
-        $("#" + childGridID).jqGrid('excelExport', { "url": url });
-    }
-    });
-	
-	leida2 = true;
-}

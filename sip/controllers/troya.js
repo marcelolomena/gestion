@@ -55,3 +55,31 @@ console.log('user:'+req.user[0].nombre);
       res.json(rows);
     });
 }
+
+exports.getfacturas = function (req, res) {
+  console.log("CUI***:"+req.query.cui);
+  console.log("Proveedor***:"+req.query.proveedor);  
+  var id = req.params.idsap
+  
+ var sql = " SELECT nombre, realacumuladopesos as monto, id "+
+ "FROM sip.detalleproyecto "+
+ "WHERE idproyecto="+238;
+    
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+      var data = '{"titulo":"REAL Erogaciones por SAP","data":[';
+      for (var i = 0; i < proyecto.length; i++) {
+        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].monto+',"dId":'+proyecto[i].id+'},'
+        console.log(linea);
+        data = data + linea;
+      }
+      data = data.substring(0,data.length-1);
+      data = data + '],"showInLegend":false}';
+      console.log(data);
+      var obj = JSON.parse(data);
+      res.json(obj);
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+}

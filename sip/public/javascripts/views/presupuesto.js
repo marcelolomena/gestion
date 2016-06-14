@@ -156,8 +156,14 @@ $(document).ready(function () {
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
                 console.log("*** selrow:" + rowKey);
+                console.log("***Ejercicio:" + postdata.idejercicio+","+rowData.idejercicio);
                 postdata.id = rowKey;
-                postdata.version = parseInt(rowData.version) + 1;
+                if (postdata.idejercicio == rowData.idejercicio){
+                    postdata.version = parseInt(rowData.version) + 1;
+                } else {
+                    postdata.version = 1;
+                }
+                postdata.ejercicio = rowData.ejercicio
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (postdata.idejercicio == 0) {

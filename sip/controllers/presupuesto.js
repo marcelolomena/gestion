@@ -227,6 +227,7 @@ exports.action = function (req, res) {
   console.log("Id Prep:" + version);
   switch (action) {
     case "add":
+      var ejercicio=req.body.idejercicio;
       models.presupuesto.create({
         idejercicio: req.body.idejercicio,
         idcui: req.body.idcui,
@@ -242,6 +243,7 @@ exports.action = function (req, res) {
             var idservorig=servicio[i].id;
             console.log("----->" + servicio[i].id)
             sequelize.query('EXECUTE sip.InsertaPeriodo '+servicio[i].id
+            +","+ejercicio
             +","+id_cui
             +","+presupuesto.id
             +","+servicio[i].idservicio
