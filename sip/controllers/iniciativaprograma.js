@@ -245,6 +245,32 @@ exports.codigoart = function (req, res) {
   });
 };
 
+exports.combobox = function (req, res) {
+  models.iniciativaprograma.findAll({
+    where: {
+      idiniciativa: req.params.id
+    },
+    order: 'nombre'
+  }).then(function (iniciativas) {
+    //iniciativas.forEach(log)
+    res.json(iniciativas);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+exports.comboboxtotal = function (req, res) {
+  models.iniciativaprograma.findAll({
+    order: 'nombre'
+  }).then(function (iniciativas) {
+    //iniciativas.forEach(log)
+    res.json(iniciativas);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+
 // Create endpoint /iniciativaprograma for GET
 exports.list = function (req, res) {
   var page = req.body.page;

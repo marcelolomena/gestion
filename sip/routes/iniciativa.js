@@ -50,7 +50,16 @@ module.exports = function (passport) {
 
     router.route('/usuarios_por_rol/:rol')
         .get(isAuthenticated, iniciativaController.getUsersByRol);
-        
+    
+    router.route('/iniciativa/combobox')
+        .get(isAuthenticated, iniciativaController.combobox);
+
+    router.route('/iniciativaprograma/comboboxtotal/')
+        .get(isAuthenticated, iniciativaprogramaController.comboboxtotal);
+
+    router.route('/iniciativaprograma/combobox/:id')
+        .get(isAuthenticated, iniciativaprogramaController.combobox);
+
     return router;
 
 }

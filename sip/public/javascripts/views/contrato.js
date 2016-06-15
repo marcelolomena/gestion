@@ -190,7 +190,7 @@ $(document).ready(function () {
                         $("input#tiposolicitud").val($('option:selected', this).text());
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }
         },
         {
             label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
@@ -219,7 +219,7 @@ $(document).ready(function () {
                         $("input#pmoresponsable").val($('option:selected', this).text());
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }
         },
         {
             label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,

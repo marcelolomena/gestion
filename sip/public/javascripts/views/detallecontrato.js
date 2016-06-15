@@ -727,12 +727,11 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                                     s += "</select>";
                                     //console.log(s)
                                     $("#tarea").html(s);
-
                                 }
                             });
                         }
                     }]
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Tarea', name: 'tarea', editable: true, hidden: false, edittype: "select",

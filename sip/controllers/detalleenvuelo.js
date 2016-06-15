@@ -3,6 +3,44 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
 
+
+exports.tareasap = function (req, res) {
+
+    models.detalleproyecto.belongsTo(models.proyecto, { foreignKey: 'idproyecto' });
+    models.detalleproyecto.findAll({
+        attributes: ['idproyecto', 'tarea'],
+        include: [{
+            model: models.proyecto, where: { sap: req.params.id },
+        }]
+    }).then(function (proyecto) {
+        res.json(proyecto);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+}
+
+exports.tareaservicio = function (req, res) {
+
+    models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
+    models.servicio.findAll({
+        where: { tarea: req.params.id },
+        //attributes: ['idproyecto', 'tarea'],
+        include: [{
+            model: models.cuentascontables,
+        }]
+    }).then(function (proyecto) {
+        res.json(proyecto);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+}
+
+
+
 exports.list = function (req, res) {
 
     var page = req.body.page;
@@ -24,7 +62,7 @@ exports.list = function (req, res) {
         "op": "eq",
         "data": req.params.id
     }];
-
+    models.detalleenvuelo.belongsTo(models.proyectosenvuelo, { foreignKey: 'idproyectoenvuelo' });
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (err) {
             console.log("->>> " + err)
@@ -38,7 +76,10 @@ exports.list = function (req, res) {
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: orden,
-                    where: data
+                    where: data,
+                    include: [{
+                        model: models.proyectosenvuelo
+                    }]
                 }).then(function (detalleenvuelo) {
                     //Contrato.forEach(log)
                     res.json({ records: records, total: total, page: page, rows: detalleenvuelo });

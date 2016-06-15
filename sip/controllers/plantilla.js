@@ -8,63 +8,100 @@ var log = function (inst) {
 }
 // 
 exports.list = function (req, res) {
+  // Use the Proyectos model to find all proyectos
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var filters = req.query.filters;
+  var condition = "";
 
-    var page = req.body.page;
-    var rows = req.body.rows;
-    var filters = req.body.filters;
-    var sidx = req.body.sidx;
-    var sord = req.body.sord;
+  if (!sidx)
+    sidx = "id";
 
-    if (!sidx)
-        sidx = "cui";
+  if (!sord)
+    sord = "asc";
 
-    if (!sord)
-        sord = "asc";
+  var order = sidx + " " + sord;
 
-    var orden = sidx + " " + sord;
+  var sql0 = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rows + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+    "as resultNum, id,cui, nombre, nombreresponsable, nombregerente  " +
+    "FROM sip.estructuracui " +
+    " where id in (select idcui from sip.plantillapresupuesto) ORDER BY cui asc) " +
+    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-    utilSeq.buildCondition(filters, function (err, data) {
-        if (err) {
-            console.log("->>> " + err)
-        } else {
-            models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-            models.plantillapresupuesto.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.plantillapresupuesto.findAll({
-                    distinct: 'idcui',
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    where: data,
-                    include: [{
-                        model: models.estructuracui
-                    }]
-                }).then(function (plantillas) {
-                    //Contrato.forEach(log)
-                    res.json({ records: records, total: total, page: page, rows: plantillas });
-                }).catch(function (err) {
-                    //console.log(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
 
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+
+      jsonObj.rules.forEach(function (item) {
+
+        if (item.op === 'cn')
+          condition += item.field + " like '%" + item.data + "%' AND"
+      });
+
+      var sql = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rows + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        "as resultNum, id,cui, nombre, nombreresponsable, nombregerente " +
+        "FROM sip.estructuracui " +
+        "WHERE id in (select idcui from sip.plantillapresupuesto) and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+      console.log(sql);
+
+      models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql)
+          .spread(function (rows) {
+
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })
+
+    } else {
+
+      models.estructuracui.count().then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })
+    }
+
+  } else {
+
+    models.estructuracui.count().then(function (records) {
+      var total = Math.ceil(records / rows);
+      sequelize.query(sql0)
+        .spread(function (rows) {
+          res.json({ records: records, total: total, page: page, rows: rows });
+        });
+    })
+
+  }
 };
+
 
 exports.action = function (req, res) {
   var action = req.body.oper;
 
   switch (action) {
     case "add":
-      models.servicio.create({
-        criticidad: req.body.criticidad,
-        nombre: req.body.nombre,
-        tarea: req.body.tarea,
-        idcuenta: req.body.idcuenta,
-        cuentacontable: req.body.cuentacontable,
+      models.plantillapresupuesto.create({
+        idcui: req.body.idcui,
+        idservicio: req.body.idservicio,
+        idproveedor: req.body.idproveedor,
         borrado: 1
       }).then(function (servicio) {
         res.json({ error_code: 0 });
@@ -75,12 +112,10 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.servicio.update({
-        criticidad: req.body.criticidad,
-        nombre: req.body.nombre,
-        tarea: req.body.tarea,
-        idcuenta: req.body.idcuenta,
-        cuentacontable: req.body.cuentacontable
+      models.plantillapresupuesto.update({
+        idcui: req.body.idcui,
+        idservicio: req.body.idservicio,
+        idproveedor: req.body.idproveedor
       }, {
           where: {
             id: req.body.id
@@ -93,7 +128,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.servicio.destroy({
+      models.plantillapresupuesto.destroy({
         where: {
           id: req.body.id
         }

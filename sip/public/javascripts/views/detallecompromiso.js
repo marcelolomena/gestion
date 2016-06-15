@@ -1,8 +1,6 @@
 function gridDetail(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-    //var childGridURL = "/compromisos/" + parentRowKey;
-
     var templateDetalle = "<div id='responsive-form' class='clearfix'>";
 
     templateDetalle += "<div class='form-row'>";
@@ -25,9 +23,8 @@ function gridDetail(parentRowID, parentRowKey) {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        autowidth: true,  // set 'true' here
-        shrinkToFit: false, // well, it's 'true' by default
-        //width: null,
+        autowidth: true,  
+        shrinkToFit: false,
         caption: 'Compromisos',
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
