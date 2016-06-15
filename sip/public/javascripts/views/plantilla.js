@@ -103,7 +103,7 @@ function showChildGrid(parentRowID, parentRowKey) {
        var modelDetalleServicio = [
        { label: 'id', name: 'id', key: true, hidden: true },
        { label: 'idcui', name: 'idcui', hidden: true },
-       { label: 'CUI', name: 'estructuracui.cui',editable: true, editrules: { edithidden: false }, hidedlg: true },
+       { label: 'CUI', name: 'cui',editable: true, jsonmap: "estructuracui.cui",editrules: { edithidden: false }, hidedlg: true },
        { label: 'Nombre', name: 'estructuracui.nombre',editable: true, editrules: { edithidden: false }, hidedlg: true },
        {
             label: 'Servicio', name: 'nombre', search: false, width: 300,
