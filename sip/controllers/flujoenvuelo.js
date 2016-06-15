@@ -21,12 +21,17 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
+            var presupuestoorigen = req.body.presupuestoorigen.split(".").join("").replace(",", ".")
+            //console.log("req.params.id :" + req.params.id)
+            //console.log("req.body.id :" + req.body.id)
+            //console.log("req.body.periodo :" + req.body.periodo)
+            //console.log("req.body.presupuestoorigen :" + presupuestoorigen)
             models.flujoenvuelo.update({
                 periodo: req.body.periodo,
-                presupuestoorigen: req.body.presupuestoorigen
+                presupuestoorigen: presupuestoorigen
             }, {
                 where: {
-                    id: req.params.id
+                    id: parseInt(req.body.id)
                 }
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
