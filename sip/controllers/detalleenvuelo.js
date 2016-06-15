@@ -128,8 +128,7 @@ exports.action = function (req, res) {
 }
 
 exports.list = function (req, res) {
-//    req.params.id
-console.log("listando ------------->>" + req.params.id)
+
     var page = req.body.page;
     var rows = req.body.rows;
     var filters = req.body.filters;

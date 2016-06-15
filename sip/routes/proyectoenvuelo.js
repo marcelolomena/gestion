@@ -18,7 +18,8 @@ module.exports = function (passport) {
         .post(isAuthenticated, proyectosenvueloController.action);
 
     router.route('/flujoenvuelo/:id')
-        .post(isAuthenticated, flujoenvueloController.list);
+        .get(isAuthenticated, flujoenvueloController.list)
+        .post(isAuthenticated, flujoenvueloController.action);
 
     router.route('/tareasap/:id')
         .get(isAuthenticated, detalleenvueloController.tareasap);
