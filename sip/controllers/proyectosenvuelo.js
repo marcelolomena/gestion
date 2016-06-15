@@ -96,7 +96,6 @@ exports.list = function (req, res) {
             console.log("->>> " + err)
         } else {
             models.proyectosenvuelo.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-
             models.proyectosenvuelo.count({
                 where: data
             }).then(function (records) {
