@@ -98,12 +98,10 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.servicio.create({
-        criticidad: req.body.criticidad,
-        nombre: req.body.nombre,
-        tarea: req.body.tarea,
-        idcuenta: req.body.idcuenta,
-        cuentacontable: req.body.cuentacontable,
+      models.plantillapresupuesto.create({
+        idcui: req.body.idcui,
+        idservicio: req.body.idservicio,
+        idproveedor: req.body.idproveedor,
         borrado: 1
       }).then(function (servicio) {
         res.json({ error_code: 0 });
@@ -114,12 +112,10 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.servicio.update({
-        criticidad: req.body.criticidad,
-        nombre: req.body.nombre,
-        tarea: req.body.tarea,
-        idcuenta: req.body.idcuenta,
-        cuentacontable: req.body.cuentacontable
+      models.plantillapresupuesto.update({
+        idcui: req.body.idcui,
+        idservicio: req.body.idservicio,
+        idproveedor: req.body.idproveedor
       }, {
           where: {
             id: req.body.id
@@ -132,7 +128,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.servicio.destroy({
+      models.plantillapresupuesto.destroy({
         where: {
           id: req.body.id
         }
