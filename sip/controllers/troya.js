@@ -58,28 +58,26 @@ console.log('user:'+req.user[0].nombre);
 
 exports.getfacturas = function (req, res) {
   console.log("CUI***:"+req.query.cui);
-  console.log("Proveedor***:"+req.query.proveedor);  
+  console.log("Proveedor***:"+req.query.proveedor);
+  console.log("Proveedor***:"+req.query.factura+":");  
+  console.log("Proveedor***:"+req.query.fechaini+":");  
+  console.log("Proveedor***:"+req.query.fechafin+":");    
   var id = req.params.idsap
   
- var sql = " SELECT nombre, realacumuladopesos as monto, id "+
- "FROM sip.detalleproyecto "+
- "WHERE idproyecto="+238;
-    
-    sequelize.query(sql)
-      .spread(function (proyecto) {
-      var data = '{"titulo":"REAL Erogaciones por SAP","data":[';
-      for (var i = 0; i < proyecto.length; i++) {
-        var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].monto+',"dId":'+proyecto[i].id+'},'
-        console.log(linea);
-        data = data + linea;
-      }
-      data = data.substring(0,data.length-1);
-      data = data + '],"showInLegend":false}';
-      console.log(data);
-      var obj = JSON.parse(data);
-      res.json(obj);
-    }).catch(function (err) {
-      console.log(err);
-      res.json({ error_code: 100 });
+  var sql = "DECLARE @cui INT "+
+  "SELECT @cui=cui FROM sip.estructuracui WHERE id="+req.query.cui+" "
+  
+  sql = sql +"SELECT * FROM sip.discoverer "+
+  "WHERE cuiseccion=@cui AND idproveedor="+req.query.proveedor+" ";
+  if (req.query.factura != "") {
+    sql = sql +"AND documento="+req.query.factura+" ";
+  }
+  if (req.query.fechaini != "") {
+    sql = sql +"AND fechacontable >= convert(datetime, '"+req.query.fechaini+"', 103) ";
+    sql = sql +"AND fechacontable <= convert(datetime, '"+req.query.fechafin+"', 103) ";
+  }
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
     });
 }

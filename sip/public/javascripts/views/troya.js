@@ -42,30 +42,38 @@ $(document).ready(function () {
     });
     
     $("#buscar").click(function(){
-       alert('Click'); 
        cui = $('#cui').val();
        proveedor = $('#proveedor').val();
        factura = $('#factura').val();
        fechaini = $('#fechaini').val();
        fechafin = $('#fechafin').val();
-       showDocumentos(cui, proveedor, factura, fechaini, fechafin);
+       //alert('Click:'+factura+", "+ fechaini+", "+fechafin); 
+       loadGrid(cui, proveedor, factura, fechaini, fechafin);
     });
 
 });
 
 var leida = false;
-function loadGrid(parentID) {
-	var url = "/proyectostareas/" + parentID;
+function loadGrid(cui, proveedor, factura, fechaini, fechafin) {
+    alert('showDocumentos:'+cui+","+proveedor+","+factura+", "+ fechaini+", "+fechafin);
+	var url = "/troyafacturas";
 	var formatter = new Intl.NumberFormat();
 	if (leida){
-		$("#grid").jqGrid('setCaption', "Tareas SAP ").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
+        //$('#grid').jqGrid("clearGridData");
+        //$('#grid').jqGrid('GridDestroy');
+        //$('#grid').jqGrid('GridUnload');
+        //$.jgrid.gridUnload('#grid'); 
+        //$('#grid').remove();
+        //$('#container').empty();
+        $("#grid").jqGrid('GridUnload');
+        showDocumentos(cui, proveedor, factura, fechaini, fechafin);
 	} else {
-		showProyectoErogaciones(parentID);
+		showDocumentos(cui, proveedor, factura, fechaini, fechafin);
 	}
 }
 
 function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
-
+    
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/troyafacturas";   
     $("#grid").jqGrid({
@@ -97,40 +105,52 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                       key: true, 
                       hidden:true
                    },
-                   { label: 'Numero',
-                     name: 'tarea',  
-                     search: false,                 
-                     width: 70
-                   },                                      
-                   { label: 'Nombre ',
-                     name: 'nombre',
+                   { label: 'Documento',
+                     name: 'documento',  
                      search: false,
-                     width: 180
+                     align: 'center',                 
+                     width: 100
+                   },        
+                   { label: 'Fecha',
+                     name: 'fechacontable',  
+                     search: false,
+                     align: 'center',                 
+                     width: 70,
+                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' }                   },                                                     
+                   { label: 'Tipo ',
+                     name: 'tipodocumento',
+                     search: false,
+                     align: 'center',
+                     width: 130
                    },
-                   { label: 'Presupuesto',
-                     name: 'presupuestopesos',
-                     width: 100,
+                   { label: 'Proveedor',
+                     name: 'razonsocial',
+                     width: 200,
                      search: false,
-                     align: 'right',
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                     align: 'center'
                    },                  
-                   { label: 'Real',
-                     name: 'realacumuladopesos',
+                   { label: 'Monto',
+                     name: 'monto',
                      width: 100,
                      align: 'right',
                      search: false,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
-                   { label: 'Total',
-                     name: 'saldopesos',
+                   { label: 'Departamento',
+                     name: 'depto',
+                     width: 200,
+                     search: false,
+                     align: 'center'
+                   },   
+                   { label: 'Gerencia',
+                     name: 'gerencia',
                      width: 100,
                      search: false,
-                     align: 'right',
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   }            
+                     align: 'center'
+                   }                                
         ],
         viewrecords: true,
-		caption: "Tareas SAP ",
+		caption: "Facturas ",
         rowNum: 10,
  		height: 'auto',
         styleUI: "Bootstrap",         
@@ -141,7 +161,7 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
         pager: "#pager"
     });
 
-    $("#grid").jqGrid('filterToolbar', {cui:cui, proveedor:proveedor, factura:factura, fechaini:fechaini, fechafin:fechafin, stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#grid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         search: false, // show search button on the toolbar
