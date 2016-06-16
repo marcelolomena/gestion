@@ -200,14 +200,14 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 $('#' + subgrid_table_id).addRowData("blankRow", { "tarea": "No hay datos" });
             }
         },
-        //subGrid: true,
-        //subGridRowExpanded: gridDetail,
-        //subGridOptions: {
-        //    plusicon: "glyphicon-hand-right",
-        //    minusicon: "glyphicon-hand-down",
-        //    "reloadOnExpand": true,
-        //    "selectOnExpand": true
-        //}
+        subGrid: true,
+        subGridRowExpanded: gridDetail,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down",
+            "reloadOnExpand": true,
+            "selectOnExpand": true
+        }
     });
 
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
