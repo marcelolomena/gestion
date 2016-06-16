@@ -64,10 +64,11 @@ exports.getfacturas = function (req, res) {
   console.log("Proveedor***:"+req.query.fechafin+":");    
   var id = req.params.idsap
   
-  var sql = "DECLARE @cui INT "+
-  "SELECT @cui=cui FROM sip.estructuracui WHERE id="+req.query.cui+" "
+  var sql = "DECLARE @cui INT; "+
+  "SELECT @cui=cui FROM sip.estructuracui WHERE id="+req.query.cui+"; "
   
-  sql = sql +"SELECT * FROM sip.discoverer "+
+  sql = sql +"With SQLPaging As   ( "+
+  "SELECT documento,tipodocumento, razonsocial, depto, gerencia, min(fechacontable) AS fechacontable, sum(monto) AS montop FROM sip.discoverer "+
   "WHERE cuiseccion=@cui AND idproveedor="+req.query.proveedor+" ";
   if (req.query.factura != "") {
     sql = sql +"AND documento="+req.query.factura+" ";
@@ -76,6 +77,27 @@ exports.getfacturas = function (req, res) {
     sql = sql +"AND fechacontable >= convert(datetime, '"+req.query.fechaini+"', 103) ";
     sql = sql +"AND fechacontable <= convert(datetime, '"+req.query.fechafin+"', 103) ";
   }
+  sql = sql + "GROUP BY documento,tipodocumento, razonsocial, depto, gerencia) ";
+  sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.depto, a.gerencia, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
+  sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.depto, a.gerencia, a.fechacontable ";
+  sql = sql + "HAVING sum(b.monto)>0";
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+}
+
+exports.getDetalle = function (req, res) {
+  var id = req.params.id
+  
+  var sql = "With SQLPaging As   (  "+ 
+    "SELECT cuiseccion, cuentacontable, min(id) AS id, sum(monto) as monto "+
+    "FROM sip.discoverer "+
+    "WHERE documento='"+id+"' "+
+    "GROUP BY cuiseccion, cuentacontable) "+
+    "SELECT * FROM SQLPaging "+ 
+    "WHERE monto > 0";
+  
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);

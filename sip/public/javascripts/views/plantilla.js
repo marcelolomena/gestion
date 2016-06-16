@@ -256,14 +256,14 @@ function showChildGrid(parentRowID, parentRowKey) {
                 var grid = $("#grid");
                 var rowData = grid.getRowData(parentRowKey);
                 var thissid = rowData.cui;
-                console.log("***dataformcui:" + rowData + ", " + thissid);
                 $("#cui", form).val(thissid);
                 var grid = $("#grid");
                 var rowData = grid.getRowData(parentRowKey);
                 var thissid = rowData.nombre;
-               console.log("***dataformnombrecui:" + rowData + ", " + thissid);
                 $("#nombrecui", form).val(thissid);
-
+                
+                $('input#cui', form).attr('readonly', 'readonly');
+                $('input#nombrecui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));

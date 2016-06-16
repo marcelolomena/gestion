@@ -100,8 +100,11 @@ exports.action = function (req, res) {
    
     case "add":
     var proveedor 
+    console.log(req.body.idproveedor);
      if (req.body.idproveedor == 0)
-       { provedor = 'NULL'} 
+       { provedor = 'NULL'}
+     else
+       {proveedor= req.body.idproveedor}
                
       models.plantillapresupuesto.create({
         idcui: req.body.parent_id,
