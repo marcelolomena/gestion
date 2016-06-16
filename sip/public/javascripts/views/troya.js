@@ -35,6 +35,7 @@ $(document).ready(function () {
         scui = $(this).val();
         $.getJSON("/proveedorcui/"+scui, function(j){
             $('#proveedor option').remove();
+            $('#proveedor').append('<option value="0"> - Escoger Proveedor - </option>');            
             $.each(j,function(i,item) {
                 $('#proveedor').append('<option value="'+item.idproveedor+'">'+item.razonsocial+'</option>');
             });
@@ -43,7 +44,15 @@ $(document).ready(function () {
     
     $("#buscar").click(function(){
        cui = $('#cui').val();
+       if (cui == 0){
+           alert('Debe escoger un CUI');
+           return;
+       }
        proveedor = $('#proveedor').val();
+       if (proveedor == 0){
+           alert('Debe escoger un Proveedor');
+           return;
+       }       
        factura = $('#factura').val();
        fechaini = $('#fechaini').val();
        fechafin = $('#fechafin').val();
@@ -55,18 +64,12 @@ $(document).ready(function () {
 
 var leida = false;
 function loadGrid(cui, proveedor, factura, fechaini, fechafin) {
-    alert('showDocumentos:'+cui+","+proveedor+","+factura+", "+ fechaini+", "+fechafin);
+    //alert('showDocumentos:'+cui+","+proveedor+","+factura+", "+ fechaini+", "+fechafin);
 	var url = "/troyafacturas";
 	var formatter = new Intl.NumberFormat();
 	if (leida){
-        //$('#grid').jqGrid("clearGridData");
-        //$('#grid').jqGrid('GridDestroy');
-        //$('#grid').jqGrid('GridUnload');
-        //$.jgrid.gridUnload('#grid'); 
-        //$('#grid').remove();
-        //$('#container').empty();
-        $("#grid").jqGrid('GridUnload');
-        showDocumentos(cui, proveedor, factura, fechaini, fechafin);
+        $("#grid").setGridParam({ postData: {cui:cui, proveedor:proveedor, factura:factura, fechaini:fechaini, fechafin:fechafin} });
+        $("#grid").jqGrid('setCaption', "Facturas").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	} else {
 		showDocumentos(cui, proveedor, factura, fechaini, fechafin);
 	}
@@ -102,12 +105,12 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                    { label: 'id',
                       name: 'id',
                       width: 50,
-                      key: true, 
                       hidden:true
                    },
                    { label: 'Documento',
                      name: 'documento',  
                      search: false,
+                     key: true, 
                      align: 'center',                 
                      width: 100
                    },        
@@ -116,7 +119,8 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                      search: false,
                      align: 'center',                 
                      width: 70,
-                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' }                   },                                                     
+                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' }                   
+                    },                                                     
                    { label: 'Tipo ',
                      name: 'tipodocumento',
                      search: false,
@@ -130,7 +134,7 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                      align: 'center'
                    },                  
                    { label: 'Monto',
-                     name: 'monto',
+                     name: 'montototal',
                      width: 100,
                      align: 'right',
                      search: false,
@@ -158,6 +162,8 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
         sortable: "true",  
         rowList: [5, 10, 20, 50],    
         regional : "es",
+        subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        subGridRowExpanded: showDetalle, // javascript function that will take care of showing the child grid                        
         pager: "#pager"
     });
 
@@ -173,4 +179,70 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
 
 	leida = true;
 }
+
+function showDetalle(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/troyadetalle/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'id',
+                      name: 'id',
+                      width: 50,
+                      key: true, 
+                      hidden:true
+                   },                                   
+                   { label: 'CUI',
+                     name: 'cuiseccion',
+                     search: false,
+                     width: 200,
+                     align: 'center'
+                   },
+                   { label: 'Cuenta',
+                     name: 'cuentacontable',
+                     width: 150,
+                     search: false,
+                     align: 'center'
+                   },
+                   { label: 'Monto',
+                     name: 'monto',
+                     width: 150,
+                     align: 'right',
+                     search: false,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                   } 
+        ],
+        viewrecords: true,
+        styleUI: "Bootstrap", 
+        regional: 'es',
+        sortable: "true",
+        rowNum: 10,
+ 		height: 'auto',  
+        rowList: [5, 10, 20, 50],
+        autowidth:false,       
+        pager: "#" + childGridPagerID
+    });
+    
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
+    $("#" + childGridID).jqGrid('navGrid', "#"+ childGridPagerID, {
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    });    
+       
+}
+
 

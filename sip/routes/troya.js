@@ -21,6 +21,9 @@ module.exports = function (passport) {
 
     router.route('/troyafacturas')
         .get(isAuthenticated, troyaController.getfacturas);
+
+    router.route('/troyadetalle/:id')
+        .get(isAuthenticated, troyaController.getDetalle);
         
     return router;
 
