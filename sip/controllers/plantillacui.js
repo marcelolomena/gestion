@@ -18,6 +18,8 @@ exports.getCuiServicios = function (req, res) {
 exports.getCuiProveedores = function (req, res) {
   var id = req.params.id;
   
+  console.log(req);
+  
   var sql = "SELECT b.id, b.razonsocial FROM sip.proveedor b "+
    "ORDER BY b.razonsocial";
       
