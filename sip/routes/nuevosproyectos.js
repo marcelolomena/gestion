@@ -24,6 +24,9 @@ module.exports = function (passport) {
     router.route('/tareasnuevosproyectos/:id')
         .post(isAuthenticated, tareasNuevosProyectosController.list);
 
+    router.route('/tareasnuevosproyectos/action/:idd')
+        .post(isAuthenticated, tareasNuevosProyectosController.action);
+
     router.route('/flujonuevatarea/:id')
         .post(isAuthenticated, flujoNuevaTareaController.list);
 

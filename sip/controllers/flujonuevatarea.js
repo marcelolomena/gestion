@@ -20,8 +20,8 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            models.detallecompromiso.create({
-                iddetalleserviciocto: req.params.idd,
+            models.flujonuevatarea.create({
+                idtareasnuevosproyectos: req.params.idd,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
@@ -35,7 +35,7 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            models.detallecompromiso.update({
+            models.flujonuevatarea.update({
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen
@@ -51,7 +51,7 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-            models.detallecompromiso.destroy({
+            models.flujonuevatarea.destroy({
                 where: {
                     id: req.body.id
                 }

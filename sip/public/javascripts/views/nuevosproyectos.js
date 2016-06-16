@@ -297,13 +297,13 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0) {
-                    return [false, result.error_text, ""];
-                } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
-                    return [true, "", ""];
-                }
+                //if (result.error_code != 0) {
+                    //return [false, result.error_text, ""];
+                //} else {
+                    //var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                    //$("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    //return [true, "", ""];
+                //}
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }

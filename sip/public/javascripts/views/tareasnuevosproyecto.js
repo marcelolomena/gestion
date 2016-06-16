@@ -16,54 +16,17 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     var templateServicio = "<div id='responsive-form' class='clearfix'>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
-    templateServicio += "<div class='column-half'>Cui{idcui}</div>";
+    templateServicio += "<div class='column-full'>Servicio{idservicio}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
-    templateServicio += "<div class='column-half'>Fecha Término{fechatermino}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Fecha Control{fechacontrol}</div>";
-    templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Estado{idestadocto}</div>";
-    templateServicio += "<div class='column-half'>Frecuencia{idfrecuencia}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Plazo{idplazocontrato}</div>";
-    templateServicio += "<div class='column-half'>Condición{idcondicion}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Contacto{idcontactoproveedor}</div>";
-    templateServicio += "<div class='column-half'>Moneda{idmoneda}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
-    templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Factor{factorimpuesto}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-full'>Descripción{glosaservicio}</div>";
+    templateServicio += "<div class='column-full'>Proveedor{idproveedor}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row' style='display: none;'>";
     templateServicio += "<div class='column-half'>servicio{servicio}</div>";
-    templateServicio += "<div class='column-half'>frecuenciafacturacion {frecuenciafacturacion}</div>";
-    templateServicio += "<div class='column-half'>plazocontrato {plazocontrato}</div>";
-    templateServicio += "<div class='column-half'>condicionnegociacion {condicionnegociacion}</div>";
-    templateServicio += "<div class='column-half'>estadocontrato {estadocontrato}</div>";
+    templateServicio += "<div class='column-half'>idnuevosproyectos {idnuevosproyectos}</div>";
+    templateServicio += "<div class='column-half'>razonsocial {razonsocial}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<hr style='width:100%;'/>";
@@ -250,23 +213,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.idcui == 0) {
-                    return [false, "CUI: Debe escoger un valor", ""];
-                } if (postdata.idservicio == 0) {
+                if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
-                } if (postdata.idfrecuencia == 0) {
-                    return [false, "Frecuencia: Debe escoger un valor", ""];
-                } if (postdata.idplazocontrato == 0) {
-                    return [false, "Plazo: Debe escoger un valor", ""];
-                } if (postdata.idcondicion == 0) {
-                    return [false, "Condición: Debe escoger un valor", ""];
-                } if (postdata.idestadocto == 0) {
-                    return [false, "Estado: Debe escoger un valor", ""];
-                } if (postdata.idcontactoproveedor == 0) {
-                    return [false, "Contacto: Debe escoger un valor", ""];
-                } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger un valor", ""];
-                } else {
+                }  else {
                     return [true, "", ""]
                 }
             }, afterSubmit: function (response, postdata) {

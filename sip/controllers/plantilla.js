@@ -100,7 +100,7 @@ exports.action = function (req, res) {
    
     case "add":
     var proveedor 
-    console.log(req.body.idproveedor);
+
      if (req.body.idproveedor == 0)
        { provedor = 'NULL'}
      else

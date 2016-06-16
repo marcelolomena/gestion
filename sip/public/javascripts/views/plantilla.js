@@ -76,6 +76,7 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
+    var childIdServicio  = 0;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -127,6 +128,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            childIdServicio = data[i].id;
                         } else {
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
@@ -146,7 +148,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/cuiproveedores/' + parentRowKey,
+                dataUrl: '/cuiproveedores/' + parentRowKey + '/' + childIdServicio,
                 buildSelect: function (response) {
                     var grid = $("#" + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -261,11 +263,22 @@ function showChildGrid(parentRowID, parentRowKey) {
                 var rowData = grid.getRowData(parentRowKey);
                 var thissid = rowData.nombre;
                 $("#nombrecui", form).val(thissid);
-                
+
                 $('input#cui', form).attr('readonly', 'readonly');
                 $('input#nombrecui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
+
+                $("#idservicio").change(function () {
+                    childIdServicio = $(this).val();
+                    $.getJSON("/cuiproveedores/" + parentRowKey+"/"+childIdServicio, function (j) {
+                        $('#idproveedor').remove();
+                        $.each(j, function (i, item) {
+                            $('#idproveedor').append('<option value="' + item.id + '">' + item.razonsocial + '</option>');
+                        });
+                    });
+                });
+
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },

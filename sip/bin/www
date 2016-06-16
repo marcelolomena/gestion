@@ -4,10 +4,12 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var models = require("../models");
-var debug = require('debug')('sip:server');
-var http = require('http');
+var app = require('../app')
+var models = require("../models")
+var debug = require('debug')('sip:server')
+var http = require('http')
+var https = require('https')
+var fs = require('fs');
 
 /**
  * Get port from environment and store in Express.
@@ -16,11 +18,17 @@ var http = require('http');
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+var options = {
+  key: fs.readFileSync('newkey.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
+var secure_server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -28,9 +36,60 @@ var server = http.createServer(app);
 
 models.sequelize.sync().then(function () { 
 	server.listen(port);
+  secure_server.listen(3001);
 	server.on('error', onError);
 	server.on('listening', onListening);
 });
+
+var io = require('socket.io').listen(secure_server);
+
+io.sockets.on('connection', function (socket) {
+    
+    // convenience function to log server messages on the client
+    function log() {
+        var array = [">>> Mensaje desde el servidor: "];
+        for (var i = 0; i < arguments.length; i++) {
+            array.push(arguments[i]);
+        }
+        socket.emit('log', array);
+    }
+    
+    socket.on('message', function (message) {
+        log('Got message:', message);
+        // for a real app, would be room only (not broadcast)
+        socket.broadcast.emit('message', message);
+    });
+    
+    socket.on('create or join', function (room) {
+        //var numClients = io.sockets.clients(room).length;
+        
+        var namespace = '/';
+
+        var sala = io.nsps[namespace].adapter.rooms[room];
+        var numClients = 0;
+        for (var i in sala) numClients++;
+
+        
+        log('Sala ' + room + ' tiene ' + numClients + ' cliente(s)');
+        log('Peticion para crear o unirse a una sala ' + room);
+        
+        if (numClients === 0) {
+            socket.join(room);
+            socket.emit('created', room);
+        } else if (numClients === 1) {
+            io.sockets.in(room).emit('join', room);
+            socket.join(room);
+            socket.emit('joined', room);
+        } else { // maximo dos clientes
+            socket.emit('full', room);
+        }
+        socket.emit('emit(): client ' + socket.id + ' joined room ' + room);
+        socket.broadcast.emit('broadcast(): client ' + socket.id + ' joined room ' + room);
+
+    });
+
+});
+
 /**
  * Normalize a port into a number, string, or false.
  */
