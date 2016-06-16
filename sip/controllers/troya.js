@@ -68,7 +68,7 @@ exports.getfacturas = function (req, res) {
   "SELECT @cui=cui FROM sip.estructuracui WHERE id="+req.query.cui+"; "
   
   sql = sql +"With SQLPaging As   ( "+
-  "SELECT documento,tipodocumento, razonsocial, depto, gerencia, min(fechacontable) AS fechacontable, sum(monto) AS montop FROM sip.discoverer "+
+  "SELECT documento,tipodocumento, razonsocial, min(glosalinea) AS glosalinea, min(fechacontable) AS fechacontable, sum(monto) AS montop FROM sip.discoverer "+
   "WHERE cuiseccion=@cui AND idproveedor="+req.query.proveedor+" ";
   if (req.query.factura != "") {
     sql = sql +"AND documento="+req.query.factura+" ";
@@ -77,9 +77,9 @@ exports.getfacturas = function (req, res) {
     sql = sql +"AND fechacontable >= convert(datetime, '"+req.query.fechaini+"', 103) ";
     sql = sql +"AND fechacontable <= convert(datetime, '"+req.query.fechafin+"', 103) ";
   }
-  sql = sql + "GROUP BY documento,tipodocumento, razonsocial, depto, gerencia) ";
-  sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.depto, a.gerencia, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
-  sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.depto, a.gerencia, a.fechacontable ";
+  sql = sql + "GROUP BY documento,tipodocumento, razonsocial) ";
+  sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
+  sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable ";
   sql = sql + "HAVING sum(b.monto)>0";
   sequelize.query(sql)
     .spread(function (rows) {
@@ -91,10 +91,10 @@ exports.getDetalle = function (req, res) {
   var id = req.params.id
   
   var sql = "With SQLPaging As   (  "+ 
-    "SELECT cuiseccion, cuentacontable, min(id) AS id, sum(monto) as monto "+
+    "SELECT cuiseccion, nombrecentrocosto, cuentacontable, nombrecuentaorigen, min(id) AS id, sum(monto) as monto "+
     "FROM sip.discoverer "+
     "WHERE documento='"+id+"' "+
-    "GROUP BY cuiseccion, cuentacontable) "+
+    "GROUP BY cuiseccion, nombrecentrocosto, cuentacontable, nombrecuentaorigen) "+
     "SELECT * FROM SQLPaging "+ 
     "WHERE monto > 0";
   

@@ -140,17 +140,11 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                      search: false,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
-                   { label: 'Departamento',
-                     name: 'depto',
-                     width: 200,
+                   { label: 'Glosa Factura',
+                     name: 'glosalinea',
+                     width: 300,
                      search: false,
-                     align: 'center'
-                   },   
-                   { label: 'Gerencia',
-                     name: 'gerencia',
-                     width: 100,
-                     search: false,
-                     align: 'center'
+                     align: 'left'
                    }                                
         ],
         viewrecords: true,
@@ -205,18 +199,30 @@ function showDetalle(parentRowID, parentRowKey) {
                    { label: 'CUI',
                      name: 'cuiseccion',
                      search: false,
-                     width: 200,
-                     align: 'center'
+                     width: 100,
+                     align: 'left'
                    },
+                   { label: 'Nombre CUI',
+                     name: 'nombrecentrocosto',
+                     width: 250,
+                     search: false,
+                     align: 'left'
+                   },                    
                    { label: 'Cuenta',
                      name: 'cuentacontable',
-                     width: 150,
+                     width: 100,
                      search: false,
-                     align: 'center'
+                     align: 'left'
                    },
+                   { label: 'Nombre Cuenta',
+                     name: 'nombrecuentaorigen',
+                     width: 250,
+                     search: false,
+                     align: 'left'
+                   },                   
                    { label: 'Monto',
                      name: 'monto',
-                     width: 150,
+                     width: 100,
                      align: 'right',
                      search: false,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
