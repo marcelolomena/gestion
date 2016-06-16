@@ -246,6 +246,11 @@ $(document).ready(function () {
         styleUI: "Bootstrap",
         editurl: '/contratos/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
+        loadComplete: function () {
+            var $grid = $("#grid");
+            var colSum = $grid.jqGrid('getCol', 'numero', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { numero: colSum });
+        },
         gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -254,6 +259,8 @@ $(document).ready(function () {
             }
         },
         subGrid: true,
+        footerrow: true,
+        userDataOnFooter: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",

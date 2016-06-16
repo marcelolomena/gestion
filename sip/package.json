@@ -24,6 +24,7 @@
 	"express-flash": "0.0.2",
 	"tedious": "latest",
 	"bcrypt-nodejs": "latest",
-    "excel-export": "0.5.1"
+    "excel-export": "0.5.1",
+    "socket.io": "1.4.6"    
   }
 }
