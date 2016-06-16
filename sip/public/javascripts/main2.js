@@ -21,7 +21,7 @@ var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 
 // Handler associated with Send button
-//sendButton.onclick = sendData;
+sendButton.onclick = sendData;
 // Flags...
 var isChannelReady = false;
 var isInitiator = false;
@@ -33,8 +33,8 @@ var remoteStream;
 // PeerConnection
 var pc;
 // PeerConnection ICE protocol configuration (either Firefox or Chrome)
-var pc_config  = 'Chrome' ?
-{ 'iceServers': [{ 'url': 'stun:152.139.147.41' }] } : // IP address
+var pc_config = webrtcDetectedBrowser === 'firefox' ?
+{ 'iceServers': [{ 'url': 'stun:192.168.0.22' }] } : // IP address
 { 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] };
 var pc_constraints = {
     'optional': [
