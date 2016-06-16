@@ -74,6 +74,7 @@ if (typeof window === 'object') {
 
 // Attach a media stream to an element.
 attachMediaStream = function (element, stream) {
+    console.log("---------->>>" + element)
     element.srcObject = stream;
 };
 
@@ -461,6 +462,8 @@ if (typeof window === 'undefined' || !window.navigator) {
     
     // Attach a media stream to an element.
     attachMediaStream = function (element, stream) {
+        console.log("stream : " + stream)
+        console.log("element : " + element)
         if (webrtcDetectedVersion >= 43) {
             element.srcObject = stream;
         } else if (typeof element.src !== 'undefined') {
