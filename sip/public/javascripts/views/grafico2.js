@@ -21,18 +21,18 @@ $(document).ready(function () {
 				text: 'Presupuesto Erogaciones por SAP'
 			}, tooltip: {
 				formatter: function () {
-					return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.point.y, 0);
+					return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) + ' %';
 				}
 			}, plotOptions: {
 				pie: {
 					allowPointSelect: true,
 					cursor: 'pointer',
 					point: {
-						events: {
-							click: function (event) {
-								loadGrid2(this.options.dId, this.options.name, this.options.y);
-							}
-						}
+						//events: {
+						//	click: function (event) {
+						//		loadGrid2(this.options.dId, this.options.name, this.options.y);
+						//	}
+						//}
 					},
 					dataLabels: {
 						enabled: true,
@@ -76,11 +76,11 @@ $(document).ready(function () {
 					allowPointSelect: true,
 					cursor: 'pointer',
 					point: {
-					//	events: {
-					//		click: function (event) {
-					//			loadGrid2(this.options.dId, this.options.name, this.options.y);
-					//		}
-					//	}
+						events: {
+							click: function (event) {
+								loadGrid2(this.options.dId, this.options.name, this.options.y);
+							}
+						}
 					},
 					dataLabels: {
 						enabled: true,
@@ -184,6 +184,15 @@ function showProyectoErogaciones(parentID) {
         sortable: "true",  
         rowList: [5, 10, 20, 50],    
         regional : "es",
+        loadComplete: function () {
+            var $grid = $("#grid");
+            var colSum = $grid.jqGrid('getCol', 'presupuestopesos', false, 'sum');
+            var colSum2 = $grid.jqGrid('getCol', 'realacumuladopesos', false, 'sum');
+            var colSum3 = $grid.jqGrid('getCol', 'saldopesos', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { presupuestopesos: colSum, realacumuladopesos: colSum2, saldopesos:colSum3});
+        },               
+        footerrow: true,
+        userDataOnFooter: true,              
         pager: "#pager"
     });
 
@@ -207,7 +216,7 @@ function loadGrid2(parentID, parentNombre, monto) {
 	var formatter = new Intl.NumberFormat();
 	if (leida2){
 		$("#grid2").jqGrid('setGridState', 'visible');
-		$("#grid2").jqGrid('setCaption', "FACTURAS - "+parentNombre+" - "+ formatter.format(monto)).jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
+		$("#grid2").jqGrid('setCaption', "FACTURAS - "+parentNombre).jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
 	} else {
 		showProyectoErogaciones2(parentID, parentNombre, monto);
 	}
@@ -256,7 +265,7 @@ function showProyectoErogaciones2(parentID, parentNombre, monto) {
                    }                                              
         ],
         viewrecords: true,
-		caption: "FACTURAS - "+parentNombre+" - "+ formatter.format(monto),
+		caption: "FACTURAS - "+parentNombre,
         rowNum: 10,
  		height: 'auto',
         styleUI: "Bootstrap",         
@@ -264,6 +273,13 @@ function showProyectoErogaciones2(parentID, parentNombre, monto) {
         sortable: "true",  
         rowList: [5, 10, 20, 50],    
         regional : "es",
+        loadComplete: function () {
+            var $grid = $("#grid2");
+            var colSum = $grid.jqGrid('getCol', 'montosum', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { montosum: colSum});
+        },               
+        footerrow: true,
+        userDataOnFooter: true,             
         pager: "#pager2"
     });
 
@@ -276,19 +292,6 @@ function showProyectoErogaciones2(parentID, parentNombre, monto) {
         del: false,
         refresh: true
     });  
-
-    $("#grid2").jqGrid('navButtonAdd', "#pager2", {
-    caption: "",
-    buttonicon: "glyphicon glyphicon-download-alt",
-    title: "Excel",
-    position: "last",
-    onClickButton: function () {
-        var grid = $("#" + childGridID);
-        var rowKey = grid.getGridParam("selrow");
-        var url = '/erogacionesexcel/'+ parentRowKey;
-        $("#" + childGridID).jqGrid('excelExport', { "url": url });
-    }
-    });
 	
 	leida2 = true;
 }

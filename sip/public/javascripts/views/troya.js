@@ -156,7 +156,14 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
         sortable: "true",  
         rowList: [5, 10, 20, 50],    
         regional : "es",
+        loadComplete: function () {
+            var $grid = $("#grid");
+            var colSum = $grid.jqGrid('getCol', 'montototal', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { montototal: colSum });
+        },               
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
+        footerrow: true,
+        userDataOnFooter: true,         
         subGridRowExpanded: showDetalle, // javascript function that will take care of showing the child grid                        
         pager: "#pager"
     });
