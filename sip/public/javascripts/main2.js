@@ -34,7 +34,7 @@ var remoteStream;
 var pc;
 // PeerConnection ICE protocol configuration (either Firefox or Chrome)
 var pc_config = webrtcDetectedBrowser === 'firefox' ?
-{ 'iceServers': [{ 'url': 'stun:192.168.0.22' }] } : // IP address
+{ 'iceServers': [{ 'url': 'stun:152.139.147.41' }] } : // IP address
 { 'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }] };
 var pc_constraints = {
     'optional': [
@@ -46,7 +46,7 @@ var sdpConstraints = {};
 // Let's get started: prompt user for input (room name)
 var room = prompt('Ingrese el nombre de la sala:');
 // Connect to signaling server
-var socket = io.connect("https://localhost:3001");
+var socket = io.connect("https://152.139.147.41:3001");
 // Send 'Create or join' message to singnaling server
 if (room !== '') {
     console.log('Create or join room', room);
