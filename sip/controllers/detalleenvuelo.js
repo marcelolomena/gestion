@@ -39,7 +39,93 @@ exports.tareaservicio = function (req, res) {
 
 }
 
+exports.action = function (req, res) {
+    var action = req.body.oper;
 
+    switch (action) {
+        case "add":
+            models.detalleenvuelo.create({
+                idproyectoenvuelo: req.body.idproyectoenvuelo,
+                tarea: req.body.tarea,
+                nombre: req.body.nombre,
+                idcui: req.body.idcui,
+                uid: req.body.uid,
+                idproveedor: req.body.idproveedor,
+                nombreproveedor: req.body.nombreproveedor,
+                idcuenta: req.body.idcuenta,
+                cuentacontable: req.body.cuentacontable,
+                presupuesto: req.body.presupuesto,
+                presupuestopesos: req.body.presupuestopesos,
+                compromiso: req.body.compromiso,
+                compromisopesos: req.body.compromisopesos,
+                realajustado: req.body.realajustado,
+                realajustadopesos: req.body.realajustadopesos,
+                saldotarea: req.body.saldotarea,
+                saldotareapesos: req.body.saldotareapesos,
+                idcontrato: req.body.idcontrato,
+                numerocontrato: req.body.numerocontrato,
+                solicitudcontrato: req.body.solicitudcontrato,
+                borrado: 1
+            }).then(function (contrato) {
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                console.log(err);
+                res.json({ error_code: 1 });
+            });
+
+            break;
+        case "edit":
+            models.detalleenvuelo.update({
+                idproyectoenvuelo: req.body.idproyectoenvuelo,
+                tarea: req.body.tarea,
+                nombre: req.body.nombre,
+                idcui: req.body.idcui,
+                uid: req.body.uid,
+                idproveedor: req.body.idproveedor,
+                nombreproveedor: req.body.nombreproveedor,
+                idcuenta: req.body.idcuenta,
+                cuentacontable: req.body.cuentacontable,
+                presupuesto: req.body.presupuesto,
+                presupuestopesos: req.body.presupuestopesos,
+                compromiso: req.body.compromiso,
+                compromisopesos: req.body.compromisopesos,
+                realajustado: req.body.realajustado,
+                realajustadopesos: req.body.realajustadopesos,
+                saldotarea: req.body.saldotarea,
+                saldotareapesos: req.body.saldotareapesos,
+                idcontrato: req.body.idcontrato,
+                numerocontrato: req.body.numerocontrato,
+                solicitudcontrato: req.body.solicitudcontrato,
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (contrato) {
+                    res.json({ error_code: 0 });
+                }).catch(function (err) {
+                    console.log(err);
+                    res.json({ error_code: 1 });
+                });
+            break;
+        case "del":
+            models.detalleenvuelo.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+                if (rowDeleted === 1) {
+                    console.log('Deleted successfully');
+                }
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                console.log(err);
+                res.json({ error_code: 1 });
+            });
+
+            break;
+    }
+    
+}
 
 exports.list = function (req, res) {
 
@@ -67,7 +153,6 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
-
             models.detalleenvuelo.count({
                 where: data
             }).then(function (records) {

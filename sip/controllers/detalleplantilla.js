@@ -30,6 +30,8 @@ exports.list = function (req, res) {
             console.log("->>> " + err)
         } else {
             models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+            models.plantillapresupuesto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+            models.plantillapresupuesto.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });            
             models.plantillapresupuesto.count({
                 where: data
             }).then(function (records) {
@@ -39,9 +41,11 @@ exports.list = function (req, res) {
                     limit: parseInt(rows),
                     order: orden,
                     where: data,
-                    include: [{
-                        model: models.estructuracui
-                    }]
+                    include: 
+                    [{model: models.estructuracui},
+                     {model: models.servicio},
+                     {model: models.proveedor}                      
+                    ]
                 }).then(function (plantillas) {
                     //Contrato.forEach(log)
                     res.json({ records: records, total: total, page: page, rows: plantillas });

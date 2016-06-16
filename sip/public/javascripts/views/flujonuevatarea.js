@@ -16,7 +16,7 @@ function gridDetail(parentRowID, parentRowKey) {
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     $("#" + childGridID).jqGrid({
-        url: '/compromisos/' + parentRowKey,
+        url: '/flujonuevatarea/' + parentRowKey,
         mtype: "POST",
         datatype: "json",
         page: 1,
@@ -25,7 +25,7 @@ function gridDetail(parentRowID, parentRowKey) {
         height: 'auto',
         autowidth: true,  
         shrinkToFit: false,
-        caption: 'Compromisos',
+        caption: 'Flujo Tarea',
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
             {
@@ -63,7 +63,7 @@ function gridDetail(parentRowID, parentRowKey) {
         pgtext: null,
         viewrecords: false,
         styleUI: "Bootstrap",
-        editurl: '/compromisos/' + parentRowKey + '/action',
+        editurl: '/flujonuevatarea/' + parentRowKey + '/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");

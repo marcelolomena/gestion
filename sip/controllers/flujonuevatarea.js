@@ -1,37 +1,47 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
-var nodeExcel = require('excel-export');
+
+var log = function (inst) {
+    console.dir(inst.get())
+}
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    var montoorigen = req.body.montoorigen
+    var costoorigen = req.body.costoorigen
+
+    if (action != "del") {
+        if (montoorigen != "")
+            montoorigen = montoorigen.split(".").join("").replace(",", ".")
+        if (costoorigen != "")
+            costoorigen = costoorigen.split(".").join("").replace(",", ".")
+    }
 
     switch (action) {
         case "add":
-            models.flujoenvuelo.create({
-                iddetalleenvuelo: req.params.id,
+            models.detallecompromiso.create({
+                iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
-                presupuestoorigen: req.body.presupuestoorigen,
+                montoorigen: montoorigen,
+                costoorigen: costoorigen,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
+                //console.log(err);
                 res.json({ error_code: 1 });
             });
 
             break;
         case "edit":
-            var presupuestoorigen = req.body.presupuestoorigen.split(".").join("").replace(",", ".")
-            //console.log("req.params.id :" + req.params.id)
-            //console.log("req.body.id :" + req.body.id)
-            //console.log("req.body.periodo :" + req.body.periodo)
-            //console.log("req.body.presupuestoorigen :" + presupuestoorigen)
-            models.flujoenvuelo.update({
+            models.detallecompromiso.update({
                 periodo: req.body.periodo,
-                presupuestoorigen: presupuestoorigen
+                montoorigen: montoorigen,
+                costoorigen: costoorigen
             }, {
                 where: {
-                    id: parseInt(req.body.id)
+                    id: req.body.id
                 }
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
@@ -41,11 +51,11 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-            models.flujoenvuelo.destroy({
+            models.detallecompromiso.destroy({
                 where: {
-                    id: req.params.id
+                    id: req.body.id
                 }
-            }).then(function (rowDeleted) {
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
                     console.log('Deleted successfully');
                 }
@@ -60,7 +70,6 @@ exports.action = function (req, res) {
 }
 
 exports.list = function (req, res) {
-
     var page = req.body.page;
     var rows = req.body.rows;
     var filters = req.body.filters;
@@ -76,7 +85,7 @@ exports.list = function (req, res) {
     var orden = sidx + " " + sord;
 
     var additional = [{
-        "field": "iddetalleenvuelo",
+        "field": "idtareasnuevosproyectos",
         "op": "eq",
         "data": req.params.id
     }];
@@ -85,23 +94,28 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
-            models.flujoenvuelo.count({
+            models.flujonuevatarea.count({
                 where: data
             }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.flujoenvuelo.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    where: data
-                }).then(function (flujoenvuelo) {
-                    res.json({ records: records, total: total, page: page, rows: flujoenvuelo });
-                }).catch(function (err) {
-                    //console.log(err);
-                    res.json({ error_code: 1 });
-                });
+                //if (records > 0) {
+                    var total = Math.ceil(records / rows);
+                    models.flujonuevatarea.findAll({
+                        offset: parseInt(rows * (page - 1)),
+                        limit: parseInt(rows),
+                        order: orden,
+                        where: data
+                    }).then(function (compromisos) {
+                        res.json({ records: records, total: total, page: page, rows: compromisos });
+                    }).catch(function (err) {
+                        console.log(err);
+                        res.json({ error_code: 1 });
+                    });
+                //} else {
+                  //  insertaPeriodos(function (compromisos) {
+                    //    res.json({ records: 12, total: 12, page: 1, rows: compromisos });
+                   // });
+                //}
             })
         }
     });
-
 };

@@ -12,8 +12,9 @@ module.exports = function (passport) {
     });
 
     router.route('/contratos/list')
-        .post(isAuthenticated, contratoController.list);
-
+        .post(isAuthenticated, contratoController.list)
+        .get(isAuthenticated, contratoController.listall);
+ 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
 
@@ -34,7 +35,6 @@ module.exports = function (passport) {
 
     router.route('/contratoproyecto/action/:id')
         .post(isAuthenticated, contratoservicioController.oper);
-
 
     return router;
 

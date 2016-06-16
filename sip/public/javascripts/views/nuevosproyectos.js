@@ -227,6 +227,12 @@ $(document).ready(function () {
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
             }
         },
+        subGrid: true,
+        subGridRowExpanded: showSubGrids,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
     }).jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,

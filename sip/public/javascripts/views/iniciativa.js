@@ -1339,26 +1339,6 @@ $(document).ready(function () {
                     return { parent_id: parentRowKey };
                 },
                 beforeSubmit: function (postdata, formid) {
-                    /*
-                    var fechamal = false;
-                    var fechamala = "";
-                    $.ajax({
-                        type: "POST",
-                        url: childGridURL,
-                        async: false,
-                        success: function (data) {
-                            $.each(data.rows, function (i, item) {
-                                if(data.rows[i].fecha>postdata.fecha){
-                                    fechamal=true;
-                                    fechamala=data.rows[i].fecha;
-                                }
-                            });
-                        }
-                    });
-                    if(fechamal){
-                        return [false, "Fecha: La fecha debe ser mayor a la última ingresada ("+fechamala.substr(0,10)+")", ""];
-                    }
-                    */
                     if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
                         return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
                     } if (postdata.fecha == 0) {
@@ -1384,7 +1364,6 @@ $(document).ready(function () {
                         return [true, "", ""]
                 }, beforeShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                    //$('input#codigoart', form).attr('readonly', 'readonly');
                 }, afterShowForm: function (form) {
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 }

@@ -3,6 +3,8 @@ var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var nuevosProyectosController = require('../controllers/nuevosproyectos');
+var tareasNuevosProyectosController = require('../controllers/tareasnuevosproyectos');
+var flujoNuevaTareaController = require('../controllers/flujonuevatarea');
 
 module.exports = function (passport) {
 
@@ -18,6 +20,15 @@ module.exports = function (passport) {
 
     //router.route('/nuevosproyectos/excel')
         //.get(isAuthenticated, nuevosProyectosController.excel);
+
+    router.route('/tareasnuevosproyectos/:id')
+        .post(isAuthenticated, tareasNuevosProyectosController.list);
+
+    router.route('/flujonuevatarea/:id')
+        .post(isAuthenticated, flujoNuevaTareaController.list);
+
+    router.route('/flujonuevatarea/:idd/action')
+        .post(isAuthenticated, flujoNuevaTareaController.action);
 
     return router;
 

@@ -13,21 +13,25 @@ module.exports = function (passport) {
 
     router.route('/proyectosenvuelo/list')
         .post(isAuthenticated, proyectosenvueloController.list);
-        
-    router.route('/proyectosenvuelo/action')
-        .post(isAuthenticated, proyectosenvueloController.action);        
 
-    router.route('/detalleenvuelo/:id')
-        .post(isAuthenticated, detalleenvueloController.list);
+    router.route('/proyectosenvuelo/action')
+        .post(isAuthenticated, proyectosenvueloController.action);
 
     router.route('/flujoenvuelo/:id')
-        .post(isAuthenticated, flujoenvueloController.list);
-        
+        .get(isAuthenticated, flujoenvueloController.list)
+        .post(isAuthenticated, flujoenvueloController.action);
+
     router.route('/tareasap/:id')
-        .get(isAuthenticated, detalleenvueloController.tareasap); 
-        
+        .get(isAuthenticated, detalleenvueloController.tareasap);
+
     router.route('/tareaservicio/:id')
-        .get(isAuthenticated, detalleenvueloController.tareaservicio);                
+        .get(isAuthenticated, detalleenvueloController.tareaservicio);
+        
+    router.route('/detalleenvuelo/:id')
+        .get(isAuthenticated, detalleenvueloController.list);        
+        
+    router.route('/detalleenvuelo/action')
+        .post(isAuthenticated, detalleenvueloController.action);
 
     return router;
 

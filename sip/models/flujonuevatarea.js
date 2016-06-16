@@ -1,18 +1,18 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('flujoenvuelo', {
+  return sequelize.define('flujonuevatarea', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true      
+      autoIncrement: true
     },
-    iddetalleenvuelo: {
+    idtareasnuevosproyectos: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'detalleenvuelo',
+        model: 'tareasnuevosproyectos',
         key: 'id'
       }
     },
@@ -20,23 +20,27 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idmoneda: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    presupuestoorigen: {
+    montoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    presupuestopesos: {
+    montopesos: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    costoorigen: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },    
+    costopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },       
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'flujoenvuelo'
+    schema: 'sip',timestamps: false,tableName: 'flujonuevatarea'
   });
 };

@@ -97,13 +97,21 @@ exports.action = function (req, res) {
   var action = req.body.oper;
 
   switch (action) {
+   
     case "add":
+    var proveedor 
+    console.log(req.body.idproveedor);
+     if (req.body.idproveedor == 0)
+       { provedor = 'NULL'}
+     else
+       {proveedor= req.body.idproveedor}
+               
       models.plantillapresupuesto.create({
-        idcui: req.body.idcui,
+        idcui: req.body.parent_id,
         idservicio: req.body.idservicio,
-        idproveedor: req.body.idproveedor,
+        idproveedor: proveedor,
         borrado: 1
-      }).then(function (servicio) {
+      }).then(function (plantilla) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
         console.log(err);
@@ -120,7 +128,7 @@ exports.action = function (req, res) {
           where: {
             id: req.body.id
           }
-        }).then(function (servicio) {
+        }).then(function (plantilla) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
           console.log(err);
@@ -225,6 +233,3 @@ exports.getExcel = function (req, res) {
     });
 
 };
-
-
-
