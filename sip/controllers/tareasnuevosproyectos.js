@@ -71,34 +71,10 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.iniciativa.create({
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: req.body.pptoestimadogasto.split(".").join("").replace(",", "."),
-        pptoestimadoinversion: req.body.pptoestimadoinversion.split(".").join("").replace(",", "."),
-        idestado: req.body.idestado,
-        estado: req.body.estado,
+      models.tareasnuevosproyectos.create({
+        idnuevosproyectos: req.params.idd,
+        idservicio: req.body.idservicio,
+        idproveedor: req.body.idproveedor,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -109,34 +85,9 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.iniciativa.update({
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: req.body.pptoestimadogasto.split(".").join("").replace(",", "."),
-        pptoestimadoinversion: req.body.pptoestimadoinversion.split(".").join("").replace(",", "."),
-        idestado: req.body.idestado,
-        estado: req.body.estado
+      models.tareasnuevosproyectos.update({
+        idservicio: req.body.idservicio,
+        idproveedor: req.body.idproveedor
       }, {
           where: {
             id: req.body.id
@@ -149,7 +100,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.iniciativa.destroy({
+      models.tareasnuevosproyectos.destroy({
         where: {
           id: req.body.id
         }
