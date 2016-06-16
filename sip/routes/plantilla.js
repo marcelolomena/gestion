@@ -27,7 +27,7 @@ module.exports = function (passport) {
     router.route('/cuiservicios/:id')
         .get(isAuthenticated, plantillacuiController.getCuiServicios);  
         
-    router.route('/cuiproveedores/:id')
+    router.route('/cuiproveedores/:id/:idservicio')
         .get(isAuthenticated, plantillacuiController.getCuiProveedores);                
   
     return router;
