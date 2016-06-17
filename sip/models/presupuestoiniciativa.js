@@ -1,73 +1,61 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('flujonuevatarea', {
+  return sequelize.define('presupuestoiniciativa', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    idtareasnuevosproyectos: {
+    idiniciativaprograma: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'tareasnuevosproyectos',
+        model: 'iniciativaprograma',
         key: 'id'
       }
     },
-    idsubtarea: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'art_sub_task',
-        key: 'sub_task_id'
-      }
-    },
-    periodo: {
+    cuifinanciamiento1: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    glosaitem: {
+    porcentaje1: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    cuifinanciamiento2: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    porcentaje2: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    beneficioscuantitativos: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    porcentaje: {
-      type: DataTypes.FLOAT,
+    beneficioscualitativos: {
+      type: DataTypes.STRING,
       allowNull: true
     },
-    idtipopago: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'parametro',
-        key: 'id'
-      }
-    },
-    fechainicio: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    fechafin: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    cantidad: {
+    uidlider: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    montoorigen: {
+    uidjefeproyecto: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    fechaconversion: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    dolar: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    montopesos: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    costoorigen: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    costopesos: {
+    uf: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
@@ -76,6 +64,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'flujonuevatarea'
+    tableName: 'presupuestoiniciativa'
   });
 };
