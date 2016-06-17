@@ -24,6 +24,8 @@ exports.list = function (req, res) {
 
   var order = sidx + " " + sord;
 
+  condition = "id in (select idcui from sip.plantillapresupuesto) and";
+  
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -70,7 +72,7 @@ exports.list = function (req, res) {
 
     } else {
 
-      models.estructuracui.count().then(function (records) {
+      models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -81,7 +83,7 @@ exports.list = function (req, res) {
 
   } else {
 
-    models.estructuracui.count().then(function (records) {
+    models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {

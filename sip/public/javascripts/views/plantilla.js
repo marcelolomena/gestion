@@ -247,9 +247,10 @@ function showChildGrid(parentRowID, parentRowKey) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0)
-                    return [false, result.error_text, ""];
+                    return [false, "Ya existe esa plantilla", ""];
                 else
                     return [true, "", ""]
+                    
             }, beforeShowForm: function (form) {
 
                 var grid = $("#grid");
