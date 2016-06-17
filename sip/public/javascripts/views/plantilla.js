@@ -51,7 +51,7 @@ $(document).ready(function () {
         }
     );
 
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+    $("#grid").jqGrid('navButtonAdd', "#pager", {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
@@ -59,7 +59,7 @@ $(document).ready(function () {
         onClickButton: function () {
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
-            var url = '/proyectosenvuelo/excel';
+            var url = '/plantilla/excel';
             $('#grid').jqGrid('excelExport', { "url": url });
         }
     });
@@ -76,7 +76,7 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-    var childIdServicio  = 0;
+    var childIdServicio = 0;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -89,12 +89,11 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Servicio {idservicio}</div>";
-    template += "<div class='column-full'>Proveedor {idproveedor}</div>";
+    template += "<div class='column-full'>Proveedor {razonsocial}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-full'>Servicio {nombre}</div>";
-    template += "<div class='column-full'>Proveedor {razonsocial}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -118,7 +117,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             editoptions: {
                 dataUrl: '/cuiservicios/' + parentRowKey,
                 buildSelect: function (response) {
-                    var grid = $("#" + childGridID);
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idservicio;
@@ -134,40 +133,37 @@ function showChildGrid(parentRowID, parentRowKey) {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thispid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/cuiproveedores/' + parentRowKey + '/' + thispid,
+                            async: false,
+                            success: function (data) {
+                                var s = "<select>";//el default
+                                s += '<option value="0">--Escoger Proveedor--</option>';
+                                $.each(data, function (i, item) {
+                                    s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
+                                });
+                                s += "</select>";
+                                $("#razonsocial").html(s);
+                            }
+                        });
+                    }
+                }]
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left',
-            search: false, editable: true, jsonmap: "proveedor.razonsocial",
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Proveedor', name: 'idproveedor', width: 300, align: 'right',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, jsonmap: "proveedor.razonsocial", hidden: false,
             edittype: "select",
             editoptions: {
-                dataUrl: '/cuiproveedores/' + parentRowKey + '/' + childIdServicio,
-                buildSelect: function (response) {
-                    var grid = $("#" + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Proveedor--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
+                value: "0:--Escoger Proveedor--"
+            }
+        }
     ];
 
     $("#" + childGridID).jqGrid({
@@ -245,6 +241,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
+
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -271,7 +268,7 @@ function showChildGrid(parentRowID, parentRowKey) {
 
                 $("#idservicio").change(function () {
                     childIdServicio = $(this).val();
-                    $.getJSON("/cuiproveedores/" + parentRowKey+"/"+childIdServicio, function (j) {
+                    $.getJSON("/cuiproveedores/" + parentRowKey + "/" + childIdServicio, function (j) {
                         $('#idproveedor').remove();
                         $.each(j, function (i, item) {
                             $('#idproveedor').append('<option value="' + item.id + '">' + item.razonsocial + '</option>');
