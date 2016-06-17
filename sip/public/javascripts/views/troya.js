@@ -100,7 +100,6 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                 return fechafin;
             }            
         },        
-        page: 1,
         colModel: [
                    { label: 'id',
                       name: 'id',
@@ -147,14 +146,18 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                      align: 'left'
                    }                                
         ],
-        viewrecords: true,
 		caption: "Facturas ",
-        rowNum: 10,
  		height: 'auto',
         styleUI: "Bootstrap",         
         autowidth:false, 
-        sortable: "true",  
-        rowList: [5, 10, 20, 50],    
+        sortable: "true",
+        pager: "#pager",
+        jsonReader: {cell:""},
+        rowNum: 10,  
+        rowList: [5, 10, 20, 50],
+        sortname: 'id',
+        sortorder: 'asc',
+        viewrecords: true,            
         regional : "es",
         loadComplete: function () {
             var $grid = $("#grid");
@@ -164,8 +167,7 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         footerrow: true,
         userDataOnFooter: true,         
-        subGridRowExpanded: showDetalle, // javascript function that will take care of showing the child grid                        
-        pager: "#pager"
+        subGridRowExpanded: showDetalle // javascript function that will take care of showing the child grid                        
     });
 
     $("#grid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });

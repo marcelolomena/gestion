@@ -83,7 +83,13 @@ exports.getfacturas = function (req, res) {
   sql = sql + "HAVING sum(b.monto)>0";
   sequelize.query(sql)
     .spread(function (rows) {
-      res.json(rows);
+      //res.json(rows);
+      console.log("***ROWS***:"+rows);
+      console.log("***Length***:"+rows.length);
+      var page=1;
+      var total=10;
+      var records=rows;
+      res.json({ records: records, total: total, page: page, rows: rows });
     });
 }
 
