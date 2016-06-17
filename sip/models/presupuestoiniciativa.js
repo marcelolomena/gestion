@@ -64,6 +64,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'presupuestoiniciativa'
+    schema: 'sip',timestamps: false,tableName: 'presupuestoiniciativa'
   });
 };

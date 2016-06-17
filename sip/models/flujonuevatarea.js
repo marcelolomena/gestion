@@ -76,6 +76,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'flujonuevatarea'
+    schema: 'sip',timestamps: false,tableName: 'flujonuevatarea'
   });
 };

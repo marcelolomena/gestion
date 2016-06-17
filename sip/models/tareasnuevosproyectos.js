@@ -88,6 +88,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'tareasnuevosproyectos'
+    schema: 'sip',timestamps: false,tableName: 'tareasnuevosproyectos'
   });
 };
