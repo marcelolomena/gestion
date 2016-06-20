@@ -1,12 +1,24 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var flash = require('express-flash');
+var express = require('express'),
+ path = require('path'),
+ favicon = require('serve-favicon'),
+ morgan = require('morgan'),
+ cookieParser = require('cookie-parser'),
+ bodyParser = require('body-parser'),
+ flash = require('express-flash'),
+ fs = require('fs'),
+ FileStreamRotator = require('file-stream-rotator'),
+ app = express(),
+ logDirectory = path.join(__dirname, 'log')
+ 
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
-var app = express();
+// create a rotating write stream
+var accessLogStream = FileStreamRotator.getStream({
+  date_format: 'YYYYMMDD',
+  filename: path.join(logDirectory, 'access-%DATE%.log'),
+  frequency: 'daily',
+  verbose: false
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -14,7 +26,8 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+//app.use(logger('dev'));
+app.use(morgan('combined', {stream: accessLogStream}))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

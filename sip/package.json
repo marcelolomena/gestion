@@ -14,7 +14,7 @@
     "express": "^4.8.7",
 	"express-session": "^1.7.6",
     "jade": "~1.11.0",
-    "morgan": "~1.6.1",
+    "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0",
 	"bcryptjs": "latest",
 	"squel": "latest",
@@ -25,6 +25,7 @@
 	"tedious": "latest",
 	"bcrypt-nodejs": "latest",
     "excel-export": "0.5.1",
-    "socket.io": "1.4.6"    
+    "socket.io": "1.4.6",   
+    "file-stream-rotator":"0.0.6" 
   }
 }

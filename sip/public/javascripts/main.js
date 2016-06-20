@@ -45,7 +45,7 @@ var pc_constraints = {
 
 var sdpConstraints = {};
 // Let's get started: prompt user for input (room name)
-var room = prompt('Ingrese el nombre de la sala:');
+var room = prompt('Ingrese el nombre de la sala:','pmo');
 // Connect to signaling server
 var socket = io.connect("https://152.139.147.41:3001");
 // Send 'Create or join' message to singnaling server
@@ -84,6 +84,7 @@ socket.on('created', function (room) {
 
 socket.on('full', function (room) {
     console.log('Room ' + room + ' is full');
+    alert('la sala PMO esta llena')
 });
 // Handle 'join' message coming back from server:
 // another peer is joining the channel
