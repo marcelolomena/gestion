@@ -1,10 +1,8 @@
-doctype html
-html
-  head
-    title .:Video Online:.
-    script(type='text/javascript', src='/resources/socket.io/socket.io.js')         
-  body
-    #mainDiv
+extends basevideo.jade
+block titulo
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Contratos
+block video
+  .vcontainer
       table(border='1', width='100%')
         tr
           th
@@ -13,7 +11,7 @@ html
             | Video Remoto
         tr
           td
-            video#localVideo(autoplay='')
+            video#localVideo(autoplay='', muted='')
           td
             video#remoteVideo(autoplay='')
         tr
@@ -24,7 +22,6 @@ html
         tr
           td(align='center')
             button#sendButton(disabled='') Enviar
-          td
-    script(type='text/javascript', src='/javascripts/webrtc/adapter.js')
-    script(type='text/javascript', src='/javascripts/main2.js')
-              
+          td  
+  script(type='text/javascript', src='/javascripts/webrtc/adapter.js')
+  script(type='text/javascript', src='/javascripts/main.js')            

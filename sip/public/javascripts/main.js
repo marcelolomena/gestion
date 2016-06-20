@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 // Look after different browser vendors' ways of calling the getUserMedia()
 // API method:
 // Opera --> getUserMedia
@@ -18,6 +18,7 @@ var sendTextarea = document.getElementById("dataChannelSend");
 var receiveTextarea = document.getElementById("dataChannelReceive");
 // HTML5 <video> elements
 var localVideo = document.querySelector('#localVideo');
+console.log("localVideo:" + localVideo)
 var remoteVideo = document.querySelector('#remoteVideo');
 
 // Handler associated with Send button
@@ -44,9 +45,9 @@ var pc_constraints = {
 
 var sdpConstraints = {};
 // Let's get started: prompt user for input (room name)
-var room = prompt('Ingrese el nombre de la sala:');
+var room = prompt('Ingrese el nombre de la sala:','pmo');
 // Connect to signaling server
-var socket = io.connect("https://localhost:3001");
+var socket = io.connect("https://152.139.147.41:3001");
 // Send 'Create or join' message to singnaling server
 if (room !== '') {
     console.log('Create or join room', room);
@@ -83,6 +84,7 @@ socket.on('created', function (room) {
 
 socket.on('full', function (room) {
     console.log('Room ' + room + ' is full');
+    alert('la sala PMO esta llena')
 });
 // Handle 'join' message coming back from server:
 // another peer is joining the channel

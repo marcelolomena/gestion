@@ -5,8 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     idtareasnuevosproyectos: {
       type: DataTypes.INTEGER,
@@ -16,7 +15,43 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    idsubtarea: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'art_sub_task',
+        key: 'sub_task_id'
+      }
+    },
     periodo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    glosaitem: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    porcentaje: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    idtipopago: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'parametro',
+        key: 'id'
+      }
+    },
+    fechainicio: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechafin: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    cantidad: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -31,11 +66,11 @@ module.exports = function(sequelize, DataTypes) {
     costoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
-    },    
+    },
     costopesos: {
       type: DataTypes.FLOAT,
       allowNull: true
-    },       
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

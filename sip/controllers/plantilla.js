@@ -24,6 +24,8 @@ exports.list = function (req, res) {
 
   var order = sidx + " " + sord;
 
+  condition = "id in (select idcui from sip.plantillapresupuesto) and";
+  
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -70,7 +72,7 @@ exports.list = function (req, res) {
 
     } else {
 
-      models.estructuracui.count().then(function (records) {
+      models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -81,7 +83,7 @@ exports.list = function (req, res) {
 
   } else {
 
-    models.estructuracui.count().then(function (records) {
+    models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {
@@ -101,10 +103,10 @@ exports.action = function (req, res) {
     case "add":
     var proveedor 
 
-     if (req.body.idproveedor == 0)
+     if (req.body.razonsocial == 0)
        { provedor = 'NULL'}
      else
-       {proveedor= req.body.idproveedor}
+       {proveedor= req.body.razonsocial}
                
       models.plantillapresupuesto.create({
         idcui: req.body.parent_id,
@@ -186,37 +188,38 @@ exports.getExcel = function (req, res) {
       width: 50
     },
     {
-      caption: 'Ejercicio',
-      type: 'number',
+      caption: 'Servicio',
+      type: 'string',
       width: 20
     },
     {
-      caption: 'Versión',
-      type: 'number',
-      width: 10
+      caption: 'Tarea',
+      type: 'string',
+      width: 20
     },
     {
-      caption: 'Descripción',
+      caption: 'Proveedor',
       type: 'string',
-      width: 30
-    }
+      width: 10
+    },
   ];
 
-  var sql = "SELECT a.*, b.CUI, b.nombre, b.responsable, c.ejercicio " +
-    "FROM sip.presupuesto a JOIN sip.cuidivot b ON a.idcui=b.secuencia " +
-    "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
+  var sql = "SELECT a.id, b.cui, b.nombre, b.nombreresponsable,c.nombre as servicio,isnull(c.tarea,0) as tarea ,d.razonsocial " +
+    "FROM sip.plantillapresupuesto a left outer JOIN sip.estructuracui b ON a.idcui=b.id " +
+    "left outer JOIN sip.servicio c ON a.idservicio=c.id left outer join sip.proveedor d on a.idproveedor=d.id " +
+    "ORDER BY b.cui asc";
 
   sequelize.query(sql)
     .spread(function (proyecto) {
       var arr = []
       for (var i = 0; i < proyecto.length; i++) {
 
-        a = [i + 1, proyecto[i].CUI,
+        a = [i + 1, proyecto[i].cui,
           proyecto[i].nombre,
-          proyecto[i].responsable,
-          proyecto[i].ejercicio,
-          proyecto[i].version,
-          proyecto[i].descripcion
+          proyecto[i].nombreresponsable,
+          proyecto[i].servicio,
+          proyecto[i].tarea,
+          proyecto[i].razonsocial
         ];
         arr.push(a);
       }
@@ -224,7 +227,7 @@ exports.getExcel = function (req, res) {
 
       var result = nodeExcel.execute(conf);
       res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "Presupuestos.xlsx");
+      res.setHeader("Content-Disposition", "attachment;filename=" + "PlantillaPresupuestos.xlsx");
       res.end(result, 'binary');
 
     }).catch(function (err) {

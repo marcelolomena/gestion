@@ -15,6 +15,9 @@
           ul
             each vol in val.submenu
               li
-                a(href='/'+vol.url)
-                  span=vol.opt
-          
+                if(vol.url!='conferencia')
+                  a(href='/'+vol.url)
+                    span=vol.opt
+                else                    
+                  a(href='https://152.139.147.41:3001/'+vol.url)
+                    span=vol.opt                

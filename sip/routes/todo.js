@@ -25,10 +25,6 @@ module.exports = function (passport) {
     router.get('/proveedores', isAuthenticated, function (req, res) {
         res.render('proveedores', { user: req.user });
     });
-    
-    router.get('/video', isAuthenticated, function (req, res) {
-        res.render('video', { user: req.user });
-    });    
 
     router.route('/proveedores/combobox')
         .get(isAuthenticated, proveedorController.combobox);
