@@ -5,8 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     idcui: {
       type: DataTypes.INTEGER,
@@ -18,7 +17,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idservicio: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'servicio',
+        key: 'id'
+      }
     },
     idproveedor: {
       type: DataTypes.INTEGER,

@@ -9,8 +9,8 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-half'>CUIs{idcui}</div>";
     template += "<div class='column-half'>Tarea{tarea}</div>";
-    template += "<div class='column-half'>CUI{idcui}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -51,6 +51,10 @@ function showChildGrid(parentRowID, parentRowKey) {
             label: 'Tarea', name: 'tarea', width: 50, align: 'left', search: true, editable: true,
             edittype: "select",
             editoptions: {
+                value: "0:--Escoger Tarea--"
+            }
+            /*
+            editoptions: {
                 dataUrl: '/tareasap/' + $('#grid').getRowData(parentRowKey).sap,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
@@ -84,6 +88,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                     }
                 }]
             }
+            */
         },
         { label: 'Nombre', name: 'nombre', width: 150, align: 'left', search: true, editable: true },
         {
@@ -108,6 +113,25 @@ function showChildGrid(parentRowID, parentRowKey) {
                     });
                     return s + "</select>";
                 },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thispid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/tareacui/' + thispid,
+                            async: false,
+                            success: function (data) {
+                                var s = "<select>";//el default
+                                s += '<option value="0">--Escoger Tarea--</option>';
+                                $.each(data, function (i, item) {
+                                    s += '<option value="' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                                });
+                                s += "</select>";
+                                $("#tarea").html(s);
+                            }
+                        });
+                    }
+                }]
             }
         },
         { label: 'uid', name: 'uid', search: false, hidden: true, editable: true },

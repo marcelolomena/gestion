@@ -23,6 +23,9 @@ module.exports = function (passport) {
 
     router.route('/tareasap/:id')
         .get(isAuthenticated, detalleenvueloController.tareasap);
+        
+    router.route('/tareacui/:id')
+        .get(isAuthenticated, detalleenvueloController.tareacui);        
 
     router.route('/tareaservicio/:id')
         .get(isAuthenticated, detalleenvueloController.tareaservicio);
