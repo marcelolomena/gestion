@@ -57,11 +57,10 @@ console.log('user:'+req.user[0].nombre);
 }
 
 exports.getfacturas = function (req, res) {
-  console.log("CUI***:"+req.query.cui);
-  console.log("Proveedor***:"+req.query.proveedor);
-  console.log("Proveedor***:"+req.query.factura+":");  
-  console.log("Proveedor***:"+req.query.fechaini+":");  
-  console.log("Proveedor***:"+req.query.fechafin+":");    
+  var page = req.query.page;
+  var filas = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;    
   var id = req.params.idsap
   
   var sql = "DECLARE @cui INT; "+
@@ -86,9 +85,8 @@ exports.getfacturas = function (req, res) {
       //res.json(rows);
       console.log("***ROWS***:"+rows);
       console.log("***Length***:"+rows.length);
-      var page=1;
-      var total=10;
-      var records=rows;
+      var records=rows.length;      
+      var total=Math.ceil(records / filas);
       res.json({ records: records, total: total, page: page, rows: rows });
     });
 }

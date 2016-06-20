@@ -1,0 +1,77 @@
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+
+exports.getGrillaProveedor = function (req, res) {
+  var page = req.query.page;
+  var filas = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;    
+  var id = req.params.idsap
+  
+  var sql = "SELECT cuiseccion, nombrecentrocosto AS nombrecui, cuentacontable, nombrecuenta, sum(monto) AS monto FROM sip.discoverer "+ 
+  "WHERE idproveedor = "+req.params.id+" "+
+  "GROUP BY nombrecentrocosto, cuiseccion, cuentacontable, nombrecuenta ";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      //res.json(rows);
+      console.log("***ROWS***:"+rows);
+      console.log("***Length***:"+rows.length);
+      var records=rows.length;      
+      var total=Math.ceil(records / filas);
+      res.json({ records: records, total: total, page: page, rows: rows });
+    });
+}
+
+exports.getGraficoProveedor = function (req, res) {
+  var id = req.params.id
+  console.log("proveedor:"+id);
+  
+ var sql = "SELECT nombrecentrocosto AS name, cuiseccion, sum(monto) AS monto FROM sip.discoverer "+ 
+"WHERE idproveedor = "+id+" "+
+"GROUP BY nombrecentrocosto, cuiseccion";
+
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+      var data = '{"titulo":"Línea de Gasto","data":[';
+      for (var i = 0; i < proyecto.length; i++) {
+        var linea = '{"name":"'+proyecto[i].name+'","y":'+proyecto[i].monto+',"idcui":'+proyecto[i].cuiseccion+'},'
+        console.log(linea);
+        data = data + linea;
+      }
+      data = data.substring(0,data.length-1);
+      data = data + '],"showInLegend":false}';
+      console.log(data);
+      var obj = JSON.parse(data);
+      res.json(obj);
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 100 });
+    });
+
+};
+
+exports.getDetalleFacturas = function (req, res) {
+  var page = req.query.page;
+  var filas = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;    
+  var id = req.params.idsap
+   
+  var sql = "With SQLPaging As   ( "+
+  "SELECT documento,tipodocumento, razonsocial, min(glosalinea) AS glosalinea, min(fechacontable) AS fechacontable, sum(monto) AS montop FROM sip.discoverer "+
+  "WHERE cuiseccion="+req.query.cui+" AND idproveedor="+req.query.proveedor+" ";
+  sql = sql + "GROUP BY documento,tipodocumento, razonsocial) ";
+  sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
+  sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable ";
+  sql = sql + "HAVING sum(b.monto)>0";
+  sequelize.query(sql)
+    .spread(function (rows) {
+      //res.json(rows);
+      console.log("***ROWS***:"+rows);
+      console.log("***Length***:"+rows.length);
+      var records=rows.length;      
+      var total=Math.ceil(records / filas);
+      res.json({ records: records, total: total, page: page, rows: rows });
+    });
+}

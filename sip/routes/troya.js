@@ -3,6 +3,7 @@ var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var troyaController = require('../controllers/troya');
+var troyaControllerGraficos = require('../controllers/troyaproveedor');
 
 module.exports = function (passport) {
 
@@ -25,6 +26,19 @@ module.exports = function (passport) {
     router.route('/troyadetalle/:id')
         .get(isAuthenticated, troyaController.getDetalle);
         
+    router.get('/graficotroyaproveedor', isAuthenticated, function (req, res) {
+        res.render('troyaproveedor', { user: req.user });
+    });  
+
+    router.route('/graficotroyaproveedor/:id')
+        .get(isAuthenticated, troyaControllerGraficos.getGraficoProveedor);
+    
+    router.route('/grillatroyaproveedor/:id')
+        .get(isAuthenticated, troyaControllerGraficos.getGrillaProveedor);
+        
+    router.route('/grillafacturascuiproveedor')
+        .get(isAuthenticated, troyaControllerGraficos.getDetalleFacturas);        
+            
     return router;
 
 }
