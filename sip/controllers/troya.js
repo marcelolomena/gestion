@@ -79,7 +79,7 @@ exports.getfacturas = function (req, res) {
   sql = sql + "GROUP BY documento,tipodocumento, razonsocial) ";
   sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
   sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable ";
-  sql = sql + "HAVING sum(b.monto)>0";
+  sql = sql + "HAVING sum(b.monto)>0";//OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY
   sequelize.query(sql)
     .spread(function (rows) {
       //res.json(rows);

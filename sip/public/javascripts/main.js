@@ -18,7 +18,6 @@ var sendTextarea = document.getElementById("dataChannelSend");
 var receiveTextarea = document.getElementById("dataChannelReceive");
 // HTML5 <video> elements
 var localVideo = document.querySelector('#localVideo');
-console.log("localVideo:" + localVideo)
 var remoteVideo = document.querySelector('#remoteVideo');
 
 // Handler associated with Send button

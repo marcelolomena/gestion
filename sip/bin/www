@@ -56,6 +56,10 @@ var handleClient = function (socket) {
     socket.broadcast.emit('message', message);
   });
 
+  socket.on('colgar', function (room) {
+
+  });
+
   socket.on('create or join', function (room) {
     var namespace = '/';
     //var sala = io.nsps[namespace].adapter.rooms[room];//no funciona en 1.4.X
