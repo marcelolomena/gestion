@@ -81,7 +81,6 @@ module.exports = function (passport) {
             ]
             //group: ['[User].[first_name]', '[User].[last_name]', '[Rols.Menus].[descripcion]' , '[Rols.Menus].[url]' ]
         }).then(function (usr) {
-            console.log(usr.rols[0].id)
             var usuario = []
             var nombre = {}
             nombre["nombre"] = usr.first_name + " " + usr.last_name
