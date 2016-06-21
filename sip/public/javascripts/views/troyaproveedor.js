@@ -36,7 +36,7 @@ $(document).ready(function () {
 					},
 					dataLabels: {
 						enabled: true,
-						format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+						format: '<b>{point.idcui}</b>: {point.percentage:.1f} %',
 						style: {
 							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
 						},
@@ -138,6 +138,7 @@ function showDocumentos(proveedor) {
         sortable: "true",
         pager: "#pager",
         jsonReader: {cell:""},
+        page: 1,
         rowNum: 10,  
         rowList: [5, 10, 20, 50],
         sortname: 'id',
@@ -255,6 +256,7 @@ function showDetalleCUI(cui, proveedor) {
         sortable: "true",
         pager: "#pager2",
         jsonReader: {cell:""},
+        page: 1,
         rowNum: 10,  
         rowList: [5, 10, 20, 50],
         sortname: 'id',

@@ -64,6 +64,10 @@ exports.getfacturas = function (req, res) {
   var id = req.params.idsap
   
   var sql = "DECLARE @cui INT; "+
+  "DECLARE @PageSize INT; "+
+  "SELECT @PageSize="+filas+"; "+
+  "DECLARE @PageNumber INT; "+
+  "SELECT @PageNumber="+page+"; "+
   "SELECT @cui=cui FROM sip.estructuracui WHERE id="+req.query.cui+"; "
   
   sql = sql +"With SQLPaging As   ( "+
@@ -79,16 +83,24 @@ exports.getfacturas = function (req, res) {
   sql = sql + "GROUP BY documento,tipodocumento, razonsocial) ";
   sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
   sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable ";
-  sql = sql + "HAVING sum(b.monto)>0";//OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY
+  sql = sql + "HAVING sum(b.monto)<>0 ";
+  sql2 = sql + "ORDER BY a.documento OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+  var records;
   sequelize.query(sql)
-    .spread(function (rows) {
+    .spread(function (rowscount) {
       //res.json(rows);
-      console.log("***ROWS***:"+rows);
-      console.log("***Length***:"+rows.length);
-      var records=rows.length;      
+      console.log("***ROWS***:"+rowscount);
+      console.log("***Length***:"+rowscount.length);
+      records=rowscount.length;
+    }).then(function(response){      
+      sequelize.query(sql2)
+        .spread(function (rows) {      
       var total=Math.ceil(records / filas);
       res.json({ records: records, total: total, page: page, rows: rows });
+    }).catch(function (err) {
+          res.json({ error_code: 1 });
     });
+  });
 }
 
 exports.getDetalle = function (req, res) {
@@ -100,7 +112,7 @@ exports.getDetalle = function (req, res) {
     "WHERE documento='"+id+"' "+
     "GROUP BY cuiseccion, nombrecentrocosto, cuentacontable, nombrecuentaorigen) "+
     "SELECT * FROM SQLPaging "+ 
-    "WHERE monto > 0";
+    "WHERE monto <> 0";
   
   sequelize.query(sql)
     .spread(function (rows) {

@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var constants = require("../utils/constants");
 
 var log = function (inst) {
   console.dir(inst.get())
@@ -195,21 +196,57 @@ exports.getUsersByRol = function (req, res) {
 };
 
 exports.getCUIs = function (req, res) {
-
-  var sql = "SELECT id, nombre FROM sip.estructuracui " +
-    "ORDER BY nombre";
-
-  sequelize.query(sql)
+  var idcui;
+  
+  console.log("******usr*********:"+req.user[0].uid);
+  console.log("******rol*********:"+req.user[0].rid);
+  var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid="+req.user[0].uid;
+  console.log("query:"+sql1);
+  sequelize.query(sql1)
     .spread(function (rows) {
-      res.json(rows);
-    });
+      //res.json(rows);
+      console.log("query:"+rows+", valor:"+rows[0].cui);
+      idcui = rows[0].cui;
+    }).then(function (servicio) {
+      
+//  var sql = "SELECT id, nombre FROM sip.estructuracui " +
+//    "ORDER BY nombre";
 
+  var sql = "select a.id, a.nombre "+
+    "from   sip.estructuracui a "+
+    "where  a.cui = "+idcui +" "+
+    "union "+
+    "select b.id, b.nombre "+
+    "from   sip.estructuracui a,sip.estructuracui b "+
+    "where  a.cui = "+idcui +" "+
+    "  and  a.cui = b.cuipadre "+
+    "union "+
+    "select c.id, c.nombre "+
+    "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c "+
+    "where  a.cui = "+idcui +" "+
+    "  and  a.cui = b.cuipadre "+
+    "  and  b.cui = c.cuipadre "+
+    "union "+
+    "select d.id, d.nombre "+
+    "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d "+
+    "where  a.cui = "+idcui +" "+
+    "  and  a.cui = b.cuipadre "+
+    "  and  b.cui = c.cuipadre "+
+    "  and  c.cui = d.cuipadre ";
+
+    sequelize.query(sql)
+      .spread(function (rows) {
+        res.json(rows);
+    }).catch(function (err) {
+      res.json({ error_code: 1 });
+    });
+  });
 };
 
 
 exports.getEjercicios = function (req, res) {
 
-  var sql = "SELECT id, ejercicio FROM sip.ejercicios";
+  var sql = "SELECT id, ejercicio FROM sip.ejercicios where estado='vigente'";
 
   sequelize.query(sql)
     .spread(function (rows) {

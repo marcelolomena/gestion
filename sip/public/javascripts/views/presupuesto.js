@@ -59,11 +59,11 @@ $(document).ready(function () {
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
         { label: 'Responsable CUI', name: 'responsable', width: 250, align: 'left', search: false, editable: true },
         {
-            label: 'Ejercicio', name: 'ejercicio', width: 200, align: 'left', search: false, editable: true,
+            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', search: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Ejercicio', name: 'idejercicio', width: 100, align: 'left', search: false, editable: true, hidden: true,
+            label: 'Ejercicio', name: 'idejercicio', width: 50, align: 'left', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/ejercicios',
@@ -87,8 +87,9 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Versión', name: 'version', width: 100, align: 'left', search: false, editable: true },
-        { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false, editable: true }
+        { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, editable: true },
+        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: true },
+        { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
     ];
     $("#grid").jqGrid({
         url: '/presupuestolist',
@@ -178,7 +179,7 @@ $(document).ready(function () {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 if (rowKey == null) {
-                    alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
+                    //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
                     return [false, "", ""];
                 }
                 return [true, "", ""];
