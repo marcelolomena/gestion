@@ -45,7 +45,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
-            label: 'Subtarea', name: 'idsubtarea', width: 50, align: 'left',
+            label: 'Subtarea', name: 'idsubtarea', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
@@ -53,7 +53,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Glosa Item', name: 'glosaitem', width: 50, align: 'left',
+            label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
@@ -61,24 +61,82 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tipo Pago', name: 'idtipopago', width: 200, align: 'left',
+            label: 'Tipo Pago', name: 'idtipopago', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                childGridID[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
+                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
         },
         {
-            label: 'Fecha Fin', name: 'fechafin', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Fecha Fin', name: 'fechainicio', width: 150, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                childGridID[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
+                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
         },
         {
-            label: 'Monto', name: 'montoorigen', width: 80, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Monto', name: 'montoorigen', width: 80, align: 'right',
+            search: false, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
-         {
-            label: 'Costo', name: 'costoorigen', width: 80, align: 'left',
-            search: true, editable: false, hidden: false,
+        {
+            label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
+            search: false, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         }
 
     ];
@@ -91,6 +149,10 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         mtype: "POST",
         datatype: "json",
         caption: 'Flujo',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelFlujoNuevaTarea,
         viewrecords: true,

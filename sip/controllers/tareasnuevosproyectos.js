@@ -17,7 +17,7 @@ exports.list = function (req, res) {
   var sord = req.body.sord;
 
   if (!sidx)
-    sidx = "servicio.tarea";
+    sidx = "idcui";
 
   if (!sord)
     sord = "asc";
@@ -25,7 +25,7 @@ exports.list = function (req, res) {
   var orden = sidx + " " + sord;
   
   var additional = [{
-        "field": "idnuevosproyectos",
+        "field": "idpresupuestoiniciativa",
         "op": "eq",
         "data": req.params.id
     }];
@@ -34,7 +34,6 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.tareasnuevosproyectos.belongsTo(models.nuevosproyectos, { foreignKey: 'idnuevosproyectos' });
       models.tareasnuevosproyectos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
       models.tareasnuevosproyectos.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
       models.tareasnuevosproyectos.count({
@@ -46,11 +45,11 @@ exports.list = function (req, res) {
           limit: parseInt(rows),
           order: orden,
           where: data,
-          include: [{
-            model: models.nuevosproyectos
-          },{
+          include: [
+            {
             model: models.servicio
-          },{
+          },
+          {
             model: models.proveedor
           }]
         }).then(function (iniciativas) {

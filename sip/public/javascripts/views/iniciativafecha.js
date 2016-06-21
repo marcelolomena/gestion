@@ -101,6 +101,10 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
         mtype: "POST",
         datatype: "json",
         caption: 'Fechas Clave',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelIniciativaFecha,
         viewrecords: true,

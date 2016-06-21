@@ -513,6 +513,10 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         datatype: "json",
         page: 1,
         caption: 'Iniciativa / Programa',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
         colModel: modelIniciativaPrograma,
         viewrecords: true,
         styleUI: "Bootstrap",
@@ -658,6 +662,6 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
 }
 function showSubGrids(subgrid_id, row_id) {
-    gridIniciativaFecha(subgrid_id, row_id,'fecha');
     gridPresupuestoIniciativa(subgrid_id, row_id,'presupuesto');
+    gridIniciativaFecha(subgrid_id, row_id,'fecha');
 }

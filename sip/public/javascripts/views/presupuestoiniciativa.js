@@ -72,27 +72,63 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'uidlider', name: 'uidlider', search: true, editable: false, hidden: true,
         },
         {
-            label: 'Lider', name: 'users.uname', width: 150, align: 'left',
+            label: 'Lider', name: 'user.uname', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
             label: 'uidjefeproyecto', name: 'uidjefeproyecto', search: true, editable: false, hidden: true,
         },
         {
-            label: 'Jefe de Proyecto', name: 'users.uname', width: 150, align: 'left',
+            label: 'Jefe de Proyecto', name: 'user.uname', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Fecha Conversión', name: 'fechaconversion', width: 100, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                childGridID[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
+                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
         },
         {
-            label: 'Dolar', name: 'dolar', width: 80, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Dolar', name: 'dolar', width: 80, align: 'right',
+            search: false, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
+        
         {
-            label: 'Uf', name: 'uf', width: 80, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'UF', name: 'uf', width: 80, align: 'right',
+            search: false, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         }
 
     ];
@@ -105,6 +141,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         mtype: "POST",
         datatype: "json",
         caption: 'Presupuesto',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelPresupuestoIniciativa,
         viewrecords: true,

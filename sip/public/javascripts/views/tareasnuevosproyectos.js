@@ -35,7 +35,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/presupuestoiniciativa/" + parentRowKey;
+    var childGridURL = "/tareasnuevosproyectos/" + parentRowKey;
 
     var modelTareasNuevosProyectos = [
         {
@@ -49,47 +49,99 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Servicio', name: 'idservicio', width: 50, align: 'left',
+            label: 'Servicio', name: 'idservicio', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Proveedor', name: 'idproveedor', width: 50, align: 'left',
+            label: 'Proveedor', name: 'idproveedor', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tarea', name: 'tarea', width: 50, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tipo Pago', name: 'idtipopago', width: 200, align: 'left',
+            label: 'Tipo Pago', name: 'idtipopago', width: 80, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 200, align: 'left',
+            label: 'Fecha Inicio', name: 'fechainicio', width: 100, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                childGridID[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
+        },
+        {
+            label: 'Fecha Fin', name: 'fechafin', width: 100, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                childGridID[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
+                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
+        },
+        {
+            label: 'Requiere Contrato', name: 'reqcontrato', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Fecha Fin', name: 'fechafin', width: 200, align: 'left',
+            label: 'Moneda', name: 'idmoneda', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Requiere Contrato', name: 'reqcontrato', width: 100, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
+            search: false, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
         {
-            label: 'Moneda', name: 'idmoneda', width: 80, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
-            label: 'Costo Unitario', name: 'costounitario', width: 80, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
-            label: 'Cantidad', name: 'cantidad', width: 80, align: 'left',
+            label: 'Cantidad', name: 'cantidad', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
          {
-            label: 'Con IVA', name: 'coniva', width: 80, align: 'left',
+            label: 'Con IVA', name: 'coniva', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         }
 
@@ -103,6 +155,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         mtype: "POST",
         datatype: "json",
         caption: 'Tareas',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelTareasNuevosProyectos,
         viewrecords: true,

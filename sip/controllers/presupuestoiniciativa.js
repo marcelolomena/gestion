@@ -81,20 +81,25 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
+      models.presupuestoiniciativa.belongsTo(models.user, { foreignKey: 'uidlider'});
       models.presupuestoiniciativa.count({
         where: data
       }).then(function (records) {
           console.log("campos: "+records);
         var total = Math.ceil(records / rows);
+
         models.presupuestoiniciativa.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data
+          where: data,
+          include: [
+            {model: models.user}
+            ]
         }).then(function (iniciativas) {
           res.json({ records: records, total: total, page: page, rows: iniciativas });
         }).catch(function (err) {
-          //console.log(err);
+          console.log('EL ERROR: '+err);
           res.json({ error_code: 1 });
         });
       })
