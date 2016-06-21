@@ -21,12 +21,34 @@ exports.tareasap = function (req, res) {
 
 }
 
+exports.tareacui = function (req, res) {
+
+    models.plantillapresupuesto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+    models.plantillapresupuesto.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+    models.plantillapresupuesto.findAll({
+        where: { idcui: req.params.id },
+        attributes: ['id'],
+        include: [
+            {
+                model: models.servicio, where: { 'tarea': { $ne: null } }, attributes: ['tarea']
+            },
+            {
+                model: models.proveedor, attributes: ['id', 'razonsocial']
+            }]
+    }).then(function (plantillapresupuesto) {
+        res.json(plantillapresupuesto);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+}
+
 exports.tareaservicio = function (req, res) {
 
     models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
     models.servicio.findAll({
         where: { tarea: req.params.id },
-        //attributes: ['idproyecto', 'tarea'],
         include: [{
             model: models.cuentascontables,
         }]
@@ -124,7 +146,7 @@ exports.action = function (req, res) {
 
             break;
     }
-    
+
 }
 
 exports.list = function (req, res) {

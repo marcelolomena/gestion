@@ -144,7 +144,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $("input#servicio").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) { $(elem).width(200); }
+                }
             },
             {
                 label: 'Servicio', name: 'servicio.nombre', width: 300, align: 'left', search: true, editable: true,
@@ -302,7 +302,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $("input#frecuenciafacturacion").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Frecuencia', name: 'frecuenciafacturacion', align: 'center', search: true, editable: true, hidden: false,
@@ -335,7 +335,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $("input#plazocontrato").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Plazo', name: 'plazocontrato', align: 'center', search: true, editable: true, hidden: false,
@@ -368,7 +368,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $("input#condicionnegociacion").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Condición', name: 'condicionnegociacion', align: 'center', search: true, editable: true, hidden: false,
@@ -412,7 +412,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         });
                         return s + "</select>";
                     }
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Estado', name: 'idestadocto', search: false, editable: true, hidden: true,
@@ -441,7 +441,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $("input#estadocontrato").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Estado', name: 'estadocontrato', width: 150, align: 'left', search: true, editable: true, hidden: false,
@@ -486,7 +486,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     $('#' + subgrid_table_id).jqGrid("setLabel", "fechacontrol", "", { "text-align": "center" });
     $('#' + subgrid_table_id).jqGrid("setLabel", "valorcuota", "", { "text-align": "right" });
     $('#' + subgrid_table_id).jqGrid("setLabel", "frecuenciafacturacion", "", { "text-align": "center" });
-    
+
     $('#' + subgrid_table_id).jqGrid("setLabel", "plazocontrato", "", { "text-align": "center" });
     $('#' + subgrid_table_id).jqGrid("setLabel", "condicionnegociacion", "", { "text-align": "center" });
     $('#' + subgrid_table_id).jqGrid("setLabel", "impuesto", "", { "text-align": "right" });
@@ -495,8 +495,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     $('#' + subgrid_table_id).jqGrid('navGrid', '#' + pager_id, {
         edit: true, add: true,
         del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false
-    },
-        {
+    }, {
             editCaption: "Modifica Servicio",
             closeAfterEdit: true,
             recreateForm: true,
@@ -725,7 +724,6 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                                         s += '<option value="' + data[i].tarea + '">' + data[i].tarea + '</option>';
                                     });
                                     s += "</select>";
-                                    //console.log(s)
                                     $("#tarea").html(s);
                                 }
                             });

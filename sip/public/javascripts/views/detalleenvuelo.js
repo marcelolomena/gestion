@@ -9,12 +9,12 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tarea{tarea}</div>";
     template += "<div class='column-half'>CUI{idcui}</div>";
+    template += "<div class='column-half'>Tarea{tarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Proveedor{idproveedor}</div>";
+    template += "<div class='column-half'>Proveedor{nombreproveedor}</div>";
     template += "<div class='column-half'>Cuenta{cuentacontable}</div>";
     template += "</div>";
 
@@ -33,7 +33,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>nombreproveedor{nombreproveedor}</div>";
+    template += "<div class='column-half'>idproveedor{idproveedor}</div>";
     template += "<div class='column-half'>idcuenta{idcuenta}</div>";
     template += "<div class='column-half'>numerocontrato{numerocontrato}</div>";
     template += "</div>";
@@ -51,27 +51,13 @@ function showChildGrid(parentRowID, parentRowKey) {
             label: 'Tarea', name: 'tarea', width: 50, align: 'left', search: true, editable: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/tareasap/' + $('#grid').getRowData(parentRowKey).sap,
-                buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.tarea;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Tarea--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].tarea == thissid) {
-                            s += '<option value="' + data[i].tarea + '" selected>' + data[i].tarea + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].tarea + '">' + data[i].tarea + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
+                value: "0:--Escoger Tarea--",
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        var thispid = $(this).val();
+                        var thisval = $(this).val().split("|");
+                        //console.log("id:" + thisval[0]);
+                        //console.log("razon:" + thisval[1]);
+                        var thispid = thisval[2];
                         $.ajax({
                             type: "GET",
                             url: '/tareaservicio/' + thispid,
@@ -79,6 +65,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                             success: function (data) {
                                 $("input#idcuenta").val(data[0].cuentascontable.id);
                                 $("input#cuentacontable").val(data[0].cuentascontable.cuentacontable);
+                                $("input#idproveedor").val(thisval[0]);
+                                $("input#nombreproveedor").val(thisval[1]);
                             }
                         });
                     }
@@ -108,11 +96,31 @@ function showChildGrid(parentRowID, parentRowKey) {
                     });
                     return s + "</select>";
                 },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thispid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/tareacui/' + thispid,
+                            async: false,
+                            success: function (data) {
+                                var s = "<select>";//el default
+                                s += '<option value="0">--Escoger Tarea--</option>';
+                                $.each(data, function (i, item) {
+                                    s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                                });
+                                s += "</select>";
+                                $("#tarea").html(s);
+                            }
+                        });
+                    }
+                }]
             }
         },
         { label: 'uid', name: 'uid', search: false, hidden: true, editable: true },
         {
             label: 'idproveedor', name: 'idproveedor', search: false, hidden: true, editable: true,
+            /*
             edittype: "select",
             editoptions: {
                 dataUrl: '/proveedores/combobox',
@@ -138,7 +146,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                         $("input#nombreproveedor").val($('option:selected', this).text());
                     }
                 }],
-            }
+            }*/
         },
         { label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'left', search: true, editable: true },
         { label: 'idcuenta', name: 'idcuenta', search: false, hidden: true, editable: true },
@@ -266,6 +274,10 @@ function showChildGrid(parentRowID, parentRowKey) {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
+            }, beforeShowForm: function (form) {
+                $('input#cuentacontable', form).attr('readonly', 'readonly');
+                $('input#nombreproveedor', form).attr('readonly', 'readonly');
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
@@ -287,11 +299,12 @@ function showChildGrid(parentRowID, parentRowKey) {
                 postdata.compromiso = postdata.compromiso.split(".").join("").replace(",", ".");
                 postdata.realajustado = postdata.realajustado.split(".").join("").replace(",", ".");
                 postdata.saldotarea = postdata.saldotarea.split(".").join("").replace(",", ".");
+                postdata.tarea = postdata.tarea.split("|")[2];
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
-                } else if (postdata.idproveedor == 0) {
+                } /*else if (postdata.idproveedor == 0) {
                     return [false, "Proveedor: Debe escoger un valor", ""];
-                } else {
+                } */else {
                     return [true, "", ""]
                 }
             }, afterSubmit: function (response, postdata) {
@@ -306,6 +319,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                 }
             }, beforeShowForm: function (form) {
                 $('input#cuentacontable', form).attr('readonly', 'readonly');
+                $('input#nombreproveedor', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },

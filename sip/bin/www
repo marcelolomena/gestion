@@ -52,19 +52,20 @@ var handleClient = function (socket) {
 
   socket.on('message', function (message) {
     log('Got message:', message);
+    console.log("------------->>" + message)
+
+    if (message === 'bye') {
+      socket.disconnect();
+      console.log("socket.disconnect()")
+    }
     // for a real app, would be room only (not broadcast)
     socket.broadcast.emit('message', message);
-  });
-
-  socket.on('colgar', function (room) {
-
   });
 
   socket.on('create or join', function (room) {
     var namespace = '/';
     //var sala = io.nsps[namespace].adapter.rooms[room];//no funciona en 1.4.X
     var sala = io.sockets.adapter.rooms[room];
-
     var numClients = 0;
     //for (var i in sala) numClients++;
     if (sala) numClients = sala.length;
