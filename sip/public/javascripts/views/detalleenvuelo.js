@@ -51,7 +51,26 @@ function showChildGrid(parentRowID, parentRowKey) {
             label: 'Tarea', name: 'tarea', width: 50, align: 'left', search: true, editable: true,
             edittype: "select",
             editoptions: {
-                value: "0:--Escoger Tarea--",
+                //value: "0:--Escoger Tarea--",
+                //dataUrl: '/tareasap/' + $('#' + parentRowID).getRowData(parentRowKey).sap,
+                dataUrl: '/tareacui/' + thispid,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.tarea;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tarea--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].servicio.tarea == thissid) {
+                            s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '" selected>' + data[i].servicio.tarea + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         var thisval = $(this).val().split("|");
