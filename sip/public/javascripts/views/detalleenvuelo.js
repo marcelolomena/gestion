@@ -84,17 +84,14 @@ function showChildGrid(parentRowID, parentRowKey) {
                     var thissid = rowData.idcui;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
-                    var idcui = 0
                     s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
-                            idcui = data[i].id
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                         } else {
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    console.log('lo tiene  : ' + idcui)
                     return s + "</select>";
                 },
                 dataEvents: [{
@@ -250,12 +247,11 @@ function showChildGrid(parentRowID, parentRowKey) {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 setTimeout(function () {
-                    console.log('pico conchetumadre : ' + $('#idcui :selected').val())
+                    //console.log('idcui: ' + $('#idcui :selected').val())
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thistid = rowData.tarea;
-                    console.log('la tarea : ' + thistid)
                     var thispid = $('#idcui :selected').val();
                     $.ajax({
                         type: "GET",
