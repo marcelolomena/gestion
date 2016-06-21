@@ -197,50 +197,60 @@ exports.getUsersByRol = function (req, res) {
 
 exports.getCUIs = function (req, res) {
   var idcui;
-  
-  console.log("******usr*********:"+req.user[0].uid);
-  console.log("******rol*********:"+req.user[0].rid);
-  var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid="+req.user[0].uid;
-  console.log("query:"+sql1);
-  sequelize.query(sql1)
-    .spread(function (rows) {
-      //res.json(rows);
-      console.log("query:"+rows+", valor:"+rows[0].cui);
-      idcui = rows[0].cui;
-    }).then(function (servicio) {
-      
-//  var sql = "SELECT id, nombre FROM sip.estructuracui " +
-//    "ORDER BY nombre";
-
-  var sql = "select a.id, a.nombre "+
-    "from   sip.estructuracui a "+
-    "where  a.cui = "+idcui +" "+
-    "union "+
-    "select b.id, b.nombre "+
-    "from   sip.estructuracui a,sip.estructuracui b "+
-    "where  a.cui = "+idcui +" "+
-    "  and  a.cui = b.cuipadre "+
-    "union "+
-    "select c.id, c.nombre "+
-    "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c "+
-    "where  a.cui = "+idcui +" "+
-    "  and  a.cui = b.cuipadre "+
-    "  and  b.cui = c.cuipadre "+
-    "union "+
-    "select d.id, d.nombre "+
-    "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d "+
-    "where  a.cui = "+idcui +" "+
-    "  and  a.cui = b.cuipadre "+
-    "  and  b.cui = c.cuipadre "+
-    "  and  c.cui = d.cuipadre ";
-
+  var rol = req.user[0].rid;
+  console.log("******usr*********:" + req.user[0].uid);
+  console.log("******rol*********:" + req.user[0].rid);
+  console.log("*ROLADM*:" + constants.ROLADMDIVOT);
+  if (rol == constants.ROLADMDIVOT) {
+    var sql = "SELECT id, nombre FROM sip.estructuracui " +
+      "ORDER BY nombre";
     sequelize.query(sql)
       .spread(function (rows) {
         res.json(rows);
-    }).catch(function (err) {
-      res.json({ error_code: 1 });
-    });
-  });
+      }).catch(function (err) {
+        res.json({ error_code: 1 });
+      });
+  } else {
+    var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + req.user[0].uid;
+    console.log("query:" + sql1);
+    sequelize.query(sql1)
+      .spread(function (rows) {
+        if (rows.length > 0) {
+          console.log("query:" + rows + ", valor:" + rows[0].cui);
+          idcui = rows[0].cui;
+        } else {
+          idcui = 0; //cui no existente para que no encuentre nada
+        }
+      }).then(function (servicio) {
+        var sql = "select a.id, a.nombre " +
+          "from   sip.estructuracui a " +
+          "where  a.cui = " + idcui + " " +
+          "union " +
+          "select b.id, b.nombre " +
+          "from   sip.estructuracui a,sip.estructuracui b " +
+          "where  a.cui = " + idcui + " " +
+          "  and  a.cui = b.cuipadre " +
+          "union " +
+          "select c.id, c.nombre " +
+          "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c " +
+          "where  a.cui = " + idcui + " " +
+          "  and  a.cui = b.cuipadre " +
+          "  and  b.cui = c.cuipadre " +
+          "union " +
+          "select d.id, d.nombre " +
+          "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d " +
+          "where  a.cui = " + idcui + " " +
+          "  and  a.cui = b.cuipadre " +
+          "  and  b.cui = c.cuipadre " +
+          "  and  c.cui = d.cuipadre ";
+        sequelize.query(sql)
+          .spread(function (rows) {
+            res.json(rows);
+          }).catch(function (err) {
+            res.json({ error_code: 1 });
+          });
+      });
+  }
 };
 
 
@@ -264,7 +274,7 @@ exports.action = function (req, res) {
   console.log("Id Prep:" + version);
   switch (action) {
     case "add":
-      var ejercicio=req.body.idejercicio;
+      var ejercicio = req.body.idejercicio;
       models.presupuesto.create({
         idejercicio: req.body.idejercicio,
         idcui: req.body.idcui,
@@ -277,20 +287,20 @@ exports.action = function (req, res) {
           where: { 'idpresupuesto': idpre }
         }).then(function (servicio) {
           for (var i = 0; i < servicio.length; i++) {
-            var idservorig=servicio[i].id;
+            var idservorig = servicio[i].id;
             console.log("----->" + servicio[i].id)
-            sequelize.query('EXECUTE sip.InsertaPeriodo '+servicio[i].id
-            +","+ejercicio
-            +","+id_cui
-            +","+presupuesto.id
-            +","+servicio[i].idservicio
-            +","+servicio[i].idmoneda
-            +","+servicio[i].montoforecast
-            +","+servicio[i].montoanual
-            +';').then(function(response){
-            }).error(function(err){
+            sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
+              + "," + ejercicio
+              + "," + id_cui
+              + "," + presupuesto.id
+              + "," + servicio[i].idservicio
+              + "," + servicio[i].idmoneda
+              + "," + servicio[i].montoforecast
+              + "," + servicio[i].montoanual
+              + ';').then(function (response) {
+              }).error(function (err) {
                 res.json(err);
-            });
+              });
           }
           res.json({ error_code: 0 });
         }).catch(function (err) {
