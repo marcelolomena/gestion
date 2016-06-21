@@ -5,6 +5,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var iniciativaController = require('../controllers/iniciativa');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var iniciativafechaController = require('../controllers/iniciativafecha');
+var presupuestoiniciativaController = require('../controllers/presupuestoiniciativa');
 
 module.exports = function (passport) {
 
@@ -50,7 +51,7 @@ module.exports = function (passport) {
 
     router.route('/usuarios_por_rol/:rol')
         .get(isAuthenticated, iniciativaController.getUsersByRol);
-    
+
     router.route('/iniciativa/combobox')
         .get(isAuthenticated, iniciativaController.combobox);
 
@@ -59,6 +60,12 @@ module.exports = function (passport) {
 
     router.route('/iniciativaprograma/combobox/:id')
         .get(isAuthenticated, iniciativaprogramaController.combobox);
+
+    router.route('/presupuestoiniciativa/action')
+        .post(isAuthenticated, presupuestoiniciativaController.action);
+
+    router.route('/presupuestoiniciativa/:id')
+        .post(isAuthenticated, presupuestoiniciativaController.list);
 
     return router;
 

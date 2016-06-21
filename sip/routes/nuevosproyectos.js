@@ -27,11 +27,11 @@ module.exports = function (passport) {
     router.route('/tareasnuevosproyectos/action/:idd')
         .post(isAuthenticated, tareasNuevosProyectosController.action);
 
-    router.route('/flujonuevatarea/:id')
-        .post(isAuthenticated, flujoNuevaTareaController.list);
+    //router.route('/flujonuevatarea/:id')
+      //  .post(isAuthenticated, flujoNuevaTareaController.list);
 
-    router.route('/flujonuevatarea/:idd/action')
-        .post(isAuthenticated, flujoNuevaTareaController.action);
+    //router.route('/flujonuevatarea/:idd/action')
+      //  .post(isAuthenticated, flujoNuevaTareaController.action);
 
     return router;
 
