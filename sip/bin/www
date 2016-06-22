@@ -52,7 +52,7 @@ var handleClient = function (socket) {
 
   socket.on('message', function (message) {
     log('Got message:', message);
-    console.log("------------->>" + message)
+    //console.log("------------->>" + message)
 
     if (message === 'bye') {
       socket.disconnect();

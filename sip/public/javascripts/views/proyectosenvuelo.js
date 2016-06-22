@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>CUI{idcui}</div>";
-    template += "<div class='column-half'>% Avance{porcentajeavance}</div>";
+    template += "<div class='column-half'>Lider Proyecto {uidlider}</div>";    
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -25,11 +25,10 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Fecha Cierre SAP {fechacierresap}</div>";
-    template += "<div class='column-half'></div>";
+    template += "<div class='column-half'>% Avance{porcentajeavance}</div>";    
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Lider Proyecto {uidlider}</div>";
     template += "<div class='column-half'>PMO {uidpmo}</div>";
     template += "</div>";
 
@@ -46,18 +45,24 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         {
             label: 'SAP', name: 'sap', width: 60, align: 'center', search: true, editable: true,
+            editrules: { number: true },
             searchoptions: {
                 sopt: ["eq", "le", "ge"]
-            },
+            }
         },
-        { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true },
-        { label: 'ART', name: 'codigoart', width: 50, align: 'right', search: true, editable: true },
+        {
+            label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true,
+            editrules: { required: true },
+        },
+        {
+            label: 'ART', name: 'codigoart', width: 50, align: 'right', search: true, editable: true,
+            editrules: { number: true },
+        },
         {
             label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'center', search: true, editable: false,
             hidden: false, searchoptions: {
                 sopt: ["eq", "le", "ge"]
             },
-            //jsonmap: "estructuracui.cui"
         },
         {
             label: 'CUI', name: 'idcui', search: false, editable: true, hidden: true,
@@ -71,7 +76,7 @@ $(document).ready(function () {
                     var thissid = rowData.id;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Cui--</option>';
+                    s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
@@ -83,7 +88,10 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: '% Avance', name: 'porcentajeavance', width: 50, align: 'right', search: true, editable: true },
+        {
+            label: '% Avance', name: 'porcentajeavance', width: 50, align: 'right', search: true, editable: true,
+            editrules: { number: true },
+        },
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 120, align: 'center', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
@@ -151,12 +159,12 @@ $(document).ready(function () {
             label: 'Lider Proyecto', name: 'uidlider', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuarios_por_rol/PMO',
+                dataUrl: '/usuarios_por_rol_art/prm',
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.uidpmo;
+                    var thissid = rowData.uidlider;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Lider Proyecto--</option>';
@@ -250,16 +258,6 @@ $(document).ready(function () {
 
         }
     });
-    $("#grid").jqGrid("setLabel", "sap", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "nombre", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "codigoart", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "estructuracui.cui", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "porcentajeavance", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "fechainicio", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "fechapap", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "fechacierresap", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "liderproyecto", "", { "text-align": "center" });
-    $("#grid").jqGrid("setLabel", "pmoresponsable", "", { "text-align": "center" });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: true, del: true, search: false,
@@ -284,7 +282,7 @@ $(document).ready(function () {
             }
         },
         {
-            addCaption: "Agrega Proyecto",
+            addCaption: "Agrega Proyecto en Vuelo",
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -293,10 +291,16 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.uidlider == 0) {
-                    return [false, "Lider: Debe escoger un valor", ""];
-                } else if (postdata.uidpmo == 0) {
+                if (postdata.fechainicio == "") postdata.fechainicio = null;
+                if (postdata.fechapap == "") postdata.fechapap = null;
+                if (postdata.fechacierresap == "") postdata.fechacierresap = null;
+                if (postdata.porcentajeavance == "") postdata.porcentajeavance = 0;
+                if (postdata.uidlider == "0") {
+                    return [false, "Lider de Proyecto: Debe escoger un valor", ""];
+                } else if (postdata.uidpmo == "0") {
                     return [false, "PMO: Debe escoger un valor", ""];
+                } else if (postdata.idcui == "0") {
+                    return [false, "CUI: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -304,7 +308,7 @@ $(document).ready(function () {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0) {
-                    return [false, result.error_text, ""];
+                    return [false, result.error_text.sql, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
                     $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
@@ -332,6 +336,17 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
+
+    $("#grid").jqGrid("setLabel", "sap", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "nombre", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "codigoart", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "estructuracui.cui", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "porcentajeavance", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "fechainicio", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "fechapap", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "fechacierresap", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "liderproyecto", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "pmoresponsable", "", { "text-align": "center" });
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",

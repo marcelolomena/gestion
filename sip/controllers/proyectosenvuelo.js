@@ -25,8 +25,8 @@ exports.action = function (req, res) {
             }).then(function (contrato) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
-                res.json({ error_code: 1 });
+                //console.log(err);
+                res.json({ error_text: err, error_code: 1 });
             });
 
             break;

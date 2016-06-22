@@ -51,9 +51,6 @@ module.exports = function (passport) {
     router.route('/actualizaduracion/:id')
         .get(isAuthenticated, iniciativafechaController.actualizaDuracion);
 
-    router.route('/usuarios_por_rol/:rol')
-        .get(isAuthenticated, iniciativaController.getUsersByRol);
-
     router.route('/iniciativa/combobox')
         .get(isAuthenticated, iniciativaController.combobox);
 
