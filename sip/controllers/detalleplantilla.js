@@ -31,11 +31,12 @@ exports.list = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, plantillapresupuesto.id, plantillapresupuesto.idcui, plantillapresupuesto.idservicio, plantillapresupuesto.idproveedor, " +
     "estructuracui.cui, estructuracui.nombre as nombrecui ,estructuracui.uid, estructuracui.nombreresponsable, estructuracui.idgerencia, estructuracui.gerencia,estructuracui.nombregerente, " +
-    "servicio.nombre, servicio.idcuenta,servicio.tarea, " +
+    "servicio.nombre,cuentas.cuentacontable+'  '+cuentas.nombrecuenta as cuentacontable,servicio.tarea, " +
     "proveedor.numrut, proveedor.dvrut, proveedor.razonsocial " +
     "FROM sip.plantillapresupuesto plantillapresupuesto " +
     " LEFT OUTER JOIN sip.estructuracui estructuracui ON plantillapresupuesto.idcui = estructuracui.id " +
-    " LEFT OUTER JOIN sip.servicio servicio ON plantillapresupuesto.idservicio = servicio.id " +
+    " LEFT OUTER JOIN (sip.servicio servicio LEFT OUTER JOIN sip.cuentascontables cuentas ON servicio.idcuenta = cuentas.id) " +
+    " ON plantillapresupuesto.idservicio = servicio.id " +
     " LEFT OUTER JOIN sip.proveedor proveedor ON plantillapresupuesto.idproveedor = proveedor.id " +
     " where plantillapresupuesto.idcui = "+id+" AND plantillapresupuesto.borrado = 1 ORDER BY cui asc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -59,9 +60,13 @@ exports.list = function (req, res) {
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, plantillapresupuesto.id, plantillapresupuesto.idcui, plantillapresupuesto.idservicio, plantillapresupuesto.idproveedor, " +
         "estructuracui.cui, estructuracui.nombre as nombrecui ,estructuracui.uid, estructuracui.nombreresponsable, estructuracui.idgerencia, estructuracui.gerencia,estructuracui.nombregerente, " +
-        "servicio.nombre, servicio.idcuenta,servicio.tarea, " +
+        "servicio.nombre, cuentas.cuentacontable+'  '+cuentas.nombrecuenta as cuentacontable,servicio.tarea, " +
         "proveedor.numrut, proveedor.dvrut, proveedor.razonsocial " +
-        "FROM sip.estructuracui " +
+        "FROM sip.plantillapresupuesto plantillapresupuesto " +
+        " LEFT OUTER JOIN sip.estructuracui estructuracui ON plantillapresupuesto.idcui = estructuracui.id " +
+        " LEFT OUTER JOIN (sip.servicio servicio LEFT OUTER JOIN sip.cuentascontables cuentas ON servicio.idcuenta = cuentas.id) " +
+        " ON plantillapresupuesto.idservicio = servicio.id " +
+        " LEFT OUTER JOIN sip.proveedor proveedor ON plantillapresupuesto.idproveedor = proveedor.id " +
         "WHERE  plantillapresupuesto.idcui =" +id+" AND plantillapresupuesto.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -98,60 +103,4 @@ exports.list = function (req, res) {
     })
 
   }
-};
-
-exports.list2222 = function (req, res) {
-
-    var page = req.body.page;
-    var rows = req.body.rows;
-    var filters = req.body.filters;
-    var sidx = req.body.sidx;
-    var sord = req.body.sord;
-
-    if (!sidx)
-        sidx = "idcui";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = sidx + " " + sord;
-
-    var additional = [{
-        "field": "idcui",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (err) {
-            console.log("->>> " + err)
-        } else {
-            models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-            models.plantillapresupuesto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
-            models.plantillapresupuesto.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });            
-            models.plantillapresupuesto.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.plantillapresupuesto.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    where: data,
-                    include: 
-                    [{model: models.estructuracui},
-                     {model: models.servicio},
-                     {model: models.proveedor}                      
-                    ]
-                }).then(function (plantillas) {
-                    //Contrato.forEach(log)
-                    res.json({ records: records, total: total, page: page, rows: plantillas });
-                }).catch(function (err) {
-                    //console.log(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-
 };

@@ -153,11 +153,11 @@ function showChildGrid(parentRowID, parentRowKey) {
                         });
                     }
                 }]
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, dataInit: function (elem) { $(elem).width(100); }
 
         },
-        { label: 'Cuenta', name: 'idcuenta', editable: true, editrules: { edithidden: false }, hidedlg: true },
-        { label: 'Tarea', name: 'tarea', editable: true, editrules: { edithidden: false }, hidedlg: true },
+        { label: 'Cuenta', name: 'cuentacontable', editable: true,width: 300, editrules: { edithidden: false }, hidedlg: true },
+        { label: 'Tarea', name: 'tarea', editable: true, width: 80,editrules: { edithidden: false }, hidedlg: true },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left',
             search: false, editable: true, hidden: false,
@@ -178,7 +178,7 @@ function showChildGrid(parentRowID, parentRowKey) {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         shrinkToFit: true,
-        autowidth: true,
+        width: 1300,
         caption: 'Plantilla por CUI-SERVICIO-PROVEEDOR',
         styleUI: "Bootstrap",
         subGrid: false,

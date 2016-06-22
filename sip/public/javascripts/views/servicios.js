@@ -39,7 +39,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/serviciosext/cuentas',
                 buildSelect: function (response) {
-                    var grid = $("#table_servicio");
+                    var grid = $("#table_servicio2");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idcuenta;
@@ -63,7 +63,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Cuenta Contable', name: 'cuentacontable', width: 300, align: 'left', search: true,
+            label: 'Cuenta Contable', name: 'cuentacontable', width: 200, align: 'left', search: true,
             editable: true, jsonmap: "cuentascontable.cuentacontable",
             stype: 'select',
             searchoptions: {
@@ -80,11 +80,11 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Criticidad', name: 'criticidad', width: 200, align: 'left',
-            search: true, editable: true, editrules: { required: true }, hidden: true
+            label: 'NombreCuenta', name: 'nombrecuenta', width: 500, align: 'left',
+            search: false, editable: true,jsonmap: "cuentascontable.nombrecuenta", editrules: { required: false }, hidden: false
         },
         {
-            label: 'Tarea', name: 'tarea', width: 200, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: true, editrules: { required: false }, hidden: false
         },
     ];
@@ -98,7 +98,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-       // width: null,
+        width: 1600,
         autowidth: true,
         shrinkToFit: true,
         caption: 'Lista de servicios',
@@ -187,6 +187,7 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                    
                 sipLibrary.centerDialog($('#table_servicio').attr('id'));
             }
         },
