@@ -5,6 +5,9 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var iniciativaController = require('../controllers/iniciativa');
 var iniciativaprogramaController = require('../controllers/iniciativaprograma');
 var iniciativafechaController = require('../controllers/iniciativafecha');
+var presupuestoiniciativaController = require('../controllers/presupuestoiniciativa');
+var tareasnuevosproyectosController = require('../controllers/tareasnuevosproyectos');
+var flujonuevatareaController = require('../controllers/flujonuevatarea');
 
 module.exports = function (passport) {
 
@@ -48,9 +51,6 @@ module.exports = function (passport) {
     router.route('/actualizaduracion/:id')
         .get(isAuthenticated, iniciativafechaController.actualizaDuracion);
 
-    router.route('/usuarios_por_rol/:rol')
-        .get(isAuthenticated, iniciativaController.getUsersByRol);
-    
     router.route('/iniciativa/combobox')
         .get(isAuthenticated, iniciativaController.combobox);
 
@@ -59,6 +59,24 @@ module.exports = function (passport) {
 
     router.route('/iniciativaprograma/combobox/:id')
         .get(isAuthenticated, iniciativaprogramaController.combobox);
+
+    router.route('/presupuestoiniciativa/action')
+        .post(isAuthenticated, presupuestoiniciativaController.action);
+
+    router.route('/presupuestoiniciativa/:id')
+        .post(isAuthenticated, presupuestoiniciativaController.list);
+
+    router.route('/tareasnuevosproyectos/action')
+        .post(isAuthenticated, tareasnuevosproyectosController.action);
+
+    router.route('/tareasnuevosproyectos/:id')
+        .post(isAuthenticated, tareasnuevosproyectosController.list);
+
+    router.route('/flujonuevatarea/action')
+        .post(isAuthenticated, flujonuevatareaController.action);
+
+    router.route('/flujonuevatarea/:id')
+        .post(isAuthenticated, flujonuevatareaController.list);
 
     return router;
 

@@ -22,7 +22,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, plantillaController.getExcel);
 
     router.route('/detalleplantilla/:id')
-        .post(isAuthenticated, detalleplantillaController.list);      
+        .get(isAuthenticated, detalleplantillaController.list);      
         
     router.route('/cuiservicios/:id')
         .get(isAuthenticated, plantillacuiController.getCuiServicios);  

@@ -266,7 +266,7 @@ exports.sap = function (req, res) {
     models.proyecto.findAll({
         attributes: ['id', 'sap']
     }).then(function (proyecto) {
-        console.dir(proyecto)
+        //console.dir(proyecto)
         res.json(proyecto);
     }).catch(function (err) {
         //console.log(err);

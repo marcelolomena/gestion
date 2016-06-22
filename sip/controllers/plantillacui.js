@@ -7,6 +7,7 @@ exports.getCuiServicios = function (req, res) {
  var id = req.params.id;
   
   var sql = "SELECT b.id, b.nombre FROM sip.servicio b "+
+  "Where b.borrado = 1 " +
   "ORDER BY b.nombre";
       
   sequelize.query(sql)

@@ -1,4 +1,4 @@
-function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
+function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -35,9 +35,9 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
     template += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/flujonuevatarea/" + parentRowKey;
+    var childGridURL = "/presupuestoiniciativa/" + parentRowKey;
 
-    var modelFlujoNuevaTarea = [
+    var modelPresupuestoIniciativa = [
         {
             label: 'id',
             name: 'id',
@@ -45,27 +45,45 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
-            label: 'Subtarea', name: 'art_sub_task.title', width: 200, align: 'left',
+            label: 'Cui 1', name: 'cuifinanciamiento1', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Periodo', name: 'periodo', width: 50, align: 'left',
+            label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
+            label: 'Cui 2', name: 'cuifinanciamiento2', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
+            label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
+            label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
+            label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200, align: 'left',
+            search: true, editable: false, hidden: false,
+        },
+        {
+            label: 'uidlider', name: 'uidlider', search: true, editable: false, hidden: true,
+        },
+        {
+            label: 'Lider', name: 'user.uname', width: 150, align: 'left',
+            search: true, editable: false, hidden: false,
+        },
+        {
+            label: 'uidjefeproyecto', name: 'uidjefeproyecto', search: true, editable: false, hidden: true,
+        },
+        {
+            label: 'Jefe de Proyecto', name: 'user.uname', width: 150, align: 'left',
+            search: true, editable: false, hidden: false,
+        },
+        {
+            label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -92,34 +110,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Fecha Fin', name: 'fechainicio', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true,
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
-                }
-            }
-        },
-        {
-            label: 'Monto', name: 'montoorigen', width: 80, align: 'right',
+            label: 'Dolar', name: 'dolar', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -128,8 +119,9 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 }
             }
         },
+        
         {
-            label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
+            label: 'UF', name: 'uf', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -148,19 +140,25 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Flujo',
+        caption: 'Presupuesto',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelFlujoNuevaTarea,
+        colModel: modelPresupuestoIniciativa,
         viewrecords: true,
         styleUI: "Bootstrap",
+        subGrid: true,
+        subGridRowExpanded: showSubGrids2,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/flujonuevatarea/action',
+        editurl: '/presupuestoiniciativa/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -287,4 +285,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+}
+function showSubGrids2(subgrid_id, row_id) {
+    gridTareasNuevosProyectos(subgrid_id, row_id,'tareas');
 }

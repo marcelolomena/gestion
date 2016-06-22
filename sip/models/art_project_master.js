@@ -99,6 +99,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'art_project_master'
+    schema: 'dbo', timestamps: false, tableName: 'art_project_master'
   });
 };

@@ -55,8 +55,6 @@ function showChildGrid(parentRowID, parentRowKey) {
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         var thisval = $(this).val().split("|");
-                        //console.log("id:" + thisval[0]);
-                        //console.log("razon:" + thisval[1]);
                         var thispid = thisval[2];
                         $.ajax({
                             type: "GET",
@@ -120,33 +118,6 @@ function showChildGrid(parentRowID, parentRowKey) {
         { label: 'uid', name: 'uid', search: false, hidden: true, editable: true },
         {
             label: 'idproveedor', name: 'idproveedor', search: false, hidden: true, editable: true,
-            /*
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/proveedores/combobox',
-                buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Proveedor--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        $("input#nombreproveedor").val($('option:selected', this).text());
-                    }
-                }],
-            }*/
         },
         { label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'left', search: true, editable: true },
         { label: 'idcuenta', name: 'idcuenta', search: false, hidden: true, editable: true },
@@ -275,6 +246,33 @@ function showChildGrid(parentRowID, parentRowKey) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
+                setTimeout(function () {
+                    //console.log('idcui: ' + $('#idcui :selected').val())
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thistid = rowData.tarea;
+                    var thispid = $('#idcui :selected').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '/tareacui/' + thispid,
+                        async: false,
+                        success: function (data) {
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Tarea--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].servicio.tarea == thistid) {
+                                    s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '" selected>' + data[i].servicio.tarea + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("#tarea").html(s);
+                        }
+                    });
+                }, 1000);
+
                 $('input#cuentacontable', form).attr('readonly', 'readonly');
                 $('input#nombreproveedor', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -302,9 +300,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                 postdata.tarea = postdata.tarea.split("|")[2];
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
-                } /*else if (postdata.idproveedor == 0) {
-                    return [false, "Proveedor: Debe escoger un valor", ""];
-                } */else {
+                } else {
                     return [true, "", ""]
                 }
             }, afterSubmit: function (response, postdata) {

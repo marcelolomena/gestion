@@ -12,7 +12,7 @@
             "idleTimeout": 500000
         }
     },
-    "qa": {
+    "testing": {
         "username": "art",
         "password": "Art2015",
         "database": "art_live",

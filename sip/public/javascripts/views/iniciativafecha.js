@@ -1,4 +1,4 @@
-function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
+function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -10,62 +10,62 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         pager_id += suffix;
     }
 
-    var template = "<div id='responsive-form' class='clearfix'>";
+    var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-full'>Iniciativa{idiniciativapadre}</div>";
-    template += "</div>";
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'>Tipo Fecha {idtipofecha}</div>";
+    tmplPF += "<div class='column-half'>Fecha {fecha}</div>";
+    tmplPF += "</div>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-full'>Iniciativa Programa{idiniciativaprograma}</div>";
-    template += "</div>";
+    tmplPF += "<div class='form-row' style='display: none;'>";
+    tmplPF += "<div class='column-half'>tipofecha {tipofecha}</div>";
+    tmplPF += "</div>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-full'>Moneda{idmoneda}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
-    template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
-    template += "<div class='column-half'>idmoneda{glosamoneda}</div>";
-    template += "</div>";
-
-    template += "<hr style='width:100%;'/>";
-    template += "<div> {sData} {cData}  </div>";
-    template += "</div>";
+    tmplPF += "<hr style='width:100%;'/>";
+    tmplPF += "<div> {sData} {cData}  </div>";
+    tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/flujonuevatarea/" + parentRowKey;
+    var childGridURL = "/iniciativafecha/" + parentRowKey;
 
-    var modelFlujoNuevaTarea = [
+    var modelIniciativaFecha = [
+        { label: 'id', name: 'id', key: true, hidden: true },
+
         {
-            label: 'id',
-            name: 'id',
-            key: true,
-            hidden: true
+            label: 'Tipo Fecha', name: 'idtipofecha', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/tipofecha',
+                buildSelect: function (response) {
+                    var grid = $("#" + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.tipofecha;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo de Fecha--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#tipofecha").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Subtarea', name: 'art_sub_task.title', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Tipo Fecha', name: 'tipofecha', width: 400, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Periodo', name: 'periodo', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
-            label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
-            label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
-            label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
+            label: 'Fecha', name: 'fecha', width: 120, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -76,7 +76,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                childGridID[0].triggerToolbar();
+                                $("#" + childGridID)[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -86,59 +86,11 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
-        {
-            label: 'Fecha Fin', name: 'fechainicio', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true,
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
-                }
-            }
-        },
-        {
-            label: 'Monto', name: 'montoorigen', width: 80, align: 'right',
-            search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editoptions: {
-                dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
-                }
-            }
-        },
-        {
-            label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
-            search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editoptions: {
-                dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
-                }
-            }
-        }
-
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -148,24 +100,24 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Flujo',
+        caption: 'Fechas Clave',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelFlujoNuevaTarea,
+        colModel: modelIniciativaFecha,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/flujonuevatarea/action',
+        editurl: '/iniciativafecha/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "porcentaje1": "No hay datos", "cuifinanciamiento2": "" });
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
             }
         }
     });
@@ -178,8 +130,8 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Presupuesto Iniciativa",
-            template: template,
+            editCaption: "Modificar Fecha Crítica",
+            template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -228,8 +180,8 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Presupuesto Iniciativa",
-            template: template,
+            addCaption: "Agregar Fecha Crítica",
+            template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -271,7 +223,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Presupuesto Iniciativa",
+            addCaption: "Eliminar Fecha Crítica",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {

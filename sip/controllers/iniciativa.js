@@ -182,28 +182,6 @@ exports.getExcel = function (req, res) {
 
 };
 
-exports.getUsersByRol = function (req, res) {
-  models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
-  models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
-
-  models.user.findAll({
-    order: ['[user].first_name', '[user].last_name'],
-    include: [{
-      model: models.rol,
-      where: { 'glosarol': req.params.rol },
-    }]
-  }).then(function (gerentes) {
-    //gerentes.forEach(log)
-    console.dir(gerentes)
-    res.json(gerentes);
-  }).catch(function (err) {
-    console.log(err);
-    res.json({ error_code: 1 });
-  });
-
-};
-
-
 exports.getDivisiones = function (req, res) {
 
   var sql = "select * from art_division_master " +

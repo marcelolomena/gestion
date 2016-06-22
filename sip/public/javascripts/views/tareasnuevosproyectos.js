@@ -1,4 +1,4 @@
-function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
+function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -35,9 +35,9 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
     template += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/flujonuevatarea/" + parentRowKey;
+    var childGridURL = "/tareasnuevosproyectos/" + parentRowKey;
 
-    var modelFlujoNuevaTarea = [
+    var modelTareasNuevosProyectos = [
         {
             label: 'id',
             name: 'id',
@@ -45,27 +45,54 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
-            label: 'Subtarea', name: 'art_sub_task.title', width: 200, align: 'left',
+            label: 'Cui', name: 'estructuracui.cui', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Periodo', name: 'periodo', width: 50, align: 'left',
+            label: 'Servicio', name: 'servicio.nombre', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
+            label: 'Proveedor', name: 'proveedor.razonsocial', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
+            label: 'Tipo Pago', name: 'parametro.nombre', width: 80, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
+            label: 'Fecha Inicio', name: 'fechainicio', width: 100, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true,
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                childGridID[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
+        },
+        {
+            label: 'Fecha Fin', name: 'fechafin', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -92,34 +119,15 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Fecha Fin', name: 'fechainicio', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true,
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
-                }
-            }
+            label: 'Requiere Contrato', name: 'reqcontrato', width: 50, align: 'left',
+            search: true, editable: false, hidden: false,
         },
         {
-            label: 'Monto', name: 'montoorigen', width: 80, align: 'right',
+            label: 'Moneda', name: 'moneda.moneda', width: 50, align: 'left',
+            search: true, editable: false, hidden: false,
+        },
+        {
+            label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -129,14 +137,12 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
-            search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editoptions: {
-                dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
-                }
-            }
+            label: 'Cantidad', name: 'cantidad', width: 50, align: 'left',
+            search: true, editable: false, hidden: false,
+        },
+         {
+            label: 'Con IVA', name: 'coniva', width: 50, align: 'left',
+            search: true, editable: false, hidden: false,
         }
 
     ];
@@ -148,24 +154,30 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Flujo',
+        caption: 'Tareas',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelFlujoNuevaTarea,
+        colModel: modelTareasNuevosProyectos,
         viewrecords: true,
         styleUI: "Bootstrap",
+        subGrid: true,
+        subGridRowExpanded: showSubGrids3,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/flujonuevatarea/action',
+        editurl: '/presupuestoiniciativa/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "porcentaje1": "No hay datos", "cuifinanciamiento2": "" });
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "idcui": "No hay datos", "idservicio": "" });
             }
         }
     });
@@ -287,4 +299,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+}
+function showSubGrids3(subgrid_id, row_id) {
+    gridFlujoNuevaTarea(subgrid_id, row_id,'flujo');
 }

@@ -20,16 +20,16 @@ exports.getServicios = function (req, res) {
 };
 
 exports.cuentas = function (req, res) {
-  models.cuentascontables.findAll({
-    order: 'cuentacontable'
-  }).then(function (cuentas) {
-    //iniciativas.forEach(log)
-    res.json(cuentas);
-  }).catch(function (err) {
-    //console.log(err);
-    res.json({ error_code: 1 });
-  });
-}
+  
+  var sql = "SELECT  id, cuentacontable+'  '+nombrecuenta as cuentacontable FROM sip.cuentascontables "+
+  "Where borrado = 1 " +
+  "ORDER BY cuentacontable";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};
 
 exports.list = function (req, res) {
 
