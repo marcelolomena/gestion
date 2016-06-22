@@ -234,7 +234,8 @@ exports.action = function (req, res) {
     case "edit":
       console.log("Edit:"+req.body.presupuestopesos);
       models.detalleplan.update({
-        presupuestopesos: req.body.presupuestopesos
+        presupuestopesos: req.body.presupuestopesos,
+        periodo:req.body.periodo
       }, {
           where: {
             id: req.body.id

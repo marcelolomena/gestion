@@ -152,18 +152,29 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
-            beforeSubmit: function (postdata, formid) {
+            beforeSubmit: function (postdata, formid) {                               
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
+                if (rowKey == null) {
+                    //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
+                    //return [false, "", ""];
+                } else {
+                    //disableSelect();
+                }                
                 console.log("*** selrow:" + rowKey);
                 console.log("***Ejercicio:" + postdata.idejercicio+","+rowData.idejercicio);
                 postdata.id = rowKey;
-                if (postdata.idejercicio == rowData.idejercicio){
-                    postdata.version = parseInt(rowData.version) + 1;
+                //Obtiene version
+                var ver = getVersion(postdata.idcui,postdata.idejercicio);
+                console.log("Version:"+ver);
+                if (ver > 0) {
+                    postdata.version = parseInt(ver) + 1;
+                    console.log("v+1:"+postdata.version);
                 } else {
                     postdata.version = 1;
                 }
+                
                 postdata.ejercicio = rowData.ejercicio
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
@@ -174,15 +185,25 @@ $(document).ready(function () {
                 } else {
                     return [true, "", ""]
                 }
+                
             },
-            beforeShowForm: function (formid) {
+            afterShowForm: function (formid) {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 if (rowKey == null) {
                     //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
-                    return [false, "", ""];
+                    //return [false, "", ""];
+                } else {
+                    //disableSelect();
                 }
                 return [true, "", ""];
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code == 10)
+                    return [false, "Ya existe un presuspuesto Aprobado o Confirmado para el CUI", ""];
+                else
+                    return [true, "", ""]
             }
         },
         {
@@ -193,6 +214,15 @@ $(document).ready(function () {
             addCaption: "Elimina Presupuesto",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            }, beforeSubmit: function (postdata, formid) {                               
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                if (rowData.estado != 'Creado') {
+                    return [false, "Solo puede eliminar presupuestos en estado Creado", ""];
+                } else{
+                    return [true, "", ""];
+                }
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -221,6 +251,27 @@ $(document).ready(function () {
     $("#pager_left").css("width", "");
 });
 
+function disableSelect() {
+    alert("disable");
+    $('#idcui').hide();
+}
+
+function getVersion(cui, ejercicio){
+    var version;
+    $.ajax({ 
+        url: "/getversion/"+cui+"/"+ejercicio, 
+        dataType: 'json', 
+        async: false, 
+        success: function(j){ 
+            $.each(j,function(i,item) {
+                version = item.version;
+                console.log('***version:'+version); 
+            });
+        } 
+    });    
+    return version; 
+        
+}
 
 function showPresupuestoServicios(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
@@ -538,7 +589,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 label: 'Periodo',
                 name: 'periodo',
                 search: false,
-                editable: false,
+                editable: true,
                 sortable: false,
                 width: 100,
             },

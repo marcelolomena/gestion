@@ -309,19 +309,15 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.detallepre.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          console.log('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
+      var id = req.body.id;
+      var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre="+id+"; "+
+        "DELETE FROM sip.detallepre WHERE id="+id;
+          
+      sequelize.query(sql).then(function (response) {
+            res.json({ error_code: 0 });
+        }).error(function (err) {
+          res.json(err);
+        });
 
       break;
 

@@ -265,52 +265,81 @@ exports.getEjercicios = function (req, res) {
 
 };
 
+exports.getVersion = function (req, res) {
+  console.log("******EN VERSIONNNNN********");
+  console.log("******EN VERSIONNNNN********");
+  var cui=req.params.cui;
+  var ejercicio=req.params.ejercicio;
+  var sql = "SELECT max(version) AS version "+
+  "FROM sip.presupuesto WHERE idcui="+cui+" AND idejercicio="+ejercicio;
+  
+  console.log("***SQL***:"+sql);
+  sequelize.query(sql)
+    .spread(function (rows) {
+      if (rows.length > 0){
+        res.json(rows);
+      } else {
+        res.json({ version: 1 });
+      }
+    });
+
+};
+
 exports.action = function (req, res) {
   var action = req.body.oper;
   var idpre = req.body.id;
   var version = req.body.version;
   var id_cui = req.body.idcui;
+  var ejercicio = req.body.idejercicio;
   console.log("Id Prep:" + idpre);
-  console.log("Id Prep:" + version);
+  console.log("Ejercicio:" + ejercicio);
   switch (action) {
     case "add":
-      var ejercicio = req.body.idejercicio;
-      models.presupuesto.create({
-        idejercicio: req.body.idejercicio,
-        idcui: req.body.idcui,
-        descripcion: req.body.descripcion,
-        estado: 'ingresado',
-        version: version,
-        borrado: 1
-      }).then(function (presupuesto) {
-        models.detallepre.findAll({
-          where: { 'idpresupuesto': idpre }
-        }).then(function (servicio) {
-          for (var i = 0; i < servicio.length; i++) {
-            var idservorig = servicio[i].id;
-            console.log("----->" + servicio[i].id)
-            sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
-              + "," + ejercicio
-              + "," + id_cui
-              + "," + presupuesto.id
-              + "," + servicio[i].idservicio
-              + "," + servicio[i].idmoneda
-              + "," + servicio[i].montoforecast
-              + "," + servicio[i].montoanual
-              + ';').then(function (response) {
-              }).error(function (err) {
-                res.json(err);
+      var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id "+
+        "WHERE b.idcui="+id_cui+" AND b.idejercicio="+ejercicio+" AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
+      sequelize.query(sql)
+        .spread(function (rows) {
+          if (rows.length > 0) {
+            res.json({ error_code: 10 });
+          } else {
+            var ejercicio = req.body.idejercicio;
+            models.presupuesto.create({
+              idejercicio: req.body.idejercicio,
+              idcui: req.body.idcui,
+              descripcion: req.body.descripcion,
+              estado: 'Creado',
+              version: version,
+              borrado: 1
+            }).then(function (presupuesto) {
+              models.detallepre.findAll({
+                where: { 'idpresupuesto': idpre }
+              }).then(function (servicio) {
+                for (var i = 0; i < servicio.length; i++) {
+                  var idservorig = servicio[i].id;
+                  console.log("----->" + servicio[i].id)
+                  sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
+                    + "," + ejercicio
+                    + "," + id_cui
+                    + "," + presupuesto.id
+                    + "," + servicio[i].idservicio
+                    + "," + servicio[i].idmoneda
+                    + "," + servicio[i].montoforecast
+                    + "," + servicio[i].montoanual
+                    + ';').then(function (response) {
+                    }).error(function (err) {
+                      res.json(err);
+                    });
+                }
+                res.json({ error_code: 0 });
+              }).catch(function (err) {
+                res.json({ error_code: 1 });
               });
+            }).catch(function (err) {
+              console.log(err);
+              res.json({ error_code: 1 });
+            });
           }
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          res.json({ error_code: 1 });
-        });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-
+        });  
       break;
     case "edit":
       models.presupuesto.update({
@@ -329,20 +358,12 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.presupuesto.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          console.log('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-
+       sequelize.query('EXECUTE sip.EliminaPresupuesto ' + req.body.id
+          + ';').then(function (response) {
+            res.json({ error_code: 0 });
+        }).error(function (err) {
+          res.json(err);
+        });
       break;
 
   }
