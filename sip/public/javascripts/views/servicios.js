@@ -11,10 +11,6 @@ $(document).ready(function () {
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Cuenta {idcuenta}</div>";
     tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Criticidad {criticidad}</div>";
-    tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Tarea {tarea}</div>";
@@ -22,6 +18,7 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>cuentacontable {cuentacontable}</div>";
+    tmpl += "<div class='column-half'>Criticidad {criticidad}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -84,7 +81,7 @@ $(document).ready(function () {
         },
         {
             label: 'Criticidad', name: 'criticidad', width: 200, align: 'left',
-            search: true, editable: true, editrules: { required: true }, hidden: false
+            search: true, editable: true, editrules: { required: true }, hidden: true
         },
         {
             label: 'Tarea', name: 'tarea', width: 200, align: 'left',

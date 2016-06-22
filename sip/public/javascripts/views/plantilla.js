@@ -103,11 +103,11 @@ function showChildGrid(parentRowID, parentRowKey) {
     var modelDetalleServicio = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idcui', name: 'idcui', hidden: true },
-        { label: 'CUI', name: 'cui', editable: true, width: 100, jsonmap: "estructuracui.cui", editrules: { edithidden: false }, hidedlg: false },
-        { label: 'Nombre', name: 'nombrecui', editable: true, jsonmap: "estructuracui.nombre", editrules: { edithidden: false }, hidedlg: true },
+        { label: 'CUI', name: 'cui', editable: true, width: 100,hidden: true, jsonmap: "estructuracui.cui", editrules: { edithidden: false }, hidedlg: false },
+        { label: 'Nombre', name: 'nombrecui', editable: true,hidden: true, jsonmap: "estructuracui.nombre", editrules: { edithidden: false }, hidedlg: true },
         {
             label: 'Servicio', name: 'nombre', search: false, width: 300,
-            editable: true, jsonmap: "servicio.nombre",
+            editable: true, //jsonmap: "servicio.nombre",
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -156,9 +156,11 @@ function showChildGrid(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
+        { label: 'Cuenta', name: 'idcuenta', editable: true, editrules: { edithidden: false }, hidedlg: true },
+        { label: 'Tarea', name: 'tarea', editable: true, editrules: { edithidden: false }, hidedlg: true },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left',
-            search: false, editable: true, jsonmap: "proveedor.razonsocial", hidden: false,
+            search: false, editable: true, hidden: false,
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Proveedor--"
@@ -168,11 +170,13 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     $("#" + childGridID).jqGrid({
         url: '/detalleplantilla/' + parentRowKey,
-        mtype: "POST",
+        mtype: "GET",
         datatype: "json",
         page: 1,
         colModel: modelDetalleServicio,
+        rowNum: 10,
         viewrecords: true,
+        rowList: [5, 10, 20, 50],
         shrinkToFit: true,
         autowidth: true,
         caption: 'Plantilla por CUI-SERVICIO-PROVEEDOR',
