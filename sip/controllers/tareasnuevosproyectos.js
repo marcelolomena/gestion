@@ -17,7 +17,7 @@ exports.list = function (req, res) {
   var sord = req.body.sord;
 
   if (!sidx)
-    sidx = "idcui";
+    sidx = "estructuracui.cui";
 
   if (!sord)
     sord = "asc";
@@ -34,6 +34,9 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
+      models.tareasnuevosproyectos.belongsTo(models.moneda, { foreignKey: 'idmoneda' });
+      models.tareasnuevosproyectos.belongsTo(models.parametro, { foreignKey: 'idtipopago' });
+      models.tareasnuevosproyectos.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
       models.tareasnuevosproyectos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
       models.tareasnuevosproyectos.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
       models.tareasnuevosproyectos.count({
@@ -48,6 +51,15 @@ exports.list = function (req, res) {
           include: [
             {
             model: models.servicio
+          },
+          {
+            model: models.estructuracui
+          },
+          {
+            model: models.parametro
+          },
+          {
+            model: models.moneda
           },
           {
             model: models.proveedor

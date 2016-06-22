@@ -45,15 +45,15 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
-            label: 'Cui', name: 'idcui', width: 50, align: 'left',
+            label: 'Cui', name: 'estructuracui.cui', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Servicio', name: 'idservicio', width: 200, align: 'left',
+            label: 'Servicio', name: 'servicio.nombre', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Proveedor', name: 'idproveedor', width: 150, align: 'left',
+            label: 'Proveedor', name: 'proveedor.razonsocial', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
@@ -61,7 +61,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tipo Pago', name: 'idtipopago', width: 80, align: 'left',
+            label: 'Tipo Pago', name: 'parametro.nombre', width: 80, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
@@ -123,7 +123,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Moneda', name: 'idmoneda', width: 50, align: 'left',
+            label: 'Moneda', name: 'moneda.moneda', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {

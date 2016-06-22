@@ -45,7 +45,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
-            label: 'Subtarea', name: 'idsubtarea', width: 200, align: 'left',
+            label: 'Subtarea', name: 'art_sub_task.title', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
@@ -61,7 +61,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tipo Pago', name: 'idtipopago', width: 50, align: 'left',
+            label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {

@@ -40,9 +40,9 @@ exports.action = function (req, res) {
                 montoorigen: montoorigen,
                 costoorigen: costoorigen
             }, {
-                where: {
-                    id: req.body.id
-                }
+                    where: {
+                        id: req.body.id
+                    }
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
@@ -94,26 +94,35 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
+            models.flujonuevatarea.belongsTo(models.art_sub_task, { foreignKey: 'idsubtarea' });
+            models.flujonuevatarea.belongsTo(models.parametro, { foreignKey: 'idtipopago' });
             models.flujonuevatarea.count({
                 where: data
             }).then(function (records) {
                 //if (records > 0) {
-                    var total = Math.ceil(records / rows);
-                    models.flujonuevatarea.findAll({
-                        offset: parseInt(rows * (page - 1)),
-                        limit: parseInt(rows),
-                        order: orden,
-                        where: data
-                    }).then(function (compromisos) {
-                        res.json({ records: records, total: total, page: page, rows: compromisos });
-                    }).catch(function (err) {
-                        console.log(err);
-                        res.json({ error_code: 1 });
-                    });
+                var total = Math.ceil(records / rows);
+                models.flujonuevatarea.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    order: orden,
+                    where: data,
+                    include: [
+                        {
+                            model: models.art_sub_task
+                        },
+                        {
+                            model: models.parametro
+                        }]
+                }).then(function (compromisos) {
+                    res.json({ records: records, total: total, page: page, rows: compromisos });
+                }).catch(function (err) {
+                    console.log(err);
+                    res.json({ error_code: 1 });
+                });
                 //} else {
-                  //  insertaPeriodos(function (compromisos) {
-                    //    res.json({ records: 12, total: 12, page: 1, rows: compromisos });
-                   // });
+                //  insertaPeriodos(function (compromisos) {
+                //    res.json({ records: 12, total: 12, page: 1, rows: compromisos });
+                // });
                 //}
             })
         }
