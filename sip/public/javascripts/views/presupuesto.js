@@ -88,7 +88,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, editable: true },
-        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: true },
+        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: true},
         { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
     ];
     $("#grid").jqGrid({

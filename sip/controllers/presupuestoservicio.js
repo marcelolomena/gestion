@@ -233,6 +233,7 @@ exports.getServicios = function (req, res) {
   "SELECT @cui=idcui FROM sip.presupuesto WHERE id="+id+" "+
   "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id "+
   "WHERE a.idcui=@cui "+
+  "GROUP BY a.idservicio, b.nombre "+
   "ORDER BY b.nombre";
       
   sequelize.query(sql)
