@@ -51,8 +51,7 @@ exports.action = function (req, res) {
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
-                    res.json({ error_code: 1 });
+                    res.json({ error_text: err, error_code: 1 });
                 });
             break;
         case "del":
@@ -66,8 +65,7 @@ exports.action = function (req, res) {
                 }
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
-                res.json({ error_code: 1 });
+                res.json({ error_text: err, error_code: 1 });
             });
 
             break;
@@ -112,8 +110,7 @@ exports.list = function (req, res) {
                     //Contrato.forEach(log)
                     res.json({ records: records, total: total, page: page, rows: proyectosenvuelo });
                 }).catch(function (err) {
-                    //console.log(err);
-                    res.json({ error_code: 1 });
+                    res.json({ error_text: err, error_code: 1 });
                 });
             })
         }

@@ -20,23 +20,9 @@ exports.getUsersByRol = function (req, res) {
 }
 
 exports.getUsersByRolART = function (req, res) {
-    /*
-    models.user.findAll({
-        attributes: ['uid', 'first_name', 'last_name'],
-        order: ['first_name', 'last_name'],
-        where: { user_profile: req.params.rol }
-    }).then(function (gerentes) {
-        res.json(gerentes);
-    }).catch(function (err) {
-        console.log(err)
-        res.json({ error_code: 1 });
-    });
-    */
-
     sequelize.query('SELECT uid,first_name,last_name FROM art_user WHERE CAST(user_profile AS VARCHAR) = :user_profile ORDER BY first_name,last_name',
         { replacements: { user_profile: req.params.rol }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
-        //console.log(user)
         res.json(user);
     }).catch(function (err) {
         console.log(err)
