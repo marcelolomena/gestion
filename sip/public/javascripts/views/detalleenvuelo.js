@@ -71,7 +71,10 @@ function showChildGrid(parentRowID, parentRowKey) {
                 }]
             }
         },
-        { label: 'Nombre', name: 'nombre', width: 150, align: 'left', search: true, editable: true },
+        {
+            label: 'Nombre', name: 'nombre', width: 150, align: 'left', search: true, editable: true,
+            editrules: { required: true },
+        },
         {
             label: 'idcui', name: 'idcui', search: false, hidden: true, editable: true,
             edittype: "select",
@@ -179,12 +182,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                         }
                     });
                     return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        //$("input#idcontrato").val($('option:selected', this).text());
-                    }
-                }],
+                }
             }
         },
         {
@@ -300,6 +298,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 postdata.tarea = postdata.tarea.split("|")[2];
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
+                } else if (postdata.idcontrato == 0) {
+                    return [false, "CONTRATO: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }

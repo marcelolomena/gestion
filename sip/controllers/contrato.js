@@ -293,9 +293,9 @@ exports.action = function (req, res) {
 exports.listall = function (req, res) {
   models.contrato.findAll({
     atributes: ['id', 'nombre'],
+    where: { 'nombre': { $ne: null } },
     order: 'nombre'
   }).then(function (contratos) {
-    //Contrato.forEach(log)
     res.json(contratos);
   }).catch(function (err) {
     //console.log(err);
