@@ -62,10 +62,6 @@ exports.getProyectosPaginados = function (req, res) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
-            
-            
-            
-            
             res.json({ records: records, total: total, page: page, rows: rows });
           });
       })

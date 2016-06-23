@@ -20,51 +20,7 @@ exports.getPresupuestoServicios = function (req, res) {
     sord = "desc";
 
   var order = sidx + " " + sord;
-  
-  var insertaPeriodos = function (callback) {
-
-      models.sequelize.transaction({ autocommit: true }, function (t) {
-          var promises = []
-          var d = new Date();
-          var anio = d.getFullYear()
-          var mes = d.getMonth() + 1
-
-          for (var i = 0; i < 12; i++) {
-              var mm = mes + i
-              if (mm === 12) {
-                  anio = anio + 1 // incrementa el año en uno si el mes actual es DIC
-                  mm = 1 // coloca el mes en enero
-              }
-              var mmm = mm < 10 ? '0' + mm : mm
-              var periodo = anio + mmm
-
-              var newPromise = models.detalleplan.create({
-                  'iddetallepre': req.params.id,
-                  'periodo': periodo, 
-                  'presupuestopesos': 5000,
-                  'presupuestobasepesos': 5000, 
-                  'compromisopesos': 5000,
-                  'borrado':1
-              }, { transaction: t });
-
-              promises.push(newPromise);
-          };
-          return Promise.all(promises).then(function (compromisos) {
-              var compromisoPromises = [];
-              for (var i = 0; i < compromisos.length; i++) {
-                  compromisoPromises.push(compromisos[i]);
-              }
-              return Promise.all(compromisoPromises);
-          });
-
-      }).then(function (result) {
-          callback(result)
-      }).catch(function (err) {
-          return next(err);
-      });
-
-  }  
-  
+    
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -72,7 +28,8 @@ exports.getPresupuestoServicios = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-    "a.comentario, a.glosaservicio FROM sip.detallepre a " +
+    "a.comentario, a.glosaservicio, a.idproveedor, b.razonsocial FROM sip.detallepre a " +
+    "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +    
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
     "WHERE a.idpresupuesto="+id+")" +
@@ -96,7 +53,8 @@ exports.getPresupuestoServicios = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-        "a.comentario, a.glosaservicio FROM sip.detallepre a " +
+        "a.comentario, a.glosaservicio, a.idproveedor, b.razonsocial  FROM sip.detallepre a " +
+        "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +   
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
         "WHERE a.idpresupuesto=" +id+" "+ condition.substring(0, condition.length - 4) + ")" +
@@ -282,6 +240,7 @@ exports.action = function (req, res) {
         idservicio: req.body.idservicio,
         idmoneda: req.body.idmoneda,
         comentario:req.body.comentario,
+        idproveedor:req.body.idproveedor,
         glosaservicio:req.body.glosaservicio,
         borrado: 1
       }).then(function (iniciativa) {
@@ -296,8 +255,9 @@ exports.action = function (req, res) {
       models.detallepre.update({
         idservicio: req.body.idservicio,
         idmoneda: req.body.idmoneda,
-        montoforecast: req.body.montoforecast,
-        montoanual: req.body.montoanual 
+        idproveedor:req.body.idproveedor,
+        comentario:req.body.comentario,
+        glosaservicio:req.body.glosaservicio
       }, {
           where: {
             id: req.body.id

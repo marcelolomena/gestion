@@ -393,7 +393,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
         },
         {
-            label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'right',
+            label: 'Proveedor', name: 'razonsocial', width: 200, align: 'right',
             search: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
@@ -407,7 +407,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idmoneda;
+                    var thissid = rowData.idproveedor;
                     console.log(response);
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
@@ -426,7 +426,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         },     
         {
             label: 'Comentario', name: 'comentario',
-            search: false, editable: true, edittype: "textarea"
+            search: false, editable: true, edittype: "textarea", hidden: true,
         },             
         {
             label: 'Monto Forecast',
@@ -496,6 +496,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Servicio: Debe escoger un valor", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
+                } if (postdata.idproveedor == 0) {
+                    return [false, "Proveedor: Debe escoger un proveedor", ""];                                        
                 } else {
                     return [true, "", ""]
                 }
@@ -516,12 +518,21 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             beforeSubmit: function (postdata, formid) {
 
                 if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un valor", ""];
+                    return [false, "Servicio: Debe escoger un servicio", ""];
                 } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger un valor", ""];
+                    return [false, "Moneda: Debe escoger una moneda", ""];
+                } if (postdata.idproveedor == 0) {
+                    return [false, "Proveedor: Debe escoger un proveedor", ""];                    
                 } else {
                     return [true, "", ""]
                 }
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
             }
         },
         {

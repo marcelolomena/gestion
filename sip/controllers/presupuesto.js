@@ -23,6 +23,61 @@ exports.getPresupuestoPaginados = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
+  //var cuis = getCuis(req.user[0].uid);
+
+  var superCui = function (uid, callback) {
+    var rol = req.user[0].rid;
+    if (rol != constants.ROLADMDIVOT) {
+      var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
+      console.log("query:" + sql1);
+      sequelize.query(sql1)
+        .spread(function (rows) {
+          if (rows.length > 0) {
+            console.log("query:" + rows + ", valor:" + rows[0].cui);
+            idcui = rows[0].cui;
+          } else {
+            idcui = 0; //cui no existente para que no encuentre nada
+          }
+        }).then(function (servicio) {
+          var sql = "select a.id " +
+            "from   sip.estructuracui a " +
+            "where  a.cui = " + idcui + " " +
+            "union " +
+            "select b.id " +
+            "from   sip.estructuracui a,sip.estructuracui b " +
+            "where  a.cui = " + idcui + " " +
+            "  and  a.cui = b.cuipadre " +
+            "union " +
+            "select c.id " +
+            "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c " +
+            "where  a.cui = " + idcui + " " +
+            "  and  a.cui = b.cuipadre " +
+            "  and  b.cui = c.cuipadre " +
+            "union " +
+            "select d.id " +
+            "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d " +
+            "where  a.cui = " + idcui + " " +
+            "  and  a.cui = b.cuipadre " +
+            "  and  b.cui = c.cuipadre " +
+            "  and  c.cui = d.cuipadre ";
+          sequelize.query(sql)
+            .spread(function (rows) {
+              var cuis = "";
+              console.log("En cuis:" + rows);
+              for (i = 0; i < rows.length; i++) {
+                //console.log("cui:" + rows[i].id);
+                cuis = cuis + rows[i].id + ",";
+              }
+              //return cuis.substring(0, cuis.length - 1);
+              console.log("antes call:" + cuis.substring(0, cuis.length - 1));
+              callback(cuis.substring(0, cuis.length - 1));
+            });
+        });
+    } else {
+      callback("*");
+    }
+  };
+
 
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
@@ -32,6 +87,7 @@ exports.getPresupuestoPaginados = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
     "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+    "WHERE a.idcui IN ( :CUIS ) " +
     "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -62,6 +118,7 @@ exports.getPresupuestoPaginados = function (req, res) {
 
       models.presupuesto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
+
         sequelize.query(sql)
           .spread(function (rows) {
 
@@ -73,10 +130,33 @@ exports.getPresupuestoPaginados = function (req, res) {
 
       models.presupuesto.count().then(function (records) {
         var total = Math.ceil(records / rows);
+        /*
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
           });
+          */
+        superCui(req.user[0].uid, function (elcui) {
+          var sqlok = "declare @rowsPerPage as bigint; " +
+            "declare @pageNum as bigint;" +
+            "set @rowsPerPage=" + rows + "; " +
+            "set @pageNum=" + page + ";   " +
+            "With SQLPaging As   ( " +
+            "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+            "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+            "WHERE a.idcui IN (" + elcui + ") " +
+            "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) " +
+            "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+          sequelize.query(sqlok).then(function (user) {
+            //console.log(user)
+            res.json(user);
+          }).catch(function (err) {
+            console.log(err)
+            res.json({ error_code: 1 });
+          });
+        });
+
       })
     }
 
@@ -84,14 +164,91 @@ exports.getPresupuestoPaginados = function (req, res) {
 
     models.presupuesto.count().then(function (records) {
       var total = Math.ceil(records / rows);
-      sequelize.query(sql0)
-        .spread(function (rows) {
+      superCui(req.user[0].uid, function (elcui) {
+        console.log('elcui:' + elcui)
+        var rol = req.user[0].rid;
+        var sqlok;
+        if (rol == constants.ROLADMDIVOT) {
+          sqlok = "declare @rowsPerPage as bigint; " +
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rows + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+          "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
+          "ORDER BY id desc) " +
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+        } else {
+          sqlok = "declare @rowsPerPage as bigint; " +
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rows + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+          "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
+          "WHERE a.idcui IN (" + elcui + ") " +
+          "ORDER BY id desc) " +
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
+        }
+        sequelize.query(sqlok).spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
         });
+      });
     })
 
   }
 };
+
+
+function getCuis(uid) {
+  var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
+  console.log("query:" + sql1);
+  sequelize.query(sql1)
+    .spread(function (rows) {
+      if (rows.length > 0) {
+        console.log("query:" + rows + ", valor:" + rows[0].cui);
+        idcui = rows[0].cui;
+      } else {
+        idcui = 0; //cui no existente para que no encuentre nada
+      }
+    }).then(function (servicio) {
+      var sql = "select a.id " +
+        "from   sip.estructuracui a " +
+        "where  a.cui = " + idcui + " " +
+        "union " +
+        "select b.id " +
+        "from   sip.estructuracui a,sip.estructuracui b " +
+        "where  a.cui = " + idcui + " " +
+        "  and  a.cui = b.cuipadre " +
+        "union " +
+        "select c.id " +
+        "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c " +
+        "where  a.cui = " + idcui + " " +
+        "  and  a.cui = b.cuipadre " +
+        "  and  b.cui = c.cuipadre " +
+        "union " +
+        "select d.id " +
+        "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d " +
+        "where  a.cui = " + idcui + " " +
+        "  and  a.cui = b.cuipadre " +
+        "  and  b.cui = c.cuipadre " +
+        "  and  c.cui = d.cuipadre ";
+      sequelize.query(sql)
+        .spread(function (rows) {
+          var cuis;
+          console.log("En cuis:" + rows);
+          for (i = 0; i < rows.length; i++) {
+            console.log("cui:" + rows[i].id);
+            cuis = cuis + rows[i].id + ",";
+          }
+          return cuis.substring(0, cuis.length - 1);
+        });
+    });
+}
 
 exports.getExcel = function (req, res) {
   var page = req.query.page;
@@ -268,15 +425,15 @@ exports.getEjercicios = function (req, res) {
 exports.getVersion = function (req, res) {
   console.log("******EN VERSIONNNNN********");
   console.log("******EN VERSIONNNNN********");
-  var cui=req.params.cui;
-  var ejercicio=req.params.ejercicio;
-  var sql = "SELECT max(version) AS version "+
-  "FROM sip.presupuesto WHERE idcui="+cui+" AND idejercicio="+ejercicio;
-  
-  console.log("***SQL***:"+sql);
+  var cui = req.params.cui;
+  var ejercicio = req.params.ejercicio;
+  var sql = "SELECT max(version) AS version " +
+    "FROM sip.presupuesto WHERE idcui=" + cui + " AND idejercicio=" + ejercicio;
+
+  console.log("***SQL***:" + sql);
   sequelize.query(sql)
     .spread(function (rows) {
-      if (rows.length > 0){
+      if (rows.length > 0) {
         res.json(rows);
       } else {
         res.json({ version: 1 });
@@ -295,8 +452,8 @@ exports.action = function (req, res) {
   console.log("Ejercicio:" + ejercicio);
   switch (action) {
     case "add":
-      var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id "+
-        "WHERE b.idcui="+id_cui+" AND b.idejercicio="+ejercicio+" AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
+      var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
+        "WHERE b.idcui=" + id_cui + " AND b.idejercicio=" + ejercicio + " AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
       sequelize.query(sql)
         .spread(function (rows) {
           if (rows.length > 0) {
@@ -339,7 +496,7 @@ exports.action = function (req, res) {
               res.json({ error_code: 1 });
             });
           }
-        });  
+        });
       break;
     case "edit":
       models.presupuesto.update({
@@ -358,9 +515,9 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-       sequelize.query('EXECUTE sip.EliminaPresupuesto ' + req.body.id
-          + ';').then(function (response) {
-            res.json({ error_code: 0 });
+      sequelize.query('EXECUTE sip.EliminaPresupuesto ' + req.body.id
+        + ';').then(function (response) {
+          res.json({ error_code: 0 });
         }).error(function (err) {
           res.json(err);
         });
