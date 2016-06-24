@@ -13,15 +13,32 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Iniciativa{idiniciativapadre}</div>";
+    template += "<div class='column-half'>CUI 1{cuifinanciamiento1}</div>";
+    template += "<div class='column-half'>% financiamiento{porcentaje1}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Iniciativa Programa{idiniciativaprograma}</div>";
+    template += "<div class='column-half'>CUI 2{cuifinanciamiento2}</div>";
+    template += "<div class='column-half'>% financiamiento{porcentaje2}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Moneda{idmoneda}</div>";
+    template += "<div class='column-full'>Beneficios Cuantitativos{beneficioscuantitativos}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'>Beneficios Cualitativos{beneficioscualitativos}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Lider{uidlider}</div>";
+    template += "<div class='column-half'>Jefe de Proyecto{uidjefeproyecto}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-three'>Dolar{dolar}</div>";
+    template += "<div class='column-three'>UF{uf}</div>";
+    template += "<div class='column-three'>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -46,41 +63,128 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Cui 1', name: 'cuifinanciamiento1', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }
+            },
+            editrules: { edithidden: false, required: true, number: true },
+            hidedlg: true
         },
         {
             label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.00', { reverse: true });
+                }
+            },
+            search: true, editable: true, hidden: false,
+            editrules: { edithidden: false, required: true, number: true },
+            hidedlg: true
         },
         {
             label: 'Cui 2', name: 'cuifinanciamiento2', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }
+            },
+            editrules: { edithidden: false, required: true, number: true },
+            hidedlg: true
         },
         {
             label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.00', { reverse: true });
+                }
+            },
+            search: true, editable: true, hidden: false,
+            editrules: { edithidden: false, required: true, number: true },
+            hidedlg: true
         },
         {
-            label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
+            align: 'left', edittype: "textarea",
+            search: true, editable: true, hidden: false,
         },
         {
-            label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200,
+            align: 'left', edittype: "textarea",
+            search: true, editable: true, hidden: false,
         },
         {
-            label: 'uidlider', name: 'uidlider', search: true, editable: false, hidden: true,
+            label: 'uidlider', name: 'uidlider', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/usuarios_por_rol/Gerente',
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.uidlider;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Lider--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#lider").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
         },
         {
-            label: 'Lider', name: 'user.uname', width: 150, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Lider', name: 'lider', width: 150, align: 'left',
+            search: true, editable: false, hidden: false, jsonmap: "user.uname",
         },
         {
-            label: 'uidjefeproyecto', name: 'uidjefeproyecto', search: true, editable: false, hidden: true,
+            label: 'uidjefeproyecto', name: 'uidjefeproyecto', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/usuarios_por_rol/Gerente',
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.uidjefeproyecto;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Jefe de Proyecto--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#jefeproyecto").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Jefe de Proyecto', name: 'user.uname', width: 150, align: 'left',
-            search: true, editable: false, hidden: false,
+            label: 'Jefe de Proyecto', name: 'jefeproyecto', width: 150, align: 'left',
+            search: true, editable: false, hidden: false, jsonmap: "user.uname",
         },
         {
             label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
@@ -104,8 +208,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
@@ -115,18 +219,18 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.00', { reverse: true });
                 }
             }
         },
-        
+
         {
             label: 'UF', name: 'uf', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('00000.00', { reverse: true });
                 }
             }
         }
@@ -162,8 +266,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
-
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "porcentaje1": "No hay datos", "cuifinanciamiento2": "" });
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "beneficioscuantitativos": "No hay datos" });
             }
         }
     });
@@ -287,5 +390,5 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     );
 }
 function showSubGrids2(subgrid_id, row_id) {
-    gridTareasNuevosProyectos(subgrid_id, row_id,'tareas');
+    gridTareasNuevosProyectos(subgrid_id, row_id, 'tareas');
 }
