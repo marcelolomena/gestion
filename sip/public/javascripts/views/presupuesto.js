@@ -24,7 +24,7 @@ $(document).ready(function () {
     var modelPresupuesto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'CUI', name: 'CUI', width: 200, align: 'left', search: false, editable: true,
+            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -57,7 +57,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-        { label: 'Responsable CUI', name: 'responsable', width: 250, align: 'left', search: false, editable: true },
+        { label: 'Responsable CUI', name: 'responsable', width: 200, align: 'left', search: false, editable: true },
         {
             label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', search: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
@@ -89,6 +89,10 @@ $(document).ready(function () {
         },
         { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, editable: true },
         { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: true},
+        { label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }},
+        { label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }},
         { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
     ];
     $("#grid").jqGrid({
@@ -138,7 +142,18 @@ $(document).ready(function () {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }
+            },
+            beforeSubmit: function (postdata, formid) {                               
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                if (rowData.idcui != postdata.idcui) {
+                    return [false, "NO puede cambiar el CUI base", ""];
+                } if (rowData.idejercicio != postdata.idejercicio) {
+                    return [false, "NO puede cambiar el Ejercicio base", ""];
+                } 
+                return [true, "", ""]
+            }            
         },
         {
             addCaption: "Agrega Presupuesto",
@@ -160,7 +175,9 @@ $(document).ready(function () {
                     //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
                     //return [false, "", ""];
                 } else {
-                    //disableSelect();
+                    if (rowData.idcui != postdata.idcui) {
+                        return [false, "NO puede cambiar el CUI base", ""];
+                    }
                 }                
                 console.log("*** selrow:" + rowKey);
                 console.log("***Ejercicio:" + postdata.idejercicio+","+rowData.idejercicio);
@@ -190,11 +207,21 @@ $(document).ready(function () {
             afterShowForm: function (formid) {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                var cuisel = rowData.idcui;                
                 if (rowKey == null) {
+                    
                     //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
                     //return [false, "", ""];
                 } else {
+                    //$('#idcui').attr('disabled', true);
+                    //$('select#idcui', form).attr('disabled', 'disabled');
+                    //document.getElementById('idcui').disabled = true;
                     //disableSelect();
+                    //var s ='<input type="text" id=idcui value='+cuisel+'>';
+                    //$("select#idcui").html(s);
+                    //alert("hola");
+                    //$("select#idcui").attr('disabled', true);
                 }
                 return [true, "", ""];
             }, afterSubmit: function (response, postdata) {
@@ -253,7 +280,12 @@ $(document).ready(function () {
 
 function disableSelect() {
     alert("disable");
-    $('#idcui').hide();
+    $('#idcui').attr('disabled', 'disabled');
+}
+
+function enableSelect() {
+    alert("enable");
+    $('#idcui').removeAttr('disabled'); 
 }
 
 function getVersion(cui, ejercicio){
@@ -279,6 +311,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     var childGridURL = "/presupuestoservicios/" + parentRowKey;
     var urlServicios = '/serviciospre/'+parentRowKey;
     var urlProveedores = '/proveedorespre/'+parentRowKey;
+    var urlProveedoresServ = '/proveedorespreserv/'+parentRowKey;
 
     var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -346,12 +379,28 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                         }
                     });
                     return s + "</select>";
-                }/*
-            dataEvents: [{
-                type: 'change', fn: function (e) {
-                    $("input#divisionsponsor").val($('option:selected', this).text());
-                }
-            }],*/
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var servicio = $('option:selected', this).val()
+                        if (servicio != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: urlProveedoresServ + '/'+servicio,
+                                async: false,
+                                success: function (data) {
+                                    var s = "<select>";//el default
+                                    s += '<option value="0" selected>--Escoger Proveedor--</option>';
+                                    $.each(data, function (i, item) {
+                                        s += '<option value="' + data[i].idproveedor + '">' + data[i].nombreproveedor + '</option>';
+                                    });
+                                    s += "</select>";
+                                    $("select#idproveedor").html(s);
+                                }
+                            });
+                        } 
+                    }
+                }],                
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
@@ -477,7 +526,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         edit: true,
         add: true,
         del: true,
-        refresh: false,
+        refresh: true,
         search: false
     },
         {
@@ -600,7 +649,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 label: 'Periodo',
                 name: 'periodo',
                 search: false,
-                editable: true,
+                editable: false,
                 sortable: false,
                 width: 100,
             },
@@ -684,7 +733,16 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             for (var i = 0; i < ids.length; i++) {
                 subgrid.jqGrid('saveRow', ids[i]);
             }
-        }
+            $.ajax({
+                type: "GET",
+                url: '/actualizaTotales/' + parentRowKey,
+                async: true,
+                success: function (data) {
+                    if (data.error_code != 0)
+                        alert('Problemas al actualizar totales');
+                }
+            });             
+        }         
     });    
 /*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {

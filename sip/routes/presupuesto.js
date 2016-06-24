@@ -31,6 +31,9 @@ module.exports = function (passport) {
 
     router.route('/proveedorespre/:id')
         .get(isAuthenticated, presupuestoServiciosController.getProveedores);
+        
+    router.route('/proveedorespreserv/:id/:id2')
+        .get(isAuthenticated, presupuestoServiciosController.getProveedoresServ);        
 
     router.route('/presupuestolist')
         .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
@@ -49,6 +52,9 @@ module.exports = function (passport) {
         
     router.route('/getversion/:cui/:ejercicio')
         .get(isAuthenticated, presupuestoController.getVersion);           
+
+    router.route('/actualizaTotales/:id')
+        .get(isAuthenticated, presupuestoController.updateTotales);   
         
      return router;       
 

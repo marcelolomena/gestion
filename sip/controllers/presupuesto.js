@@ -78,23 +78,9 @@ exports.getPresupuestoPaginados = function (req, res) {
     }
   };
 
-
-  var sql0 = "declare @rowsPerPage as bigint; " +
-    "declare @pageNum as bigint;" +
-    "set @rowsPerPage=" + rows + "; " +
-    "set @pageNum=" + page + ";   " +
-    "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-    "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
-    "WHERE a.idcui IN ( :CUIS ) " +
-    "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) " +
-    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-  if (filters) {
+/*
+  if (filters && JSON.stringify(jsonObj.rules) != '[]') {
     var jsonObj = JSON.parse(filters);
-
-    if (JSON.stringify(jsonObj.rules) != '[]') {
 
       jsonObj.rules.forEach(function (item) {
 
@@ -127,17 +113,15 @@ exports.getPresupuestoPaginados = function (req, res) {
       })
 
     } else {
-
+*/
       models.presupuesto.count().then(function (records) {
         var total = Math.ceil(records / rows);
-        /*
-        sequelize.query(sql0)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-          */
         superCui(req.user[0].uid, function (elcui) {
-          var sqlok = "declare @rowsPerPage as bigint; " +
+          console.log('elcui:' + elcui)
+          var rol = req.user[0].rid;
+          var sqlok;
+          if (rol == constants.ROLADMDIVOT) {
+            sqlok = "declare @rowsPerPage as bigint; " +
             "declare @pageNum as bigint;" +
             "set @rowsPerPage=" + rows + "; " +
             "set @pageNum=" + page + ";   " +
@@ -145,62 +129,30 @@ exports.getPresupuestoPaginados = function (req, res) {
             "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
             "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
             "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
-            "WHERE a.idcui IN (" + elcui + ") " +
-            "JOIN sip.ejercicios c ON c.id=a.idejercicio ORDER BY id desc) " +
+            "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
+            "ORDER BY id desc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-          sequelize.query(sqlok).then(function (user) {
-            //console.log(user)
-            res.json(user);
-          }).catch(function (err) {
-            console.log(err)
-            res.json({ error_code: 1 });
+          } else {
+            sqlok = "declare @rowsPerPage as bigint; " +
+            "declare @pageNum as bigint;" +
+            "set @rowsPerPage=" + rows + "; " +
+            "set @pageNum=" + page + ";   " +
+            "With SQLPaging As   ( " +
+            "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+            "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+            "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
+            "WHERE a.idcui IN (" + elcui + ") " +
+            "ORDER BY id desc) " +
+            "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
+          }
+          sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
           });
         });
-
       })
-    }
-
-  } else {
-
-    models.presupuesto.count().then(function (records) {
-      var total = Math.ceil(records / rows);
-      superCui(req.user[0].uid, function (elcui) {
-        console.log('elcui:' + elcui)
-        var rol = req.user[0].rid;
-        var sqlok;
-        if (rol == constants.ROLADMDIVOT) {
-          sqlok = "declare @rowsPerPage as bigint; " +
-          "declare @pageNum as bigint;" +
-          "set @rowsPerPage=" + rows + "; " +
-          "set @pageNum=" + page + ";   " +
-          "With SQLPaging As   ( " +
-          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
-          "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-          "ORDER BY id desc) " +
-          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-        } else {
-          sqlok = "declare @rowsPerPage as bigint; " +
-          "declare @pageNum as bigint;" +
-          "set @rowsPerPage=" + rows + "; " +
-          "set @pageNum=" + page + ";   " +
-          "With SQLPaging As   ( " +
-          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
-          "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-          "WHERE a.idcui IN (" + elcui + ") " +
-          "ORDER BY id desc) " +
-          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
-        }
-        sequelize.query(sqlok).spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
-      });
-    })
-
-  }
+/*
+  }*/
 };
 
 
@@ -524,5 +476,15 @@ exports.action = function (req, res) {
       break;
 
   }
-
 }
+
+exports.updateTotales = function (req, res) {
+  console.log("****id:"+req.params.id);
+  sequelize.query('EXECUTE sip.actulizadetallepre ' + req.params.id
+    + ';').then(function (response) {
+      res.json({ error_code: 0 });
+    }).error(function (err) {
+      res.json(err);
+    });
+
+};

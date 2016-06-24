@@ -75,7 +75,8 @@ exports.getPresupuestoServicios = function (req, res) {
       models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
-          .spread(function (rows) {        
+          .spread(function (rows) {       
+            res.json({ records: records, total: total, page: page, rows: rows }); 
           });
       })
     }
@@ -208,6 +209,24 @@ exports.getProveedores = function (req, res) {
   "SELECT @cui=idcui FROM sip.presupuesto WHERE id="+id+" "+
   "SELECT a.idproveedor AS id, b.razonsocial AS nombreproveedor FROM sip.plantillapresupuesto a JOIN sip.proveedor b ON a.idproveedor=b.id "+
   "WHERE a.idcui=@cui "+
+  "GROUP BY a.idproveedor, b.razonsocial  "+
+  "ORDER BY b.razonsocial";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.getProveedoresServ = function (req, res) {
+  var id = req.params.id;
+  var id2 = req.params.id2;
+  
+  var sql = "DECLARE @cui INT; "+
+  "SELECT @cui=idcui FROM sip.presupuesto WHERE id="+id+" "+
+  "SELECT a.idproveedor AS id, b.razonsocial AS nombreproveedor FROM sip.plantillapresupuesto a JOIN sip.proveedor b ON a.idproveedor=b.id "+
+  "WHERE a.idcui=@cui and a.idservicio="+id2+" "+
   "GROUP BY a.idproveedor, b.razonsocial  "+
   "ORDER BY b.razonsocial";
       
