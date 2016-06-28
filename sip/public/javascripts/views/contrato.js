@@ -371,6 +371,7 @@ $(document).ready(function () {
 
     $(window).bind('resize', function () {
         $("#grid").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
 });
