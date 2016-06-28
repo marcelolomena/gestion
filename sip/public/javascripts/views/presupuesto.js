@@ -17,6 +17,10 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>CUI {CUI}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Estado {estado}</div>";
+    tmpl += "</div>";    
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -88,7 +92,13 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, editable: true },
-        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: true},
+        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: true,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemEstadoPre
+            }    
+        },
         { label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }},
         { label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, editable: true,
@@ -204,26 +214,9 @@ $(document).ready(function () {
                 }
                 
             },
-            afterShowForm: function (formid) {
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var cuisel = rowData.idcui;                
-                if (rowKey == null) {
-                    
-                    //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
-                    //return [false, "", ""];
-                } else {
-                    //$('#idcui').attr('disabled', true);
-                    //$('select#idcui', form).attr('disabled', 'disabled');
-                    //document.getElementById('idcui').disabled = true;
-                    //disableSelect();
-                    //var s ='<input type="text" id=idcui value='+cuisel+'>';
-                    //$("select#idcui").html(s);
-                    //alert("hola");
-                    //$("select#idcui").attr('disabled', true);
-                }
-                return [true, "", ""];
+            beforeShowForm: function (formid) {
+                $("input[type=radio]").attr('disabled', true);
+                sipLibrary.centerDialog($('#grid').attr('id'));                
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
