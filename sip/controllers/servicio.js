@@ -161,11 +161,6 @@ exports.getExcel = function (req, res) {
       width: 50
     },
     {
-      caption: 'criticidad',
-      type: 'string',
-      width: 50
-    },
-    {
       caption: 'Cuenta Contable',
       type: 'string',
       width: 50
@@ -178,7 +173,7 @@ exports.getExcel = function (req, res) {
   ];
   
  var sql = "SELECT a.id, a.nombre, a.tarea "+
-    ",a.criticidad,b.cuentacontable,b.nombrecuenta "+
+    ",b.cuentacontable,b.nombrecuenta "+
     "FROM sip.servicio a left join sip.cuentascontables b on a.idcuenta = b.id order by a.nombre"
     
     sequelize.query(sql)
@@ -188,7 +183,6 @@ exports.getExcel = function (req, res) {
 
         a = [i + 1, servicio[i].nombre,
           servicio[i].tarea,
-          servicio[i].criticidad,
           servicio[i].cuentacontable,
           servicio[i].nombrecuenta
         ];

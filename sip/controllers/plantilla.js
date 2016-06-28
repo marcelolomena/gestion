@@ -23,8 +23,6 @@ exports.list = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-
-  condition = "id in (select idcui from sip.plantillapresupuesto) and";
   
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
@@ -34,7 +32,7 @@ exports.list = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, id,cui, nombre, nombreresponsable, nombregerente  " +
     "FROM sip.estructuracui " +
-    " where id in (select idcui from sip.plantillapresupuesto) ORDER BY cui asc) " +
+    " where borrado = 1 ORDER BY cui asc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -56,10 +54,8 @@ exports.list = function (req, res) {
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, id,cui, nombre, nombreresponsable, nombregerente " +
         "FROM sip.estructuracui " +
-        "WHERE id in (select idcui from sip.plantillapresupuesto) and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
+        "WHERE borrado = 1 " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-      console.log(sql);
 
       models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
