@@ -96,7 +96,7 @@ $(document).ready(function () {
         { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
     ];
     $("#grid").jqGrid({
-        url: '/presupuestolist',
+        url: '/presupuestosconfirmados',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -112,6 +112,7 @@ $(document).ready(function () {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
+        multiselect: true,
         editurl: '/presupuesto/action',
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showPresupuestoServicios, // javascript function that will take care of showing the child grid        
@@ -125,146 +126,14 @@ $(document).ready(function () {
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $('#grid').jqGrid('navGrid', "#pager", {
-        edit: true,
-        add: true,
-        del: true,
+        edit: false,
+        add: false,
+        del: false,
         refresh: true,
         search: false, // show search button on the toolbar        
         cloneToTop: false
-    },
-
-        {
-            editCaption: "Modifica Presupuesto",
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmpl,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {                               
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                alert("rowKey:"+rowKey);
-                var rowData = grid.getRowData(rowKey);
-                alert("rowData:"+rowData);
-                if (rowData.idcui != postdata.idcui) {
-                    return [false, "NO puede cambiar el CUI base", ""];
-                } if (rowData.idejercicio != postdata.idejercicio) {
-                    return [false, "NO puede cambiar el Ejercicio base", ""];
-                } 
-                return [true, "", ""]
-            }, 
-            beforeShowForm: function (postdata, formid) {                               
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                //alert("rowKey:"+rowKey);
-                var rowData = grid.getRowData(rowKey);
-                //alert("rowData:"+rowData);
-                var s = grid.jqGrid('getGridParam','selarrrow');
-                //alert("SS:"+s);
-            } 
-        },
-        {
-            addCaption: "Agrega Presupuesto",
-            closeAfterAdd: true,
-            recreateForm: true,
-            //mtype: 'GET',
-            //url: '/iniciativas/add',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmpl,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {                               
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                if (rowKey == null) {
-                    //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
-                    //return [false, "", ""];
-                } else {
-                    if (rowData.idcui != postdata.idcui) {
-                        return [false, "NO puede cambiar el CUI base", ""];
-                    }
-                }                
-                console.log("*** selrow:" + rowKey);
-                console.log("***Ejercicio:" + postdata.idejercicio+","+rowData.idejercicio);
-                postdata.id = rowKey;
-                //Obtiene version
-                var ver = getVersion(postdata.idcui,postdata.idejercicio);
-                console.log("Version:"+ver);
-                if (ver > 0) {
-                    postdata.version = parseInt(ver) + 1;
-                    console.log("v+1:"+postdata.version);
-                } else {
-                    postdata.version = 1;
-                }
-                
-                postdata.ejercicio = rowData.ejercicio
-                if (postdata.idcui == 0) {
-                    return [false, "CUI: Debe escoger un valor", ""];
-                } if (postdata.idejercicio == 0) {
-                    return [false, "Ejercicio: Debe escoger un valor", ""];
-                } if (postdata.descripcion == 0) {
-                    return [false, "Descripción: Debe escoger un valor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-                
-            },afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code == 10)
-                    return [false, "Ya existe un presuspuesto Aprobado o Confirmado para el CUI", ""];
-                else
-                    return [true, "", ""]
-            }
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Presupuesto",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {                               
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                if (rowData.estado != 'Creado') {
-                    return [false, "Solo puede eliminar presupuestos en estado Creado", ""];
-                } else{
-                    return [true, "", ""];
-                }
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
-        }, {}
-    );
-
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Excel",
-        //position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/presupuestosexcel';
-            $('#grid').jqGrid('excelExport', { "url": url });
-        }
     });
-    
+
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon glyphicon-check",
@@ -276,31 +145,23 @@ $(document).ready(function () {
             var rowData = grid.getRowData(rowKey);   
                 
             if (rowKey != null) {     
-                if (rowData.estado == 'Creado') {
-                    if (confirm("¿Esta seguro de Confirmar el presupuesto?")){
-                        $.ajax({ 
-                            url: "/presupuestoconfirma/"+rowData.id+"/Confirmado",
-                            dataType: 'json', 
-                            async: false, 
-                            success: function(j){ 
-                                $("#grid").trigger("reloadGrid"); 
-                            } 
-                        });
-                    }
-                } else if (rowData.estado == 'Confirmado') {
-                    if (confirm("El presupuesto ya esta Confirmado, desea volver a estado Creado")) {
-                        $.ajax({ 
-                            url: "/presupuestoconfirma/"+rowData.id+"/Creado",
-                            dataType: 'json', 
-                            async: false, 
-                            success: function(j){ 
-                                $("#grid").trigger("reloadGrid"); 
-                            } 
-                        });
-                    }
-                } else if (rowData.estado == 'Aprobado') {
-                    alert("El presupuesto esta aprobado, no se puede cambiar el estado")
-                }
+                if (confirm("¿Esta seguro de Aprobar el presupuesto?")){
+                    var grid = $('#grid');
+                    var rowKey = grid.getGridParam("selrow");
+                    //alert("rowKey:"+rowKey);
+                    var rowData = grid.getRowData(rowKey);
+                    //alert("rowData:"+rowData);
+                    var ids = grid.jqGrid('getGridParam','selarrrow');
+                    alert("SS:"+ids);
+                    $.ajax({ 
+                        url: "/aprueba/"+ids,
+                        dataType: 'json', 
+                        async: false, 
+                        success: function(j){ 
+                            $("#grid").trigger("reloadGrid"); 
+                        } 
+                    });
+                }                
             } else {
                 alert("Debe seleccionar una fila");
             }        
@@ -310,27 +171,6 @@ $(document).ready(function () {
     $("#pager_left").css("width", "");
 });
 
-function disableSelect() {
-    alert("disable");
-    $('#idcui').attr('disabled', 'disabled');
-}
-
-function getVersion(cui, ejercicio){
-    var version;
-    $.ajax({ 
-        url: "/getversion/"+cui+"/"+ejercicio, 
-        dataType: 'json', 
-        async: false, 
-        success: function(j){ 
-            $.each(j,function(i,item) {
-                version = item.version;
-                console.log('***version:'+version); 
-            });
-        } 
-    });    
-    return version; 
-        
-}
 
 function showPresupuestoServicios(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
@@ -550,100 +390,13 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
-        add: true,
-        del: true,
+        edit: false,
+        add: false,
+        del: false,
         refresh: true,
         search: false
-    },
-        {
-            editCaption: "Modifica Servicio",
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmplServ,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
+    });
 
-                if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un valor", ""];
-                } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger un valor", ""];
-                } if (postdata.idproveedor == 0) {
-                    return [false, "Proveedor: Debe escoger un proveedor", ""];                                        
-                } else {
-                    return [true, "", ""]
-                }
-            }
-        },
-        {
-            addCaption: "Agrega Servicio",
-            closeAfterAdd: true,
-            recreateForm: true,
-            //mtype: 'GET',
-            //url: '/iniciativas/add',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmplServ,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-
-                if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un servicio", ""];
-                } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger una moneda", ""];
-                } if (postdata.idproveedor == 0) {
-                    return [false, "Proveedor: Debe escoger un proveedor", ""];                    
-                } else {
-                    return [true, "", ""]
-                }
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Servicio",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
-        }, {}
-
-    );
-    /*
-        $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-            caption: "Excel",
-            buttonicon: "silk-icon-page-excel",
-            title: "Excel",
-            position: "last",
-            onClickButton: function () {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var url = '/presupuestoserviciosexcel/' + parentRowKey;
-                $("#" + childGridID).jqGrid('excelExport', { "url": url });
-            }
-        });
-    */
 }
 
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
@@ -713,12 +466,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID
     });
-    /*
-        $("#" + childGridID).jqGrid('filterToolbar', {
-            stringResult: false, searchOperators: true, searchOnEnter: false,
-            defaultSearch: 'cn'
-        });
-    */
+
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,
         add: false,
@@ -726,63 +474,5 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         search: false,
         refresh: true,
         view: false, position: "left", cloneToTop: false
-    },
-    {
-        
-    },
-        {
-            recreateFilter: true
-        }    
-    );
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-pencil",
-        title: "Editar",
-        position: "last",
-        onClickButton: function () {
-            var subgrid = $("#" + childGridID);
-            var ids = subgrid.jqGrid('getDataIDs');
-            for (var i = 0; i < ids.length; i++) {
-                subgrid.jqGrid('editRow', ids[i]);
-            }
-        }
     });
-
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "",
-        buttonicon: 'glyphicon glyphicon-save-file',
-        title: "Grabar",
-        iconsOverText: true,
-        position: "last",
-        onClickButton: function () {
-            var subgrid = $("#" + childGridID);
-            var ids = subgrid.jqGrid('getDataIDs');
-            for (var i = 0; i < ids.length; i++) {
-                subgrid.jqGrid('saveRow', ids[i]);
-            }
-            $.ajax({
-                type: "GET",
-                url: '/actualizaTotales/' + parentRowKey,
-                async: true,
-                success: function (data) {
-                    if (data.error_code != 0)
-                        alert('Problemas al actualizar totales');
-                }
-            });             
-        }         
-    });    
-/*
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
-        title: "Excel",
-        position: "last",
-        onClickButton: function () {
-            var grid = $("#" + childGridID);
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/presupuestoperiodosexcel/' + parentRowKey;
-            $("#" + childGridID).jqGrid('excelExport', { "url": url });
-        }
-    });
-*/    
 }

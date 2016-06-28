@@ -6,9 +6,6 @@ var proyectoTareasController = require('../controllers/proyectotareas');
 var erogacionesController = require('../controllers/erogaciones');
 var programaController = require('../controllers/programa');
 var paramController = require('../controllers/param');
-var presupuestoController = require('../controllers/presupuesto');
-var presupuestoServiciosController = require('../controllers/presupuestoservicio');
-var presupuestoperiodosController = require('../controllers/presupuestoperiodos');
 var cuiController = require('../controllers/estructuracui');
 var cuentaController = require('../controllers/cuenta');
 var servicioController = require('../controllers/servicio');
@@ -97,43 +94,6 @@ module.exports = function (passport) {
     router.route('/erogacionesexcel/:id')
         .get(isAuthenticated, erogacionesController.getExcel);
 
-    router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
-        res.render('presupuesto', { user: req.user });
-    });
-
-    router.route('/presupuestolist')
-        .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
-
-    router.route('/presupuestosexcel')
-        .get(isAuthenticated, presupuestoController.getExcel);
-
-    router.route('/CUIs')
-        .get(isAuthenticated, presupuestoController.getCUIs);
-
-    router.route('/presupuesto/action')
-        .post(isAuthenticated, presupuestoController.action);
-
-    router.route('/ejercicios')
-        .get(isAuthenticated, presupuestoController.getEjercicios);
-
-    router.route('/presupuestoservicios/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getPresupuestoServicios);
-
-    router.route('/presupuestoserviciosexcel/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getExcel);
-
-    router.route('/presupuestoservicios/action/:id')
-        .post(isAuthenticated, presupuestoServiciosController.action);
-
-    router.route('/monedas')
-        .get(isAuthenticated, presupuestoServiciosController.getMonedas);
-
-    router.route('/serviciospre/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getServicios);
-
-    router.route('/proveedorespre/:id')
-        .get(isAuthenticated, presupuestoServiciosController.getProveedores);
-
     router.route('/servicios')
         .get(isAuthenticated, servicioController.getServicios);
 
@@ -154,12 +114,6 @@ module.exports = function (passport) {
 
     router.route('/contactos/:id')
         .get(isAuthenticated, contactoController.getContactos);
-
-    router.route('/presupuestoperiodoslist/:id')
-        .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);
-
-    router.route('/presupuestoperiodos/action')
-        .post(isAuthenticated, presupuestoperiodosController.action);
 
     router.get('/serviciosext', isAuthenticated, function (req, res) {
         res.render('servicios', { user: req.user });

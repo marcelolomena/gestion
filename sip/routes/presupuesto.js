@@ -4,10 +4,19 @@ var isAuthenticated = require('../policies/isAuthenticated');
 var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
 var presupuestoperiodosController = require('../controllers/presupuestoperiodos');
+var presupuestoapruebaController = require('../controllers/presupuestoaprueba');
 
 
 module.exports = function (passport) {
 
+    router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
+        res.render('presupuesto', { user: req.user });
+    });
+
+    router.get('/presupuestoaprobacion', isAuthenticated, function (req, res) {
+        res.render('presupuestoaprueba', { user: req.user });
+    });
+    
     router.route('/presupuestoperiodoslist/:id')
         .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);
 
@@ -55,6 +64,15 @@ module.exports = function (passport) {
 
     router.route('/actualizaTotales/:id')
         .get(isAuthenticated, presupuestoController.updateTotales);   
+
+    router.route('/presupuestoconfirma/:id/:estado')
+        .get(isAuthenticated, presupuestoController.confirma);   
+
+    router.route('/presupuestosconfirmados')
+        .get(isAuthenticated, presupuestoapruebaController.getPresupuestosConfirmados);   
+        
+    router.route('/aprueba/:ids')
+        .get(isAuthenticated, presupuestoapruebaController.aprueba);           
         
      return router;       
 

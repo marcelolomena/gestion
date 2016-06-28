@@ -488,3 +488,17 @@ exports.updateTotales = function (req, res) {
     });
 
 };
+
+exports.confirma = function (req, res) {
+  console.log("****id:"+req.params.id+" estado:"+req.params.estado);
+  var id = req.params.id;
+  var estado = req.params.estado;
+
+  sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
+  sequelize.query(sql).then(function (response) {
+      res.json({ error_code: 0 });
+    }).error(function (err) {
+      res.json(err);
+    });
+
+};
