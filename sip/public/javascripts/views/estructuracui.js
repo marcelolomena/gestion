@@ -26,13 +26,15 @@ $(document).ready(function () {
 
 			//       $('#responsable').append('<option value="'+data[0].responsable+'</option>');
 		});
+        loadGrid(idestructura);
 	});
-	loadGrid(idestructura);
+	
 });
 
 var leida = false;
 
 function loadGrid(idestructura) {
+
 
  var template = "<div id='responsive-form' class='clearfix'>";
 
@@ -191,6 +193,7 @@ function loadGrid(idestructura) {
         $("#grid").setGridWidth($(".gcontainer").width(), true);
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
+  
 };
 
 
