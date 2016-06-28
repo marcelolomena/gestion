@@ -1,0 +1,47 @@
+extends base.jade
+block titulo
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Estructura CUI
+  link(rel='stylesheet', href='/stylesheets/formResp.css', type='text/css', media='screen', charset='utf-8')      
+block jsgrilla
+    script(type='text/javascript', src='/javascripts/views/estructuracui.js')
+block titulogrilla
+  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Estructura CUI
+block grilla                 
+    section#contact-page
+      .container
+        .row.contact-wrap(style='color:#003366')
+          .status.alert.alert-success(style='display: none')
+          form#form1(name='form1', method='post', action='')
+            .col-sm-5.col-sm-offset-1
+              .form-group
+                label # Estructrura CUI:
+                input#EstructuraCui.form-control(type='text', name='#EstructuraCui', style='width:87%')
+                input#button.btn_interr(name='button', type='button', value='?')
+                // <input name="button" type="submit" class="btn_interr" id="button" value="?" >
+              .form-group
+                label CUI Padre :
+                input.form-control(name='CUIPadre', type='text', id='CUIPadre')
+            .col-sm-5
+              .form-group
+                label Nombre Estructrura CUI :
+                input#NombreEstructura.form-control(type='text', name='NombreEstructura')
+              .form-group
+                label Nombre :
+                input#Nombre.form-control(name='Nombre', type='text')
+            .col-sm-5.col-sm-offset-1
+              .form-group
+                label Responsable :
+                select#Responsable.form-control(name='Responsable')
+                  option(selected='') - Escoger Responsable -
+            .col-sm-5.col-sm-offset-1(style='width:83%')
+              .form-group
+                input#agregar.btn(name='agregar', type='submit', value='AGREGAR')
+                input#modificar.btn(name='modificar', type='submit', value='MODIFICAR')
+                input#eliminar.btn(name='eliminar', type='submit', value='ELIMINAR')
+        // /.row
+      // /.container
+  div(style='width: 100%')
+    #container(style='width: 100%; float: left; display: inline-block;')
+      table#grid
+      #pager   
