@@ -259,7 +259,7 @@ $(document).ready(function () {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
-        position: "last",
+        //position: "last",
         onClickButton: function () {
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
@@ -270,8 +270,8 @@ $(document).ready(function () {
     
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",
-        buttonicon: "glyphicon glyphicons-random",
-        title: "Excel",
+        buttonicon: "glyphicon glyphicon glyphicon-check",
+        title: "LALA",
         position: "last",
         onClickButton: function () {
             var grid = $('#grid');
