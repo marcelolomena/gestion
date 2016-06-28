@@ -267,6 +267,22 @@ $(document).ready(function () {
             $('#grid').jqGrid('excelExport', { "url": url });
         }
     });
+    
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicons-random",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            alert(rowKey)
+            /*
+            var url = '/nuevosproyectos/excel';
+            $('#grid').jqGrid('excelExport', { "url": url });
+            */
+        }
+    });    
 
     $("#pager_left").css("width", "");
 });
