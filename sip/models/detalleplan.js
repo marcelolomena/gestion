@@ -5,12 +5,15 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     iddetallepre: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'detallepre',
+        key: 'id'
+      }
     },
     periodo: {
       type: DataTypes.INTEGER,

@@ -2,23 +2,82 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
+    $.ajax(
+        {
+            type: "GET",
+            url: "/hyperion/colnames/" + 2015,
+            dataType: "json",
+            success: function (JSONdata) {
+                var listOfColumnModels = [];
+                var listOfColumnNames = [];
+                var data = JSONdata[0].detallepres[0].detalleplans;
+                listOfColumnNames.push('CUI');
+                listOfColumnNames.push('Periodo');
 
+                listOfColumnModels.push({
+                    name: 'cui',
+                    width: 100,
+                    sortable: true,
+                    hidden: false
+                });
+                
+                listOfColumnModels.push({
+                    name: 'ano',
+                    width: 100,
+                    sortable: true,
+                    hidden: false
+                });     
+                /*
+                 var numdeco = {}  
+                 numdeco["decimalSeparator"] = ','   
+                 numdeco["thousandsSeparator"] = '.'   
+                 numdeco["decimalPlaces"] = 2
+                 
+                 var numstyle = {number:numdeco} 
+                    */
+                $.each(data, function (i, item) {
+                    listOfColumnNames.push(data[i].periodo);
+                    listOfColumnModels.push({
+                        name: data[i].periodo,
+                        width: 100,
+                        sortable: true,
+                        hidden: false,
+                        align: 'right',
+                     });
+                    //console.log(data[i].periodo)
+                    //$("#grid").jqGrid("setLabel", "sap", "", { "text-align": "center" });
+                });
+
+                CreateJQGrid(listOfColumnModels, listOfColumnNames);
+            }
+        });
+
+    $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
+});
+
+function CreateJQGrid(listOfColumnModels, listOfColumnNames) {
     var modelContrato = [
         { label: 'cui', name: 'cui', key: true, hidden: false },
+        { label: 'periodo', name: 'ano', hidden: false },
     ];
     $("#grid").jqGrid({
         url: '/hyperion/list',
         mtype: "POST",
         datatype: "json",
         page: 1,
-        colModel: modelContrato,
+        colNames: listOfColumnNames,
+        colModel: listOfColumnModels,
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default        
+        autowidth: true,  
+        shrinkToFit: true,    
         caption: 'Lista de contratos',
         pager: "#pager",
         viewrecords: true,
@@ -40,13 +99,4 @@ $(document).ready(function () {
         //    minusicon: "glyphicon-hand-down"
         //},
     });
-  
-
-    $("#pager_left").css("width", "");
-
-    $(window).bind('resize', function () {
-        $("#grid").setGridWidth($(".gcontainer").width(), true);
-        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
-        $("#pager").setGridWidth($(".gcontainer").width(), true);
-    });
-});
+}

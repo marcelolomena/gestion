@@ -13,6 +13,9 @@ module.exports = function (passport) {
 
     router.route('/hyperion/list')
         .post(isAuthenticated, hyperionController.list)
+        
+    router.route('/hyperion/colnames/:ano')
+        .get(isAuthenticated, hyperionController.colnames)        
 
     return router;
 
