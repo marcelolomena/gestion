@@ -13,8 +13,20 @@ module.exports = function (passport) {
     router.route('/estructuracui/responsables')
         .get(isAuthenticated, estructuracuiController.responsables);        
 
+    router.route('/estructuracui/gerencias')
+        .get(isAuthenticated, estructuracuiController.gerencias);   
+
     router.route('/estructuracui/cabecera/:id')
-        .get(isAuthenticated, estructuracuiController.cabecera);                             
+        .get(isAuthenticated, estructuracuiController.cabecera);        
+
+    router.route('/estructuracui/hijos/:id/:idpadre')
+        .get(isAuthenticated, estructuracuiController.getEstructuraCui);   
+
+    router.route('/estructuracui/action')
+        .post(isAuthenticated, estructuracuiController.action);    
+
+    router.route('/estructuracui/excel')
+        .get(isAuthenticated, estructuracuiController.getExcel);                                           
   
     return router;
 

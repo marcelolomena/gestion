@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idestructura: {
       type: DataTypes.INTEGER,
@@ -45,6 +46,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     gerencia: {
       type: DataTypes.STRING,
+      allowNull: true
+    },
+    uidgerente: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     nombregerente: {
