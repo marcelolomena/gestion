@@ -493,12 +493,33 @@ exports.confirma = function (req, res) {
   console.log("****id:"+req.params.id+" estado:"+req.params.estado);
   var id = req.params.id;
   var estado = req.params.estado;
-
-  sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
-  sequelize.query(sql).then(function (response) {
-      res.json({ error_code: 0 });
-    }).error(function (err) {
-      res.json(err);
+  var idcui = req.params.idcui;
+  var ideje = req.params.ideje;
+  if (estado === 'Confirmado'){
+    var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
+      "WHERE b.idcui=" + idcui + " AND b.idejercicio=" + ideje + " AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
+    sequelize.query(sql)
+      .spread(function (rows) {
+        if (rows.length > 0) {
+          res.json({ error_code: 10 });
+        } else {
+          sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
+          sequelize.query(sql).then(function (response) {
+              res.json({ error_code: 0 });
+            }).error(function (err) {
+              res.json(err);
+            });
+        }     
+    }).catch(function (err) {
+      res.json({ error_code: 1 });
     });
+  } else {
+      sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
+      sequelize.query(sql).then(function (response) {
+          res.json({ error_code: 0 });
+        }).error(function (err) {
+          res.json(err);
+        });    
+  }
 
 };

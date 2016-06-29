@@ -146,9 +146,7 @@ $(document).ready(function () {
             beforeSubmit: function (postdata, formid) {                               
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
-                alert("rowKey:"+rowKey);
                 var rowData = grid.getRowData(rowKey);
-                alert("rowData:"+rowData);
                 if (rowData.idcui != postdata.idcui) {
                     return [false, "NO puede cambiar el CUI base", ""];
                 } if (rowData.idejercicio != postdata.idejercicio) {
@@ -279,18 +277,25 @@ $(document).ready(function () {
                 if (rowData.estado == 'Creado') {
                     if (confirm("¿Esta seguro de Confirmar el presupuesto?")){
                         $.ajax({ 
-                            url: "/presupuestoconfirma/"+rowData.id+"/Confirmado",
+                            url: "/presupuestoconfirma/"+rowData.id+"/Confirmado/"+rowData.idcui+"/"+rowData.idejercicio,
                             dataType: 'json', 
                             async: false, 
                             success: function(j){ 
-                                $("#grid").trigger("reloadGrid"); 
+                                //var json = response.responseText;
+                                //var result = JSON.parse(json);
+                                console.log("j:"+j);
+                                if (j.error_code == 0){                                
+                                    $("#grid").trigger("reloadGrid");
+                                } else if (j.error_code == 10) {
+                                    alert("Ya existe un presupuesto Confirmado para el CUI");
+                                }
                             } 
                         });
                     }
                 } else if (rowData.estado == 'Confirmado') {
                     if (confirm("El presupuesto ya esta Confirmado, desea volver a estado Creado")) {
                         $.ajax({ 
-                            url: "/presupuestoconfirma/"+rowData.id+"/Creado",
+                            url: "/presupuestoconfirma/"+rowData.id+"/Creado/"+rowData.idcui+"/"+rowData.idejercicio,
                             dataType: 'json', 
                             async: false, 
                             success: function(j){ 
@@ -311,7 +316,7 @@ $(document).ready(function () {
 });
 
 function disableSelect() {
-    alert("disable");
+    //alert("disable");
     $('#idcui').attr('disabled', 'disabled');
 }
 
@@ -419,7 +424,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                                     var s = "<select>";//el default
                                     s += '<option value="0" selected>--Escoger Proveedor--</option>';
                                     $.each(data, function (i, item) {
-                                        s += '<option value="' + data[i].idproveedor + '">' + data[i].nombreproveedor + '</option>';
+                                        s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
                                     });
                                     s += "</select>";
                                     $("select#idproveedor").html(s);
@@ -486,6 +491,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     var thissid = rowData.idproveedor;
                     console.log(response);
                     var data = JSON.parse(response);
+                    console.log(data);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Proveedor--</option>';
                     $.each(data, function (i, item) {
@@ -496,6 +502,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                             s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
                         }
                     });
+                    console.log(s);
                     return s + "</select>";
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
@@ -592,7 +599,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-
+                //alert("postdata:"+postdata.idproveedor);
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un servicio", ""];
                 } if (postdata.idmoneda == 0) {
@@ -765,24 +772,19 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 url: '/actualizaTotales/' + parentRowKey,
                 async: true,
                 success: function (data) {
-                    if (data.error_code != 0)
+                    if (data.error_code != 0) {
                         alert('Problemas al actualizar totales');
+                    } else {
+                        //alert("Actualiza OK");
+                        loadGrid();
+                    }
                 }
             });             
         }         
     });    
-/*
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
-        title: "Excel",
-        position: "last",
-        onClickButton: function () {
-            var grid = $("#" + childGridID);
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/presupuestoperiodosexcel/' + parentRowKey;
-            $("#" + childGridID).jqGrid('excelExport', { "url": url });
-        }
-    });
-*/    
+}
+
+function loadGrid(parentID) {
+    var url = '/presupuestolist';
+	$("#grid").jqGrid('setCaption', "Lista de Presupuestos").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
 }

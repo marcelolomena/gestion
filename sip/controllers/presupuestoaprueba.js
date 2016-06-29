@@ -36,8 +36,8 @@ exports.getPresupuestosConfirmados = function (req, res) {
         "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
         "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
         "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-        "Where a.estado='Confirmado' "+
-        "ORDER BY id desc) " +
+        "Where a.estado='Confirmado' or a.estado='Aprobado'"+
+        "ORDER BY a.estado desc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         sequelize.query(sqlok).spread(function (rows) {
         res.json({ records: records, total: total, page: page, rows: rows });
@@ -51,6 +51,20 @@ exports.aprueba = function (req, res) {
   var ids2 = ids.split(",");
   for (i=0; i<ids2.length; i++){
     sql = "UPDATE sip.presupuesto SET estado='Aprobado' WHERE id="+ids2[i];
+    sequelize.query(sql).then(function (response) {
+        res.json({ error_code: 0 });
+      }).error(function (err) {
+        res.json(err);
+      });
+  }
+};
+
+exports.desaprueba = function (req, res) {
+  console.log("****ids:"+req.params.ids);
+  var ids = req.params.ids;
+  var ids2 = ids.split(",");
+  for (i=0; i<ids2.length; i++){
+    sql = "UPDATE sip.presupuesto SET estado='Confirmado' WHERE id="+ids2[i];
     sequelize.query(sql).then(function (response) {
         res.json({ error_code: 0 });
       }).error(function (err) {

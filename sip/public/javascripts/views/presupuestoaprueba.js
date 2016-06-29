@@ -137,7 +137,7 @@ $(document).ready(function () {
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon glyphicon-check",
-        title: "Confirmar",
+        title: "Aprobar",
         position: "last",
         onClickButton: function () {
             var grid = $('#grid');
@@ -145,14 +145,14 @@ $(document).ready(function () {
             var rowData = grid.getRowData(rowKey);   
                 
             if (rowKey != null) {     
-                if (confirm("¿Esta seguro de Aprobar el presupuesto?")){
+                if (confirm("¿Esta seguro de Aprobar el o los presupuesto?")){
                     var grid = $('#grid');
                     var rowKey = grid.getGridParam("selrow");
                     //alert("rowKey:"+rowKey);
                     var rowData = grid.getRowData(rowKey);
                     //alert("rowData:"+rowData);
                     var ids = grid.jqGrid('getGridParam','selarrrow');
-                    alert("SS:"+ids);
+                    
                     $.ajax({ 
                         url: "/aprueba/"+ids,
                         dataType: 'json', 
@@ -168,8 +168,43 @@ $(document).ready(function () {
         }
     });    
 
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon glyphicon-share",
+        title: "Desaprobar",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var rowData = grid.getRowData(rowKey);   
+                
+            if (rowKey != null) {     
+                if (confirm("¿Esta seguro de volver a Confirmado el o los presupuestos?")){
+                    var grid = $('#grid');
+                    var rowKey = grid.getGridParam("selrow");
+                    //alert("rowKey:"+rowKey);
+                    var rowData = grid.getRowData(rowKey);
+                    //alert("rowData:"+rowData);
+                    var ids = grid.jqGrid('getGridParam','selarrrow');
+                    
+                    $.ajax({ 
+                        url: "/desaprueba/"+ids,
+                        dataType: 'json', 
+                        async: false, 
+                        success: function(j){ 
+                            $("#grid").trigger("reloadGrid"); 
+                        } 
+                    });
+                }                
+            } else {
+                alert("Debe seleccionar una fila");
+            }        
+        }
+    });   
+    
     $("#pager_left").css("width", "");
 });
+
 
 
 function showPresupuestoServicios(parentRowID, parentRowKey) {

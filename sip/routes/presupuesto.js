@@ -65,7 +65,7 @@ module.exports = function (passport) {
     router.route('/actualizaTotales/:id')
         .get(isAuthenticated, presupuestoController.updateTotales);   
 
-    router.route('/presupuestoconfirma/:id/:estado')
+    router.route('/presupuestoconfirma/:id/:estado/:idcui/:ideje')
         .get(isAuthenticated, presupuestoController.confirma);   
 
     router.route('/presupuestosconfirmados')
@@ -73,6 +73,9 @@ module.exports = function (passport) {
         
     router.route('/aprueba/:ids')
         .get(isAuthenticated, presupuestoapruebaController.aprueba);           
+
+    router.route('/desaprueba/:ids')
+        .get(isAuthenticated, presupuestoapruebaController.desaprueba);   
         
      return router;       
 
