@@ -27,14 +27,6 @@ $(document).ready(function () {
                     sortable: true,
                     hidden: false
                 });     
-                /*
-                 var numdeco = {}  
-                 numdeco["decimalSeparator"] = ','   
-                 numdeco["thousandsSeparator"] = '.'   
-                 numdeco["decimalPlaces"] = 2
-                 
-                 var numstyle = {number:numdeco} 
-                    */
                 $.each(data, function (i, item) {
                     listOfColumnNames.push(data[i].periodo);
                     listOfColumnModels.push({
@@ -43,9 +35,8 @@ $(document).ready(function () {
                         sortable: true,
                         hidden: false,
                         align: 'right',
+                        formatter:sipLibrary.currencyFormatter
                      });
-                    //console.log(data[i].periodo)
-                    //$("#grid").jqGrid("setLabel", "sap", "", { "text-align": "center" });
                 });
 
                 CreateJQGrid(listOfColumnModels, listOfColumnNames);
