@@ -4,17 +4,13 @@ var nodeExcel = require('excel-export');
 
 
 exports.colnames = function (req, res) {
-
     models.presupuesto.hasMany(models.detallepre, { foreignKey: 'idpresupuesto' })
     models.detallepre.belongsTo(models.presupuesto, { foreignKey: 'idpresupuesto' })
-
     models.detallepre.hasMany(models.detalleplan, { foreignKey: 'iddetallepre' })
     models.detalleplan.belongsTo(models.detallepre, { foreignKey: 'iddetallepre' })
-
-
     models.presupuesto.findAll({
         attributes: ['id'],
-        where: { 'estado': 'Aprobado' },
+        where: { 'estado': 'Creado' },//Aprobado
         include: [
             {
                 model: models.detallepre,
@@ -52,7 +48,7 @@ exports.list = function (req, res) {
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='Aprobado' AND d.periodo BETWEEN 201509 AND 201612 " +
+        "a.estado='Creado' AND d.periodo BETWEEN 201509 AND 201612 " +
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
