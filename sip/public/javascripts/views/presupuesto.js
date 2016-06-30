@@ -168,6 +168,7 @@ $(document).ready(function () {
                 //alert("SS:"+s);
                 window.setTimeout(function () {
                    $("#idcui").attr('disabled', true);
+                   $("#idejercicio").attr('disabled', true);
                 }, 1000);
                 
             }
@@ -209,7 +210,9 @@ $(document).ready(function () {
                     postdata.version = 1;
                 }
 
-                postdata.ejercicio = rowData.ejercicio
+                postdata.ejercicio = rowData.ejercicio;
+                postdata.montoforecast = rowData.montoforecast;
+                postdata.montoanual = rowData.montoanual;
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (postdata.idejercicio == 0) {
@@ -225,8 +228,9 @@ $(document).ready(function () {
                 var result = JSON.parse(json);
                 if (result.error_code == 10)
                     return [false, "Ya existe un presuspuesto Aprobado o Confirmado para el CUI", ""];
-                else
-                    return [true, "", ""]
+                else {
+                    return [true, "", ""];
+                }
             }
         },
         {
@@ -257,7 +261,12 @@ $(document).ready(function () {
         }, {}
     );
 
-
+    $("#grid").jqGrid({
+        loadComplete: function(data) {
+            $("#grid").trigger("reloadGrid");
+        }
+    });
+    
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",

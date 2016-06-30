@@ -224,12 +224,12 @@ exports.getExcel = function (req, res) {
     {
       caption: 'Nombre CUI',
       type: 'string',
-      width: 50
+      width: 40
     },
     {
       caption: 'Responsable',
       type: 'string',
-      width: 50
+      width: 40
     },
     {
       caption: 'Ejercicio',
@@ -241,6 +241,21 @@ exports.getExcel = function (req, res) {
       type: 'number',
       width: 10
     },
+    {
+      caption: 'Estado',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Monto Forecast',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Monto Anual',
+      type: 'number',
+      width: 15
+    },            
     {
       caption: 'Descripción',
       type: 'string',
@@ -262,6 +277,9 @@ exports.getExcel = function (req, res) {
           proyecto[i].responsable,
           proyecto[i].ejercicio,
           proyecto[i].version,
+          proyecto[i].estado,
+          proyecto[i].montoforecast,
+          proyecto[i].montoanual,                              
           proyecto[i].descripcion
         ];
         arr.push(a);
@@ -375,8 +393,6 @@ exports.getEjercicios = function (req, res) {
 };
 
 exports.getVersion = function (req, res) {
-  console.log("******EN VERSIONNNNN********");
-  console.log("******EN VERSIONNNNN********");
   var cui = req.params.cui;
   var ejercicio = req.params.ejercicio;
   var sql = "SELECT max(version) AS version " +
@@ -402,6 +418,7 @@ exports.action = function (req, res) {
   var ejercicio = req.body.idejercicio;
   console.log("Id Prep:" + idpre);
   console.log("Ejercicio:" + ejercicio);
+  console.log("montos:"+req.body.montoforecast+", "+req.body.montoanual)
   switch (action) {
     case "add":
       var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
@@ -416,6 +433,8 @@ exports.action = function (req, res) {
               idejercicio: req.body.idejercicio,
               idcui: req.body.idcui,
               descripcion: req.body.descripcion,
+              montoforecast:req.body.montoforecast,
+              montoanual: req.body.montoanual,
               estado: 'Creado',
               version: version,
               borrado: 1
