@@ -82,6 +82,51 @@ var sipLibrary = {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    }, currencyFormatter: function (cellvalue, options, rowObject) {
+        var formatoptions = options.colModel.formatoptions || {};
+
+        // Setup the defaults
+        formatoptions.defaulValue = formatoptions.defaulValue || 0;
+        formatoptions.thousandsSeparator = formatoptions.thousandsSeparator || ".";
+        formatoptions.decimalPlaces = formatoptions.decimalPlaces || 0;
+        formatoptions.suffix = formatoptions.suffix || "";
+        formatoptions.prefix = formatoptions.prefix || "";
+        formatoptions.thousandsSeparator = formatoptions.thousandsSeparator || ".";
+
+        var format = function (value) {
+            // Ceil the number value if any decimal numbers are present
+            value = Math.ceil(value).toString();
+
+
+            // Regular expression to find thousand delimiter
+            var reg = /(\d+)(\d{3})/g;
+
+
+            // Loop through all thousands and add a space
+            while (reg.test(value))
+                value = value.replace(reg, "$1" + formatoptions.thousandsSeparator + "$2");
+
+
+            // Add the decimal numbers
+            if (formatoptions.decimalPlaces > 0)
+                value += ",";
+
+            for (var i = 0; i < formatoptions.decimalPlaces; i++)
+                value += "0";
+
+            // Add the suffix         
+            return formatoptions.prefix + value + formatoptions.suffix;
+        }
+
+        if (cellvalue === undefined) {
+            if (formatoptions.defaulValue != undefined)
+                return format(formatoptions.defaulValue);
+            else
+                return format(0);
+        }
+        else {
+            return format(cellvalue);
+        }
     }
 }
 

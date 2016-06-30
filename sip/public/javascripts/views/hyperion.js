@@ -18,34 +18,30 @@ $(document).ready(function () {
                     name: 'cui',
                     width: 100,
                     sortable: true,
-                    hidden: false
+                    hidden: false,
+                    searchoptions: { sopt: ["eq", "le", "ge"] }
                 });
-                
+
                 listOfColumnModels.push({
                     name: 'ano',
                     width: 100,
                     sortable: true,
-                    hidden: false
-                });     
-                /*
-                 var numdeco = {}  
-                 numdeco["decimalSeparator"] = ','   
-                 numdeco["thousandsSeparator"] = '.'   
-                 numdeco["decimalPlaces"] = 2
-                 
-                 var numstyle = {number:numdeco} 
-                    */
+                    hidden: false,
+                    searchoptions: { sopt: ["eq", "le", "ge"] }
+                });
                 $.each(data, function (i, item) {
-                    listOfColumnNames.push(data[i].periodo);
+                    //console.log( data[i].periodo.toString().substring(4,6) + '/' + data[i].periodo.toString().substring(0,4) )
+                    listOfColumnNames.push(data[i].periodo.toString().substring(4, 6) + '/' + data[i].periodo.toString().substring(0, 4));
                     listOfColumnModels.push({
-                        name: data[i].periodo,
+                        name: data[i].periodo.toString(),
+                        //name: data[i].periodo.toString().substring(4, 6) + '/' + data[i].periodo.toString().substring(0, 4),
                         width: 100,
                         sortable: true,
                         hidden: false,
                         align: 'right',
-                     });
-                    //console.log(data[i].periodo)
-                    //$("#grid").jqGrid("setLabel", "sap", "", { "text-align": "center" });
+                        search: false,
+                        formatter: sipLibrary.currencyFormatter
+                    });
                 });
 
                 CreateJQGrid(listOfColumnModels, listOfColumnNames);
@@ -62,10 +58,6 @@ $(document).ready(function () {
 });
 
 function CreateJQGrid(listOfColumnModels, listOfColumnNames) {
-    var modelContrato = [
-        { label: 'cui', name: 'cui', key: true, hidden: false },
-        { label: 'periodo', name: 'ano', hidden: false },
-    ];
     $("#grid").jqGrid({
         url: '/hyperion/list',
         mtype: "POST",
@@ -76,20 +68,26 @@ function CreateJQGrid(listOfColumnModels, listOfColumnNames) {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,  
-        shrinkToFit: true,    
-        caption: 'Lista de contratos',
+        autowidth: true,
+        shrinkToFit: true,
+        caption: 'Presupuestos',
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
-        editurl: '/contratos/action',
+        //editurl: '/contratos/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $("#grid").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
+            }
+
+            var cm = $("#grid").jqGrid("getGridParam", "colModel");
+            for (var i = 0; i < cm.length; i++) {
+                //console.log(cm[i].name)
+                $("#grid").jqGrid("setLabel", cm[i].name, "", { "text-align": "right" });
             }
         },
         //subGrid: true,
@@ -99,4 +97,13 @@ function CreateJQGrid(listOfColumnModels, listOfColumnNames) {
         //    minusicon: "glyphicon-hand-down"
         //},
     });
+
+    $('#grid').navGrid("#pager", {
+        search: true, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    });
+
 }
