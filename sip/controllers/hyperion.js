@@ -39,28 +39,35 @@ exports.list = function (req, res) {
     var _sord = req.body.sord;
     var _filters = req.body.filters;
     var _search = req.body._search;
-    var strsql = ''
+    var ano = 2015
+    var ssql
 
-
-    if (_search) {
-        var searchField = req.body.filters;
+    if (_search == true) {
+        var searchField = req.body.searchField;
         var searchString = req.body.searchString;
         var searchOper = req.body.searchOper;
+        console.log("searchString : " + searchString)
 
         if (searchField === 'ano') {
-            strsql += searchString
+            ano = parseInt(searchString)
+            console.log("----------->> " + ano)
+            ssql = "BETWEEN " + searchString + "09 AND " + (parseInt(searchString) + 1) + "12 "
         }
 
+    } else {
+        ssql = "BETWEEN " + ano.toString() + "09 AND " + (ano + 1) + "12 "
     }
 
-    var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= '2015'; " +
+    console.log(ssql)
+
+    var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= ':ano'; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
         "FROM sip.presupuesto a " +
         "JOIN sip.detallepre b ON a.id = b.idpresupuesto " +
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='Creado' AND d.periodo BETWEEN 201509 AND 201612 " +
+        "a.estado='Creado' AND d.periodo " + ssql + 
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
@@ -83,10 +90,10 @@ exports.list = function (req, res) {
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
 
-    sequelize.query(sql)
-        .spread(function (rows) {
-            //console.dir(rows)
-            res.json(rows);
-        });
-
+    sequelize.query(sql, { replacements: { ano: ano, periodo: ssql }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (rows) {
+        res.json(rows);
+    }).catch(function (err) {
+        res.json({ error_code: 1 });
+    });
 };
