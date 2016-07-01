@@ -11,7 +11,7 @@ exports.getEstructuraCui = function (req, res) {
   var sql = "SELECT id,cui,nombre as nombrecui,e.uid,u.first_name+' '+u.last_name as responsable,idgerencia,genrencia,uidgerente,u2.first_name+' '+u2.last_name as nombregerente " + 
             "FROM sip.estructuracui e LEFT OUTER JOIN art_genrencia_master g ON e.idgerencia =g.dId "+ 
             "LEFT OUTER JOIN dbo.art_user u ON  e.uid = u.uid " +
-            "LEFT OUTER JOIN dbo.art_user u2 ON  e.uid = u2.uid " + 
+            "LEFT OUTER JOIN dbo.art_user u2 ON  e.uidgerente = u2.uid " + 
             "Where  e.idestructura = "+idestructura+" and e.cuipadre = "+idpadre+" and e.borrado = 1 Order by e.cui asc";
 
   sequelize.query(sql)
@@ -29,7 +29,11 @@ exports.cabecera = function (req, res) {
       
   sequelize.query(sql)
     .spread(function (rows) {
-      res.json(rows);
+       if (rows.length > 0) {
+            res.json(rows);            
+          } else {
+            res.json({ error_code: 10 })
+          }
     });
 };
 
