@@ -87,6 +87,27 @@ module.exports = function (passport) {
     router.route('/tipopago')
         .get(isAuthenticated, tareasnuevosproyectosController.getTipoPago);
 
+    router.route('/proyectosporiniciativa/:idtareanuevoproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getProyectosPorTareaNuevoProyecto);
+
+    router.route('/tareasporproyecto/:idproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getTareasPorProyecto);
+
+    router.route('/tareasporiniciativa/:idtareanuevoproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getTareasPorTareaNuevoProyecto);
+
+    router.route('/subtareasportarea/:idtarea')
+        .get(isAuthenticated, flujonuevatareaController.getSubtareasPorTarea);
+
+    router.route('/subtareasporiniciativa/:idtareanuevoproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getSubtareasPorTareaNuevoProyecto);
+
+    router.route('/cuiporservicio/:idservicio')
+        .get(isAuthenticated, tareasnuevosproyectosController.getCUIServicio);
+
+    router.route('/proveedorporcui/:idcui/:idservicio')
+        .get(isAuthenticated, tareasnuevosproyectosController.getProveedorCUI);
+
     return router;
 
 }

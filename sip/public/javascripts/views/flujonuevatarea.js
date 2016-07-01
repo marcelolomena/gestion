@@ -182,7 +182,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             jsonmap: 'art_subtask.art_task.art_projectmaster.pId',
             edittype: "select",
             editoptions: {
-                dataUrl: '/proyectosporprograma/' + parentRowKey,
+                dataUrl: '/proyectosporiniciativa/' + parentRowKey,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -224,7 +224,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                                         }
                                     });
                                     s += "</select>";
-                                    $("select#tarea").html(s);
+                                    $("select#idtarea").html(s);
                                 }
                             });
                         }
@@ -239,7 +239,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             jsonmap: 'art_subtask.art_task.tId',
             edittype: "select",
             editoptions: {
-                dataUrl: '/tareasporprograma/' + parentRowKey,
+                dataUrl: '/tareasporiniciativa/' + parentRowKey,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -264,7 +264,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                         if (idTarea != "0") {
                             $.ajax({
                                 type: "GET",
-                                url: '/subtareasporproyecto/' + idTarea,
+                                url: '/subtareasportarea/' + idTarea,
                                 async: false,
                                 success: function (data) {
                                     var grid = $("#" + childGridID);
@@ -281,7 +281,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                                         }
                                     });
                                     s += "</select>";
-                                    $("select#subtarea").html(s);
+                                    $("select#idsubtarea").html(s);
                                 }
                             });
                         }
@@ -297,11 +297,11 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
          {
-            label: 'subtarea', name: 'idsubtarea', search: false, editable: true, hidden: true,
-            jsonmap: 'art_subtask.sub_task_id',
+            label: 'idsubtarea', name: 'idsubtarea', search: false, editable: true, hidden: true,
+            jsonmap: 'art_sub_task.sub_task_id',
             edittype: "select",
             editoptions: {
-                dataUrl: '/subtareasporprograma/' + parentRowKey,
+                dataUrl: '/subtareasporiniciativa/' + parentRowKey,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -441,14 +441,6 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
-                    $.ajax({
-                        type: "GET",
-                        url: '/actualizaduracion/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
                 return [true, "", ""]
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));

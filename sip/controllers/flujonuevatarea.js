@@ -21,10 +21,17 @@ exports.action = function (req, res) {
     switch (action) {
         case "add":
             models.flujonuevatarea.create({
-                idtareasnuevosproyectos: req.params.idd,
+                idtareasnuevosproyectos: req.body.parent_id,
+                idsubtarea: req.body.idsubtarea,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
+                glosaitem: req.body.glosaitem,
+                porcentaje: req.body.porcentaje,
+                idtipopago: req.body.idtipopago,
+                fechainicio: req.body.fechainicio,
+                fechafin: req.body.fechafin,
+                cantidad: req.body.cantidad,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
@@ -36,9 +43,16 @@ exports.action = function (req, res) {
             break;
         case "edit":
             models.flujonuevatarea.update({
+                idsubtarea: req.body.idsubtarea,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
-                costoorigen: costoorigen
+                costoorigen: costoorigen,
+                glosaitem: req.body.glosaitem,
+                porcentaje: req.body.porcentaje,
+                idtipopago: req.body.idtipopago,
+                fechainicio: req.body.fechainicio,
+                fechafin: req.body.fechafin,
+                cantidad: req.body.cantidad
             }, {
                     where: {
                         id: req.body.id
@@ -136,5 +150,59 @@ exports.list = function (req, res) {
                 //}
             })
         }
+    });
+};
+exports.getProyectosPorTareaNuevoProyecto = function (req, res) {
+    sequelize.query('select a.pId, a.project_name from art_project_master a join art_program b on a.program= b.program_id join sip.iniciativaprograma c on c.codigoart= b.program_code join sip.presupuestoiniciativa d on d.idiniciativaprograma=c.id join sip.tareasnuevosproyectos e on e.idpresupuestoiniciativa=d.id where e.id = :idtareanuevoproyecto and a.is_active=1',
+        { replacements: { idtareanuevoproyecto: req.params.idtareanuevoproyecto }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.getTareasPorProyecto = function (req, res) {
+    sequelize.query('select tId, task_title from art_task where pId=:idproyecto and is_active=1',
+        { replacements: { idproyecto: req.params.idproyecto }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.getTareasPorTareaNuevoProyecto = function (req, res) {
+    sequelize.query('select x.tId, x.task_title from art_task x join art_project_master a on a.pId=x.pId join art_program b on a.program= b.program_id join sip.iniciativaprograma c on c.codigoart= b.program_code join sip.presupuestoiniciativa d on d.idiniciativaprograma=c.id join sip.tareasnuevosproyectos e on e.idpresupuestoiniciativa=d.id where e.id = :idtareanuevoproyecto and x.is_active=1',
+        { replacements: { idtareanuevoproyecto: req.params.idtareanuevoproyecto }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.getSubtareasPorTarea = function (req, res) {
+    sequelize.query('select sub_task_id, title from art_sub_task where task_id=:idtarea and is_deleted=1',
+        { replacements: { idtarea: req.params.idtarea }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.getSubtareasPorTareaNuevoProyecto = function (req, res) {
+    sequelize.query('select z.sub_task_id, z.title from art_sub_task z join art_task x on x.tId= z.task_id join art_project_master a on a.pId=x.pId join art_program b on a.program= b.program_id join sip.iniciativaprograma c on c.codigoart= b.program_code join sip.presupuestoiniciativa d on d.idiniciativaprograma=c.id join sip.tareasnuevosproyectos e on e.idpresupuestoiniciativa=d.id where e.id = :idtareanuevoproyecto and z.is_deleted=1',
+        { replacements: { idtareanuevoproyecto: req.params.idtareanuevoproyecto }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
     });
 };

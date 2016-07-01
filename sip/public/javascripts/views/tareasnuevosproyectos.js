@@ -13,12 +13,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI{cui}</div>";
+    template += "<div class='column-half'>Servicio{idservicio}</div>";
     template += "<div class='column-half'>Tarea{tarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Servicio{idservicio}</div>";
+    template += "<div class='column-half'>CUI{idcui}</div>";
     template += "<div class='column-half'>Proveedor{idproveedor}</div>";
     template += "</div>";
 
@@ -62,13 +62,75 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             key: true,
             hidden: true
         },
+
+        {
+            label: 'CUI', name: 'idcui', search: false, editable: true, hidden: true,
+            jsonmap: 'estructuracui.id',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/cuiporservicio/' + 0,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idcui;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger CUI--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].idcui == thissid) {
+                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#cui").val($('option:selected', this).val());
+                        var idCUI = $('option:selected', this).val();
+                        var idServicio = $('#idservicio').val();
+                        console.log('idServicio: '+idServicio);
+                        if (idCUI != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/proveedorporcui/' + idCUI + '/' + idServicio,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idproveedor;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Proveedor--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].idproveedor == thissid) {
+                                            s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].idproveedor + '">' + data[i].razonsocial + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idproveedor").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+
         {
             label: 'Cui', name: 'cui', width: 50, align: 'left',
             search: true, editable: true, hidden: false, jsonmap: "estructuracui.cui",
         },
-        
+
         {
             label: 'Servicio', name: 'idservicio', search: false, width: 300,
+            jsonmap: 'servicio.id',
             editable: true, hidden: true,
             edittype: "select",
             editoptions: {
@@ -90,7 +152,39 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#servicio").val($('option:selected', this).val());
+                        var idServicio = $('option:selected', this).val()
+                        if (idServicio != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/cuiporservicio/' + idServicio,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idcui;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger CUI--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].idcui == thissid) {
+                                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idcui").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
             }, dataInit: function (elem) { $(elem).width(100); }
 
         },
@@ -227,14 +321,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.reqcontrato;
-                console.log('val: ' + val);
                 if (val == 1) {
                     dato = 'Sí';
 
                 } else if (val == 0) {
                     dato = 'No';
                 }
-                console.log('dato: ' + dato)
                 return dato;
             }
         },
@@ -305,14 +397,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.reqcontrato;
-                console.log('val: ' + val);
                 if (val == 1) {
                     dato = 'Sí';
 
                 } else if (val == 0) {
                     dato = 'No';
                 }
-                console.log('dato: ' + dato)
                 return dato;
             }
         },
@@ -322,14 +412,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.gastoinversion;
-                console.log('val: ' + val);
                 if (val == 1) {
                     dato = 'Gasto';
 
                 } else if (val == 2) {
                     dato = 'Inversión';
                 }
-                console.log('dato: ' + dato)
                 return dato;
             }
         }

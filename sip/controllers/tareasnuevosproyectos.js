@@ -90,6 +90,30 @@ exports.getServiciosDesarrollo = function (req, res) {
       res.json(rows);
     });
 };
+
+exports.getCUIServicio = function (req, res) {
+    sequelize.query('SELECT distinct a.idcui, b.cui FROM sip.plantillapresupuesto a join sip.estructuracui b on b.id=a.idcui where b.borrado = 1 and a.idservicio=:idservicio',
+        { replacements: { idservicio: req.params.idservicio }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.getProveedorCUI = function (req, res) {
+    sequelize.query('SELECT distinct a.idproveedor, b.razonsocial FROM sip.plantillapresupuesto a join sip.proveedor b on b.id=a.idproveedor where b.borrado = 1 and a.idcui=:idcui and a.idservicio=:idservicio',
+        { replacements: { idservicio: req.params.idservicio , idcui: req.params.idcui }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+      console.dir(user);
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+};
+
 exports.getProveedoresDesarrollo = function (req, res) {
   
   var sql = "SELECT a.id, a.razonsocial FROM sip.proveedor a "+
