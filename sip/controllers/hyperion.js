@@ -33,13 +33,25 @@ exports.colnames = function (req, res) {
 }
 
 exports.list = function (req, res) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-    var filters = req.query.filters;
-    var condition = "";
-    var id = req.params.id
+    var _page = req.body.page;
+    var _rows = req.body.rows;
+    var _sidx = req.body.sidx;
+    var _sord = req.body.sord;
+    var _filters = req.body.filters;
+    var _search = req.body._search;
+    var strsql = ''
+
+
+    if (_search) {
+        var searchField = req.body.filters;
+        var searchString = req.body.searchString;
+        var searchOper = req.body.searchOper;
+
+        if (searchField === 'ano') {
+            strsql += searchString
+        }
+
+    }
 
     var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= '2015'; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
@@ -70,8 +82,6 @@ exports.list = function (req, res) {
         "SUM(presupuestoorigen) " +
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
-
-    //console.log(sql)
 
     sequelize.query(sql)
         .spread(function (rows) {

@@ -35,7 +35,15 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    montoforecast: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoanual: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    } 
   }, {
     schema: 'sip',timestamps: false,tableName: 'presupuesto'
   });

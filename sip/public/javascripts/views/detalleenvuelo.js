@@ -56,17 +56,19 @@ function showChildGrid(parentRowID, parentRowKey) {
                     type: 'change', fn: function (e) {
                         var thisval = $(this).val().split("|");
                         var thispid = thisval[2];
-                        $.ajax({
-                            type: "GET",
-                            url: '/tareaservicio/' + thispid,
-                            async: false,
-                            success: function (data) {
-                                $("input#idcuenta").val(data[0].cuentascontable.id);
-                                $("input#cuentacontable").val(data[0].cuentascontable.cuentacontable);
-                                $("input#idproveedor").val(thisval[0]);
-                                $("input#nombreproveedor").val(thisval[1]);
-                            }
-                        });
+                        if (thispid) {
+                            $.ajax({
+                                type: "GET",
+                                url: '/tareaservicio/' + thispid,
+                                //async: false,
+                                success: function (data) {
+                                    $("input#idcuenta").val(data[0].cuentascontable.id);
+                                    $("input#cuentacontable").val(data[0].cuentascontable.cuentacontable);
+                                    $("input#idproveedor").val(thisval[0]);
+                                    $("input#nombreproveedor").val(thisval[1]);
+                                }
+                            });
+                        }
                     }
                 }]
             }
