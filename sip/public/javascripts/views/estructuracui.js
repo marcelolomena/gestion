@@ -15,11 +15,25 @@ $(document).ready(function () {
             return;
         }
         $.getJSON("/estructuracui/cabecera/" + idestructura, function (data) {
+
+            if (data.error_code == 10) {
+                alert('No existe # Estructura de CUI');
+                return;
+            }
+
             $('#CUIPadre').val(data[0].iddivision);
             cuipadre = $('#CUIPadre').val();
             $('#NombreEstructura').val(data[0].nombre);
             $('#Nombre').val(data[0].division);
-            
+            $('#EstructuraCui').attr('readonly', true);
+            $('#CUIPadre').attr('readonly', true);
+            $('#NombreEstructura').attr('readonly', true);
+            $('#Nombre').attr('readonly', true);
+            $('#responsable').attr('readonly', true);
+            $("#button").attr( "disabled", "disabled" );
+            $("#agregar").attr( "disabled", "disabled" );
+            $("#modificar").attr( "disabled", "disabled" );
+
             loadGrid(idestructura, cuipadre);
             //$('#responsable').remove();
             //$('#responsable').val(data[0].responsable);
@@ -34,6 +48,7 @@ $(document).ready(function () {
 var leida = false;
 var idestructura;
 var cuipadre;
+var griddepartamento;
 
 function loadGrid(idestructura, cuipadre) {
 
@@ -335,8 +350,13 @@ function loadGrid(idestructura, cuipadre) {
 function showChildGrid(parentRowID, parentRowKey) {
 
     var childGridID = parentRowID + "_table";
+    griddepartamento = childGridID;
     var childGridPagerID = parentRowID + "_pager";
     var childIdServicio = 0;
+
+    var grid = $("#grid");
+    var rowData = grid.getRowData(parentRowKey);
+    cuipadre    = rowData.cui;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -479,7 +499,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     ];
 
     $("#" + childGridID).jqGrid({
-        url: '/estructuracui/hijos/' + idestructura + '/4946', // + cuipadre,
+        url: '/estructuracui/hijos/' + idestructura + '/' + cuipadre,
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -587,8 +607,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 $("#idestructura", form).val(idestructura);
                 var grid = $("#grid");
                 var rowData = grid.getRowData(parentRowKey);
-                var thissid = rowData.cui;
-                $("#cuipadre", form).val(thissid);
+                cuipadre    = rowData.cui;
+                $("#cuipadre", form).val(cuipadre);
 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
@@ -630,6 +650,10 @@ function gridDetail(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
     var childIdServicio = 0;
+
+    var grid = $("#"+griddepartamento);
+    var rowData = grid.getRowData(parentRowKey);
+    cuipadre    = rowData.cui;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -676,7 +700,7 @@ function gridDetail(parentRowID, parentRowKey) {
             editoptions: {
                 dataUrl: '/estructuracui/responsables',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#" + childGridID);
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uid;
@@ -709,7 +733,7 @@ function gridDetail(parentRowID, parentRowKey) {
             editoptions: {
                 dataUrl: '/estructuracui/gerencias',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#" + childGridID);
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idgerencia;
@@ -742,7 +766,7 @@ function gridDetail(parentRowID, parentRowKey) {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Gerente',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#" + childGridID);
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidgerente;
@@ -772,7 +796,7 @@ function gridDetail(parentRowID, parentRowKey) {
     ];
 
     $("#" + childGridID).jqGrid({
-        url: '/estructuracui/hijos/' + idestructura + '/6348', // + cuipadre,
+        url: '/estructuracui/hijos/' + idestructura + '/' + cuipadre,
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -873,10 +897,10 @@ function gridDetail(parentRowID, parentRowKey) {
 
             }, beforeShowForm: function (form) {
                 $("#idestructura", form).val(idestructura);
-                var grid = $("#grid");
+                var grid = $("#"+griddepartamento);
                 var rowData = grid.getRowData(parentRowKey);
-                var thissid = rowData.cui;
-                $("#cuipadre", form).val(thissid);
+                cuipadre    = rowData.cui;
+                $("#cuipadre", form).val(cuipadre);
 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
