@@ -30,8 +30,8 @@ exports.list = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, id,cui, nombre, nombreresponsable, nombregerente  " +
-    "FROM sip.estructuracui " +
+    "as resultNum, e.id,e.cui, e.nombre, u.first_name+' '+u.last_name as nombreresponsable, u2.first_name+' '+u2.last_name as nombregerente " +
+    "FROM sip.estructuracui e LEFT OUTER JOIN dbo.art_user u ON e.uid = u.uid LEFT OUTER JOIN dbo.art_user u2 ON e.uidgerente = u2.uid " +
     " where borrado = 1 ORDER BY cui asc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -52,8 +52,8 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, id,cui, nombre, nombreresponsable, nombregerente " +
-        "FROM sip.estructuracui " +
+        "as resultNum, e.id,e.cui, e.nombre, u.first_name+' '+u.last_name as nombreresponsable, u2.first_name+' '+u2.last_name as nombregerente " +
+        "FROM sip.estructuracui e LEFT OUTER JOIN dbo.art_user u ON e.uid = u.uid LEFT OUTER JOIN dbo.art_user u2 ON e.uidgerente = u2.uid " +
         "WHERE borrado = 1 " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
