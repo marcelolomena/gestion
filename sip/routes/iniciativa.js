@@ -64,7 +64,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, presupuestoiniciativaController.action);
 
     router.route('/presupuestoiniciativa/:id')
-        .post(isAuthenticated, presupuestoiniciativaController.list);
+        .get(isAuthenticated, presupuestoiniciativaController.list);
 
     router.route('/tareasnuevosproyectos/action')
         .post(isAuthenticated, tareasnuevosproyectosController.action);
@@ -77,6 +77,15 @@ module.exports = function (passport) {
 
     router.route('/flujonuevatarea/:id')
         .post(isAuthenticated, flujonuevatareaController.list);
+
+    router.route('/serviciosdesarrollo')
+        .get(isAuthenticated, tareasnuevosproyectosController.getServiciosDesarrollo);
+
+    router.route('/proveedordesarrollo')
+        .get(isAuthenticated, tareasnuevosproyectosController.getProveedoresDesarrollo);
+
+    router.route('/tipopago')
+        .get(isAuthenticated, tareasnuevosproyectosController.getTipoPago);
 
     return router;
 

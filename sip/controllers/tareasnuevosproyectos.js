@@ -38,6 +38,7 @@ exports.list = function (req, res) {
       models.tareasnuevosproyectos.belongsTo(models.parametro, { foreignKey: 'idtipopago' });
       models.tareasnuevosproyectos.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
       models.tareasnuevosproyectos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+      models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
       models.tareasnuevosproyectos.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
       models.tareasnuevosproyectos.count({
         where: data
@@ -50,7 +51,9 @@ exports.list = function (req, res) {
           where: data,
           include: [
             {
-            model: models.servicio
+            model: models.servicio,
+              include: models.cuentascontables
+            
           },
           {
             model: models.estructuracui
@@ -76,6 +79,41 @@ exports.list = function (req, res) {
   });
 
 }
+exports.getServiciosDesarrollo = function (req, res) {
+  
+  var sql = "SELECT a.id, a.nombre FROM sip.servicio a "+
+  "where a.borrado = 1 and a.tarea<>''" +
+  "ORDER BY a.nombre";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};
+exports.getProveedoresDesarrollo = function (req, res) {
+  
+  var sql = "SELECT a.id, a.razonsocial FROM sip.proveedor a "+
+  "where a.borrado = 1 " +
+  "ORDER BY a.razonsocial";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};
+
+exports.getTipoPago = function (req, res) {
+  
+  var sql = "SELECT a.id, a.nombre FROM sip.parametro a "+
+  "where a.borrado = 1 and tipo='tipopago' " +
+  "ORDER BY a.nombre";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};
+
 
 exports.action = function (req, res) {
   var action = req.body.oper;
@@ -83,9 +121,19 @@ exports.action = function (req, res) {
   switch (action) {
     case "add":
       models.tareasnuevosproyectos.create({
-        idnuevosproyectos: req.params.idd,
+        idpresupuestoiniciativa: req.body.parent_id,
+        idcui: req.body.cui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
+        tarea: req.body.tarea,
+        idtipopago: req.body.idtipopago,
+        fechainicio: req.body.fechainicio,
+        fechafin: req.body.fechafin,
+        reqcontrato: req.body.reqcontrato,
+        idmoneda: req.body.idmoneda,
+        costounitario: req.body.costounitario,
+        cantidad: req.body.cantidad,
+        coniva: req.body.coniva,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -97,8 +145,18 @@ exports.action = function (req, res) {
       break;
     case "edit":
       models.tareasnuevosproyectos.update({
+        idcui: req.body.cui,
         idservicio: req.body.idservicio,
-        idproveedor: req.body.idproveedor
+        idproveedor: req.body.idproveedor,
+        tarea: req.body.tarea,
+        idtipopago: req.body.idtipopago,
+        fechainicio: req.body.fechainicio,
+        fechafin: req.body.fechafin,
+        reqcontrato: req.body.reqcontrato,
+        idmoneda: req.body.idmoneda,
+        costounitario: req.body.costounitario,
+        cantidad: req.body.cantidad,
+        coniva: req.body.coniva,
       }, {
           where: {
             id: req.body.id

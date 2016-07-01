@@ -13,6 +13,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-half'>Glosa{glosa}</div>";
+    template += "<div class='column-half'>N° SAP{sap}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
     template += "<div class='column-half'>CUI 1{cuifinanciamiento1}</div>";
     template += "<div class='column-half'>% financiamiento{porcentaje1}</div>";
     template += "</div>";
@@ -45,6 +50,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
     template += "<div class='column-half'>idmoneda{glosamoneda}</div>";
+    template += "<div class='column-half'>lider{lider}</div>";
+    template += "<div class='column-half'>jefeproyecto{jefeproyecto}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -60,6 +67,14 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             name: 'id',
             key: true,
             hidden: true
+        },
+        {
+            label: 'Glosa', name: 'glosa', width: 100, align: 'left',
+            search: true, editable: true, hidden: false,
+        },
+        {
+            label: 'SAP', name: 'sap', width: 80, align: 'left',
+            search: true, editable: true, hidden: false,
         },
         {
             label: 'Cui 1', name: 'cuifinanciamiento1', width: 50, align: 'left',
@@ -123,7 +138,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'uidlider', name: 'uidlider', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuarios_por_rol/Gerente',
+                dataUrl: '/usuariosprograma/' + parentRowKey,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -143,7 +158,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#lider").val($('option:selected', this).text());
+                        $("input#lider").val($('option:selected', this).val());
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
@@ -151,13 +166,13 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Lider', name: 'lider', width: 150, align: 'left',
-            search: true, editable: false, hidden: false, jsonmap: "user.uname",
+            search: true, editable: true, hidden: false, jsonmap: "nombrelider",
         },
         {
             label: 'uidjefeproyecto', name: 'uidjefeproyecto', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuarios_por_rol/Gerente',
+                dataUrl: '/usuariosprograma/' + parentRowKey,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -177,14 +192,14 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#jefeproyecto").val($('option:selected', this).text());
+                        $("input#jefeproyecto").val($('option:selected', this).val());
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Jefe de Proyecto', name: 'jefeproyecto', width: 150, align: 'left',
-            search: true, editable: false, hidden: false, jsonmap: "user.uname",
+            search: true, editable: true, hidden: false, jsonmap: "nombrejefe",
         },
         {
             label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
@@ -242,7 +257,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
-        mtype: "POST",
+        mtype: "GET",
         datatype: "json",
         caption: 'Presupuesto',
         //width: null,
@@ -250,6 +265,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
+        rowNum: 10,
+        rowList: [5, 10, 20, 50],
+        sortable: "true",
         colModel: modelPresupuestoIniciativa,
         viewrecords: true,
         styleUI: "Bootstrap",
@@ -266,7 +284,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "beneficioscuantitativos": "No hay datos" });
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "beneficioscuantitativos": "No hay datos", "porcentaje1": " ", "porcentaje2": " ", "dolar": " ", "uf": " " });
             }
         }
     });
@@ -299,15 +317,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
-                    $.ajax({
-                        type: "GET",
-                        url: '/actualizaduracion/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
-                return [true, "", ""]
+                    return [true, "", ""]
             },
             beforeShowForm: function (form) {
                 var grid = $("#" + childGridID);
@@ -352,15 +362,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
-                    $.ajax({
-                        type: "GET",
-                        url: '/actualizaduracion/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
-                return [true, "", ""]
+                    return [true, "", ""]
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {

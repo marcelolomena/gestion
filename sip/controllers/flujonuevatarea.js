@@ -95,6 +95,8 @@ exports.list = function (req, res) {
             console.log("->>> " + err)
         } else {
             models.flujonuevatarea.belongsTo(models.art_sub_task, { foreignKey: 'idsubtarea' });
+            models.art_sub_task.belongsTo(models.art_task, { foreignKey: 'task_id' });
+            models.art_task.belongsTo(models.art_project_master, { foreignKey: 'pId' });
             models.flujonuevatarea.belongsTo(models.parametro, { foreignKey: 'idtipopago' });
             models.flujonuevatarea.count({
                 where: data
@@ -108,7 +110,15 @@ exports.list = function (req, res) {
                     where: data,
                     include: [
                         {
-                            model: models.art_sub_task
+                            model: models.art_sub_task,
+                            include: [
+                                {
+                                    model: models.art_task,
+                                    include: [
+                                        {
+                                        model: models.art_project_master
+                                    }] 
+                                }]
                         },
                         {
                             model: models.parametro
