@@ -30,7 +30,8 @@ exports.tareacui = function (req, res) {
         attributes: ['id'],
         include: [
             {
-                model: models.servicio, where: { 'tarea': { $ne: null } }, attributes: ['tarea']
+                //model: models.servicio, where: { 'tarea': { $ne: null } }, attributes: ['tarea']
+                model: models.servicio, attributes: ['tarea']
             },
             {
                 model: models.proveedor, attributes: ['id', 'razonsocial']

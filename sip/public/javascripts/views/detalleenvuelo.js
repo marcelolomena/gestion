@@ -14,13 +14,12 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Proveedor{nombreproveedor}</div>";
-    template += "<div class='column-half'>Cuenta{cuentacontable}</div>";
+    template += "<div class='column-half'>Proveedor{idproveedor}</div>";
+    template += "<div class='column-half'>Contrato{idcontrato}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Contrato{idcontrato}</div>";
-    template += "<div class='column-half'>Presupuesto{presupuesto}</div>";
+    template += "<div class='column-half'>Cuenta{cuentacontable}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -29,13 +28,14 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-half'>Presupuesto{presupuesto}</div>";
     template += "<div class='column-half'>Saldo{saldotarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>idproveedor{idproveedor}</div>";
-    template += "<div class='column-half'>idcuenta{idcuenta}</div>";
-    template += "<div class='column-half'>numerocontrato{numerocontrato}</div>";
+    template += "{nombreproveedor}";
+    template += "{idcuenta}";
+    template += "{numerocontrato}";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -54,18 +54,14 @@ function showChildGrid(parentRowID, parentRowKey) {
                 value: "0:--Escoger Tarea--",
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        var thisval = $(this).val().split("|");
-                        var thispid = thisval[2];
-                        if (thispid) {
+                        var thisval = $(this).val();
+                        if (thisval) {
                             $.ajax({
                                 type: "GET",
-                                url: '/tareaservicio/' + thispid,
-                                //async: false,
+                                url: '/tareaservicio/' + thisval,
                                 success: function (data) {
                                     $("input#idcuenta").val(data[0].cuentascontable.id);
                                     $("input#cuentacontable").val(data[0].cuentascontable.cuentacontable);
-                                    $("input#idproveedor").val(thisval[0]);
-                                    $("input#nombreproveedor").val(thisval[1]);
                                 }
                             });
                         }
@@ -88,7 +84,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idcui;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
@@ -107,13 +103,20 @@ function showChildGrid(parentRowID, parentRowKey) {
                             url: '/tareacui/' + thispid,
                             async: false,
                             success: function (data) {
-                                var s = "<select>";//el default
-                                s += '<option value="0">--Escoger Tarea--</option>';
+                                var r = "<select>";
+                                r += '<option value="0">--Escoger Tarea--</option>';
                                 $.each(data, function (i, item) {
-                                    s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                                    r += '<option value="' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                                });
+                                r += "</select>";
+                                $("#tarea").html(r);
+                                var s = "<select>";
+                                s += '<option value="0">--Escoger Proveedor--</option>';
+                                $.each(data, function (i, item) {
+                                    s += '<option value="' + data[i].proveedor.id + '">' + data[i].proveedor.razonsocial + '</option>';
                                 });
                                 s += "</select>";
-                                $("#tarea").html(s);
+                                $("#idproveedor").html(s);
                             }
                         });
                     }
@@ -123,6 +126,30 @@ function showChildGrid(parentRowID, parentRowKey) {
         { label: 'uid', name: 'uid', search: false, hidden: true, editable: true },
         {
             label: 'idproveedor', name: 'idproveedor', search: false, hidden: true, editable: true,
+            edittype: "select",
+            editoptions: {
+                value: "0:--Escoger Proveedor--",
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thispid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/contratoproveedor/' + thispid,
+                            async: false,
+                            success: function (data) {
+                                var r = "<select>";
+                                r += '<option value="0">--Escoger Contrato--</option>';
+                                $.each(data, function (i, item) {
+                                    r += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                });
+                                r += "</select>";
+                                $("#idcontrato").html(r);
+                            }
+                        });
+                        $("input#nombreproveedor").val($('option:selected', this).text());
+                    }
+                }],
+            }
         },
         { label: 'Proveedor', name: 'nombreproveedor', width: 100, align: 'left', search: true, editable: true },
         { label: 'idcuenta', name: 'idcuenta', search: false, hidden: true, editable: true },
@@ -167,24 +194,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             label: 'idcontrato', name: 'idcontrato', hidden: true, editable: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/contratos/list',
-                buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idcui;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Contrato--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
+                value: "0:--Escoger Contrato--",
             }
         },
         {
@@ -247,34 +257,61 @@ function showChildGrid(parentRowID, parentRowKey) {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 setTimeout(function () {
-                    //console.log('idcui: ' + $('#idcui :selected').val())
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thistid = rowData.tarea;
-                    var thispid = $('#idcui :selected').val();
+                    var thispid = rowData.idproveedor;
+                    var thisrid = rowData.idcontrato;
+                    var thiscui = $('#idcui :selected').val();
                     $.ajax({
                         type: "GET",
-                        url: '/tareacui/' + thispid,
-                        async: false,
+                        url: '/tareacui/' + thiscui,
                         success: function (data) {
-                            var s = "<select>";//el default
+                            var s = "<select>";
+                            var r = "<select>";
                             s += '<option value="0">--Escoger Tarea--</option>';
+                            r += '<option value="0">--Escoger Proveedor--</option>';
                             $.each(data, function (i, item) {
                                 if (data[i].servicio.tarea == thistid) {
-                                    s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '" selected>' + data[i].servicio.tarea + '</option>';
+                                    s += '<option value="' + data[i].servicio.tarea + '" selected>' + data[i].servicio.tarea + '</option>';
                                 } else {
-                                    s += '<option value="' + data[i].proveedor.id + '|' + data[i].proveedor.razonsocial + '|' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
+                                    s += '<option value="' + data[i].servicio.tarea + '">' + data[i].servicio.tarea + '</option>';
                                 }
                             });
                             s += "</select>";
+                            $.each(data, function (i, item) {
+                                if (data[i].proveedor.id == thispid) {
+                                    r += '<option value="' + data[i].proveedor.id + '" selected>' + data[i].proveedor.razonsocial + '</option>';
+                                } else {
+                                    r += '<option value="' + data[i].proveedor.id + '">' + data[i].proveedor.razonsocial + '</option>';
+                                }
+                            });
+                            r += "</select>";
                             $("#tarea").html(s);
+                            $("#idproveedor").html(r);
+                        }
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: '/contratoproveedor/' + thispid,
+                        success: function (data) {
+                            var r = "<select>";
+                            r += '<option value="0">--Escoger Contrato--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].id == thisrid) {
+                                    r += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    r += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            r += "</select>";
+                            $("#idcontrato").html(r);
                         }
                     });
                 }, 1000);
 
                 $('input#cuentacontable', form).attr('readonly', 'readonly');
-                $('input#nombreproveedor', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
@@ -297,11 +334,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 postdata.compromiso = postdata.compromiso.split(".").join("").replace(",", ".");
                 postdata.realajustado = postdata.realajustado.split(".").join("").replace(",", ".");
                 postdata.saldotarea = postdata.saldotarea.split(".").join("").replace(",", ".");
-                postdata.tarea = postdata.tarea.split("|")[2];
                 if (postdata.idcui == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
-                } else if (postdata.idcontrato == 0) {
-                    return [false, "CONTRATO: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -317,7 +351,6 @@ function showChildGrid(parentRowID, parentRowKey) {
                 }
             }, beforeShowForm: function (form) {
                 $('input#cuentacontable', form).attr('readonly', 'readonly');
-                $('input#nombreproveedor', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
