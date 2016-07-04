@@ -25,7 +25,7 @@ exports.cabecera = function (req, res) {
     var id = req.params.id;
     
   var sql = "SELECT  id,nombre,iddivision,e.division,first_name+' '+last_name as responsable  FROM sip.estructuracentro e, " +
-  "dbo.art_user u Where e.id ="+id+" and e.uidresponsable = u.uid ";
+  "dbo.art_user u Where e.uidresponsable = u.uid and e.borrado = 1";
       
   sequelize.query(sql)
     .spread(function (rows) {
@@ -186,7 +186,7 @@ exports.getExcel = function (req, res) {
 "genrencia,u2.first_name+' '+u2.last_name as nombregerente " +
 "FROM sip.estructuracentro a left outer JOIN (sip.estructuracui b left outer JOIN dbo.art_user u " +
 "ON b.uid = u.uid left outer JOIN dbo.art_user u2 ON b.uidgerente=u2.uid left outer JOIN dbo.art_genrencia_master m " +
-"ON b.idgerencia=m.dId) ON a.id=b.idestructura ORDER BY b.cuipadre asc";
+"ON b.idgerencia=m.dId) ON a.id=b.idestructura ORDER BY a.id,b.cuipadre asc";
 
   sequelize.query(sql)
     .spread(function (estructura) {

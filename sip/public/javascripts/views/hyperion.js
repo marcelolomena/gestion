@@ -62,6 +62,7 @@ $(document).ready(function () {
                         hidden: false,
                         align: 'right',
                         search: false,
+                        summaryType: 'sum',
                         formatter: sipLibrary.currencyFormatter
                     });
                 });
@@ -92,7 +93,7 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        caption: 'Presupuestos',
+        caption: "Hyperion",
         pager: "#pager",
         viewrecords: true,
         rowList: [50, 100, 1000],
@@ -104,13 +105,13 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
             if (isNaN(recs) || recs == 0) {
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
             }
-/*
-            var cm = $("#grid").jqGrid("getGridParam", "colModel");
-            for (var i = 0; i < cm.length; i++) {
-                //console.log(cm[i].name)
-                $("#grid").jqGrid("setLabel", cm[i].name, "", { "text-align": "right" });
-            }
-*/            
+            /*
+                        var cm = $("#grid").jqGrid("getGridParam", "colModel");
+                        for (var i = 0; i < cm.length; i++) {
+                            //console.log(cm[i].name)
+                            $("#grid").jqGrid("setLabel", cm[i].name, "", { "text-align": "right" });
+                        }
+            */
         },
         //subGrid: true,
         //subGridRowExpanded: showSubGrids,
@@ -118,6 +119,15 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
         //    plusicon: "glyphicon-hand-right",
         //    minusicon: "glyphicon-hand-down"
         //},
+        grouping: true,
+        groupingView: {
+            groupField: ["cuentacontable"],
+            groupColumnShow: [true],
+            groupText: ["<b>{0}</b>"],
+            groupOrder: ["asc"],
+            groupSummary: [true],
+            groupCollapse: false
+        }
     });
 
     $('#grid').jqGrid('navGrid', '#pager', {
@@ -129,7 +139,7 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
         {},
         {},
         { closeAfterSearch: true });
-        
+
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
@@ -141,6 +151,6 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
             var url = '/hyperion/excel';
             $('#grid').jqGrid('excelExport', { "url": url });
         }
-    });        
+    });
 
 }
