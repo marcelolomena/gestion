@@ -63,6 +63,14 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    glosa: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    sap: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'presupuestoiniciativa'

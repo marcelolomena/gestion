@@ -36,6 +36,8 @@ exports.action = function (req, res) {
         fechaconversion: req.body.uidjefeproyecto,
         dolar: dolar,
         uf: uf,
+        glosa: req.body.glosa,
+        sap: req.body.sap,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -57,6 +59,8 @@ exports.action = function (req, res) {
         uidjefeproyecto: req.body.uidjefeproyecto,
         fechaconversion: req.body.fechaconversion,
         dolar: req.body.dolar,
+        glosa: req.body.glosa,
+        sap: req.body.sap,
         uf: req.body.uf
       }, {
           where: {

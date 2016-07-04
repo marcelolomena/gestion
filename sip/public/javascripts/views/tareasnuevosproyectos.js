@@ -96,7 +96,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                             $.ajax({
                                 type: "GET",
                                 url: '/proveedorporcui/' + idCUI + '/' + idServicio,
-                                async: false,
+                                async: true,
                                 success: function (data) {
                                     var grid = $("#" + childGridID);
                                     var rowKey = grid.getGridParam("selrow");
