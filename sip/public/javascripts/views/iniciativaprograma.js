@@ -474,10 +474,10 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     $.each(data, function (i, item) {
                         var datasub = 'a';
                         var idsub = 'b';
-                        if(data[i].nombre!=undefined){
+                        if (data[i].nombre != undefined) {
                             datasub = data[i].nombre.trim();
                         }
-                        if(thissid!=undefined){
+                        if (thissid != undefined) {
                             idsub = thissid.trim();
                         }
                         if (datasub == idsub) {
@@ -551,17 +551,35 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             template: tmplP,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.fechacomite == "") {
+                    return [false, "Fecha Comité: Debe escoger un valor", ""];
+                } if (postdata.uidgerente == 0) {
+                    return [false, "Gerente: Debe escoger un valor", ""];
+                } if (postdata.uidpmo == 0) {
+                    return [false, "PMO: Debe escoger un valor", ""];
+                } if (postdata.idestado == 0) {
+                    return [false, "Estado: Debe escoger un valor", ""];
+                } if (postdata.idcategoria == 0) {
+                    return [false, "Categoría: Debe escoger un valor", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
+            afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }, beforeShowForm: function (form) {
+            },
+            beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 $('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
+            },
+            afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
@@ -662,6 +680,6 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
 }
 function showSubGrids(subgrid_id, row_id) {
-    gridPresupuestoIniciativa(subgrid_id, row_id,'presupuesto');
-    gridIniciativaFecha(subgrid_id, row_id,'fecha');
+    gridPresupuestoIniciativa(subgrid_id, row_id, 'presupuesto');
+    gridIniciativaFecha(subgrid_id, row_id, 'fecha');
 }

@@ -92,62 +92,7 @@ exports.action = function (req, res) {
   }
 }
 
-// Create endpoint /iniciativaprograma for GET
-/*
 exports.list = function (req, res) {
-  var page = req.body.page;
-  var rows = req.body.rows;
-  var filters = req.body.filters;
-  var sidx = req.body.sidx;
-  var sord = req.body.sord;
-
-  if (!sidx)
-    sidx = "cuifinanciamiento1";
-
-  if (!sord)
-    sord = "asc";
-
-  var orden = sidx + " " + sord;
-
-  var additional = [{
-    "field": "idiniciativaprograma",
-    "op": "eq",
-    "data": req.params.id
-  }];
-
-  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-    if (err) {
-      console.log("->>> " + err)
-    } else {
-      models.presupuestoiniciativa.belongsTo(models.user, { foreignKey: 'uidlider' });
-      models.presupuestoiniciativa.count({
-        where: data
-      }).then(function (records) {
-        console.log("campos: " + records);
-        var total = Math.ceil(records / rows);
-
-        models.presupuestoiniciativa.findAll({
-          offset: parseInt(rows * (page - 1)),
-          limit: parseInt(rows),
-          order: orden,
-          where: data,
-          include: [
-            { model: models.user }
-          ]
-        }).then(function (iniciativas) {
-          res.json({ records: records, total: total, page: page, rows: iniciativas });
-        }).catch(function (err) {
-          console.log('EL ERROR: ' + err);
-          res.json({ error_code: 1 });
-        });
-      })
-    }
-  });
-
-};
-*/
-exports.list = function (req, res) {
-  // Use the Proyectos model to find all proyectos
   var page = req.query.page;
   var rows = req.query.rows;
   var sidx = req.query.sidx;

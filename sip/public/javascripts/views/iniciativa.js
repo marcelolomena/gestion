@@ -69,15 +69,15 @@ $(document).ready(function () {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.divisionsponsor;
+                    var thissid = rowData.iddivision;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].division == thissid) {
-                            s += '<option value="' + data[i].dId + '" selected>' + data[i].division + '</option>';
+                        if (data[i].idRRHH == thissid) {
+                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
                         } else {
-                            s += '<option value="' + data[i].dId + '">' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -100,28 +100,31 @@ $(document).ready(function () {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.divisionsponsor;
+                    var thissid = rowData.iddivision;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].division == thissid) {
-                            s += '<option value="' + data[i].dId + '" selected>' + data[i].division + '</option>';
+                        if (data[i].idRRHH == thissid) {
+                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
                         } else {
-                            s += '<option value="' + data[i].dId + '">' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
                         }
                     });
                     return s + "</select>";
                 }
             },
         },
+        /*
         {
             label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
         },
+        */
         {
             label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', search: true,
             editable: true, hidden: false,
             edittype: "text",
+            /*
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
@@ -146,15 +149,17 @@ $(document).ready(function () {
                         });
                     }, 100);
                 }
-            }
+            } */
         },
+        /*
         {
             label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true,
-        },
+        },*/
         {
             label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', search: true,
             editable: true, hidden: false,
             edittype: "text",
+            /*
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
@@ -179,7 +184,7 @@ $(document).ready(function () {
                         });
                     }, 100);
                 }
-            }
+            } */
         },
         {
             label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
