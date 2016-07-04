@@ -499,7 +499,7 @@ exports.action = function (req, res) {
 
 exports.updateTotales = function (req, res) {
   console.log("****id:"+req.params.id);
-  sequelize.query('EXECUTE sip.actulizadetallepre ' + req.params.id
+  sequelize.query('EXECUTE sip.actualizadetallepre ' + req.params.id
     + ';').then(function (response) {
       res.json({ error_code: 0 });
     }).error(function (err) {
