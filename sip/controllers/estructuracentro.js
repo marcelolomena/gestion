@@ -3,48 +3,75 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
 
-exports.list = function (req, res) {
+exports.cabeceracentro = function (req, res) {
+    
+  var sql = "SELECT  id,nombre,iddivision,e.division,e.uidresponsable,first_name+' '+last_name as responsable  FROM sip.estructuracentro e, " +
+  "dbo.art_user u Where e.uidresponsable = u.uid and e.borrado = 1";
+      
+  sequelize.query(sql)
+    .spread(function (rows) {
+       if (rows.length > 0) {
+            res.json(rows);            
+          } else {
+            res.json({ error_code: 10 })
+          }
+    });
+};
 
-  var page = req.body.page;
-  var rows = req.body.rows;
-  var filters = req.body.filters;
-  var sidx = req.body.sidx;
-  var sord = req.body.sord;
+exports.action = function (req, res) {
+  var action = req.body.oper;
 
-  if (!sidx)
-    sidx = "id";
+  switch (action) {
+   
+    case "add":
+               
+      models.estructuracentro.create({
+        nombre: req.body.nombre,
+        uidresponsable: req.body.uidresponsable,
+        iddivision: req.body.iddivision,
+        division: req.body.division,
+        borrado: 1
+      }).then(function (estructuracentro) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
 
-  if (!sord)
-    sord = "asc";
-
-  var orden =  sidx + " " + sord;
-
-  utilSeq.buildCondition(filters, function (err, data) {
-    if (err) {
-      console.log("->>> " + err)
-    } else {
-      models.estructuracentro.belongsTo(models.user, { foreignKey: 'uidresponsable' });
-      models.estructuracentro.count({
-        where: data
-      }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        models.estructuracentro.findAll({
-          offset: parseInt(rows * (page - 1)),
-          limit: parseInt(rows),
-          order: orden,
-          where: data,
-          include: [{
-            model: models.user
-          }]
-        }).then(function (centros) {
-          //Contrato.forEach(log)
-          res.json({ records: records, total: total, page: page, rows: centros });
+      break;
+    case "edit":
+      models.estructuracentro.update({
+        nombre: req.body.nombre,
+        uidresponsable: req.body.uidresponsable,
+        division: req.body.division
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (estructuracentro) {
+          res.json({ error_code: 0 });
         }).catch(function (err) {
-          //console.log(err);
+          console.log(err);
           res.json({ error_code: 1 });
         });
-      })
-    }
-  });
+      break;
+    case "del":
+      models.estructuracentro.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          console.log('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
 
-};
+      break;
+
+  }
+
+}
