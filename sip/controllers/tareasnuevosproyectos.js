@@ -116,8 +116,8 @@ exports.getProveedorCUI = function (req, res) {
 
 exports.getProveedoresDesarrollo = function (req, res) {
   
-  var sql = "SELECT a.id, a.razonsocial FROM sip.proveedor a "+
-  "where a.borrado = 1 " +
+  var sql = "SELECT a.id, a.razonsocial FROM sip.proveedor a join sip.plantillapresupuesto b on a.id=b.idproveedor "+
+  "where a.borrado = 1 "+ 
   "ORDER BY a.razonsocial";
       
   sequelize.query(sql)

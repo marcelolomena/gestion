@@ -91,12 +91,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                         $("input#cui").val($('option:selected', this).val());
                         var idCUI = $('option:selected', this).val();
                         var idServicio = $('#idservicio').val();
-                        console.log('idServicio: '+idServicio);
+                        //console.log('idServicio: ' + idServicio);
                         if (idCUI != "0") {
                             $.ajax({
                                 type: "GET",
                                 url: '/proveedorporcui/' + idCUI + '/' + idServicio,
-                                async: true,
+                                async: false,
                                 success: function (data) {
                                     var grid = $("#" + childGridID);
                                     var rowKey = grid.getGridParam("selrow");
@@ -104,15 +104,25 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                                     var thissid = rowData.idproveedor;
                                     var s = "<select>";//el default
                                     s += '<option value="0">--Escoger Proveedor--</option>';
+                                    //var lahora = new Date();
+                                    //console.log('Entro al for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                     $.each(data, function (i, item) {
                                         if (data[i].idproveedor == thissid) {
+                                            //lahora = new Date();
+                                            //console.log('Encuentro el proveedor a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                             s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
                                         } else {
+                                            //lahora = new Date();
+                                            //console.log('No encuentro el proveedor a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                             s += '<option value="' + data[i].idproveedor + '">' + data[i].razonsocial + '</option>';
                                         }
                                     });
                                     s += "</select>";
-                                    $("select#idproveedor").html(s);
+                                    //lahora = new Date();
+                                    //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                    $("select#idproveedor").empty().html(s);
+                                    //lahora = new Date();
+                                    //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                 }
                             });
                         }
@@ -146,7 +156,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                            childIdServicio = data[i].id;
+                            //childIdServicio = data[i].id;
                         } else {
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
@@ -209,7 +219,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
-                            childIdServicio = data[i].id;
+                            //childIdServicio = data[i].id;
                         } else {
                             s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
                         }
