@@ -106,9 +106,9 @@ $(document).ready(function () {
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].idRRHH == thissid) {
-                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].division + '" selected>' + data[i].division + '</option>';
                         } else {
-                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].division + '">' + data[i].division + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -311,7 +311,7 @@ $(document).ready(function () {
         {
             label: 'Fecha Último Comite', name: 'fechacomite', width: 130, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true,
+            editable: true, required: true,
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -432,6 +432,22 @@ $(document).ready(function () {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },beforeSubmit: function (postdata, formid) {
+                if (postdata.iddivision == 0) {
+                    return [false, "División: Debe escoger un valor", ""];
+                } if (postdata.fechacomite == "") {
+                    return [false, "Fecha Comité: Debe ingresar un valor", ""];
+                } if (postdata.uidgerente == 0) {
+                    return [false, "Gerente: Debe escoger un valor", ""];
+                } if (postdata.uidpmo == 0) {
+                    return [false, "PMO: Debe escoger un valor", ""];
+                } if (postdata.idestado == 0) {
+                    return [false, "Estado: Debe escoger un valor", ""];
+                } if (postdata.idcategoria == 0) {
+                    return [false, "Categoría: Debe escoger un valor", ""];
+                } else {
+                    return [true, "", ""]
+                }
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -459,6 +475,8 @@ $(document).ready(function () {
             }, beforeSubmit: function (postdata, formid) {
                 if (postdata.iddivision == 0) {
                     return [false, "División: Debe escoger un valor", ""];
+                } if (postdata.fechacomite == "") {
+                    return [false, "Fecha Comité: Debe ingresar un valor", ""];
                 } if (postdata.uidgerente == 0) {
                     return [false, "Gerente: Debe escoger un valor", ""];
                 } if (postdata.uidpmo == 0) {
@@ -518,7 +536,7 @@ $(document).ready(function () {
         }
     });
 
-    
-    
+
+
     $("#pager_iniciativa_left").css("width", "");
 });
