@@ -5,8 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     idpresupuesto: {
       type: DataTypes.INTEGER,
@@ -26,11 +25,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     idservicio: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'servicio',
-        key: 'id'
-      }
+      allowNull: true
     },
     glosaservicio: {
       type: DataTypes.STRING,
@@ -65,6 +60,46 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    estado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    cuota: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    numerocuota: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    idfrecuencia: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    desde: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    masiva: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    ivarecuperable: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    gastodiferido: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    mesesdiferido: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    desdediferido: {
       type: DataTypes.INTEGER,
       allowNull: true
     }

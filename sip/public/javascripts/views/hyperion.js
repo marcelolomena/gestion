@@ -93,7 +93,7 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        caption: 'Presupuestos',
+        caption: "Hyperion",
         pager: "#pager",
         viewrecords: true,
         rowList: [50, 100, 1000],
