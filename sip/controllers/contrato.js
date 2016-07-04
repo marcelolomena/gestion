@@ -303,6 +303,19 @@ exports.listall = function (req, res) {
   });
 }
 
+exports.listaporproveedor = function (req, res) {
+  models.contrato.findAll({
+    atributes: ['id', 'nombre'],
+    where: [{ 'nombre': { $ne: null } }, {idproveedor : req.params.id}],
+    order: 'nombre'
+  }).then(function (contratos) {
+    res.json(contratos);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+
 exports.list = function (req, res) {
 
   var page = req.body.page;
