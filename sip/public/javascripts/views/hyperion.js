@@ -31,8 +31,22 @@ $(document).ready(function () {
                     width: 100,
                     sortable: true,
                     hidden: false,
-                    search: false,
-                    searchoptions: { sopt: ["eq", "le", "ge"] }
+                    search: true,
+                    stype: 'select',
+                    searchoptions: {
+                        sopt: ["eq"],
+                        dataUrl: '/hyperion/listcui',
+                        buildSelect: function (response) {
+                            var data = JSON.parse(response);
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger Cui--</option>';
+                            $.each(data, function (i, item) {
+                                s += '<option value="' + data[i].idcui + '">' + data[i].estructuracui.cui + '</option>';
+                            });
+                            return s + "</select>";
+                        }
+                    },
+
                 });
 
                 listOfColumnModels.push({

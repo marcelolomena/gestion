@@ -23,6 +23,23 @@ exports.excel = function (req, res) {
 
 }
 
+exports.listcui = function (req, res) {
+    models.presupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' })
+    models.presupuesto.findAll({
+        attributes: ['idcui'],
+        where: { 'estado': 'Aprobado' },
+        include: [
+            {
+                model: models.estructuracui, attributes: ['cui']
+            }]
+    }).then(function (presupuesto) {
+        //console.dir(presupuesto[0])
+        res.json(presupuesto);
+    }).catch(function (err) {
+        console.log(err)
+    });
+}
+
 exports.colnames = function (req, res) {
     var ano = req.params.ano;
     var peini = ano + '09'
@@ -57,7 +74,6 @@ exports.colnames = function (req, res) {
         console.log(err)
     });
 
-
 }
 
 exports.list = function (req, res) {
@@ -68,20 +84,24 @@ exports.list = function (req, res) {
     var _filters = req.body.filters;
     var _search = req.body._search;
     var ano = req.params.ano;
+    var cui = req.params.cui;
     var ssql
 
-    if (_search == true) {
+    if (_search == 'true') {
         var searchField = req.body.searchField;
         var searchString = req.body.searchString;
         var searchOper = req.body.searchOper;
-        //console.log("searchString : " + searchString)
         if (searchField === 'ano') {
             ano = parseInt(searchString)
-            //console.log("----------->> " + ano)
             ssql = "BETWEEN " + searchString + "09 AND " + (parseInt(searchString) + 1) + "12 "
+        } else if (searchField === 'cui') {
+            cui = parseInt(searchString)
+            console.log("la super cui ----------->> " + cui)
         }
-    } else {
+    } else if (_search == 'false') {
+        console.log("ano ----------->> " + ano)
         ssql = "BETWEEN " + ano.toString() + "09 AND " + (ano + 1) + "12 "
+        console.log("ssql ----------->> " + ssql)
     }
 
     //console.log(ssql)
