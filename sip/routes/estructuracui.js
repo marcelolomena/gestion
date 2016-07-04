@@ -1,4 +1,5 @@
 var estructuracuiController = require('../controllers/estructuracui');
+var estructuracentroController = require('../controllers/estructuracentro');
 var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
@@ -26,7 +27,10 @@ module.exports = function (passport) {
         .post(isAuthenticated, estructuracuiController.action);    
 
     router.route('/estructuracui/excel')
-        .get(isAuthenticated, estructuracuiController.getExcel);                                           
+        .get(isAuthenticated, estructuracuiController.getExcel);   
+
+    router.route('/estructuracentro/list')
+        .get(isAuthenticated, estructuracentroController.list)                                                
   
     return router;
 

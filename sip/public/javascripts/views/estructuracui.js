@@ -2,46 +2,216 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-    $.getJSON("/estructuracui/responsables", function (j) {
-        $.each(j, function (i, item) {
-            $('#Responsable').append('<option value="' + item.id + '">' + item.nombre + '</option>');
-        });
-    });
+    idestructura = 0;
+    cuipadre = 0;
 
-    $("#button").click(function () {
-        idestructura = $('#EstructuraCui').val();
-        if (idestructura == 0) {
-            alert('Debe escoger una Estructura de CUI');
-            return;
-        }
-        $.getJSON("/estructuracui/cabecera/" + idestructura, function (data) {
+    var templ = "<div id='responsive-form' class='clearfix'>";
 
-            if (data.error_code == 10) {
-                alert('No existe # Estructura de CUI');
-                return;
+    templ += "<div class='form-row'>";
+    templ += "<div class='column-full'>Cui{cui}</div>";
+    templ += "<div class='column-full'>Nombre Cui{nombrecui}</div>";
+    templ += "</div>";
+
+    templ += "<div class='form-row'>";
+    templ += "<div class='column-full'>Nombre Responsable{uid}</div>";
+    templ += "</div>";
+
+    templ += "<div class='form-row'>";
+    templ += "<div class='column-full'>Gerencia{idgerencia}</div>";
+    templ += "</div>";
+
+    templ += "<div class='form-row'>";
+    templ += "<div class='column-full'>Nombre Gerente{uidgerente}</div>";
+    templ += "</div>";
+
+    templ += "<div class='form-row' style='display: none;'>";
+    templ += "<div class='column-half'>nombregerente {nombregerente}</div>";
+    templ += "<div class='column-full'>Nombre Responsable{responsable}</div>";
+    templ += "<div class='column-full'>genrencia{genrencia}</div>";
+    templ += "<div class='column-full'>idestructura{idestructura}</div>";
+    templ += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    templ += "</div>";
+
+    templ += "<hr style='width:100%;'/>";
+    templ += "<div> {sData} {cData}  </div>";
+    templ += "</div>";
+
+    var modelEstructura = [
+        { label: 'id', name: 'id', key: true, hidden: false },
+        { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'CUI Padre', name: 'iddivision', hidden: false, editable: true },
+        { label: 'Division', name: 'division', hidden: false, editable: true },
+        { label: 'Responsable', name: 'uidresponsable', width: 15 },
+        { label: 'Responsable', name: 'responsable', width: 150 }
+    ];
+
+    $("#gridpadre").jqGrid({
+        url: '/estructuracentro/list',
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: modelEstructura,
+        rowNum: 10,
+        height: 'auto',
+        autowidth: true,
+        shrinkToFit: true,
+        loadonce: true,
+        caption: 'Estructura de Centros',
+        onSelectRow: function (rowid, selected) {
+            if (rowid != null) {
+                jQuery("#grid").jqGrid('setGridParam', { url: '/estructuracui/hijos/' + rowid + '/' + cuipadre, datatype: 'json' }); // the last setting is for demo only
+                jQuery("#grid").jqGrid('setCaption', 'Estructura Cui Gerencia');
+                jQuery("#grid").trigger("reloadGrid");
             }
+        }, // use the onSelectRow that is triggered on row click to show a details grid
+        onSortCol: clearSelection,
+        onPaging: clearSelection,
+        pager: "#pagerpadre",
+        viewrecords: true,
+        rowList: [5, 10, 20, 50],
+        styleUI: "Bootstrap",
+        editurl: '/estructuracui/action',
+        loadError: sipLibrary.jqGrid_loadErrorHandler,
+        gridComplete: function () {
+            var recs = $("#gridpadre").getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
 
-            $('#CUIPadre').val(data[0].iddivision);
-            cuipadre = $('#CUIPadre').val();
-            $('#NombreEstructura').val(data[0].nombre);
-            $('#Nombre').val(data[0].division);
-            $('#EstructuraCui').attr('readonly', true);
-            $('#CUIPadre').attr('readonly', true);
-            $('#NombreEstructura').attr('readonly', true);
-            $('#Nombre').attr('readonly', true);
-            $('#responsable').attr('readonly', true);
-            $("#button").attr( "disabled", "disabled" );
-            $("#agregar").attr( "disabled", "disabled" );
-            $("#modificar").attr( "disabled", "disabled" );
-
-            loadGrid(idestructura, cuipadre);
-            //$('#responsable').remove();
-            //$('#responsable').val(data[0].responsable);
-
-            //       $('#responsable').append('<option value="'+data[0].responsable+'</option>');
-        });
-
+                $("#gridpadre").addRowData("blankRow", { "nombre": "No hay datos" });
+            }
+        },
+    //   subGrid: true,
+    //   subGridRowExpanded: showChildGrid,
+    //   subGridOptions: {
+    //        plusicon: "glyphicon-hand-right",
+    //        minusicon: "glyphicon-hand-down"
+    //   },
     });
+
+    $("#gridpadre").jqGrid('navGrid', "#pagerpadre", {
+        edit: true, add: true, del: true, search: false,
+        refresh: true, view: true, position: "left", cloneToTop: false
+    },
+        {
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            editCaption: "Modifica Estructura de CUI",
+            template: templ,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, beforeSubmit: function (postdata, formid) {
+
+                if (postdata.nombrecui == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
+                } if (postdata.uid == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
+                } if (postdata.idgerencia == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
+                } if (postdata.uidgerente == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }, beforeShowForm: function (form) {
+
+                $('input#cui', form).attr('readonly', 'readonly');
+                sipLibrary.centerDialog($("#gridpadre").attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#gridpadre").attr('id'));
+            }
+        },
+        {
+            closeAfterAdd: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Agregar Estructura de CUI",
+            template: templ,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, beforeSubmit: function (postdata, formid) {
+
+                if (postdata.cui == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de cui", ""];
+                } if (postdata.nombrecui == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
+                } if (postdata.uid == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
+                } if (postdata.idgerencia == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
+                } if (postdata.uidgerente == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
+            afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, "Error en llamada a Servidor", ""];
+                else
+                    return [true, "", ""]
+
+            }, beforeShowForm: function (form) {
+                $("#idestructura", form).val(idestructura);
+                $("#cuipadre", form).val(cuipadre);
+                sipLibrary.centerDialog($("#gridpadre").attr('id'));
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#gridpadre").attr('id'));
+            }
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Elimina Estructura de CUI",
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }
+        },
+        {
+            recreateFilter: true
+        }
+    );
+
+    $("#gridpadre").jqGrid('navButtonAdd', "#pagerpadre", {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#gridpadre');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/estructuracui/excel';
+            $('#gridpadre').jqGrid('excelExport', { "url": url });
+        }
+    });
+
+    $("#pagerpadre_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#gridpadre").setGridWidth($(".gcontainer").width(), true);
+        $("#pagerpadre").setGridWidth($(".gcontainer").width(), true);
+    });
+
+    loadGrid(idestructura, cuipadre);
 
 });
 
@@ -85,8 +255,8 @@ function loadGrid(idestructura, cuipadre) {
 
     var modelCui = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idestructura', name: 'idestructura', hidden: true,editable: true },
-        { label: 'cuipadre', name: 'cuipadre', hidden: true,editable: true },
+        { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
+        { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
@@ -200,6 +370,7 @@ function loadGrid(idestructura, cuipadre) {
         autowidth: true,
         shrinkToFit: true,
         caption: 'Estructura Cui Gerencia',
+        loadonce: true,
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -234,7 +405,7 @@ function loadGrid(idestructura, cuipadre) {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },beforeSubmit: function (postdata, formid) {
+            }, beforeSubmit: function (postdata, formid) {
 
                 if (postdata.nombrecui == 0) {
                     return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
@@ -278,11 +449,11 @@ function loadGrid(idestructura, cuipadre) {
                 } if (postdata.nombrecui == 0) {
                     return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
                 } if (postdata.uid == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];                      
+                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
                 } if (postdata.idgerencia == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];   
+                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
                 } if (postdata.uidgerente == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];                                                           
+                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -354,13 +525,14 @@ function showChildGrid(parentRowID, parentRowKey) {
     var childGridPagerID = parentRowID + "_pager";
     var childIdServicio = 0;
 
-    var grid = $("#grid");
+    var grid = $("#gridpadre");
     var rowData = grid.getRowData(parentRowKey);
-    cuipadre    = rowData.cui;
+    idestructura=rowData.id;
+    cuipadre = rowData.iddivision;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
-   var template = "<div id='responsive-form' class='clearfix'>";
+    var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Cui{cui}</div>";
@@ -393,8 +565,8 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     var modelCui = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idestructura', name: 'idestructura', hidden: true,editable: true },
-        { label: 'cuipadre', name: 'cuipadre', hidden: true,editable: true },
+        { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
+        { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
@@ -533,7 +705,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
-               {
+        {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -542,7 +714,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },beforeSubmit: function (postdata, formid) {
+            }, beforeSubmit: function (postdata, formid) {
 
                 if (postdata.nombrecui == 0) {
                     return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
@@ -586,11 +758,11 @@ function showChildGrid(parentRowID, parentRowKey) {
                 } if (postdata.nombrecui == 0) {
                     return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
                 } if (postdata.uid == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];                      
+                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
                 } if (postdata.idgerencia == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];   
+                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
                 } if (postdata.uidgerente == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];                                                           
+                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -607,7 +779,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                 $("#idestructura", form).val(idestructura);
                 var grid = $("#grid");
                 var rowData = grid.getRowData(parentRowKey);
-                cuipadre    = rowData.cui;
+                cuipadre = rowData.cui;
                 $("#cuipadre", form).val(cuipadre);
 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -651,13 +823,13 @@ function gridDetail(parentRowID, parentRowKey) {
     var childGridPagerID = parentRowID + "_pager";
     var childIdServicio = 0;
 
-    var grid = $("#"+griddepartamento);
+    var grid = $("#" + griddepartamento);
     var rowData = grid.getRowData(parentRowKey);
-    cuipadre    = rowData.cui;
+    cuipadre = rowData.cui;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
-   var template = "<div id='responsive-form' class='clearfix'>";
+    var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Cui{cui}</div>";
@@ -690,8 +862,8 @@ function gridDetail(parentRowID, parentRowKey) {
 
     var modelCui = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idestructura', name: 'idestructura', hidden: true,editable: true },
-        { label: 'cuipadre', name: 'cuipadre', hidden: true,editable: true },
+        { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
+        { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
@@ -825,7 +997,7 @@ function gridDetail(parentRowID, parentRowKey) {
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
-               {
+        {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -834,7 +1006,7 @@ function gridDetail(parentRowID, parentRowKey) {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },beforeSubmit: function (postdata, formid) {
+            }, beforeSubmit: function (postdata, formid) {
 
                 if (postdata.nombrecui == 0) {
                     return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
@@ -878,11 +1050,11 @@ function gridDetail(parentRowID, parentRowKey) {
                 } if (postdata.nombrecui == 0) {
                     return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
                 } if (postdata.uid == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];                      
+                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
                 } if (postdata.idgerencia == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];   
+                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
                 } if (postdata.uidgerente == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];                                                           
+                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -897,9 +1069,9 @@ function gridDetail(parentRowID, parentRowKey) {
 
             }, beforeShowForm: function (form) {
                 $("#idestructura", form).val(idestructura);
-                var grid = $("#"+griddepartamento);
+                var grid = $("#" + griddepartamento);
                 var rowData = grid.getRowData(parentRowKey);
-                cuipadre    = rowData.cui;
+                cuipadre = rowData.cui;
                 $("#cuipadre", form).val(cuipadre);
 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -938,6 +1110,11 @@ function gridDetail(parentRowID, parentRowKey) {
 
 }
 
+function clearSelection() {
+				jQuery("#grid").jqGrid('setGridParam', { url: "empty.json", datatype: 'json' }); // the last setting is for demo purpose only
+				jQuery("#grid").jqGrid('setCaption', 'Detail Grid:: none');
+				jQuery("#grid").trigger("reloadGrid");
 
+}
 
 
