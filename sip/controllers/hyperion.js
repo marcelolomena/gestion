@@ -2,6 +2,26 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 
+exports.excel = function (req, res) {
+    var conf = {}
+    conf.cols = [{
+        caption: 'Id Contrato',
+        type: 'number',
+        width: 3
+    },
+        {
+            caption: 'Contrato',
+            type: 'string',
+            width: 50
+        },
+        {
+            caption: 'Solicitud',
+            type: 'string',
+            width: 30
+        }
+    ];
+
+}
 
 exports.colnames = function (req, res) {
     var ano = req.params.ano;

@@ -129,5 +129,18 @@ function CreateJQGrid(currentYear, listOfColumnModels, listOfColumnNames) {
         {},
         {},
         { closeAfterSearch: true });
+        
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/hyperion/excel';
+            $('#grid').jqGrid('excelExport', { "url": url });
+        }
+    });        
 
 }
