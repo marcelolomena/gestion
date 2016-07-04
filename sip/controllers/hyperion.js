@@ -32,10 +32,11 @@ exports.colnames = function (req, res) {
     models.detallepre.belongsTo(models.presupuesto, { foreignKey: 'idpresupuesto' })
     models.detallepre.hasMany(models.detalleplan, { foreignKey: 'iddetallepre' })
     models.detalleplan.belongsTo(models.detallepre, { foreignKey: 'iddetallepre' })
+
     models.presupuesto.findAll({
         attributes: ['id'],
         //limit: 1,
-        where: { 'estado': 'Aprobado' },//Aprobado
+        where: [{ 'estado': 'Aprobado' }, { 'idcui': 59 }],
         include: [
             {
                 model: models.detallepre,
@@ -45,6 +46,7 @@ exports.colnames = function (req, res) {
                         model: models.detalleplan,
                         attributes: ['periodo'],
                         where: { 'periodo': { $between: [peini, pefin] } },
+                        group: ['periodo']
                     }]
             }
         ],
@@ -84,6 +86,8 @@ exports.list = function (req, res) {
 
     //console.log(ssql)
 
+    var estado = 'Aprobado'
+
     var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= :ano; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
         "FROM sip.presupuesto a " +
@@ -91,7 +95,7 @@ exports.list = function (req, res) {
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='Aprobado' AND d.periodo " + ssql +
+        "a.estado='" + estado + "' AND a.idcui = 59 AND d.periodo " + ssql +
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
@@ -102,17 +106,18 @@ exports.list = function (req, res) {
         "f.cuentacontable, c.cui, c.cuipadre, " +
         "' + @ano + ' ano, " +
         "d.periodo, " +
-        "d.presupuestoorigen " +
+        "d.presupuestopesos " +
         "FROM sip.presupuesto a " +
         "JOIN sip.detallepre b ON a.id = b.idpresupuesto " +
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d ON d.iddetallepre = b.id " +
         "JOIN sip.servicio e ON b.idservicio=e.id " +
         "JOIN sip.cuentascontables f ON e.idcuenta=f.id " +
+        " WHERE a.estado=''" + estado + "'' AND a.idcui = 59 AND d.periodo " + ssql +
         ") x " +
         "PIVOT " +
         "( " +
-        "SUM(presupuestoorigen) " +
+        "SUM(presupuestopesos) " +
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
 
