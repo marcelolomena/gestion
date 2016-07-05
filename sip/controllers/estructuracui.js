@@ -74,6 +74,7 @@ exports.action = function (req, res) {
         uidgerente: req.body.uidgerente,
         idestructura:req.body.idestructura,
         cuipadre:req.body.cuipadre,
+        nivel:req.body.nivel,
         borrado: 1
       }).then(function (estructuracui) {
         res.json({ error_code: 0 });

@@ -15,7 +15,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, hyperionController.colnames)   
         
     router.route('/hyperion/excel')
-        .get(isAuthenticated, hyperionController.excel)        
+        .get(isAuthenticated, hyperionController.excel) 
+        
+    router.route('/hyperion/listcui')
+        .get(isAuthenticated, hyperionController.listcui)                  
 
     return router;
 

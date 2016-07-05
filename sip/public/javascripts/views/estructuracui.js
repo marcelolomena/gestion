@@ -270,6 +270,7 @@ function loadGrid(idestructura, cuipadre) {
     template += "<div class='column-full'>genrencia{genrencia}</div>";
     template += "<div class='column-full'>idestructura{idestructura}</div>";
     template += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    template += "<div class='column-full'>nivel{nivel}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -280,6 +281,7 @@ function loadGrid(idestructura, cuipadre) {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
         { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
+        { label: 'nivel', name: 'nivel', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false,
           editoptions: {dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
@@ -587,6 +589,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "<div class='column-full'>genrencia{genrencia}</div>";
     template += "<div class='column-full'>idestructura{idestructura}</div>";
     template += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    template += "<div class='column-full'>nivel{nivel}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -597,6 +600,7 @@ function showChildGrid(parentRowID, parentRowKey) {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
         { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
+        { label: 'nivel', name: 'nivel', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
@@ -884,6 +888,7 @@ function gridDetail(parentRowID, parentRowKey) {
     template += "<div class='column-full'>genrencia{genrencia}</div>";
     template += "<div class='column-full'>idestructura{idestructura}</div>";
     template += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    template += "<div class='column-full'>nivel{nivel}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -894,6 +899,7 @@ function gridDetail(parentRowID, parentRowKey) {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
         { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
+        { label: 'nivel', name: 'nivel', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {

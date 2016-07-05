@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    oficial: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     glosanivel1: {
       type: DataTypes.STRING,
       allowNull: true

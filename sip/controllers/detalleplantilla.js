@@ -9,9 +9,10 @@ exports.list = function (req, res) {
   var rows = req.query.rows;
   var sidx = req.query.sidx;
   var sord = req.query.sord;
-  var id   = req.params.id
+  var id = req.params.id
   var filters = req.query.filters;
   var condition = "";
+  var condition1 = "";
 
   if (!sidx)
     sidx = "plantillapresupuesto.id";
@@ -20,9 +21,9 @@ exports.list = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-  
-  condition = "plantillapresupuesto.idcui =" +id+" AND plantillapresupuesto.borrado = 1 and ";
-  
+
+  condition1 = "plantillapresupuesto.idcui =" + id + " AND plantillapresupuesto.borrado = 1 and ";
+
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -38,7 +39,7 @@ exports.list = function (req, res) {
     " LEFT OUTER JOIN (sip.servicio servicio LEFT OUTER JOIN sip.cuentascontables cuentas ON servicio.idcuenta = cuentas.id) " +
     " ON plantillapresupuesto.idservicio = servicio.id " +
     " LEFT OUTER JOIN sip.proveedor proveedor ON plantillapresupuesto.idproveedor = proveedor.id " +
-    " where plantillapresupuesto.idcui = "+id+" AND plantillapresupuesto.borrado = 1 ORDER BY cui asc) " +
+    " where plantillapresupuesto.idcui = " + id + " AND plantillapresupuesto.borrado = 1 ORDER BY cui asc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
@@ -48,8 +49,17 @@ exports.list = function (req, res) {
 
       jsonObj.rules.forEach(function (item) {
 
-        if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
+        if (item.op === 'cn') {
+          if (item.field === 'nombre')
+            condition += 'servicio.' + item.field + " like '%" + item.data + "%' AND "
+          else if (item.field === 'tarea')
+            condition += 'servicio.' + item.field + " like '%" + item.data + "%' AND "
+          else if (item.field === 'razonsocial')
+            condition += 'proveedor.' + item.field + " like '%" + item.data + "%' AND "            
+          else if (item.field === 'cuentacontable')
+            condition += '('+ item.field + " like '%" + item.data + "%' OR cuentas.nombrecuenta like '%" + item.data + "%') AND "
+        }
+
       });
 
       var sql = "declare @rowsPerPage as bigint; " +
@@ -67,40 +77,39 @@ exports.list = function (req, res) {
         " LEFT OUTER JOIN (sip.servicio servicio LEFT OUTER JOIN sip.cuentascontables cuentas ON servicio.idcuenta = cuentas.id) " +
         " ON plantillapresupuesto.idservicio = servicio.id " +
         " LEFT OUTER JOIN sip.proveedor proveedor ON plantillapresupuesto.idproveedor = proveedor.id " +
-        "WHERE  plantillapresupuesto.idcui =" +id+" AND plantillapresupuesto.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
+        "WHERE  plantillapresupuesto.idcui =" + id + " AND plantillapresupuesto.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       console.log(sql);
 
-      models.plantillapresupuesto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.plantillapresupuesto.count({ where: [condition1.substring(0, condition1.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql)
           .spread(function (rows) {
 
             res.json({ records: records, total: total, page: page, rows: rows });
           });
-      })
+       })
 
     } else {
+      models.plantillapresupuesto.count({ where: [condition1.substring(0, condition1.length - 4)] }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })  
+  }
+  }
+  else {
 
-      models.plantillapresupuesto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      models.plantillapresupuesto.count({ where: [condition1.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
           });
       })
+
     }
-
-  } else {
-
-    models.plantillapresupuesto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-      var total = Math.ceil(records / rows);
-      sequelize.query(sql0)
-        .spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
-    })
-
-  }
-};
+  };

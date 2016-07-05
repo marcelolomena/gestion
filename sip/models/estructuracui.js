@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    nivel: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     cui: {
       type: DataTypes.INTEGER,
       allowNull: true

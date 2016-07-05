@@ -54,7 +54,7 @@ exports.list = function (req, res) {
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, e.id,e.cui, e.nombre, u.first_name+' '+u.last_name as nombreresponsable, u2.first_name+' '+u2.last_name as nombregerente " +
         "FROM sip.estructuracui e LEFT OUTER JOIN dbo.art_user u ON e.uid = u.uid LEFT OUTER JOIN dbo.art_user u2 ON e.uidgerente = u2.uid " +
-        "WHERE borrado = 1 " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
+        "WHERE borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       models.estructuracui.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
