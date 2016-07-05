@@ -12,8 +12,6 @@ exports.action = function (req, res) {
     var costoorigen = req.body.costoorigen
 
     if (action != "del") {
-        if (montoorigen != "")
-            montoorigen = montoorigen.split(".").join("").replace(",", ".")
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
     }

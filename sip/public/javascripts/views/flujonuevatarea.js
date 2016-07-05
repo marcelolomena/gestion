@@ -27,7 +27,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Monto{montoorigen}</div>";
+    template += "<div class='column-half'>Cantidad{cantidad}</div>";
     template += "<div class='column-half'>Costo{costoorigen}</div>";
     template += "</div>";
 
@@ -158,14 +158,9 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Monto', name: 'montoorigen', width: 80, align: 'right',
+            label: 'Cantidad', name: 'cantidad', width: 50, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
-            }
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
         },
         {
             label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
