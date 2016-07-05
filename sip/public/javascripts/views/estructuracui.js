@@ -242,6 +242,7 @@ var leida = false;
 var idestructura;
 var cuipadre;
 var griddepartamento;
+var nivel;
 
 function loadGrid(idestructura, cuipadre) {
 
@@ -459,6 +460,8 @@ function loadGrid(idestructura, cuipadre) {
                 var rowData = grid.getRowData(rowKey);
                 cuipadre = rowData.iddivision;
                 idestructura = rowData.id;
+                nivel=1;
+                $("#nivel", form).val(nivel);                
                 $("#idestructura", form).val(idestructura);
                 $("#cuipadre", form).val(cuipadre);
                 $('input#cui', form).attr('readonly', 'readonly');
@@ -508,8 +511,10 @@ function loadGrid(idestructura, cuipadre) {
                 var rowData = grid.getRowData(rowKey);
                 cuipadre = rowData.iddivision;
                 idestructura = rowData.id;
+                nivel=1;
+                $("#nivel", form).val(nivel);                
                 $("#idestructura", form).val(idestructura);
-                $("#cuipadre", form).val(cuipadre);
+                $("#cuipadre", form).val(cuipadre);                
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));
@@ -769,7 +774,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-
+                nivel=2;
+                $("#nivel", form).val(nivel);                
                 $('input#cui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
@@ -815,7 +821,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 var rowData = grid.getRowData(parentRowKey);
                 cuipadre = rowData.cui;
                 $("#cuipadre", form).val(cuipadre);
-
+                nivel=2;
+                $("#nivel", form).val(nivel);                
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -1063,7 +1070,8 @@ function gridDetail(parentRowID, parentRowKey) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-
+                nivel=3;
+                $("#nivel", form).val(nivel);
                 $('input#cui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
@@ -1109,7 +1117,8 @@ function gridDetail(parentRowID, parentRowKey) {
                 var rowData = grid.getRowData(parentRowKey);
                 cuipadre = rowData.cui;
                 $("#cuipadre", form).val(cuipadre);
-
+                nivel=3;
+                $("#nivel", form).val(nivel);
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
