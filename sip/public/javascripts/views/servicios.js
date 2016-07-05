@@ -16,6 +16,14 @@ $(document).ready(function () {
     tmpl += "<div class='column-full'>Tarea {tarea}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Agrupacion SAP {agrupacionsap}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Secuencia SAP {secuenciasap}</div>";
+    tmpl += "</div>";    
+
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>cuentacontable {cuentacontable}</div>";
     tmpl += "<div class='column-half'>Criticidad {criticidad}</div>";
@@ -87,6 +95,18 @@ $(document).ready(function () {
             label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: true, editrules: { required: false }, hidden: false
         },
+        {
+            label: 'Agrupacion SAP', name: 'agrupacionsap', width: 300, align: 'left',
+            search: true, editable: true, editrules: { required: false }, hidden: false
+        },
+        {
+            label: 'Secuencia SAP', name: 'secuenciasap', width: 200, align: 'left',
+            search: true, editable: true, editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("000000", { placeholder: "_________" });
+
+                },editrules: { required: false }, hidden: false
+        }},                
     ];
 
     $("#table_servicio").jqGrid({

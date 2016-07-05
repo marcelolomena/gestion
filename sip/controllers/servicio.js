@@ -88,6 +88,8 @@ exports.action = function (req, res) {
         tarea: req.body.tarea,
         idcuenta: req.body.idcuenta,
         cuentacontable: req.body.cuentacontable,
+        agrupacionsap: req.body.agrupacionsap,
+        secuenciasap: req.body.secuenciasap,
         borrado: 1
       }).then(function (servicio) {
         res.json({ error_code: 0 });
@@ -103,7 +105,9 @@ exports.action = function (req, res) {
         nombre: req.body.nombre,
         tarea: req.body.tarea,
         idcuenta: req.body.idcuenta,
-        cuentacontable: req.body.cuentacontable
+        cuentacontable: req.body.cuentacontable,
+        agrupacionsap: req.body.agrupacionsap,
+        secuenciasap: req.body.secuenciasap,        
       }, {
           where: {
             id: req.body.id

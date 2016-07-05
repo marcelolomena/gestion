@@ -28,6 +28,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    agrupacionsap: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
+    secuenciasap: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
