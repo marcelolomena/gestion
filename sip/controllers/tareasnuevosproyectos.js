@@ -146,7 +146,7 @@ exports.action = function (req, res) {
     case "add":
       models.tareasnuevosproyectos.create({
         idpresupuestoiniciativa: req.body.parent_id,
-        idcui: req.body.cui,
+        idcui: req.body.idcui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
@@ -169,7 +169,7 @@ exports.action = function (req, res) {
       break;
     case "edit":
       models.tareasnuevosproyectos.update({
-        idcui: req.body.cui,
+        idcui: req.body.idcui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,

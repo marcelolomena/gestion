@@ -89,6 +89,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#cui").val($('option:selected', this).val());
+                        $("input#inputcui").val($('option:selected', this).val());
                         var idCUI = $('option:selected', this).val();
                         var idServicio = $('#idservicio').val();
                         //console.log('idServicio: ' + idServicio);
