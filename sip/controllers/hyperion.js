@@ -40,6 +40,23 @@ exports.listcui = function (req, res) {
     });
 }
 
+exports.presupuesto = function (req, res) {
+    models.presupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' })
+    models.presupuesto.findAll({
+        attributes: ['id', 'idcui', 'descripcion', 'montoforecast', 'montoanual'],
+        where: { 'estado': 'Aprobado' },
+        include: [
+            {
+                model: models.estructuracui, attributes: ['cui']
+            }]
+    }).then(function (presupuesto) {
+        //console.dir(presupuesto[0])
+        res.json(presupuesto);
+    }).catch(function (err) {
+        console.log(err)
+    });
+}
+
 exports.colnames = function (req, res) {
     var ano = req.params.ano;
     var peini = ano + '09'
@@ -83,8 +100,10 @@ exports.list = function (req, res) {
     var _sord = req.body.sord;
     var _filters = req.body.filters;
     var _search = req.body._search;
-    var ano = req.params.ano;
-    var cui = req.params.cui;
+    var ano = req.body.ano;
+    var cui = req.body.cui;
+    var idcui = req.body.idcui;
+    var estado = 'Aprobado'
     var ssql
 
     if (_search == 'true') {
@@ -106,8 +125,6 @@ exports.list = function (req, res) {
 
     //console.log(ssql)
 
-    var estado = 'Aprobado'
-
     var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= :ano; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
         "FROM sip.presupuesto a " +
@@ -115,7 +132,7 @@ exports.list = function (req, res) {
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='" + estado + "' AND a.idcui = 59 AND d.periodo " + ssql +
+        "a.estado='" + estado + "' AND a.idcui = " + idcui + " AND d.periodo " + ssql +
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
@@ -133,7 +150,7 @@ exports.list = function (req, res) {
         "JOIN sip.detalleplan d ON d.iddetallepre = b.id " +
         "JOIN sip.servicio e ON b.idservicio=e.id " +
         "JOIN sip.cuentascontables f ON e.idcuenta=f.id " +
-        " WHERE a.estado=''" + estado + "'' AND a.idcui = 59 AND d.periodo " + ssql +
+        " WHERE a.estado=''" + estado + "'' AND a.idcui = " + idcui + " AND d.periodo " + ssql +
         ") x " +
         "PIVOT " +
         "( " +

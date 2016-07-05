@@ -10,9 +10,11 @@ module.exports = function (passport) {
         res.render('hyperion', { user: req.user });
     });
 
-    router.route('/hyperion/list/:ano')
+    router.route('/hyperion/list')
         .post(isAuthenticated, hyperionController.list)
-        .get(isAuthenticated, hyperionController.colnames)   
+        
+    router.route('/hyperion/presupuesto')
+        .get(isAuthenticated, hyperionController.presupuesto)        
         
     router.route('/hyperion/excel')
         .get(isAuthenticated, hyperionController.excel) 
