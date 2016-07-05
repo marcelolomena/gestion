@@ -42,8 +42,10 @@ $(document).ready(function () {
         },
     });
 
+    $("#grid").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: false, add: false, del: false, search: false,
+        edit: false, add: false, del: false, search: true,
         refresh: true, view: true, position: "left", cloneToTop: false
     },
         {
@@ -103,10 +105,10 @@ function showChildGrid(parentRowID, parentRowKey) {
     var modelDetalleServicio = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idcui', name: 'idcui', hidden: true },
-        { label: 'CUI', name: 'cui', editable: true, width: 100,hidden: true, jsonmap: "estructuracui.cui", editrules: { edithidden: false }, hidedlg: false },
-        { label: 'Nombre', name: 'nombrecui', editable: true,hidden: true, jsonmap: "estructuracui.nombre", editrules: { edithidden: false }, hidedlg: true },
+        { label: 'CUI', name: 'cui', search: true,editable: true, width: 100,hidden: true, jsonmap: "estructuracui.cui", editrules: { edithidden: false }, hidedlg: false },
+        { label: 'Nombre', name: 'nombrecui', search: true,editable: true,hidden: true, jsonmap: "estructuracui.nombre", editrules: { edithidden: false }, hidedlg: true },
         {
-            label: 'Servicio', name: 'nombre', search: false, width: 300,
+            label: 'Servicio', name: 'nombre', search: true, width: 300,
             editable: true, //jsonmap: "servicio.nombre",
             editrules: { edithidden: false }, hidedlg: true
         },
@@ -160,7 +162,7 @@ function showChildGrid(parentRowID, parentRowKey) {
         { label: 'Tarea', name: 'tarea', editable: true, width: 80,editrules: { edithidden: false }, hidedlg: true },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left',
-            search: false, editable: true, hidden: false,
+            search: true, editable: true, hidden: false,
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Proveedor--"
@@ -199,8 +201,10 @@ function showChildGrid(parentRowID, parentRowKey) {
         }
     });
 
+    $("#" + childGridID).jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: false, add: true, del: true, search: true, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,

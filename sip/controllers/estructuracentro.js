@@ -30,6 +30,7 @@ exports.action = function (req, res) {
         uidresponsable: req.body.uidresponsable,
         iddivision: req.body.iddivision,
         division: req.body.division,
+        oficial: req.body.oficial,
         borrado: 1
       }).then(function (estructuracentro) {
         res.json({ error_code: 0 });
@@ -43,7 +44,8 @@ exports.action = function (req, res) {
       models.estructuracentro.update({
         nombre: req.body.nombre,
         uidresponsable: req.body.uidresponsable,
-        division: req.body.division
+        division: req.body.division,
+        oficial: req.body.oficial
       }, {
           where: {
             id: req.body.id
