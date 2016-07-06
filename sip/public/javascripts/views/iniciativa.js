@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
@@ -38,8 +37,13 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Presupuesto Gasto (USD) {pptoestimadogasto}</div>";
-    tmpl += "<div class='column-half'>Presupuesto Inversión (USD) {pptoestimadoinversion}</div>";
+    tmpl += "<div class='column-three'>Gasto Estimado {pptoestimadogasto}</div>";
+    tmpl += "<div class='column-three'>Inversión Estimada {pptoestimadoinversion}</div>";
+    tmpl += "<div class='column-three'>Presupuesto Estimado {pptoestimadoprevisto}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Importante: Los montos especificados deben ser en Dolares.</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' style='display: none;'>";
@@ -58,10 +62,13 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
-            search: true, editable: true, editrules: { required: true }, hidden: false
+            search: true, editable: true, hidden: false,
+            editrules: { required: true }
         },
         {
-            label: 'División', name: 'iddivision', search: false, editable: true, hidden: true,
+            label: 'División', name: 'iddivision',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/divisiones',
@@ -71,7 +78,7 @@ $(document).ready(function () {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.iddivision;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].idRRHH == thissid) {
@@ -84,15 +91,20 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#divisionsponsor").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#divisionsponsor").val($('option:selected', this).text());
+                        }else{
+                            $("input#divisionsponsor").val("");
+                        }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
-
+            },
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true,
+            label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false,  required: true},
             stype: 'select',
             searchoptions: {
                 dataUrl: '/divisiones',
@@ -102,7 +114,7 @@ $(document).ready(function () {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.iddivision;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].idRRHH == thissid) {
@@ -115,79 +127,18 @@ $(document).ready(function () {
                 }
             },
         },
-        /*
         {
-            label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
-        },
-        */
-        {
-            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', search: true,
-            editable: true, hidden: false,
-            edittype: "text",
-            /*
-            editoptions: {
-                dataInit: function (element) {
-                    window.setTimeout(function () {
-                        $(element).attr("autocomplete", "off").typeahead({
-                            appendTo: "body",
-                            source: function (request, response) {
-                                $.ajax({
-                                    url: '/personal',
-                                    dataType: "json",
-                                    data: { term: request },
-                                    error: function (res, status) {
-                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                    },
-                                    success: function (data) {
-                                        response(data);
-                                    }
-                                });
-                            }, displayText: function (item) {
-                                return item.label;
-                            }, items: 100
-                            , minLength: 2
-                        });
-                    }, 100);
-                }
-            } */
-        },
-        /*
-        {
-            label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true,
-        },*/
-        {
-            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', search: true,
-            editable: true, hidden: false,
-            edittype: "text",
-            /*
-            editoptions: {
-                dataInit: function (element) {
-                    window.setTimeout(function () {
-                        //$(element).width(200);
-                        $(element).attr("autocomplete", "off").typeahead({
-                            appendTo: "body",
-                            source: function (request, response) {
-                                $.ajax({
-                                    url: '/personal',
-                                    dataType: "json",
-                                    data: { term: request },
-                                    error: function (res, status) {
-                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                    },
-                                    success: function (data) {
-                                        response(data);
-                                    }
-                                });
-                            }, displayText: function (item) {
-                                return item.label;
-                            }
-                        });
-                    }, 100);
-                }
-            } */
+            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left',
+            search: true, editable: true, hidden: false
         },
         {
-            label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
+            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left',
+            search: true, editable: true, hidden: false
+        },
+        {
+            label: 'Gerente', name: 'uidgerente',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Gerente',
@@ -197,7 +148,7 @@ $(document).ready(function () {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidgerente;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Gerente--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
@@ -210,17 +161,25 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#gerenteresponsable").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#gerenteresponsable").val($('option:selected', this).text());
+                        }else{
+                            $("input#gerenteresponsable").val("");
+                        } 
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required:true }
         },
         {
-            label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
+            label: 'PMO', name: 'uidpmo',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/PMO',
@@ -230,7 +189,7 @@ $(document).ready(function () {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger PMO--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
@@ -243,19 +202,25 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#pmoresponsable").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#pmoresponsable").val($('option:selected', this).text());
+                        }else{
+                            $("input#pmoresponsable").val("");
+                        }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required:true }
         },
-        { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
-        { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
         {
-            label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
+            label: 'Categoria', name: 'idcategoria',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/parameters/categoria',
@@ -265,7 +230,7 @@ $(document).ready(function () {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Categoría--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].nombre == thissid) {
@@ -278,40 +243,64 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#categoria").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#categoria").val($('option:selected', this).text());
+                        }else{
+                            $("input#categoria").val("");
+                        }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Categoria', name: 'categoria', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Categoria', name: 'categoria', width: 150, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Estado', name: 'estado', width: 150, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true,
+            label: 'Año', name: 'ano', width: 50, align: 'left',
+            search: true, editable: true,
+            editrules: { required: true },
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
-
                 }
-            }, searchoptions: {
-                // show search options
+            },
+            searchoptions: {
                 sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
         },
-        { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
         {
-            label: 'Fecha Último Comite', name: 'fechacomite', width: 130, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true, required: true,
+            label: 'Año', name: 'anoq',
+            search: false, editable: false, hidden: true,
+            editrules: { required: true }
+        },
+        {
+            label: 'Q1', name: 'q1', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Q2', name: 'q2', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Q3', name: 'q3', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Q4', name: 'q4', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Fecha Último Comite', name: 'fechacomite', width: 130, align: 'left',
+            search: false, editable: true, formatter: 'date',
+            formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -335,11 +324,10 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Moneda', name: 'idmoneda', search: true, editable: false, hidden: true },
         {
-            label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
-            search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            label: 'Gasto Estimado (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -347,9 +335,9 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
-            search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            label: 'Inversión Estimada (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -357,8 +345,20 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
+            label: 'Presupuesto Estimado (US$)', name: 'pptoestimadoprevisto', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Estado', name: 'idestado',
+            search: false, editable: true, hidden: true,
             edittype: "select",
+            editrules: { required: true },
             editoptions: {
                 dataUrl: '/parameters/estadoiniciativa',
                 buildSelect: function (response) {
@@ -380,13 +380,17 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#estado").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#estado").val($('option:selected', this).text());
+                        }else{
+                            $("input#estado").val("");
+                        }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            dataInit: function (elem) { $(elem).width(200); }
         },
     ];
-
     $("#table_iniciativa").jqGrid({
         url: '/iniciativas/list',
         mtype: "POST",
@@ -418,9 +422,15 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_iniciativa").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_iniciativa").jqGrid('filterToolbar', {
+        stringResult: true, searchOperators: true,
+        searchOnEnter: false, defaultSearch: 'cn'
+    });
 
-    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
+        edit: true, add: true, del: true, search: false, refresh: true,
+        view: false, position: "left", cloneToTop: false
+    },
         {
             editCaption: "Modifica Iniciativa",
             closeAfterEdit: true,
@@ -432,7 +442,9 @@ $(document).ready(function () {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },beforeSubmit: function (postdata, formid) {
+            },
+            /*
+             beforeSubmit: function (postdata, formid) {
                 if (postdata.iddivision == 0) {
                     return [false, "División: Debe escoger un valor", ""];
                 } if (postdata.fechacomite == "") {
@@ -448,7 +460,9 @@ $(document).ready(function () {
                 } else {
                     return [true, "", ""]
                 }
-            }, afterSubmit: function (response, postdata) {
+            },
+            */ 
+            afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0)
@@ -472,23 +486,20 @@ $(document).ready(function () {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
-                if (postdata.iddivision == 0) {
-                    return [false, "División: Debe escoger un valor", ""];
-                } if (postdata.fechacomite == "") {
-                    return [false, "Fecha Comité: Debe ingresar un valor", ""];
-                } if (postdata.uidgerente == 0) {
-                    return [false, "Gerente: Debe escoger un valor", ""];
-                } if (postdata.uidpmo == 0) {
-                    return [false, "PMO: Debe escoger un valor", ""];
-                } if (postdata.idestado == 0) {
-                    return [false, "Estado: Debe escoger un valor", ""];
-                } if (postdata.idcategoria == 0) {
-                    return [false, "Categoría: Debe escoger un valor", ""];
+            }, 
+            /*
+            beforeSubmit: function (postdata, formid) {
+                
+                if (postdata.fechacomite == "") {
+                    $("input#fechacomite").val("sinfecha");
+                    return [true, "", ""];
                 } else {
                     return [true, "", ""]
                 }
-            }, afterSubmit: function (response, postdata) {
+                
+            },
+            */ 
+            afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0) {
@@ -535,8 +546,5 @@ $(document).ready(function () {
             $('#table_iniciativa').jqGrid('excelExport', { "url": url });
         }
     });
-
-
-
     $("#pager_iniciativa_left").css("width", "");
 });

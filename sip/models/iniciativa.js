@@ -112,6 +112,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    pptoestimadoprevisto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
     idestado: {
       type: DataTypes.INTEGER,
       allowNull: true
