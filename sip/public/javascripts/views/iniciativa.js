@@ -443,25 +443,6 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
-            /*
-             beforeSubmit: function (postdata, formid) {
-                if (postdata.iddivision == 0) {
-                    return [false, "División: Debe escoger un valor", ""];
-                } if (postdata.fechacomite == "") {
-                    return [false, "Fecha Comité: Debe ingresar un valor", ""];
-                } if (postdata.uidgerente == 0) {
-                    return [false, "Gerente: Debe escoger un valor", ""];
-                } if (postdata.uidpmo == 0) {
-                    return [false, "PMO: Debe escoger un valor", ""];
-                } if (postdata.idestado == 0) {
-                    return [false, "Estado: Debe escoger un valor", ""];
-                } if (postdata.idcategoria == 0) {
-                    return [false, "Categoría: Debe escoger un valor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
-            */ 
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -487,18 +468,6 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, 
-            /*
-            beforeSubmit: function (postdata, formid) {
-                
-                if (postdata.fechacomite == "") {
-                    $("input#fechacomite").val("sinfecha");
-                    return [true, "", ""];
-                } else {
-                    return [true, "", ""]
-                }
-                
-            },
-            */ 
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);

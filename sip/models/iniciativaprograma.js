@@ -175,7 +175,19 @@ module.exports = function (sequelize, DataTypes) {
     anoinicioprevisto: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    pptoaprobadogasto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoaprobadoinversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoaprobadoprevisto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
   }, {
       schema: 'sip', timestamps: false, tableName: 'iniciativaprograma'
     });

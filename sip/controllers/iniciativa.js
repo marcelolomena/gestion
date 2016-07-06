@@ -411,6 +411,7 @@ if (action != "del") {
           idmoneda: req.body.idmoneda,
           pptoestimadogasto: gasto,
           pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
           idestado: req.body.idestado,
           estado: req.body.estado
         }, {

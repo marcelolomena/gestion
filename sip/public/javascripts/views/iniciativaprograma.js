@@ -40,17 +40,26 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-three'>Presupuesto Gasto {pptoestimadogasto}</div>";
-    tmplP += "<div class='column-three'>Presupuesto Inversión {pptoestimadoinversion}</div>";
-    tmplP += "<div class='column-three'>Presupuesto Estimado {pptoestimadoprevisto}</div>";
-    tmplP += "</div>";
-
-    tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-three'>Fecha Último Comité {fechacomite}</div>";
     tmplP += "<div class='column-three'>Mes inicio Proyectado {mesinicioprevisto}</div>";
     tmplP += "<div class='column-three'>Año inicio Proyectado {anoinicioprevisto}</div>";
     tmplP += "</div>";
 
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-three'>Gasto Estimado {pptoestimadogasto}</div>";
+    tmplP += "<div class='column-three'>Inversión Estimada {pptoestimadoinversion}</div>";
+    tmplP += "<div class='column-three'>Presupuesto Estimado {pptoestimadoprevisto}</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-three'>Gasto Aprobado {pptoaprobadogasto}</div>";
+    tmplP += "<div class='column-three'>Inversión Aprobada {pptoaprobadoinversion}</div>";
+    tmplP += "<div class='column-three'>Presupuesto Aprobado {pptoaprobadoprevisto}</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-full'>Importante: Los montos especificados deben ser en Dolares.</div>";
+    tmplP += "</div>";
 
     tmplP += "<div class='form-row' style='display: none;'>";
     tmplP += "<div class='column-half'>estado {estado}</div>";
@@ -64,6 +73,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "<hr style='width:100%;'/>";
     tmplP += "<div> {sData} {cData}  </div>";
     tmplP += "</div>";
+
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
     var childGridURL = "/iniciativaprograma/" + parentRowKey;
@@ -71,8 +81,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     var modelIniciativaPrograma = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'program_id', name: 'program_id', hidden: true, editable: true,
-            width: 150, align: 'left',
+            label: 'program_id', name: 'program_id', width: 150, align: 'left', 
+            hidden: true, editable: true,
             editrules: { edithidden: true },
             edittype: "select",
             editoptions: {
@@ -83,7 +93,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.program_name;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Programa--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].program_name == thissid) {
@@ -111,15 +121,22 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                         }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, 
+            dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Art', name: 'codigoart', width: 150, align: 'center', search: false, editable: true, editrules: { required: false } },
+        { 
+            label: 'Art', name: 'codigoart', width: 150, align: 'center', 
+            search: false, editable: true 
+        },
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
-            search: true, editable: true, editrules: { required: false }, hidden: false
+            search: true, editable: true, hidden: false,
+            editrules: { required: true }
         },
         {
-            label: 'División', name: 'iddivision', search: false, editable: true, hidden: true,
+            label: 'División', name: 'iddivision', 
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/divisiones',
@@ -129,7 +146,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.divisionsponsor;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].division == thissid) {
@@ -142,7 +159,11 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#divisionsponsor").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#divisionsponsor").val($('option:selected', this).text());
+                        }else{
+                            $("input#divisionsponsor").val("");
+                        }
                         var idRRHH = $('option:selected', this).val()
                         if (idRRHH != "0") {
                             $.ajax({
@@ -174,80 +195,26 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
-
+            }, 
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'División', name: 'divisionsponsor', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'División', name: 'divisionsponsor', width: 200, align: 'left', 
+            search: true, editable: true, hidedlg: true,
+            editrules: {required: true ,edithidden: false }
         },
         {
-            label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
+            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', 
+            search: true, editable: true, hidden: false,
         },
         {
-            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', search: true,
-            editable: true, hidden: false,
-            edittype: "text",
-            editoptions: {
-                dataInit: function (element) {
-                    window.setTimeout(function () {
-                        $(element).attr("autocomplete", "off").typeahead({
-                            appendTo: "body",
-                            source: function (request, response) {
-                                $.ajax({
-                                    url: '/personal',
-                                    dataType: "json",
-                                    data: { term: request },
-                                    error: function (res, status) {
-                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                    },
-                                    success: function (data) {
-                                        response(data);
-                                    }
-                                });
-                            }, displayText: function (item) {
-                                return item.label;
-                            }, items: 100
-                            , minLength: 2
-                        });
-                    }, 100);
-                }
-            }
+            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', 
+            search: true, editable: true, hidden: false
         },
         {
-            label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true
-        },
-        {
-            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', search: true,
-            editable: true, hidden: false,
-            edittype: "text",
-            editoptions: {
-                dataInit: function (element) {
-                    window.setTimeout(function () {
-                        $(element).attr("autocomplete", "off").typeahead({
-                            appendTo: "body",
-                            source: function (request, response) {
-                                $.ajax({
-                                    url: '/personal',
-                                    dataType: "json",
-                                    data: { term: request },
-                                    error: function (res, status) {
-                                        alert(res.status + " : " + res.statusText + ". Status: " + status);
-                                    },
-                                    success: function (data) {
-                                        response(data);
-                                    }
-                                });
-                            }, displayText: function (item) {
-                                return item.label;
-                            }
-                        });
-                    }, 100);
-                }
-            }
-        },
-        {
-            label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
+            label: 'Gerente', name: 'uidgerente', 
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Gerente',
@@ -257,7 +224,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidgerente;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Gerente--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
@@ -270,17 +237,26 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#gerenteresponsable").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#gerenteresponsable").val($('option:selected', this).text());
+                        }else{
+                            $("input#gerenteresponsable").val("");
+                        }
+                        
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, 
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left', 
+            search: true, editable: true, hidedlg: true,
+            editrules: { required: true,edithidden: false }
         },
         {
-            label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
+            label: 'PMO', name: 'uidpmo', 
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/PMO',
@@ -290,7 +266,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger PMO--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
@@ -303,19 +279,25 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#pmoresponsable").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#pmoresponsable").val($('option:selected', this).text());
+                        }else{
+                            $("input#pmoresponsable").val("");
+                        }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, 
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left', 
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }, 
         },
-        { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
-        { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
         {
-            label: 'Categoria', name: 'idcategoria', search: false, editable: true, hidden: true,
+            label: 'Categoria', name: 'idcategoria', 
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/parameters/categoria',
@@ -338,21 +320,30 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#categoria").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#categoria").val($('option:selected', this).text());
+                        }else{
+                            $("input#categoria").val("");
+                        }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, 
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Categoria', name: 'categoria', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Categoria', name: 'categoria', width: 150, align: 'left', 
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Estado', name: 'estado', width: 150, align: 'left', 
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false , required: true }
         },
         {
-            label: 'Año', name: 'ano', width: 50, align: 'left', search: false, editable: true,
+            label: 'Año', name: 'ano', width: 50, align: 'left', 
+            search: false, editable: true,
+            editrules: { required: true },
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
@@ -360,15 +351,26 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 }
             }
         },
-        { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { 
+            label: 'Q1', name: 'q1', width: 50, align: 'left', 
+            search: false, editable: true, hidden: false 
+        },
+        { 
+            label: 'Q2', name: 'q2', width: 50, align: 'left', 
+            search: false, editable: true, hidden: false 
+        },
+        { 
+            label: 'Q3', name: 'q3', width: 50, align: 'left', 
+            search: false, editable: true, hidden: false 
+        },
+        { 
+            label: 'Q4', name: 'q4', width: 50, align: 'left', 
+            search: false, editable: true, hidden: false 
+        },
         {
-            label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true,
+            label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left', 
+            search: false, editable: true, formatter: 'date',
+            formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -392,11 +394,15 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 }
             }
         },
-        { label: 'Moneda', name: 'idmoneda', search: false, editable: false, hidden: true },
+        { 
+            label: 'Moneda', name: 'idmoneda', 
+            search: false, editable: false, hidden: true,
+            editrules: { required: true }
+        },
         {
-            label: 'Presupuesto Gasto (US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            label: 'Gasto Estimado (US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -404,9 +410,9 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Presupuesto Inversión (US$)', name: 'pptoestimadoinversion', width: 190, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            label: 'Inversión Estimada (US$)', name: 'pptoestimadoinversion', width: 190, align: 'right',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -414,9 +420,9 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Presupuesto Estimado Total (US$)', name: 'pptoestimadoprevisto', width: 225, align: 'left',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            label: 'Presupuesto Estimado (US$)', name: 'pptoestimadoprevisto', width: 225, align: 'left',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -424,7 +430,39 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Estado', name: 'idestado', search: false, editable: true, hidden: true,
+            label: 'Gasto Aprobado (US$)', name: 'pptoaprobadogasto', width: 170, align: 'right',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Inversión Aprobada (US$)', name: 'pptoaprobadoinversion', width: 190, align: 'right',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadoprevisto', width: 225, align: 'left',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Estado', name: 'idestado', 
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/parameters/estadoiniciativa',
@@ -447,19 +485,23 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#estado").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#estado").val($('option:selected', this).text());
+                        }else{
+                            $("input#estado").val("");
+                        }
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Duracion', name: 'duracion', width: 78, align: 'left', search: true, editable: false,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Duracion', name: 'duracion', width: 78, align: 'left', 
+            search: true, editable: false, hidedlg: true,
+            editrules: { edithidden: false }
         },
-
-        { label: 'Tipo', name: 'tipo', width: 150, align: 'left', search: false, editable: false, hidden: true },
         {
-            label: 'Subcategoría', name: 'idsubcategoria', search: false, editable: true, hidden: true,
+            label: 'Subcategoría', name: 'idsubcategoria', 
+            search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/parameters/subcategoria',
@@ -469,7 +511,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.subcategoria;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Subcategoría--</option>';
                     $.each(data, function (i, item) {
                         var datasub = 'a';
@@ -490,18 +532,29 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#subcategoria").val($('option:selected', this).text());
+                        if($('option:selected', this).val()!=0){
+                            $("input#subcategoria").val($('option:selected', this).text());
+                        }else{
+                            $("input#subcategoria").val("");
+                        }
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left', 
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false }
         },
-        { label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left', search: false, editable: true, hidden: false }
+        { 
+            label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left', 
+            search: false, editable: true, hidden: false },
+        { 
+            label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left', 
+            search: false, editable: true, hidden: false },
+        { 
+            label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left', 
+            search: false, editable: true, hidden: false }
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -552,21 +605,6 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.fechacomite == "") {
-                    return [false, "Fecha Comité: Debe escoger un valor", ""];
-                } if (postdata.uidgerente == 0) {
-                    return [false, "Gerente: Debe escoger un valor", ""];
-                } if (postdata.uidpmo == 0) {
-                    return [false, "PMO: Debe escoger un valor", ""];
-                } if (postdata.idestado == 0) {
-                    return [false, "Estado: Debe escoger un valor", ""];
-                } if (postdata.idcategoria == 0) {
-                    return [false, "Categoría: Debe escoger un valor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -603,7 +641,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }, beforeShowForm: function (form) {
+            }, 
+            beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 $.ajax({
                     type: "GET",
@@ -652,7 +691,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     }
                 });
                 $('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
+            }, 
+            afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
