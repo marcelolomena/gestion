@@ -52,13 +52,17 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-three'>Gasto Aprobado {pptoaprobadogasto}</div>";
-    tmplP += "<div class='column-three'>Inversión Aprobada {pptoaprobadoinversion}</div>";
-    tmplP += "<div class='column-three'>Presupuesto Aprobado {pptoaprobadoprevisto}</div>";
+    tmplP += "<div class='column-full'>Importante: Los montos estimados deben ser ingresados en dolares.</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-full'>Importante: Los montos especificados deben ser en Dolares.</div>";
+    tmplP += "<div class='column-three'>Gasto Aprobado {pptoaprobadogasto}</div>";
+    tmplP += "<div class='column-three'>Inversión Aprobada {pptoaprobadoinversion}</div>";
+    tmplP += "<div class='column-three'>Presupuesto Aprobado{pptoaprobadoprevisto}</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'>Presupuesto Aprobado en Dolares{pptoaprobadodolares}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row' style='display: none;'>";
@@ -430,27 +434,37 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Gasto Aprobado (US$)', name: 'pptoaprobadogasto', width: 170, align: 'right',
+            label: 'Gasto Aprobado (CLP)', name: 'pptoaprobadogasto', width: 170, align: 'right',
             search: true, editable: true, hidden: false, formatter: 'number', 
-            formatoptions: { decimalPlaces: 2 },
+            formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.000.000.000.000', { reverse: true });
                 }
             }
         },
         {
-            label: 'Inversión Aprobada (US$)', name: 'pptoaprobadoinversion', width: 190, align: 'right',
+            label: 'Inversión Aprobada (CLP)', name: 'pptoaprobadoinversion', width: 190, align: 'right',
             search: true, editable: true, hidden: false, formatter: 'number', 
-            formatoptions: { decimalPlaces: 2 },
+            formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.000.000.000.000', { reverse: true });
                 }
             }
         },
         {
-            label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadoprevisto', width: 225, align: 'left',
+            label: 'Presupuesto Aprobado (CLP)', name: 'pptoaprobadoprevisto', width: 225, align: 'left',
+            search: true, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadodolares', width: 225, align: 'left',
             search: true, editable: true, hidden: false, formatter: 'number', 
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -496,8 +510,9 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Duracion', name: 'duracion', width: 78, align: 'left', 
-            search: true, editable: false, hidedlg: true,
-            editrules: { edithidden: false }
+            search: true, editable: false, hidedlg: true, formatter: 'number',
+            formatoptions: { decimalPlaces: 0 },
+            editrules: { edithidden: false },
         },
         {
             label: 'Subcategoría', name: 'idsubcategoria', 
@@ -539,7 +554,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                         }
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, 
+            dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left', 
@@ -548,13 +564,29 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         { 
             label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left', 
-            search: false, editable: true, hidden: false },
+            search: false, editable: true, hidden: false, formatter: 'number', 
+            formatoptions: { decimalPlaces: 0 },
+        },
         { 
             label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left', 
-            search: false, editable: true, hidden: false },
+            search: false, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("00", { placeholder: "__" });
+
+                }
+            } 
+        },
         { 
             label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left', 
-            search: false, editable: true, hidden: false }
+            search: false, editable: true, hidden: false, 
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }
+            } 
+        }
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -611,7 +643,15 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
-                    return [true, "", ""]
+                    $.ajax({
+                        type: "GET",
+                        url: '/actualizamontos/' + parentRowKey,
+                        async: false,
+                        success: function (data) {
+                            return [true, "", ""]
+                        }
+                    });
+                return [true, "", ""]
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -640,7 +680,15 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
-                    return [true, "", ""]
+                    $.ajax({
+                        type: "GET",
+                        url: '/actualizamontos/' + parentRowKey,
+                        async: false,
+                        success: function (data) {
+                            return [true, "", ""]
+                        }
+                    });
+                return [true, "", ""]
             }, 
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -662,12 +710,14 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                             $("#fechacomite", form).val(fecha.toISOString().substr(0, 10));
                         }
                         $("#ano", form).val(data.ano);
+                        /*
                         if (data.pptoestimadogasto) {
                             $("#pptoestimadogasto", form).val(data.pptoestimadogasto.toFixed(2).toString().replace(".", ","));
                         }
                         if (data.pptoestimadoinversion) {
                             $("#pptoestimadoinversion", form).val(data.pptoestimadoinversion.toFixed(2).toString().replace(".", ","));
                         }
+                        */
                         setTimeout(function () { $("#iddivision option[value=" + data.iddivision + "]", form).attr("selected", true); }, 500)
                         setTimeout(function () { $("#uidpmo option[value=" + data.uidpmo + "]", form).attr("selected", true); }, 500)
                         setTimeout(function () { $("#uidgerente option[value=" + data.uidgerente + "]", form).attr("selected", true); }, 500)

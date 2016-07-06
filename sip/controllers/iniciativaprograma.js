@@ -5,7 +5,7 @@ var utilSeq = require('../utils/seq');
 exports.action = function (req, res) {
   var action = req.body.oper;
   var gasto, inversion, previsto = 0
-  var gastoaprobado, inversionaprobada, aprobado = 0
+  var gastoaprobado, inversionaprobada, aprobado, aprobadodolares = 0
   var programid = null
 
   if (action != "del") {
@@ -19,13 +19,16 @@ exports.action = function (req, res) {
       previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadogasto != "")
-      gasto = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
+      gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadoinversion != "")
-      inversion = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
+      inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadoprevisto != "")
-      previsto = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+      aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadodolares != "")
+      aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
 
     if (req.body.program_id != "0")
       programid = req.body.program_id
@@ -67,6 +70,7 @@ exports.action = function (req, res) {
           pptoaprobadogasto: gastoaprobado,
           pptoaprobadoinversion: inversionaprobada,
           pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
@@ -114,6 +118,7 @@ exports.action = function (req, res) {
           pptoaprobadogasto: gastoaprobado,
           pptoaprobadoinversion: inversionaprobada,
           pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
@@ -163,6 +168,7 @@ exports.action = function (req, res) {
           pptoaprobadogasto: gastoaprobado,
           pptoaprobadoinversion: inversionaprobada,
           pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
@@ -212,6 +218,7 @@ exports.action = function (req, res) {
           pptoaprobadogasto: gastoaprobado,
           pptoaprobadoinversion: inversionaprobada,
           pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
@@ -249,6 +256,53 @@ exports.action = function (req, res) {
       break;
   }
 }
+
+exports.actualizaMontos = function (req, res) {
+  var pptoestimadogasto = 0;
+  var pptoestimadoinversion= 0;
+  var pptoestimadoprevisto = 0;
+  var pptoaprobadogasto = 0;
+  var pptoaprobadoinversion = 0;
+  var pptoaprobadoprevisto = 0;
+  var pptoaprobadodolares = 0;
+
+  models.iniciativaprograma.findAll({
+    where: {
+      idiniciativa: req.params.idiniciativa
+    }
+  }).then(function (iniciativasp) {
+    iniciativasp.forEach(function (element) {
+      console.log('sumo '+pptoestimadogasto+' mas '+element.pptoestimadogasto);
+      pptoestimadogasto = pptoestimadogasto + element.pptoestimadogasto;
+      console.log('y el resultado es: '+pptoestimadogasto);
+      pptoestimadoinversion = pptoestimadoinversion + element.pptoestimadoinversion;
+      pptoestimadoprevisto = pptoestimadoprevisto + element.pptoestimadoprevisto;
+      pptoaprobadogasto = pptoaprobadogasto + element.pptoaprobadogasto;
+      pptoaprobadoinversion = pptoaprobadoinversion + element.pptoaprobadoinversion;
+      pptoaprobadoprevisto = pptoaprobadoprevisto + element.pptoaprobadoprevisto;
+      pptoaprobadodolares = pptoaprobadodolares + element.pptoaprobadodolares;
+    }, this);
+  }).then(function (records) {
+    models.iniciativa.update({
+      pptoestimadogasto: pptoestimadogasto,
+      pptoestimadoinversion: pptoestimadoinversion,
+      pptoestimadoprevisto: pptoestimadoprevisto,
+      pptoaprobadogasto: pptoaprobadogasto,
+      pptoaprobadoinversion: pptoaprobadoinversion,
+      pptoaprobadoprevisto: pptoaprobadoprevisto,
+      pptoaprobadodolares: pptoaprobadodolares
+    }, {
+        where: {
+          id: req.params.idiniciativa
+        }
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+  })
+};
 
 exports.codigoart = function (req, res) {
 

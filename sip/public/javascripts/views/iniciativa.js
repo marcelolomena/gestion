@@ -43,7 +43,17 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Importante: Los montos especificados deben ser en Dolares.</div>";
+    tmpl += "<div class='column-full'>Importante: Los montos estimados están en Dolares.</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-three'>Gasto Aprobado {pptoaprobadogasto}</div>";
+    tmpl += "<div class='column-three'>Inversión Aprobada {pptoaprobadoinversion}</div>";
+    tmpl += "<div class='column-three'>PresupuestoAprobado{pptoaprobadoprevisto}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Presupuesto Aprobado en Dolares {pptoaprobadodolares}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' style='display: none;'>";
@@ -91,9 +101,9 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#divisionsponsor").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#divisionsponsor").val("");
                         }
                     }
@@ -104,7 +114,7 @@ $(document).ready(function () {
         {
             label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false,  required: true},
+            editrules: { edithidden: false, required: true },
             stype: 'select',
             searchoptions: {
                 dataUrl: '/divisiones',
@@ -161,11 +171,11 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#gerenteresponsable").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#gerenteresponsable").val("");
-                        } 
+                        }
                     }
                 }],
             },
@@ -174,7 +184,7 @@ $(document).ready(function () {
         {
             label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required:true }
+            editrules: { edithidden: false, required: true }
         },
         {
             label: 'PMO', name: 'uidpmo',
@@ -202,9 +212,9 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#pmoresponsable").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#pmoresponsable").val("");
                         }
                     }
@@ -215,7 +225,7 @@ $(document).ready(function () {
         {
             label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required:true }
+            editrules: { edithidden: false, required: true }
         },
         {
             label: 'Categoria', name: 'idcategoria',
@@ -243,9 +253,9 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#categoria").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#categoria").val("");
                         }
                     }
@@ -275,11 +285,6 @@ $(document).ready(function () {
             searchoptions: {
                 sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
-        },
-        {
-            label: 'Año', name: 'anoq',
-            search: false, editable: false, hidden: true,
-            editrules: { required: true }
         },
         {
             label: 'Q1', name: 'q1', width: 50, align: 'left',
@@ -355,6 +360,46 @@ $(document).ready(function () {
             }
         },
         {
+            label: 'Gasto Aprobado (CLP)', name: 'pptoaprobadogasto', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Inversión Aprobada (CLP)', name: 'pptoaprobadoinversion', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Presupuesto Aprobado (CLP)', name: 'pptoaprobadoprevisto', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadodolares', width: 150, align: 'right',
+            search: false, editable: true, hidden: false, formatter: 'number',
+            formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
+        },
+        {
             label: 'Estado', name: 'idestado',
             search: false, editable: true, hidden: true,
             edittype: "select",
@@ -380,9 +425,9 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#estado").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#estado").val("");
                         }
                     }
@@ -452,6 +497,13 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+                $('input#pptoestimadogasto', form).attr('readonly', 'readonly');
+                $('input#pptoestimadoinversion', form).attr('readonly', 'readonly');
+                $('input#pptoestimadoprevisto', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadogasto', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadoinversion', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadoprevisto', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadodolares', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
@@ -467,7 +519,7 @@ $(document).ready(function () {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, 
+            },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -479,6 +531,13 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                $('input#pptoestimadogasto', form).attr('readonly', 'readonly');
+                $('input#pptoestimadoinversion', form).attr('readonly', 'readonly');
+                $('input#pptoestimadoprevisto', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadogasto', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadoinversion', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadoprevisto', form).attr('readonly', 'readonly');
+                $('input#pptoaprobadodolares', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#table_iniciativa").attr('id'));

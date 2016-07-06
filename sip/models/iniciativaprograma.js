@@ -188,6 +188,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    pptoaprobadodolares: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }
   }, {
       schema: 'sip', timestamps: false, tableName: 'iniciativaprograma'
     });

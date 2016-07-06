@@ -38,6 +38,7 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
         {
             label: 'Tipo Fecha', name: 'idtipofecha', search: false, editable: true, hidden: true,
             edittype: "select",
+            editrules: {required: true},
             editoptions: {
                 dataUrl: '/parameters/tipofecha',
                 buildSelect: function (response) {
@@ -66,14 +67,14 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Tipo Fecha', name: 'tipofecha', width: 250, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            editrules: { edithidden: false, required: true}, hidedlg: true
         },
 
         
         {
             label: 'Fecha', name: 'fecha', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true,
+            editable: true, editrules: {required: true},
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -146,15 +147,6 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -198,15 +190,6 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
-                } else {
-                    return [true, "", ""]
-                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;

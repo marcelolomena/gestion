@@ -260,7 +260,8 @@ exports.combobox = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var gasto, inversion,previsto = 0
-
+  var gastoaprobado, inversionaprobada,aprobado,aprobadodolares = 0
+/*
 if (action != "del") {
     if (req.body.pptoestimadogasto != "")
       gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
@@ -270,7 +271,20 @@ if (action != "del") {
       
     if (req.body.pptoestimadoprevisto != "")
       previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadogasto != "")
+      gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadoinversion != "")
+      inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
+      
+    if (req.body.pptoaprobadoprevisto != "")
+      aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadodolares != "")
+      aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
   }
+  */
 
 
   switch (action) {
@@ -298,9 +312,15 @@ if (action != "del") {
           q4: req.body.q4,
           //fechacomite: req.body.fechacomite,
           idmoneda: req.body.idmoneda,
+          /*
           pptoestimadogasto: gasto,
           pptoestimadoinversion: inversion,
           pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
           idestado: req.body.idestado,
           estado: req.body.estado,
           borrado: 1
@@ -333,9 +353,15 @@ if (action != "del") {
           q4: req.body.q4,
           fechacomite: req.body.fechacomite,
           idmoneda: req.body.idmoneda,
+          /*
           pptoestimadogasto: gasto,
           pptoestimadoinversion: inversion,
           pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
           idestado: req.body.idestado,
           estado: req.body.estado,
           borrado: 1
@@ -371,9 +397,15 @@ if (action != "del") {
           q4: req.body.q4,
           //fechacomite: req.body.fechacomite,
           idmoneda: req.body.idmoneda,
+          /*
           pptoestimadogasto: gasto,
           pptoestimadoinversion: inversion,
           pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
           idestado: req.body.idestado,
           estado: req.body.estado
         }, {
@@ -409,9 +441,15 @@ if (action != "del") {
           q4: req.body.q4,
           fechacomite: req.body.fechacomite,
           idmoneda: req.body.idmoneda,
+          /*
           pptoestimadogasto: gasto,
           pptoestimadoinversion: inversion,
           pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
           idestado: req.body.idestado,
           estado: req.body.estado
         }, {
