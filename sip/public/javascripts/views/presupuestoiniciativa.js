@@ -71,10 +71,16 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'Glosa', name: 'glosa', width: 100, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: {required: true},
         },
         {
             label: 'SAP', name: 'sap', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+                }
+            },
         },
         {
             label: 'Cui 1', name: 'cuifinanciamiento1', width: 50, align: 'left',
@@ -82,7 +88,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
-
                 }
             },
             editrules: { edithidden: false, required: true, number: true },
@@ -90,10 +95,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 3 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.00', { reverse: true });
+                    $(el).mask('0.00', { reverse: true });
                 }
             },
             search: true, editable: true, hidden: false,
@@ -114,10 +119,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 3 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.00', { reverse: true });
+                    $(el).mask('0.00', { reverse: true });
                 }
             },
             search: true, editable: true, hidden: false,
@@ -135,7 +140,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             search: true, editable: true, hidden: false,
         },
         {
-            label: 'uidlider', name: 'uidlider', search: false, editable: true, hidden: true,
+            label: 'uidlider', name: 'uidlider', 
+            search: false, editable: true, hidden: true,
+            editrules: {required: true},
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuariosprograma/' + parentRowKey,
@@ -166,10 +173,12 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Lider', name: 'lider', width: 150, align: 'left',
-            search: true, editable: true, hidden: false, jsonmap: "nombrelider",
+            search: true, editable: true, hidden: false, jsonmap: "nombrelider"
         },
         {
-            label: 'uidjefeproyecto', name: 'uidjefeproyecto', search: false, editable: true, hidden: true,
+            label: 'uidjefeproyecto', name: 'uidjefeproyecto', 
+            search: false, editable: true, hidden: true,
+            editrules: {required: true},
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuariosprograma/' + parentRowKey,
@@ -205,6 +214,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
+            editrules: {required: true},
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -231,6 +241,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'Dolar', name: 'dolar', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
+            editrules: {required: true},
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -242,6 +253,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'UF', name: 'uf', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
+            editrules: {required: true},
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -303,10 +315,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
+                if (postdata.uidlider == 0) {
+                    return [false, "Lider: Campo obligatorio", ""];
+                } if (postdata.uidjefeproyecto == 0) {
+                    return [false, "Jefe de Proyecto: Campo obligatorio", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -348,10 +360,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
+                if (postdata.uidlider == 0) {
+                    return [false, "Lider: Campo obligatorio", ""];
+                } if (postdata.uidjefeproyecto == 0) {
+                    return [false, "Jefe de Proyecto: Campo obligatorio", ""];
                 } else {
                     return [true, "", ""]
                 }

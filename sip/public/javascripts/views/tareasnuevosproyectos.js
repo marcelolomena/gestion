@@ -66,26 +66,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'CUI', name: 'idcui', search: false, editable: true, hidden: true,
             jsonmap: 'estructuracui.id',
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
-                dataUrl: '/cuiporservicio/' + 0,
-                buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idcui;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger CUI--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].idcui == thissid) {
-                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
+                value: "0:--Escoger CUI--",
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#cui").val($('option:selected', this).val());
@@ -105,16 +89,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                                     var thissid = rowData.idproveedor;
                                     var s = "<select>";//el default
                                     s += '<option value="0">--Escoger Proveedor--</option>';
-                                    //var lahora = new Date();
-                                    //console.log('Entro al for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                     $.each(data, function (i, item) {
                                         if (data[i].idproveedor == thissid) {
-                                            //lahora = new Date();
-                                            //console.log('Encuentro el proveedor a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                             s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
                                         } else {
-                                            //lahora = new Date();
-                                            //console.log('No encuentro el proveedor a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
                                             s += '<option value="' + data[i].idproveedor + '">' + data[i].razonsocial + '</option>';
                                         }
                                     });
@@ -137,6 +115,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'Cui', name: 'cui', width: 50, align: 'left',
             search: true, editable: true, hidden: false, jsonmap: "estructuracui.cui",
+            editrules: { required: true },
         },
 
         {
@@ -144,6 +123,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             jsonmap: 'servicio.id',
             editable: true, hidden: true,
             edittype: "select",
+            editrules: { required: true },
             editoptions: {
                 dataUrl: '/serviciosdesarrollo',
                 buildSelect: function (response) {
@@ -179,7 +159,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                                     var rowKey = grid.getGridParam("selrow");
                                     var rowData = grid.getRowData(rowKey);
                                     var thissid = rowData.idcui;
-                                    var s = "<select>";//el default
+                                    var s = "<select>";
                                     s += '<option value="0">--Escoger CUI--</option>';
                                     $.each(data, function (i, item) {
                                         if (data[i].idcui == thissid) {
@@ -202,32 +182,16 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'Servicio', name: 'servicio.nombre', width: 200, align: 'left',
             search: true, editable: false, hidden: false,
+            editrules: { required: true },
         },
         {
             label: 'Proveedor', name: 'idproveedor', search: false, width: 300,
             editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/proveedordesarrollo',
-                buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Proveedor--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
-                            //childIdServicio = data[i].id;
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(100); }
+                value: "0:--Escoger Proveedor--",
+            },
+            dataInit: function (elem) { $(elem).width(100); }
 
         },
         {
@@ -237,6 +201,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: { required: true },
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 80, align: 'left',
@@ -501,6 +466,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     return [true, "", ""]
             },
             beforeShowForm: function (form) {
+                setTimeout(function () {
                 var grid = $("#" + childGridID);
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
@@ -509,9 +475,53 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
+                var thisidservicio = rowData.idservicio;
+                var thisidcui = rowData.idcui;
+                var thisidproveedor = rowData.idproveedor;
+
+                $.ajax({
+                    type: "GET",
+                    url: '/cuiporservicio/' + thisidservicio,
+                    success: function (data) {
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger CUI--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].idcui == thisidcui) {
+                                s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
+                            }
+                        });
+                        s += "</select>";
+                        $("select#idcui").html(s);
+                    }
+                });
+                //setTimeout(function () {
+                //var thisidcui = $('#idcui :selected').val();
+
+                $.ajax({
+                    type: "GET",
+                    url: '/proveedorporcui/' + thisidcui + '/' + thisidservicio,
+                    success: function (data) {
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger CUI--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].idproveedor == thisidproveedor) {
+                                s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].idproveedor + '">' + data[i].razonsocial + '</option>';
+                            }
+                        });
+                        s += "</select>";
+                        $("select#idproveedor").html(s);
+                    }
+                });
+                //}, 1000);
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 //$('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
+                }, 1000);
+            },
+            afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
@@ -541,8 +551,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
+                //$('select#idcui').attr("disabled", true); 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
+                //$('select#idcui').attr("disabled", true); 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
