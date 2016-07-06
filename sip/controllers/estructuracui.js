@@ -89,7 +89,8 @@ exports.action = function (req, res) {
         nombre: req.body.nombrecui,
         uid: req.body.uid,
         idgerencia: req.body.idgerencia,
-        uidgerencia: req.body.uidgerencia
+        uidgerencia: req.body.uidgerencia,
+        nivel:req.body.nivel        
       }, {
           where: {
             id: req.body.id

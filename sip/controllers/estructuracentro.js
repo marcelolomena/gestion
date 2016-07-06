@@ -32,8 +32,29 @@ exports.action = function (req, res) {
         division: req.body.division,
         oficial: req.body.oficial,
         borrado: 1
-      }).then(function (estructuracentro) {
-        res.json({ error_code: 0 });
+      }).then(function (estructuracentro) {   
+        
+        var sql = "select max(id) as id from sip.estructuracentro"
+        var idestructura
+        sequelize.query(sql)
+           .spread(function (rows) {
+           idestructura=rows[0].id;
+           console.log(rows[0].id);
+            models.estructuracui.create({
+           cui:req.body.iddivision,
+           nombre: req.body.nombre,
+           uid: req.body.uidresponsable,
+           idestructura:idestructura,
+           cuipadre:0,
+           nivel:0,
+           borrado: 1
+           }).then(function (estructuracui) {
+              console.log('error:0');
+              }).catch(function (err) {
+              console.log(err);
+              });
+           });
+           res.json({ error_code: 0 });
       }).catch(function (err) {
         console.log(err);
         res.json({ error_code: 1 });

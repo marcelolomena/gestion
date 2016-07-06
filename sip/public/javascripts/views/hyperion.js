@@ -18,6 +18,7 @@ $(document).ready(function () {
             { label: 'Anual', name: 'montoanual', width: 150 }
         ],
         viewrecords: true,
+        multiselect: true,
         caption: 'Presupuestos Aprobados',
         styleUI: "Bootstrap",
         onSelectRow: function (rowid, selected) {
@@ -34,6 +35,40 @@ $(document).ready(function () {
         onSortCol: clearSelection,
         onPaging: clearSelection,
         pager: "#pagerMaster"
+    });
+    
+    $('#gridMaster').jqGrid('navGrid', '#pagerMaster', {
+        edit: false,
+        add: false,
+        del: false,
+        search:false,
+    },
+        {},
+        {},
+        {},
+        {});    
+
+    $('#gridMaster').jqGrid('navButtonAdd', '#pagerMaster', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon glyphicon-cog",
+        title: "Procesar",
+        position: "last",
+        onClickButton: function () {
+            var grid = $("#gridMaster");
+            var rowKey = grid.getGridParam("selrow");
+
+            if (!rowKey)
+                alert("No hay filas seleccionadas");
+            else {
+                var selectedIDs = grid.getGridParam("selarrrow");
+                var result = "";
+                for (var i = 0; i < selectedIDs.length; i++) {
+                    result += selectedIDs[i] + ",";
+                }
+
+                alert(result);
+            }
+        }
     });
 
 
