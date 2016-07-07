@@ -2,29 +2,46 @@ $(document).ready(function () {
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
     var currentYear = (new Date).getFullYear();
     var idcui = 0;
-
     var data = sipLibrary.currentPeriod();
     var listOfColumnModels = listColumnModels(data);
     var listOfColumnNames = listColumnNames(data);
 
+    var newColModel = [
+        { label: 'ID', name: 'idcui', key: true, hidden: true },
+        { label: 'CUI Gerencia', name: 'gerencia', width: 150 },
+        { label: 'CUI Departamento', name: 'departamento', width: 150 },
+        { label: 'CUI Sección', name: 'seccion', width: 150 },
+        { label: 'cui', name: 'cui', hidden: true },
+        {
+            label: 'Estado',
+            name: 'diferencia',
+            width: 60,
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+                var val = rawObject.idcui;
+                if (val > 0) {
+                    console.log(val)
+                    color = 'green';
+                } else {
+                    color = 'red';
+                }
+                return "style='background-color:" + color + "'";
+            },
+        }
+    ]
+
     $("#gridMaster").jqGrid({
         url: '/hyperion/presupuesto',
         datatype: "json",
-        colModel: [
-            { label: 'ID', name: 'idcui', key: true, hidden: true },
-            { label: 'CUI', name: 'cui', width: 150, jsonmap: "estructuracui.cui" },
-            { label: 'Nombre CUI', name: 'nombre', width: 150, jsonmap: "estructuracui.nombre" },
-            { label: 'Responsable CUI', name: 'responsable', width: 150, jsonmap: "estructuracui.nombreresponsable" },
-            { label: 'Ejercicio', name: 'ejercicio', width: 150, jsonmap: "ejercicio.ejercicio" },
-            { label: 'Versión', name: 'version', width: 150 },
-            { label: 'Estado', name: 'estado', width: 150 },
-            { label: 'Forecast', name: 'montoforecast', width: 150 },
-            { label: 'Anual', name: 'montoanual', width: 150 },
-            { label: 'Descripción', name: 'descripcion', width: 150 }            
-        ],
+        colModel: newColModel,
+        page: 1,
+        rowNum: 20,
+        regional: 'es',
+        height: 'auto',
+        width: 600,
+        shrinkToFit: true,
         viewrecords: true,
         multiselect: true,
-        caption: 'Presupuestos Aprobados',
+        caption: 'Presupuestos para Hyperion',
         styleUI: "Bootstrap",
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
@@ -76,7 +93,6 @@ $(document).ready(function () {
         }
     });
 
-
     $("#gridDetail").jqGrid({
         url: '/hyperion/list',
         mtype: "POST",
@@ -110,7 +126,10 @@ $(document).ready(function () {
             groupOrder: ["asc"],
             groupSummary: [true],
             groupCollapse: false
-        }
+        }, loadComplete: function () {
+            gridParentWidth = $(".gcontainer").width();
+            $("#gridDetail").jqGrid('setGridWidth', gridParentWidth, true);
+        },
     });
 
     $('#gridDetail').jqGrid('navGrid', '#pagerDetail', {
@@ -135,6 +154,8 @@ $(document).ready(function () {
             $('#gridDetail').jqGrid('excelExport', { "url": url });
         }
     });
+
+    $("#pager_left").css("width", "");
 
 });
 
