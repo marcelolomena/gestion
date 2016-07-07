@@ -99,7 +99,33 @@ exports.colnames = function (req, res) {
 }
 
 exports.estructura = function (req, res) {
-    var sql = `
+    var _page = req.query.page;
+    var _rows = req.query.rows;
+    var _sidx = req.query.sidx;
+    var _sord = req.query.sord;
+    var _filters = req.query.filters;
+    var _search = req.query._search;
+
+    var sql_head_0 = `SELECT COUNT(*) cant FROM`
+    var sql_head_1 = `SELECT J.gerencia,J.departamento,J.seccion,J.cui,K.idcui FROM`
+
+    var sql_body = `
+(
+SELECT gerencia,departamento,seccion,max(cui) cui FROM
+(
+SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion, NULL cui FROM 
+(
+  SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+) X LEFT OUTER JOIN 
+(
+ SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+ (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+ ON C.cuipadre = D.cui
+) Y
+ON X.cui=Y.cuipadre
+UNION
+SELECT * FROM
+(
 SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
 (
 SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
@@ -118,8 +144,61 @@ SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM
 ON X.cui=Y.cuipadre
 ) S
 ON R.cuipadre=S.gerencia AND R.cui = departamento
-ORDER BY gerencia,departamento,seccion
+UNION 
+SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+(
+SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+) R
+RIGHT OUTER JOIN 
+(
+SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+(
+  SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+) X LEFT OUTER JOIN 
+(
+ SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+ (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+ ON C.cuipadre = D.cui
+) Y
+ON X.cui=Y.cuipadre
+) S
+ON R.cuipadre=S.departamento AND R.cui = seccion
+) W
+WHERE cui IS NOT NULL
+) W
+GROUP BY gerencia, departamento,seccion
+) J
+LEFT OUTER JOIN
+(
+SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado'
+) K
+ON J.cui = K.cui
     `
+
+    var sql_tail = ` 
+ORDER BY gerencia,departamento,seccion    
+OFFSET :PageSize * (:page - 1) 
+ROWS FETCH NEXT :PageSize ROWS ONLY 
+    `
+
+    sequelize.query(sql_head_0 + sql_body)
+        .spread(function (count) {
+            sequelize.query(sql_head_1 + sql_body + sql_tail,
+                {
+                    replacements: { PageSize: parseInt(_rows), page: parseInt(_page) },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (rows) {
+                    var records = count[0].cant
+                    var total = Math.ceil(records / _rows);
+                    res.json({ records: records, total: total, page: _page, rows: rows });
+                }).catch(function (err) {
+                    console.log(err)
+                    res.json({ error_code: 1 });
+                });
+
+        }).catch(function (err) {
+            console.log(err)
+        });
 }
 
 exports.list = function (req, res) {
@@ -134,7 +213,7 @@ exports.list = function (req, res) {
     var idcui = req.body.idcui;
     var estado = 'Aprobado'
     var ssql
-    
+
     if (_search == 'true') {
         var searchField = req.body.searchField;
         var searchString = req.body.searchString;
