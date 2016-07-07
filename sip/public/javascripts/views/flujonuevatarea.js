@@ -64,6 +64,11 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         {
             label: 'Periodo', name: 'periodo', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000000', { placeholder: "______" });
+                }
+            }
         },
         {
             label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
@@ -72,6 +77,12 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         {
             label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('0,00', { reverse: true, placeholder: "_,__"  });
+                }
+            },
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',

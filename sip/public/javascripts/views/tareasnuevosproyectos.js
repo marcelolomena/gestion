@@ -42,6 +42,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'>Costo Unitario{costounitario}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'>Glosa{glosa}</div>";
+    template += "</div>";
+
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
@@ -203,6 +207,11 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
+        },
+        {
+            label: 'Glosa', name: 'glosa', width: 150, align: 'left',
+            search: true, editable: true, hidden: false,
+            edittype: "textarea", editrules: { required: false },
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 80, align: 'left',

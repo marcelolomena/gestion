@@ -164,6 +164,7 @@ exports.action = function (req, res) {
         costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
+        glosa: req.body.glosa,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -187,6 +188,7 @@ exports.action = function (req, res) {
         costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
+        glosa: req.body.glosa,
       }, {
           where: {
             id: req.body.id

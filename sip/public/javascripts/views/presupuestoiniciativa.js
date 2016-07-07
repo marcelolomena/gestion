@@ -95,14 +95,14 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
-            formatter: 'number', formatoptions: { decimalPlaces: 3 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('0.00', { reverse: true });
+                    $(el).mask('0,00', { reverse: true, placeholder: "_,__"  });
                 }
             },
             search: true, editable: true, hidden: false,
-            editrules: { edithidden: false, required: true, number: true },
+            editrules: { edithidden: false, required: true },
             hidedlg: true
         },
         {
@@ -119,14 +119,14 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
-            formatter: 'number', formatoptions: { decimalPlaces: 3 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('0.00', { reverse: true });
+                    $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
             search: true, editable: true, hidden: false,
-            editrules: { edithidden: false, required: true, number: true },
+            editrules: { edithidden: false, required: true },
             hidedlg: true
         },
         {
@@ -245,7 +245,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.00', { reverse: true });
+                    $(el).mask('000,00', { reverse: true });
                 }
             }
         },
@@ -257,7 +257,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('00000.00', { reverse: true });
+                    $(el).mask('00.000,00', { reverse: true });
                 }
             }
         }
