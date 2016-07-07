@@ -31,6 +31,8 @@ exports.listcui = function (req, res) {
         include: [
             {
                 model: models.estructuracui, attributes: ['cui']
+            }, {
+                model: models.ejercicios, attributes: ['ejercicio']
             }]
     }).then(function (presupuesto) {
         //console.dir(presupuesto[0])
@@ -42,12 +44,15 @@ exports.listcui = function (req, res) {
 
 exports.presupuesto = function (req, res) {
     models.presupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' })
+    models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
     models.presupuesto.findAll({
-        attributes: ['id', 'idcui', 'descripcion', 'montoforecast', 'montoanual'],
+        attributes: ['id', 'idcui', 'descripcion', 'estado', 'version', 'montoforecast', 'montoanual'],
         where: { 'estado': 'Aprobado' },
         include: [
             {
-                model: models.estructuracui, attributes: ['cui']
+                model: models.estructuracui, attributes: ['cui', 'nombre', 'nombreresponsable']
+            }, {
+                model: models.ejercicios, attributes: ['ejercicio']
             }]
     }).then(function (presupuesto) {
         //console.dir(presupuesto[0])
@@ -93,6 +98,30 @@ exports.colnames = function (req, res) {
 
 }
 
+exports.estructura = function (req, res) {
+    var sql = `
+SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+(
+SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+) R
+RIGHT OUTER JOIN 
+(
+SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+(
+  SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+) X LEFT OUTER JOIN 
+(
+ SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+ (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+ ON C.cuipadre = D.cui
+) Y
+ON X.cui=Y.cuipadre
+) S
+ON R.cuipadre=S.gerencia AND R.cui = departamento
+ORDER BY gerencia,departamento,seccion
+    `
+}
+
 exports.list = function (req, res) {
     var _page = req.body.page;
     var _rows = req.body.rows;
@@ -105,7 +134,7 @@ exports.list = function (req, res) {
     var idcui = req.body.idcui;
     var estado = 'Aprobado'
     var ssql
-
+    
     if (_search == 'true') {
         var searchField = req.body.searchField;
         var searchString = req.body.searchString;
@@ -132,7 +161,7 @@ exports.list = function (req, res) {
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='" + estado + "' AND a.idcui = " + idcui + " AND d.periodo " + ssql +
+        "a.estado= :estado AND a.idcui = :idcui AND d.periodo " + ssql +
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
@@ -150,7 +179,7 @@ exports.list = function (req, res) {
         "JOIN sip.detalleplan d ON d.iddetallepre = b.id " +
         "JOIN sip.servicio e ON b.idservicio=e.id " +
         "JOIN sip.cuentascontables f ON e.idcuenta=f.id " +
-        " WHERE a.estado=''" + estado + "'' AND a.idcui = " + idcui + " AND d.periodo " + ssql +
+        " WHERE a.estado=''" + estado + "'' AND a.idcui = :idcui AND d.periodo " + ssql +
         ") x " +
         "PIVOT " +
         "( " +
@@ -158,7 +187,7 @@ exports.list = function (req, res) {
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
 
-    sequelize.query(sql, { replacements: { ano: ano, periodo: ssql }, type: sequelize.QueryTypes.SELECT }
+    sequelize.query(sql, { replacements: { ano: ano, periodo: ssql, idcui: parseInt(idcui), estado: estado }, type: sequelize.QueryTypes.SELECT }
     ).then(function (rows) {
         res.json(rows);
     }).catch(function (err) {
