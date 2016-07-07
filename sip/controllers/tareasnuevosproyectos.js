@@ -23,12 +23,12 @@ exports.list = function (req, res) {
     sord = "asc";
 
   var orden = sidx + " " + sord;
-  
+
   var additional = [{
-        "field": "idpresupuestoiniciativa",
-        "op": "eq",
-        "data": req.params.id
-    }];
+    "field": "idpresupuestoiniciativa",
+    "op": "eq",
+    "data": req.params.id
+  }];
 
   utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
     if (err) {
@@ -51,22 +51,22 @@ exports.list = function (req, res) {
           where: data,
           include: [
             {
-            model: models.servicio,
+              model: models.servicio,
               include: models.cuentascontables
-            
-          },
-          {
-            model: models.estructuracui
-          },
-          {
-            model: models.parametro
-          },
-          {
-            model: models.moneda
-          },
-          {
-            model: models.proveedor
-          }]
+
+            },
+            {
+              model: models.estructuracui
+            },
+            {
+              model: models.parametro
+            },
+            {
+              model: models.moneda
+            },
+            {
+              model: models.proveedor
+            }]
         }).then(function (iniciativas) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: iniciativas });
@@ -80,11 +80,11 @@ exports.list = function (req, res) {
 
 }
 exports.getServiciosDesarrollo = function (req, res) {
-  
-  var sql = "SELECT a.id, a.nombre FROM sip.servicio a "+
-  "where a.borrado = 1 and a.tarea<>''" +
-  "ORDER BY a.nombre";
-      
+
+  var sql = "SELECT a.id, a.nombre FROM sip.servicio a " +
+    "where a.borrado = 1 and a.tarea<>''" +
+    "ORDER BY a.nombre";
+
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -92,34 +92,34 @@ exports.getServiciosDesarrollo = function (req, res) {
 };
 
 exports.getCUIServicio = function (req, res) {
-    sequelize.query('SELECT distinct a.idcui, b.cui FROM sip.plantillapresupuesto a join sip.estructuracui b on b.id=a.idcui where b.borrado = 1 and a.idservicio=:idservicio',
-        { replacements: { idservicio: req.params.idservicio }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json(user);
-    }).catch(function (err) {
-        console.log(err)
-        res.json({ error_code: 1 });
-    });
+  sequelize.query('SELECT distinct a.idcui, b.cui FROM sip.plantillapresupuesto a join sip.estructuracui b on b.id=a.idcui where b.borrado = 1 and a.idservicio=:idservicio',
+    { replacements: { idservicio: req.params.idservicio }, type: sequelize.QueryTypes.SELECT }
+  ).then(function (user) {
+    res.json(user);
+  }).catch(function (err) {
+    console.log(err)
+    res.json({ error_code: 1 });
+  });
 };
 
 exports.getProveedorCUI = function (req, res) {
-    sequelize.query('SELECT distinct a.idproveedor, b.razonsocial FROM sip.plantillapresupuesto a join sip.proveedor b on b.id=a.idproveedor where b.borrado = 1 and a.idcui=:idcui and a.idservicio=:idservicio',
-        { replacements: { idservicio: req.params.idservicio , idcui: req.params.idcui }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-      console.dir(user);
-        res.json(user);
-    }).catch(function (err) {
-        console.log(err)
-        res.json({ error_code: 1 });
-    });
+  sequelize.query('SELECT distinct a.idproveedor, b.razonsocial FROM sip.plantillapresupuesto a join sip.proveedor b on b.id=a.idproveedor where b.borrado = 1 and a.idcui=:idcui and a.idservicio=:idservicio',
+    { replacements: { idservicio: req.params.idservicio, idcui: req.params.idcui }, type: sequelize.QueryTypes.SELECT }
+  ).then(function (user) {
+    console.dir(user);
+    res.json(user);
+  }).catch(function (err) {
+    console.log(err)
+    res.json({ error_code: 1 });
+  });
 };
 
 exports.getProveedoresDesarrollo = function (req, res) {
-  
-  var sql = "SELECT a.id, a.razonsocial FROM sip.proveedor a join sip.plantillapresupuesto b on a.id=b.idproveedor "+
-  "where a.borrado = 1 "+ 
-  "ORDER BY a.razonsocial";
-      
+
+  var sql = "SELECT a.id, a.razonsocial FROM sip.proveedor a join sip.plantillapresupuesto b on a.id=b.idproveedor " +
+    "where a.borrado = 1 " +
+    "ORDER BY a.razonsocial";
+
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -127,11 +127,11 @@ exports.getProveedoresDesarrollo = function (req, res) {
 };
 
 exports.getTipoPago = function (req, res) {
-  
-  var sql = "SELECT a.id, a.nombre FROM sip.parametro a "+
-  "where a.borrado = 1 and tipo='tipopago' " +
-  "ORDER BY a.nombre";
-      
+
+  var sql = "SELECT a.id, a.nombre FROM sip.parametro a " +
+    "where a.borrado = 1 and tipo='tipopago' " +
+    "ORDER BY a.nombre";
+
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -141,6 +141,12 @@ exports.getTipoPago = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var costounitario = 0
+
+  if (action != "del") {
+    if (req.body.costounitario != "")
+      costounitario = req.body.costounitario.split(".").join("").replace(",", ".")
+  }
 
   switch (action) {
     case "add":
@@ -155,7 +161,7 @@ exports.action = function (req, res) {
         fechafin: req.body.fechafin,
         reqcontrato: req.body.reqcontrato,
         idmoneda: req.body.idmoneda,
-        costounitario: req.body.costounitario,
+        costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
         borrado: 1
@@ -178,7 +184,7 @@ exports.action = function (req, res) {
         fechafin: req.body.fechafin,
         reqcontrato: req.body.reqcontrato,
         idmoneda: req.body.idmoneda,
-        costounitario: req.body.costounitario,
+        costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
       }, {

@@ -187,6 +187,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'Proveedor', name: 'idproveedor', search: false, width: 300,
             editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Proveedor--",
@@ -210,6 +211,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'Tipo Pago', name: 'idtipopago', search: false, width: 300,
             editable: true, hidden: true,
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/tipopago',
@@ -237,6 +239,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             label: 'Fecha Inicio', name: 'fechainicio', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
+            editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -264,6 +267,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             label: 'Fecha Fin', name: 'fechafin', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
+            editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -288,7 +292,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Requiere Contrato', name: 'reqcontrato', search: false, editable: true, hidden: false,
+            label: 'Requiere Contrato', name: 'reqcontrato',
+            search: false, editable: true, hidden: false,
+            //editrules: { required: true },
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
@@ -317,6 +323,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             hidden: true,
             editable: true,
             edittype: "select",
+            editrules: { required: true },
             editoptions: {
                 dataUrl: '/monedas',
                 buildSelect: function (response) {
@@ -351,21 +358,29 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         {
             label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
             search: false, editable: true, hidden: false,
+            editrules: {required: true},
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000000000000000.00', { reverse: true });
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
                 }
             }
         },
         {
             label: 'Cantidad', name: 'cantidad', width: 50, align: 'left',
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editrules: { required: true },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            },
             search: true, editable: true, hidden: false,
         },
         {
             label: 'Con IVA', name: 'coniva', search: false, editable: true, hidden: false,
             edittype: "custom",
+            //editrules: { required: true },
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemReqcontrato
@@ -449,10 +464,16 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
+                if (postdata.idservicio == 0) {
+                    return [false, "Servicio: Debe seleccionar un valor", ""];
+                } if (postdata.idcui == 0) {
+                    return [false, "CUI: Debe seleccionar un valor", ""];
+                } if (postdata.idproveedor == 0) {
+                    return [false, "Proveedor: Debe seleccionar un valor", ""];
+                } if (postdata.idtipopago == 0) {
+                    return [false, "Tipo Pago: Debe seleccionar un valor", ""];
+                } if (postdata.idmoneda == 0) {
+                    return [false, "Moneda: Debe seleccionar un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -467,58 +488,58 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             },
             beforeShowForm: function (form) {
                 setTimeout(function () {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.id;
-                if (thissid == 0) {
-                    alert("Debe seleccionar una fila");
-                    return [false, result.error_text, ""];
-                }
-                var thisidservicio = rowData.idservicio;
-                var thisidcui = rowData.idcui;
-                var thisidproveedor = rowData.idproveedor;
-
-                $.ajax({
-                    type: "GET",
-                    url: '/cuiporservicio/' + thisidservicio,
-                    success: function (data) {
-                        var s = "<select>";
-                        s += '<option value="0">--Escoger CUI--</option>';
-                        $.each(data, function (i, item) {
-                            if (data[i].idcui == thisidcui) {
-                                s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
-                            }
-                        });
-                        s += "</select>";
-                        $("select#idcui").html(s);
+                    var grid = $("#" + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.id;
+                    if (thissid == 0) {
+                        alert("Debe seleccionar una fila");
+                        return [false, result.error_text, ""];
                     }
-                });
-                //setTimeout(function () {
-                //var thisidcui = $('#idcui :selected').val();
+                    var thisidservicio = rowData.idservicio;
+                    var thisidcui = rowData.idcui;
+                    var thisidproveedor = rowData.idproveedor;
 
-                $.ajax({
-                    type: "GET",
-                    url: '/proveedorporcui/' + thisidcui + '/' + thisidservicio,
-                    success: function (data) {
-                        var s = "<select>";
-                        s += '<option value="0">--Escoger CUI--</option>';
-                        $.each(data, function (i, item) {
-                            if (data[i].idproveedor == thisidproveedor) {
-                                s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].idproveedor + '">' + data[i].razonsocial + '</option>';
-                            }
-                        });
-                        s += "</select>";
-                        $("select#idproveedor").html(s);
-                    }
-                });
-                //}, 1000);
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                //$('input#codigoart', form).attr('readonly', 'readonly');
+                    $.ajax({
+                        type: "GET",
+                        url: '/cuiporservicio/' + thisidservicio,
+                        success: function (data) {
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger CUI--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].idcui == thisidcui) {
+                                    s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("select#idcui").html(s);
+                        }
+                    });
+                    //setTimeout(function () {
+                    //var thisidcui = $('#idcui :selected').val();
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/proveedorporcui/' + thisidcui + '/' + thisidservicio,
+                        success: function (data) {
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger CUI--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].idproveedor == thisidproveedor) {
+                                    s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].idproveedor + '">' + data[i].razonsocial + '</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("select#idproveedor").html(s);
+                        }
+                    });
+                    //}, 1000);
+                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                    //$('input#codigoart', form).attr('readonly', 'readonly');
                 }, 1000);
             },
             afterShowForm: function (form) {
@@ -539,9 +560,19 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
-
-                return [true, "", ""]
-
+                if (postdata.idservicio == 0) {
+                    return [false, "Servicio: Debe seleccionar un valor", ""];
+                } if (postdata.idcui == 0) {
+                    return [false, "CUI: Debe seleccionar un valor", ""];
+                } if (postdata.idproveedor == 0) {
+                    return [false, "Proveedor: Debe seleccionar un valor", ""];
+                } if (postdata.idtipopago == 0) {
+                    return [false, "Tipo Pago: Debe seleccionar un valor", ""];
+                } if (postdata.idmoneda == 0) {
+                    return [false, "Moneda: Debe seleccionar un valor", ""];
+                } else {
+                    return [true, "", ""]
+                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
