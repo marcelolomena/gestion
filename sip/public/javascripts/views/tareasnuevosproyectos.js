@@ -298,7 +298,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.radioElemConIva
+                custom_element: sipLibrary.radioElemReqcontrato
             },
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
@@ -383,11 +383,11 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             //editrules: { required: true },
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.radioElemReqcontrato
+                custom_element: sipLibrary.radioElemConIva
             },
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
-                var val = rowObject.reqcontrato;
+                var val = rowObject.coniva;
                 if (val == 1) {
                     dato = 'Sí';
 
@@ -582,7 +582,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                //$('select#idcui').attr("disabled", true); 
+                //document.getElementsByName("reqcontrato").checked = true; 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 //$('select#idcui').attr("disabled", true); 

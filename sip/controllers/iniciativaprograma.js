@@ -87,7 +87,7 @@ exports.action = function (req, res) {
       } else {
         models.iniciativaprograma.create({
           idiniciativa: req.body.parent_id,
-          program_id: req.body.programid,
+          program_id: programid,
           codigoart: req.body.codigoart,
           nombre: req.body.nombre,
           iddivision: req.body.iddivision,

@@ -81,7 +81,8 @@ var sipLibrary = {
         if (value === 'No') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
     }, radioElemConIva: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="coniva" value="1"',
             breakline = '/>Sí</label>',
@@ -94,7 +95,8 @@ var sipLibrary = {
         if (value === 'No') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
     }, radioElemEstadoPre: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio"  name="estado" value="1"',
             breakline = '/>Creado</label>',

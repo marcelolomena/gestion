@@ -85,7 +85,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     var modelIniciativaPrograma = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'program_id', name: 'program_id', width: 150, align: 'left', 
+            label: 'program_id', name: 'program_id', width: 150, align: 'left',
             hidden: true, editable: true,
             editrules: { edithidden: true },
             edittype: "select",
@@ -125,12 +125,12 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                         }
                     }
                 }],
-            }, 
+            },
             dataInit: function (elem) { $(elem).width(200); }
         },
-        { 
-            label: 'Art', name: 'codigoart', width: 150, align: 'center', 
-            search: false, editable: true 
+        {
+            label: 'Art', name: 'codigoart', width: 150, align: 'center',
+            search: false, editable: true
         },
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
@@ -138,7 +138,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { required: true }
         },
         {
-            label: 'División', name: 'iddivision', 
+            label: 'División', name: 'iddivision',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -163,9 +163,9 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#divisionsponsor").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#divisionsponsor").val("");
                         }
                         var idRRHH = $('option:selected', this).val()
@@ -199,24 +199,24 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
                     }
                 }],
-            }, 
+            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'División', name: 'divisionsponsor', width: 200, align: 'left', 
+            label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: {required: true ,edithidden: false }
+            editrules: { required: true, edithidden: false }
         },
         {
-            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', 
+            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
         },
         {
-            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', 
+            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left',
             search: true, editable: true, hidden: false
         },
         {
-            label: 'Gerente', name: 'uidgerente', 
+            label: 'Gerente', name: 'uidgerente',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -241,24 +241,24 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#gerenteresponsable").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#gerenteresponsable").val("");
                         }
-                        
+
                     }
                 }],
-            }, 
+            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left', 
+            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { required: true,edithidden: false }
+            editrules: { required: true, edithidden: false }
         },
         {
-            label: 'PMO', name: 'uidpmo', 
+            label: 'PMO', name: 'uidpmo',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -283,23 +283,23 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#pmoresponsable").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#pmoresponsable").val("");
                         }
                     }
                 }],
-            }, 
+            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left', 
+            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required: true }, 
+            editrules: { edithidden: false, required: true },
         },
         {
-            label: 'Categoria', name: 'idcategoria', 
+            label: 'Categoria', name: 'idcategoria',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -324,28 +324,28 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#categoria").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#categoria").val("");
                         }
                     }
                 }],
-            }, 
+            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Categoria', name: 'categoria', width: 150, align: 'left', 
+            label: 'Categoria', name: 'categoria', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left', 
+            label: 'Estado', name: 'estado', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false , required: true }
+            editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Año', name: 'ano', width: 50, align: 'left', 
+            label: 'Año', name: 'ano', width: 50, align: 'left',
             search: false, editable: true,
             editrules: { required: true },
             editoptions: {
@@ -355,24 +355,24 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 }
             }
         },
-        { 
-            label: 'Q1', name: 'q1', width: 50, align: 'left', 
-            search: false, editable: true, hidden: false 
-        },
-        { 
-            label: 'Q2', name: 'q2', width: 50, align: 'left', 
-            search: false, editable: true, hidden: false 
-        },
-        { 
-            label: 'Q3', name: 'q3', width: 50, align: 'left', 
-            search: false, editable: true, hidden: false 
-        },
-        { 
-            label: 'Q4', name: 'q4', width: 50, align: 'left', 
-            search: false, editable: true, hidden: false 
+        {
+            label: 'Q1', name: 'q1', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
         },
         {
-            label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left', 
+            label: 'Q2', name: 'q2', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Q3', name: 'q3', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Q4', name: 'q4', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },
+        {
+            label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left',
             search: false, editable: true, formatter: 'date',
             formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
@@ -398,14 +398,14 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 }
             }
         },
-        { 
-            label: 'Moneda', name: 'idmoneda', 
+        {
+            label: 'Moneda', name: 'idmoneda',
             search: false, editable: false, hidden: true,
             editrules: { required: true }
         },
         {
             label: 'Gasto Estimado (US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -415,7 +415,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Inversión Estimada (US$)', name: 'pptoestimadoinversion', width: 190, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -425,7 +425,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Presupuesto Estimado (US$)', name: 'pptoestimadoprevisto', width: 225, align: 'left',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -435,7 +435,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Gasto Aprobado (CLP)', name: 'pptoaprobadogasto', width: 170, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
@@ -445,7 +445,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Inversión Aprobada (CLP)', name: 'pptoaprobadoinversion', width: 190, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
@@ -455,7 +455,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Presupuesto Aprobado (CLP)', name: 'pptoaprobadoprevisto', width: 225, align: 'left',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
@@ -465,7 +465,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadodolares', width: 225, align: 'left',
-            search: true, editable: true, hidden: false, formatter: 'number', 
+            search: true, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -474,7 +474,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Estado', name: 'idestado', 
+            label: 'Estado', name: 'idestado',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -499,9 +499,9 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#estado").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#estado").val("");
                         }
                     }
@@ -509,13 +509,13 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Duracion', name: 'duracion', width: 78, align: 'left', 
+            label: 'Duracion', name: 'duracion', width: 78, align: 'left',
             search: true, editable: false, hidedlg: true, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editrules: { edithidden: false },
         },
         {
-            label: 'Subcategoría', name: 'idsubcategoria', 
+            label: 'Subcategoría', name: 'idsubcategoria',
             search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
@@ -547,45 +547,45 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        if($('option:selected', this).val()!=0){
+                        if ($('option:selected', this).val() != 0) {
                             $("input#subcategoria").val($('option:selected', this).text());
-                        }else{
+                        } else {
                             $("input#subcategoria").val("");
                         }
                     }
                 }],
-            }, 
+            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left', 
+            label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false }
         },
-        { 
-            label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left', 
-            search: false, editable: true, hidden: false, formatter: 'number', 
+        {
+            label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
         },
-        { 
-            label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left', 
+        {
+            label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left',
             search: false, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("00", { placeholder: "__" });
 
                 }
-            } 
+            }
         },
-        { 
-            label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left', 
-            search: false, editable: true, hidden: false, 
+        {
+            label: 'Año Inicio', name: 'anoinicioprevisto', width: 82, align: 'left',
+            search: false, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
 
                 }
-            } 
+            }
         }
     ];
 
@@ -655,6 +655,37 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+
+                setTimeout(function () {
+                    var grid = $("#" + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thisiddivision = rowData.iddivision;
+                    var thisprogramid = rowData.program_id;
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/programas/' + thisiddivision,
+                        success: function (data) {
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Programa--</option>';
+                            $.each(data, function (i, item) {
+                                //console.log('comparando program_id que viene '+data[i].program_id+' con program_id que tengo '+thisprogramid);
+                                if (data[i].program_id == thisprogramid) {
+                                    s += '<option value="' + data[i].program_id + '" selected>' + data[i].program_name + '</option>';
+                                    //console.log('lo encontre');
+                                } else {
+                                    s += '<option value="' + data[i].program_id + '">' + data[i].program_name + '</option>';
+                                    //console.log('no lo encontre');
+                                }
+                            });
+                            s += "</select>";
+                            $("select#program_id").html(s);
+                        }
+                    });
+                    
+                }, 500);
+
                 $('input#codigoart', form).attr('readonly', 'readonly');
             },
             afterShowForm: function (form) {
@@ -689,7 +720,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                         }
                     });
                 return [true, "", ""]
-            }, 
+            },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 $.ajax({
@@ -729,6 +760,32 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                         setTimeout(function () { $("#gerenteresponsable", form).val(data.gerenteresponsable); }, 500);
                         setTimeout(function () { $("#estado", form).val(data.estado); }, 500);
                         setTimeout(function () { $("#categoria", form).val(data.categoria); }, 500);
+                        setTimeout(function () {
+                            var grid = $("#" + childGridID);
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thisiddivision = data.iddivision;
+                            var thisprogramname = rowData.program_name;
+
+                            $.ajax({
+                                type: "GET",
+                                url: '/programas/' + thisiddivision,
+                                success: function (data) {
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Programa--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].program_name == thisprogramname) {
+                                            s += '<option value="' + data[i].program_id + '" selected>' + data[i].program_name + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].program_id + '">' + data[i].program_name + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#program_id").html(s);
+                                }
+                            });
+                            $("input#codigoart").val(data.program_code);
+                        }, 500);
                     }
                 });
                 $.ajax({
@@ -741,7 +798,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     }
                 });
                 $('input#codigoart', form).attr('readonly', 'readonly');
-            }, 
+            },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
