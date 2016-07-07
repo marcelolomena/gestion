@@ -13,9 +13,14 @@ $(document).ready(function () {
         colModel: [
             { label: 'ID', name: 'idcui', key: true, hidden: true },
             { label: 'CUI', name: 'cui', width: 150, jsonmap: "estructuracui.cui" },
-            { label: 'Descripción', name: 'descripcion', width: 150 },
+            { label: 'Nombre CUI', name: 'nombre', width: 150, jsonmap: "estructuracui.nombre" },
+            { label: 'Responsable CUI', name: 'responsable', width: 150, jsonmap: "estructuracui.nombreresponsable" },
+            { label: 'Ejercicio', name: 'ejercicio', width: 150, jsonmap: "ejercicio.ejercicio" },
+            { label: 'Versión', name: 'version', width: 150 },
+            { label: 'Estado', name: 'estado', width: 150 },
             { label: 'Forecast', name: 'montoforecast', width: 150 },
-            { label: 'Anual', name: 'montoanual', width: 150 }
+            { label: 'Anual', name: 'montoanual', width: 150 },
+            { label: 'Descripción', name: 'descripcion', width: 150 }            
         ],
         viewrecords: true,
         multiselect: true,
@@ -36,17 +41,17 @@ $(document).ready(function () {
         onPaging: clearSelection,
         pager: "#pagerMaster"
     });
-    
+
     $('#gridMaster').jqGrid('navGrid', '#pagerMaster', {
         edit: false,
         add: false,
         del: false,
-        search:false,
+        search: false,
     },
         {},
         {},
         {},
-        {});    
+        {});
 
     $('#gridMaster').jqGrid('navButtonAdd', '#pagerMaster', {
         caption: "",

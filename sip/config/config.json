@@ -9,7 +9,7 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idleTimeout": 500000
+            "idle": 500000
         }
     },
     "testing": {
@@ -22,7 +22,7 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idleTimeout": 500000
+            "idle": 500000
         }
     },
     "production": {
@@ -35,7 +35,7 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idleTimeout": 500000
+            "idle": 500000
         }
     },
     "home": {
@@ -50,7 +50,7 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idleTimeout": 500000
+            "idle": 500000
         }
     },
     "local": {
@@ -65,7 +65,7 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idleTimeout": 500000
+            "idle": 500000
         }
     },
     "local2": {
@@ -80,7 +80,7 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idleTimeout": 500000
+            "idle": 500000
         }
     }
 }
