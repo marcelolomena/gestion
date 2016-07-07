@@ -10,10 +10,13 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
+    var porcentaje = req.body.porcentaje
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
+        if (porcentaje != "")
+            porcentaje = porcentaje.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
@@ -25,7 +28,7 @@ exports.action = function (req, res) {
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
-                porcentaje: req.body.porcentaje,
+                porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
                 fechainicio: req.body.fechainicio,
                 fechafin: req.body.fechafin,
@@ -34,7 +37,7 @@ exports.action = function (req, res) {
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                //console.log(err);
+                console.log(err);
                 res.json({ error_code: 1 });
             });
 
@@ -46,7 +49,7 @@ exports.action = function (req, res) {
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
-                porcentaje: req.body.porcentaje,
+                porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
                 fechainicio: req.body.fechainicio,
                 fechafin: req.body.fechafin,
@@ -128,8 +131,8 @@ exports.list = function (req, res) {
                                     model: models.art_task,
                                     include: [
                                         {
-                                        model: models.art_project_master
-                                    }] 
+                                            model: models.art_project_master
+                                        }]
                                 }]
                         },
                         {
