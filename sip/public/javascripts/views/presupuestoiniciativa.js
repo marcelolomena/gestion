@@ -37,7 +37,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Lider{uidlider}</div>";
-    template += "<div class='column-half'>Jefe de Proyecto{uidjefeproyecto}</div>";
+    template += "<div class='column-half'>Jefe Area Responsable{uidjefeproyecto}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -207,7 +207,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Jefe de Proyecto', name: 'jefeproyecto', width: 150, align: 'left',
+            label: 'Jefe Area Responsable', name: 'jefeproyecto', width: 150, align: 'left',
             search: true, editable: true, hidden: false, jsonmap: "nombrejefe",
         },
         {

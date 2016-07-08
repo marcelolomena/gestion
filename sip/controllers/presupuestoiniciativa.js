@@ -159,7 +159,12 @@ exports.list = function (req, res) {
 
     } else {
 
-      models.presupuestoiniciativa.count().then(function (records) {
+      models.presupuestoiniciativa.count({
+        where:
+         {
+            idiniciativaprograma: idiniciativaprograma
+          }
+      }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -170,7 +175,12 @@ exports.list = function (req, res) {
 
   } else {
 
-    models.presupuestoiniciativa.count().then(function (records) {
+    models.presupuestoiniciativa.count({
+        where:
+         {
+            idiniciativaprograma: idiniciativaprograma
+          }
+      }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {

@@ -62,6 +62,10 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-full'>Importante: Los montos aprobados deben ser ingresados en pesos.</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-half'>Presupuesto Aprobado en Dolares{pptoaprobadodolares}</div>";
     tmplP += "</div>";
 

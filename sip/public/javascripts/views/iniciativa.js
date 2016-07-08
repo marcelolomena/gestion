@@ -53,6 +53,10 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Importante: Los montos aprobados están en Pesos.</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Presupuesto Aprobado en Dolares {pptoaprobadodolares}</div>";
     tmpl += "</div>";
 

@@ -167,9 +167,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                                     s += '<option value="0">--Escoger CUI--</option>';
                                     $.each(data, function (i, item) {
                                         if (data[i].idcui == thissid) {
-                                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
+                                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + ' - '+data[i].nombre+'</option>';
                                         } else {
-                                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
+                                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + ' - '+data[i].nombre+'</option>';
                                         }
                                     });
                                     s += "</select>";
@@ -517,9 +517,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                             s += '<option value="0">--Escoger CUI--</option>';
                             $.each(data, function (i, item) {
                                 if (data[i].idcui == thisidcui) {
-                                    s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + '</option>';
+                                    s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + ' - '+data[i].nombre+'</option>';
                                 } else {
-                                    s += '<option value="' + data[i].idcui + '">' + data[i].cui + '</option>';
+                                    s += '<option value="' + data[i].idcui + '">' + data[i].cui + ' - '+data[i].nombre+'</option>';
                                 }
                             });
                             s += "</select>";

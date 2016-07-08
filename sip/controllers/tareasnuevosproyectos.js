@@ -92,7 +92,7 @@ exports.getServiciosDesarrollo = function (req, res) {
 };
 
 exports.getCUIServicio = function (req, res) {
-  sequelize.query('SELECT distinct a.idcui, b.cui FROM sip.plantillapresupuesto a join sip.estructuracui b on b.id=a.idcui where b.borrado = 1 and a.idservicio=:idservicio',
+  sequelize.query('SELECT distinct a.idcui, b.cui, b.nombre, b.nombreresponsable FROM sip.plantillapresupuesto a join sip.estructuracui b on b.id=a.idcui where b.borrado = 1 and a.idservicio=:idservicio',
     { replacements: { idservicio: req.params.idservicio }, type: sequelize.QueryTypes.SELECT }
   ).then(function (user) {
     res.json(user);

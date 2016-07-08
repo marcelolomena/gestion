@@ -11,19 +11,22 @@ exports.action = function (req, res) {
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
     var porcentaje = req.body.porcentaje
+    var idsubtarea = req.body.idsubtarea
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
         if (porcentaje != "")
             porcentaje = porcentaje.split(".").join("").replace(",", ".")
+        if (idsubtarea == "0")
+            idsubtarea = null
     }
 
     switch (action) {
         case "add":
             models.flujonuevatarea.create({
                 idtareasnuevosproyectos: req.body.parent_id,
-                idsubtarea: req.body.idsubtarea,
+                idsubtarea: idsubtarea,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
@@ -44,7 +47,7 @@ exports.action = function (req, res) {
             break;
         case "edit":
             models.flujonuevatarea.update({
-                idsubtarea: req.body.idsubtarea,
+                idsubtarea: idsubtarea,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
