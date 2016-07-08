@@ -214,6 +214,29 @@ exports.list = function (req, res) {
     var estado = 'Aprobado'
     var ssql
 
+
+    var ejercicio = function (id, callback) {
+        models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
+        models.presupuesto.findAll({
+            attributes: ['id'],
+            where: [{ 'estado': 'Aprobado' }, { 'idcui': id }],
+            include: [
+                {
+                    model: models.ejercicios, attributes: ['ejercicio']
+                }]
+        }).then(function (presupuesto) {
+
+            callback(presupuesto[0].ejercicio.ejercicio)
+        }).catch(function (err) {
+            console.log(err)
+        });
+    }
+
+    ejercicio(idcui, function (exerc) {
+        console.log("--------------------------------------------------->" + exerc)
+    })
+
+
     if (_search == 'true') {
         var searchField = req.body.searchField;
         var searchString = req.body.searchString;
