@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var utilSeq = require('../utils/seq');
 
 exports.excel = function (req, res) {
     var conf = {}
@@ -215,7 +216,7 @@ exports.list = function (req, res) {
     var ssql
 
 
-    var ejercicio = function (id, callback) {
+    var yearExercise = function (id, callback) {
         models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
         models.presupuesto.findAll({
             attributes: ['id'],
@@ -232,8 +233,10 @@ exports.list = function (req, res) {
         });
     }
 
-    ejercicio(idcui, function (exerc) {
-        console.log("--------------------------------------------------->" + exerc)
+    yearExercise(idcui, function (year) {
+        utilSeq.getPeriodRange(year - 1, function (err, range) {
+            console.dir(range)
+        });
     })
 
 

@@ -96,10 +96,36 @@ module.exports = (function () {
         }
         callback(undefined, range);
     }
+    var getPeriodRange = function (currentYear, callback) {
+        var period = [];
+        try {
+            var periodIni = currentYear + '09';
+            //console.log('periodInit:' + periodIni);
+            var periodEnd = (currentYear + 1) + '12';
+            //console.log('periodEnd:' + periodEnd);
+            for (var i = 1; periodIni <= periodEnd; i++) {
+                //console.log('----->>' + periodIni);
+
+                if (periodIni.toString().substring(4, 6) == '12') {
+                    period.push(parseInt(periodIni));
+                    periodIni = (parseInt(periodIni.toString().substring(0, 4)) + 1) + '01'
+                }
+
+                if (periodIni < periodEnd) {
+                    period.push(parseInt(periodIni));
+                }
+                periodIni++;
+            }
+        } catch (e) {
+            return callback(e);
+        }
+        callback(undefined, period);
+    }
     return {
         buildCondition: buildCondition,
         buildAdditionalCondition: buildAdditionalCondition,
-        getDateRange: getDateRange
+        getDateRange: getDateRange,
+        getPeriodRange: getPeriodRange
     };
 
 
