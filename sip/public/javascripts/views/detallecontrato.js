@@ -92,25 +92,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/cui',
-                    buildSelect: function (response) {
-                        var grid = $('#' + subgrid_table_id);
-                        var rowKey = grid.getGridParam("selrow");
-                        var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.id;
-                        var data = JSON.parse(response);
-                        var s = "<select>";//el default
-                        s += '<option value="0">--Escoger Cui--</option>';
-                        $.each(data, function (i, item) {
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                            }
-                        });
-                        return s + "</select>";
-                    }
-                }, dataInit: function (elem) { $(elem).width(200); }
+                    value: "0:--Escoger CUI--",
+                }
             },
             {
                 label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
@@ -120,7 +103,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'idservicio', name: 'idservicio', search: false, editable: true, hidden: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/servicios',
+                    dataUrl: '/contratoservicio/plantillapresupuesto/' + $('#grid').getRowData(row_id).idproveedor,
                     buildSelect: function (response) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
@@ -130,17 +113,31 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Servicio--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].nombre == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            if (data[i].servicio.nombre == thissid) {
+                                s += '<option value="' + data[i].servicio.id + '" selected>' + data[i].servicio.nombre + '</option>';
                             } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].servicio.id + '">' + data[i].servicio.nombre + '</option>';
                             }
                         });
                         return s + "</select>";
                     },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var thistid = $(this).val();
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    var r = "<select>";
+                                    r += '<option value="0">--Escoger CUI--</option>';
+                                    $.each(data, function (i, item) {
+                                        r += '<option value="' + data[i].estructuracui.id + '">' + data[i].estructuracui.cui + '</option>';
+                                    });
+                                    r += "</select>";
+                                    $("#idcui").html(r);
+                                }
+                            });
                             $("input#servicio").val($('option:selected', this).text());
                         }
                     }],
@@ -235,6 +232,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Cuota', name: 'valorcuota', width: 100, align: 'right',
                 search: true, editable: true, hidden: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -513,6 +511,34 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 needDisable = true;
+
+                setTimeout(function () {
+                    var grid = $('#' + subgrid_table_id);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idservicio;
+                    var thiscid = rowData.idcui;
+                    $.ajax({
+                        type: "GET",
+                        url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thissid,
+                        async: false,
+                        success: function (data) {
+                            var r = "<select>";
+                            r += '<option value="0">--Escoger CUI--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].estructuracui.id == thiscid) {
+                                    r += '<option value="' + data[i].estructuracui.id + '" selected>' + data[i].estructuracui.cui + '</option>';
+                                } else {
+                                    r += '<option value="' + data[i].estructuracui.id + '">' + data[i].estructuracui.cui + '</option>';
+                                }
+                            });
+                            r += "</select>";
+                            $("#idcui").html(r);
+                        }
+                    });
+
+                }, 1000);
+
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));

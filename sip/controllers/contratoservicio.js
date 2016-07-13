@@ -274,6 +274,48 @@ exports.sap = function (req, res) {
     });
 }
 
+exports.plantillapresupuesto = function (req, res) {
+
+    models.plantillapresupuesto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+    models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+    models.plantillapresupuesto.findAll({
+        where: { idproveedor: req.params.id },
+        attributes: ['id'],
+        include: [
+            {
+                model: models.servicio, attributes: ['id', 'nombre']
+            },
+            {
+                model: models.estructuracui, attributes: ['id', 'cui', 'nombre']
+            }]
+    }).then(function (plantillapresupuesto) {
+        res.json(plantillapresupuesto);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+}
+ 
+exports.cuiforservice = function (req, res) {
+
+    models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+    models.plantillapresupuesto.findAll({
+        where: [{ idproveedor: req.params.idp }, { idservicio: req.params.ids }],
+        attributes: ['id'],
+        include: [
+            {
+                model: models.estructuracui, attributes: ['id', 'cui']
+            }]
+    }).then(function (plantillapresupuesto) {
+        res.json(plantillapresupuesto);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+}
+
 exports.tarea = function (req, res) {
     models.detalleproyecto.findAll({
         attributes: ['id', 'tarea'],
