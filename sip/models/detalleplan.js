@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     iddetallepre: {
       type: DataTypes.INTEGER,
@@ -62,7 +63,31 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    caja: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },   
+    costo: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    cajacomprometido: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    costocomprometido: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    totalcaja: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    totalcosto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleplan'
   });

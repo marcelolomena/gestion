@@ -251,7 +251,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0)
-                    return [false, "Ya existe esa plantilla", ""];
+                    return [false, "Problemas en llamada al servidor de base de datos", ""];
                 else
                     return [true, "", ""]
                     

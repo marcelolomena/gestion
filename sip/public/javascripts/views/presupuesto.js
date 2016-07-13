@@ -98,6 +98,14 @@ $(document).ready(function () {
             label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
+        {
+            label: 'Costo Forecast', name: 'costoforecast', width: 130, align: 'left', search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Costo Anual', name: 'costoanual', width: 100, align: 'left', search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },        
         { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
         
     ];
@@ -418,33 +426,17 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "</div>";
     
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Frecuencia {idfrecuencia}</div>";
+    tmplServ += "<div class='column-half'>Meses entre cuotas {mesesentrecuotas}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Desde {desde}</div>";
+    tmplServ += "<div class='column-half'>Mes inicio {desde}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
     tmplServ += "<div class='column-half'>Mas IVA {masiva}</div>";
     tmplServ += "</div>";
-                
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>IVA Recuperable {ivarecuperable}</div>";
-    tmplServ += "</div>";
-
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Diferido {gastodiferido}</div>";
-    tmplServ += "</div>";
-
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Meses Diferido  {mesesdiferido}</div>";
-    tmplServ += "</div>";
-
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Diferido Desde {desdediferido}</div>";
-    tmplServ += "</div>";
-                                
+                                             
     tmplServ += "<hr style='width:100%;'/>";
     tmplServ += "<div> {sData} {cData}  </div>";
     tmplServ += "</div>";
@@ -600,6 +592,24 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
+            label: 'Costo Forecast',
+            name: 'montoforecast',
+            width: 130,
+            align: 'right',
+            search: false,
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Costo Anual',
+            name: 'montoanual',
+            width: 130,
+            align: 'right',
+            search: false,
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },        
+        {
             label: 'Cuota', name: 'cuota', search: false, editable: true, hidden: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },        
@@ -608,35 +618,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },   
         {
-            label: 'Frecuencia', name: 'idfrecuencia', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlFrecuencia,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Frecuencia--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***proveedor:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    //console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }            
+            label: 'Meses entre cuotas', name: 'mesesentrecuotas', search: false, editable: true, hidden: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },      
         {
-            label: 'Desde', name: 'desde', search: false, editable: true, hidden: true,
+            label: 'Mes Inicio', name: 'desde', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: urlPeriodo,
@@ -666,47 +652,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         {
             label: 'Mas IVA', name: 'masiva', search: false, editable: true, hidden: true,
             edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        },  
-        {
-            label: 'IVA Recuperable', name: 'ivarecuperable', search: false, editable: true, hidden: true,
-            edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        }, 
-        {
-            label: 'Diferido', name: 'gastodiferido', search: false, editable: true, hidden: true,
-            edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        },    
-        {
-            label: 'Meses', name: 'mesesdiferido', search: false, editable: true, hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Desde Diferido', name: 'desdediferido', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlPeriodo,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Periodo--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***proveedor:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    //console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }            
-        }                             
+        } 
     ];
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
@@ -866,23 +812,96 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 width: 100,
             },
             {
-                label: 'Presupuesto',
-                name: 'presupuestobasepesos',
+                label: 'Base Caja',
+                name: 'presupuestobasecaja',
                 align: 'right',
-                width: 150,
+                width: 100,
                 search: false,
                 sortable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Valor Presupuesto',
-                name: 'presupuestopesos',
+                label: 'Base Costo',
+                name: 'presupuestobasecosto',
+                align: 'right',
+                width: 100,
+                search: false,
+                sortable: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Valor Moneda',
+                name: 'presupuestoorigen',
                 editable: true,
                 align: 'right',
                 search: false,
-                width: 150,
+                width: 100,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
-            }
+            },
+            {
+                label: 'Valor Pesos',
+                name: 'presupuestopesos',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Caja',
+                name: 'caja',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Compromiso',
+                name: 'cajacomprometido',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Total Caja',
+                name: 'totalcaja',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Costo',
+                name: 'costo',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Compromiso',
+                name: 'costocomprometido',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Total Costo',
+                name: 'totalcosto',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            }                          
+                                                          
         ],
         //viewrecords: true,
         //rowNum: 16,

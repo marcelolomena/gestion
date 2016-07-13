@@ -69,7 +69,33 @@ var sipLibrary = {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
-    }, radioElemEstadoPre: function (value, options) {
+    }, radioElemReqcontrato: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="reqcontrato" value="1"',
+            breakline = '/>Sí</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="reqcontrato" value="0"',
+            endnaradio = '/>No</label>';
+
+        if (value === 'Sí') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'No') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    }, radioElemConIva: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="coniva" value="1"',
+            breakline = '/>Sí</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="coniva" value="0"',
+            endnaradio = '/>No</label>';
+
+        if (value === 'Sí') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'No') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },radioElemEstadoPre: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio"  name="estado" value="1"',
             breakline = '/>Creado</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="estado" value="0"',
@@ -85,7 +111,6 @@ var sipLibrary = {
     }, currencyFormatter: function (cellvalue, options, rowObject) {
         var formatoptions = options.colModel.formatoptions || {};
 
-        // Setup the defaults
         formatoptions.defaulValue = formatoptions.defaulValue || 0;
         formatoptions.thousandsSeparator = formatoptions.thousandsSeparator || ".";
         formatoptions.decimalPlaces = formatoptions.decimalPlaces || 0;
@@ -94,27 +119,19 @@ var sipLibrary = {
         formatoptions.thousandsSeparator = formatoptions.thousandsSeparator || ".";
 
         var format = function (value) {
-            // Ceil the number value if any decimal numbers are present
             value = Math.ceil(value).toString();
 
-
-            // Regular expression to find thousand delimiter
             var reg = /(\d+)(\d{3})/g;
 
-
-            // Loop through all thousands and add a space
             while (reg.test(value))
                 value = value.replace(reg, "$1" + formatoptions.thousandsSeparator + "$2");
 
-
-            // Add the decimal numbers
             if (formatoptions.decimalPlaces > 0)
                 value += ",";
 
             for (var i = 0; i < formatoptions.decimalPlaces; i++)
                 value += "0";
-
-            // Add the suffix         
+        
             return formatoptions.prefix + value + formatoptions.suffix;
         }
 

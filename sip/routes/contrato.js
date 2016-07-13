@@ -29,6 +29,9 @@ module.exports = function (passport) {
 
     router.route('/contratoservicio/:id')
         .post(isAuthenticated, contratoservicioController.list);
+        
+    router.route('/contratoproveedor/:id')
+        .get(isAuthenticated, contratoController.listaporproveedor);        
 
     router.route('/contratoservicio/action/:id')
         .post(isAuthenticated, contratoservicioController.action);

@@ -72,7 +72,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         { label: 'id', name: 'id', key: true, hidden: true },
         {
             label: 'program_id', name: 'program_id', hidden: true, editable: true,
-            width: 200, align: 'left',
+            width: 150, align: 'left',
             editrules: { edithidden: true },
             edittype: "select",
             editoptions: {
@@ -113,9 +113,9 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Art', name: 'codigoart', width: 100, align: 'center', search: false, editable: true, editrules: { required: false } },
+        { label: 'Art', name: 'codigoart', width: 150, align: 'center', search: false, editable: true, editrules: { required: false } },
         {
-            label: 'Proyecto', name: 'nombre', width: 500, align: 'left',
+            label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
             search: true, editable: true, editrules: { required: false }, hidden: false
         },
         {
@@ -185,7 +185,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
         },
         {
-            label: 'Sponsor 1', name: 'sponsor1', width: 200, align: 'left', search: true,
+            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', search: true,
             editable: true, hidden: false,
             edittype: "text",
             editoptions: {
@@ -218,7 +218,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true
         },
         {
-            label: 'Sponsor 2', name: 'sponsor2', width: 200, align: 'left', search: true,
+            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', search: true,
             editable: true, hidden: false,
             edittype: "text",
             editoptions: {
@@ -276,7 +276,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true,
+            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -309,7 +309,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
@@ -361,12 +361,12 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-        { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q3', name: 'q3', width: 100, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q4', name: 'q4', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
         {
-            label: 'Fecha Último Comité', name: 'fechacomite', width: 150, align: 'left', search: false,
+            label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -457,7 +457,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { edithidden: false }, hidedlg: true
         },
 
-        { label: 'Tipo', name: 'tipo', width: 200, align: 'left', search: false, editable: false, hidden: true },
+        { label: 'Tipo', name: 'tipo', width: 150, align: 'left', search: false, editable: false, hidden: true },
         {
             label: 'Subcategoría', name: 'idsubcategoria', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -474,10 +474,10 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     $.each(data, function (i, item) {
                         var datasub = 'a';
                         var idsub = 'b';
-                        if(data[i].nombre!=undefined){
+                        if (data[i].nombre != undefined) {
                             datasub = data[i].nombre.trim();
                         }
-                        if(thissid!=undefined){
+                        if (thissid != undefined) {
                             idsub = thissid.trim();
                         }
                         if (datasub == idsub) {
@@ -551,17 +551,35 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             template: tmplP,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.fechacomite == "") {
+                    return [false, "Fecha Comité: Debe escoger un valor", ""];
+                } if (postdata.uidgerente == 0) {
+                    return [false, "Gerente: Debe escoger un valor", ""];
+                } if (postdata.uidpmo == 0) {
+                    return [false, "PMO: Debe escoger un valor", ""];
+                } if (postdata.idestado == 0) {
+                    return [false, "Estado: Debe escoger un valor", ""];
+                } if (postdata.idcategoria == 0) {
+                    return [false, "Categoría: Debe escoger un valor", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
+            afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }, beforeShowForm: function (form) {
+            },
+            beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 $('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
+            },
+            afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
@@ -662,6 +680,6 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
 }
 function showSubGrids(subgrid_id, row_id) {
-    gridPresupuestoIniciativa(subgrid_id, row_id,'presupuesto');
-    gridIniciativaFecha(subgrid_id, row_id,'fecha');
+    gridPresupuestoIniciativa(subgrid_id, row_id, 'presupuesto');
+    gridIniciativaFecha(subgrid_id, row_id, 'fecha');
 }

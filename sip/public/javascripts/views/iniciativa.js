@@ -57,7 +57,7 @@ $(document).ready(function () {
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'Proyecto', name: 'nombre', width: 500, align: 'left',
+            label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
         {
@@ -69,15 +69,15 @@ $(document).ready(function () {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.divisionsponsor;
+                    var thissid = rowData.iddivision;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].division == thissid) {
-                            s += '<option value="' + data[i].dId + '" selected>' + data[i].division + '</option>';
+                        if (data[i].idRRHH == thissid) {
+                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
                         } else {
-                            s += '<option value="' + data[i].dId + '">' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -100,28 +100,31 @@ $(document).ready(function () {
                     var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.divisionsponsor;
+                    var thissid = rowData.iddivision;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
-                        if (data[i].division == thissid) {
-                            s += '<option value="' + data[i].dId + '" selected>' + data[i].division + '</option>';
+                        if (data[i].idRRHH == thissid) {
+                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
                         } else {
-                            s += '<option value="' + data[i].dId + '">' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
                         }
                     });
                     return s + "</select>";
                 }
             },
         },
+        /*
         {
             label: 'Sponsor', name: 'uidsponsor1', search: false, editable: false, hidden: true
         },
+        */
         {
-            label: 'Sponsor 1', name: 'sponsor1', width: 200, align: 'left', search: true,
+            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left', search: true,
             editable: true, hidden: false,
             edittype: "text",
+            /*
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
@@ -146,15 +149,17 @@ $(document).ready(function () {
                         });
                     }, 100);
                 }
-            }
+            } */
         },
+        /*
         {
             label: 'Sponsor 2', name: 'uidsponsor2', search: false, editable: false, hidden: true,
-        },
+        },*/
         {
-            label: 'Sponsor 2', name: 'sponsor2', width: 200, align: 'left', search: true,
+            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left', search: true,
             editable: true, hidden: false,
             edittype: "text",
+            /*
             editoptions: {
                 dataInit: function (element) {
                     window.setTimeout(function () {
@@ -179,7 +184,7 @@ $(document).ready(function () {
                         });
                     }, 100);
                 }
-            }
+            } */
         },
         {
             label: 'Gerente', name: 'uidgerente', search: false, editable: true, hidden: true,
@@ -211,7 +216,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 200, align: 'left', search: true, editable: true,
+            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -244,7 +249,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         { label: 'Tipo', name: 'idtipo', search: false, editable: false, hidden: true },
@@ -287,7 +292,7 @@ $(document).ready(function () {
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Año', name: 'ano', width: 150, align: 'left', search: true, editable: true,
+            label: 'Año', name: 'ano', width: 50, align: 'left', search: true, editable: true,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
@@ -299,12 +304,12 @@ $(document).ready(function () {
             }
         },
         { label: 'Año', name: 'anoq', search: false, editable: false, hidden: true },
-        { label: 'Q1', name: 'q1', width: 100, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q2', name: 'q2', width: 100, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q3', name: 'q3', width: 100, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Q4', name: 'q4', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q1', name: 'q1', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q2', name: 'q2', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q3', name: 'q3', width: 50, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Q4', name: 'q4', width: 50, align: 'left', search: false, editable: true, hidden: false },
         {
-            label: 'Fecha Último Comite', name: 'fechacomite', width: 150, align: 'left', search: false,
+            label: 'Fecha Último Comite', name: 'fechacomite', width: 130, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {

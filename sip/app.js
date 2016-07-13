@@ -26,12 +26,12 @@ var logger = new (winston.Logger)({
   transports: [
     new (winston.transports.File)({
       name: 'info-file',
-      filename: 'filelog-info.log',
+      filename: 'log/filelog-info.log',
       level: 'info'
     }),
     new (winston.transports.File)({
       name: 'error-file',
-      filename: 'filelog-error.log',
+      filename: 'log/filelog-error.log',
       level: 'error'
     }),
     new winston.transports.Console({

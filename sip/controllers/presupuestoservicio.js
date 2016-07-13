@@ -28,7 +28,9 @@ exports.getPresupuestoServicios = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-    "a.comentario, a.glosaservicio, a.idproveedor, b.razonsocial FROM sip.detallepre a " +
+    "a.comentario, a.glosaservicio, a.idproveedor, "+
+    "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.gastodiferido, a.mesesdiferido, a.desdediferido, "+
+    "b.razonsocial FROM sip.detallepre a " +
     "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
@@ -53,7 +55,9 @@ exports.getPresupuestoServicios = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-        "a.comentario, a.glosaservicio, a.idproveedor, b.razonsocial  FROM sip.detallepre a " +
+        "a.comentario, a.glosaservicio, a.idproveedor, "+
+        "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.gastodiferido, a.mesesdiferido, a.desdediferido, "+
+        "b.razonsocial  FROM sip.detallepre a " +
         "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
@@ -251,6 +255,121 @@ exports.getMonedas = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var idPre = req.params.id
+  
+  var insertaPeriodos = function (idservicio, cuotas, callback) {
+
+    models.sequelize.transaction({ autocommit: true }, function (t) {
+        var promises = []
+        var d = new Date();
+        var anio = d.getFullYear()
+        var mes = 9;
+        console.log("Recibe:"+cuotas[0][0]+","+cuotas[0][1]+","+cuotas[0][2]+","+cuotas[0][3]);  
+        for (var i = 0; i < 4; i++) {
+            var mm = mes + i;
+            var mmm = mm < 10 ? '0' + mm : mm;
+            var periodo = anio +''+ mmm;
+            var newPromise = models.detalleplan.create({
+                'iddetallepre': idservicio,
+                'periodo': periodo, 
+                'presupuestobasecaja':0,
+                'presupuestobasecosto':0,
+                'presupuestoorigen': 0,
+                'presupuestopesos': 0, 
+                'caja': 0,
+                'costo':0,
+                'cajacomprometido':0,
+                'costocomprometido':0,
+                'totalcaja':0,
+                'totalcosto':0,
+                'borrado':1
+            }, { transaction: t });
+
+            promises.push(newPromise);
+        };
+        mes = 1;
+        anio = anio+1;
+        for (var i = 0; i < 12; i++) {
+            var mm = mes + i;
+            var mmm = mm < 10 ? '0' + mm : mm;
+            var periodo = anio +''+ mmm;
+
+            var newPromise = models.detalleplan.create({
+                'iddetallepre': idservicio,
+                'periodo': periodo, 
+                'presupuestobasecaja':0,
+                'presupuestobasecosto':0,
+                'presupuestoorigen': cuotas[0][i],
+                'presupuestopesos': cuotas[1][i], 
+                'caja': cuotas[2][i],
+                'costo':cuotas[3][i],
+                'cajacomprometido':0,
+                'costocomprometido':0,
+                'totalcaja':cuotas[2][i],
+                'totalcosto':cuotas[3][i],
+                'borrado':1
+            }, { transaction: t });
+
+            promises.push(newPromise);
+        };
+        return Promise.all(promises).then(function (compromisos) {
+            var compromisoPromises = [];
+            for (var i = 0; i < compromisos.length; i++) {
+                compromisoPromises.push(compromisos[i]);
+            }
+            return Promise.all(compromisoPromises);
+        });
+
+    }).then(function (result) {
+        callback(result)
+    }).catch(function (err) {
+        return next(err);
+    });
+
+  }  
+  
+  var actualizaPeriodos = function (idservicio, cuotas, callback) {
+
+    models.sequelize.transaction({ autocommit: true }, function (t) {
+        var promises = []
+        var d = new Date();
+        var anio = d.getFullYear()
+        var mes = 1;
+        anio = anio+1;
+        for (var i = 0; i < 12; i++) {
+            var mm = mes + i;
+            var mmm = mm < 10 ? '0' + mm : mm;
+            var periodo = anio +''+ mmm;
+
+            var newPromise = models.detalleplan.update({
+                'presupuestoorigen': cuota[0][i],
+                'presupuestopesos': cuota[1][i], 
+                'caja': cuota[2][i],
+                'costo':cuota[3][i],
+                'cajacomprometido':0,
+                'costocomprometido':0,
+                'totalcaja':parseFloat(cuota[2][i])+sequelize.col('cajacomprometido'),
+                'totalcosto':parseFloat(cuota[3][i])+sequelize.col('cajacomprometido'),
+                'borrado':1
+            }, {where:{iddetallepre:idservicio, periodo:periodo}},
+            { transaction: t });
+
+            promises.push(newPromise);
+        };
+        return Promise.all(promises).then(function (compromisos) {
+            var compromisoPromises = [];
+            for (var i = 0; i < compromisos.length; i++) {
+                compromisoPromises.push(compromisos[i]);
+            }
+            return Promise.all(compromisoPromises);
+        });
+
+    }).then(function (result) {
+        callback(result)
+    }).catch(function (err) {
+        return next(err);
+    });
+
+  }  
 
   switch (action) {
     case "add":
@@ -263,20 +382,37 @@ exports.action = function (req, res) {
         glosaservicio: req.body.glosaservicio,
         cuota: req.body.cuota, 
         numerocuota: req.body.numerocuota, 
-        idfrecuencia: req.body.idfrecuencia,
+        mesesentrecuotas: req.body.mesesentrecuotas,
         desde: req.body.desde,
-        masiva: req.body.masiva,
-        ivarecuperable: req.body.ivarecuperable, 
-        gastodiferido: req.body.gastodiferido, 
-        mesesdiferido: req.body.mesesdiferido, 
-        desdediferido: req.body.desdediferido,       
+        masiva: req.body.masiva,      
         borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+      }).then(function (servicio) {
+          var idservicio = servicio.id;
+          console.log("****servicio:"+idservicio);
+          //Find en tabla valor moneda
+          //Then conversion
+          var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
+          var cuotas = calculoCuotas(
+              req.body.cuota,
+              req.body.numerocuota,
+              req.body.mesesentrecuotas,
+              req.body.desde,
+              req.body.masiva,
+              0.77,
+              conversion
+              );
+          console.log("CUOTAS:"+cuotas);
+          insertaPeriodos(function (idservicio, cuotas, compromisos) {
+              res.json({ error_code: 0 });
+          }).catch(function (err) {
+            console.log(err);
+            res.json({ error_code: 1 });
+          }); 
       }).catch(function (err) {
         console.log(err);
         res.json({ error_code: 1 });
       });
+
 
       break;
     case "edit":
@@ -285,13 +421,30 @@ exports.action = function (req, res) {
         idmoneda: req.body.idmoneda,
         idproveedor: req.body.idproveedor,
         comentario: req.body.comentario,
-        glosaservicio: req.body.glosaservicio
+        glosaservicio: req.body.glosaservicio,
+        cuota: req.body.cuota, 
+        numerocuota: req.body.numerocuota, 
+        mesesentrecuotas: req.body.mesesentrecuotas,
+        desde: req.body.desde,
+        masiva: req.body.masiva,       
       }, {
           where: {
             id: req.body.id
           }
         }).then(function (contrato) {
-          res.json({ error_code: 0 });
+          var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
+          var cuotas = calculoCuotas(
+              req.body.cuota,
+              req.body.numerocuota,
+              req.body.mesesentrecuotas,
+              req.body.desde,
+              req.body.masiva,
+              0.77,
+              conversion
+              );
+          insertaPeriodos(function (idservicio, cuotas, compromisos) {
+              res.json({ error_code: 0 });
+          });           
         }).catch(function (err) {
           console.log(err);
           res.json({ error_code: 1 });
@@ -314,6 +467,40 @@ exports.action = function (req, res) {
 
 }
 
+function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion){
+  console.log("Param:"+cuota+","+ ncuotas+","+ mesesentre+","+mescuota1+","+ coniva+","+ frecup+","+ conversion); 
+  //var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
+  var origen = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var pesos = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var caja = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var costo = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var mesesentre = parseInt(mesesentremedio);
+
+  for (i=mescuota1; i<caja.length+1; i=i+mesesentre) {
+      origen[i-1] = cuota;
+      pesos[i-1] = cuota * conversion[i-1];
+      if (coniva == "Si") {
+          var valorcaja = pesos[i-1] * 1.19;
+      } else {
+          var valorcaja = pesos[i-1] ;
+      }            
+      caja[i-1] = valorcaja;
+  }
+  for (i=mescuota1; i<caja.length+1; i=i+mesesentre) {
+      var iva = pesos[i-1]*0.19;
+      var recuperacion = iva*frecup;
+      var total = parseFloat(pesos[i-1]) + parseFloat(recuperacion);
+      var valorcosto = total/mesesentre;
+      var valorcosto = valorcosto.toFixed(2);
+      for (j=i; j<=i+mesesentre && j<caja.length+1; j++) {
+          costo[j-1] = valorcosto;
+      }   
+  }
+  var todo = [origen, pesos, caja, costo];
+  console.log(todo);
+  return todo;
+}
+
 exports.getFrecuencia = function (req, res) {
 
   var sql = "SELECT id, nombre, valor FROM sip.parametro WHERE tipo='frecuenciafacturacion'";
@@ -331,7 +518,7 @@ exports.getPeriodos = function (req, res) {
   var d = new Date();
   var anio = d.getFullYear()
   var mes = 9;
-
+  /*
   for (var i = 0; i < 4; i++) {
     var mm = mes + i;
     var mmm = mm < 10 ? '0' + mm : mm;
@@ -339,14 +526,15 @@ exports.getPeriodos = function (req, res) {
     var texto = mmm + '-' + anio;
     var newPromise = {'id':periodo, 'nombre': texto};
     promises.push(newPromise);
-  };
+  };*/
   
   mes = 1;
   anio = anio + 1;
   for (var i = 0; i < 12; i++) {
     var mm = mes + i;
     var mmm = mm < 10 ? '0' + mm : mm;
-    var periodo = anio + '' + mmm;
+    //var periodo = anio + '' + mmm;
+    var periodo = parseInt(mmm);
     var texto = mmm + '-' + anio;
     var newPromise = {'id':periodo, 'nombre': texto};
     promises.push(newPromise);

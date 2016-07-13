@@ -2,15 +2,41 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 
+exports.excel = function (req, res) {
+    var conf = {}
+    conf.cols = [{
+        caption: 'Id Contrato',
+        type: 'number',
+        width: 3
+    },
+        {
+            caption: 'Contrato',
+            type: 'string',
+            width: 50
+        },
+        {
+            caption: 'Solicitud',
+            type: 'string',
+            width: 30
+        }
+    ];
+
+}
 
 exports.colnames = function (req, res) {
+    var ano = req.params.ano;
+    var peini = ano + '09'
+    var pefin = (parseInt(ano) + 1) + '12'
+
     models.presupuesto.hasMany(models.detallepre, { foreignKey: 'idpresupuesto' })
     models.detallepre.belongsTo(models.presupuesto, { foreignKey: 'idpresupuesto' })
     models.detallepre.hasMany(models.detalleplan, { foreignKey: 'iddetallepre' })
     models.detalleplan.belongsTo(models.detallepre, { foreignKey: 'iddetallepre' })
+
     models.presupuesto.findAll({
         attributes: ['id'],
-        where: { 'estado': 'Creado' },//Aprobado
+        //limit: 1,
+        where: [{ 'estado': 'Aprobado' }, { 'idcui': 59 }],
         include: [
             {
                 model: models.detallepre,
@@ -19,11 +45,13 @@ exports.colnames = function (req, res) {
                     {
                         model: models.detalleplan,
                         attributes: ['periodo'],
-                        where: { 'periodo': { $between: [201509, 201612] } },
+                        where: { 'periodo': { $between: [peini, pefin] } },
+                        group: ['periodo']
                     }]
             }
         ],
     }).then(function (presupuesto) {
+        //console.dir(presupuesto[0])
         res.json(presupuesto);
     }).catch(function (err) {
         console.log(err)
@@ -33,50 +61,70 @@ exports.colnames = function (req, res) {
 }
 
 exports.list = function (req, res) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-    var filters = req.query.filters;
-    var condition = "";
-    var id = req.params.id
+    var _page = req.body.page;
+    var _rows = req.body.rows;
+    var _sidx = req.body.sidx;
+    var _sord = req.body.sord;
+    var _filters = req.body.filters;
+    var _search = req.body._search;
+    var ano = req.params.ano;
+    var ssql
 
-    var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= '2015'; " +
+    if (_search == true) {
+        var searchField = req.body.searchField;
+        var searchString = req.body.searchString;
+        var searchOper = req.body.searchOper;
+        //console.log("searchString : " + searchString)
+        if (searchField === 'ano') {
+            ano = parseInt(searchString)
+            //console.log("----------->> " + ano)
+            ssql = "BETWEEN " + searchString + "09 AND " + (parseInt(searchString) + 1) + "12 "
+        }
+    } else {
+        ssql = "BETWEEN " + ano.toString() + "09 AND " + (ano + 1) + "12 "
+    }
+
+    //console.log(ssql)
+
+    var estado = 'Aprobado'
+
+    var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= :ano; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
         "FROM sip.presupuesto a " +
         "JOIN sip.detallepre b ON a.id = b.idpresupuesto " +
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='Creado' AND d.periodo BETWEEN 201509 AND 201612 " +
+        "a.estado='" + estado + "' AND a.idcui = 59 AND d.periodo " + ssql +
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
         ",1,1,'') " +
-        "SET @query = 'SELECT cui,ano,' + @cols + ' FROM " +
+        "SET @query = 'SELECT cuentacontable,cui,cuipadre,ano,' + @cols + ' FROM " +
         "(" +
         "SELECT " +
-        "c.cui, " +
+        "f.cuentacontable, c.cui, c.cuipadre, " +
         "' + @ano + ' ano, " +
         "d.periodo, " +
-        "d.presupuestoorigen " +
+        "d.presupuestopesos " +
         "FROM sip.presupuesto a " +
-        "JOIN sip.detallepre b on a.id = b.idpresupuesto " +
-        "JOIN sip.estructuracui c on a.idcui = c.id " +
-        "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
+        "JOIN sip.detallepre b ON a.id = b.idpresupuesto " +
+        "JOIN sip.estructuracui c ON a.idcui = c.id " +
+        "JOIN sip.detalleplan d ON d.iddetallepre = b.id " +
+        "JOIN sip.servicio e ON b.idservicio=e.id " +
+        "JOIN sip.cuentascontables f ON e.idcuenta=f.id " +
+        " WHERE a.estado=''" + estado + "'' AND a.idcui = 59 AND d.periodo " + ssql +
         ") x " +
         "PIVOT " +
         "( " +
-        "SUM(presupuestoorigen) " +
+        "SUM(presupuestopesos) " +
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
 
-    //console.log(sql)
-
-    sequelize.query(sql)
-        .spread(function (rows) {
-            //console.dir(rows)
-            res.json(rows);
-        });
-
+    sequelize.query(sql, { replacements: { ano: ano, periodo: ssql }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (rows) {
+        res.json(rows);
+    }).catch(function (err) {
+        res.json({ error_code: 1 });
+    });
 };

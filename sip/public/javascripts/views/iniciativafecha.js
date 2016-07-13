@@ -17,6 +17,10 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
     tmplPF += "<div class='column-half'>Fecha {fecha}</div>";
     tmplPF += "</div>";
 
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Comentario {comentario}</div>";
+    tmplPF += "</div>";
+
     tmplPF += "<div class='form-row' style='display: none;'>";
     tmplPF += "<div class='column-half'>tipofecha {tipofecha}</div>";
     tmplPF += "</div>";
@@ -61,11 +65,13 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Tipo Fecha', name: 'tipofecha', width: 400, align: 'left', search: true, editable: true,
+            label: 'Tipo Fecha', name: 'tipofecha', width: 250, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
+
+        
         {
-            label: 'Fecha', name: 'fecha', width: 120, align: 'left', search: false,
+            label: 'Fecha', name: 'fecha', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -90,6 +96,11 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
+        },
+        {
+            label: 'Comentario', name: 'comentario', width: 500,
+            align: 'left', edittype: "textarea",
+            search: true, editable: true, hidden: false,
         },
     ];
 

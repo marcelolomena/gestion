@@ -11,6 +11,7 @@ exports.action = function (req, res) {
         idiniciativaprograma: req.body.parent_id,
         tipofecha: req.body.tipofecha,
         fecha: req.body.fecha,
+        comentario: req.body.comentario,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -25,6 +26,7 @@ exports.action = function (req, res) {
         idiniciativaprograma: req.body.parent_id,
         idtipofecha: req.body.idtipofecha,
         fecha: req.body.fecha,
+        comentario: req.body.comentario
       }, {
           where: {
             id: req.body.id

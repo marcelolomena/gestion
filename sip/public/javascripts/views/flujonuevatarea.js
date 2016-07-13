@@ -13,15 +13,32 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Iniciativa{idiniciativapadre}</div>";
+    template += "<div class='column-half'>Periodo{periodo}</div>";
+    template += "<div class='column-half'>Porcentaje{porcentaje}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Iniciativa Programa{idiniciativaprograma}</div>";
+    template += "<div class='column-full'>Glosa Item{glosaitem}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Moneda{idmoneda}</div>";
+    template += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
+    template += "<div class='column-half'>Fecha Fin{fechafin}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Monto{montoorigen}</div>";
+    template += "<div class='column-half'>Costo{costoorigen}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo Pago{idtipopago}</div>";
+    template += "<div class='column-half'>Proyecto{idproyecto}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tarea{idtarea}</div>";
+    template += "<div class='column-half'>Subtarea{idsubtarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -45,24 +62,46 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
-            label: 'Subtarea', name: 'art_sub_task.title', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
-        },
-        {
             label: 'Periodo', name: 'periodo', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            search: true, editable: true, hidden: false,
         },
         {
             label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
-            search: true, editable: false, hidden: false,
+            search: true, editable: true, hidden: false,
         },
         {
             label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            search: true, editable: true, hidden: false,
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
-            search: true, editable: false, hidden: false,
+            search: true, editable: true, hidden: false,
+        },
+        {
+            label: 'Tipo Pago', name: 'idtipopago', search: false, width: 300,
+            editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/tipopago',
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idtipopago;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo de Pago--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(100); }
+
         },
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
@@ -86,13 +125,13 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
         {
-            label: 'Fecha Fin', name: 'fechainicio', width: 150, align: 'left', search: false,
+            label: 'Fecha Fin', name: 'fechafin', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             searchoptions: {
@@ -113,8 +152,8 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    childGridID.element.mask("0000-00-00", { placeholder: "____-__-__" });
-                    childGridID.element.datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }
         },
@@ -124,7 +163,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
                 }
             }
         },
@@ -134,10 +173,161 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    childGridID.el.mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
                 }
             }
-        }
+        },
+        {
+            label: 'proyecto', name: 'idproyecto', search: false, editable: true, hidden: true,
+            jsonmap: 'art_subtask.art_task.art_projectmaster.pId',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/proyectosporiniciativa/' + parentRowKey,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idproyecto;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Proyecto--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].pId == thissid) {
+                            s += '<option value="' + data[i].pId + '" selected>' + data[i].project_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].pId + '">' + data[i].project_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#proyecto").val($('option:selected', this).val());
+                        var idProyecto = $('option:selected', this).val()
+                        if (idProyecto != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/tareasporproyecto/' + idProyecto,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idtarea;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Tarea--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].tId == thissid) {
+                                            s += '<option value="' + data[i].tId + '" selected>' + data[i].task_title + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].tId + '">' + data[i].task_title + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idtarea").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'tarea', name: 'idtarea', search: false, editable: true, hidden: true,
+            jsonmap: 'art_subtask.art_task.tId',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/tareasporiniciativa/' + parentRowKey,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idtarea;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tarea--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].tId == thissid) {
+                            s += '<option value="' + data[i].tId + '" selected>' + data[i].task_title + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].tId + '">' + data[i].task_title + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#tarea").val($('option:selected', this).val());
+                        var idTarea = $('option:selected', this).val()
+                        if (idTarea != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/subtareasportarea/' + idTarea,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idsubtarea;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Subtarea--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].sub_task_id == thissid) {
+                                            s += '<option value="' + data[i].sub_task_id + '" selected>' + data[i].title + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].sub_task_id + '">' + data[i].title + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idsubtarea").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'Subtarea', name: 'subtarea', width: 200, align: 'left', 
+            jsonmap: 'art_sub_task.title',
+            search: true, editable: false, hidden: false,
+        },
+         {
+            label: 'idsubtarea', name: 'idsubtarea', search: false, editable: true, hidden: true,
+            jsonmap: 'art_sub_task.sub_task_id',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/subtareasporiniciativa/' + parentRowKey,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idsubtarea;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Subtarea--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].sub_task_id == thissid) {
+                            s += '<option value="' + data[i].sub_task_id + '" selected>' + data[i].title + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].sub_task_id + '">' + data[i].title + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#subtarea").val($('option:selected', this).val());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+
 
     ];
 
@@ -251,14 +441,6 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
-                    $.ajax({
-                        type: "GET",
-                        url: '/actualizaduracion/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
                 return [true, "", ""]
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));

@@ -69,7 +69,7 @@ $(document).ready(function () {
                         $("input#razonsocial").val($('option:selected', this).text());
                     }
                 }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }
         },
         { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true },
         {

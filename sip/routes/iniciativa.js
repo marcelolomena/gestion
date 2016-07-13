@@ -64,7 +64,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, presupuestoiniciativaController.action);
 
     router.route('/presupuestoiniciativa/:id')
-        .post(isAuthenticated, presupuestoiniciativaController.list);
+        .get(isAuthenticated, presupuestoiniciativaController.list);
 
     router.route('/tareasnuevosproyectos/action')
         .post(isAuthenticated, tareasnuevosproyectosController.action);
@@ -77,6 +77,36 @@ module.exports = function (passport) {
 
     router.route('/flujonuevatarea/:id')
         .post(isAuthenticated, flujonuevatareaController.list);
+
+    router.route('/serviciosdesarrollo')
+        .get(isAuthenticated, tareasnuevosproyectosController.getServiciosDesarrollo);
+
+    router.route('/proveedordesarrollo')
+        .get(isAuthenticated, tareasnuevosproyectosController.getProveedoresDesarrollo);
+
+    router.route('/tipopago')
+        .get(isAuthenticated, tareasnuevosproyectosController.getTipoPago);
+
+    router.route('/proyectosporiniciativa/:idtareanuevoproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getProyectosPorTareaNuevoProyecto);
+
+    router.route('/tareasporproyecto/:idproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getTareasPorProyecto);
+
+    router.route('/tareasporiniciativa/:idtareanuevoproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getTareasPorTareaNuevoProyecto);
+
+    router.route('/subtareasportarea/:idtarea')
+        .get(isAuthenticated, flujonuevatareaController.getSubtareasPorTarea);
+
+    router.route('/subtareasporiniciativa/:idtareanuevoproyecto')
+        .get(isAuthenticated, flujonuevatareaController.getSubtareasPorTareaNuevoProyecto);
+
+    router.route('/cuiporservicio/:idservicio')
+        .get(isAuthenticated, tareasnuevosproyectosController.getCUIServicio);
+
+    router.route('/proveedorporcui/:idcui/:idservicio')
+        .get(isAuthenticated, tareasnuevosproyectosController.getProveedorCUI);
 
     return router;
 
