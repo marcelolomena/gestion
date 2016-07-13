@@ -4,7 +4,6 @@ var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-
   var porcentaje1, porcentaje2, dolar, uf = 0
 
   if (action != "del") {

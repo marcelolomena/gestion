@@ -186,9 +186,8 @@ $(document).ready(function () {
             editrules: { required: true },
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuariosprograma/',
                 buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
+                    var grid = $('#table_iniciativa');
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidlider;
@@ -222,9 +221,8 @@ $(document).ready(function () {
             editrules: { required: true },
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuariosprograma/',
                 buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
+                    var grid = $('#table_iniciativa');
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidjefeproyecto;
@@ -257,15 +255,15 @@ $(document).ready(function () {
             editrules: { required: true },
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuariosprograma/',
+                dataUrl: '/usuarios_por_rol/PMO',
                 buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.uidjefeproyecto;
+                    var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Jefe de Proyecto--</option>';
+                    s += '<option value="0">--Escoger PMO--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
@@ -277,7 +275,7 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#jefeproyecto").val($('option:selected', this).val());
+                        $("input#pmoresponsable").val($('option:selected', this).text());
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
@@ -358,13 +356,18 @@ $(document).ready(function () {
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        editurl: '/iniciativas/action',
+        editurl: '/presupuestoenvuelo/action',
         styleUI: "Bootstrap",
         subGrid: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
+        },
+        onSelectRow: function (id) {
+            var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
+            $("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/'+temp }});
+            $("#table_iniciativa").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/'+temp }});
         },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
@@ -379,6 +382,7 @@ $(document).ready(function () {
             }
         }
     });
+    jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
     $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'

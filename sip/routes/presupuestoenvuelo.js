@@ -14,6 +14,8 @@ module.exports = function (passport) {
     router.route('/presupuestoenvuelo/list')
         .post(isAuthenticated, presupuestoenvueloController.list);
 
+    router.route('/presupuestoenvuelo/action')
+        .post(isAuthenticated, presupuestoenvueloController.action);
 
     router.route('/tareaenvuelo/:id')
         .post(isAuthenticated, tareaenvueloController.list);
