@@ -9,16 +9,16 @@ exports.action = function (req, res) {
 
   if (action != "del") {
     if (req.body.porcentaje1 != "")
-      porcentaje1 = req.body.porcentaje1;//.split(".").join("").replace(",", ".")
+      porcentaje1 = req.body.porcentaje1.split(".").join("").replace(",", ".")
 
     if (req.body.porcentaje2 != "")
-      porcentaje2 = req.body.porcentaje2;//.split(".").join("").replace(",", ".")
+      porcentaje2 = req.body.porcentaje2.split(".").join("").replace(",", ".")
 
     if (req.body.dolar != "")
-      dolar = req.body.dolar;//.split(".").join("").replace(",", ".")
+      dolar = req.body.dolar.split(".").join("").replace(",", ".")
 
     if (req.body.uf != "")
-      uf = req.body.uf;//.split(".").join("").replace(",", ".")
+      uf = req.body.uf.split(".").join("").replace(",", ".")
   }
 
   switch (action) {
@@ -31,9 +31,9 @@ exports.action = function (req, res) {
         porcentaje2: porcentaje2,
         beneficioscuantitativos: req.body.beneficioscuantitativos,
         beneficioscualitativos: req.body.beneficioscualitativos,
-        uidlider: req.body.lider,
-        uidjefeproyecto: req.body.jefeproyecto,
-        fechaconversion: req.body.uidjefeproyecto,
+        uidlider: req.body.uidlider,
+        uidjefeproyecto: req.body.uidjefeproyecto,
+        fechaconversion: req.body.fechaconversion,
         dolar: dolar,
         uf: uf,
         glosa: req.body.glosa,
@@ -50,18 +50,18 @@ exports.action = function (req, res) {
     case "edit":
       models.presupuestoiniciativa.update({
         cuifinanciamiento1: req.body.cuifinanciamiento1,
-        porcentaje1: req.body.porcentaje1,
+        porcentaje1: porcentaje1,
         cuifinanciamiento2: req.body.cuifinanciamiento2,
-        porcentaje2: req.body.porcentaje2,
+        porcentaje2: porcentaje2,
         beneficioscuantitativos: req.body.beneficioscuantitativos,
         beneficioscualitativos: req.body.beneficioscualitativos,
         uidlider: req.body.uidlider,
         uidjefeproyecto: req.body.uidjefeproyecto,
         fechaconversion: req.body.fechaconversion,
-        dolar: req.body.dolar,
+        dolar: dolar,
         glosa: req.body.glosa,
         sap: req.body.sap,
-        uf: req.body.uf
+        uf: uf
       }, {
           where: {
             id: req.body.id
@@ -159,7 +159,12 @@ exports.list = function (req, res) {
 
     } else {
 
-      models.presupuestoiniciativa.count().then(function (records) {
+      models.presupuestoiniciativa.count({
+        where:
+         {
+            idiniciativaprograma: idiniciativaprograma
+          }
+      }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
@@ -170,7 +175,12 @@ exports.list = function (req, res) {
 
   } else {
 
-    models.presupuestoiniciativa.count().then(function (records) {
+    models.presupuestoiniciativa.count({
+        where:
+         {
+            idiniciativaprograma: idiniciativaprograma
+          }
+      }).then(function (records) {
       var total = Math.ceil(records / rows);
       sequelize.query(sql0)
         .spread(function (rows) {

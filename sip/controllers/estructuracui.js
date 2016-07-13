@@ -25,7 +25,7 @@ exports.cabecera = function (req, res) {
     var id = req.params.id;
     
   var sql = "SELECT  id,nombre,iddivision,e.division,first_name+' '+last_name as responsable  FROM sip.estructuracentro e, " +
-  "dbo.art_user u Where e.id ="+id+" and e.uidresponsable = u.uid ";
+  "dbo.art_user u Where e.uidresponsable = u.uid and e.borrado = 1";
       
   sequelize.query(sql)
     .spread(function (rows) {
@@ -74,6 +74,7 @@ exports.action = function (req, res) {
         uidgerente: req.body.uidgerente,
         idestructura:req.body.idestructura,
         cuipadre:req.body.cuipadre,
+        nivel:req.body.nivel,
         borrado: 1
       }).then(function (estructuracui) {
         res.json({ error_code: 0 });
@@ -88,7 +89,8 @@ exports.action = function (req, res) {
         nombre: req.body.nombrecui,
         uid: req.body.uid,
         idgerencia: req.body.idgerencia,
-        uidgerencia: req.body.uidgerencia
+        uidgerencia: req.body.uidgerencia,
+        nivel:req.body.nivel        
       }, {
           where: {
             id: req.body.id
@@ -186,7 +188,7 @@ exports.getExcel = function (req, res) {
 "genrencia,u2.first_name+' '+u2.last_name as nombregerente " +
 "FROM sip.estructuracentro a left outer JOIN (sip.estructuracui b left outer JOIN dbo.art_user u " +
 "ON b.uid = u.uid left outer JOIN dbo.art_user u2 ON b.uidgerente=u2.uid left outer JOIN dbo.art_genrencia_master m " +
-"ON b.idgerencia=m.dId) ON a.id=b.idestructura ORDER BY b.cuipadre asc";
+"ON b.idgerencia=m.dId) ON a.id=b.idestructura ORDER BY a.id,b.cuipadre asc";
 
   sequelize.query(sql)
     .spread(function (estructura) {

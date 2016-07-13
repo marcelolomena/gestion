@@ -4,7 +4,9 @@ var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  var gasto, inversion,pptoestimadoprevisto = 0
+  var gasto, inversion, previsto = 0
+  var gastoaprobado, inversionaprobada, aprobado, aprobadodolares = 0
+  var programid = null
 
   if (action != "del") {
     if (req.body.pptoestimadogasto != "")
@@ -12,201 +14,229 @@ exports.action = function (req, res) {
 
     if (req.body.pptoestimadoinversion != "")
       inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
-      
-    if (req.body.pptoestimadoprevisto != "")
-      pptoestimadoprevisto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
-  }
 
-  //console.log("gasto : " + gasto);
-  //console.log("inversion : " + inversion);
+    if (req.body.pptoestimadoprevisto != "")
+      previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadogasto != "")
+      gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadoinversion != "")
+      inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadoprevisto != "")
+      aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadodolares != "")
+      aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
+
+    if (req.body.program_id != "0")
+      programid = req.body.program_id
+  }
 
   switch (action) {
     case "add":
-    if(req.body.program_id=="0"){
-      models.iniciativaprograma.create({
-        idiniciativa: req.body.parent_id,
-        program_id: null,
-        codigoart: req.body.codigoart,
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: gasto,
-        pptoestimadoinversion: inversion,
-        pptoestimadoprevisto: pptoestimadoprevisto,
-        idestado: req.body.idestado,
-        estado: req.body.estado,
-        subcategoria: req.body.subcategoria,
-        duracionprevista: req.body.duracionprevista,
-        mesinicioprevisto: req.body.mesinicioprevisto,
-        anoinicioprevisto: req.body.anoinicioprevisto,
-        borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-    }else{
-      models.iniciativaprograma.create({
-        idiniciativa: req.body.parent_id,
-        program_id: req.body.program_id,
-        codigoart: req.body.codigoart,
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: gasto,
-        pptoestimadoinversion: inversion,
-        pptoestimadoprevisto: pptoestimadoprevisto,
-        idestado: req.body.idestado,
-        estado: req.body.estado,
-        subcategoria: req.body.subcategoria,
-        duracionprevista: req.body.duracionprevista,
-        mesinicioprevisto: req.body.mesinicioprevisto,
-        anoinicioprevisto: req.body.anoinicioprevisto,
-        borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-    }
+      if (req.body.fechacomite == "") {
+        models.iniciativaprograma.create({
+          idiniciativa: req.body.parent_id,
+          program_id: programid,
+          codigoart: req.body.codigoart,
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          uidsponsor1: req.body.uidsponsor1,
+          sponsor1: req.body.sponsor1,
+          uidsponsor2: req.body.uidsponsor2,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          //fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          idestado: req.body.idestado,
+          estado: req.body.estado,
+          subcategoria: req.body.subcategoria,
+          duracionprevista: req.body.duracionprevista,
+          mesinicioprevisto: req.body.mesinicioprevisto,
+          anoinicioprevisto: req.body.anoinicioprevisto,
+          borrado: 1
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+      } else {
+        models.iniciativaprograma.create({
+          idiniciativa: req.body.parent_id,
+          program_id: programid,
+          codigoart: req.body.codigoart,
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          uidsponsor1: req.body.uidsponsor1,
+          sponsor1: req.body.sponsor1,
+          uidsponsor2: req.body.uidsponsor2,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          idestado: req.body.idestado,
+          estado: req.body.estado,
+          subcategoria: req.body.subcategoria,
+          duracionprevista: req.body.duracionprevista,
+          mesinicioprevisto: req.body.mesinicioprevisto,
+          anoinicioprevisto: req.body.anoinicioprevisto,
+          borrado: 1
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+      }
       break;
     case "edit":
-    if(req.body.program_id=="0"){
-      models.iniciativaprograma.update({
-        program_id: null,
-        codigoart: req.body.codigoart,
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: gasto,
-        pptoestimadoinversion: inversion,
-        pptoestimadoprevisto: pptoestimadoprevisto,
-        idestado: req.body.idestado,
-        estado: req.body.estado,
-        subcategoria: req.body.subcategoria,
-        duracionprevista: req.body.duracionprevista,
-        mesinicioprevisto: req.body.mesinicioprevisto,
-        anoinicioprevisto: req.body.anoinicioprevisto
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (iniciativa) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          console.log(err);
-          res.json({ error_code: 1 });
-        });
-    }else{
+      if (req.body.fechacomite == "") {
         models.iniciativaprograma.update({
-        program_id: req.body.program_id,
-        codigoart: req.body.codigoart,
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: gasto,
-        pptoestimadoinversion: inversion,
-        pptoestimadoprevisto: pptoestimadoprevisto,
-        idestado: req.body.idestado,
-        estado: req.body.estado,
-        subcategoria: req.body.subcategoria,
-        duracionprevista: req.body.duracionprevista,
-        mesinicioprevisto: req.body.mesinicioprevisto,
-        anoinicioprevisto: req.body.anoinicioprevisto
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (iniciativa) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          console.log(err);
-          res.json({ error_code: 1 });
-        });
-    }
-    
+          program_id: programid,
+          codigoart: req.body.codigoart,
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          uidsponsor1: req.body.uidsponsor1,
+          sponsor1: req.body.sponsor1,
+          uidsponsor2: req.body.uidsponsor2,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          //fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          idestado: req.body.idestado,
+          estado: req.body.estado,
+          subcategoria: req.body.subcategoria,
+          duracionprevista: req.body.duracionprevista,
+          mesinicioprevisto: req.body.mesinicioprevisto,
+          anoinicioprevisto: req.body.anoinicioprevisto
+        }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(function (iniciativa) {
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            console.log(err);
+            res.json({ error_code: 1 });
+          });
+      } else {
+        models.iniciativaprograma.update({
+          program_id: programid,
+          codigoart: req.body.codigoart,
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          uidsponsor1: req.body.uidsponsor1,
+          sponsor1: req.body.sponsor1,
+          uidsponsor2: req.body.uidsponsor2,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          idestado: req.body.idestado,
+          estado: req.body.estado,
+          subcategoria: req.body.subcategoria,
+          duracionprevista: req.body.duracionprevista,
+          mesinicioprevisto: req.body.mesinicioprevisto,
+          anoinicioprevisto: req.body.anoinicioprevisto
+        }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(function (iniciativa) {
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            console.log(err);
+            res.json({ error_code: 1 });
+          });
+      }
+
       break;
     case "del":
       models.iniciativaprograma.destroy({
@@ -226,6 +256,53 @@ exports.action = function (req, res) {
       break;
   }
 }
+
+exports.actualizaMontos = function (req, res) {
+  var pptoestimadogasto = 0;
+  var pptoestimadoinversion= 0;
+  var pptoestimadoprevisto = 0;
+  var pptoaprobadogasto = 0;
+  var pptoaprobadoinversion = 0;
+  var pptoaprobadoprevisto = 0;
+  var pptoaprobadodolares = 0;
+
+  models.iniciativaprograma.findAll({
+    where: {
+      idiniciativa: req.params.idiniciativa
+    }
+  }).then(function (iniciativasp) {
+    iniciativasp.forEach(function (element) {
+      console.log('sumo '+pptoestimadogasto+' mas '+element.pptoestimadogasto);
+      pptoestimadogasto = pptoestimadogasto + element.pptoestimadogasto;
+      console.log('y el resultado es: '+pptoestimadogasto);
+      pptoestimadoinversion = pptoestimadoinversion + element.pptoestimadoinversion;
+      pptoestimadoprevisto = pptoestimadoprevisto + element.pptoestimadoprevisto;
+      pptoaprobadogasto = pptoaprobadogasto + element.pptoaprobadogasto;
+      pptoaprobadoinversion = pptoaprobadoinversion + element.pptoaprobadoinversion;
+      pptoaprobadoprevisto = pptoaprobadoprevisto + element.pptoaprobadoprevisto;
+      pptoaprobadodolares = pptoaprobadodolares + element.pptoaprobadodolares;
+    }, this);
+  }).then(function (records) {
+    models.iniciativa.update({
+      pptoestimadogasto: pptoestimadogasto,
+      pptoestimadoinversion: pptoestimadoinversion,
+      pptoestimadoprevisto: pptoestimadoprevisto,
+      pptoaprobadogasto: pptoaprobadogasto,
+      pptoaprobadoinversion: pptoaprobadoinversion,
+      pptoaprobadoprevisto: pptoaprobadoprevisto,
+      pptoaprobadodolares: pptoaprobadodolares
+    }, {
+        where: {
+          id: req.params.idiniciativa
+        }
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+  })
+};
 
 exports.codigoart = function (req, res) {
 

@@ -27,7 +27,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Monto{montoorigen}</div>";
+    template += "<div class='column-half'>Cantidad{cantidad}</div>";
     template += "<div class='column-half'>Costo{costoorigen}</div>";
     template += "</div>";
 
@@ -64,22 +64,38 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         {
             label: 'Periodo', name: 'periodo', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: {required:true},
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000000', { placeholder: "______" });
+                }
+            }
         },
         {
             label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: {required:true},
         },
         {
             label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: {required:true},
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('0,00', { reverse: true, placeholder: "_,__"  });
+                }
+            },
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: {required:true},
         },
         {
             label: 'Tipo Pago', name: 'idtipopago', search: false, width: 300,
             editable: true, hidden: true,
+            editrules: {required:true},
             edittype: "select",
             editoptions: {
                 dataUrl: '/tipopago',
@@ -158,19 +174,16 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Monto', name: 'montoorigen', width: 80, align: 'right',
+            label: 'Cantidad', name: 'cantidad', width: 50, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
-            }
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editrules: {required:true},
         },
         {
             label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editrules: {required:true},
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('000.000.000.000.000,00', { reverse: true });
@@ -374,10 +387,12 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
+                if (postdata.idtipopago == 0) {
+                    return [false, "Tipo Pago: Campo obligatorio", ""];
+                } if (postdata.fechainicio == 0) {
+                    return [false, "Fecha Inicio: Campo obligatorio", ""];
+                } if (postdata.fechafin == 0) {
+                    return [false, "Fecha Fin: Campo obligatorio", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -427,10 +442,12 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.tipofecha == "--Escoger Tipo de Fecha--") {
-                    return [false, "Tipo Fecha: Debe agregar un tipo de fecha", ""];
-                } if (postdata.fecha == 0) {
-                    return [false, "Fecha: Debe agregar una fecha", ""];
+                if (postdata.idtipopago == 0) {
+                    return [false, "Tipo Pago: Campo obligatorio", ""];
+                } if (postdata.fechainicio == 0) {
+                    return [false, "Fecha Inicio: Campo obligatorio", ""];
+                } if (postdata.fechafin == 0) {
+                    return [false, "Fecha Fin: Campo obligatorio", ""];
                 } else {
                     return [true, "", ""]
                 }

@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var utilSeq = require('../utils/seq');
 
 exports.excel = function (req, res) {
     var conf = {}
@@ -21,6 +22,45 @@ exports.excel = function (req, res) {
         }
     ];
 
+}
+
+exports.listcui = function (req, res) {
+    models.presupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' })
+    models.presupuesto.findAll({
+        attributes: ['idcui'],
+        where: { 'estado': 'Aprobado' },
+        include: [
+            {
+                model: models.estructuracui, attributes: ['cui']
+            }, {
+                model: models.ejercicios, attributes: ['ejercicio']
+            }]
+    }).then(function (presupuesto) {
+        //console.dir(presupuesto[0])
+        res.json(presupuesto);
+    }).catch(function (err) {
+        console.log(err)
+    });
+}
+
+exports.presupuesto = function (req, res) {
+    models.presupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' })
+    models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
+    models.presupuesto.findAll({
+        attributes: ['id', 'idcui', 'descripcion', 'estado', 'version', 'montoforecast', 'montoanual'],
+        where: { 'estado': 'Aprobado' },
+        include: [
+            {
+                model: models.estructuracui, attributes: ['cui', 'nombre', 'nombreresponsable']
+            }, {
+                model: models.ejercicios, attributes: ['ejercicio']
+            }]
+    }).then(function (presupuesto) {
+        //console.dir(presupuesto[0])
+        res.json(presupuesto);
+    }).catch(function (err) {
+        console.log(err)
+    });
 }
 
 exports.colnames = function (req, res) {
@@ -57,7 +97,193 @@ exports.colnames = function (req, res) {
         console.log(err)
     });
 
+}
 
+exports.estructura = function (req, res) {
+    var _page = req.query.page;
+    var _rows = req.query.rows;
+    var _sidx = req.query.sidx;
+    var _sord = req.query.sord;
+    var _filters = req.query.filters;
+    var _search = req.query._search;
+
+    var sql_head_0 = `SELECT COUNT(*) cant FROM`
+    var sql_head_1 = `SELECT J.gerencia,J.departamento,J.seccion,J.cui,K.idcui FROM`
+
+    var sql_body = `
+(
+SELECT gerencia,departamento,seccion,max(cui) cui FROM
+(
+SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion, NULL cui FROM 
+(
+  SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+) X LEFT OUTER JOIN 
+(
+ SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+ (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+ ON C.cuipadre = D.cui
+) Y
+ON X.cui=Y.cuipadre
+UNION
+SELECT * FROM
+(
+SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+(
+SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+) R
+RIGHT OUTER JOIN 
+(
+SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+(
+  SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+) X LEFT OUTER JOIN 
+(
+ SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+ (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+ ON C.cuipadre = D.cui
+) Y
+ON X.cui=Y.cuipadre
+) S
+ON R.cuipadre=S.gerencia AND R.cui = departamento
+UNION 
+SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+(
+SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+) R
+RIGHT OUTER JOIN 
+(
+SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+(
+  SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+) X LEFT OUTER JOIN 
+(
+ SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+ (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+ ON C.cuipadre = D.cui
+) Y
+ON X.cui=Y.cuipadre
+) S
+ON R.cuipadre=S.departamento AND R.cui = seccion
+) W
+WHERE cui IS NOT NULL
+) W
+GROUP BY gerencia, departamento,seccion
+) J
+LEFT OUTER JOIN
+(
+SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado'
+) K
+ON J.cui = K.cui
+    `
+
+    var sql_tail = ` 
+ORDER BY gerencia,departamento,seccion    
+OFFSET :PageSize * (:page - 1) 
+ROWS FETCH NEXT :PageSize ROWS ONLY 
+    `
+
+    sequelize.query(sql_head_0 + sql_body)
+        .spread(function (count) {
+            sequelize.query(sql_head_1 + sql_body + sql_tail,
+                {
+                    replacements: { PageSize: parseInt(_rows), page: parseInt(_page) },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (rows) {
+                    var records = count[0].cant
+                    var total = Math.ceil(records / _rows);
+                    res.json({ records: records, total: total, page: _page, rows: rows });
+                }).catch(function (err) {
+                    console.log(err)
+                    res.json({ error_code: 1 });
+                });
+
+        }).catch(function (err) {
+            console.log(err)
+        });
+}
+
+exports.list2 = function (req, res) {
+    var _page = req.body.page;
+    var _rows = req.body.rows;
+    var _sidx = req.body.sidx;
+    var _sord = req.body.sord;
+    var _filters = req.body.filters;
+    var _search = req.body._search;
+    var ano = req.body.ano;
+    var cui = req.body.cui;
+    var idcui = req.body.idcui;
+    var estado = 'Aprobado'
+    var ssql
+
+    var yearExercise = function (id, callback) {
+        models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
+        models.presupuesto.findAll({
+            attributes: ['id'],
+            where: [{ 'estado': 'Aprobado' }, { 'idcui': id }],
+            include: [
+                {
+                    model: models.ejercicios, attributes: ['ejercicio']
+                }]
+        }).then(function (presupuesto) {
+            if (presupuesto) {
+                callback(undefined, presupuesto[0].ejercicio.ejercicio)
+            } else {
+                console.log("NO HAY FILAS")
+                callback('no rows', undefined)
+            }
+        }).catch(function (err) {
+            console.log(err)
+        });
+    }
+
+    yearExercise(idcui, function (err, year) {
+        if (year) {
+
+            utilSeq.getPeriodRange(year - 1, function (err, range) {
+                var acum = ''
+                var min = range[0]
+                var max = range[range.length - 1]
+                //console.log(min)
+                //console.log(max)
+                for (var i = 0; i < range.length; i++) {
+                    acum += '[' + range[i] + ']'
+                    if (i < range.length - 1)
+                        acum += ','
+                }
+                //console.log(acum)
+                var sql = `SELECT cuentacontable,cui,cuipadre,:periodos FROM 
+                    (
+                    SELECT 
+                    f.cuentacontable, c.cui, c.cuipadre, 
+                            d.periodo, 
+                            d.presupuestopesos 
+                            FROM sip.presupuesto a 
+                            JOIN sip.detallepre b ON a.id = b.idpresupuesto 
+                            JOIN sip.estructuracui c ON a.idcui = c.id 
+                            JOIN sip.detalleplan d ON d.iddetallepre = b.id 
+                            JOIN sip.servicio e ON b.idservicio=e.id 
+                            JOIN sip.cuentascontables f ON e.idcuenta=f.id 
+                            WHERE a.estado='Aprobado' AND a.idcui = :idcui AND d.periodo BETWEEN :min AND :max
+                            ) x 
+                            PIVOT 
+                            ( 
+                            SUM(presupuestopesos) 
+                            FOR periodo IN (:periodos) 
+                            ) p '
+                            });
+                        })
+                    `
+
+                sequelize.query(sql, { replacements: { periodos: acum, min: min, max: max, idcui: parseInt(idcui) }, type: sequelize.QueryTypes.SELECT }
+                ).then(function (rows) {
+                    res.json(rows);
+                }).catch(function (err) {
+                    res.json({ error_code: 1 });
+                });
+            });
+
+        }
+    })
 }
 
 exports.list = function (req, res) {
@@ -67,26 +293,30 @@ exports.list = function (req, res) {
     var _sord = req.body.sord;
     var _filters = req.body.filters;
     var _search = req.body._search;
-    var ano = req.params.ano;
+    var ano = req.body.ano;
+    var cui = req.body.cui;
+    var idcui = req.body.idcui;
+    var estado = 'Aprobado'
     var ssql
 
-    if (_search == true) {
+    if (_search == 'true') {
         var searchField = req.body.searchField;
         var searchString = req.body.searchString;
         var searchOper = req.body.searchOper;
-        //console.log("searchString : " + searchString)
         if (searchField === 'ano') {
             ano = parseInt(searchString)
-            //console.log("----------->> " + ano)
             ssql = "BETWEEN " + searchString + "09 AND " + (parseInt(searchString) + 1) + "12 "
+        } else if (searchField === 'cui') {
+            cui = parseInt(searchString)
+            console.log("la super cui ----------->> " + cui)
         }
-    } else {
+    } else if (_search == 'false') {
+        console.log("ano ----------->> " + ano)
         ssql = "BETWEEN " + ano.toString() + "09 AND " + (ano + 1) + "12 "
+        console.log("ssql ----------->> " + ssql)
     }
 
     //console.log(ssql)
-
-    var estado = 'Aprobado'
 
     var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= :ano; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
@@ -95,7 +325,7 @@ exports.list = function (req, res) {
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
         "JOIN sip.detalleplan d on d.iddetallepre = b.id " +
         "WHERE " +
-        "a.estado='" + estado + "' AND a.idcui = 59 AND d.periodo " + ssql +
+        "a.estado= :estado AND a.idcui = :idcui AND d.periodo " + ssql +
         "GROUP BY d.periodo " +
         "FOR XML PATH(''), TYPE " +
         ").value('.', 'NVARCHAR(MAX)') " +
@@ -113,7 +343,7 @@ exports.list = function (req, res) {
         "JOIN sip.detalleplan d ON d.iddetallepre = b.id " +
         "JOIN sip.servicio e ON b.idservicio=e.id " +
         "JOIN sip.cuentascontables f ON e.idcuenta=f.id " +
-        " WHERE a.estado=''" + estado + "'' AND a.idcui = 59 AND d.periodo " + ssql +
+        " WHERE a.estado=''" + estado + "'' AND a.idcui = :idcui AND d.periodo " + ssql +
         ") x " +
         "PIVOT " +
         "( " +
@@ -121,8 +351,9 @@ exports.list = function (req, res) {
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
 
-    sequelize.query(sql, { replacements: { ano: ano, periodo: ssql }, type: sequelize.QueryTypes.SELECT }
+    sequelize.query(sql, { replacements: { ano: ano, periodo: ssql, idcui: parseInt(idcui), estado: estado }, type: sequelize.QueryTypes.SELECT }
     ).then(function (rows) {
+        console.dir(rows)
         res.json(rows);
     }).catch(function (err) {
         res.json({ error_code: 1 });

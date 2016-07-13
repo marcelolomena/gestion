@@ -8,28 +8,23 @@ $(document).ready(function () {
     var templ = "<div id='responsive-form' class='clearfix'>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Cui{cui}</div>";
-    templ += "<div class='column-full'>Nombre Cui{nombrecui}</div>";
+    templ += "<div class='column-full'>Nombre Estructura{nombre}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Nombre Responsable{uid}</div>";
+    templ += "<div class='column-full'>Cui Padre{iddivision}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Gerencia{idgerencia}</div>";
+    templ += "<div class='column-full'>Nombre Division{division}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Nombre Gerente{uidgerente}</div>";
+    templ += "<div class='column-full'>Nombre Responsable{uidresponsable}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row' style='display: none;'>";
-    templ += "<div class='column-half'>nombregerente {nombregerente}</div>";
     templ += "<div class='column-full'>Nombre Responsable{responsable}</div>";
-    templ += "<div class='column-full'>genrencia{genrencia}</div>";
-    templ += "<div class='column-full'>idestructura{idestructura}</div>";
-    templ += "<div class='column-full'>cuipadre{cuipadre}</div>";
     templ += "</div>";
 
     templ += "<hr style='width:100%;'/>";
@@ -39,14 +34,49 @@ $(document).ready(function () {
     var modelEstructura = [
         { label: 'id', name: 'id', key: true, hidden: false },
         { label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'CUI Padre', name: 'iddivision', hidden: false, editable: true },
+        { label: 'CUI Padre', name: 'iddivision', hidden: false, editable: true ,
+          editoptions: {dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }}},
         { label: 'Division', name: 'division', hidden: false, editable: true },
-        { label: 'Responsable', name: 'uidresponsable', width: 15 },
-        { label: 'Responsable', name: 'responsable', width: 150 }
+        {
+            label: 'Responsable', name: 'uidresponsable', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/estructuracui/responsables',
+                buildSelect: function (response) {
+                    var grid = $("#gridpadre");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.uidresponsable;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Responsable--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#responsable").val($('option:selected', this).text());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Responsable', name: 'responsable', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        }
     ];
 
     $("#gridpadre").jqGrid({
-        url: '/estructuracentro/list',
+        url: '/estructuracentro/cabeceracentro',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -55,11 +85,14 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        loadonce: true,
         caption: 'Estructura de Centros',
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
-                jQuery("#grid").jqGrid('setGridParam', { url: '/estructuracui/hijos/' + rowid + '/' + cuipadre, datatype: 'json' }); // the last setting is for demo only
+                var grid = $("#gridpadre");
+                var rowData = grid.getRowData(rowid);
+                cuipadre = rowData.iddivision;
+                idestructura = rowData.id;
+                jQuery("#grid").jqGrid('setGridParam', { url: '/estructuracui/hijos/' + idestructura + '/' + cuipadre, datatype: 'json' }); // the last setting is for demo only
                 jQuery("#grid").jqGrid('setCaption', 'Estructura Cui Gerencia');
                 jQuery("#grid").trigger("reloadGrid");
             }
@@ -70,7 +103,7 @@ $(document).ready(function () {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
-        editurl: '/estructuracui/action',
+        editurl: '/estructuracentro/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
             var recs = $("#gridpadre").getGridParam("reccount");
@@ -79,12 +112,6 @@ $(document).ready(function () {
                 $("#gridpadre").addRowData("blankRow", { "nombre": "No hay datos" });
             }
         },
-    //   subGrid: true,
-    //   subGridRowExpanded: showChildGrid,
-    //   subGridOptions: {
-    //        plusicon: "glyphicon-hand-right",
-    //        minusicon: "glyphicon-hand-down"
-    //   },
     });
 
     $("#gridpadre").jqGrid('navGrid', "#pagerpadre", {
@@ -102,14 +129,14 @@ $(document).ready(function () {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
 
-                if (postdata.nombrecui == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
-                } if (postdata.uid == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
-                } if (postdata.idgerencia == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
-                } if (postdata.uidgerente == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
+                if (postdata.nombre == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de nombre estructura", ""];
+                } if (postdata.iddivision == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de cui padre", ""];
+                } if (postdata.division == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de division", ""];
+                } if (postdata.uidresponsable == 0) {
+                    return [false, "Item Estructura: Debe escoger un responsable", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -122,7 +149,7 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
 
-                $('input#cui', form).attr('readonly', 'readonly');
+                $('input#iddivision', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#gridpadre").attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#gridpadre").attr('id'));
@@ -139,16 +166,14 @@ $(document).ready(function () {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
 
-                if (postdata.cui == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de cui", ""];
-                } if (postdata.nombrecui == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de nombre cui", ""];
-                } if (postdata.uid == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de responsable", ""];
-                } if (postdata.idgerencia == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerencia", ""];
-                } if (postdata.uidgerente == 0) {
-                    return [false, "Item Estructura: Debe escoger un valor de gerente", ""];
+                 if (postdata.nombre == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de nombre estructura", ""];
+                } if (postdata.iddivision == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de cui padre", ""];
+                } if (postdata.division == 0) {
+                    return [false, "Item Estructura: Debe escoger un valor de division", ""];
+                } if (postdata.uidresponsable == 0) {
+                    return [false, "Item Estructura: Debe escoger un responsable", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -162,8 +187,6 @@ $(document).ready(function () {
                     return [true, "", ""]
 
             }, beforeShowForm: function (form) {
-                $("#idestructura", form).val(idestructura);
-                $("#cuipadre", form).val(cuipadre);
                 sipLibrary.centerDialog($("#gridpadre").attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#gridpadre").attr('id'));
@@ -219,6 +242,7 @@ var leida = false;
 var idestructura;
 var cuipadre;
 var griddepartamento;
+var nivel;
 
 function loadGrid(idestructura, cuipadre) {
 
@@ -247,6 +271,7 @@ function loadGrid(idestructura, cuipadre) {
     template += "<div class='column-full'>genrencia{genrencia}</div>";
     template += "<div class='column-full'>idestructura{idestructura}</div>";
     template += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    template += "<div class='column-full'>nivel{nivel}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -257,7 +282,12 @@ function loadGrid(idestructura, cuipadre) {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
         { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
-        { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'nivel', name: 'nivel', hidden: true, editable: true },
+        { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false,
+          editoptions: {dataInit: function (element) {
+                    $(element).mask("0000", { placeholder: "____" });
+
+                }} },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
             label: 'Responsable', name: 'uid', search: false, editable: true, hidden: true,
@@ -370,7 +400,6 @@ function loadGrid(idestructura, cuipadre) {
         autowidth: true,
         shrinkToFit: true,
         caption: 'Estructura Cui Gerencia',
-        loadonce: true,
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -426,7 +455,15 @@ function loadGrid(idestructura, cuipadre) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-
+                var grid = $("#gridpadre");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                cuipadre = rowData.iddivision;
+                idestructura = rowData.id;
+                nivel=1;
+                $("#nivel", form).val(nivel);                
+                $("#idestructura", form).val(idestructura);
+                $("#cuipadre", form).val(cuipadre);
                 $('input#cui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }, afterShowForm: function (form) {
@@ -467,8 +504,17 @@ function loadGrid(idestructura, cuipadre) {
                     return [true, "", ""]
 
             }, beforeShowForm: function (form) {
+                
+                $('input#cuipadre', form).attr('readonly', 'readonly');
+                var grid = $("#gridpadre");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                cuipadre = rowData.iddivision;
+                idestructura = rowData.id;
+                nivel=1;
+                $("#nivel", form).val(nivel);                
                 $("#idestructura", form).val(idestructura);
-                $("#cuipadre", form).val(cuipadre);
+                $("#cuipadre", form).val(cuipadre);                
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));
@@ -496,19 +542,6 @@ function loadGrid(idestructura, cuipadre) {
         }
     );
 
-    $("#grid").jqGrid('navButtonAdd', "#pager", {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Excel",
-        position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/estructuracui/excel';
-            $('#grid').jqGrid('excelExport', { "url": url });
-        }
-    });
-
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {
@@ -526,9 +559,13 @@ function showChildGrid(parentRowID, parentRowKey) {
     var childIdServicio = 0;
 
     var grid = $("#gridpadre");
+    var rowKey = grid.getGridParam("selrow");
+    var rowData = grid.getRowData(rowKey);
+    idestructura = rowData.id;
+
+    var grid = $("#grid");
     var rowData = grid.getRowData(parentRowKey);
-    idestructura=rowData.id;
-    cuipadre = rowData.iddivision;
+    cuipadre = rowData.cui;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -557,6 +594,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "<div class='column-full'>genrencia{genrencia}</div>";
     template += "<div class='column-full'>idestructura{idestructura}</div>";
     template += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    template += "<div class='column-full'>nivel{nivel}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -567,6 +605,7 @@ function showChildGrid(parentRowID, parentRowKey) {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
         { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
+        { label: 'nivel', name: 'nivel', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
@@ -735,7 +774,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-
+                nivel=2;
+                $("#nivel", form).val(nivel);                
                 $('input#cui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
@@ -781,7 +821,8 @@ function showChildGrid(parentRowID, parentRowKey) {
                 var rowData = grid.getRowData(parentRowKey);
                 cuipadre = rowData.cui;
                 $("#cuipadre", form).val(cuipadre);
-
+                nivel=2;
+                $("#nivel", form).val(nivel);                
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -854,6 +895,7 @@ function gridDetail(parentRowID, parentRowKey) {
     template += "<div class='column-full'>genrencia{genrencia}</div>";
     template += "<div class='column-full'>idestructura{idestructura}</div>";
     template += "<div class='column-full'>cuipadre{cuipadre}</div>";
+    template += "<div class='column-full'>nivel{nivel}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -864,6 +906,7 @@ function gridDetail(parentRowID, parentRowKey) {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idestructura', name: 'idestructura', hidden: true, editable: true },
         { label: 'cuipadre', name: 'cuipadre', hidden: true, editable: true },
+        { label: 'nivel', name: 'nivel', hidden: true, editable: true },
         { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Nombre Cui', name: 'nombrecui', width: 200, align: 'left', search: true, editable: true, hidden: false },
         {
@@ -1027,7 +1070,8 @@ function gridDetail(parentRowID, parentRowKey) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-
+                nivel=3;
+                $("#nivel", form).val(nivel);
                 $('input#cui', form).attr('readonly', 'readonly');
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
@@ -1073,7 +1117,8 @@ function gridDetail(parentRowID, parentRowKey) {
                 var rowData = grid.getRowData(parentRowKey);
                 cuipadre = rowData.cui;
                 $("#cuipadre", form).val(cuipadre);
-
+                nivel=3;
+                $("#nivel", form).val(nivel);
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));

@@ -259,85 +259,210 @@ exports.combobox = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var gasto, inversion,previsto = 0
+  var gastoaprobado, inversionaprobada,aprobado,aprobadodolares = 0
+/*
+if (action != "del") {
+    if (req.body.pptoestimadogasto != "")
+      gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoestimadoinversion != "")
+      inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+      
+    if (req.body.pptoestimadoprevisto != "")
+      previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadogasto != "")
+      gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadoinversion != "")
+      inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
+      
+    if (req.body.pptoaprobadoprevisto != "")
+      aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+
+    if (req.body.pptoaprobadodolares != "")
+      aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
+  }
+  */
+
 
   switch (action) {
     case "add":
-      models.iniciativa.create({
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        //uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        //uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: req.body.pptoestimadogasto.split(".").join("").replace(",", "."),
-        pptoestimadoinversion: req.body.pptoestimadoinversion.split(".").join("").replace(",", "."),
-        idestado: req.body.idestado,
-        estado: req.body.estado,
-        borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-
-      break;
-    case "edit":
-      models.iniciativa.update({
-        nombre: req.body.nombre,
-        iddivision: req.body.iddivision,
-        divisionsponsor: req.body.divisionsponsor,
-        //uidsponsor1: req.body.uidsponsor1,
-        sponsor1: req.body.sponsor1,
-        //uidsponsor2: req.body.uidsponsor2,
-        sponsor2: req.body.sponsor2,
-        uidgerente: req.body.uidgerente,
-        gerenteresponsable: req.body.gerenteresponsable,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idtipo: req.body.idtipo,
-        tipo: req.body.tipo,
-        idcategoria: req.body.idcategoria,
-        categoria: req.body.categoria,
-        ano: req.body.ano,
-        anoq: req.body.anoq,
-        q1: req.body.q1,
-        q2: req.body.q2,
-        q3: req.body.q3,
-        q4: req.body.q4,
-        fechacomite: req.body.fechacomite,
-        idmoneda: req.body.idmoneda,
-        pptoestimadogasto: req.body.pptoestimadogasto.split(".").join("").replace(",", "."),
-        pptoestimadoinversion: req.body.pptoestimadoinversion.split(".").join("").replace(",", "."),
-        idestado: req.body.idestado,
-        estado: req.body.estado
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
+      if (req.body.fechacomite == "") {
+        models.iniciativa.create({
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          sponsor1: req.body.sponsor1,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          //fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          /*
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
+          idestado: req.body.idestado,
+          estado: req.body.estado,
+          borrado: 1
+        }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
           console.log(err);
           res.json({ error_code: 1 });
         });
+      } else {
+        models.iniciativa.create({
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          sponsor1: req.body.sponsor1,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          /*
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
+          idestado: req.body.idestado,
+          estado: req.body.estado,
+          borrado: 1
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+      }
+      break;
+    case "edit":
+      if (req.body.fechacomite == "") {
+        models.iniciativa.update({
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          sponsor1: req.body.sponsor1,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          //fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          /*
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
+          idestado: req.body.idestado,
+          estado: req.body.estado
+        }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(function (contrato) {
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            console.log(err);
+            res.json({ error_code: 1 });
+          });
+      } else {
+        models.iniciativa.update({
+          nombre: req.body.nombre,
+          iddivision: req.body.iddivision,
+          divisionsponsor: req.body.divisionsponsor,
+          sponsor1: req.body.sponsor1,
+          sponsor2: req.body.sponsor2,
+          uidgerente: req.body.uidgerente,
+          gerenteresponsable: req.body.gerenteresponsable,
+          uidpmo: req.body.uidpmo,
+          pmoresponsable: req.body.pmoresponsable,
+          idtipo: req.body.idtipo,
+          tipo: req.body.tipo,
+          idcategoria: req.body.idcategoria,
+          categoria: req.body.categoria,
+          ano: req.body.ano,
+          anoq: req.body.anoq,
+          q1: req.body.q1,
+          q2: req.body.q2,
+          q3: req.body.q3,
+          q4: req.body.q4,
+          fechacomite: req.body.fechacomite,
+          idmoneda: req.body.idmoneda,
+          /*
+          pptoestimadogasto: gasto,
+          pptoestimadoinversion: inversion,
+          pptoestimadoprevisto: previsto,
+          pptoaprobadogasto: gastoaprobado,
+          pptoaprobadoinversion: inversionaprobada,
+          pptoaprobadoprevisto: aprobado,
+          pptoaprobadodolares: aprobadodolares,
+          */
+          idestado: req.body.idestado,
+          estado: req.body.estado
+        }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(function (contrato) {
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            console.log(err);
+            res.json({ error_code: 1 });
+          });
+      }
       break;
     case "del":
       models.iniciativa.destroy({

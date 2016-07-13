@@ -27,11 +27,14 @@ module.exports = function (passport) {
         .post(isAuthenticated, estructuracuiController.action);    
 
     router.route('/estructuracui/excel')
-        .get(isAuthenticated, estructuracuiController.getExcel);   
-
-    router.route('/estructuracentro/list')
-        .get(isAuthenticated, estructuracentroController.list)                                                
+        .get(isAuthenticated, estructuracuiController.getExcel);                                         
   
+    router.route('/estructuracentro/cabeceracentro')  
+        .get(isAuthenticated, estructuracentroController.cabeceracentro)     
+
+    router.route('/estructuracentro/action')
+        .post(isAuthenticated, estructuracentroController.action);          
+
     return router;
 
 }

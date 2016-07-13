@@ -20,7 +20,15 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    uidresponsable: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     niveles: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    oficial: {
       type: DataTypes.INTEGER,
       allowNull: true
     },

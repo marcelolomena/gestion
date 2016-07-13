@@ -112,6 +112,26 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    pptoestimadoprevisto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoaprobadogasto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoaprobadoinversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoaprobadoprevisto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    pptoaprobadodolares: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
     idestado: {
       type: DataTypes.INTEGER,
       allowNull: true

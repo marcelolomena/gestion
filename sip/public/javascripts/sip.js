@@ -81,7 +81,8 @@ var sipLibrary = {
         if (value === 'No') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
     }, radioElemConIva: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="coniva" value="1"',
             breakline = '/>Sí</label>',
@@ -94,8 +95,9 @@ var sipLibrary = {
         if (value === 'No') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
-    },radioElemEstadoPre: function (value, options) {
+        //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+    }, radioElemEstadoPre: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio"  name="estado" value="1"',
             breakline = '/>Creado</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="estado" value="0"',
@@ -131,7 +133,7 @@ var sipLibrary = {
 
             for (var i = 0; i < formatoptions.decimalPlaces; i++)
                 value += "0";
-        
+
             return formatoptions.prefix + value + formatoptions.suffix;
         }
 
@@ -144,6 +146,28 @@ var sipLibrary = {
         else {
             return format(cellvalue);
         }
+    }, currentPeriod: function () {
+        var currentYear = (new Date).getFullYear();
+        var period = [];
+        var periodIni = currentYear + '09';
+        //console.log('periodInit:' + periodIni);
+        var periodEnd = (currentYear + 1) + '12';
+        //console.log('periodEnd:' + periodEnd);
+        for (var i = 1; periodIni <= periodEnd; i++) {
+            //console.log('----->>' + periodIni);
+
+            if (periodIni.toString().substring(4, 6) == '12') {
+                period.push(parseInt(periodIni));
+                periodIni = (parseInt(periodIni.toString().substring(0, 4)) + 1) + '01'
+            }
+
+            if (periodIni < periodEnd) {
+                period.push(parseInt(periodIni));
+            }
+            periodIni++;
+        }
+        //console.dir(period);
+        return period;
     }
 }
 
