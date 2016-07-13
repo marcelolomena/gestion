@@ -28,9 +28,9 @@ exports.getPresupuestoServicios = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-    "a.comentario, a.glosaservicio, a.idproveedor, "+
-    "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.gastodiferido, a.mesesdiferido, a.desdediferido, "+
-    "b.razonsocial FROM sip.detallepre a " +
+    "a.costoforecast, a.costoanual, a.comentario, a.glosaservicio, a.idproveedor, "+
+    "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.mesesentrecuotas, "+
+    "a.gastodiferido, b.razonsocial FROM sip.detallepre a " +
     "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
@@ -56,8 +56,8 @@ exports.getPresupuestoServicios = function (req, res) {
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, a.id, c.nombre, a.idservicio, b.cuentacontable, b.nombrecuenta, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
         "a.comentario, a.glosaservicio, a.idproveedor, "+
-        "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.gastodiferido, a.mesesdiferido, a.desdediferido, "+
-        "b.razonsocial  FROM sip.detallepre a " +
+        "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.mesesentrecuotas, "+
+        "a.gastodiferido, b.razonsocial  FROM sip.detallepre a " +
         "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
         "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
         "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
@@ -257,8 +257,9 @@ exports.action = function (req, res) {
   var idPre = req.params.id
   
   var insertaPeriodos = function (idservicio, cuotas, callback) {
-
+    console.log("insertaPeriodos:"+idservicio+","+cuotas);
     models.sequelize.transaction({ autocommit: true }, function (t) {
+       
         var promises = []
         var d = new Date();
         var anio = d.getFullYear()
@@ -318,17 +319,24 @@ exports.action = function (req, res) {
             }
             return Promise.all(compromisoPromises);
         });
-
     }).then(function (result) {
         callback(result)
     }).catch(function (err) {
-        return next(err);
+        return err;
     });
-
+    
+    /*
+    }).then(function (result) {
+        callback(undefined,result)
+    }).catch(function (err) {
+        //return next(err);
+         callback(err,undefined)
+    });
+*/
   }  
   
   var actualizaPeriodos = function (idservicio, cuotas, callback) {
-
+    console.log("actualizaPeriodos:"+idservicio+","+cuotas);
     models.sequelize.transaction({ autocommit: true }, function (t) {
         var promises = []
         var d = new Date();
@@ -341,14 +349,14 @@ exports.action = function (req, res) {
             var periodo = anio +''+ mmm;
 
             var newPromise = models.detalleplan.update({
-                'presupuestoorigen': cuota[0][i],
-                'presupuestopesos': cuota[1][i], 
-                'caja': cuota[2][i],
-                'costo':cuota[3][i],
+                'presupuestoorigen': cuotas[0][i],
+                'presupuestopesos': cuotas[1][i], 
+                'caja': cuotas[2][i],
+                'costo':cuotas[3][i],
                 'cajacomprometido':0,
                 'costocomprometido':0,
-                'totalcaja':parseFloat(cuota[2][i])+sequelize.col('cajacomprometido'),
-                'totalcosto':parseFloat(cuota[3][i])+sequelize.col('cajacomprometido'),
+                'totalcaja':parseFloat(cuotas[2][i]),
+                'totalcosto':parseFloat(cuotas[3][i]),
                 'borrado':1
             }, {where:{iddetallepre:idservicio, periodo:periodo}},
             { transaction: t });
@@ -366,13 +374,14 @@ exports.action = function (req, res) {
     }).then(function (result) {
         callback(result)
     }).catch(function (err) {
-        return next(err);
+        return err;
     });
 
   }  
 
   switch (action) {
     case "add":
+      var idservicio = 0;
       models.detallepre.create({
         idpresupuesto: idPre,
         idservicio: req.body.idservicio,
@@ -384,10 +393,11 @@ exports.action = function (req, res) {
         numerocuota: req.body.numerocuota, 
         mesesentrecuotas: req.body.mesesentrecuotas,
         desde: req.body.desde,
-        masiva: req.body.masiva,      
+        masiva: req.body.masiva,
+        gastodiferido: req.body.gastodiferido,
         borrado: 1
       }).then(function (servicio) {
-          var idservicio = servicio.id;
+          idservicio = servicio.id;
           console.log("****servicio:"+idservicio);
           //Find en tabla valor moneda
           //Then conversion
@@ -399,20 +409,24 @@ exports.action = function (req, res) {
               req.body.desde,
               req.body.masiva,
               0.77,
-              conversion
+              conversion,
+              req.body.gastodiferido
               );
           console.log("CUOTAS:"+cuotas);
-          insertaPeriodos(function (idservicio, cuotas, compromisos) {
-              res.json({ error_code: 0 });
-          }).catch(function (err) {
-            console.log(err);
-            res.json({ error_code: 1 });
-          }); 
+          insertaPeriodos( idservicio, cuotas, function(err,compromisos) {
+              console.log("***  ***ACTualizadetallepre:"+idservicio);
+              sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
+              + ';').then(function (response) {
+                res.json({ error_code: 0 });
+              }).error(function (err) {
+                res.json(err);
+              });              
+          });      
       }).catch(function (err) {
         console.log(err);
         res.json({ error_code: 1 });
       });
-
+      
 
       break;
     case "edit":
@@ -426,12 +440,14 @@ exports.action = function (req, res) {
         numerocuota: req.body.numerocuota, 
         mesesentrecuotas: req.body.mesesentrecuotas,
         desde: req.body.desde,
-        masiva: req.body.masiva,       
+        masiva: req.body.masiva,
+        gastodiferido: req.body.gastodiferido   
       }, {
           where: {
             id: req.body.id
           }
         }).then(function (contrato) {
+          var idservicio = req.body.id;
           var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
           var cuotas = calculoCuotas(
               req.body.cuota,
@@ -440,11 +456,19 @@ exports.action = function (req, res) {
               req.body.desde,
               req.body.masiva,
               0.77,
-              conversion
+              conversion,
+              req.body.gastodiferido
               );
-          insertaPeriodos(function (idservicio, cuotas, compromisos) {
-              res.json({ error_code: 0 });
-          });           
+         actualizaPeriodos(idservicio, cuotas, function(err,compromisos) {
+            console.log("***actualizadetallepre:"+idservicio);
+            sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
+              + ';').then(function (response) {
+                res.json({ error_code: 0 });
+              }).error(function (err) {
+                res.json(err);
+              });               
+          });      
+            
         }).catch(function (err) {
           console.log(err);
           res.json({ error_code: 1 });
@@ -467,8 +491,8 @@ exports.action = function (req, res) {
 
 }
 
-function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion){
-  console.log("Param:"+cuota+","+ ncuotas+","+ mesesentre+","+mescuota1+","+ coniva+","+ frecup+","+ conversion); 
+function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion, diferido){
+  console.log("Param:"+cuota+","+ ncuotas+","+ mesesentremedio+","+mescuota1+","+ coniva+","+ frecup+","+ conversion); 
   //var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
   var origen = [0,0,0,0,0,0,0,0,0,0,0,0];
   var pesos = [0,0,0,0,0,0,0,0,0,0,0,0];
@@ -476,25 +500,37 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
   var costo = [0,0,0,0,0,0,0,0,0,0,0,0];
   var mesesentre = parseInt(mesesentremedio);
 
-  for (i=mescuota1; i<caja.length+1; i=i+mesesentre) {
+
+
+  for (i=mescuota1; i<caja.length+1; i=parseInt(i)+mesesentre) {
+      console.log("***SALTO:"+i+mesesentre);
       origen[i-1] = cuota;
       pesos[i-1] = cuota * conversion[i-1];
-      if (coniva == "Si") {
+      if (coniva == "1") {
           var valorcaja = pesos[i-1] * 1.19;
       } else {
           var valorcaja = pesos[i-1] ;
       }            
       caja[i-1] = valorcaja;
   }
-  for (i=mescuota1; i<caja.length+1; i=i+mesesentre) {
-      var iva = pesos[i-1]*0.19;
+  for (i=mescuota1; i<caja.length+1; i=parseInt(i)+mesesentre) {
+      if (coniva == "1") {
+          var iva = pesos[i-1]* 0.19;
+      } else {
+          var iva = 0;
+      }
       var recuperacion = iva*frecup;
       var total = parseFloat(pesos[i-1]) + parseFloat(recuperacion);
-      var valorcosto = total/mesesentre;
-      var valorcosto = valorcosto.toFixed(2);
-      for (j=i; j<=i+mesesentre && j<caja.length+1; j++) {
-          costo[j-1] = valorcosto;
-      }   
+      if (diferido=="1"){
+          var valorcosto = total/mesesentre;
+          var valorcosto = valorcosto.toFixed(2);            
+          for (j=i; j<=i+mesesentre && j<caja.length+1; j++) {
+              costo[j-1] = valorcosto;
+          }   
+      } else {
+          costo[i-1] = total;
+      }    
+
   }
   var todo = [origen, pesos, caja, costo];
   console.log(todo);

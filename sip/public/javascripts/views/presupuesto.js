@@ -436,7 +436,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "<div class='form-row'>";
     tmplServ += "<div class='column-half'>Mas IVA {masiva}</div>";
     tmplServ += "</div>";
-                                             
+
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Gasto Diferido {gastodiferido}</div>";
+    tmplServ += "</div>";
+                                                 
     tmplServ += "<hr style='width:100%;'/>";
     tmplServ += "<div> {sData} {cData}  </div>";
     tmplServ += "</div>";
@@ -593,7 +597,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         },
         {
             label: 'Costo Forecast',
-            name: 'montoforecast',
+            name: 'costoforecast',
             width: 130,
             align: 'right',
             search: false,
@@ -602,7 +606,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         },
         {
             label: 'Costo Anual',
-            name: 'montoanual',
+            name: 'costoanual',
             width: 130,
             align: 'right',
             search: false,
@@ -652,7 +656,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         {
             label: 'Mas IVA', name: 'masiva', search: false, editable: true, hidden: true,
             edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        } 
+        },
+        {
+            label: 'Gasto Diferido', name: 'gastodiferido', search: false, editable: true, hidden: true,
+            edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
+        }         
     ];
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
@@ -857,7 +865,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Compromiso',
+                label: 'Compr. Caja',
                 name: 'cajacomprometido',
                 editable: false,
                 align: 'right',
@@ -884,7 +892,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Compromiso',
+                label: 'Compr. Costo',
                 name: 'costocomprometido',
                 editable: false,
                 align: 'right',
