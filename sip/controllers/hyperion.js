@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var utilSeq = require('../utils/seq');
 
 exports.excel = function (req, res) {
     var conf = {}
@@ -201,6 +202,90 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
         });
 }
 
+exports.list2 = function (req, res) {
+    var _page = req.body.page;
+    var _rows = req.body.rows;
+    var _sidx = req.body.sidx;
+    var _sord = req.body.sord;
+    var _filters = req.body.filters;
+    var _search = req.body._search;
+    var ano = req.body.ano;
+    var cui = req.body.cui;
+    var idcui = req.body.idcui;
+    var estado = 'Aprobado'
+    var ssql
+
+    var yearExercise = function (id, callback) {
+        models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
+        models.presupuesto.findAll({
+            attributes: ['id'],
+            where: [{ 'estado': 'Aprobado' }, { 'idcui': id }],
+            include: [
+                {
+                    model: models.ejercicios, attributes: ['ejercicio']
+                }]
+        }).then(function (presupuesto) {
+            if (presupuesto) {
+                callback(undefined, presupuesto[0].ejercicio.ejercicio)
+            } else {
+                console.log("NO HAY FILAS")
+                callback('no rows', undefined)
+            }
+        }).catch(function (err) {
+            console.log(err)
+        });
+    }
+
+    yearExercise(idcui, function (err, year) {
+        if (year) {
+
+            utilSeq.getPeriodRange(year - 1, function (err, range) {
+                var acum = ''
+                var min = range[0]
+                var max = range[range.length - 1]
+                //console.log(min)
+                //console.log(max)
+                for (var i = 0; i < range.length; i++) {
+                    acum += '[' + range[i] + ']'
+                    if (i < range.length - 1)
+                        acum += ','
+                }
+                //console.log(acum)
+                var sql = `SELECT cuentacontable,cui,cuipadre,:periodos FROM 
+                    (
+                    SELECT 
+                    f.cuentacontable, c.cui, c.cuipadre, 
+                            d.periodo, 
+                            d.presupuestopesos 
+                            FROM sip.presupuesto a 
+                            JOIN sip.detallepre b ON a.id = b.idpresupuesto 
+                            JOIN sip.estructuracui c ON a.idcui = c.id 
+                            JOIN sip.detalleplan d ON d.iddetallepre = b.id 
+                            JOIN sip.servicio e ON b.idservicio=e.id 
+                            JOIN sip.cuentascontables f ON e.idcuenta=f.id 
+                            WHERE a.estado='Aprobado' AND a.idcui = :idcui AND d.periodo BETWEEN :min AND :max
+                            ) x 
+                            PIVOT 
+                            ( 
+                            SUM(presupuestopesos) 
+                            FOR periodo IN (:periodos) 
+                            ) p '
+                            });
+                        })
+                    `
+
+                sequelize.query(sql, { replacements: { periodos: acum, min: min, max: max, idcui: parseInt(idcui) }, type: sequelize.QueryTypes.SELECT }
+                ).then(function (rows) {
+                    res.json(rows);
+                }).catch(function (err) {
+                    res.json({ error_code: 1 });
+                });
+            });
+
+        }
+    })
+}
+
 exports.list = function (req, res) {
     var _page = req.body.page;
     var _rows = req.body.rows;
@@ -268,6 +353,7 @@ exports.list = function (req, res) {
 
     sequelize.query(sql, { replacements: { ano: ano, periodo: ssql, idcui: parseInt(idcui), estado: estado }, type: sequelize.QueryTypes.SELECT }
     ).then(function (rows) {
+        console.dir(rows)
         res.json(rows);
     }).catch(function (err) {
         res.json({ error_code: 1 });

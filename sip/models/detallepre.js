@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idpresupuesto: {
       type: DataTypes.INTEGER,
@@ -102,7 +103,11 @@ module.exports = function(sequelize, DataTypes) {
     desdediferido: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    mesesentrecuotas: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'detallepre'
   });

@@ -48,12 +48,7 @@ $(document).ready(function () {
                         }
                     });
                     return s + "</select>";
-                }/*
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        $("input#divisionsponsor").val($('option:selected', this).text());
-                    }
-                }],*/
+                }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
@@ -72,15 +67,21 @@ $(document).ready(function () {
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idejercicio;
+                    var ejer = rowData.ejercicio;
                     console.log(response);
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
+                    var sel=false;
                     s += '<option value="0">--Escoger Ejercicio--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].ejercicio + '</option>';
+                            sel=true;
                         } else {
                             s += '<option value="' + data[i].id + '">' + data[i].ejercicio + '</option>';
+                        }
+                        if (!sel && rowKey != null) {
+                            s += '<option value="' + thissid + '">' + ejer + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -97,7 +98,16 @@ $(document).ready(function () {
             label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
+        {
+            label: 'Costo Forecast', name: 'costoforecast', width: 130, align: 'left', search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Costo Anual', name: 'costoanual', width: 100, align: 'left', search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },        
         { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
+        
     ];
     $("#grid").jqGrid({
         url: '/presupuestolist',
@@ -167,10 +177,10 @@ $(document).ready(function () {
                 var s = grid.jqGrid('getGridParam', 'selarrrow');
                 //alert("SS:"+s);
                 window.setTimeout(function () {
-                   $("#idcui").attr('disabled', true);
-                   $("#idejercicio").attr('disabled', true);
+                    $("#idcui").attr('disabled', true);
+                    $("#idejercicio").attr('disabled', true);
                 }, 1000);
-                
+
             }
         },
         {
@@ -226,12 +236,31 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code == 10)
+                console.log(result)  
+                if (result.error_code == 10) {
                     return [false, "Ya existe un presuspuesto Aprobado o Confirmado para el CUI", ""];
-                else {
-                    return [true, "", ""];
+                } else if (result.error_code == 0) {
+                    console.log("exitoso");  
+                    alert("Presupuesto creado en forma exitosa");                 
+                    return [true, "listo", ""];
                 }
-            }
+
+            }, 
+            beforeShowForm: function (postdata, formid) {
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                if (rowKey == null) {
+                    //alert("Esta opción agrega presupuesto para un nuevo CUI.\nPara una nueva versión de presupuesto:\n   1.-Seleccione versión base\n   2.-Presione boton agregar");
+                    //return [false, "", ""];
+                } else {
+                    window.setTimeout(function () {
+                        $("#idcui").attr('disabled', true);
+                    }, 1000);
+                }                
+
+
+            }            
         },
         {
             closeAfterDelete: true,
@@ -261,12 +290,6 @@ $(document).ready(function () {
         }, {}
     );
 
-    $("#grid").jqGrid({
-        loadComplete: function(data) {
-            $("#grid").trigger("reloadGrid");
-        }
-    });
-    
     $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
@@ -361,6 +384,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     var urlServicios = '/serviciospre/' + parentRowKey;
     var urlProveedores = '/proveedorespre/' + parentRowKey;
     var urlProveedoresServ = '/proveedorespreserv/' + parentRowKey;
+    var urlFrecuencia = '/serviciosfrecuencia/';
+    var urlPeriodo = '/serviciosperiodos/';
 
     var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -392,6 +417,26 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "<div class='column-half'>Comentario {comentario}</div>";
     tmplServ += "</div>";
 
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Cuota {cuota}</div>";
+    tmplServ += "</div>";    
+
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Número Cuotas {numerocuota}</div>";
+    tmplServ += "</div>";
+    
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Meses entre cuotas {mesesentrecuotas}</div>";
+    tmplServ += "</div>";
+
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Mes inicio {desde}</div>";
+    tmplServ += "</div>";
+
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Mas IVA {masiva}</div>";
+    tmplServ += "</div>";
+                                             
     tmplServ += "<hr style='width:100%;'/>";
     tmplServ += "<div> {sData} {cData}  </div>";
     tmplServ += "</div>";
@@ -545,7 +590,69 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             search: false,
             editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        }
+        },
+        {
+            label: 'Costo Forecast',
+            name: 'montoforecast',
+            width: 130,
+            align: 'right',
+            search: false,
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Costo Anual',
+            name: 'montoanual',
+            width: 130,
+            align: 'right',
+            search: false,
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },        
+        {
+            label: 'Cuota', name: 'cuota', search: false, editable: true, hidden: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },        
+        {
+            label: '# Cuotas', name: 'numerocuota', search: false, editable: true, hidden: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },   
+        {
+            label: 'Meses entre cuotas', name: 'mesesentrecuotas', search: false, editable: true, hidden: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },      
+        {
+            label: 'Mes Inicio', name: 'desde', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: urlPeriodo,
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idproveedor;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Periodo--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***proveedor:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    //console.log(s);
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }            
+        },
+        {
+            label: 'Mas IVA', name: 'masiva', search: false, editable: true, hidden: true,
+            edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
+        } 
     ];
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
@@ -705,23 +812,96 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 width: 100,
             },
             {
-                label: 'Presupuesto',
-                name: 'presupuestobasepesos',
+                label: 'Base Caja',
+                name: 'presupuestobasecaja',
                 align: 'right',
-                width: 150,
+                width: 100,
                 search: false,
                 sortable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Valor Presupuesto',
-                name: 'presupuestopesos',
+                label: 'Base Costo',
+                name: 'presupuestobasecosto',
+                align: 'right',
+                width: 100,
+                search: false,
+                sortable: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Valor Moneda',
+                name: 'presupuestoorigen',
                 editable: true,
                 align: 'right',
                 search: false,
-                width: 150,
+                width: 100,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
-            }
+            },
+            {
+                label: 'Valor Pesos',
+                name: 'presupuestopesos',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Caja',
+                name: 'caja',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Compromiso',
+                name: 'cajacomprometido',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Total Caja',
+                name: 'totalcaja',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Costo',
+                name: 'costo',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Compromiso',
+                name: 'costocomprometido',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Total Costo',
+                name: 'totalcosto',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            }                          
+                                                          
         ],
         //viewrecords: true,
         //rowNum: 16,

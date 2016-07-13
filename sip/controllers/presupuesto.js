@@ -442,21 +442,32 @@ exports.action = function (req, res) {
               models.detallepre.findAll({
                 where: { 'idpresupuesto': idpre }
               }).then(function (servicio) {
-                for (var i = 0; i < servicio.length; i++) {
-                  var idservorig = servicio[i].id;
-                  console.log("----->" + servicio[i].id)
-                  sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
-                    + "," + ejercicio
+                if (servicio.length > 0) {
+                  for (var i = 0; i < servicio.length; i++) {
+                    var idservorig = servicio[i].id;
+                    console.log("----->" + servicio[i].json)
+                    sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
+                      + "," + ejercicio
+                      + "," + id_cui
+                      + "," + presupuesto.id
+                      + "," + servicio[i].idservicio
+                      + "," + servicio[i].idproveedor
+                      + "," + servicio[i].idmoneda
+                      + "," + servicio[i].montoforecast
+                      + "," + servicio[i].montoanual
+                      + ';').then(function (response) {
+                      }).error(function (err) {
+                        res.json(err);
+                      });
+                  }
+                } else {
+                  sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
                     + "," + id_cui
                     + "," + presupuesto.id
-                    + "," + servicio[i].idservicio
-                    + "," + servicio[i].idmoneda
-                    + "," + servicio[i].montoforecast
-                    + "," + servicio[i].montoanual
                     + ';').then(function (response) {
                     }).error(function (err) {
                       res.json(err);
-                    });
+                    });                  
                 }
                 res.json({ error_code: 0 });
               }).catch(function (err) {
@@ -499,7 +510,7 @@ exports.action = function (req, res) {
 
 exports.updateTotales = function (req, res) {
   console.log("****id:"+req.params.id);
-  sequelize.query('EXECUTE sip.actulizadetallepre ' + req.params.id
+  sequelize.query('EXECUTE sip.actualizadetallepre ' + req.params.id
     + ';').then(function (response) {
       res.json({ error_code: 0 });
     }).error(function (err) {
