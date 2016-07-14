@@ -14,6 +14,9 @@ module.exports = function (passport) {
     router.route('/usuariosprograma/:idiniciativaprograma')
         .get(isAuthenticated, userController.getUsersProgramMember);
 
+    router.route('/usuariosporprograma/:program_id')
+        .get(isAuthenticated, userController.getUsersByProgram);
+
     return router;
 
 }

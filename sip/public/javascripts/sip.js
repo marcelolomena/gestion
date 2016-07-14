@@ -168,6 +168,14 @@ var sipLibrary = {
         }
         //console.dir(period);
         return period;
+    },
+
+    numFormat: function (cellvalue, options, rowObject) {
+        return cellvalue.replace(".", ",");
+    },
+
+    numUnformat: function (cellvalue, options, rowObject) {
+        return cellvalue.replace(",", ".");
     }
 }
 

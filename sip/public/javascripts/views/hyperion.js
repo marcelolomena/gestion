@@ -179,7 +179,7 @@ function listColumnModels(data) {
     });
 
     _listOfColumnModels.push({
-        name: 'cui',
+        name: 'gerencia',
         width: 100,
         sortable: true,
         hidden: false,
@@ -202,13 +202,22 @@ function listColumnModels(data) {
     });
 
     _listOfColumnModels.push({
-        name: 'cuipadre',
+        name: 'departamento',
         width: 100,
         sortable: true,
         hidden: false,
         search: false,
         searchoptions: { sopt: ["eq", "le", "ge"] }
     });
+    
+    _listOfColumnModels.push({
+        name: 'seccion',
+        width: 100,
+        sortable: true,
+        hidden: false,
+        search: false,
+        searchoptions: { sopt: ["eq", "le", "ge"] }
+    });    
 
     _listOfColumnModels.push({
         name: 'ano',
@@ -235,8 +244,9 @@ function listColumnModels(data) {
 function listColumnNames(data) {
     var _listOfColumnNames = [];
     _listOfColumnNames.push('Cuenta');
-    _listOfColumnNames.push('CUI Sección');
-    _listOfColumnNames.push('CUI Depto');
+    _listOfColumnNames.push('Gerencia');
+    _listOfColumnNames.push('Departamento');
+    _listOfColumnNames.push('Sección');    
     _listOfColumnNames.push('Periodo');
     $.each(data, function (i, item) {
         _listOfColumnNames.push(data[i].toString().substring(4, 6) + '/' + data[i].toString().substring(0, 4));

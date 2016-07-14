@@ -215,6 +215,8 @@ exports.list2 = function (req, res) {
     var estado = 'Aprobado'
     var ssql
 
+    var nothing = []
+
     var yearExercise = function (id, callback) {
         models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
         models.presupuesto.findAll({
@@ -228,7 +230,6 @@ exports.list2 = function (req, res) {
             if (presupuesto) {
                 callback(undefined, presupuesto[0].ejercicio.ejercicio)
             } else {
-                console.log("NO HAY FILAS")
                 callback('no rows', undefined)
             }
         }).catch(function (err) {
@@ -236,54 +237,136 @@ exports.list2 = function (req, res) {
         });
     }
 
-    yearExercise(idcui, function (err, year) {
-        if (year) {
+    if (idcui > 0) {
+        yearExercise(idcui, function (err, year) {
+            if (year) {
+                utilSeq.getPeriodRange(year - 1, function (err, range) {
+                    var acum = ''
+                    var min = range[0]
+                    var max = range[range.length - 1]
+                    //console.log(min)
+                    //console.log(max)
+                    for (var i = 0; i < range.length; i++) {
+                        acum += '[' + range[i] + ']'
+                        if (i < range.length - 1)
+                            acum += ','
+                    }
+                    //console.log(acum)
+                    var sql_head_0 = `SELECT cuentacontable,gerencia,departamento,seccion `
 
-            utilSeq.getPeriodRange(year - 1, function (err, range) {
-                var acum = ''
-                var min = range[0]
-                var max = range[range.length - 1]
-                //console.log(min)
-                //console.log(max)
-                for (var i = 0; i < range.length; i++) {
-                    acum += '[' + range[i] + ']'
-                    if (i < range.length - 1)
-                        acum += ','
-                }
-                //console.log(acum)
-                var sql = `SELECT cuentacontable,cui,cuipadre,:periodos FROM 
+                    var sql_body_1 = `
+                            SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.presupuestopesos FROM 
+                            (
+                            SELECT f.cuentacontable, c.cui, 
+                                                        d.periodo,
+                                                        d.presupuestopesos
+                                                        FROM sip.presupuesto a
+                                                        JOIN sip.detallepre b ON a.id = b.idpresupuesto
+                                                        JOIN sip.estructuracui c ON a.idcui = c.id
+                                                        JOIN sip.detalleplan d ON d.iddetallepre = b.id
+                                                        JOIN sip.servicio e ON b.idservicio=e.id
+                                                        JOIN sip.cuentascontables f ON e.idcuenta=f.id
+                                                        WHERE a.estado='Aprobado' AND a.idcui = :idcui AND d.periodo BETWEEN :min AND :max
+                            ) M
+                            JOIN
+                            (
+                            SELECT J.gerencia,J.departamento,J.seccion,J.cui,K.idcui FROM
+                            (
+                            SELECT gerencia,departamento,seccion,max(cui) cui FROM
+                            (
+                            SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion, NULL cui FROM 
+                            (
+                            SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+                            ) X LEFT OUTER JOIN 
+                            (
+                            SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+                            (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+                            ON C.cuipadre = D.cui
+                            ) Y
+                            ON X.cui=Y.cuipadre
+                            UNION
+                            SELECT * FROM
+                            (
+                            SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+                            (
+                            SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+                            ) R
+                            RIGHT OUTER JOIN 
+                            (
+                            SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+                            (
+                            SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+                            ) X LEFT OUTER JOIN 
+                            (
+                            SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+                            (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+                            ON C.cuipadre = D.cui
+                            ) Y
+                            ON X.cui=Y.cuipadre
+                            ) S
+                            ON R.cuipadre=S.gerencia AND R.cui = departamento
+                            UNION 
+                            SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+                            (
+                            SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+                            ) R
+                            RIGHT OUTER JOIN 
+                            (
+                            SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+                            (
+                            SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+                            ) X LEFT OUTER JOIN 
+                            (
+                            SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+                            (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+                            ON C.cuipadre = D.cui
+                            ) Y
+                            ON X.cui=Y.cuipadre
+                            ) S
+                            ON R.cuipadre=S.departamento AND R.cui = seccion
+                            ) W
+                            WHERE cui IS NOT NULL
+                            ) W
+                            GROUP BY gerencia, departamento,seccion
+                            ) J
+                            LEFT OUTER JOIN
+                            (
+                            SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado'
+                            ) K
+                            ON J.cui = K.cui
+                            ) N
+                            ON M.cui = N.cui                   
+                    `
+
+
+                    var sql_body_0 = ` FROM 
                     (
-                    SELECT 
-                    f.cuentacontable, c.cui, c.cuipadre, 
-                            d.periodo, 
-                            d.presupuestopesos 
-                            FROM sip.presupuesto a 
-                            JOIN sip.detallepre b ON a.id = b.idpresupuesto 
-                            JOIN sip.estructuracui c ON a.idcui = c.id 
-                            JOIN sip.detalleplan d ON d.iddetallepre = b.id 
-                            JOIN sip.servicio e ON b.idservicio=e.id 
-                            JOIN sip.cuentascontables f ON e.idcuenta=f.id 
-                            WHERE a.estado='Aprobado' AND a.idcui = :idcui AND d.periodo BETWEEN :min AND :max
-                            ) x 
+                    `
+
+                    var sql_body_2 = ` ) x 
                             PIVOT 
                             ( 
                             SUM(presupuestopesos) 
-                            FOR periodo IN (:periodos) 
-                            ) p '
-                            });
-                        })
-                    `
+                            FOR periodo IN (`
 
-                sequelize.query(sql, { replacements: { periodos: acum, min: min, max: max, idcui: parseInt(idcui) }, type: sequelize.QueryTypes.SELECT }
-                ).then(function (rows) {
-                    res.json(rows);
-                }).catch(function (err) {
-                    res.json({ error_code: 1 });
+                    var sql_tail = `  )   ) p `
+
+                    sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail, { replacements: { periodos: acum, min: min, max: max, idcui: parseInt(idcui) }, type: sequelize.QueryTypes.SELECT }
+                    ).then(function (rows) {
+                        res.json(rows);
+                    }).catch(function (err) {
+                        res.json({ error_code: 1 });
+                    });
                 });
-            });
 
-        }
-    })
+            } else {
+                res.json(nothing);
+            }
+        })
+
+    } else {
+        res.json(nothing);
+    }
 }
 
 exports.list = function (req, res) {

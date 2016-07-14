@@ -11,7 +11,7 @@ module.exports = function (passport) {
     });
 
     router.route('/hyperion/list')
-        .post(isAuthenticated, hyperionController.list)
+        .post(isAuthenticated, hyperionController.list2)
         
     router.route('/hyperion/presupuesto')
         .get(isAuthenticated, hyperionController.estructura)        

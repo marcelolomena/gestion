@@ -40,3 +40,13 @@ exports.getUsersProgramMember = function (req, res) {
         res.json({ error_code: 1 });
     });
 }
+exports.getUsersByProgram = function (req, res) {
+    sequelize.query('select d.uid, d.first_name, d.last_name from art_program_members a join art_program b on a.program_id=b.program_id join art_user d on a.member_id=d.uid where b.program_id=:program_id and a.is_active=0',
+        { replacements: { program_id: req.params.program_id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        console.log(err)
+        res.json({ error_code: 1 });
+    });
+}
