@@ -12,15 +12,15 @@ module.exports = function (passport) {
 
     router.route('/hyperion/list')
         .post(isAuthenticated, hyperionController.list2)
-        
+
     router.route('/hyperion/presupuesto')
-        .get(isAuthenticated, hyperionController.estructura)        
-        
-    router.route('/hyperion/excel')
-        .get(isAuthenticated, hyperionController.excel) 
-        
+        .get(isAuthenticated, hyperionController.estructura)
+
+    router.route('/hyperion/csv')
+        .get(isAuthenticated, hyperionController.csv)
+
     router.route('/hyperion/listcui')
-        .get(isAuthenticated, hyperionController.listcui)                  
+        .get(isAuthenticated, hyperionController.listcui)
 
     return router;
 

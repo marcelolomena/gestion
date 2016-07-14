@@ -121,12 +121,37 @@ module.exports = (function () {
         }
         callback(undefined, period);
     }
+    var JSON2CSV = function (data) {
+        var result, ctr, keys, columnDelimiter, lineDelimiter;
+
+        columnDelimiter = ';';
+        lineDelimiter = '\n';
+
+        keys = Object.keys(data[0]);
+
+        result = '';
+        result += keys.join(columnDelimiter);
+        result += lineDelimiter;
+
+        data.forEach(function (item) {
+            ctr = 0;
+            keys.forEach(function (key) {
+                if (ctr > 0) result += columnDelimiter;
+
+                //result += item[key];
+                result += item[key] == null ? 0 : item[key];
+                ctr++;
+            });
+            result += lineDelimiter;
+        });
+
+        return result;
+    }
     return {
         buildCondition: buildCondition,
         buildAdditionalCondition: buildAdditionalCondition,
         getDateRange: getDateRange,
-        getPeriodRange: getPeriodRange
+        getPeriodRange: getPeriodRange,
+        JSON2CSV: JSON2CSV
     };
-
-
 })();
