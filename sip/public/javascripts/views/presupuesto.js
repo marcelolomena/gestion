@@ -815,9 +815,10 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 label: 'Periodo',
                 name: 'periodo',
                 search: false,
-                editable: false,
+                editable: true,
                 sortable: false,
                 width: 100,
+                editoptions: { size: 10, readonly: 'readonly'}               
             },
             {
                 label: 'Base Caja',
@@ -838,7 +839,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
             {
-                label: 'Valor Moneda',
+                label: 'Valor en Moneda',
                 name: 'presupuestoorigen',
                 editable: true,
                 align: 'right',
@@ -932,7 +933,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         });
     */
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false,
+        edit: true,
         add: false,
         del: false,
         search: false,
@@ -940,11 +941,25 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         view: false, position: "left", cloneToTop: false
     },
         {
-
-        },
-        {
-            recreateFilter: true
-        }
+            editCaption: "Modifica Periodo",
+            closeAfterEdit: true,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeSubmit: function (postdata, formid) {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var idxsel = grid.getInd(rowKey);
+                var rowData = grid.getRowData(rowKey);
+                alert("idx:"+idxsel);
+                postdata.idx = idxsel;
+                //var num = new Number(rowData.presupuestoorigen);
+                //if (isNaN(num)) {
+                //    return [false, "Debe ingresar un numero", ""];
+                //} 
+                return [true, "", ""]
+            },            
+        }, {}
     );
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
