@@ -109,10 +109,36 @@ $(document).ready(function () {
                                 async: false,
                                 success: function (data) {
                                     $("input#codigoart").val(data.program_code);
+                                    $("input#program_id").val(data.program_id);
+                                }
+                            });
+                            $.ajax({
+                                type: "GET",
+                                url: '/usuariosporprograma/' + thispid,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $('#table_iniciativa');
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.uidlider;
+                                    //var data = JSON.parse(response);
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Lider--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].uid == thissid) {
+                                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#uidlider").html(s);
+                                    $("select#uidjefeproyecto").html(s);
                                 }
                             });
                         } else {
                             $("input#codigoart").val(null);
+                            $("input#program_id").val(null);
                         }
                     }
                 }],
@@ -186,6 +212,8 @@ $(document).ready(function () {
             editrules: { required: true },
             edittype: "select",
             editoptions: {
+                value: "0:--Escoger Lider--",
+                /*
                 buildSelect: function (response) {
                     var grid = $('#table_iniciativa');
                     var rowKey = grid.getGridParam("selrow");
@@ -203,6 +231,7 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 },
+                */
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#lider").val($('option:selected', this).val());
@@ -221,6 +250,8 @@ $(document).ready(function () {
             editrules: { required: true },
             edittype: "select",
             editoptions: {
+                value: "0:--Escoger Lider--",
+                /*
                 buildSelect: function (response) {
                     var grid = $('#table_iniciativa');
                     var rowKey = grid.getGridParam("selrow");
@@ -238,6 +269,7 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 },
+                */
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#jefeproyecto").val($('option:selected', this).val());
@@ -365,9 +397,9 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
         onSelectRow: function (id) {
-            var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
-            $("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/'+temp }});
-            $("#table_iniciativa").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/'+temp }});
+            //var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
+            //$("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
+            //$("#table_iniciativa").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
         },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
@@ -429,6 +461,31 @@ $(document).ready(function () {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
+                var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
+
+                $.ajax({
+                    type: "GET",
+                    url: '/usuariosporprograma/' + temp,
+                    success: function (data) {
+                        var grid = $('#table_iniciativa');
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid2 = rowData.uidlider;
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger Lider--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].uid == thissid2) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            }
+                        });
+                        s += "</select>";
+                        $("select#uidlider").html(s);
+                        $("select#uidjefeproyecto").html(s);
+                    }
+                });
+
                 sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
@@ -453,7 +510,7 @@ $(document).ready(function () {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombreproyecto\",\"op\":\"cn\",\"data\":\"" + postdata.nombreproyecto + "\"}]}";
                     $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }

@@ -11,24 +11,19 @@ exports.action = function (req, res) {
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
     var porcentaje = req.body.porcentaje
-    var idsubtarea = req.body.idsubtarea
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
         if (porcentaje != "")
             porcentaje = porcentaje.split(".").join("").replace(",", ".")
-        if (idsubtarea == "0")
-            idsubtarea = null
     }
 
     switch (action) {
         case "add":
-            models.flujonuevatarea.create({
-                idtareasnuevosproyectos: req.body.parent_id,
-                idsubtarea: idsubtarea,
+            models.flujopagoenvuelo.create({
+                idtareaenvuelo: req.body.parent_id,
                 periodo: req.body.periodo,
-                montoorigen: montoorigen,
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
@@ -46,17 +41,15 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            models.flujonuevatarea.update({
-                idsubtarea: idsubtarea,
+            models.flujopagoenvuelo.update({
                 periodo: req.body.periodo,
-                montoorigen: montoorigen,
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
                 fechainicio: req.body.fechainicio,
                 fechafin: req.body.fechafin,
-                cantidad: req.body.cantidad
+                cantidad: req.body.cantidad,
             }, {
                     where: {
                         id: req.body.id
@@ -69,7 +62,7 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-            models.flujonuevatarea.destroy({
+            models.flujopagoenvuelo.destroy({
                 where: {
                     id: req.body.id
                 }

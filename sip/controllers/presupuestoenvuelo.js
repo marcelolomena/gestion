@@ -366,6 +366,7 @@ exports.action = function (req, res) {
       models.presupuestoenvuelo.create({
         nombreproyecto: req.body.nombreproyecto,
         sap: req.body.sap,
+        program_id: req.body.program_id,
         cuifinanciamiento1: req.body.cuifinanciamiento1,
         porcentaje1: porcentaje1,
         cuifinanciamiento2: req.body.cuifinanciamiento2,
@@ -390,6 +391,7 @@ exports.action = function (req, res) {
       models.presupuestoenvuelo.update({
         nombreproyecto: req.body.nombreproyecto,
         sap: req.body.sap,
+        program_id: req.body.program_id,
         cuifinanciamiento1: req.body.cuifinanciamiento1,
         porcentaje1: porcentaje1,
         cuifinanciamiento2: req.body.cuifinanciamiento2,

@@ -59,7 +59,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/tareaenvuelo/" + parentRowKey;
+    var childGridURL = "/tareaenvuelo/list/" + parentRowKey;
 
     var modelTareaEnVuelo = [
         {
@@ -452,7 +452,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/tareaenvuelo/action',
+        //editurl: '/tareaenvuelo/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -471,6 +471,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             editCaption: "Modificar Tarea",
+            url: '/tareaenvuelo/action',
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -550,9 +551,9 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
                         }
                     });
                     //}, 1000);
-                    sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                     //$('input#codigoart', form).attr('readonly', 'readonly');
                 }, 1000);
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -561,6 +562,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         {
             closeAfterAdd: true,
             recreateForm: true,
+            mtype: "POST",
+            url: '/tareaenvuelo/action',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Tarea",

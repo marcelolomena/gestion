@@ -11,20 +11,24 @@ module.exports = function (passport) {
     router.get('/presupuestoenvuelo', isAuthenticated, function (req, res) {
         res.render('presupuestoenvuelo', { user: req.user });
     });
+
     router.route('/presupuestoenvuelo/list')
         .post(isAuthenticated, presupuestoenvueloController.list);
 
     router.route('/presupuestoenvuelo/action')
         .post(isAuthenticated, presupuestoenvueloController.action);
 
-    router.route('/tareaenvuelo/:id')
+    router.route('/tareaenvuelo/list/:id')
         .post(isAuthenticated, tareaenvueloController.list);
 
-    router.route('/flujopagoenvuelo/:id')
+    router.route('/tareaenvuelo/action')
+        .post(isAuthenticated, tareaenvueloController.action)
+
+    router.route('/flujopagoenvuelo/list/:id')
         .post(isAuthenticated, flujopagoenvueloController.list);
 
-
-
+    router.route('/flujopagoenvuelo/action')
+        .post(isAuthenticated, flujopagoenvueloController.action)
 
     return router;
 

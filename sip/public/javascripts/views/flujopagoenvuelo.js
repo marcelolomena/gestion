@@ -43,7 +43,7 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/flujopagoenvuelo/" + parentRowKey;
+    var childGridURL = "/flujopagoenvuelo/list/" + parentRowKey;
 
     var modelFlujoPagoEnVuelo = [
         {
