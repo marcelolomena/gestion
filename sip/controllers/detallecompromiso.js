@@ -35,27 +35,43 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            models.detallecompromiso.update({
-                periodo: req.body.periodo,
-                montoorigen: montoorigen,
-                costoorigen: costoorigen
-            }, {
-                where: {
-                    id: req.body.id
-                }
-                }).then(function (detalle) {
-                    res.json({ error_code: 0 });
+
+            var valMoneda = function (callback) {
+                models.monedasconversion.findAll({
+                    where: [{ idmoneda: req.body.idmoneda }, { periodo: req.body.periodo }]
+                }).then(function (monedasconversion) {
+                    callback(monedasconversion[0].valorconversion);
                 }).catch(function (err) {
                     console.log(err);
-                    res.json({ error_code: 1 });
                 });
+            }
+
+            valMoneda(function (conversion) {
+                //console.log("cococ : " + conversion)
+                models.detallecompromiso.update({
+                    periodo: req.body.periodo,
+                    montoorigen: montoorigen,
+                    montopesos: montoorigen * conversion,
+                    costoorigen: costoorigen,
+                    costopesos: costoorigen * conversion
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (detalle) {
+                        res.json({ error_code: 0 });
+                    }).catch(function (err) {
+                        console.log(err);
+                        res.json({ error_code: 1 });
+                    });
+            });
             break;
         case "del":
             models.detallecompromiso.destroy({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+            }).then(function (rowDeleted) {
                 if (rowDeleted === 1) {
                     console.log('Deleted successfully');
                 }

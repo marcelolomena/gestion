@@ -19,7 +19,7 @@ $(document).ready(function () {
             cellattr: function (rowId, val, rawObject, cm, rdata) {
                 var val = rawObject.idcui;
                 if (val > 0) {
-                    console.log(val)
+                    //console.log(val)
                     color = 'green';
                 } else {
                     color = 'red';
@@ -40,7 +40,7 @@ $(document).ready(function () {
         width: 600,
         shrinkToFit: true,
         viewrecords: true,
-        multiselect: true,
+        //multiselect: true,
         caption: 'Presupuestos para Hyperion',
         styleUI: "Bootstrap",
         onSelectRow: function (rowid, selected) {
@@ -73,12 +73,18 @@ $(document).ready(function () {
     $('#gridMaster').jqGrid('navButtonAdd', '#pagerMaster', {
         caption: "",
         buttonicon: "glyphicon glyphicon glyphicon-cog",
-        title: "Procesar",
+        title: "Procesar Hyperion",
         position: "last",
         onClickButton: function () {
             var grid = $("#gridMaster");
             var rowKey = grid.getGridParam("selrow");
 
+            //var grid = $('#gridDetail');
+            //var rowKey = grid.getGridParam("selrow");
+            var url = '/hyperion/csv';
+            $('#gridMaster').jqGrid('excelExport', { "url": url });
+        
+/*
             if (!rowKey)
                 alert("No hay filas seleccionadas");
             else {
@@ -90,6 +96,7 @@ $(document).ready(function () {
 
                 alert(result);
             }
+*/            
         }
     });
 
@@ -135,7 +142,8 @@ $(document).ready(function () {
     $('#gridDetail').jqGrid('navGrid', '#pagerDetail', {
         edit: false,
         add: false,
-        del: false
+        del: false,
+        search:false
     },
         {},
         {},
@@ -145,12 +153,12 @@ $(document).ready(function () {
     $('#gridDetail').jqGrid('navButtonAdd', '#pagerDetail', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Excel",
+        title: "Exportar Hyperion",
         position: "last",
         onClickButton: function () {
             var grid = $('#gridDetail');
             var rowKey = grid.getGridParam("selrow");
-            var url = '/hyperion/excel';
+            var url = '/hyperion/csv';
             $('#gridDetail').jqGrid('excelExport', { "url": url });
         }
     });

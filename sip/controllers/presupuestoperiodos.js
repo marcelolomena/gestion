@@ -232,20 +232,17 @@ exports.action = function (req, res) {
         console.log("No se puede agregar");
       break;
     case "edit":
-      console.log("Edit:"+req.body.presupuestopesos);
-      models.detalleplan.update({
-        presupuestopesos: req.body.presupuestopesos,
-        periodo:req.body.periodo
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
+      console.log("Edit:"+req.body.id+","+req.body.presupuestoorigen+","+req.body.periodo);
+      sequelize.query('EXECUTE sip.spActualizaPeriodoPresup ' + req.body.id
+        + "," + req.body.presupuestoorigen
+        + "," + req.body.periodo
+        + "," + req.body.idx        
+        + ';').then(function (response) {
           res.json({ error_code: 0 });
-        }).catch(function (err) {
-          console.log(err);
-          res.json({ error_code: 1 });
-        });
+        }).error(function (err) {
+          res.json(err);
+        });       
+    
       break;
     case "del":
       console.log("No se puede eliminar");

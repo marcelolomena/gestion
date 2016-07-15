@@ -1,26 +1,140 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 
-exports.excel = function (req, res) {
-    var conf = {}
-    conf.cols = [{
-        caption: 'Id Contrato',
-        type: 'number',
-        width: 3
-    },
-        {
-            caption: 'Contrato',
-            type: 'string',
-            width: 50
-        },
-        {
-            caption: 'Solicitud',
-            type: 'string',
-            width: 30
+exports.csv = function (req, res) {
+
+    var sql_head_0 = `SELECT cuentacontable 'cuenta',gerencia 'gerencia',departamento 'departamento',seccion 'seccion', `
+
+    var sql_body_1 = `
+                            SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.presupuestopesos FROM 
+                            (
+                            SELECT f.cuentacontable, c.cui, 
+                                                        d.periodo,
+                                                        d.presupuestopesos
+                                                        FROM sip.presupuesto a
+                                                        JOIN sip.detallepre b ON a.id = b.idpresupuesto
+                                                        JOIN sip.estructuracui c ON a.idcui = c.id
+                                                        JOIN sip.detalleplan d ON d.iddetallepre = b.id
+                                                        JOIN sip.servicio e ON b.idservicio=e.id
+                                                        JOIN sip.cuentascontables f ON e.idcuenta=f.id
+                                                        WHERE a.estado='Aprobado' AND a.idcui in (SELECT idcui FROM sip.presupuesto where estado = 'Aprobado') AND d.periodo BETWEEN :min AND :max
+                            ) M
+                            JOIN
+                            (
+                            SELECT J.gerencia,J.departamento,J.seccion,J.cui,K.idcui FROM
+                            (
+                            SELECT gerencia,departamento,seccion,max(cui) cui FROM
+                            (
+                            SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion, NULL cui FROM 
+                            (
+                            SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+                            ) X LEFT OUTER JOIN 
+                            (
+                            SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+                            (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+                            ON C.cuipadre = D.cui
+                            ) Y
+                            ON X.cui=Y.cuipadre
+                            UNION
+                            SELECT * FROM
+                            (
+                            SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+                            (
+                            SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+                            ) R
+                            RIGHT OUTER JOIN 
+                            (
+                            SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+                            (
+                            SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+                            ) X LEFT OUTER JOIN 
+                            (
+                            SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+                            (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+                            ON C.cuipadre = D.cui
+                            ) Y
+                            ON X.cui=Y.cuipadre
+                            ) S
+                            ON R.cuipadre=S.gerencia AND R.cui = departamento
+                            UNION 
+                            SELECT S.gerencia,S.departamento,S.seccion,R.cui FROM 
+                            (
+                            SELECT B.cui,B.cuipadre FROM sip.presupuesto A JOIN sip.estructuracui B ON A.idcui = B.id WHERE A.estado='Aprobado'
+                            ) R
+                            RIGHT OUTER JOIN 
+                            (
+                            SELECT X.cuipadre gerencia, X.cui departamento,Y.cui seccion FROM 
+                            (
+                            SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900
+                            ) X LEFT OUTER JOIN 
+                            (
+                            SELECT C.cui,C.cuipadre FROM sip.estructuracui C JOIN 
+                            (SELECT A.cui,A.cuipadre FROM sip.estructuracui A JOIN sip.estructuracui B ON A.cuipadre = B.cui WHERE B.cuipadre=1900 ) D
+                            ON C.cuipadre = D.cui
+                            ) Y
+                            ON X.cui=Y.cuipadre
+                            ) S
+                            ON R.cuipadre=S.departamento AND R.cui = seccion
+                            ) W
+                            WHERE cui IS NOT NULL
+                            ) W
+                            GROUP BY gerencia, departamento,seccion
+                            ) J
+                            LEFT OUTER JOIN
+                            (
+                            SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado'
+                            ) K
+                            ON J.cui = K.cui
+                            ) N
+                            ON M.cui = N.cui                   
+                    `
+    var sql_body_0 = ` FROM 
+                    (
+                    `
+    var sql_body_2 = ` ) x 
+                            PIVOT 
+                            ( 
+                            SUM(presupuestopesos) 
+                            FOR periodo IN (`
+
+    var sql_tail = `  )   ) p `
+
+    var year = (new Date).getFullYear();
+
+    utilSeq.getPeriodRange(year, function (err, range) {
+        var acum = ''
+        var min = range[0]
+        var max = range[range.length - 1]
+        for (var i = 0; i < range.length; i++) {
+            acum += '[' + range[i] + ']'
+            if (i < range.length - 1)
+                acum += ','
         }
-    ];
+
+        sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail, { replacements: { periodos: acum, min: min, max: max }, type: sequelize.QueryTypes.SELECT }
+        ).then(function (rows) {
+            /*
+            var json = JSON.stringify(rows).replace(/"(\w+)"\s*:/g, '$1:');
+            console.log(json);
+            try {
+                var rson=JSON.parse(json)
+                console.dir(rson)
+            } catch (e) {
+                console.log(e);
+            }
+            */
+            var csv = utilSeq.JSON2CSV(rows)
+            var hdr = 'attachment; filename=hyperion_' + Math.floor(Date.now()) + '.csv'
+            res.setHeader('Content-disposition', hdr);
+            res.set('Content-Type', 'text/csv');
+            res.status(200).send(csv);
+        }).catch(function (err) {
+            res.json({ error_code: 1 });
+        });
+
+
+    });
 
 }
 
@@ -36,7 +150,6 @@ exports.listcui = function (req, res) {
                 model: models.ejercicios, attributes: ['ejercicio']
             }]
     }).then(function (presupuesto) {
-        //console.dir(presupuesto[0])
         res.json(presupuesto);
     }).catch(function (err) {
         console.log(err)
@@ -56,7 +169,6 @@ exports.presupuesto = function (req, res) {
                 model: models.ejercicios, attributes: ['ejercicio']
             }]
     }).then(function (presupuesto) {
-        //console.dir(presupuesto[0])
         res.json(presupuesto);
     }).catch(function (err) {
         console.log(err)
@@ -75,7 +187,6 @@ exports.colnames = function (req, res) {
 
     models.presupuesto.findAll({
         attributes: ['id'],
-        //limit: 1,
         where: [{ 'estado': 'Aprobado' }, { 'idcui': 59 }],
         include: [
             {
@@ -91,7 +202,6 @@ exports.colnames = function (req, res) {
             }
         ],
     }).then(function (presupuesto) {
-        //console.dir(presupuesto[0])
         res.json(presupuesto);
     }).catch(function (err) {
         console.log(err)
@@ -213,8 +323,6 @@ exports.list2 = function (req, res) {
     var cui = req.body.cui;
     var idcui = req.body.idcui;
     var estado = 'Aprobado'
-    var ssql
-
     var nothing = []
 
     var yearExercise = function (id, callback) {
@@ -244,14 +352,11 @@ exports.list2 = function (req, res) {
                     var acum = ''
                     var min = range[0]
                     var max = range[range.length - 1]
-                    //console.log(min)
-                    //console.log(max)
                     for (var i = 0; i < range.length; i++) {
                         acum += '[' + range[i] + ']'
                         if (i < range.length - 1)
                             acum += ','
                     }
-                    //console.log(acum)
                     var sql_head_0 = `SELECT cuentacontable,gerencia,departamento,seccion `
 
                     var sql_body_1 = `
@@ -337,12 +442,9 @@ exports.list2 = function (req, res) {
                             ) N
                             ON M.cui = N.cui                   
                     `
-
-
                     var sql_body_0 = ` FROM 
                     (
                     `
-
                     var sql_body_2 = ` ) x 
                             PIVOT 
                             ( 
@@ -391,15 +493,10 @@ exports.list = function (req, res) {
             ssql = "BETWEEN " + searchString + "09 AND " + (parseInt(searchString) + 1) + "12 "
         } else if (searchField === 'cui') {
             cui = parseInt(searchString)
-            console.log("la super cui ----------->> " + cui)
         }
     } else if (_search == 'false') {
-        console.log("ano ----------->> " + ano)
         ssql = "BETWEEN " + ano.toString() + "09 AND " + (ano + 1) + "12 "
-        console.log("ssql ----------->> " + ssql)
     }
-
-    //console.log(ssql)
 
     var sql = "DECLARE @cols AS NVARCHAR(MAX), @query  AS NVARCHAR(MAX), @ano AS NVARCHAR(4)= :ano; " +
         "SELECT @cols = STUFF((SELECT ',' + QUOTENAME(d.periodo) " +
