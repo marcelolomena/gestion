@@ -455,6 +455,12 @@ exports.action = function (req, res) {
                       + "," + servicio[i].idmoneda
                       + "," + servicio[i].montoforecast
                       + "," + servicio[i].montoanual
+                      + "," + servicio[i].cuota
+                      + "," + servicio[i].numerocuota
+                      + "," + servicio[i].desde
+                      + "," + servicio[i].masiva
+                      + "," + servicio[i].mesesentrecuotas
+                      + "," + servicio[i].gastodiferido                                    
                       + ';').then(function (response) {
                       }).error(function (err) {
                         res.json(err);

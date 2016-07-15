@@ -951,7 +951,6 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 var rowKey = grid.getGridParam("selrow");
                 var idxsel = grid.getInd(rowKey);
                 var rowData = grid.getRowData(rowKey);
-                alert("idx:"+idxsel);
                 postdata.idx = idxsel;
                 //var num = new Number(rowData.presupuestoorigen);
                 //if (isNaN(num)) {
@@ -961,6 +960,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             },            
         }, {}
     );
+    /*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: "glyphicon glyphicon-pencil",
@@ -1001,7 +1001,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 }
             });
         }
-    });
+    });*/
 }
 
 function loadGrid(parentID) {

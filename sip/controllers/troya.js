@@ -105,6 +105,7 @@ exports.getfacturas = function (req, res) {
 
 exports.getDetalle = function (req, res) {
   var id = req.params.id
+  var prov = req.params.prov
   
   var sql = "With SQLPaging As   (  "+ 
     "SELECT cuiseccion, nombrecentrocosto, cuentacontable, nombrecuentaorigen, min(id) AS id, sum(monto) as monto "+
