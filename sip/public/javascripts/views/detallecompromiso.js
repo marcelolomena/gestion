@@ -23,7 +23,7 @@ function gridDetail(parentRowID, parentRowKey) {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        autowidth: true,  
+        autowidth: true,
         shrinkToFit: false,
         caption: 'Compromisos',
         colModel: [
@@ -74,9 +74,10 @@ function gridDetail(parentRowID, parentRowKey) {
         }
     });
 
-    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, { 
-        edit: false, add: true, del: true, search: false, refresh: true, 
-        view: false, position: "left", cloneToTop: false },
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: false, add: true, del: true, search: false, refresh: true,
+        view: false, position: "left", cloneToTop: false
+    },
         {
         },
         {
@@ -111,6 +112,7 @@ function gridDetail(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
+
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
@@ -145,10 +147,31 @@ function gridDetail(parentRowID, parentRowKey) {
         onClickButton: function () {
             var subgrid = $("#" + childGridID);
             var ids = subgrid.jqGrid('getDataIDs');
-            for (var i = 0; i < ids.length; i++) {
-                subgrid.jqGrid('saveRow', ids[i]);
+            var parentTable = "grid_" + parentRowID.split("_")[1] + "_t";
+            var parentGrid = $('#' + parentTable);
+            var parentRowData = parentGrid.getRowData(parentRowKey);
+            var extraparam = {
+                pk: parentRowKey,
+                valorcuota: parentRowData.valorcuota,
+                idmoneda: parentRowData.idmoneda,
+                impuesto: parentRowData.impuesto,
+                factorimpuesto: parentRowData.factorimpuesto
             }
-            subgrid.trigger( 'reloadGrid' );
+
+            saveparameters = {
+                "successfunc": null,
+                "url": null,
+                "extraparam": extraparam,
+                "aftersavefunc": null,
+                "errorfunc": null,
+                "afterrestorefunc": null,
+                "restoreAfterError": true,
+                "mtype": "POST"
+            }
+            for (var i = 0; i < ids.length; i++) {
+                subgrid.jqGrid('saveRow', ids[i], saveparameters);
+            }
+            subgrid.trigger('reloadGrid');
         }
     });
 
