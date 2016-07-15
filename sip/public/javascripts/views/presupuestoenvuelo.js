@@ -541,6 +541,6 @@ $(document).ready(function () {
     $("#pager_iniciativa_left").css("width", "");
     function showSubGrids(subgrid_id, row_id) {
         gridTareaEnVuelo(subgrid_id, row_id, 'tareaenvuelo');
-        //gridIniciativaFecha(subgrid_id, row_id, 'fecha');
+        gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
     }
 });
