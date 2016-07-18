@@ -7,11 +7,11 @@ exports.csv = function (req, res) {
     var sql_head_0 = `SELECT cuentacontable 'cuenta',gerencia 'gerencia',departamento 'departamento',seccion 'seccion', `
 
     var sql_body_1 = `
-                            SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.presupuestopesos FROM 
+                            SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.totalcosto FROM 
                             (
                             SELECT f.cuentacontable, c.cui, 
                                                         d.periodo,
-                                                        d.presupuestopesos
+                                                        d.totalcosto
                                                         FROM sip.presupuesto a
                                                         JOIN sip.detallepre b ON a.id = b.idpresupuesto
                                                         JOIN sip.estructuracui c ON a.idcui = c.id
@@ -95,7 +95,7 @@ exports.csv = function (req, res) {
     var sql_body_2 = ` ) x 
                             PIVOT 
                             ( 
-                            SUM(presupuestopesos) 
+                            SUM(totalcosto) 
                             FOR periodo IN (`
 
     var sql_tail = `  )   ) p `
@@ -348,6 +348,7 @@ exports.list2 = function (req, res) {
     if (idcui > 0) {
         yearExercise(idcui, function (err, year) {
             if (year) {
+                console.log(year)
                 utilSeq.getPeriodRange(year - 1, function (err, range) {
                     var acum = ''
                     var min = range[0]
@@ -357,14 +358,15 @@ exports.list2 = function (req, res) {
                         if (i < range.length - 1)
                             acum += ','
                     }
+                    console.dir(acum) 
                     var sql_head_0 = `SELECT cuentacontable,gerencia,departamento,seccion `
 
                     var sql_body_1 = `
-                            SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.presupuestopesos FROM 
+                            SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.totalcosto FROM 
                             (
                             SELECT f.cuentacontable, c.cui, 
                                                         d.periodo,
-                                                        d.presupuestopesos
+                                                        d.totalcosto
                                                         FROM sip.presupuesto a
                                                         JOIN sip.detallepre b ON a.id = b.idpresupuesto
                                                         JOIN sip.estructuracui c ON a.idcui = c.id
@@ -448,7 +450,7 @@ exports.list2 = function (req, res) {
                     var sql_body_2 = ` ) x 
                             PIVOT 
                             ( 
-                            SUM(presupuestopesos) 
+                            SUM(totalcosto) 
                             FOR periodo IN (`
 
                     var sql_tail = `  )   ) p `
@@ -516,7 +518,7 @@ exports.list = function (req, res) {
         "f.cuentacontable, c.cui, c.cuipadre, " +
         "' + @ano + ' ano, " +
         "d.periodo, " +
-        "d.presupuestopesos " +
+        "d.totalcosto " +
         "FROM sip.presupuesto a " +
         "JOIN sip.detallepre b ON a.id = b.idpresupuesto " +
         "JOIN sip.estructuracui c ON a.idcui = c.id " +
@@ -527,7 +529,7 @@ exports.list = function (req, res) {
         ") x " +
         "PIVOT " +
         "( " +
-        "SUM(presupuestopesos) " +
+        "SUM(totalcosto) " +
         "FOR periodo IN (' + @cols + ') " +
         ") p ' execute(@query);";
 
