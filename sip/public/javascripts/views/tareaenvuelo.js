@@ -408,20 +408,10 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         {
             label: 'N° Contrato', name: 'numerocontrato', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
-            editoptions: {
-                dataInit: function (element) {
-                    $(element).mask("0000", { placeholder: "____" });
-                }
-            },
         },
         {
             label: 'N° Sol. Contrato', name: 'numerosolicitudcontrato', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
-            editoptions: {
-                dataInit: function (element) {
-                    $(element).mask("0000", { placeholder: "____" });
-                }
-            },
         },
       
 
@@ -607,6 +597,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         {
             closeAfterDelete: true,
             recreateForm: true,
+            url: '/tareaenvuelo/action',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Eliminar Presupuesto Iniciativa",

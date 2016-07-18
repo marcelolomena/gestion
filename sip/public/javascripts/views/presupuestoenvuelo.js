@@ -69,6 +69,7 @@ $(document).ready(function () {
         {
             label: 'SAP', name: 'sap', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
+            editrules: { required: true },
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
@@ -441,7 +442,21 @@ $(document).ready(function () {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
-                } else {
+                } if (postdata.uidpmoresponsable == 0) {
+                    return [false, "PMO Responsable: Campo obligatorio", ""];
+                } if (postdata.program_id == 0) {
+                    return [false, "Programa ART: Campo obligatorio", ""];
+                }
+                var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
+                //console.log('porcentaje1: ' + elporcentaje1);
+                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                //console.log('porcentaje2: ' + elporcentaje2);
+                var lasuma = elporcentaje1 + elporcentaje2;
+                //console.log('total: ' + lasuma);
+                if (lasuma != 1) {
+                    return [false, "Porcentajes no suman 1", ""];
+                }
+                else {
                     return [true, "", ""]
                 }
             },
@@ -453,6 +468,7 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
+                $('input#codigoart', form).attr('readonly', 'readonly');
                 var grid = $("#table_iniciativa");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
@@ -504,6 +520,29 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.uidlider == 0) {
+                    return [false, "Lider: Campo obligatorio", ""];
+                } if (postdata.uidjefeproyecto == 0) {
+                    return [false, "Jefe de Proyecto: Campo obligatorio", ""];
+                } if (postdata.uidpmoresponsable == 0) {
+                    return [false, "PMO Responsable: Campo obligatorio", ""];
+                } if (postdata.program_id == 0) {
+                    return [false, "Programa ART: Campo obligatorio", ""];
+                }
+                var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
+                //console.log('porcentaje1: ' + elporcentaje1);
+                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                //console.log('porcentaje2: ' + elporcentaje2);
+                var lasuma = elporcentaje1 + elporcentaje2;
+                //console.log('total: ' + lasuma);
+                if (lasuma != 1) {
+                    return [false, "Porcentajes no suman 1", ""];
+                }
+                else {
+                    return [true, "", ""]
+                }
+            },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -516,6 +555,7 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+                $('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
