@@ -205,6 +205,11 @@ function showDetalle(parentRowID, parentRowKey) {
         mtype: "GET",
         datatype: "json",
         page: 1,
+        postData: {
+            proveedor : function () {
+                return proveedorx;
+            }                                    
+        },             
         colModel: [
                    { label: 'id',
                       name: 'id',

@@ -171,6 +171,7 @@ function showDocumentos(proveedor) {
 var leida2=false;
 
 function loadGrid2(cui, proveedor) {
+     proveedorcui=proveedor;
     //alert('showDocumentos:'+cui+","+proveedor+","+factura+", "+ fechaini+", "+fechafin);
 	var url = "/grillafacturascuiproveedor";
 	var formatter = new Intl.NumberFormat();
@@ -182,7 +183,10 @@ function loadGrid2(cui, proveedor) {
 	}
 }
 
+var proveedorcui;
+
 function showDetalleCUI(cui, proveedor) {
+
     
     var childGridURL = "/grillafacturascuiproveedor";   
     $("#grid2").jqGrid({
@@ -290,7 +294,8 @@ function showDetalleCUI(cui, proveedor) {
 function showDetalle(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-
+    
+    console.log("Proveedor:"+proveedorcui);
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/troyadetalle/" + parentRowKey;
 
@@ -302,6 +307,11 @@ function showDetalle(parentRowID, parentRowKey) {
         mtype: "GET",
         datatype: "json",
         page: 1,
+        postData: {
+            proveedor : function () {
+                return proveedorcui;
+            }                                    
+        },           
         colModel: [
                    { label: 'id',
                       name: 'id',
