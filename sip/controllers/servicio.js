@@ -165,6 +165,16 @@ exports.getExcel = function (req, res) {
       width: 50
     },
     {
+      caption: 'agrupacionsap',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'secuenciasap',
+      type: 'number',
+      width: 50
+    },    
+    {
       caption: 'Cuenta Contable',
       type: 'string',
       width: 50
@@ -176,9 +186,10 @@ exports.getExcel = function (req, res) {
     }
   ];
   
- var sql = "SELECT a.id, a.nombre, a.tarea "+
+ var sql = "SELECT a.id, a.nombre, a.tarea,a.agrupacionsap,a.secuenciasap "+
     ",b.cuentacontable,b.nombrecuenta "+
-    "FROM sip.servicio a left join sip.cuentascontables b on a.idcuenta = b.id order by a.nombre"
+    "FROM sip.servicio a left join sip.cuentascontables b on a.idcuenta = b.id "+
+    "Where a.borrado = 1 order by a.nombre"
     
     sequelize.query(sql)
       .spread(function (servicio) {
@@ -187,6 +198,8 @@ exports.getExcel = function (req, res) {
 
         a = [i + 1, servicio[i].nombre,
           servicio[i].tarea,
+          servicio[i].agrupacionsap,
+          servicio[i].secuenciasap,
           servicio[i].cuentacontable,
           servicio[i].nombrecuenta
         ];
