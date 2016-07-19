@@ -227,10 +227,10 @@ exports.list = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
     "FROM [sip].[presupuestoenvuelo] a " +
-	   "JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
-	   "JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
-    "JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
-    "JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
+	   " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
+	   " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
+    " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
+    " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
     "WHERE (a.[borrado] = 1) " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -252,11 +252,12 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo " +
+        "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
         "FROM [sip].[presupuestoenvuelo] a " +
-        "JOIN [dbo].[art_user] lider  ON a.[uidpmoresponsable] = lider.[uid] " +
-        "JOIN [dbo].[art_user] pmo  ON a.[uidlider] = pmo.[uid] " +
-        "JOIN  [dbo].[art_user] jefeproyecto  ON a.uidjefeproyecto = jefeproyecto.[uid] " +
+        " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
+        " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
+        " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
+        " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
         "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 

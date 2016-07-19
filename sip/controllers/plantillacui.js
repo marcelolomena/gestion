@@ -21,7 +21,7 @@ exports.getCuiProveedores = function (req, res) {
   var idservicio = req.params.idservicio;
   
   var sql = "SELECT b.id, b.razonsocial FROM sip.proveedor b "+
-   "Where b.id not in (Select a.idproveedor from sip.plantillapresupuesto a where a.idcui="+idcui+" and a.idservicio ="+idservicio+") "
+   "Where b.id not in (Select a.idproveedor from sip.plantillapresupuesto a where a.idcui="+idcui+" and a.idservicio ="+idservicio+") "+
    "ORDER BY b.razonsocial";
       
   sequelize.query(sql)

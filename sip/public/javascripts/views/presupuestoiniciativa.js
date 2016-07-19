@@ -319,7 +319,17 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
-                } else {
+                } 
+                var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
+                //console.log('porcentaje1: ' + elporcentaje1);
+                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                //console.log('porcentaje2: ' + elporcentaje2);
+                var lasuma = elporcentaje1 + elporcentaje2;
+                //console.log('total: ' + lasuma);
+                if (lasuma != 1) {
+                    return [false, "Porcentajes no suman 1", ""];
+                }
+                else {
                     return [true, "", ""]
                 }
             },
@@ -364,9 +374,20 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
-                } else {
+                } 
+                var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
+                //console.log('porcentaje1: ' + elporcentaje1);
+                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                //console.log('porcentaje2: ' + elporcentaje2);
+                var lasuma = elporcentaje1 + elporcentaje2;
+                //console.log('total: ' + lasuma);
+                if (lasuma != 1) {
+                    return [false, "Porcentajes no suman 1", ""];
+                }
+                else {
                     return [true, "", ""]
                 }
+                
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;

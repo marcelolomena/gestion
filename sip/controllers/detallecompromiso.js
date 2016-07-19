@@ -107,12 +107,15 @@ exports.list = function (req, res) {
     }];
 
     var buscaParamValue = function (detallecto, callback) {
-        return models.Parametro.find({
+        return models.parametro.find({
             where: { id: detallecto.idfrecuencia }
         }).then(function (param) {
+            console.dir("No entra!!!")
             utilSeq.getDateRange(detallecto.fechainicio, function (err, range) {
                 callback([param.valor, range])
             });
+        }).catch(function (err) {
+            console.log("Que paso?> " + err);
         });
     }
 
@@ -120,7 +123,9 @@ exports.list = function (req, res) {
         models.detalleserviciocto.find({
             where: { id: req.params.id }
         }).then(function (detallecto) {
+            console.dir(detallecto)
             buscaParamValue(detallecto, function (param) {
+
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = []
                     for (var i = 0; i < param[0]; i++) {
