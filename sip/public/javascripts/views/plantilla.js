@@ -45,7 +45,7 @@ $(document).ready(function () {
     $("#grid").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: false, add: false, del: false, search: true,
+        edit: false, add: false, del: false, search: false,
         refresh: true, view: true, position: "left", cloneToTop: false
     },
         {
@@ -204,7 +204,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     $("#" + childGridID).jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: true, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
