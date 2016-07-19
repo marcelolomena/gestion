@@ -557,21 +557,25 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.idcui == 0) {
+
+                if (postdata.fechainicio.trim() == "")
+                    postdata.fechainicio = null
+
+                if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
-                } if (postdata.idservicio == 0) {
+                } if (parseInt(postdata.idservicio) == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
-                } if (postdata.idfrecuencia == 0) {
+                } if (parseInt(postdata.idfrecuencia) == 0) {
                     return [false, "Frecuencia: Debe escoger un valor", ""];
-                } if (postdata.idplazocontrato == 0) {
+                } if (parseInt(postdata.idplazocontrato) == 0) {
                     return [false, "Plazo: Debe escoger un valor", ""];
-                } if (postdata.idcondicion == 0) {
+                } if (parseInt(postdata.idcondicion) == 0) {
                     return [false, "Condición: Debe escoger un valor", ""];
-                } if (postdata.idestadocto == 0) {
+                } if (parseInt(postdata.idestadocto) == 0) {
                     return [false, "Estado: Debe escoger un valor", ""];
-                } if (postdata.idcontactoproveedor == 0) {
+                } if (parseInt(postdata.idcontactoproveedor) == 0) {
                     return [false, "Contacto: Debe escoger un valor", ""];
-                } if (postdata.idmoneda == 0) {
+                } if (parseInt(postdata.idmoneda) == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
@@ -945,7 +949,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                             $("input#plazocontrato").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Plazo', name: 'plazocontrato', search: true, editable: true, hidden: false,
@@ -1051,7 +1055,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                             $("input#estadocontrato").val($('option:selected', this).text());
                         }
                     }],
-                }, dataInit: function (elem) {/* $(elem).width(200);*/ }
+                }
             },
             {
                 label: 'Estado', name: 'estadocontrato', width: 150, align: 'left', search: true, editable: true, hidden: false,
