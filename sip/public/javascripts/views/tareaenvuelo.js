@@ -528,7 +528,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
                         url: '/proveedorporcui/' + thisidcui + '/' + thisidservicio,
                         success: function (data) {
                             var s = "<select>";
-                            s += '<option value="0">--Escoger CUI--</option>';
+                            s += '<option value="0">--Escoger Proveedor--</option>';
                             $.each(data, function (i, item) {
                                 if (data[i].idproveedor == thisidproveedor) {
                                     s += '<option value="' + data[i].idproveedor + '" selected>' + data[i].razonsocial + '</option>';
