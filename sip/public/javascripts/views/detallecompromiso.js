@@ -20,7 +20,7 @@ function gridDetail(parentRowID, parentRowKey) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        rowNum: 20,
+        rowNum: 100,
         regional: 'es',
         height: 'auto',
         autowidth: true,

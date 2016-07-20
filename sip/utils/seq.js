@@ -96,6 +96,50 @@ module.exports = (function () {
         }
         callback(undefined, range);
     }
+    var getMonthRange = function (startDate, endDate, callback) {
+        var range = [];
+        try {
+            var iDate = startDate.toISOString().slice(0, 10).split("-");
+            var eDate = endDate.toISOString().slice(0, 10).split("-");
+            var iniDate = new Date(parseInt(iDate[0]), parseInt(iDate[1]) - 1, 15);
+            var endDate = new Date(parseInt(eDate[0]), parseInt(eDate[1]) - 1, 15);
+
+            while (iniDate.getTime() < endDate.getTime()) {
+                var mes = parseInt(iniDate.getMonth()) + 1
+                var mm = mes < 10 ? '0' + mes : mes;
+                var period = iniDate.getFullYear() + '' + mm;
+                range.push(parseInt(period));
+                iniDate.setTime(iniDate.getTime() + 86400000 * 30);//1 mes
+            }
+
+        } catch (e) {
+            return callback(e);
+        }
+        callback(undefined, range);
+    }
+    var getYearRange = function (startDate, endDate, callback) {
+        var range = [];
+        try {
+            var iDate = startDate.toISOString().slice(0, 10).split("-");
+            var eDate = endDate.toISOString().slice(0, 10).split("-");
+            var iYear = parseInt(iDate[0]);
+            var eYear = parseInt(eDate[0]);
+            var largo = eYear - iYear;
+            var iniDate = new Date(parseInt(iDate[0]), parseInt(iDate[1]) - 1, 15);
+            //var endDate = new Date(parseInt(eDate[0]) + 1, parseInt(eDate[1]) - 1, 15);
+
+            for (var i = 0; i <= largo; i++) {
+                var mes = parseInt(iniDate.getMonth()) + 1
+                var mm = mes < 10 ? '0' + mes : mes;
+                var agno = iYear + i;
+                var period = agno + '' + mm;
+                range.push(parseInt(period));
+            }
+        } catch (e) {
+            return callback(e);
+        }
+        callback(undefined, range);
+    }
     var getPeriodRange = function (currentYear, callback) {
         var period = [];
         try {
@@ -151,6 +195,8 @@ module.exports = (function () {
         buildCondition: buildCondition,
         buildAdditionalCondition: buildAdditionalCondition,
         getDateRange: getDateRange,
+        getMonthRange: getMonthRange,
+        getYearRange:getYearRange,
         getPeriodRange: getPeriodRange,
         JSON2CSV: JSON2CSV
     };

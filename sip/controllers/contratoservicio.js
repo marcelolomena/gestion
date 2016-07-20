@@ -8,17 +8,6 @@ exports.action = function (req, res) {
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
 
-    if (action != "del") {
-        if (valorcuota != "")
-            valorcuota = valorcuota.split(".").join("").replace(",", ".")
-
-        if (impuesto != "")
-            impuesto = impuesto.split(".").join("").replace(",", ".")
-
-        if (factorimpuesto != "")
-            factorimpuesto = factorimpuesto.split(".").join("").replace(",", ".")
-    }
-
     switch (action) {
         case "add":
             //var factor = req.body.impuesto == 1 ? 1.19 : 1;
@@ -70,44 +59,111 @@ exports.action = function (req, res) {
             });
             break;
         case "edit":
-            models.detalleserviciocto.update({
-                idcontrato: req.body.idcontrato,
-                anexo: req.body.anexo,
-                idcui: req.body.idcui,
-                idservicio: req.body.idservicio,
-                //servicio: req.body.servicio,
-                idcuenta: req.body.idcuenta,
-                cuentacontable: req.body.cuentacontable,
-                sap: req.body.sap,
-                tarea: req.body.tarea,
-                codigoart: req.body.codigoart,
-                fechainicio: req.body.fechainicio,
-                fechatermino: req.body.fechatermino,
-                fechacontrol: req.body.fechacontrol,
-                valorcuota: req.body.valorcuota,
-                idmoneda: req.body.idmoneda,
-                idfrecuencia: req.body.idfrecuencia,
-                frecuenciafacturacion: req.body.frecuenciafacturacion,
-                idplazocontrato: req.body.idplazocontrato,
-                plazocontrato: req.body.plazocontrato,
-                idcondicion: req.body.idcondicion,
-                condicionnegociacion: req.body.condicionnegociacion,
-                impuesto: impuesto,
-                factorimpuesto: factorimpuesto,
-                idcontactoproveedor: req.body.idcontactoproveedor,
-                idestadocto: req.body.idestadocto,
-                estadocontrato: req.body.estadocontrato,
-                glosaservicio: req.body.glosaservicio
-            }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (contrato) {
-                    res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    console.log(err);
-                    res.json({ error_code: 1 });
-                });
+            models.detalleserviciocto.find({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (detallecto) {
+                if (detallecto.idfrecuencia == req.body.idfrecuencia) {
+                    console.log("no hay que hacer nada")
+                    models.detalleserviciocto.update({
+                        idcontrato: req.body.idcontrato,
+                        anexo: req.body.anexo,
+                        idcui: req.body.idcui,
+                        idservicio: req.body.idservicio,
+                        idcuenta: req.body.idcuenta,
+                        cuentacontable: req.body.cuentacontable,
+                        sap: req.body.sap,
+                        tarea: req.body.tarea,
+                        codigoart: req.body.codigoart,
+                        fechainicio: req.body.fechainicio,
+                        fechatermino: req.body.fechatermino,
+                        fechacontrol: req.body.fechacontrol,
+                        valorcuota: req.body.valorcuota,
+                        idmoneda: req.body.idmoneda,
+                        idfrecuencia: req.body.idfrecuencia,
+                        frecuenciafacturacion: req.body.frecuenciafacturacion,
+                        idplazocontrato: req.body.idplazocontrato,
+                        plazocontrato: req.body.plazocontrato,
+                        idcondicion: req.body.idcondicion,
+                        condicionnegociacion: req.body.condicionnegociacion,
+                        impuesto: impuesto,
+                        factorimpuesto: factorimpuesto,
+                        idcontactoproveedor: req.body.idcontactoproveedor,
+                        idestadocto: req.body.idestadocto,
+                        estadocontrato: req.body.estadocontrato,
+                        glosaservicio: req.body.glosaservicio
+                    }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (contrato) {
+                            res.json({ error_code: 0 });
+                        }).catch(function (err) {
+                            console.log(err);
+                            res.json({ error_code: 1 });
+                        });
+                } else {
+                    console.log("ya existen periodos")
+
+                    console.log("voy a borrar el detallecompromiso con iddetalleserviciocto [" + req.body.id + "]")
+
+                    models.detallecompromiso.destroy({
+                        where: {
+                            iddetalleserviciocto: req.body.id
+                        }
+                    }).then(function (rowDeleted) {
+
+                        console.log('detalles borrados >>>>>>>>>>>>>> ' + rowDeleted);
+
+                        models.detalleserviciocto.update({
+                            idcontrato: req.body.idcontrato,
+                            anexo: req.body.anexo,
+                            idcui: req.body.idcui,
+                            idservicio: req.body.idservicio,
+                            idcuenta: req.body.idcuenta,
+                            cuentacontable: req.body.cuentacontable,
+                            sap: req.body.sap,
+                            tarea: req.body.tarea,
+                            codigoart: req.body.codigoart,
+                            fechainicio: req.body.fechainicio,
+                            fechatermino: req.body.fechatermino,
+                            fechacontrol: req.body.fechacontrol,
+                            valorcuota: req.body.valorcuota,
+                            idmoneda: req.body.idmoneda,
+                            idfrecuencia: req.body.idfrecuencia,
+                            frecuenciafacturacion: req.body.frecuenciafacturacion,
+                            idplazocontrato: req.body.idplazocontrato,
+                            plazocontrato: req.body.plazocontrato,
+                            idcondicion: req.body.idcondicion,
+                            condicionnegociacion: req.body.condicionnegociacion,
+                            impuesto: impuesto,
+                            factorimpuesto: factorimpuesto,
+                            idcontactoproveedor: req.body.idcontactoproveedor,
+                            idestadocto: req.body.idestadocto,
+                            estadocontrato: req.body.estadocontrato,
+                            glosaservicio: req.body.glosaservicio
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (contrato) {
+                                res.json({ error_code: 0 });
+                            }).catch(function (err) {
+                                console.log(err);
+                                res.json({ error_code: 1 });
+                            });
+
+                    }).catch(function (err) {
+                        console.log(err);
+                        res.json({ error_code: 1 });
+                    });
+
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+
             break;
         case "del":
             models.detallecompromiso.destroy({
@@ -296,7 +352,7 @@ exports.plantillapresupuesto = function (req, res) {
     });
 
 }
- 
+
 exports.cuiforservice = function (req, res) {
 
     models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
