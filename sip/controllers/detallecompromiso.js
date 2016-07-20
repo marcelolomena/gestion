@@ -47,7 +47,6 @@ exports.action = function (req, res) {
             }
 
             valMoneda(function (conversion) {
-                //console.log("cococ : " + conversion)
                 models.detallecompromiso.update({
                     periodo: req.body.periodo,
                     montoorigen: montoorigen,
@@ -146,8 +145,8 @@ exports.list = function (req, res) {
                         var newPromise = models.detallecompromiso.create({
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
-                            'montoorigen': valcuo + valcuo * valimp,
-                            'costoorigen': valcuo + valcuo * valimp * valfac,
+                            'montoorigen': valcuo * valimp,
+                            'costoorigen': valcuo * valimp * valfac,
                             'montopesos': 0,
                             'pending': true
                         }, { transaction: t });
