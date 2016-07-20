@@ -446,6 +446,7 @@ exports.action = function (req, res) {
                   for (var i = 0; i < servicio.length; i++) {
                     var idservorig = servicio[i].id;
                     console.log("----->" + servicio[i].json)
+                    console.log("****LLamo InsertaPeriodo"); 
                     sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
                       + "," + ejercicio
                       + "," + id_cui
@@ -462,15 +463,18 @@ exports.action = function (req, res) {
                       + "," + servicio[i].mesesentrecuotas
                       + "," + servicio[i].gastodiferido                                    
                       + ';').then(function (response) {
+                        console.log("****LLamo InsertaPeriodo");
                       }).error(function (err) {
                         res.json(err);
                       });
                   }
                 } else {
+                  console.log("****LLamo InsertaServiciosPresupuesto"); 
                   sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
                     + "," + id_cui
                     + "," + presupuesto.id
                     + ';').then(function (response) {
+                      console.log("****LLamo InsertaServiciosPresupuesto");                    
                     }).error(function (err) {
                       res.json(err);
                     });                  
