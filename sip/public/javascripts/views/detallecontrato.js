@@ -23,46 +23,43 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     var templateServicio = "<div id='responsive-form' class='clearfix'>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Servicio{idservicio}</div>";
-    templateServicio += "<div class='column-half'>Cui{idcui}</div>";
+    templateServicio += "<div class='column-half'>Servicio<span style='color:red'>*</span>{idservicio}</div>";    
+    templateServicio += "<div class='column-half'>CUI<span style='color:red'>*</span>{idcui}</div>";    
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
-    templateServicio += "<div class='column-half'>Fecha Término{fechatermino}</div>";
+    templateServicio += "<div class='column-half'>Fecha Inicio<span style='color:red'>*</span>{fechainicio}</div>";
+    templateServicio += "<div class='column-half'>Fecha Término<span style='color:red'>*</span>{fechatermino}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Fecha Control{fechacontrol}</div>";
-    templateServicio += "<div class='column-half'>Valor Cuota{valorcuota}</div>";
+    templateServicio += "<div class='column-half'>Valor Cuota<span style='color:red'>*</span>{valorcuota}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Estado{idestadocto}</div>";
-    templateServicio += "<div class='column-half'>Frecuencia{idfrecuencia}</div>";
+    templateServicio += "<div class='column-half'>Estado<span style='color:red'>*</span>{idestadocto}</div>";
+    templateServicio += "<div class='column-half'>Frecuencia<span style='color:red'>*</span>{idfrecuencia}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Plazo{idplazocontrato}</div>";
-    templateServicio += "<div class='column-half'>Condición{idcondicion}</div>";
+    templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</span>{idplazocontrato}</div>";
+    templateServicio += "<div class='column-half'>Condición<span style='color:red'>*</span>{idcondicion}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Contacto{idcontactoproveedor}</div>";
-    templateServicio += "<div class='column-half'>Moneda{idmoneda}</div>";
+    templateServicio += "<div class='column-half'>Contacto<span style='color:red'>*</span>{idcontactoproveedor}</div>";
+    templateServicio += "<div class='column-half'>Moneda<span style='color:red'>*</span>{idmoneda}</div>";
+    templateServicio += "</div>";
+
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Factor<span style='color:red'>*</span>{factorimpuesto}</div>";    
+    templateServicio += "<div class='column-half'>Impuesto<span style='color:red'>*</span>{impuesto}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
-    templateServicio += "<div class='column-half'>Impuesto{impuesto}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Factor{factorimpuesto}</div>";
-    templateServicio += "</div>";
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-full'>Descripción{glosaservicio}</div>";
+    templateServicio += "<div class='column-half'>Descripción<span style='color:red'>*</span>{glosaservicio}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row' style='display: none;'>";
@@ -237,7 +234,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
-                }
+                },cellattr: function () { return ' title="valor de la cuota"'; }
             },
             {
                 label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true,
@@ -373,18 +370,50 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
-                label: 'Impuesto', name: 'impuesto', width: 100, align: 'right', search: true, editable: true, hidden: false,
+                label: 'Impuesto', name: 'impuesto', align: 'right', search: true, editable: true, hidden: false,
+                edittype: "select",
                 editoptions: {
-                    dataInit: function (el) {
-                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    dataUrl: '/parameters/impuesto',
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.impuesto;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="-1">--Escoger Impuesto--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].valor == thissid) {
+                                s += '<option value="' + data[i].valor + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].valor + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
                     }
                 }
             },
             {
-                label: 'Factor', name: 'factorimpuesto', width: 100, align: 'right', search: true, editable: true, hidden: false,
+                label: 'Factor', name: 'factorimpuesto', align: 'right', search: true, editable: true, hidden: false,
+                edittype: "select",
                 editoptions: {
-                    dataInit: function (el) {
-                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    dataUrl: '/parameters/factor',
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.factorimpuesto;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="-1">--Escoger Factor--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].valor == thissid) {
+                                s += '<option value="' + data[i].valor + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].valor + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
                     }
                 }
             },
@@ -557,14 +586,15 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
+                postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
 
-                if (postdata.fechainicio.trim() == "")
-                    postdata.fechainicio = null
+                if (postdata.fechacontrol.trim() == "")
+                    postdata.fechacontrol = null
 
-                if (parseInt(postdata.idcui) == 0) {
-                    return [false, "CUI: Debe escoger un valor", ""];
-                } if (parseInt(postdata.idservicio) == 0) {
+                if (parseInt(postdata.idservicio) == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idcui) == 0) {
+                    return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idfrecuencia) == 0) {
                     return [false, "Frecuencia: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idplazocontrato) == 0) {
@@ -577,6 +607,18 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Contacto: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idmoneda) == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
+                } if (parseInt(postdata.impuesto) == -1) {
+                    return [false, "Impuesto: Debe escoger un valor", ""];
+                } if (parseInt(postdata.factorimpuesto) == -1) {
+                    return [false, "Factor: Debe escoger un valor", ""];
+                } if (postdata.glosaservicio.trim().length == 0) {
+                    return [false, "Descripción: Debe ingresar un texto", ""];
+                } if (postdata.valorcuota.trim().length == 0) {
+                    return [false, "Valor cuota: Debe ingresar un valor", ""];
+                } if (postdata.fechainicio.trim().length == 0) {
+                    return [false, "Fecha Inicio: Debe ingresar un valor", ""];
+                } if (postdata.fechatermino.trim().length == 0) {
+                    return [false, "Fecha Término: Debe ingresar un valor", ""];
                 } else {
                     return [true, "", ""]
                 }

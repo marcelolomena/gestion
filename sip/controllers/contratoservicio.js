@@ -8,6 +8,7 @@ exports.action = function (req, res) {
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
 
+/*
     if (action != "del") {
         if (valorcuota != "")
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
@@ -18,7 +19,7 @@ exports.action = function (req, res) {
         if (factorimpuesto != "")
             factorimpuesto = factorimpuesto.split(".").join("").replace(",", ".")
     }
-
+*/
     switch (action) {
         case "add":
             //var factor = req.body.impuesto == 1 ? 1.19 : 1;

@@ -110,10 +110,22 @@ exports.list = function (req, res) {
         return models.parametro.find({
             where: { id: detallecto.idfrecuencia }
         }).then(function (param) {
-            console.dir("No entra!!!")
-            utilSeq.getDateRange(detallecto.fechainicio, function (err, range) {
-                callback([param.valor, range])
-            });
+            switch (param.nombre) {
+                case "Anual":
+                    utilSeq.getYearRange(detallecto.fechainicio, detallecto.fechatermino, function (err, range) {
+                        callback([range.length, range])
+                    });
+                    break;
+                case "Mensual":
+                    utilSeq.getMonthRange(detallecto.fechainicio, detallecto.fechatermino, function (err, range) {
+                        callback([range.length, range])
+                    });
+                    break;
+                case "Otros":
+                    callback([0, []])
+                    break;
+            }
+
         }).catch(function (err) {
             console.log("Que paso?> " + err);
         });
@@ -123,18 +135,21 @@ exports.list = function (req, res) {
         models.detalleserviciocto.find({
             where: { id: req.params.id }
         }).then(function (detallecto) {
-            console.dir(detallecto)
             buscaParamValue(detallecto, function (param) {
-
+                var valcuo = detallecto.valorcuota;
+                var valmon = detallecto.idmoneda;
+                var valimp = detallecto.impuesto
+                var valfac = detallecto.factorimpuesto
                 models.sequelize.transaction({ autocommit: true }, function (t) {
-                    var promises = []
+                    var promises = [], convert
                     for (var i = 0; i < param[0]; i++) {
                         var newPromise = models.detallecompromiso.create({
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
-                            'montoorigen': 0,
-                            'costoorigen': 0,
-                            'montopesos': 0, 'pending': true
+                            'montoorigen': valcuo + valcuo * valimp,
+                            'costoorigen': valcuo + valcuo * valimp * valfac,
+                            'montopesos': 0,
+                            'pending': true
                         }, { transaction: t });
 
                         promises.push(newPromise);
@@ -181,7 +196,7 @@ exports.list = function (req, res) {
                     });
                 } else {
                     insertaPeriodos(function (compromisos) {
-                        res.json({ records: 12, total: 12, page: 1, rows: compromisos });
+                        res.json({ rows: compromisos });
                     });
                 }
             })
