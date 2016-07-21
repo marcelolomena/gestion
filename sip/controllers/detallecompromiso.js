@@ -10,12 +10,18 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
+    var parentRowKey = req.body.parentRowKey
+    var valorcuota = req.body.valorcuota
+    var impuesto = req.body.impuesto
+    var factorimpuesto = req.body.factorimpuesto
 
     if (action != "del") {
         if (montoorigen != "")
             montoorigen = montoorigen.split(".").join("").replace(",", ".")
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
+        if (valorcuota != "")
+            valorcuota = valorcuota.split(".").join("").replace(",", ".")
     }
 
     switch (action) {
@@ -23,9 +29,10 @@ exports.action = function (req, res) {
             models.detallecompromiso.create({
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
-                montoorigen: montoorigen,
-                costoorigen: costoorigen,
-                borrado: 1
+                montoorigen: valorcuota + valorcuota * impuesto,
+                costoorigen: valorcuota + valorcuota * impuesto * factorimpuesto,
+                borrado: 1,
+                valorcuota: valorcuota
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
@@ -49,10 +56,11 @@ exports.action = function (req, res) {
             valMoneda(function (conversion) {
                 models.detallecompromiso.update({
                     periodo: req.body.periodo,
-                    montoorigen: montoorigen,
+                    montoorigen: valorcuota + valorcuota * impuesto,
                     montopesos: montoorigen * conversion,
-                    costoorigen: costoorigen,
-                    costopesos: costoorigen * conversion
+                    costoorigen: valorcuota + valorcuota * impuesto * factorimpuesto,
+                    costopesos: costoorigen * conversion,
+                    valorcuota: valorcuota
                 }, {
                         where: {
                             id: req.body.id
@@ -139,15 +147,18 @@ exports.list = function (req, res) {
                 var valmon = detallecto.idmoneda;
                 var valimp = detallecto.impuesto
                 var valfac = detallecto.factorimpuesto
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = [], convert
                     for (var i = 0; i < param[0]; i++) {
+                        //console.log("montoorigen = " + valcuo + valcuo * valimp);
+                        //console.log("costoorigen = " + valcuo + valcuo * valimp * valfac);
                         var newPromise = models.detallecompromiso.create({
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
-                            'montoorigen': valcuo * valimp,
-                            'costoorigen': valcuo * valimp * valfac,
-                            'montopesos': 0,
+                            'montoorigen': valcuo + (valcuo * valimp),
+                            'costoorigen':  valcuo + (valcuo * valimp * valfac),
+                            'valorcuota': valcuo,
                             'pending': true
                         }, { transaction: t });
 
