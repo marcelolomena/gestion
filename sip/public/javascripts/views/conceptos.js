@@ -5,8 +5,8 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Concepto{conceptopresupuestario}</div>";
-    template += "<div class='column-full'>Nombre{glosaconcepto}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Concepto{conceptopresupuestario}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Nombre{glosaconcepto}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";

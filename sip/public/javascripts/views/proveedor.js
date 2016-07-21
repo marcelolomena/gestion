@@ -62,11 +62,11 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Rut {numrut}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>* </span>Rut {numrut}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Razon Social {razonsocial}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>* </span>Razon Social {razonsocial}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -83,7 +83,7 @@ $(document).ready(function () {
 
     var modelProveedor = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'RUT', name: 'numrut', width: 150, align: 'right', search: false, editable: true,
+        { label: 'RUT', name: 'numrut', width: 150, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { required: true, custom: true, custom_func: validaRut }, 
             formoptions: { elmsuffix: '<span class="required">*</span>' },
@@ -128,15 +128,15 @@ $(document).ready(function () {
     var tmpc = "<div id='responsive-form' class='clearfix'>";
 
     tmpc += "<div class='form-row'>";
-    tmpc += "<div class='column-full'>Contacto {contacto}</div>";
+    tmpc += "<div class='column-full'><span style='color:red'>* </span>Contacto {contacto}</div>";
     tmpc += "</div>";
 
     tmpc += "<div class='form-row'>";
-    tmpc += "<div class='column-full'>Telefono {fono}</div>";
+    tmpc += "<div class='column-full'><span style='color:red'>* </span>Telefono {fono}</div>";
     tmpc += "</div>";
 
     tmpc += "<div class='form-row'>";
-    tmpc += "<div class='column-full'>Correo {correo}</div>";
+    tmpc += "<div class='column-full'><span style='color:red'>* </span>Correo {correo}</div>";
     tmpc += "</div>";
 
     tmpc += "<hr style='width:100%;'/>";
