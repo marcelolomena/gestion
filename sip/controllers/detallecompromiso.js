@@ -24,13 +24,15 @@ exports.action = function (req, res) {
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
     }
 
+    console.log("montoorigen : " + montoorigen)
+    console.log("costoorigen : " + costoorigen)
     switch (action) {
         case "add":
             models.detallecompromiso.create({
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
-                montoorigen: valorcuota + valorcuota * impuesto,
-                costoorigen: valorcuota + valorcuota * impuesto * factorimpuesto,
+                montoorigen: montoorigen,
+                costoorigen: costoorigen,
                 borrado: 1,
                 valorcuota: valorcuota
             }).then(function (detalle) {
@@ -42,36 +44,34 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
+            /*
+                        var valMoneda = function (callback) {
+                            models.monedasconversion.findAll({
+                                where: [{ idmoneda: req.body.idmoneda }, { periodo: req.body.periodo }]
+                            }).then(function (monedasconversion) {
+                                callback(monedasconversion[0].valorconversion);
+                            }).catch(function (err) {
+                                console.log(err);
+                            });
+                        }
+            */
 
-            var valMoneda = function (callback) {
-                models.monedasconversion.findAll({
-                    where: [{ idmoneda: req.body.idmoneda }, { periodo: req.body.periodo }]
-                }).then(function (monedasconversion) {
-                    callback(monedasconversion[0].valorconversion);
+            models.detallecompromiso.update({
+                periodo: req.body.periodo,
+                montoorigen: montoorigen,
+                costoorigen: costoorigen,
+                valorcuota: valorcuota
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (detalle) {
+                    res.json({ error_code: 0 });
                 }).catch(function (err) {
                     console.log(err);
+                    res.json({ error_code: 1 });
                 });
-            }
 
-            valMoneda(function (conversion) {
-                models.detallecompromiso.update({
-                    periodo: req.body.periodo,
-                    montoorigen: valorcuota + valorcuota * impuesto,
-                    montopesos: montoorigen * conversion,
-                    costoorigen: valorcuota + valorcuota * impuesto * factorimpuesto,
-                    costopesos: costoorigen * conversion,
-                    valorcuota: valorcuota
-                }, {
-                        where: {
-                            id: req.body.id
-                        }
-                    }).then(function (detalle) {
-                        res.json({ error_code: 0 });
-                    }).catch(function (err) {
-                        console.log(err);
-                        res.json({ error_code: 1 });
-                    });
-            });
             break;
         case "del":
             models.detallecompromiso.destroy({
@@ -157,7 +157,7 @@ exports.list = function (req, res) {
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
                             'montoorigen': valcuo + (valcuo * valimp),
-                            'costoorigen':  valcuo + (valcuo * valimp * valfac),
+                            'costoorigen': valcuo + (valcuo * valimp * valfac),
                             'valorcuota': valcuo,
                             'pending': true
                         }, { transaction: t });
