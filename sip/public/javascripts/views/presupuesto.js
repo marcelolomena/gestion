@@ -161,12 +161,16 @@ $(document).ready(function () {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (rowData.idcui != postdata.idcui) {
-                    return [false, "NO puede cambiar el CUI base", ""];
-                } if (rowData.idejercicio != postdata.idejercicio) {
-                    return [false, "NO puede cambiar el Ejercicio base", ""];
+                if (rowData.estado == 'Aprobado') {
+                    return [false, "No puede editar presupuestos en estado Aprobado", ""];
+                } else { 
+                    if (rowData.idcui != postdata.idcui) {
+                        return [false, "NO puede cambiar el CUI base", ""];
+                    } if (rowData.idejercicio != postdata.idejercicio) {
+                        return [false, "NO puede cambiar el Ejercicio base", ""];
+                    }
+                    return [true, "", ""]
                 }
-                return [true, "", ""]
             },
             beforeShowForm: function (postdata, formid) {
                 var grid = $('#grid');
@@ -711,8 +715,6 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Cuota: Debe ingresar la cuota", ""];
                 } if (postdata.numerocuota == 0) {
                     return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
-                } if (postdata.mesesentrecuotas == 0) {
-                    return [false, "Meses: Debe ingresar los meses entre cuotas", ""];
                 } if (postdata.desde == 0) {
                     return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
                 } else {
@@ -747,8 +749,6 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Cuota: Debe ingresar la cuota", ""];
                 } if (postdata.numerocuota == 0) {
                     return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
-                } if (postdata.mesesentrecuotas == 0) {
-                    return [false, "Meses: Debe ingresar los meses entre cuotas", ""];
                 } if (postdata.desde == 0) {
                     return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
                 } else {
@@ -782,20 +782,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         }, {}
 
     );
-    /*
-        $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-            caption: "Excel",
-            buttonicon: "silk-icon-page-excel",
-            title: "Excel",
-            position: "last",
-            onClickButton: function () {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var url = '/presupuestoserviciosexcel/' + parentRowKey;
-                $("#" + childGridID).jqGrid('excelExport', { "url": url });
-            }
-        });
-    */
+
 }
 
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
@@ -939,12 +926,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID
     });
-    /*
-        $("#" + childGridID).jqGrid('filterToolbar', {
-            stringResult: false, searchOperators: true, searchOnEnter: false,
-            defaultSearch: 'cn'
-        });
-    */
+
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,
         add: false,

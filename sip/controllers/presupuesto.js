@@ -452,6 +452,7 @@ exports.action = function (req, res) {
                       + "," + id_cui
                       + "," + presupuesto.id
                       + "," + servicio[i].idservicio
+                      + "," + servicio[i].glosaservicio                      
                       + "," + servicio[i].idproveedor
                       + "," + servicio[i].idmoneda
                       + "," + servicio[i].montoforecast
@@ -468,6 +469,14 @@ exports.action = function (req, res) {
                         res.json(err);
                       });
                   }
+                  sequelize.query('EXECUTE sip.InsertaServiciosAdicionalesComp ' + ejercicio
+                    + "," + id_cui
+                    + "," + presupuesto.id
+                    + ';').then(function (response) {
+                      console.log("****LLamo InsertaServiciosAdicionalesComp");                    
+                    }).error(function (err) {
+                      res.json(err);
+                    });                    
                 } else {
                   console.log("****LLamo InsertaServiciosPresupuesto"); 
                   sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
