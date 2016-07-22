@@ -31,13 +31,17 @@ module.exports = function(sequelize, DataTypes) {
     costoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
-    },    
+    },
     costopesos: {
       type: DataTypes.FLOAT,
       allowNull: true
-    },       
+    },
     borrado: {
       type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    valorcuota: {
+      type: DataTypes.FLOAT,
       allowNull: true
     }
   }, {

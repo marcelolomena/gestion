@@ -8,19 +8,19 @@ $(document).ready(function () {
     var templ = "<div id='responsive-form' class='clearfix'>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Nombre Estructura{nombre}</div>";
+    templ += "<div class='column-full'><span style='color:red'>* </span>Nombre Estructura{nombre}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Cui Padre{iddivision}</div>";
+    templ += "<div class='column-full'><span style='color:red'>* </span>Cui Padre{iddivision}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Nombre Division{division}</div>";
+    templ += "<div class='column-full'><span style='color:red'>* </span>Nombre Division{division}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row'>";
-    templ += "<div class='column-full'>Nombre Responsable{uidresponsable}</div>";
+    templ += "<div class='column-full'><span style='color:red'>* </span>Nombre Responsable{uidresponsable}</div>";
     templ += "</div>";
 
     templ += "<div class='form-row' style='display: none;'>";
@@ -249,20 +249,20 @@ function loadGrid(idestructura, cuipadre) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Cui{cui}</div>";
-    template += "<div class='column-full'>Nombre Cui{nombrecui}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Cui{cui}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Nombre Cui{nombrecui}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Nombre Responsable{uid}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Nombre Responsable{uid}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Gerencia{idgerencia}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Gerencia{idgerencia}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Nombre Gerente{uidgerente}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Nombre Gerente{uidgerente}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";

@@ -295,8 +295,7 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-
-                if (parseInt(postdata.pid) == 0) {
+                if (parseInt(postdata.idproveedor) == 0) {
                     return [false, "Proveedor: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtiposolicitud) == 0) {
                     return [false, "Tipo Solicitud: Debe escoger un valor", ""];
@@ -317,7 +316,6 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                $("input[type=radio]").attr('disabled', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },
@@ -331,7 +329,8 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (parseInt(postdata.pid) == 0) {
+
+                if (parseInt(postdata.idproveedor) == 0) {
                     return [false, "Proveedor: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtiposolicitud) == 0) {
                     return [false, "Tipo Solicitud: Debe escoger un valor", ""];
@@ -355,6 +354,7 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                $(form).find("input:radio[value='1']").attr('checked', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },

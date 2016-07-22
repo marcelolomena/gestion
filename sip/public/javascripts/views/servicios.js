@@ -5,11 +5,11 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Nombre {nombre}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>* </span>Nombre {nombre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Cuenta {idcuenta}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>* </span>Cuenta {idcuenta}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";

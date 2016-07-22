@@ -90,7 +90,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Servicio {idservicio}</div>";
+    template += "<div class='column-full'><span style='color:red'>* </span>Servicio {idservicio}</div>";
     template += "<div class='column-full'>Proveedor {razonsocial}</div>";
     template += "</div>";
 

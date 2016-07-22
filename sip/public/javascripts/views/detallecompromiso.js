@@ -89,6 +89,20 @@ function gridDetail(parentRowID, parentRowKey) {
             template: templateDetalle,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            }, onclickSubmit: function (rowid) {
+                var subgrid = $("#" + childGridID);
+                var ids = subgrid.jqGrid('getDataIDs');
+                var parentTable = "grid_" + parentRowID.split("_")[1] + "_t";
+                var parentGrid = $('#' + parentTable);
+                var parentRowData = parentGrid.getRowData(parentRowKey);
+                var extraparam = {
+                    pk: parentRowKey,
+                    valorcuota: parentRowData.valorcuota,
+                    idmoneda: parentRowData.idmoneda,
+                    impuesto: parentRowData.impuesto,
+                    factorimpuesto: parentRowData.factorimpuesto
+                }
+                return extraparam;
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);

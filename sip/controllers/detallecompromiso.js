@@ -10,14 +10,22 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
+    var parentRowKey = req.body.parentRowKey
+    var valorcuota = req.body.valorcuota
+    var impuesto = req.body.impuesto
+    var factorimpuesto = req.body.factorimpuesto
 
     if (action != "del") {
         if (montoorigen != "")
             montoorigen = montoorigen.split(".").join("").replace(",", ".")
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
+        if (valorcuota != "")
+            valorcuota = valorcuota.split(".").join("").replace(",", ".")
     }
 
+    console.log("montoorigen : " + montoorigen)
+    console.log("costoorigen : " + costoorigen)
     switch (action) {
         case "add":
             models.detallecompromiso.create({
@@ -25,7 +33,8 @@ exports.action = function (req, res) {
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
                 costoorigen: costoorigen,
-                borrado: 1
+                borrado: 1,
+                valorcuota: valorcuota
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
@@ -35,35 +44,34 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
+            /*
+                        var valMoneda = function (callback) {
+                            models.monedasconversion.findAll({
+                                where: [{ idmoneda: req.body.idmoneda }, { periodo: req.body.periodo }]
+                            }).then(function (monedasconversion) {
+                                callback(monedasconversion[0].valorconversion);
+                            }).catch(function (err) {
+                                console.log(err);
+                            });
+                        }
+            */
 
-            var valMoneda = function (callback) {
-                models.monedasconversion.findAll({
-                    where: [{ idmoneda: req.body.idmoneda }, { periodo: req.body.periodo }]
-                }).then(function (monedasconversion) {
-                    callback(monedasconversion[0].valorconversion);
+            models.detallecompromiso.update({
+                periodo: req.body.periodo,
+                montoorigen: montoorigen,
+                costoorigen: costoorigen,
+                valorcuota: valorcuota
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (detalle) {
+                    res.json({ error_code: 0 });
                 }).catch(function (err) {
                     console.log(err);
+                    res.json({ error_code: 1 });
                 });
-            }
 
-            valMoneda(function (conversion) {
-                models.detallecompromiso.update({
-                    periodo: req.body.periodo,
-                    montoorigen: montoorigen,
-                    montopesos: montoorigen * conversion,
-                    costoorigen: costoorigen,
-                    costopesos: costoorigen * conversion
-                }, {
-                        where: {
-                            id: req.body.id
-                        }
-                    }).then(function (detalle) {
-                        res.json({ error_code: 0 });
-                    }).catch(function (err) {
-                        console.log(err);
-                        res.json({ error_code: 1 });
-                    });
-            });
             break;
         case "del":
             models.detallecompromiso.destroy({
@@ -139,15 +147,18 @@ exports.list = function (req, res) {
                 var valmon = detallecto.idmoneda;
                 var valimp = detallecto.impuesto
                 var valfac = detallecto.factorimpuesto
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = [], convert
                     for (var i = 0; i < param[0]; i++) {
+                        //console.log("montoorigen = " + valcuo + valcuo * valimp);
+                        //console.log("costoorigen = " + valcuo + valcuo * valimp * valfac);
                         var newPromise = models.detallecompromiso.create({
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
-                            'montoorigen': valcuo * valimp,
-                            'costoorigen': valcuo * valimp * valfac,
-                            'montopesos': 0,
+                            'montoorigen': valcuo + (valcuo * valimp),
+                            'costoorigen': valcuo + (valcuo * valimp * valfac),
+                            'valorcuota': valcuo,
                             'pending': true
                         }, { transaction: t });
 
