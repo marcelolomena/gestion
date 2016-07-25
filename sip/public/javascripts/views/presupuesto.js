@@ -2,15 +2,15 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>CUI {idcui}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>CUI {idcui}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Ejercicio {idejercicio}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>Ejercicio {idejercicio}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Descripción {descripcion}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>Descripción {descripcion}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' style='display: none;'>";
@@ -161,12 +161,16 @@ $(document).ready(function () {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (rowData.idcui != postdata.idcui) {
-                    return [false, "NO puede cambiar el CUI base", ""];
-                } if (rowData.idejercicio != postdata.idejercicio) {
-                    return [false, "NO puede cambiar el Ejercicio base", ""];
+                if (rowData.estado == 'Aprobado') {
+                    return [false, "No puede editar presupuestos en estado Aprobado", ""];
+                } else { 
+                    if (rowData.idcui != postdata.idcui) {
+                        return [false, "NO puede cambiar el CUI base", ""];
+                    } if (rowData.idejercicio != postdata.idejercicio) {
+                        return [false, "NO puede cambiar el Ejercicio base", ""];
+                    }
+                    return [true, "", ""]
                 }
-                return [true, "", ""]
             },
             beforeShowForm: function (postdata, formid) {
                 var grid = $('#grid');
@@ -390,27 +394,19 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-full'>Servicio {idservicio}</div>";
+    tmplServ += "<div class='column-full'><span style='color:red'>*</span>Servicio {idservicio}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Glosa Servicio {glosaservicio}</div>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Glosa Servicio {glosaservicio}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-full'>Moneda {idmoneda}</div>";
+    tmplServ += "<div class='column-full'><span style='color:red'>*</span>Moneda {idmoneda}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-full'>Proveedor {idproveedor}</div>";
-    tmplServ += "</div>";
-
-    tmplServ += "<div class='form-row' style='display: none;'>";
-    tmplServ += "<div class='column-full'>Monto Forecast {montoforecast}</div>";
-    tmplServ += "</div>";
-
-    tmplServ += "<div class='form-row' style='display: none;'>";
-    tmplServ += "<div class='column-half'>Monto Anual {montoanual}</div>";
+    tmplServ += "<div class='column-full'><span style='color:red'>*</span>Proveedor {idproveedor}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
@@ -418,19 +414,19 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Cuota {cuota}</div>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Cuota {cuota}</div>";
     tmplServ += "</div>";    
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Número Cuotas {numerocuota}</div>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Número Cuotas {numerocuota}</div>";
     tmplServ += "</div>";
     
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Meses entre cuotas {mesesentrecuotas}</div>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Meses entre cuotas {mesesentrecuotas}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Mes inicio {desde}</div>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Mes inicio {desde}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
@@ -708,14 +704,23 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             beforeSubmit: function (postdata, formid) {
 
                 if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un valor", ""];
+                    return [false, "Servicio: Debe escoger un servicio", ""];
+                } if (postdata.glosaservicio == "") {
+                    return [false, "Glosa: Debe ingresar una glosa de servicio", ""];
                 } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger un valor", ""];
+                    return [false, "Moneda: Debe escoger una moneda", ""];
                 } if (postdata.idproveedor == 0) {
                     return [false, "Proveedor: Debe escoger un proveedor", ""];
+                } if (postdata.cuota == 0) {
+                    return [false, "Cuota: Debe ingresar la cuota", ""];
+                } if (postdata.numerocuota == 0) {
+                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
+                } if (postdata.desde == 0) {
+                    return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
                 } else {
                     return [true, "", ""]
                 }
+
             }
         },
         {
@@ -734,10 +739,18 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                 //alert("postdata:"+postdata.idproveedor);
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un servicio", ""];
+                } if (postdata.glosaservicio == "") {
+                    return [false, "Glosa: Debe ingresar una glosa de servicio", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe escoger una moneda", ""];
                 } if (postdata.idproveedor == 0) {
                     return [false, "Proveedor: Debe escoger un proveedor", ""];
+                } if (postdata.cuota == 0) {
+                    return [false, "Cuota: Debe ingresar la cuota", ""];
+                } if (postdata.numerocuota == 0) {
+                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
+                } if (postdata.desde == 0) {
+                    return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -769,20 +782,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         }, {}
 
     );
-    /*
-        $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-            caption: "Excel",
-            buttonicon: "silk-icon-page-excel",
-            title: "Excel",
-            position: "last",
-            onClickButton: function () {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var url = '/presupuestoserviciosexcel/' + parentRowKey;
-                $("#" + childGridID).jqGrid('excelExport', { "url": url });
-            }
-        });
-    */
+
 }
 
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
@@ -926,12 +926,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID
     });
-    /*
-        $("#" + childGridID).jqGrid('filterToolbar', {
-            stringResult: false, searchOperators: true, searchOnEnter: false,
-            defaultSearch: 'cn'
-        });
-    */
+
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,
         add: false,

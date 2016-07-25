@@ -80,12 +80,114 @@ exports.combobox = function (req, res) {
 }
 
 exports.list = function (req, res) {
+  // Use the Proyectos model to find all proveedores
+  var page = req.body.page;
+  var rows = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+  var condition = "";
+
+  if (!sidx)
+    sidx = "razonsocial";
+
+  if (!sord)
+    sord = "asc ";
+
+  var orden = sidx + " " + sord;
+
+  var sql0 = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rows + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + orden + ") " +
+    "as resultNum, id, numrut, dvrut, razonsocial, uid, negociadordivot, borrado "+ 
+    "from sip.proveedor where proveedor.borrado = 1 ORDER BY razonsocial asc )" +
+    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+      console.log(sql0);
+            console.log(sql);
+
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+
+      jsonObj.rules.forEach(function (item) {
+
+        if (item.op === 'cn') {
+          if (item.field === 'numrut')
+            condition += "rtrim(convert(char,numrut))+'-'+dvrut"  + " like '%" + item.data + "%' AND "
+          else 
+            condition +=  item.field + " like '%" + item.data + "%' AND "
+        }
+
+      });
+
+      var sql = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rows + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + orden + ") " +
+        "as resultNum,id, numrut, dvrut, razonsocial, uid, negociadordivot, borrado "+ 
+        "from sip.proveedor where proveedor.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY razonsocial asc) " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+      console.log(sql);
+
+      models.proveedor.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql)
+          .spread(function (rows) {
+
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+       })
+
+    } else {
+            console.log(sql0);
+      models.proveedor.count().then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })  
+  }
+  }
+  else {
+      console.log(sql0);
+      models.proveedor.count().then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })
+
+    }
+  };
+
+
+exports.list2 = function (req, res) {
 
   var page = req.body.page;
   var rows = req.body.rows;
   var filters = req.body.filters;
   var sidx = req.body.sidx;
   var sord = req.body.sord;
+
+  console.log("->>> " + filters)
+
+  // JSON.stringify(jsonObj.rules)
+
+  //  if (filters.rules.field == 'numrut') {
+  //    filters.rules.field = "rtrim(convert(varchar,[proveedor].[numrut]))+'-'+[proveedor].[dvrut]";
+  //  }
+
+  //console.log("->>> " + filters)
 
   if (!sidx)
     sidx = "razonsocial";
@@ -99,7 +201,8 @@ exports.list = function (req, res) {
     if (err) {
       console.log("->>> " + err)
     } else {
-      models.proveedor.count({
+      //console.log("data->>> " + data[1].rules)
+      models.proveedor.count({        
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);

@@ -66,6 +66,7 @@ var leida = false;
 var proveedorx;
 function loadGrid(cui, proveedor, factura, fechaini, fechafin) {
     //alert('showDocumentos:'+cui+","+proveedor+","+factura+", "+ fechaini+", "+fechafin);
+    proveedorx = proveedor;
 	var url = "/troyafacturas";
 	var formatter = new Intl.NumberFormat();
 	if (leida){
@@ -77,7 +78,7 @@ function loadGrid(cui, proveedor, factura, fechaini, fechafin) {
 }
 
 function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
-    proveedorx = proveedor;
+    
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/troyafacturas";   
     $("#grid").jqGrid({
@@ -205,6 +206,11 @@ function showDetalle(parentRowID, parentRowKey) {
         mtype: "GET",
         datatype: "json",
         page: 1,
+        postData: {
+            proveedor : function () {
+                return proveedorx;
+            }                                    
+        },             
         colModel: [
                    { label: 'id',
                       name: 'id',

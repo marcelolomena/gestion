@@ -516,7 +516,7 @@ function getMonedas(idpresupuesto, idmoneda) {
 }
 
 function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion, diferido) {
-  console.log("Param:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," + conversion);
+  console.log("CUPTAS DENTRO:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," + conversion);
   //var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
   var origen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   var pesos = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -526,8 +526,8 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
 
 
 
-  for (i = mescuota1; i < caja.length + 1; i = parseInt(i) + mesesentre) {
-    //console.log("***SALTO:" + i + mesesentre);
+  for (i=mescuota1, j=0; i<caja.length+1 && j<ncuotas; i=parseInt(i)+mesesentre, j++) {
+    console.log("***SALTO:" + i + mesesentre);
     origen[i - 1] = cuota;
     pesos[i - 1] = cuota * conversion[i - 1];
     if (coniva == "1") {
@@ -537,7 +537,8 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     }
     caja[i - 1] = valorcaja;
   }
-  for (i = mescuota1; i < caja.length + 1; i = parseInt(i) + mesesentre) {
+  for (var i=mescuota1, j=0; i<caja.length+1 && j<ncuotas; i=parseInt(i)+mesesentre, j++) {
+    console.log("*****JJJJ:"+j);
     if (coniva == "1") {
       var iva = pesos[i - 1] * 0.19;
     } else {
@@ -546,9 +547,9 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     var recuperacion = iva * frecup;
     var total = parseFloat(pesos[i - 1]) + parseFloat(recuperacion);
     if (diferido == "1") {
-      var valorcosto = total / mesesentre;
+      var valorcosto = total / (mesesentre+1);
       var valorcosto = valorcosto.toFixed(2);
-      for (j = i; j <= i + mesesentre && j < caja.length + 1; j++) {
+      for (j = i; j <= parseInt(i) + mesesentre && j < caja.length + 1; j++) {
         costo[j - 1] = valorcosto;
       }
     } else {

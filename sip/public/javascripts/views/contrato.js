@@ -5,27 +5,27 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Contrato{nombre}</div>";
-    template += "<div class='column-full'>Proveedor{idproveedor}</div>";
+    template += "<div class='column-full'>Contrato<span style='color:red'>*</span>{nombre}</div>";
+    template += "<div class='column-full'>Proveedor<span style='color:red'>*</span>{idproveedor}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Solicitud{idtiposolicitud}</div>";
-    template += "<div class='column-half'>Estado Solicitud{idestadosol}</div>";
+    template += "<div class='column-half'>Tipo Solicitud<span style='color:red'>*</span>{idtiposolicitud}</div>";
+    template += "<div class='column-half'>Estado Solicitud<span style='color:red'>*</span>{idestadosol}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Solicitud {solicitudcontrato}</div>";
-    template += "<div class='column-half'>Número  {numero}</div>";
+    template += "<div class='column-half'>Solicitud{solicitudcontrato}</div>";
+    template += "<div class='column-half'>Número{numero}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo {tipocontrato}</div>";
-    template += "<div class='column-half'>Documento {tipodocumento}</div>";
+    template += "<div class='column-half'>Tipo<span style='color:red'>*</span>{tipocontrato}</div>";
+    template += "<div class='column-half'>Documento<span style='color:red'>*</span>{tipodocumento}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>PMO {uidpmo}</div>";
+    template += "<div class='column-half'>PMO<span style='color:red'>*</span>{uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -294,6 +294,20 @@ $(document).ready(function () {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            }, beforeSubmit: function (postdata, formid) {
+                if (parseInt(postdata.idproveedor) == 0) {
+                    return [false, "Proveedor: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idtiposolicitud) == 0) {
+                    return [false, "Tipo Solicitud: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idestadosol) == 0) {
+                    return [false, "Estado Solicitud: Debe escoger un valor", ""];
+                } if (postdata.nombre.trim().length == 0) {
+                    return [false, "Nombre: Debe ingresar un texto", ""];
+                } if (parseInt(postdata.uidpmo) == 0) {
+                    return [false, "PMO: Debe escoger un valor", ""];
+                } else {
+                    return [true, "", ""]
+                }
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -302,7 +316,6 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                $("input[type=radio]").attr('disabled', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },
@@ -316,8 +329,17 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (postdata.pid == 0) {
+
+                if (parseInt(postdata.idproveedor) == 0) {
                     return [false, "Proveedor: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idtiposolicitud) == 0) {
+                    return [false, "Tipo Solicitud: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idestadosol) == 0) {
+                    return [false, "Estado Solicitud: Debe escoger un valor", ""];
+                } if (postdata.nombre.trim().length == 0) {
+                    return [false, "Nombre: Debe ingresar un texto", ""];
+                } if (parseInt(postdata.uidpmo) == 0) {
+                    return [false, "PMO: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -332,6 +354,7 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                $(form).find("input:radio[value='1']").attr('checked', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },

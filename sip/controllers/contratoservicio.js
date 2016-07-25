@@ -8,17 +8,6 @@ exports.action = function (req, res) {
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
 
-    if (action != "del") {
-        if (valorcuota != "")
-            valorcuota = valorcuota.split(".").join("").replace(",", ".")
-
-        if (impuesto != "")
-            impuesto = impuesto.split(".").join("").replace(",", ".")
-
-        if (factorimpuesto != "")
-            factorimpuesto = factorimpuesto.split(".").join("").replace(",", ".")
-    }
-
     switch (action) {
         case "add":
             //var factor = req.body.impuesto == 1 ? 1.19 : 1;
@@ -70,12 +59,12 @@ exports.action = function (req, res) {
             });
             break;
         case "edit":
+
             models.detalleserviciocto.update({
                 idcontrato: req.body.idcontrato,
                 anexo: req.body.anexo,
                 idcui: req.body.idcui,
                 idservicio: req.body.idservicio,
-                //servicio: req.body.servicio,
                 idcuenta: req.body.idcuenta,
                 cuentacontable: req.body.cuentacontable,
                 sap: req.body.sap,
@@ -99,15 +88,32 @@ exports.action = function (req, res) {
                 estadocontrato: req.body.estadocontrato,
                 glosaservicio: req.body.glosaservicio
             }, {
-                    where: {
-                        id: req.body.id
-                    }
+                where: {
+                    id: req.body.id
+                }
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
                     console.log(err);
                     res.json({ error_code: 1 });
                 });
+
+            models.detalleserviciocto.find({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (detallecto) {
+                if ((detallecto.idfrecuencia != req.body.idfrecuencia) || (detallecto.valorcuota != req.body.valorcuota) || (detallecto.impuesto != req.body.impuesto) ||  (detallecto.factorimpuesto != req.body.factorimpuesto)) {
+                    models.detallecompromiso.destroy({
+                        where: {
+                            iddetalleserviciocto: req.body.id
+                        }
+                    }).then(function (rowDeleted) {
+                        //console.log('detalles borrados >>>>>>>>>>>>>> ' + rowDeleted);
+                    })
+                }
+            });
+
             break;
         case "del":
             models.detallecompromiso.destroy({
@@ -296,7 +302,7 @@ exports.plantillapresupuesto = function (req, res) {
     });
 
 }
- 
+
 exports.cuiforservice = function (req, res) {
 
     models.plantillapresupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
