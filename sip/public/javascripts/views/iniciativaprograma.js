@@ -2,28 +2,27 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     var tmplP = "<div id='responsive-form' class='clearfix'>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Proyecto {nombre}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Proyecto {nombre}</div>";
     tmplP += "<div class='column-half'>Art {codigoart}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>División {iddivision}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>División {iddivision}</div>";
     tmplP += "<div class='column-half'>Programas {program_id}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Sponsor 1 {sponsor1}</div>";
-    tmplP += "<div class='column-half'>Sponsor 2 {sponsor2}</div>";
+    tmplP += "<div class='column-full'>Sponsor {sponsor1}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>PMO {uidpmo}</div>";
-    tmplP += "<div class='column-half'>Gerente {uidgerente}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>PMO {uidpmo}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Gerente {uidgerente}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Estado {idestado}</div>";
-    tmplP += "<div class='column-half'>Categoría {idcategoria}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Estado {idestado}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Categoría {idcategoria}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
@@ -35,7 +34,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-half'>Subcategoría {idsubcategoria}</div>";
-    tmplP += "<div class='column-four'>Año {ano}</div>";
+    tmplP += "<div class='column-four'><span style='color: red'>*</span>Año {ano}</div>";
     tmplP += "<div class='column-four'>Duración Prev. {duracionprevista}</div>";
     tmplP += "</div>";
 
@@ -212,12 +211,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { required: true, edithidden: false }
         },
         {
-            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left',
+            label: 'Sponsor', name: 'sponsor1', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
-        },
-        {
-            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left',
-            search: true, editable: true, hidden: false
         },
         {
             label: 'Gerente', name: 'uidgerente',
@@ -735,7 +730,6 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     success: function (data) {
                         $("#nombre", form).val(data.nombre);
                         $("#sponsor1", form).val(data.sponsor1);
-                        $("#sponsor2", form).val(data.sponsor2);
                         $("#q1", form).val(data.q1);
                         $("#q2", form).val(data.q2);
                         $("#q3", form).val(data.q3);

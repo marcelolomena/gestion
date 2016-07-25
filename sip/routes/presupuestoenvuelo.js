@@ -37,6 +37,9 @@ module.exports = function (passport) {
     router.route('/flujopagoenvuelo/action')
         .post(isAuthenticated, flujopagoenvueloController.action)
 
+    router.route('/generarproyectoenvuelo/:id')
+        .post(isAuthenticated, presupuestoenvueloController.generarproyectoenvuelo)
+
     return router;
 
 }

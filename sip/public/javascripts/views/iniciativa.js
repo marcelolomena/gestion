@@ -2,26 +2,25 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Proyecto {nombre}</div>";
+    tmpl += "<div class='column-full'><span style='color: red'>*</span>Proyecto {nombre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>División {iddivision}</div>";
+    tmpl += "<div class='column-full'><span style='color: red'>*</span> División {iddivision}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Sponsor 1 {sponsor1}</div>";
-    tmpl += "<div class='column-half'>Sponsor 2 {sponsor2}</div>";
+    tmpl += "<div class='column-full'>Sponsor {sponsor1}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>PMO {uidpmo}</div>";
-    tmpl += "<div class='column-half'>Gerente {uidgerente}</div>";
+    tmpl += "<div class='column-half'><span style='color: red'>*</span>PMO {uidpmo}</div>";
+    tmpl += "<div class='column-half'><span style='color: red'>*</span>Gerente {uidgerente}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Estado {idestado}</div>";
-    tmpl += "<div class='column-half'>Categoría {idcategoria}</div>";
+    tmpl += "<div class='column-half'><span style='color: red'>*</span>Estado {idestado}</div>";
+    tmpl += "<div class='column-half'><span style='color: red'>*</span>Categoría {idcategoria}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -33,7 +32,7 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Fecha Último Comité {fechacomite}</div>";
-    tmpl += "<div class='column-half'>Año {ano}</div>";
+    tmpl += "<div class='column-half'><span style='color: red'>*</span>Año {ano}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -77,7 +76,8 @@ $(document).ready(function () {
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
             search: true, editable: true, hidden: false,
-            editrules: { required: true }
+            editrules: { required: true },
+            editoptions: {placeholder: "Nombre del proyecto" }
         },
         {
             label: 'División', name: 'iddivision',
@@ -132,9 +132,9 @@ $(document).ready(function () {
                     s += '<option value="0">--Escoger División--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].idRRHH == thissid) {
-                            s += '<option value="' + data[i].division + '" selected>' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
                         } else {
-                            s += '<option value="' + data[i].division + '">' + data[i].division + '</option>';
+                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -142,12 +142,9 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Sponsor 1', name: 'sponsor1', width: 150, align: 'left',
-            search: true, editable: true, hidden: false
-        },
-        {
-            label: 'Sponsor 2', name: 'sponsor2', width: 150, align: 'left',
-            search: true, editable: true, hidden: false
+            label: 'Sponsor', name: 'sponsor1', width: 150, align: 'left',
+            search: true, editable: true, hidden: false,
+            editoptions: {placeholder: "Nombre y apellido Sponsor 1" }
         },
         {
             label: 'Gerente', name: 'uidgerente',
@@ -292,19 +289,23 @@ $(document).ready(function () {
         },
         {
             label: 'Q1', name: 'q1', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: false,
+            editoptions: {placeholder: "Q1 o vacío" }
         },
         {
             label: 'Q2', name: 'q2', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: false,
+            editoptions: {placeholder: "Q2 o vacío" }
         },
         {
             label: 'Q3', name: 'q3', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: false,
+            editoptions: {placeholder: "Q3 o vacío" }
         },
         {
             label: 'Q4', name: 'q4', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: false,
+            editoptions: {placeholder: "Q4 o vacío" }
         },
         {
             label: 'Fecha Último Comite', name: 'fechacomite', width: 130, align: 'left',

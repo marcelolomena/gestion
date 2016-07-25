@@ -13,8 +13,8 @@ function gridFechaEnVuelo(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-half'>Tipo Fecha {idtipofecha}</div>";
-    tmplPF += "<div class='column-half'>Fecha {fecha}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Tipo Fecha {idtipofecha}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Fecha {fecha}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
