@@ -13,23 +13,23 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Servicio{idservicio}</div>";
-    template += "<div class='column-half'>Tarea{tarea}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Servicio{idservicio}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Tarea{tarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI{idcui}</div>";
-    template += "<div class='column-half'>Proveedor{idproveedor}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>CUI{idcui}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Proveedor{idproveedor}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Pago{idtipopago}</div>";
-    template += "<div class='column-half'>Moneda{idmoneda}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Moneda{idmoneda}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Fecha de Inicio{fechainicio}</div>";
-    template += "<div class='column-half'>Fecha de Fin{fechafin}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Fecha de Inicio{fechainicio}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Fecha de Fin{fechafin}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -38,8 +38,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Cantidad{cantidad}</div>";
-    template += "<div class='column-half'>Costo Unitario{costounitario}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Cantidad{cantidad}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Costo Unitario{costounitario}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";

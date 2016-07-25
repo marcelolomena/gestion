@@ -345,6 +345,224 @@ exports.combobox = function (req, res) {
   });
 }
 
+exports.combobox = function (req, res) {
+  models.iniciativa.findAll({
+    order: 'nombre'
+  }).then(function (iniciativas) {
+    //iniciativas.forEach(log)
+    res.json(iniciativas);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+
+exports.generarproyectoenvuelo = function (req, res) {
+
+  var insertaTareas = function (idpresupuestoenvuelocreado, tareasnuevosproyectos, callback) {
+
+    models.sequelize.transaction({ autocommit: true }, function (t) {
+      var promises = []
+      for (var i = 0; i < tareasnuevosproyectos.length; i++) {
+
+        var newPromise = models.tareaenvuelo.create({
+          'idpresupuestoenvuelo': idpresupuestoenvuelocreado,
+          'glosa': tareasnuevosproyectos[i].glosa,
+          'idcui': tareasnuevosproyectos[i].idcui,
+          'idservicio': tareasnuevosproyectos[i].idservicio,
+          'idproveedor': tareasnuevosproyectos[i].idproveedor,
+          'tarea': tareasnuevosproyectos[i].tarea,
+          'idtipopago': tareasnuevosproyectos[i].idtipopago,
+          'fechainicio': tareasnuevosproyectos[i].fechainicio,
+          'fechafin': tareasnuevosproyectos[i].fechafin,
+          'reqcontrato': tareasnuevosproyectos[i].reqcontrato,
+          'idmoneda': tareasnuevosproyectos[i].idmoneda,
+          'costounitario': tareasnuevosproyectos[i].costounitario,
+          'cantidad': tareasnuevosproyectos[i].cantidad,
+          'coniva': tareasnuevosproyectos[i].coniva,
+          'numerocontrato': null,
+          'numerosolicitudcontrato': null,
+          'borrado': 1, 'pending': true
+        }, { transaction: t });
+
+        promises.push(newPromise);
+      };
+      return Promise.all(promises).then(function (compromisos) {
+        var compromisoPromises = [];
+        for (var i = 0; i < compromisos.length; i++) {
+          compromisoPromises.push(compromisos[i]);
+        }
+        return Promise.all(compromisoPromises);
+      });
+
+    }).then(function (tareaenvuelo) {
+      callback(tareaenvuelo)
+    }).catch(function (err) {
+      console.log("--------> " + err);
+    });
+  }
+
+
+  var insertaFlujos = function (flujonuevatarea, tareaenvuelo, callback) {
+
+    models.sequelize.transaction({ autocommit: true }, function (t) {
+      var promises = []
+
+      for (var k = 0; k < flujonuevatarea.length; k++) {
+
+        var newPromise = models.flujopagoenvuelo.create({
+          'idtareaenvuelo': tareaenvuelo.id,
+          'periodo': flujonuevatarea[k].periodo,
+          'costoorigen': flujonuevatarea[k].costoorigen,
+          'glosaitem': flujonuevatarea[k].glosaitem,
+          'porcentaje': flujonuevatarea[k].porcentaje,
+          'idtipopago': flujonuevatarea[k].idtipopago,
+          'fechainicio': flujonuevatarea[k].fechainicio,
+          'fechafin': flujonuevatarea[k].fechafin,
+          'cantidad': flujonuevatarea[k].cantidad,
+          'borrado': 1, 'pending': true
+        }, { transaction: t });
+        promises.push(newPromise);
+      }
+
+
+
+      return Promise.all(promises).then(function (compromisos) {
+        var compromisoPromises = [];
+        for (var i = 0; i < compromisos.length; i++) {
+          compromisoPromises.push(compromisos[i]);
+        }
+        return Promise.all(compromisoPromises);
+      });
+
+    }).then(function (flujopagoenvuelo) {
+      callback(flujopagoenvuelo)
+    }).catch(function (err) {
+      console.log("--------> " + err);
+    });
+  }
+
+
+
+
+
+
+  var idpresupuestoenvuelocreado;
+  var idtareaenvuelocreada;
+  models.presupuestoiniciativa.belongsTo(models.iniciativaprograma, { foreignKey: 'idiniciativaprograma' });
+  models.presupuestoiniciativa.find({
+    where: { id: req.params.id },
+    include: [{ model: models.iniciativaprograma }]
+  }).then(function (presupuestoiniciativa) {
+    console.dir(presupuestoiniciativa);
+    models.presupuestoenvuelo.create({
+      nombreproyecto: presupuestoiniciativa.glosa,
+      sap: presupuestoiniciativa.sap,
+      program_id: presupuestoiniciativa.iniciativaprograma.program_id,
+      cuifinanciamiento1: presupuestoiniciativa.cuifinanciamiento1,
+      porcentaje1: presupuestoiniciativa.porcentaje1,
+      cuifinanciamiento2: presupuestoiniciativa.cuifinanciamiento2,
+      porcentaje2: presupuestoiniciativa.porcentaje2,
+      beneficioscuantitativos: presupuestoiniciativa.beneficioscuantitativos,
+      beneficioscualitativos: presupuestoiniciativa.beneficioscualitativos,
+      uidlider: presupuestoiniciativa.uidlider,
+      uidjefeproyecto: presupuestoiniciativa.uidjefeproyecto,
+      uidpmoresponsable: null,
+      dolar: presupuestoiniciativa.dolar,
+      uf: presupuestoiniciativa.uf,
+      fechaconversion: presupuestoiniciativa.fechaconversion,
+      borrado: 1
+    }).then(function (presupuestoenvuelo) {
+      idpresupuestoenvuelocreado = presupuestoenvuelo.id;
+      models.tareasnuevosproyectos.findAll({
+        where: { idpresupuestoiniciativa: req.params.id }
+      }).then(function (tareasnuevosproyectos) {
+        /*
+        for (var i = 0; i < tareasnuevosproyectos.length; i++) {
+          var idtareanuevoproyectobuscada = tareasnuevosproyectos[i].id;
+          models.tareaenvuelo.create({
+            idpresupuestoenvuelo: idpresupuestoenvuelocreado,
+            glosa: tareasnuevosproyectos[i].glosa,
+            idcui: tareasnuevosproyectos[i].idcui,
+            idservicio: tareasnuevosproyectos[i].idservicio,
+            idproveedor: tareasnuevosproyectos[i].idproveedor,
+            tarea: tareasnuevosproyectos[i].tarea,
+            idtipopago: tareasnuevosproyectos[i].idtipopago,
+            fechainicio: tareasnuevosproyectos[i].fechainicio,
+            fechafin: tareasnuevosproyectos[i].fechafin,
+            reqcontrato: tareasnuevosproyectos[i].reqcontrato,
+            idmoneda: tareasnuevosproyectos[i].idmoneda,
+            costounitario: tareasnuevosproyectos[i].costounitario,
+            cantidad: tareasnuevosproyectos[i].cantidad,
+            coniva: tareasnuevosproyectos[i].coniva,
+            numerocontrato: null,
+            numerosolicitudcontrato: null,
+            borrado: 1
+          }).then(function (tareaenvuelo) {
+            console.log('**** ' + tareaenvuelo.id + ' tarea en vuelo creada a partir de ' + idtareanuevoproyectobuscada + '****');
+            idtareaenvuelocreada = tareaenvuelo.id;
+            models.flujonuevatarea.findAll({
+              where: { idtareasnuevosproyectos: idtareanuevoproyectobuscada }
+            }).then(function (flujonuevatarea) {
+              for (var j = 0; j < flujonuevatarea.length; j++) {
+                models.flujopagoenvuelo.create({
+                  idtareaenvuelo: idtareaenvuelocreada,
+                  periodo: flujonuevatarea[j].periodo,
+                  costoorigen: flujonuevatarea[j].costoorigen,
+                  glosaitem: flujonuevatarea[j].glosaitem,
+                  porcentaje: flujonuevatarea[j].porcentaje,
+                  idtipopago: flujonuevatarea[j].idtipopago,
+                  fechainicio: flujonuevatarea[j].fechainicio,
+                  fechafin: flujonuevatarea[j].fechafin,
+                  cantidad: flujonuevatarea[j].cantidad,
+                  borrado: 1
+                })
+
+              }
+            })
+          })
+        }
+        */
+        insertaTareas(idpresupuestoenvuelocreado, tareasnuevosproyectos, function (tareaenvuelo) {
+          console.dir(tareaenvuelo)
+
+          for (var j = 0; j < tareasnuevosproyectos.length; j++) {
+
+            var sql = "select * from sip.flujonuevatarea " +
+              "where idtareasnuevosproyectos=" + tareasnuevosproyectos[j].id;
+
+            sequelize.query(sql)
+              .spread(function (flujonuevatarea) {
+                insertaFlujos(flujonuevatarea, tareaenvuelo[j], function (flujopagoenvuelo) {
+                  console.dir(flujopagoenvuelo)
+                })
+
+              });
+
+            /*
+                        models.flujonuevatarea.findAll({
+                          where: { idtareasnuevosproyectos: tareasnuevosproyectos[j].id }
+                        }).then(function (flujonuevatarea) {
+            */
+
+
+
+            // })
+          }
+
+
+
+        })
+      });
+      res.json(presupuestoenvuelo);
+    }).catch(function (err) {
+      console.log(err);
+      res.json({ error_code: 1 });
+    });
+  })
+
+}
+
 exports.action = function (req, res) {
   var action = req.body.oper;
   var porcentaje1, porcentaje2, dolar, uf = 0

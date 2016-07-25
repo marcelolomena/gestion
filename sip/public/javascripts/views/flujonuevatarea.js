@@ -13,26 +13,26 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Periodo{periodo}</div>";
-    template += "<div class='column-half'>Porcentaje{porcentaje}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Periodo{periodo}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Porcentaje{porcentaje}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Glosa Item{glosaitem}</div>";
+    template += "<div class='column-full'><span style='color: red'>*</span>Glosa Item{glosaitem}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Fecha Inicio{fechainicio}</div>";
-    template += "<div class='column-half'>Fecha Fin{fechafin}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Fecha Inicio{fechainicio}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Fecha Fin{fechafin}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Cantidad{cantidad}</div>";
-    template += "<div class='column-half'>Costo{costoorigen}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Cantidad{cantidad}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Costo{costoorigen}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Pago{idtipopago}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
     template += "<div class='column-half'>Proyecto{idproyecto}</div>";
     template += "</div>";
 

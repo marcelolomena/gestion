@@ -13,18 +13,18 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Glosa{glosa}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Glosa{glosa}</div>";
     template += "<div class='column-half'>N° SAP{sap}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI 1{cuifinanciamiento1}</div>";
-    template += "<div class='column-half'>% financiamiento{porcentaje1}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>CUI 1{cuifinanciamiento1}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>% financiamiento{porcentaje1}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI 2{cuifinanciamiento2}</div>";
-    template += "<div class='column-half'>% financiamiento{porcentaje2}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>CUI 2{cuifinanciamiento2}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>% financiamiento{porcentaje2}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -36,14 +36,14 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Lider{uidlider}</div>";
-    template += "<div class='column-half'>Jefe Area Responsable{uidjefeproyecto}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Lider{uidlider}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Jefe Area Responsable{uidjefeproyecto}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-three'>Dolar{dolar}</div>";
-    template += "<div class='column-three'>UF{uf}</div>";
-    template += "<div class='column-three'>Fecha Conversión{fechaconversion}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>Dolar{dolar}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>UF{uf}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -71,7 +71,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'Glosa', name: 'glosa', width: 100, align: 'left',
             search: true, editable: true, hidden: false,
-            editrules: {required: true},
+            editrules: { required: true },
         },
         {
             label: 'SAP', name: 'sap', width: 80, align: 'left',
@@ -98,7 +98,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('0,00', { reverse: true, placeholder: "_,__"  });
+                    $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
             search: true, editable: true, hidden: false,
@@ -140,9 +140,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             search: true, editable: true, hidden: false,
         },
         {
-            label: 'uidlider', name: 'uidlider', 
+            label: 'uidlider', name: 'uidlider',
             search: false, editable: true, hidden: true,
-            editrules: {required: true},
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuariosprograma/' + parentRowKey,
@@ -176,9 +176,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             search: true, editable: true, hidden: false, jsonmap: "nombrelider"
         },
         {
-            label: 'uidjefeproyecto', name: 'uidjefeproyecto', 
+            label: 'uidjefeproyecto', name: 'uidjefeproyecto',
             search: false, editable: true, hidden: true,
-            editrules: {required: true},
+            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuariosprograma/' + parentRowKey,
@@ -214,7 +214,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
-            editrules: {required: true},
+            editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -241,7 +241,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'Dolar', name: 'dolar', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            editrules: {required: true},
+            editrules: { required: true },
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -253,7 +253,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'UF', name: 'uf', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            editrules: {required: true},
+            editrules: { required: true },
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -319,7 +319,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
-                } 
+                }
                 var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
                 //console.log('porcentaje1: ' + elporcentaje1);
                 var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
@@ -374,7 +374,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
-                } 
+                }
                 var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
                 //console.log('porcentaje1: ' + elporcentaje1);
                 var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
@@ -387,7 +387,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 else {
                     return [true, "", ""]
                 }
-                
+
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -423,6 +423,41 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+    $("#" + childGridID).jqGrid('navButtonAdd', '#' + childGridPagerID,
+        {
+            caption: "Generar Proyecto en Vuelo", buttonicon: "ui-icon-extlink", title: "Generar Proyecto en Vuelo",
+            onClickButton: function () {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                var thissid = rowData.id;
+                var thissap = rowData.sap;
+                var thisiniciativa = rowData.glosa;
+                if (thissid == undefined) {
+                    alert("Debe seleccionar una fila");
+                    return [false, result.error_text, ""];
+                }
+                //console.log('la sap: '+thissap);
+                if (thissap == "0") {
+                    alert("Presupuesto no tiene número de SAP");
+                    return [false, result.error_text, ""];
+                }
+                var boton = confirm('Está seguro que desea pasar la iniciativa ' + thisiniciativa + ' a Proyecto en vuelo');
+                if (boton == true) {
+                    alert('Funcionalidad en desarrollo');
+                    /*
+                    $.ajax({
+                        type: "POST",
+                        url: '/generarproyectoenvuelo/' + thissid,
+                        success: function (data) {
+                            alert("Se ha generado el proyecto en vuelo: " + data.nombreproyecto + " con el id: " + data.id);
+                            window.location.href = "/presupuestoenvuelo";
+                        }
+                    });
+                    */
+                }
+            }
+        });
 }
 function showSubGrids2(subgrid_id, row_id) {
     gridTareasNuevosProyectos(subgrid_id, row_id, 'tareas');

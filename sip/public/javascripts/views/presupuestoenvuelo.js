@@ -2,8 +2,8 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Nombre Proyecto {nombreproyecto}</div>";
-    template += "<div class='column-half'>N° SAP{sap}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Nombre Proyecto {nombreproyecto}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>N° SAP{sap}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -12,13 +12,13 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI 1{cuifinanciamiento1}</div>";
-    template += "<div class='column-half'>% financiamiento{porcentaje1}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>CUI 1{cuifinanciamiento1}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>% financiamiento{porcentaje1}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI 2{cuifinanciamiento2}</div>";
-    template += "<div class='column-half'>% financiamiento{porcentaje2}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>CUI 2{cuifinanciamiento2}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>% financiamiento{porcentaje2}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -30,15 +30,15 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-three'>Lider{uidlider}</div>";
-    template += "<div class='column-three'>Jefe Proyecto{uidjefeproyecto}</div>";
-    template += "<div class='column-three'>PMO Responsable{uidpmoresponsable}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>Lider{uidlider}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>Jefe Proyecto{uidjefeproyecto}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>PMO Responsable{uidpmoresponsable}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-three'>Dolar{dolar}</div>";
-    template += "<div class='column-three'>UF{uf}</div>";
-    template += "<div class='column-three'>Fecha Conversión{fechaconversion}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>Dolar{dolar}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>UF{uf}</div>";
+    template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
