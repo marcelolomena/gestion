@@ -128,7 +128,7 @@ exports.getPresupuestoPaginados = function (req, res) {
             "With SQLPaging As   ( " +
             "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
             "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
             "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
             "ORDER BY id desc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -140,7 +140,7 @@ exports.getPresupuestoPaginados = function (req, res) {
             "With SQLPaging As   ( " +
             "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
             "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
             "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
             "WHERE a.idcui IN (" + elcui + ") " +
             "ORDER BY id desc) " +

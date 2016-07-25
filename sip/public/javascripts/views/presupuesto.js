@@ -821,10 +821,10 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 editoptions: { size: 10, readonly: 'readonly'}               
             },
             {
-                label: 'Base Caja',
+                label: 'Base Caja Versión Anterior',
                 name: 'presupuestobasecaja',
                 align: 'right',
-                width: 100,
+                width: 200,
                 search: false,
                 sortable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
@@ -836,15 +836,16 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 width: 100,
                 search: false,
                 sortable: false,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
             {
-                label: 'Valor en Moneda',
+                label: 'Presupuesto Requerido Moneda Origen',
                 name: 'presupuestoorigen',
                 editable: true,
                 align: 'right',
                 search: false,
-                width: 100,
+                width: 230,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -857,21 +858,21 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
             {
-                label: 'Caja',
+                label: 'Presupuesto Calculado',
                 name: 'caja',
                 editable: false,
                 align: 'right',
                 search: false,
-                width: 100,
+                width: 180,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Compr. Caja',
+                label: 'Comprometido Caja',
                 name: 'cajacomprometido',
                 editable: false,
                 align: 'right',
                 search: false,
-                width: 100,
+                width: 150,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -890,6 +891,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -899,6 +901,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -908,6 +911,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             }                          
                                                           
