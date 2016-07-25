@@ -549,8 +549,8 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     if (diferido == "1") {
       var valorcosto = total / (mesesentre+1);
       var valorcosto = valorcosto.toFixed(2);
-      for (j = i; j <= parseInt(i) + mesesentre && j < caja.length + 1; j++) {
-        costo[j - 1] = valorcosto;
+      for (k = i; k <= parseInt(i) + mesesentre && k < caja.length + 1; k++) {
+        costo[k - 1] = valorcosto;
       }
     } else {
       costo[i - 1] = total;

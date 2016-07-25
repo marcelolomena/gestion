@@ -925,6 +925,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         editurl: '/presupuestoperiodos/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID
+        //colMenu:true
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {

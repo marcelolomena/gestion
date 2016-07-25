@@ -86,7 +86,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, * " +
     "FROM sip.detalleplan " +
-    "WHERE iddetallepre="+id+" order by id asc)" +
+    "WHERE iddetallepre="+id+" order by periodo asc)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
