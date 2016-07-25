@@ -169,9 +169,9 @@ $(document).ready(function () {
                     $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
-            search: true, editable: true, hidden: false,
+            search: true, editable: true, hidden: true,
             editrules: { edithidden: false, required: true },
-            hidedlg: true
+            //hidedlg: true
         },
         {
             label: 'Cui 2', name: 'cuifinanciamiento2', width: 50, align: 'left',
@@ -193,9 +193,9 @@ $(document).ready(function () {
                     $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
-            search: true, editable: true, hidden: false,
+            search: true, editable: true, hidden: true,
             editrules: { edithidden: false, required: true },
-            hidedlg: true
+            //hidedlg: true
         },
         {
             label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
@@ -413,7 +413,8 @@ $(document).ready(function () {
 
                 $("#table_iniciativa").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
             }
-        }
+        },
+        colMenu:true
     });
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
     $("#table_iniciativa").jqGrid('filterToolbar', {
