@@ -7,13 +7,24 @@ var log = function (inst) {
   console.dir(inst.get())
 }
 // 
-exports.list = function (req, res) {
+exports.getConceptos = function (req, res) {
 
-  var page = req.body.page;
-  var rows = req.body.rows;
-  var filters = req.body.filters;
-  var sidx = req.body.sidx;
-  var sord = req.body.sord;
+    models.conceptospresupuestarios.findAll({ where: { 'borrado': 1 }, order: 'id' }).then(function (conceptos) {
+        res.json(conceptos);
+    }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+    });
+
+};
+exports.list = function (req, res) {
+  // Use the Proyectos model to find all proyectos
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var filters = req.query.filters;
+  var condition = "";
 
   if (!sidx)
     sidx = "cuentacontable";
@@ -21,34 +32,84 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
-  var orden = sidx + " " + sord;
+  var order = sidx + " " + sord;
+  
+  var sql0 = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rows + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+    "as resultNum, [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta], "+ 
+    " [cuentascontables].[invgasto], [cuentascontables].[idconcepto], [cuentascontables].[cuentaorigen], "+
+    " [cuentascontables].[borrado], [conceptospresupuestario].[id] AS [conceptospresupuestario.id], "+
+    " case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
+    " [conceptospresupuestario].[conceptopresupuestario] AS [conceptospresupuestario.conceptopresupuestario], "+
+    " [conceptospresupuestario].[glosaconcepto] AS [conceptospresupuestario.glosaconcepto] "+
+    " FROM [sip].[cuentascontables] AS [cuentascontables] "+
+    " LEFT OUTER JOIN [sip].[conceptospresupuestarios] AS [conceptospresupuestario] ON [cuentascontables].[idconcepto] = [conceptospresupuestario].[id] "+ 
+    " where [cuentascontables].borrado = 1 ORDER BY cuentacontable asc) " +
+    " select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-  utilSeq.buildCondition(filters, function (err, data) {
-    if (err) {
-      console.log("->>> " + err)
-    } else {
-      models.cuentascontables.belongsTo(models.conceptospresupuestarios, { foreignKey: 'idconcepto' });
-      models.cuentascontables.count({
-        where: data
-      }).then(function (records) {
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+
+      jsonObj.rules.forEach(function (item) {
+
+        if (item.op === 'cn')
+          condition += item.field + " like '%" + item.data + "%' AND"
+      });
+
+      var sql = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rows + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        "as resultNum, [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta], "+ 
+        " [cuentascontables].[invgasto], [cuentascontables].[idconcepto], [cuentascontables].[cuentaorigen], "+
+        " [cuentascontables].[borrado], [conceptospresupuestario].[id] AS [conceptospresupuestario.id], "+
+        " case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
+        " [conceptospresupuestario].[conceptopresupuestario] AS [conceptospresupuestario.conceptopresupuestario], "+
+        " [conceptospresupuestario].[glosaconcepto] AS [conceptospresupuestario.glosaconcepto] "+
+        " FROM [sip].[cuentascontables] AS [cuentascontables] "+
+        " LEFT OUTER JOIN [sip].[conceptospresupuestarios] AS [conceptospresupuestario] ON [cuentascontables].[idconcepto] = [conceptospresupuestario].[id] "+ 
+        " WHERE [cuentascontables].borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cuentacontable asc) " +
+        " select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+      models.cuentascontables.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.cuentascontables.findAll({
-          offset: parseInt(rows * (page - 1)),
-          limit: parseInt(rows),
-          order: orden,
-          where: data,
-          include: [{
-            model: models.conceptospresupuestarios
-          }]
-        }).then(function (cuentas) {
-          res.json({ records: records, total: total, page: page, rows: cuentas });
-        }).catch(function (err) {
-          res.json({ error_code: 1 });
-        });
+        sequelize.query(sql)
+          .spread(function (rows) {
+
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })
+
+    } else {
+
+      models.cuentascontables.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
       })
     }
-  });
 
+  } else {
+
+    models.cuentascontables.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+      var total = Math.ceil(records / rows);
+      sequelize.query(sql0)
+        .spread(function (rows) {
+          res.json({ records: records, total: total, page: page, rows: rows });
+        });
+    })
+
+  }
 };
 
 exports.action = function (req, res) {
@@ -56,10 +117,16 @@ exports.action = function (req, res) {
 
   switch (action) {
    
-    case "add":               
+    case "add":    
+    var concepto = req.body.idconcepto      
+    if (concepto == 0) 
+    {  concepto = null }
       models.cuentascontables.create({
-        conceptopresupuestario: req.body.conceptopresupuestario,
-        glosaconcepto: req.body.glosaconcepto,
+        idconcepto: concepto,
+        cuentacontable: req.body.cuentacontable,
+        nombrecuenta: req.body.nombrecuenta,
+        cuentaorigen: req.body.cuentaorigen,
+        invgasto: req.body.invgasto,
         borrado: 1
       }).then(function (cuentas) {
         res.json({ error_code: 0 });
@@ -69,8 +136,14 @@ exports.action = function (req, res) {
       });
       break;
     case "edit":
+    var concepto = req.body.idconcepto      
+    if (concepto == 0) 
+    {  concepto = null }
       models.cuentascontables.update({
-        glosaconcepto: req.body.glosaconcepto
+        idconcepto: concepto,
+        nombrecuenta: req.body.nombrecuenta,
+        cuentaorigen: req.body.cuentaorigen,
+        invgasto: req.body.invgasto,
       }, {
           where: {
             id: req.body.id
@@ -113,29 +186,60 @@ exports.getExcel = function (req, res) {
   conf.cols = [{
     caption: 'id',
     type: 'number',
-    width: 3
-  },
-    {
-      caption: 'conceptopresupuestario',
-      type: 'number',
-      width: 10
+    width: 5
+   },
+   {
+      caption: 'cuentacontable',
+      type: 'string',
+      width: 20
     },
     {
-      caption: 'Nombre',
+      caption: 'nombrecuenta',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'glosatipo',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'cuentaorigen',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'conceptopresupuestario',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'glosaconcepto',
       type: 'string',
       width: 50
     }
   ];
 
-  var sql = "SELECT id,conceptopresupuestario,glosaconcepto FROM sip.conceptospresupuestarios order by conceptopresupuestario "
+  var sql = "SELECT  [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta], "+    
+    " case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
+    " [cuentascontables].[cuentaorigen],[conceptospresupuestario].[conceptopresupuestario] AS conceptopresupuestario, "+
+    " [conceptospresupuestario].[glosaconcepto] AS glosaconcepto"+
+    " FROM [sip].[cuentascontables] AS [cuentascontables] "+
+    " LEFT OUTER JOIN [sip].[conceptospresupuestarios] AS [conceptospresupuestario] ON [cuentascontables].[idconcepto] = [conceptospresupuestario].[id] "+ 
+    " where [cuentascontables].borrado = 1 ORDER BY cuentacontable asc "
   
   sequelize.query(sql)
-    .spread(function (proyecto) {
+    .spread(function (cuentas) {
       var arr = []
-      for (var i = 0; i < proyecto.length; i++) {
+      for (var i = 0; i < cuentas.length; i++) {
 
-        a = [i + 1, proyecto[i].conceptopresupuestario,
-          proyecto[i].glosaconcepto
+        a = [i + 1, 
+          cuentas[i].cuentacontable,
+          cuentas[i].nombrecuenta,
+          cuentas[i].glosatipo,
+          cuentas[i].cuentaorigen,
+          cuentas[i].conceptopresupuestario,
+          cuentas[i].glosaconcepto
         ];
         arr.push(a);
       }
@@ -143,7 +247,7 @@ exports.getExcel = function (req, res) {
 
       var result = nodeExcel.execute(conf);
       res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-      res.setHeader("Content-Disposition", "attachment;filename=" + "ConceptosPresupuestarios.xlsx");
+      res.setHeader("Content-Disposition", "attachment;filename=" + "cuentascontables.xlsx");
       res.end(result, 'binary');
 
     }).catch(function (err) {
