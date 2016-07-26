@@ -24,11 +24,11 @@ $(document).ready(function () {
     var modelPresupuesto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: false, editable: true,
+            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: false,sortable: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, editable: true, hidden: true,
+            label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false,sortable: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/CUIs',
@@ -51,14 +51,14 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-        { label: 'Responsable CUI', name: 'responsable', width: 200, align: 'left', search: false, editable: true },
+        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, sortable: false, editable: true },
+        { label: 'Responsable CUI', name: 'responsable', width: 200, align: 'left', search: false, sortable: false, editable: true },
         {
-            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', search: false, editable: true,
+            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', sortable: false, search: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Ejercicio', name: 'idejercicio', width: 50, align: 'left', search: false, editable: true, hidden: true,
+            label: 'Ejercicio', name: 'idejercicio', width: 50, align: 'left', search: false,sortable: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/ejercicios',
@@ -88,25 +88,25 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, editable: true },
-        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: false },
+        { label: 'Versión', name: 'version', width: 80, align: 'left', search: false,sortable: false, editable: true },
+        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, sortable: false, editable: false },
         {
-            label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, editable: true,
+            label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, editable: true,
+            label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Costo Forecast', name: 'costoforecast', width: 130, align: 'left', search: false, editable: true,
+            label: 'Costo Forecast', name: 'costoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Costo Anual', name: 'costoanual', width: 100, align: 'left', search: false, editable: true,
+            label: 'Costo Anual', name: 'costoanual', width: 100, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },        
-        { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
+        { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, sortable: false, editable: true }
         
     ];
     $("#grid").jqGrid({
