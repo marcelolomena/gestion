@@ -17,10 +17,10 @@ exports.getPresupuestoPaginados = function (req, res) {
   var condition = "";
 
   if (!sidx)
-    sidx = "idcui";
+    sidx = "a.id";
 
   if (!sord)
-    sord = "asc";
+    sord = "desc";
 
   var order = sidx + " " + sord;
   //var cuis = getCuis(req.user[0].uid);
@@ -143,7 +143,7 @@ exports.getPresupuestoPaginados = function (req, res) {
             "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
 //            if (filters) 
 //              sqlok += "WHERE "+condition+ " ";             
-            "ORDER BY id desc) " +
+            "ORDER BY id asc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
           } else {
             sqlok = "declare @rowsPerPage as bigint; " +
@@ -158,7 +158,7 @@ exports.getPresupuestoPaginados = function (req, res) {
             "WHERE a.idcui IN (" + elcui + ") " +
 //            if (filters)
 //              sqlok += "AND "+ condition+ " "; 
-            "ORDER BY id desc) " +
+            "ORDER BY id asc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
           }
           sequelize.query(sqlok).spread(function (rows) {
