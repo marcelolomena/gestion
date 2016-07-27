@@ -258,6 +258,28 @@ exports.action = function (req, res) {
   var monedas = getMonedas(idPre, req.body.idmoneda);
   console.log("****MONEDAS+"+monedas);
   
+  var estadoPrep = function (idPrep, callback){
+    var sql = "SELECT estado FROM sip.presupuesto WHERE id="+idPrep;
+    var estadoPrep;
+    sequelize.query(sql)
+      .spread(function (rows) {
+          if (rows.length > 0) {
+            console.log("***Estado:" + rows[0].estado);
+            estadoPrep = rows[0].estado;
+          } else {
+            estadoPrep = ""; //no existe el presupuesto
+          }
+          callback(estadoPrep);
+      })
+  }
+  
+  estadoPrep(idPre,  function (estado) {
+    if (estado == "Aprobado") {
+      res.json({ error_code: 10 });
+    }
+  });
+
+  
   var insertaPeriodos = function (idservicio, cuotas, callback) {
     console.log("insertaPeriodos:" + idservicio + "," + cuotas);
     models.sequelize.transaction({ autocommit: true }, function (t) {

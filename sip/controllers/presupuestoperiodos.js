@@ -227,6 +227,33 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var idServ = req.params.id
   console.log("***ActionPeriodos:"+req.body.id);
+  var idPeriodo = req.body.id;
+  
+  var estadoPrep = function (idperiodo, callback){
+    console.log("***EstadoPrep"+ idperiodo);
+    var sql = "declare @idservicio int "+
+      "SELECT @idservicio=iddetallepre FROM sip.detalleplan WHERE id="+idperiodo+ " "+
+      "SELECT b.estado FROM sip.detallepre a JOIN sip.presupuesto b ON a.idpresupuesto=b.id "+
+      "WHERE a.id=@idservicio";
+    var estadoPrep;
+    sequelize.query(sql)
+      .spread(function (rows) {
+          if (rows.length > 0) {
+            console.log("***Estado:" + rows[0].estado);
+            estadoPrep = rows[0].estado;
+          } else {
+            estadoPrep = ""; //no existe el presupuesto
+          }
+          callback(estadoPrep);
+      })
+  }
+  
+  estadoPrep(idPeriodo, function (estado) {
+    if (estado == "Aprobado") {
+      res.json({ error_code: 10 });
+    }
+  });
+    
   switch (action) {
     case "add":
         console.log("No se puede agregar");
