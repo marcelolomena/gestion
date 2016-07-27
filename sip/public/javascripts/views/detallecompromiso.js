@@ -38,7 +38,7 @@ function gridDetail(parentRowID, parentRowKey) {
                 }, editrules: { required: true, number: true }
             },
             {
-                label: 'Monto', name: 'montoorigen', width: 150, editable: true,
+                label: 'Caja', name: 'montoorigen', width: 150, editable: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
                     dataInit: function (el) {
@@ -47,7 +47,7 @@ function gridDetail(parentRowID, parentRowKey) {
                 }, editrules: { required: false }
             },
             {
-                label: 'Costo', name: 'costoorigen', width: 150, editable: true,
+                label: 'Impacto Operacional', name: 'costoorigen', width: 200, editable: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
                     dataInit: function (el) {
