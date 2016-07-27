@@ -79,7 +79,7 @@ exports.test = function (req, res) {
             var menus = {}
             menus["menus"] = menu
             var toti = usuario.concat(menus);
-            console.log(JSON.stringify(toti))
+            //console.log(JSON.stringify(toti))
         });
 
     }).catch(function (err) {

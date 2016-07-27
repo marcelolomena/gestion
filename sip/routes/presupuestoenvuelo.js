@@ -13,6 +13,10 @@ module.exports = function (passport) {
         res.render('presupuestoenvuelo', { user: req.user });
     });
 
+    router.get('/inscripcionsap', isAuthenticated, function (req, res) {
+        res.render('inscripcionsap', { user: req.user });
+    });
+
     router.route('/presupuestoenvuelo/list')
         .post(isAuthenticated, presupuestoenvueloController.list);
 

@@ -66,8 +66,14 @@ module.exports = function (passport) {
     router.route('/presupuestoiniciativa/action')
         .post(isAuthenticated, presupuestoiniciativaController.action);
 
+    router.route('/presupuestoiniciativa/actualiSAP')
+        .post(isAuthenticated, presupuestoiniciativaController.actualiSAP);
+
     router.route('/presupuestoiniciativa/:id')
         .get(isAuthenticated, presupuestoiniciativaController.list);
+
+    router.route('/inscripcionsap/listSAP')
+        .post(isAuthenticated, presupuestoiniciativaController.listSAP);
 
     router.route('/tareasnuevosproyectos/action')
         .post(isAuthenticated, tareasnuevosproyectosController.action);

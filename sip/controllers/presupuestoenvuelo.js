@@ -356,7 +356,7 @@ exports.combobox = function (req, res) {
     res.json({ error_code: 1 });
   });
 }
-
+/*
 exports.generarproyectoenvuelo = function (req, res) {
 
   var insertaTareas = function (idpresupuestoenvuelocreado, tareasnuevosproyectos, callback) {
@@ -477,52 +477,7 @@ exports.generarproyectoenvuelo = function (req, res) {
       models.tareasnuevosproyectos.findAll({
         where: { idpresupuestoiniciativa: req.params.id }
       }).then(function (tareasnuevosproyectos) {
-        /*
-        for (var i = 0; i < tareasnuevosproyectos.length; i++) {
-          var idtareanuevoproyectobuscada = tareasnuevosproyectos[i].id;
-          models.tareaenvuelo.create({
-            idpresupuestoenvuelo: idpresupuestoenvuelocreado,
-            glosa: tareasnuevosproyectos[i].glosa,
-            idcui: tareasnuevosproyectos[i].idcui,
-            idservicio: tareasnuevosproyectos[i].idservicio,
-            idproveedor: tareasnuevosproyectos[i].idproveedor,
-            tarea: tareasnuevosproyectos[i].tarea,
-            idtipopago: tareasnuevosproyectos[i].idtipopago,
-            fechainicio: tareasnuevosproyectos[i].fechainicio,
-            fechafin: tareasnuevosproyectos[i].fechafin,
-            reqcontrato: tareasnuevosproyectos[i].reqcontrato,
-            idmoneda: tareasnuevosproyectos[i].idmoneda,
-            costounitario: tareasnuevosproyectos[i].costounitario,
-            cantidad: tareasnuevosproyectos[i].cantidad,
-            coniva: tareasnuevosproyectos[i].coniva,
-            numerocontrato: null,
-            numerosolicitudcontrato: null,
-            borrado: 1
-          }).then(function (tareaenvuelo) {
-            console.log('**** ' + tareaenvuelo.id + ' tarea en vuelo creada a partir de ' + idtareanuevoproyectobuscada + '****');
-            idtareaenvuelocreada = tareaenvuelo.id;
-            models.flujonuevatarea.findAll({
-              where: { idtareasnuevosproyectos: idtareanuevoproyectobuscada }
-            }).then(function (flujonuevatarea) {
-              for (var j = 0; j < flujonuevatarea.length; j++) {
-                models.flujopagoenvuelo.create({
-                  idtareaenvuelo: idtareaenvuelocreada,
-                  periodo: flujonuevatarea[j].periodo,
-                  costoorigen: flujonuevatarea[j].costoorigen,
-                  glosaitem: flujonuevatarea[j].glosaitem,
-                  porcentaje: flujonuevatarea[j].porcentaje,
-                  idtipopago: flujonuevatarea[j].idtipopago,
-                  fechainicio: flujonuevatarea[j].fechainicio,
-                  fechafin: flujonuevatarea[j].fechafin,
-                  cantidad: flujonuevatarea[j].cantidad,
-                  borrado: 1
-                })
-
-              }
-            })
-          })
-        }
-        */
+        
         insertaTareas(idpresupuestoenvuelocreado, tareasnuevosproyectos, function (tareaenvuelo) {
           console.dir(tareaenvuelo)
 
@@ -539,15 +494,7 @@ exports.generarproyectoenvuelo = function (req, res) {
 
               });
 
-            /*
-                        models.flujonuevatarea.findAll({
-                          where: { idtareasnuevosproyectos: tareasnuevosproyectos[j].id }
-                        }).then(function (flujonuevatarea) {
-            */
-
-
-
-            // })
+            
           }
 
 
@@ -561,6 +508,18 @@ exports.generarproyectoenvuelo = function (req, res) {
     });
   })
 
+}
+*/
+
+exports.generarproyectoenvuelo = function (req, res) {
+  sequelize.query('EXECUTE sip.generarproyectoenvuelo ' + 
+  req.params.id).then(function (response) {
+      console.log("****Ejecutando SP sip.generarproyectoenvuelo");
+      console.dir(response);
+      res.json(response)
+    }).error(function (err) {
+      res.json(err);
+    });
 }
 
 exports.action = function (req, res) {
