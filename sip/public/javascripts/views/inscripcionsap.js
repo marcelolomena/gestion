@@ -8,6 +8,7 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Código ART{codigoart}</div>";
+    template += "<div class='column-half'>Fecha Final Aprobación{fechafinal}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -134,7 +135,35 @@ $(document).ready(function () {
             search: true, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
             hidedlg: true
-        }
+        },
+
+        {
+            label: 'Fecha Final', name: 'fechafinal', width: 150, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            editable: true, editrules: {required: true},
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $("#" + childGridID)[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                }
+            }
+        },
 
     ];
 
@@ -147,7 +176,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        caption: 'Presupuesto Proyectos en Vuelo',
+        caption: 'Inscripción SAP',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
@@ -157,12 +186,12 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         editurl: '/presupuestoiniciativa/actualiSAP',
         styleUI: "Bootstrap",
-        //subGrid: true,
-        //subGridRowExpanded: showSubGrids,
-        /*subGridOptions: {
+        subGrid: true,
+        subGridRowExpanded: showSubGrids,
+        subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
-        },*/
+        },
         onSelectRow: function (id) {
             //var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
             //$("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
@@ -192,7 +221,7 @@ $(document).ready(function () {
         view: false, position: "left", cloneToTop: false
     },
         {
-            editCaption: "Modificar Presupuesto",
+            editCaption: "Inscripción SAP",
             closeAfterEdit: true,
             recreateForm: true,
             //mtype: 'POST',
@@ -254,6 +283,7 @@ $(document).ready(function () {
             }, beforeShowForm: function (form) {
                 $('input#codigoart', form).attr('readonly', 'readonly');
                 $('input#glosa', form).attr('readonly', 'readonly');
+                $('input#fechafinal', form).attr('readonly', 'readonly');
                 //$('#program_id').attr('disabled', 'disabled');
                 var grid = $("#table_iniciativa");
                 var rowKey = grid.getGridParam("selrow");
@@ -289,10 +319,10 @@ $(document).ready(function () {
         }
     );
     $("#pager_iniciativa_left").css("width", "");
-    /*
+    
     function showSubGrids(subgrid_id, row_id) {
-        gridTareaEnVuelo(subgrid_id, row_id, 'tareaenvuelo');
-        gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
+        gridTareasInscripcion(subgrid_id, row_id, 'tareasinscripcion');
+        //gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
     }
-    */
+    
 });

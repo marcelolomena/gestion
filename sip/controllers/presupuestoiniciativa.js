@@ -240,9 +240,10 @@ exports.listSAP = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.*, iniciativaprograma.codigoart as codigoart " +
+    "as resultNum, a.*, iniciativaprograma.codigoart as codigoart, iniciativafecha.fecha as fechafinal " +
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
+     "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] and iniciativafecha.tipofecha = 'Fecha Final Aprobación'" +
     "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1) " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
