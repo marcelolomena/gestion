@@ -17,10 +17,10 @@ exports.getPresupuestoPaginados = function (req, res) {
   var condition = "";
 
   if (!sidx)
-    sidx = "idcui";
+    sidx = "a.id";
 
   if (!sord)
-    sord = "asc";
+    sord = "desc";
 
   var order = sidx + " " + sord;
   //var cuis = getCuis(req.user[0].uid);
@@ -114,6 +114,17 @@ exports.getPresupuestoPaginados = function (req, res) {
 
     } else {
 */
+
+      if (filters) {
+        var jsonObj = JSON.parse(filters);
+        if (JSON.stringify(jsonObj.rules) != '[]') {
+          jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+              condition += item.field + " like '%" + item.data + "%' AND"
+          });
+          condition = condition.substring(0, condition.length - 4);
+        }
+      }
       models.presupuesto.count().then(function (records) {
         var total = Math.ceil(records / rows);
         superCui(req.user[0].uid, function (elcui) {
@@ -128,9 +139,11 @@ exports.getPresupuestoPaginados = function (req, res) {
             "With SQLPaging As   ( " +
             "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
             "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
             "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-            "ORDER BY id desc) " +
+//            if (filters) 
+//              sqlok += "WHERE "+condition+ " ";             
+            "ORDER BY id asc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
           } else {
             sqlok = "declare @rowsPerPage as bigint; " +
@@ -140,15 +153,25 @@ exports.getPresupuestoPaginados = function (req, res) {
             "With SQLPaging As   ( " +
             "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
             "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.secuencia " +
+            "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
             "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
             "WHERE a.idcui IN (" + elcui + ") " +
-            "ORDER BY id desc) " +
+//            if (filters)
+//              sqlok += "AND "+ condition+ " "; 
+            "ORDER BY id asc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
           }
           sequelize.query(sqlok).spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
+            res.json({ records: records, total: total, page: page, rows: rows }); 
           });
+          
+          /*models.presupuesto.count({ where: [condition] }).then(function (records) {
+            var total = Math.ceil(records / rows);
+            sequelize.query(sqlok)
+              .spread(function (rows) {
+                res.json({ records: records, total: total, page: page, rows: rows });
+              });
+          })*/                 
         });
       })
 /*

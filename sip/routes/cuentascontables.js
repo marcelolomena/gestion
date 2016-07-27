@@ -18,6 +18,9 @@ module.exports = function (passport) {
 
     router.route('/cuentascontables/excel')
         .get(isAuthenticated, cuentasController.getExcel);         
+    
+    router.route('/cuentascontables/conceptospresupuestarios')
+        .get(isAuthenticated, cuentasController.getConceptos);             
   
     return router;
 

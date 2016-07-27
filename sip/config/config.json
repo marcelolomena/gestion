@@ -27,11 +27,14 @@
     },
     "production": {
         "username": "art",
-        "password": "Art2015",
+        "password": "Banco2015.",
         "database": "art_live",
-        "host": "152.139.49.217",
+        "host": "152.139.49.102",
         "dialect": "mssql",
         "port": "1433",
+        "dialectOptions": {
+            "instanceName": "ARTBCH"
+        },        
         "pool": {
             "min": 5,
             "max": 100,
