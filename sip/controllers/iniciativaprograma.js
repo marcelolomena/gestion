@@ -4,13 +4,14 @@ var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  var gasto, inversion, previsto = 0
-  var gastoaprobado, inversionaprobada, aprobado, aprobadodolares = 0
+  var gasto, inversion, previsto = 0.00
+  var gastoaprobado, inversionaprobada, aprobado, aprobadodolares = 0.00
   var programid = null
 
   if (action != "del") {
     if (req.body.pptoestimadogasto != "")
       gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
+    console.log("*************el gasto: "+gasto);
 
     if (req.body.pptoestimadoinversion != "")
       inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
@@ -29,10 +30,12 @@ exports.action = function (req, res) {
 
     if (req.body.pptoaprobadodolares != "")
       aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
+    console.log("*************el aprobadodolares: "+aprobadodolares);
 
     if (req.body.program_id != "0")
       programid = req.body.program_id
   }
+
 
   switch (action) {
     case "add":
@@ -162,7 +165,7 @@ exports.action = function (req, res) {
           q4: req.body.q4,
           //fechacomite: req.body.fechacomite,
           idmoneda: req.body.idmoneda,
-          pptoestimadogasto: gasto,
+          pptoestimadogasto: parseFloat(gasto),
           pptoestimadoinversion: inversion,
           pptoestimadoprevisto: previsto,
           pptoaprobadogasto: gastoaprobado,
@@ -180,9 +183,11 @@ exports.action = function (req, res) {
               id: req.body.id
             }
           }).then(function (iniciativa) {
+            console.log("*************el gasto modificado es: "+parseFloat(gasto));
             res.json({ error_code: 0 });
           }).catch(function (err) {
             console.log(err);
+            console.log("*************el gasto modificado es: "+parseFloat(gasto));
             res.json({ error_code: 1 });
           });
       } else {

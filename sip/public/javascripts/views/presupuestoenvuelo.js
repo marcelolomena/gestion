@@ -58,16 +58,20 @@ $(document).ready(function () {
             label: 'id',
             name: 'id',
             key: true,
-            hidden: true
+            hidden: true,
+            hidedlg: true
         },
         {
             label: 'Proyecto', name: 'nombreproyecto', width: 200, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
 
         {
-            label: 'SAP', name: 'sap', width: 80, align: 'left',
+            label: 'SAP', name: 'sap', width: 60, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
             editoptions: {
@@ -75,10 +79,13 @@ $(document).ready(function () {
                     $(element).mask("0000", { placeholder: "____" });
                 }
             },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
             label: 'program_id', name: 'program_id', width: 150, align: 'left',
-            hidden: true, editable: true,
+            hidden: true, editable: true, hidedlg: true,
             editrules: { edithidden: true },
             edittype: "select",
             editoptions: {
@@ -147,11 +154,14 @@ $(document).ready(function () {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Art', name: 'codigoart', width: 100, align: 'left',
-            search: false, editable: true, jsonmap: 'codigoart'
+            label: 'Art', name: 'codigoart', width: 70, align: 'left',
+            search: false, editable: true, jsonmap: 'codigoart',
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
-            label: 'Cui 1', name: 'cuifinanciamiento1', width: 50, align: 'left',
+            label: 'Cui 1', name: 'cuifinanciamiento1', width: 75, align: 'left',
             search: true, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (element) {
@@ -159,22 +169,28 @@ $(document).ready(function () {
                 }
             },
             editrules: { edithidden: false, required: true, number: true },
-            hidedlg: true
+            hidedlg: true,
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
-            label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
+            label: '% Cui 1', name: 'porcentaje1', width: 85, align: 'left',
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
-            search: true, editable: true, hidden: true,
+            search: true, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
             //hidedlg: true
         },
         {
-            label: 'Cui 2', name: 'cuifinanciamiento2', width: 50, align: 'left',
+            label: 'Cui 2', name: 'cuifinanciamiento2', width: 75, align: 'left',
             search: true, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (element) {
@@ -182,35 +198,47 @@ $(document).ready(function () {
 
                 }
             },
-            editrules: { edithidden: false, required: true, number: true },
-            hidedlg: true
+            editrules: { edithidden: false, required: false, number: true },
+            hidedlg: true,
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
-            label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
+            label: '% Cui 2', name: 'porcentaje2', width: 85, align: 'left',
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
                     $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
-            search: true, editable: true, hidden: true,
-            editrules: { edithidden: false, required: true },
+            search: true, editable: true, hidden: false,
+            editrules: { edithidden: false, required: false },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
             //hidedlg: true
         },
         {
             label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
             align: 'left', edittype: "textarea",
-            search: true, editable: true, hidden: false,
+            search: true, editable: true, hidden: true,
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
             label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200,
             align: 'left', edittype: "textarea",
-            search: true, editable: true, hidden: false,
+            search: true, editable: true, hidden: true,
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
             label: 'uidlider', name: 'uidlider',
             search: false, editable: true, hidden: true,
-            editrules: { required: true },
+            editrules: { required: true }, hidedlg: true,
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Lider--",
@@ -242,13 +270,16 @@ $(document).ready(function () {
 
         },
         {
-            label: 'Lider', name: 'lider', width: 150, align: 'left',
-            search: true, editable: true, hidden: false, jsonmap: "nombrelider"
+            label: 'Lider', name: 'lider', width: 120, align: 'left',
+            search: true, editable: true, hidden: false, jsonmap: "nombrelider",
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
             label: 'uidjefeproyecto', name: 'uidjefeproyecto',
             search: false, editable: true, hidden: true,
-            editrules: { required: true },
+            editrules: { required: true }, hidedlg: true,
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Lider--",
@@ -281,11 +312,14 @@ $(document).ready(function () {
         {
             label: 'Jefe Area Responsable', name: 'jefeproyecto', width: 150, align: 'left',
             search: true, editable: true, hidden: false, jsonmap: "nombrejefe",
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
             label: 'uidpmoresponsable', name: 'uidpmoresponsable',
             search: false, editable: true, hidden: true,
-            editrules: { required: true },
+            editrules: { required: true }, hidedlg: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/PMO',
@@ -316,6 +350,9 @@ $(document).ready(function () {
         {
             label: 'PMO Responsable', name: 'pmoresponsable', width: 150, align: 'left',
             search: true, editable: true, hidden: false, jsonmap: "nombrepmo",
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
 
         {
@@ -327,7 +364,10 @@ $(document).ready(function () {
                 dataInit: function (el) {
                     $(el).mask('000,00', { reverse: true });
                 }
-            }
+            },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
 
         {
@@ -339,10 +379,13 @@ $(document).ready(function () {
                 dataInit: function (el) {
                     $(el).mask('00.000,00', { reverse: true });
                 }
-            }
+            },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
         {
-            label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
+            label: 'Fecha Conv', name: 'fechaconversion', width: 110, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true,
             editrules: { required: true },
@@ -367,7 +410,10 @@ $(document).ready(function () {
                     $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
-            }
+            },
+            colMenu:true,
+            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false},
         },
 
     ];
@@ -450,7 +496,10 @@ $(document).ready(function () {
                 }
                 var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
                 //console.log('porcentaje1: ' + elporcentaje1);
-                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                var elporcentaje2 = 0.00;
+                if(elporcentaje2!=""){
+                    elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                }
                 //console.log('porcentaje2: ' + elporcentaje2);
                 var lasuma = elporcentaje1 + elporcentaje2;
                 //console.log('total: ' + lasuma);
@@ -533,7 +582,10 @@ $(document).ready(function () {
                 }
                 var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
                 //console.log('porcentaje1: ' + elporcentaje1);
-                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                var elporcentaje2 = 0.00;
+                if(elporcentaje2!=""){
+                    elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                }
                 //console.log('porcentaje2: ' + elporcentaje2);
                 var lasuma = elporcentaje1 + elporcentaje2;
                 //console.log('total: ' + lasuma);

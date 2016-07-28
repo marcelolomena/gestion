@@ -65,7 +65,12 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Presupuesto Aprobado en Dolares{pptoaprobadodolares}</div>";
+    tmplP += "<div class='column-full'>Presupuesto Aprobado en Dolares{pptoaprobadodolares}</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'>Priorización{priorizacion}</div>";
+    tmplP += "<div class='column-half'>Criterio Rechazo{idcriteriorechazo}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row' style='display: none;'>";
@@ -356,19 +361,19 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Q1', name: 'q1', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: true
         },
         {
             label: 'Q2', name: 'q2', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: true
         },
         {
             label: 'Q3', name: 'q3', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: true
         },
         {
             label: 'Q4', name: 'q4', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
+            search: false, editable: true, hidden: true
         },
         {
             label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left',
@@ -563,8 +568,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Duración Prevista', name: 'duracionprevista', width: 125, align: 'left',
-            search: false, editable: true, hidden: false, formatter: 'number',
-            formatoptions: { decimalPlaces: 0 },
+            search: false, editable: true, hidden: false,
+           
         },
         {
             label: 'Mes Inicio', name: 'mesinicioprevisto', width: 84, align: 'left',
@@ -585,7 +590,54 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
                 }
             }
-        }
+        },
+        {
+            label: 'Priorización', name: 'priorizacion', search: false, editable: true, hidden: false,
+            edittype: "custom",
+            //editrules: { required: true },
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemConIva
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.priorizacion;
+                if (val == 1) {
+                    dato = 'Sí';
+
+                } else if (val == 0) {
+                    dato = 'No';
+                }
+                return dato;
+            }
+        },
+        {
+            label: 'Criterio Rechazo', name: 'idcriteriorechazo', search: false, width: 300,
+            editable: true, hidden: true,
+            editrules: { required: true },
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/criteriorechazo',
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idcriteriorechazo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Criterio Rechazo--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(100); }
+
+        },
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
