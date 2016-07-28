@@ -78,7 +78,6 @@ exports.getPresupuestoPaginados = function (req, res) {
     }
   };
 
-  var joinstr="";
   if (filters) {
     var jsonObj = JSON.parse(filters);
     if (JSON.stringify(jsonObj.rules) != '[]') {

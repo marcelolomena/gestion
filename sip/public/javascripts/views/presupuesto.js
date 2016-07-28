@@ -446,7 +446,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             label: 'id', name: 'id', width: 50, key: true, hidden: true
         },
         {
-            label: 'Servicio', name: 'nombre', search: false, width: 300,
+            label: 'Servicio', name: 'nombre', search: true, width: 300,
             editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
@@ -500,11 +500,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         },
         {
             label: 'Glosa Servicio', name: 'glosaservicio',
-            search: false, editable: true, edittype: "textarea"
+            search: true, editable: true, edittype: "textarea"
         },
         {
             label: 'Moneda', name: 'moneda', width: 100, align: 'right',
-            search: false, editable: true,
+            search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -537,7 +537,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         },
         {
             label: 'Proveedor', name: 'razonsocial', width: 200, align: 'right',
-            search: false, editable: true,
+            search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
