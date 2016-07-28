@@ -156,6 +156,16 @@ exports.listcui = function (req, res) {
     });
 }
 
+exports.ejercicios = function (req, res) {
+    models.ejercicios.findAll({
+        attributes: ['id', 'glosaejercicio']
+    }).then(function (ejercicios) {
+        res.json(ejercicios);
+    }).catch(function (err) {
+        console.log(err)
+    });
+}
+
 exports.presupuesto = function (req, res) {
     models.presupuesto.belongsTo(models.estructuracui, { foreignKey: 'idcui' })
     models.presupuesto.belongsTo(models.ejercicios, { foreignKey: 'idejercicio' })
@@ -358,7 +368,7 @@ exports.list2 = function (req, res) {
                         if (i < range.length - 1)
                             acum += ','
                     }
-                    console.dir(acum) 
+                    console.dir(acum)
                     var sql_head_0 = `SELECT cuentacontable,gerencia,departamento,seccion `
 
                     var sql_body_1 = `

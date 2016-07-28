@@ -22,6 +22,9 @@ module.exports = function (passport) {
     router.route('/hyperion/listcui')
         .get(isAuthenticated, hyperionController.listcui)
 
+    router.route('/hyperion/ejercicios')
+        .get(isAuthenticated, hyperionController.ejercicios)
+
     return router;
 
 }

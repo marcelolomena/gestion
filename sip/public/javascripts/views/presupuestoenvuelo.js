@@ -460,7 +460,6 @@ $(document).ready(function () {
                 $("#table_iniciativa").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
             }
         },
-        colMenu:true
     });
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
     $("#table_iniciativa").jqGrid('filterToolbar', {
