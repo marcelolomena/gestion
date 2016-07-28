@@ -27,9 +27,146 @@ $(document).ready(function () {
                 return "style='background-color:" + color + "'";
             },
         }
-    ]
+    ], $grid = $("#gridMaster"),
+        initDate = function (elem) {
+            $(elem).datepicker({
+                dateFormat: 'dd-M-yy',
+                autoSize: true,
+                changeYear: true,
+                changeMonth: true,
+                showButtonPanel: true,
+                showWeek: true
+            });
+        },
+        numberTemplate = {
+            formatter: 'number', align: 'right', sorttype: 'number', editable: true/*,
+                    searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'nu', 'nn', 'in', 'ni'] }*/},
+        dateTemplate = {
+            width: 80, align: 'center', sorttype: 'date',
+            formatter: 'date', formatoptions: { newformat: 'd-M-Y' }, editable: true, datefmt: 'd-M-Y',
+            editoptions: { dataInit: initDate },
+            searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge'], dataInit: initDate }
+        },
+        yesNoTemplate = {
+            align: 'center', editable: true, formatter: 'checkbox',
+            edittype: 'checkbox', editoptions: { value: 'Yes:No', defaultValue: 'No' },
+            stype: 'select', searchoptions: { sopt: ['eq', 'ne'], value: ':Any;true:Yes;false:No' }
+        },
+        myDefaultSearch = 'cn',
+        getColumnIndex = function (columnIndex) {
+            var cm = this.jqGrid('getGridParam', 'colModel'), i, l = cm.length;
+            for (i = 0; i < l; i++) {
+                if ((cm[i].index || cm[i].name) === columnIndex) {
+                    return i; // return the colModel index
+                }
+            }
+            return -1;
+        },
+        refreshSerchingToolbar = function (myDefaultSearch) {
+            var filters, i, l, rules, rule, iCol, cmi, control, tagName,
+                $this = $(this),
+                postData = $this.jqGrid('getGridParam', 'postData'),
+                cm = $this.jqGrid('getGridParam', 'colModel');
 
-    $("#gridMaster").jqGrid({
+            for (i = 0, l = cm.length; i < l; i++) {
+                control = $("#gs_" + $.jgrid.jqID(cm[i].name));
+                if (control.length > 0) {
+                    tagName = control[0].tagName.toUpperCase();
+                    if (tagName === "SELECT") { // && cmi.stype === "select"
+                        control.find("option[value='']")
+                            .attr('selected', 'selected');
+                    } else if (tagName === "INPUT") {
+                        control.val('');
+                    }
+                }
+            }
+
+            if (typeof (postData.filters) === "string" &&
+                typeof (this.ftoolbar) === "boolean" && this.ftoolbar) {
+
+                filters = $.parseJSON(postData.filters);
+                if (filters && filters.groupOp === "AND" && typeof (filters.groups) === "undefined") {
+                    // only in case of advance searching without grouping we import filters in the
+                    // searching toolbar
+                    rules = filters.rules;
+                    for (i = 0, l = rules.length; i < l; i++) {
+                        rule = rules[i];
+                        iCol = getColumnIndex.call($this, rule.field);
+                        if (iCol >= 0) {
+                            cmi = cm[iCol];
+                            control = $("#gs_" + $.jgrid.jqID(cmi.name));
+                            if (control.length > 0 &&
+                                (((typeof (cmi.searchoptions) === "undefined" ||
+                                    typeof (cmi.searchoptions.sopt) === "undefined")
+                                    && rule.op === myDefaultSearch) ||
+                                    (typeof (cmi.searchoptions) === "object" &&
+                                        $.isArray(cmi.searchoptions.sopt) &&
+                                        cmi.searchoptions.sopt.length > 0 &&
+                                        cmi.searchoptions.sopt[0] === rule.op))) {
+                                tagName = control[0].tagName.toUpperCase();
+                                if (tagName === "SELECT") { // && cmi.stype === "select"
+                                    control.find("option[value='" + $.jgrid.jqID(rule.data) + "']")
+                                        .attr('selected', 'selected');
+                                } else if (tagName === "INPUT") {
+                                    control.val(rule.data);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        templateClosed = {
+            groupOp: "AND",
+            rules: [
+                { field: "closed", op: "eq", data: "true" }
+            ]
+        },
+        templateLastWeek = {
+            groupOp: "AND",
+            rules: [
+                { field: "invdate", op: "ge", "data": "13-Feb-2012" },
+                { field: "invdate", op: "le", "data": "16-Feb-2012" }
+            ]
+        },
+        templateLastMonth = {
+            groupOp: "AND",
+            rules: [
+                { field: "invdate", op: "ge", "data": "16-Jan-2012" },
+                { field: "invdate", op: "le", "data": "16-Feb-2012" }
+            ]
+        },
+        myFilterTemplateExerciseNames = function () {
+            var res = [];
+            $.getJSON("/hyperion/ejercicios", function (json) {
+                $.each(json, function (i, record) {
+                    res.push(record.glosaejercicio);
+                });
+            });
+            return res;
+        },
+        myFilterTemplateLabel = 'Ejercicios:&nbsp;',
+        myFilterTemplateNames = ['Cerrado', 'Última semana', 'Último mes'],
+        myFilterTemplates = [templateClosed, templateLastWeek, templateLastMonth],
+        iTemplate,
+        cTemplates = myFilterTemplateNames.length,
+        templateOptions = '',
+        reloadWithNewFilterTemplate = function () {
+            var iTemplate = parseInt($('#filterTemplates').val(), 10),
+                postData = $grid.jqGrid('getGridParam', 'postData');
+            if (isNaN(iTemplate)) {
+                $grid.jqGrid('setGridParam', { search: false });
+            } else if (iTemplate >= 0) {
+                $.extend(postData, {
+                    filters: JSON.stringify(myFilterTemplates[iTemplate])
+                });
+                $grid.jqGrid('setGridParam', { search: true });
+            }
+            $grid.trigger('reloadGrid', [{ current: true, page: 1 }]);
+        };
+
+
+    $grid.jqGrid({
         url: '/hyperion/presupuesto',
         datatype: "json",
         colModel: newColModel,
@@ -56,47 +193,92 @@ $(document).ready(function () {
         },
         onSortCol: clearSelection,
         onPaging: clearSelection,
-        pager: "#pagerMaster"
+        pager: "#pagerMaster",
+        toolbar: [true, "top"],
+        loadComplete: function () {
+            var $this = $(this);
+
+            if (typeof (this.ftoolbar) !== "boolean") {
+                // create toolbar if needed
+                $this.jqGrid('filterToolbar',
+                    { stringResult: true, searchOnEnter: true, defaultSearch: myDefaultSearch });
+            }
+            refreshSerchingToolbar.call(this, myDefaultSearch);
+        }
+
     });
 
-    $('#gridMaster').jqGrid('navGrid', '#pagerMaster', {
-        edit: false,
-        add: false,
-        del: false,
-        search: false,
-    },
-        {},
-        {},
-        {},
-        {});
-
-    $('#gridMaster').jqGrid('navButtonAdd', '#pagerMaster', {
+    $.extend($.jgrid.search, {
+        multipleSearch: true,
+        multipleGroup: true,
+        recreateFilter: true,
+        closeOnEscape: true,
+        closeAfterSearch: true,
+        overlay: 0,
+        tmplLabel: myFilterTemplateLabel,
+        tmplNames: myFilterTemplateNames,
+        tmplFilters: myFilterTemplates
+    });
+    //$grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false });
+    $grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
+    $grid.jqGrid('navButtonAdd', '#pagerMaster', {
         caption: "",
         buttonicon: "glyphicon glyphicon glyphicon-cog",
         title: "Procesar Hyperion",
         position: "last",
         onClickButton: function () {
-            var grid = $("#gridMaster");
-            var rowKey = grid.getGridParam("selrow");
+            //var grid = $("#gridMaster");
+            var rowKey = $grid.getGridParam("selrow");
 
             //var grid = $('#gridDetail');
             //var rowKey = grid.getGridParam("selrow");
             var url = '/hyperion/csv';
-            $('#gridMaster').jqGrid('excelExport', { "url": url });
-        
-/*
-            if (!rowKey)
-                alert("No hay filas seleccionadas");
-            else {
-                var selectedIDs = grid.getGridParam("selarrrow");
-                var result = "";
-                for (var i = 0; i < selectedIDs.length; i++) {
-                    result += selectedIDs[i] + ",";
-                }
+            $grid.jqGrid('excelExport', { "url": url });
 
-                alert(result);
-            }
-*/            
+            /*
+                        if (!rowKey)
+                            alert("No hay filas seleccionadas");
+                        else {
+                            var selectedIDs = grid.getGridParam("selarrrow");
+                            var result = "";
+                            for (var i = 0; i < selectedIDs.length; i++) {
+                                result += selectedIDs[i] + ",";
+                            }
+            
+                            alert(result);
+                        }
+            */
+        }
+    });
+    console.dir(myFilterTemplateExerciseNames.call())
+    for (iTemplate = 0; iTemplate < cTemplates; iTemplate++) {
+        templateOptions += '<option value="' + iTemplate + '">' +
+            myFilterTemplateNames[iTemplate] + '</option>';
+            //myFilterTemplateExerciseNames[iTemplate] + '</option>';
+    }
+    //    background-color: #0B2161;   color: white;
+    $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
+        myFilterTemplateLabel + '</label>' +
+        '<select id="filterTemplates"><option value="">Sin filtro</option>' +
+        templateOptions + '</select>');
+    //$('#t_' + $.jgrid.jqID($grid[0].id)).addClass('ui-jqgrid-titlebar');
+    $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
+        // some web browsers like Google Chrome don't fire "change" event
+        // if the select will be "scrolled" by keybord. Moreover some browsers
+        // like Internet Explorer don't change the select option on pressing
+        // of LEFT or RIGHT key. Another web browsers like Google Chrome do this.
+        // We make refrech of the grid in any from the cases. If needed one
+        // could modify the code to reduce unnneded reloading of the grid,
+        // but for the demo with a few local rows it's such optimization
+        // isn't really needed
+        var keyCode = e.keyCode || e.which;
+
+        if (keyCode === $.ui.keyCode.PAGE_UP || keyCode === $.ui.keyCode.PAGE_DOWN ||
+            keyCode === $.ui.keyCode.END || keyCode === $.ui.keyCode.HOME ||
+            keyCode === $.ui.keyCode.UP || keyCode === $.ui.keyCode.DOWN ||
+            keyCode === $.ui.keyCode.LEFT || keyCode === $.ui.keyCode.RIGHT) {
+
+            reloadWithNewFilterTemplate();
         }
     });
 
@@ -143,7 +325,7 @@ $(document).ready(function () {
         edit: false,
         add: false,
         del: false,
-        search:false
+        search: false
     },
         {},
         {},
@@ -217,7 +399,7 @@ function listColumnModels(data) {
         search: false,
         searchoptions: { sopt: ["eq", "le", "ge"] }
     });
-    
+
     _listOfColumnModels.push({
         name: 'seccion',
         width: 100,
@@ -225,7 +407,7 @@ function listColumnModels(data) {
         hidden: false,
         search: false,
         searchoptions: { sopt: ["eq", "le", "ge"] }
-    });    
+    });
 
     _listOfColumnModels.push({
         name: 'ano',
@@ -254,7 +436,7 @@ function listColumnNames(data) {
     _listOfColumnNames.push('Cuenta');
     _listOfColumnNames.push('Gerencia');
     _listOfColumnNames.push('Departamento');
-    _listOfColumnNames.push('Sección');    
+    _listOfColumnNames.push('Sección');
     _listOfColumnNames.push('Periodo');
     $.each(data, function (i, item) {
         _listOfColumnNames.push(data[i].toString().substring(4, 6) + '/' + data[i].toString().substring(0, 4));

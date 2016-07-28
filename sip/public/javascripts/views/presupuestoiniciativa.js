@@ -91,7 +91,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 }
             },
             editrules: { edithidden: false, required: true, number: true },
-            hidedlg: true
+            hidedlg: false
         },
         {
             label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
@@ -103,7 +103,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             },
             search: true, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
-            hidedlg: true
+            hidedlg: false
         },
         {
             label: 'Cui 2', name: 'cuifinanciamiento2', width: 50, align: 'left',
@@ -114,8 +114,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
 
                 }
             },
-            editrules: { edithidden: false, required: true, number: true },
-            hidedlg: true
+            editrules: { edithidden: false, required: false, number: true },
+            hidedlg: false
         },
         {
             label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
@@ -126,8 +126,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 }
             },
             search: true, editable: true, hidden: false,
-            editrules: { edithidden: false, required: true },
-            hidedlg: true
+            editrules: { edithidden: false, required: false },
+            hidedlg: false
         },
         {
             label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
@@ -322,7 +322,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 }
                 var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
                 //console.log('porcentaje1: ' + elporcentaje1);
-                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                var elporcentaje2 = 0.00;
+                if(elporcentaje2!=""){
+                    elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                }
                 //console.log('porcentaje2: ' + elporcentaje2);
                 var lasuma = elporcentaje1 + elporcentaje2;
                 //console.log('total: ' + lasuma);
@@ -377,7 +380,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 }
                 var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
                 //console.log('porcentaje1: ' + elporcentaje1);
-                var elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                var elporcentaje2 = 0.00;
+                if(elporcentaje2!=""){
+                    elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                }
                 //console.log('porcentaje2: ' + elporcentaje2);
                 var lasuma = elporcentaje1 + elporcentaje2;
                 //console.log('total: ' + lasuma);
@@ -423,41 +429,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
-    $("#" + childGridID).jqGrid('navButtonAdd', '#' + childGridPagerID,
-        {
-            caption: "Generar Proyecto en Vuelo", buttonicon: "ui-icon-extlink", title: "Generar Proyecto en Vuelo",
-            onClickButton: function () {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.id;
-                var thissap = rowData.sap;
-                var thisiniciativa = rowData.glosa;
-                if (thissid == undefined) {
-                    alert("Debe seleccionar una fila");
-                    return [false, result.error_text, ""];
-                }
-                //console.log('la sap: '+thissap);
-                if (thissap == "0") {
-                    alert("Presupuesto no tiene número de SAP");
-                    return [false, result.error_text, ""];
-                }
-                var boton = confirm('Está seguro que desea pasar la iniciativa ' + thisiniciativa + ' a Proyecto en vuelo');
-                if (boton == true) {
-                    alert('Funcionalidad en desarrollo');
-                    /*
-                    $.ajax({
-                        type: "POST",
-                        url: '/generarproyectoenvuelo/' + thissid,
-                        success: function (data) {
-                            alert("Se ha generado el proyecto en vuelo: " + data.nombreproyecto + " con el id: " + data.id);
-                            window.location.href = "/presupuestoenvuelo";
-                        }
-                    });
-                    */
-                }
-            }
-        });
 }
 function showSubGrids2(subgrid_id, row_id) {
     gridTareasNuevosProyectos(subgrid_id, row_id, 'tareas');
