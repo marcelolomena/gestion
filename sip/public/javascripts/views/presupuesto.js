@@ -89,7 +89,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Versión', name: 'version', width: 80, align: 'left', search: false,sortable: false, editable: true },
-        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, sortable: false, editable: false },
+        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: true, sortable: false, editable: false },
         {
             label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
@@ -853,11 +853,12 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
             {
-                label: 'Presupuesto Requerido Moneda Origen',
+                label: 'Ppto. Requerido Moneda Origen',
                 name: 'presupuestoorigen',
                 editable: true,
                 align: 'right',
                 search: false,
+                sortable: false,
                 width: 230,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
@@ -867,16 +868,18 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 editable: false,
                 align: 'right',
                 search: false,
-                width: 100,
+                sortable: false,
+                width: 150,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
             {
-                label: 'Presupuesto Calculado',
+                label: 'Ppto. Calculado',
                 name: 'caja',
                 editable: false,
                 align: 'right',
                 search: false,
-                width: 180,
+                sortable: false,
+                width: 150,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -885,6 +888,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 editable: false,
                 align: 'right',
                 search: false,
+                sortable: false,
                 width: 150,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
@@ -894,6 +898,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 editable: false,
                 align: 'right',
                 search: false,
+                sortable: false,
                 width: 100,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
