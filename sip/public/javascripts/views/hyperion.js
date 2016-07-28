@@ -136,29 +136,36 @@ $(document).ready(function () {
                 { field: "invdate", op: "le", "data": "16-Feb-2012" }
             ]
         },
-        myFilterTemplateExerciseNames = function () {
-            var res = [];
+        myFilterTemplateExerciseNames = function (callback) {
             $.getJSON("/hyperion/ejercicios", function (json) {
-                $.each(json, function (i, record) {
-                    res.push(record.glosaejercicio);
-                });
+                callback(json);
             });
-            return res;
         },
         myFilterTemplateLabel = 'Ejercicios:&nbsp;',
         myFilterTemplateNames = ['Cerrado', 'Última semana', 'Último mes'],
         myFilterTemplates = [templateClosed, templateLastWeek, templateLastMonth],
+        myDynamicFilterTemplates = function (id) {
+            var rule = {
+                groupOp: "AND",
+                rules: [
+                    { field: "idejercicio", op: "eq", data: id }
+                ]
+            };
+            return rule;
+        },
         iTemplate,
         cTemplates = myFilterTemplateNames.length,
         templateOptions = '',
         reloadWithNewFilterTemplate = function () {
             var iTemplate = parseInt($('#filterTemplates').val(), 10),
                 postData = $grid.jqGrid('getGridParam', 'postData');
+            console.log(iTemplate);
             if (isNaN(iTemplate)) {
                 $grid.jqGrid('setGridParam', { search: false });
             } else if (iTemplate >= 0) {
                 $.extend(postData, {
-                    filters: JSON.stringify(myFilterTemplates[iTemplate])
+                    //filters: JSON.stringify(myFilterTemplates[iTemplate])
+                    filters: JSON.stringify(myDynamicFilterTemplates(iTemplate))
                 });
                 $grid.jqGrid('setGridParam', { search: true });
             }
@@ -250,38 +257,70 @@ $(document).ready(function () {
             */
         }
     });
-    console.dir(myFilterTemplateExerciseNames.call())
-    for (iTemplate = 0; iTemplate < cTemplates; iTemplate++) {
-        templateOptions += '<option value="' + iTemplate + '">' +
-            myFilterTemplateNames[iTemplate] + '</option>';
-            //myFilterTemplateExerciseNames[iTemplate] + '</option>';
-    }
-    //    background-color: #0B2161;   color: white;
-    $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
-        myFilterTemplateLabel + '</label>' +
-        '<select id="filterTemplates"><option value="">Sin filtro</option>' +
-        templateOptions + '</select>');
-    //$('#t_' + $.jgrid.jqID($grid[0].id)).addClass('ui-jqgrid-titlebar');
-    $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
-        // some web browsers like Google Chrome don't fire "change" event
-        // if the select will be "scrolled" by keybord. Moreover some browsers
-        // like Internet Explorer don't change the select option on pressing
-        // of LEFT or RIGHT key. Another web browsers like Google Chrome do this.
-        // We make refrech of the grid in any from the cases. If needed one
-        // could modify the code to reduce unnneded reloading of the grid,
-        // but for the demo with a few local rows it's such optimization
-        // isn't really needed
-        var keyCode = e.keyCode || e.which;
 
-        if (keyCode === $.ui.keyCode.PAGE_UP || keyCode === $.ui.keyCode.PAGE_DOWN ||
-            keyCode === $.ui.keyCode.END || keyCode === $.ui.keyCode.HOME ||
-            keyCode === $.ui.keyCode.UP || keyCode === $.ui.keyCode.DOWN ||
-            keyCode === $.ui.keyCode.LEFT || keyCode === $.ui.keyCode.RIGHT) {
+    myFilterTemplateExerciseNames(function (retorno) {
+        $.each(retorno, function (i, item) {
+            templateOptions += '<option value="' + retorno[i].id + '">' +
+                retorno[i].glosaejercicio + '</option>';
+        });
+        $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
+            myFilterTemplateLabel + '</label>' +
+            '<select id="filterTemplates"><option value="">Sin filtro</option>' +
+            templateOptions + '</select>');
+        $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
+            // some web browsers like Google Chrome don't fire "change" event
+            // if the select will be "scrolled" by keybord. Moreover some browsers
+            // like Internet Explorer don't change the select option on pressing
+            // of LEFT or RIGHT key. Another web browsers like Google Chrome do this.
+            // We make refrech of the grid in any from the cases. If needed one
+            // could modify the code to reduce unnneded reloading of the grid,
+            // but for the demo with a few local rows it's such optimization
+            // isn't really needed
+            var keyCode = e.keyCode || e.which;
 
-            reloadWithNewFilterTemplate();
-        }
+            if (keyCode === $.ui.keyCode.PAGE_UP || keyCode === $.ui.keyCode.PAGE_DOWN ||
+                keyCode === $.ui.keyCode.END || keyCode === $.ui.keyCode.HOME ||
+                keyCode === $.ui.keyCode.UP || keyCode === $.ui.keyCode.DOWN ||
+                keyCode === $.ui.keyCode.LEFT || keyCode === $.ui.keyCode.RIGHT) {
+
+                reloadWithNewFilterTemplate();
+            }
+        });
     });
 
+
+    /*
+        for (iTemplate = 0; iTemplate < cTemplates; iTemplate++) {
+            templateOptions += '<option value="' + iTemplate + '">' +
+                myFilterTemplateNames[iTemplate] + '</option>';
+        }
+    
+        $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
+            myFilterTemplateLabel + '</label>' +
+            '<select id="filterTemplates"><option value="">Sin filtro</option>' +
+            templateOptions + '</select>');
+    
+    
+        $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
+            // some web browsers like Google Chrome don't fire "change" event
+            // if the select will be "scrolled" by keybord. Moreover some browsers
+            // like Internet Explorer don't change the select option on pressing
+            // of LEFT or RIGHT key. Another web browsers like Google Chrome do this.
+            // We make refrech of the grid in any from the cases. If needed one
+            // could modify the code to reduce unnneded reloading of the grid,
+            // but for the demo with a few local rows it's such optimization
+            // isn't really needed
+            var keyCode = e.keyCode || e.which;
+    
+            if (keyCode === $.ui.keyCode.PAGE_UP || keyCode === $.ui.keyCode.PAGE_DOWN ||
+                keyCode === $.ui.keyCode.END || keyCode === $.ui.keyCode.HOME ||
+                keyCode === $.ui.keyCode.UP || keyCode === $.ui.keyCode.DOWN ||
+                keyCode === $.ui.keyCode.LEFT || keyCode === $.ui.keyCode.RIGHT) {
+    
+                reloadWithNewFilterTemplate();
+            }
+        });
+    */
     $("#gridDetail").jqGrid({
         url: '/hyperion/list',
         mtype: "POST",
