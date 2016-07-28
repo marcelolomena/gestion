@@ -114,15 +114,20 @@ exports.getPresupuestoPaginados = function (req, res) {
 
     } else {
 */
-
+      var joinstr="";
       if (filters) {
         var jsonObj = JSON.parse(filters);
         if (JSON.stringify(jsonObj.rules) != '[]') {
           jsonObj.rules.forEach(function (item) {
             if (item.op === 'cn')
-              condition += item.field + " like '%" + item.data + "%' AND"
+              if (item.field == 'CUI' || item.field == 'nombre' || item.field == 'nombreresponsable'){
+                condition += 'b.'+item.field + " like '%" + item.data + "%' AND "
+              } else {
+                condition += 'c.'+item.field +"="+ item.data + " AND "
+              }
           });
-          condition = condition.substring(0, condition.length - 4);
+          condition = condition.substring(0, condition.length - 5);
+          console.log("***CONDICION:"+condition);
         }
       }
       models.presupuesto.count().then(function (records) {
@@ -137,13 +142,15 @@ exports.getPresupuestoPaginados = function (req, res) {
             "set @rowsPerPage=" + rows + "; " +
             "set @pageNum=" + page + ";   " +
             "With SQLPaging As   ( " +
-            "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-            "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+            "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
+            "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable, c.ejercicio " +
             "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
-            "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-//            if (filters) 
-//              sqlok += "WHERE "+condition+ " ";             
-            "ORDER BY id asc) " +
+            "JOIN sip.ejercicios c ON c.id=a.idejercicio " ;
+            if (filters && condition != "") {
+              console.log("**"+condition+"**");
+              sqlok += "WHERE "+condition+ " ";  
+            }           
+            sqlok += "ORDER BY id desc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
           } else {
             sqlok = "declare @rowsPerPage as bigint; " +
@@ -151,14 +158,16 @@ exports.getPresupuestoPaginados = function (req, res) {
             "set @rowsPerPage=" + rows + "; " +
             "set @pageNum=" + page + ";   " +
             "With SQLPaging As   ( " +
-            "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+            "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
             "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
             "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
             "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-            "WHERE a.idcui IN (" + elcui + ") " +
-//            if (filters)
-//              sqlok += "AND "+ condition+ " "; 
-            "ORDER BY id asc) " +
+            "WHERE a.idcui IN (" + elcui + ") " ;
+            if (filters && condition != ""){
+              console.log("**"+condition+"**");
+              sqlok += "AND "+ condition+ " ";
+            } 
+            sqlok += "ORDER BY id desc) " +
             "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
           }
           sequelize.query(sqlok).spread(function (rows) {

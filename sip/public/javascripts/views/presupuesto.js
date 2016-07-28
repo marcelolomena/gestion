@@ -24,7 +24,7 @@ $(document).ready(function () {
     var modelPresupuesto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: false,sortable: false, editable: true,
+            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: true,sortable: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -51,10 +51,10 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, sortable: false, editable: true },
-        { label: 'Responsable CUI', name: 'responsable', width: 200, align: 'left', search: false, sortable: false, editable: true },
+        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, sortable: false, editable: true },
+        { label: 'Responsable CUI', name: 'nombreresponsable', width: 200, align: 'left', search: true, sortable: false, editable: true },
         {
-            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', sortable: false, search: false, editable: true,
+            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', sortable: false, search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -721,6 +721,15 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [true, "", ""]
                 }
 
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code == 10)
+                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
             }
         },
         {
@@ -757,6 +766,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
+                if (result.error_code == 10)
+                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];                
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
@@ -774,6 +785,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
+                if (result.error_code == 10)
+                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];                
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
@@ -957,7 +970,16 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 //    return [false, "Debe ingresar un numero", ""];
                 //} 
                 return [true, "", ""]
-            },            
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code == 10)
+                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];                
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }           
         }, {}
     );
     /*
