@@ -893,6 +893,16 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
+                label: 'Disponible',
+                name: 'disponible',
+                editable: false,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },                
+            {
                 label: 'Total Caja',
                 name: 'totalcaja',
                 editable: false,
