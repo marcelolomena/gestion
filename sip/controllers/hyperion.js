@@ -158,7 +158,8 @@ exports.listcui = function (req, res) {
 
 exports.ejercicios = function (req, res) {
     models.ejercicios.findAll({
-        attributes: ['id', 'glosaejercicio']
+        attributes: ['id', 'glosaejercicio'],
+        order: 'ejercicio'
     }).then(function (ejercicios) {
         res.json(ejercicios);
     }).catch(function (err) {
