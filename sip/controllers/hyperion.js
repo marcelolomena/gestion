@@ -304,7 +304,7 @@ GROUP BY gerencia, departamento,seccion
 ) J
 LEFT OUTER JOIN
 (
-SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado' 
+SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado' AND p.idejercicio=:IdEjercicio 
 ) K
 ON J.cui = K.cui
     `
@@ -314,9 +314,6 @@ ORDER BY gerencia,departamento,seccion
 OFFSET :PageSize * (:page - 1) 
 ROWS FETCH NEXT :PageSize ROWS ONLY 
     `
-
-    //AND idejercicio = :exec 
-
     var idejercicio
     co(function* () {
         if (_filters) {
@@ -330,19 +327,19 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
             }).catch(function (err) {
                 console.log(err)
             });
+            console.dir(exer)
             idejercicio = exer.id
         }
 
-    }).catch(function (err) {
-        console.log(err);
-    });
-    console.log("||||||----------------------------------->> " + idejercicio)
-    sequelize.query(sql_head_0 + sql_body)
-        .spread(function (count) {
+        sequelize.query(sql_head_0 + sql_body,
+            {
+                replacements: { IdEjercicio: idejercicio },
+                type: sequelize.QueryTypes.SELECT
+            }
+        ).then(function (count) {
             sequelize.query(sql_head_1 + sql_body + sql_tail,
                 {
-                    //replacements: { PageSize: parseInt(_rows), page: parseInt(_page), exec: parseInt(idejercicio) },
-                    replacements: { PageSize: parseInt(_rows), page: parseInt(_page) },
+                    replacements: { PageSize: parseInt(_rows), page: parseInt(_page), IdEjercicio: parseInt(idejercicio) },
                     type: sequelize.QueryTypes.SELECT
                 }).then(function (rows) {
                     var records = count[0].cant
@@ -356,6 +353,10 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
         }).catch(function (err) {
             console.log(err)
         });
+    }).catch(function (err) {
+        console.log(err);
+    });
+
 }
 
 exports.list2 = function (req, res) {
