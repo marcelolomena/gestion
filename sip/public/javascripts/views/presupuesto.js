@@ -99,11 +99,11 @@ $(document).ready(function () {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Costo Forecast', name: 'costoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
+            label: 'Costo Forecast', name: 'costoforecast', width: 130, align: 'left', search: false, hidden: true, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Costo Anual', name: 'costoanual', width: 100, align: 'left', search: false, sortable: false, editable: true,
+            label: 'Costo Anual', name: 'costoanual', width: 100, align: 'left', search: false, hidden: true, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },        
         { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, sortable: false, editable: true }
@@ -446,7 +446,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             label: 'id', name: 'id', width: 50, key: true, hidden: true
         },
         {
-            label: 'Servicio', name: 'nombre', search: true, width: 300,
+            label: 'Servicio', name: 'nombre', search: true, width: 290,
             editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
@@ -499,7 +499,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
         },
         {
-            label: 'Glosa Servicio', name: 'glosaservicio',
+            label: 'Glosa Servicio', name: 'glosaservicio', width: 300,
             search: true, editable: true, edittype: "textarea"
         },
         {
@@ -536,7 +536,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
         },
         {
-            label: 'Proveedor', name: 'razonsocial', width: 200, align: 'right',
+            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'right',
             search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
@@ -598,6 +598,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             align: 'right',
             search: false,
             editable: true,
+            hidden: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
@@ -607,6 +608,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             align: 'right',
             search: false,
             editable: true,
+            hidden: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },        
         {
@@ -715,6 +717,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Cuota: Debe ingresar la cuota", ""];
                 } if (postdata.numerocuota == 0) {
                     return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
+                } if (postdata.mesesentrecuotas == 0) {
+                    return [false, "Meses Entre: Debe ingresar meses entre cuotas", ""];
                 } if (postdata.desde == 0) {
                     return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
                 } else {
@@ -758,6 +762,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Cuota: Debe ingresar la cuota", ""];
                 } if (postdata.numerocuota == 0) {
                     return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
+                } if (postdata.mesesentrecuotas == 0) {
+                    return [false, "Meses Entre: Debe ingresar meses entre cuotas", ""];
                 } if (postdata.desde == 0) {
                     return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
                 } else {
@@ -956,7 +962,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         shrinkToFit: false,
         editurl: '/presupuestoperiodos/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
-        pager: "#" + childGridPagerID
+        pager: "#" + childGridPagerID       
         //colMenu:true
     });
 
@@ -970,7 +976,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     },
         {
             editCaption: "Modifica Periodo",
-            closeAfterEdit: true,
+            closeAfterEdit: false,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },

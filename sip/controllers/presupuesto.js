@@ -463,11 +463,14 @@ exports.action = function (req, res) {
                         res.json(err);
                       });
                   }
+
                   sequelize.query('EXECUTE sip.InsertaServiciosAdicionalesComp ' + ejercicio
                     + "," + id_cui
                     + "," + presupuesto.id
+                    + "," + servicio.length
                     + ';').then(function (response) {
-                      console.log("****LLamo InsertaServiciosAdicionalesComp");                    
+                      console.log("****LLamo InsertaServiciosAdicionalesComp");   
+                      res.json({ error_code: 0 });                 
                     }).error(function (err) {
                       res.json(err);
                     });                   
@@ -477,12 +480,13 @@ exports.action = function (req, res) {
                     + "," + id_cui
                     + "," + presupuesto.id
                     + ';').then(function (response) {
-                      console.log("****LLamo InsertaServiciosPresupuesto");                    
+                      console.log("****LLamo InsertaServiciosPresupuesto"); 
+                      res.json({ error_code: 0 });                   
                     }).error(function (err) {
                       res.json(err);
                     });                  
                 }
-                res.json({ error_code: 0 });
+                //res.json({ error_code: 0 });
               }).catch(function (err) {
                 res.json({ error_code: 1 });
               });

@@ -348,6 +348,7 @@ exports.action = function (req, res) {
           'costocomprometido': 0,
           'totalcaja': 0,
           'totalcosto': 0,
+          'disponible':0,
           'borrado': 1
         }, { transaction: t });
 
@@ -373,6 +374,7 @@ exports.action = function (req, res) {
           'costocomprometido': 0,
           'totalcaja': cuotas[2][i],
           'totalcosto': cuotas[3][i],
+          'disponible': cuotas[2][i],
           'borrado': 1
         }, { transaction: t });
 
@@ -413,15 +415,19 @@ exports.action = function (req, res) {
         var mm = mes + i;
         var mmm = mm < 10 ? '0' + mm : mm;
         var periodo = anio + '' + mmm;
+        var totcaja = 0;
+        var caja = cuotas[2][i];
 
        var sql = "update sip.detalleplan set "+
        "presupuestoorigen = "+cuotas[0][i]+", "+
        "presupuestopesos ="+cuotas[1][i]+", "+
        "caja="+cuotas[2][i] +", "+
        "costo="+cuotas[3][i] + ", "+
-       "totalcaja="+cuotas[2][i]+"+cajacomprometido, "+
+       "disponible="+cuotas[2][i]+"-cajacomprometido, "+    
+       "totalcaja="+cuotas[2][i]+""+
        "totalcosto="+cuotas[3][i]+"+costocomprometido "+
-       " where iddetallepre="+idservicio+" and periodo="+periodo;
+
+       "where iddetallepre="+idservicio+" and periodo="+periodo;
 
         var newPromise = sequelize.query(sql)
           .spread(function(results, metadata) {
@@ -613,7 +619,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     if (diferido == "1") {
       var valorcosto = total / (mesesentre+1);
       var valorcosto = valorcosto.toFixed(2);
-      for (k = i; k <= parseInt(i) + mesesentre && k < caja.length + 1; k++) {
+      for (k = i; k <= parseInt(i) + mesesentre-1 && k < caja.length + 1; k++) {
         costo[k - 1] = valorcosto;
       }
     } else {
