@@ -424,7 +424,7 @@ exports.action = function (req, res) {
        "caja="+cuotas[2][i] +", "+
        "costo="+cuotas[3][i] + ", "+
        "disponible="+cuotas[2][i]+"-cajacomprometido, "+    
-       "totalcaja="+cuotas[2][i]+""+
+       "totalcaja="+cuotas[2][i]+", "+
        "totalcosto="+cuotas[3][i]+"+costocomprometido "+
 
        "where iddetallepre="+idservicio+" and periodo="+periodo;
