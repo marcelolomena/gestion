@@ -160,8 +160,8 @@ var sipLibrary = {
         else {
             return format(cellvalue);
         }
-    }, currentPeriod: function () {
-        var currentYear = (new Date).getFullYear();
+    }, currentPeriod: function (currentYear) {
+        //var currentYear = (new Date).getFullYear();
         var period = [];
         var periodIni = currentYear + '09';
         //console.log('periodInit:' + periodIni);

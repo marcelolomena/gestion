@@ -227,10 +227,21 @@ exports.estructura = function (req, res) {
     var _sord = req.query.sord;
     var _filters = req.query.filters;
     var _search = req.query._search;
-
+    /*
+    if (_filters) {
+        var _jsonObj = JSON.parse(_filters);
+        var _rules = _jsonObj.rules;
+        models.ejercicios.find({
+            attributes: ['ejercicio'],
+            where: { 'id': _rules[0].data },
+        }).then(function (ex) {
+            console.log("----------------------------> " + ex.ejercicio)
+        }).catch(function (err) {
+            console.log(err)
+        });
+    }*/
     var sql_head_0 = `SELECT COUNT(*) cant FROM`
     var sql_head_1 = `SELECT J.gerencia,J.departamento,J.seccion,J.cui,K.idcui FROM`
-
     var sql_body = `
 (
 SELECT gerencia,departamento,seccion,max(cui) cui FROM
@@ -305,6 +316,13 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
 
     sequelize.query(sql_head_0 + sql_body)
         .spread(function (count) {
+/*
+            if (_filters) {
+                var _jsonObj = JSON.parse(_filters);
+                var _rules = _jsonObj.rules;
+                var idejercicio = _rules[0].data;
+            }
+*/
             sequelize.query(sql_head_1 + sql_body + sql_tail,
                 {
                     replacements: { PageSize: parseInt(_rows), page: parseInt(_page) },
