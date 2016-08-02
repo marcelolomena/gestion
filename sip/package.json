@@ -27,6 +27,7 @@
         "excel-export": "0.5.1",
         "socket.io": "1.4.6",
         "file-stream-rotator": "0.0.6",
-        "winston": "2.2.0"
+        "winston": "2.2.0",
+        "co": "4.6.0"
     }
 }

@@ -2,7 +2,8 @@ $(document).ready(function () {
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
     var currentYear = (new Date).getFullYear();
     var idcui = 0;
-    var data = sipLibrary.currentPeriod();
+    
+    var data = sipLibrary.currentPeriod(currentYear-1);
     var listOfColumnModels = listColumnModels(data);
     var listOfColumnNames = listColumnNames(data);
 
