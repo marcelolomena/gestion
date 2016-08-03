@@ -270,7 +270,7 @@ $(document).ready(function () {
                             url: '/generarproyectoenvuelo/' + thissid,
                             success: function (data) {
                                 alert("Se ha generado el proyecto en vuelo: " + thisiniciativa);// + " con el id: " + data.id);
-                                window.location.href = "/presupuestoenvuelo";
+                                //window.location.href = "/presupuestoenvuelo";
                             }
                         });
                         

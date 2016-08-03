@@ -289,22 +289,22 @@ $(document).ready(function () {
         },
         {
             label: 'Q1', name: 'q1', width: 50, align: 'left',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: false,
             editoptions: {placeholder: "Q1 o vacío" }
         },
         {
             label: 'Q2', name: 'q2', width: 50, align: 'left',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: false,
             editoptions: {placeholder: "Q2 o vacío" }
         },
         {
             label: 'Q3', name: 'q3', width: 50, align: 'left',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: false,
             editoptions: {placeholder: "Q3 o vacío" }
         },
         {
             label: 'Q4', name: 'q4', width: 50, align: 'left',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: false,
             editoptions: {placeholder: "Q4 o vacío" }
         },
         {

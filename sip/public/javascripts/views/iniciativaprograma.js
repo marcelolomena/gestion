@@ -361,19 +361,19 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Q1', name: 'q1', width: 50, align: 'left',
-            search: false, editable: true, hidden: true
+            search: false, editable: true, hidden: false
         },
         {
             label: 'Q2', name: 'q2', width: 50, align: 'left',
-            search: false, editable: true, hidden: true
+            search: false, editable: true, hidden: false
         },
         {
             label: 'Q3', name: 'q3', width: 50, align: 'left',
-            search: false, editable: true, hidden: true
+            search: false, editable: true, hidden: false
         },
         {
             label: 'Q4', name: 'q4', width: 50, align: 'left',
-            search: false, editable: true, hidden: true
+            search: false, editable: true, hidden: false
         },
         {
             label: 'Fecha Último Comité', name: 'fechacomite', width: 130, align: 'left',
