@@ -524,20 +524,32 @@ exports.generarproyectoenvuelo = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  var porcentaje1, porcentaje2, dolar, uf = 0
+  var porcentaje1, porcentaje2, dolar, uf = 0.00
+  var fecha;
 
   if (action != "del") {
-    if (req.body.porcentaje1 != "")
-      porcentaje1 = req.body.porcentaje1.split(".").join("").replace(",", ".")
+    if (req.body.porcentaje1 != ""){
+      //porcentaje1 = req.body.porcentaje1.split(".").join("").replace(",", ".");
+      porcentaje1 = parseFloat(req.body.porcentaje1)/100;
+    }else{
+      porcentaje1 = 0.00;
+    }
 
-    if (req.body.porcentaje2 != "")
-      porcentaje2 = req.body.porcentaje2.split(".").join("").replace(",", ".")
+    if (req.body.porcentaje2 != ""){
+      //porcentaje2 = req.body.porcentaje2.split(".").join("").replace(",", ".");
+      porcentaje2 = parseFloat(req.body.porcentaje2)/100;
+    }else{
+      porcentaje2 = 0.00;
+    }
 
     if (req.body.dolar != "")
       dolar = req.body.dolar.split(".").join("").replace(",", ".")
 
     if (req.body.uf != "")
       uf = req.body.uf.split(".").join("").replace(",", ".")
+
+    if (req.body.fechaconversion != "")
+      fecha = req.body.fechaconversion.split("-").reverse().join("-")
   }
   switch (action) {
     case "add":
@@ -556,7 +568,7 @@ exports.action = function (req, res) {
         uidpmoresponsable: req.body.uidpmoresponsable,
         dolar: dolar,
         uf: uf,
-        fechaconversion: req.body.fechaconversion,
+        fechaconversion: fecha,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -581,7 +593,7 @@ exports.action = function (req, res) {
         uidpmoresponsable: req.body.uidpmoresponsable,
         dolar: dolar,
         uf: uf,
-        fechaconversion: req.body.fechaconversion,
+        fechaconversion: req.body.fecha,
       }, {
           where: {
             id: req.body.id
