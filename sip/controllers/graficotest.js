@@ -68,7 +68,7 @@ exports.sapgrafico = function (req, res) {
   
   console.log("--------------------->>" + req.user[0].uid)
     models.proyecto.findAll({
-        attributes: ['id', 'nombre']
+        attributes: ['id', 'sap', 'nombre']
     }).then(function (proyecto) {
         //console.dir(proyecto)
         //res.json({ resultado: proyecto, uid: req.user[0].uid });

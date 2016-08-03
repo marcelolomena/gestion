@@ -3,7 +3,7 @@ $(document).ready(function () {
 	$.getJSON("/sapgrafico", function (j) {
 		//$('#sap option').remove();
 		$.each(j, function (i, item) {
-			$('#sap').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+			$('#sap').append('<option value="' + item.id + '">' + item.sap +' '+ item.nombre+ '</option>');
 		});
 	});
 
@@ -18,7 +18,7 @@ $(document).ready(function () {
 				plotShadow: false,
 				type: 'pie'
 			}, title: {
-				text: 'Presupuesto Erogaciones por SAP'
+				text: 'Presupuesto por SAP'
 			}, tooltip: {
 				formatter: function () {
 					return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) + ' %';
@@ -66,7 +66,7 @@ $(document).ready(function () {
 				plotShadow: false,
 				type: 'pie'
 			}, title: {
-				text: 'REAL Erogaciones por SAP'
+				text: 'Pagado por SAP'
 			}, tooltip: {
 				formatter: function () {
 					return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) + ' %';
@@ -143,12 +143,12 @@ function showProyectoErogaciones(parentID) {
                       key: true, 
                       hidden:true
                    },
-                   { label: 'Numero',
+                   { label: '# Tarea',
                      name: 'tarea',  
                      search: false,                 
                      width: 70
                    },                                      
-                   { label: 'Nombre ',
+                   { label: 'Nombre Tarea',
                      name: 'nombre',
                      search: false,
                      width: 180
@@ -160,14 +160,14 @@ function showProyectoErogaciones(parentID) {
                      align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },                  
-                   { label: 'Real',
+                   { label: 'Pagado',
                      name: 'realacumuladopesos',
                      width: 100,
                      align: 'right',
                      search: false,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
-                   { label: 'Total',
+                   { label: 'Saldo',
                      name: 'saldopesos',
                      width: 100,
                      search: false,
@@ -243,23 +243,26 @@ function showProyectoErogaciones2(parentID, parentNombre, monto) {
                    { label: 'Nombre Proveedor',
                      name: 'razonsocial',
                      width: 250,
+                     sortable: false,
                    },
                    { label: 'Numero Factura',
                      name: 'factura',
                      align: 'center',
-                     width: 100,
+                     sortable: false,
+                     width: 120,
                    },
-                   { label: 'Fecha GL',
+                   { label: 'Fecha Contable',
                      name: 'fechagl',
                      search: false,
                      sortable: false,
-                     width: 100,
+                     width: 120,
                      formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }
                    },
-                   { label: 'Total',
+                   { label: 'Costo DIVOT',
                      name: 'montosum',
                      search: false,
-                     width: 150,
+                     sortable: false,
+                     width: 140,
                      align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }                                              

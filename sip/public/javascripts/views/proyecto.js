@@ -2,12 +2,11 @@ $(document).ready(function () {
 
     var modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Numero Proyecto', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: '# SAP', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Nombre Proyecto', name: 'nombre', width: 250, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
-        { label: 'Catergoria_2', name: 'categoria2', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
-        { label: 'PMO', name: 'pmo', width: 150, align: 'left', search: true },
+        { label: 'PMO', name: 'pmo', width: 140, align: 'left', search: true },
         {
-            label: 'Fecha Creacion', name: 'fechacreacion', width: 110, align: 'right', search: false, sortable: false, 
+            label: 'Fecha Inscripción', name: 'fechacreacion', width: 130, align: 'right', search: false, sortable: false, 
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 1 },
             editoptions: {
@@ -17,9 +16,19 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Estado2', name: 'estado', width: 100, align: 'left', search: false },
         {
-            label: 'Fecha Vigencia', name: 'fechavigencia', width: 110, align: 'right', search: false, sortable: false, 
+            label: 'Fecha Paso Producción', name: 'papcomprometido', width: 170, align: 'right', search: false, sortable: false, 
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            editable: true, formoptions: { rowpos: 3, colpos: 2 },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
+                }
+            }
+        },        
+        {
+            label: 'Fecha Cierre', name: 'fechavigencia', width: 110, align: 'right', search: false, sortable: false, 
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 2 },
             editoptions: {
@@ -29,101 +38,56 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Avance %', name: 'avance2', width: 100, align: 'right', search: false,  sortable: false, 
+        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: false },        
+        { label: '% Consumido', name: 'avance2', width: 120, align: 'right', search: false,  sortable: false, 
         formatter: 'number', formatoptions: {suffix: '%', decimalPlaces: 0 }, sorttype: 'currency'
         },
         {
-            label: 'Ultimo Pago', name: 'ultimopago', width: 110, align: 'right', search: false, sortable: false, 
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, formoptions: { rowpos: 3, colpos: 1 },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
-                }
-            }
-        },
-        {
-            label: 'Paso Producción Comprometido', name: 'papcomprometido', width: 100, align: 'right', search: false, sortable: false, 
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, formoptions: { rowpos: 3, colpos: 2 },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
-                }
-            }
-        },
-        {
-            label: 'Cep', name: 'cep', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 4, colpos: 1 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },    
-        {
-            label: 'Acoplado', name: 'acoplado', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 4, colpos: 1 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },               
-        {
-            label: 'Presupuesto Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: false,
+            label: 'Ppto Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 4, colpos: 1 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Presupuesto Inversion', name: 'presupuestoinversion', width: 150, align: 'right', search: false,
+            label: 'Ppto Inversion', name: 'presupuestoinversion', width: 150, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 4, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
-        {
-            label: 'Compromiso Gasto', name: 'compromisogasto', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 4, colpos: 1 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Compromiso Inversion', name: 'compromisoinversion', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 4, colpos: 2 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },        
-        {
-            label: 'Real Gasto', name: 'realacumuladogasto', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 5, colpos: 1 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Real Inversion', name: 'realacumuladoinversion', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 5, colpos: 2 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Saldo2 Gasto', name: 'saldo2gasto', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 5, colpos: 2 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Saldo2 Inversión', name: 'saldo2inversion', width: 150, align: 'right', search: false,
-            editable: true, formoptions: { rowpos: 5, colpos: 2 },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },                
         {
             label: 'Total Presupuesto', name: 'totalpresupuesto', width: 150, align: 'right', search: false, sortable: false, 
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },  
+        },             
         {
-            label: 'Total Compromiso', name: 'totalcompromiso', width: 150, align: 'right', search: false, sortable: false, 
+            label: 'Pagado Gasto', name: 'realacumuladogasto', width: 150, align: 'right', search: false,
+            editable: true, formoptions: { rowpos: 5, colpos: 1 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Pagado Inversion', name: 'realacumuladoinversion', width: 150, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        }, 
+        },
         {
-            label: 'Total Acumulado', name: 'totalacumulado', width: 150, align: 'right', search: false, sortable: false, 
+            label: 'Total Pagado', name: 'totalacumulado', width: 150, align: 'right', search: false, sortable: false, 
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },   
+        },           
+        {
+            label: 'Saldo Gasto', name: 'saldo2gasto', width: 150, align: 'right', search: false,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Saldo Inversión', name: 'saldo2inversion', width: 150, align: 'right', search: false,
+            editable: true, formoptions: { rowpos: 5, colpos: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
         {
             label: 'Total Saldo', name: 'totalsaldo', width: 150, align: 'right', search: false, sortable: false, 
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        }            
+        }                           
+         
     ];
     $("#grid").jqGrid({
         url: '/proyectoslist',
@@ -204,7 +168,7 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                    { label: 'Numero Tarea',
                      name: 'tarea',  
                      search: false,                 
-                     width: 100
+                     width: 200
                    },                                      
                    { label: 'Nombre Tarea',
                      name: 'nombre',
@@ -217,22 +181,15 @@ function showProyectosTareas(parentRowID, parentRowKey) {
                      search: false,
                      align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   },
-                   { label: 'Compromisos',
-                     name: 'compromiso',
-                     width: 150,
-                     align: 'right',
-                     search: false,
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   },                   
-                   { label: 'Real Acumulado',
+                   },                 
+                   { label: 'Pagado',
                      name: 'realacumuladopesos',
                      width: 150,
                      align: 'right',
                      search: false,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
-                   { label: 'Total',
+                   { label: 'Saldo',
                      name: 'saldopesos',
                      width: 150,
                      search: false,
@@ -243,13 +200,22 @@ function showProyectosTareas(parentRowID, parentRowKey) {
         viewrecords: true,
         styleUI: "Bootstrap", 
         regional: 'es',
-        sortable: "true",
+        height: 'auto',
+        width: null,
+        shrinkToFit: false,
         rowNum: 10,
- 		height: 'auto',  
-        rowList: [5, 10, 20, 50],
-        autowidth:false,       
+        rowList: [5, 10, 20, 50],   
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
-        subGridRowExpanded: showProyectoErogaciones, // javascript function that will take care of showing the child grid                
+        subGridRowExpanded: showProyectoErogaciones, // javascript function that will take care of showing the child grid
+        loadComplete: function () {
+            var $grid = $("#" + childGridID);
+            var colSum = $grid.jqGrid('getCol', 'presupuestopesos', false, 'sum');
+            var colSum2 = $grid.jqGrid('getCol', 'realacumuladopesos', false, 'sum');
+            var colSum3 = $grid.jqGrid('getCol', 'saldopesos', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { presupuestopesos: colSum, realacumuladopesos: colSum2, saldopesos:colSum3});
+        },               
+        footerrow: true,
+        userDataOnFooter: true,                           
         pager: "#" + childGridPagerID
     });
     
@@ -302,48 +268,53 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
                    },                   
                    { label: 'Nombre Proveedor',
                      name: 'razonsocial',
+                     sortable: false,
                      width: 250,
                    },
                    { label: 'Numero Factura',
                      name: 'factura',
                      align: 'center',
-                     width: 100,
+                     sortable: false,
+                     width: 130,
                    },
-                   { label: 'Fecha GL',
+                   { label: 'Fecha Contable',
                      name: 'fechagl',
                      search: false,
                      sortable: false,
-                     width: 100,
-                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' }
+                     width: 130,
+                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' }
                    },
-                   { label: 'Tarea Ajustada',
+                   { label: '# Tarea',
                      name: 'numerotarea',
                      align: 'center',
+                     sortable: false,
                      search: false,
                      width: 100,
-                   },      
-                   { label: 'Tarea Original',
-                     name: 'toriginalactual',
-                     align: 'center',
-                     search: false,
-                     width: 100,
-                   },  
-                   { label: 'Total',
+                   },
+                   { label: 'Costo DIVOT',
                      name: 'montosum',
                      search: false,
-                     width: 150,
+                     sortable: false,
+                     width: 130,
                      align: 'right',
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }                                              
         ],
         viewrecords: true,
-        rowNum: 10,
- 		height: 'auto',
-        styleUI: "Bootstrap",         
-        autowidth:false, 
-        sortable: "true",  
-        rowList: [5, 10, 20, 50],    
+        styleUI: "Bootstrap", 
         regional : "es",
+ 		height: 'auto',
+        width: null,
+        shrinkToFit: false,         
+        rowNum: 10,        
+        rowList: [5, 10, 20, 50],    
+        loadComplete: function () {
+            var $grid = $("#" + childGridID);
+            var colSum = $grid.jqGrid('getCol', 'montosum', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { montosum: colSum});
+        },               
+        footerrow: true,
+        userDataOnFooter: true,              
         pager: "#" + childGridPagerID
     });
 
