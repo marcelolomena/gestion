@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
+var co = require('co');
 
 exports.csv = function (req, res) {
 
@@ -303,7 +304,7 @@ GROUP BY gerencia, departamento,seccion
 ) J
 LEFT OUTER JOIN
 (
-SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado'
+SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado' AND p.idejercicio=:IdEjercicio 
 ) K
 ON J.cui = K.cui
     `
@@ -313,19 +314,32 @@ ORDER BY gerencia,departamento,seccion
 OFFSET :PageSize * (:page - 1) 
 ROWS FETCH NEXT :PageSize ROWS ONLY 
     `
+    var idejercicio
+    co(function* () {
+        if (_filters) {
+            var _jsonObj = JSON.parse(_filters);
+            var _rules = _jsonObj.rules;
+            idejercicio = _rules[0].data;
+        } else {
+            var exer = idejercicio = yield models.ejercicios.find({
+                attributes: ['id'],
+                where: { 'ejercicio': (new Date).getFullYear() },
+            }).catch(function (err) {
+                console.log(err)
+            });
+            console.dir(exer)
+            idejercicio = exer.id
+        }
 
-    sequelize.query(sql_head_0 + sql_body)
-        .spread(function (count) {
-/*
-            if (_filters) {
-                var _jsonObj = JSON.parse(_filters);
-                var _rules = _jsonObj.rules;
-                var idejercicio = _rules[0].data;
+        sequelize.query(sql_head_0 + sql_body,
+            {
+                replacements: { IdEjercicio: idejercicio },
+                type: sequelize.QueryTypes.SELECT
             }
-*/
+        ).then(function (count) {
             sequelize.query(sql_head_1 + sql_body + sql_tail,
                 {
-                    replacements: { PageSize: parseInt(_rows), page: parseInt(_page) },
+                    replacements: { PageSize: parseInt(_rows), page: parseInt(_page), IdEjercicio: parseInt(idejercicio) },
                     type: sequelize.QueryTypes.SELECT
                 }).then(function (rows) {
                     var records = count[0].cant
@@ -339,6 +353,10 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
         }).catch(function (err) {
             console.log(err)
         });
+    }).catch(function (err) {
+        console.log(err);
+    });
+
 }
 
 exports.list2 = function (req, res) {
