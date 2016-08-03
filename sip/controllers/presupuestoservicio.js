@@ -453,6 +453,7 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
+      console.log("***AGREGANDO***");
       var idservicio = 0;
       models.detallepre.create({
         idpresupuesto: idPre,
@@ -504,6 +505,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
+      console.log("***ACTUALIZANDO***");
       models.detallepre.update({
         idservicio: req.body.idservicio,
         idmoneda: req.body.idmoneda,
@@ -549,6 +551,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
+      console.log("***ELIMINANDO***");
       var id = req.body.id;
       var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre=" + id + "; " +
         "DELETE FROM sip.detallepre WHERE id=" + id;

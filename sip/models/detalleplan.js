@@ -36,14 +36,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    presupuestobaseorigen: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    presupuestobasepesos: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
     compromisoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
@@ -87,7 +79,11 @@ module.exports = function(sequelize, DataTypes) {
     totalcosto: {
       type: DataTypes.FLOAT,
       allowNull: true
-    }    
+    },
+    disponible: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }        
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleplan'
   });
