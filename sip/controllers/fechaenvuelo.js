@@ -4,13 +4,19 @@ var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var fecha;
+
+  if (action != "del") {
+    if (req.body.fecha != "")
+      fecha = req.body.fecha.split("-").reverse().join("-")
+  }
 
   switch (action) {
     case "add":
       models.fechaenvuelo.create({
         idpresupuestoenvuelo: req.body.parent_id,
         tipofecha: req.body.tipofecha,
-        fecha: req.body.fecha,
+        fecha: fecha,
         comentario: req.body.comentario,
         borrado: 1
       }).then(function (iniciativa) {
@@ -19,12 +25,12 @@ exports.action = function (req, res) {
         console.log(err);
         res.json({ error_code: 1 });
       });
-    
+
       break;
     case "edit":
       models.fechaenvuelo.update({
         idtipofecha: req.body.idtipofecha,
-        fecha: req.body.fecha,
+        fecha: fecha,
         comentario: req.body.comentario
       }, {
           where: {
@@ -85,7 +91,7 @@ exports.list = function (req, res) {
       models.fechaenvuelo.count({
         where: data
       }).then(function (records) {
-          console.log("campos: "+records);
+        console.log("campos: " + records);
         var total = Math.ceil(records / rows);
         models.fechaenvuelo.findAll({
           offset: parseInt(rows * (page - 1)),
