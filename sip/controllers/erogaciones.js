@@ -26,9 +26,10 @@ exports.getErogacionesPaginados = function (req, res) {
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, * " +
-    "FROM sip.erogacionproyecto where iddetalleproyecto="+id+")" +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY factura) " +
+    "as resultNum, " +
+    "factura, sum(montosum) AS montosum, max(fechagl) AS fechagl, max(numerotarea) AS numerotarea, "+
+    "max(razonsocial) AS razonsocial FROM sip.erogacionproyecto where iddetalleproyecto="+id+" GROUP BY factura)" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
