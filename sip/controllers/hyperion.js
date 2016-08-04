@@ -4,9 +4,10 @@ var utilSeq = require('../utils/seq');
 var co = require('co');
 
 exports.csv = function (req, res) {
+    var _idejercicio = req.params.idejercicio;
+    console.log("_idejercicio" + _idejercicio);
 
     var sql_head_0 = `SELECT cuentacontable 'cuenta',gerencia 'gerencia',departamento 'departamento',seccion 'seccion', `
-
     var sql_body_1 = `
                             SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.totalcosto FROM 
                             (
@@ -101,40 +102,54 @@ exports.csv = function (req, res) {
 
     var sql_tail = `  )   ) p `
 
-    var year = (new Date).getFullYear();
+    // default
+    var year = (new Date).getFullYear() - 1;
 
-    utilSeq.getPeriodRange(year, function (err, range) {
-        var acum = ''
-        var min = range[0]
-        var max = range[range.length - 1]
-        for (var i = 0; i < range.length; i++) {
-            acum += '[' + range[i] + ']'
-            if (i < range.length - 1)
-                acum += ','
+    co(function* () {
+        if (_idejercicio != 0) {
+            models.ejercicios.find({
+                attributes: ['ejercicio'],
+                where: { 'id': _idejercicio },
+            }).then(function (ex) {
+                year = ex.ejercicio;
+            }).catch(function (err) {
+                console.log(err)
+            });
+        } else if (_idejercicio == 0) {
+
         }
 
-        sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail, { replacements: { periodos: acum, min: min, max: max }, type: sequelize.QueryTypes.SELECT }
-        ).then(function (rows) {
-            /*
-            var json = JSON.stringify(rows).replace(/"(\w+)"\s*:/g, '$1:');
-            console.log(json);
-            try {
-                var rson=JSON.parse(json)
-                console.dir(rson)
-            } catch (e) {
-                console.log(e);
+        utilSeq.getPeriodRange(year, function (err, range) {
+            var acum = ''
+            var min = range[0]
+            var max = range[range.length - 1]
+            for (var i = 0; i < range.length; i++) {
+                acum += '[' + range[i] + ']'
+                if (i < range.length - 1)
+                    acum += ','
             }
-            */
-            var csv = utilSeq.JSON2CSV(rows)
-            var hdr = 'attachment; filename=hyperion_' + Math.floor(Date.now()) + '.csv'
-            res.setHeader('Content-disposition', hdr);
-            res.set('Content-Type', 'text/csv');
-            res.status(200).send(csv);
-        }).catch(function (err) {
-            res.json({ error_code: 1 });
+
+            console.dir(acum)
+
+            sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail,
+                {
+                    replacements: { periodos: acum, min: min, max: max },
+                    type: sequelize.QueryTypes.SELECT
+                }
+            ).then(function (rows) {
+
+                var csv = utilSeq.JSON2CSV(rows)
+                var hdr = 'attachment; filename=hyperion_' + Math.floor(Date.now()) + '.csv'
+                res.setHeader('Content-disposition', hdr);
+                res.set('Content-Type', 'text/csv');
+                res.status(200).send(csv);
+            }).catch(function (err) {
+                res.json({ error_code: 1 });
+            });
         });
 
-
+    }).catch(function (err) {
+        done(err)
     });
 
 }
@@ -502,7 +517,8 @@ exports.list2 = function (req, res) {
 
                     var sql_tail = `  )   ) p `
 
-                    sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail, { replacements: { periodos: acum, min: min, max: max, idcui: parseInt(idcui) }, type: sequelize.QueryTypes.SELECT }
+                    sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail,
+                        { replacements: { periodos: acum, min: min, max: max, idcui: parseInt(idcui) }, type: sequelize.QueryTypes.SELECT }
                     ).then(function (rows) {
                         res.json(rows);
                     }).catch(function (err) {

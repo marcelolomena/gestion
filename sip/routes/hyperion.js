@@ -16,7 +16,7 @@ module.exports = function (passport) {
     router.route('/hyperion/presupuesto')
         .get(isAuthenticated, hyperionController.estructura)
 
-    router.route('/hyperion/csv')
+    router.route('/hyperion/csv/:idejercicio')
         .get(isAuthenticated, hyperionController.csv)
 
     router.route('/hyperion/listcui')
