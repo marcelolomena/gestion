@@ -80,10 +80,16 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: {required:true},
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatoptions: { decimalPlaces: 0 },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.porcentaje;
+                dato = val*100;
+                return dato;
+            },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('0,00', { reverse: true, placeholder: "_,__"  });
+                    $(el).mask('000', { reverse: true, placeholder: "___"  });
                 }
             },
         },
@@ -121,13 +127,13 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -141,20 +147,20 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
             label: 'Fecha Fin', name: 'fechafin', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -168,10 +174,10 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
             label: 'Cantidad', name: 'cantidad', width: 50, align: 'right',
@@ -182,11 +188,11 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
         {
             label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: {required:true},
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.000.000.000.000', { reverse: true });
                 }
             }
         },

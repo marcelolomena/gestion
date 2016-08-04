@@ -33,7 +33,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Requiere Contrato{reqcontrato}</div>";
+    template += "<div class='column-half'>Contrato{reqcontrato}</div>";
     template += "<div class='column-half'>Con IVA{coniva}</div>";
     template += "</div>";
 
@@ -43,7 +43,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Glosa{glosa}</div>";
+    template += "<div class='column-full'>Glosa Factura{glosa}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -210,10 +210,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             editoptions: {placeholder: "X.X.X de acuerdo a formato de tarea" }
         },
         {
-            label: 'Glosa', name: 'glosa', width: 150, align: 'left',
+            label: 'Glosa Factura', name: 'glosa', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
             edittype: "textarea", editrules: { required: false },
-            editoptions: {placeholder: "Glosa de la tarea" }
+            editoptions: {placeholder: "" }
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 80, align: 'left',
@@ -248,14 +248,14 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -269,21 +269,21 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
             label: 'Fecha Fin', name: 'fechafin', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -297,13 +297,13 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
-            label: 'Requiere Contrato', name: 'reqcontrato',
+            label: 'Contrato', name: 'reqcontrato',
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",
@@ -367,17 +367,6 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
-            search: false, editable: true, hidden: false,
-            editrules: {required: true},
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
-            }
-        },
-        {
             label: 'Cantidad', name: 'cantidad', width: 50, align: 'left',
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: { required: true },
@@ -387,6 +376,17 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 }
             },
             search: true, editable: true, hidden: false,
+        },
+        {
+            label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
+            search: false, editable: true, hidden: false,
+            editrules: {required: true},
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
         },
         {
             label: 'Con IVA', name: 'coniva', search: false, editable: true, hidden: false,

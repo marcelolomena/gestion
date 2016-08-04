@@ -12,12 +12,25 @@ exports.action = function (req, res) {
     var costoorigen = req.body.costoorigen
     var porcentaje = req.body.porcentaje
     var idsubtarea = req.body.idsubtarea
+    var fechainicio;
+    var fechafin;
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
-        if (porcentaje != "")
-            porcentaje = porcentaje.split(".").join("").replace(",", ".")
+
+        if (porcentaje != "") {
+            //porcentaje = porcentaje.split(".").join("").replace(",", ".")
+            porcentaje = parseFloat(req.body.porcentaje) / 100;
+        } else {
+            porcentaje = 0.00;
+        }
+        if (req.body.fechainicio != "")
+            fechainicio = req.body.fechainicio.split("-").reverse().join("-")
+
+        if (req.body.fechafin != "")
+            fechafin = req.body.fechafin.split("-").reverse().join("-")
+
         if (idsubtarea == "0")
             idsubtarea = null
     }
@@ -33,8 +46,8 @@ exports.action = function (req, res) {
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
-                fechainicio: req.body.fechainicio,
-                fechafin: req.body.fechafin,
+                fechainicio: fechainicio,
+                fechafin: fechafin,
                 cantidad: req.body.cantidad,
                 borrado: 1
             }).then(function (detalle) {
@@ -54,8 +67,8 @@ exports.action = function (req, res) {
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
-                fechainicio: req.body.fechainicio,
-                fechafin: req.body.fechafin,
+                fechainicio: fechainicio,
+                fechafin: fechafin,
                 cantidad: req.body.cantidad
             }, {
                     where: {
