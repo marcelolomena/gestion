@@ -244,9 +244,9 @@ object TaskJira extends Controller {
 
           if(success.project_mode==42){
             println("sin plantilla:" + success.project_mode)
-            val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
+            /* val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
               success.plan_start_date, success.plan_end_date, success.plan_start_date, null, null, new Date(), success.task_status, success.completion_percentage, 0, Option(""), Option(0), Option(0))
-            SubTaskServices.insertSubTask(subtask)
+            SubTaskServices.insertSubTask(subtask) */
           }else{
             
             var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
