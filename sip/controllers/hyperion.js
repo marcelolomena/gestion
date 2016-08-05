@@ -5,9 +5,10 @@ var co = require('co');
 
 exports.csv = function (req, res) {
     var _idejercicio = req.params.idejercicio;
-    console.log("_idejercicio" + _idejercicio);
+    //console.log("_idejercicio" + _idejercicio);
 
-    var sql_head_0 = `SELECT cuentacontable 'cuenta',gerencia 'gerencia',departamento 'departamento',seccion 'seccion', `
+    //var sql_head_0 = `SELECT cuentacontable "cuenta",gerencia "gerencia",departamento "departamento",seccion "seccion", `
+    var sql_head_0 = `SELECT cuentacontable cuenta,gerencia,departamento,seccion, `
     var sql_body_1 = `
                             SELECT M.cuentacontable,N.gerencia,N.departamento,N.seccion,M.periodo,M.totalcosto FROM 
                             (
@@ -85,7 +86,7 @@ exports.csv = function (req, res) {
                             ) J
                             LEFT OUTER JOIN
                             (
-                            SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado'
+                            SELECT p.idcui,c.cui,c.nombreresponsable FROM sip.presupuesto p JOIN sip.estructuracui c ON p.idcui=c.id WHERE p.estado='Aprobado' AND p.idejercicio=:IdEjercicio 
                             ) K
                             ON J.cui = K.cui
                             ) N
@@ -103,53 +104,68 @@ exports.csv = function (req, res) {
     var sql_tail = `  )   ) p `
 
     // default
-    var year = (new Date).getFullYear() - 1;
+    //var year = (new Date).getFullYear() - 1;
 
     co(function* () {
+        var exer, year
         if (_idejercicio != 0) {
-            models.ejercicios.find({
-                attributes: ['ejercicio'],
+            exer = yield models.ejercicios.find({
+                attributes: ['id', 'ejercicio'],
                 where: { 'id': _idejercicio },
-            }).then(function (ex) {
-                year = ex.ejercicio;
             }).catch(function (err) {
                 console.log(err)
             });
         } else if (_idejercicio == 0) {
-
+            exer = yield models.ejercicios.find({
+                attributes: ['id', 'ejercicio'],
+                where: { 'ejercicio': (new Date).getFullYear() },
+            }).catch(function (err) {
+                console.log(err)
+            });
+            //console.dir(exer)
         }
+        _idejercicio = exer.id;
+        year = exer.ejercicio - 1;
+
+        //console.dir(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + _idejercicio)
+        //console.dir(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + year)
 
         utilSeq.getPeriodRange(year, function (err, range) {
             var acum = ''
+            //var acom = ''
             var min = range[0]
             var max = range[range.length - 1]
             for (var i = 0; i < range.length; i++) {
                 acum += '[' + range[i] + ']'
-                if (i < range.length - 1)
-                    acum += ','
+                //acom += "[" + range[i] + "] AS '" + range[i] + "'"
+                if (i < range.length - 1) {
+                    acum += ',';
+                    //acom += ',';
+                }
             }
 
-            console.dir(acum)
+            //console.dir(acum)
 
             sequelize.query(sql_head_0 + acum + sql_body_0 + sql_body_1 + sql_body_2 + acum + sql_tail,
                 {
-                    replacements: { periodos: acum, min: min, max: max },
+                    replacements: { periodos: acum, min: min, max: max, IdEjercicio: parseInt(_idejercicio) },
                     type: sequelize.QueryTypes.SELECT
                 }
             ).then(function (rows) {
-
+                //console.dir(rows)
                 var csv = utilSeq.JSON2CSV(rows)
                 var hdr = 'attachment; filename=hyperion_' + Math.floor(Date.now()) + '.csv'
                 res.setHeader('Content-disposition', hdr);
                 res.set('Content-Type', 'text/csv');
                 res.status(200).send(csv);
             }).catch(function (err) {
+                console.log(err)
                 res.json({ error_code: 1 });
             });
         });
 
     }).catch(function (err) {
-        done(err)
+        console.log(err)
     });
 
 }
@@ -336,13 +352,13 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
             var _rules = _jsonObj.rules;
             idejercicio = _rules[0].data;
         } else {
-            var exer = idejercicio = yield models.ejercicios.find({
+            var exer = yield models.ejercicios.find({
                 attributes: ['id'],
-                where: { 'ejercicio': (new Date).getFullYear() },
+                where: { 'ejercicio': (new Date).getFullYear() - 1 },
             }).catch(function (err) {
                 console.log(err)
             });
-            console.dir(exer)
+            //console.dir(exer)
             idejercicio = exer.id
         }
 

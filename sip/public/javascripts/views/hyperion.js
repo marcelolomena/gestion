@@ -330,21 +330,20 @@ $(document).ready(function () {
         {},
         {},
         { closeAfterSearch: true });
-
+/*
     $('#gridDetail').jqGrid('navButtonAdd', '#pagerDetail', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Exportar Hyperion",
         position: "last",
         onClickButton: function () {
-            //filterTemplates
             var grid = $('#gridDetail');
             var rowKey = grid.getGridParam("selrow");
             var url = '/hyperion/csv';
             $('#gridDetail').jqGrid('excelExport', { "url": url });
         }
     });
-
+*/
     $("#pager_left").css("width", "");
 
 });
