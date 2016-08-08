@@ -1,5 +1,14 @@
 module.exports = (function () {
-
+    Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator) {
+        var n = this,
+            decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+            decSeparator = decSeparator == undefined ? "." : decSeparator,
+            thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
+            sign = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+    };
     var buildCondition = function (filters, callback) {
         var condition = [];
         try {
@@ -204,23 +213,32 @@ module.exports = (function () {
     }
     var JSON2CSV = function (data) {
         var result, ctr, keys, columnDelimiter, lineDelimiter;
+        var ids = ['cuenta', 'seccion', 'departamento', 'gerencia']
 
         columnDelimiter = ';';
         lineDelimiter = '\n';
 
         keys = Object.keys(data[0]);
 
+        for (var j = 0; j <= 15; j++)
+            ids.push(keys[j])
+
         result = '';
-        result += keys.join(columnDelimiter);
+        result += ids.join(columnDelimiter);
         result += lineDelimiter;
 
         data.forEach(function (item) {
             ctr = 0;
-            keys.forEach(function (key) {
+            ids.forEach(function (key) {
                 if (ctr > 0) result += columnDelimiter;
 
-                //result += item[key];
-                result += item[key] == null ? 0 : item[key];
+                if (key == 'cuenta' || key == 'seccion' || key == 'departamento' || key == 'gerencia') {
+                    result += item[key] == null ? 0 : item[key];
+                } else {
+                    //result += item[key] == null ? 0 : parseFloat(item[key]).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                    result += item[key] == null ? 0 : item[key].formatMoney(2, '.', ',');
+                }
+
                 ctr++;
             });
             result += lineDelimiter;

@@ -213,7 +213,6 @@ $(document).ready(function () {
             }
             refreshSerchingToolbar.call(this, myDefaultSearch);
         }
-
     });
 
     $.extend($.jgrid.search, {
@@ -240,7 +239,8 @@ $(document).ready(function () {
 
             //var grid = $('#gridDetail');
             //var rowKey = grid.getGridParam("selrow");
-            var url = '/hyperion/csv';
+
+            var url = '/hyperion/csv/' + $("#filterTemplates").val();
             $grid.jqGrid('excelExport', { "url": url });
 
             /*
@@ -266,17 +266,9 @@ $(document).ready(function () {
         });
         $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
             myFilterTemplateLabel + '</label>' +
-            '<select id="filterTemplates"><option value="">Sin filtro</option>' +
+            '<select id="filterTemplates"><option value="0">Sin filtro</option>' +
             templateOptions + '</select>');
         $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
-            // some web browsers like Google Chrome don't fire "change" event
-            // if the select will be "scrolled" by keybord. Moreover some browsers
-            // like Internet Explorer don't change the select option on pressing
-            // of LEFT or RIGHT key. Another web browsers like Google Chrome do this.
-            // We make refrech of the grid in any from the cases. If needed one
-            // could modify the code to reduce unnneded reloading of the grid,
-            // but for the demo with a few local rows it's such optimization
-            // isn't really needed
             var keyCode = e.keyCode || e.which;
 
             if (keyCode === $.ui.keyCode.PAGE_UP || keyCode === $.ui.keyCode.PAGE_DOWN ||
@@ -289,39 +281,6 @@ $(document).ready(function () {
         });
     });
 
-
-    /*
-        for (iTemplate = 0; iTemplate < cTemplates; iTemplate++) {
-            templateOptions += '<option value="' + iTemplate + '">' +
-                myFilterTemplateNames[iTemplate] + '</option>';
-        }
-    
-        $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
-            myFilterTemplateLabel + '</label>' +
-            '<select id="filterTemplates"><option value="">Sin filtro</option>' +
-            templateOptions + '</select>');
-    
-    
-        $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
-            // some web browsers like Google Chrome don't fire "change" event
-            // if the select will be "scrolled" by keybord. Moreover some browsers
-            // like Internet Explorer don't change the select option on pressing
-            // of LEFT or RIGHT key. Another web browsers like Google Chrome do this.
-            // We make refrech of the grid in any from the cases. If needed one
-            // could modify the code to reduce unnneded reloading of the grid,
-            // but for the demo with a few local rows it's such optimization
-            // isn't really needed
-            var keyCode = e.keyCode || e.which;
-    
-            if (keyCode === $.ui.keyCode.PAGE_UP || keyCode === $.ui.keyCode.PAGE_DOWN ||
-                keyCode === $.ui.keyCode.END || keyCode === $.ui.keyCode.HOME ||
-                keyCode === $.ui.keyCode.UP || keyCode === $.ui.keyCode.DOWN ||
-                keyCode === $.ui.keyCode.LEFT || keyCode === $.ui.keyCode.RIGHT) {
-    
-                reloadWithNewFilterTemplate();
-            }
-        });
-    */
     $("#gridDetail").jqGrid({
         url: '/hyperion/list',
         mtype: "POST",
@@ -371,7 +330,7 @@ $(document).ready(function () {
         {},
         {},
         { closeAfterSearch: true });
-
+/*
     $('#gridDetail').jqGrid('navButtonAdd', '#pagerDetail', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
@@ -384,7 +343,7 @@ $(document).ready(function () {
             $('#gridDetail').jqGrid('excelExport', { "url": url });
         }
     });
-
+*/
     $("#pager_left").css("width", "");
 
 });
