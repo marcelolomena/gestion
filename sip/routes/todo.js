@@ -13,6 +13,7 @@ var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var graficoController = require('../controllers/graficotest');
 var testController = require('../controllers/test')
+var rolesController = require('../controllers/roles')
 var express=require('express')
 var router=express.Router()
 var isAuthenticated=require('../policies/isAuthenticated')    
@@ -44,6 +45,14 @@ module.exports = function (passport) {
     router.get('/parametros', isAuthenticated, function (req, res) {
         res.render('parametros', { user: req.user });
     });
+
+    router.get('/roles', isAuthenticated, function (req, res) {
+        res.render('roles', { user: req.user });
+    });
+
+    router.route('/roles/list')
+        .post(isAuthenticated, rolesController.list);
+
     router.route('/parametros/list')
         .post(isAuthenticated, parametroController.list);
 
