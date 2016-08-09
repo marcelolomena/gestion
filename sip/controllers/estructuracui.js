@@ -75,6 +75,9 @@ exports.action = function (req, res) {
         idestructura:req.body.idestructura,
         cuipadre:req.body.cuipadre,
         nivel:req.body.nivel,
+        nombreresponsable:req.body.responsable,
+        nombregerente:req.body.nombregerente,
+        gerencia:req.body.genrencia,
         borrado: 1
       }).then(function (estructuracui) {
         res.json({ error_code: 0 });
@@ -90,6 +93,9 @@ exports.action = function (req, res) {
         uid: req.body.uid,
         idgerencia: req.body.idgerencia,
         uidgerente: req.body.uidgerente,
+        nombreresponsable:req.body.responsable,
+        nombregerente:req.body.nombregerente,
+        gerencia:req.body.genrencia,
         nivel:req.body.nivel        
       }, {
           where: {
