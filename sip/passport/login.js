@@ -37,23 +37,6 @@ module.exports = function (passport) {
 					console.log(err);
 				});
 
-				/*
-				var rol = models.usrrol.find({
-					attributes: ['id'],
-					where: { 'uid': user.uid },
-				});
-				console.dir(rol);
-				console.log(rol.id);
-				if (!user) {
-					console.log('Usuario no encontrado. ' + username);
-					return done(null, false, req.flash('message', 'Usuario no encontrado.'));
-				} else if (!isValidPassword(user, password)) {
-					console.log('Clave inválida');
-					return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
-				} else {
-					return done(null, user);
-				}
-			*/
 			}).catch(function (err) {
 				done(err)
 			});
@@ -65,28 +48,6 @@ module.exports = function (passport) {
         return bCrypt.compareSync(password, user.password);
 
     }
-	/*
-		var isExistsRol = function* (user) {
-			var rid = 0
-			console.log("entro!!!!!!")
-			yield models.usrrol.find({
-				attributes: ['id'],
-				where: { 'uid': user.uid },
-			}).then(function (rol) {
-				console.log("))))))))))))))))))))))))))))))))) " + rol.rid)
-				rid = rol.rid
-			}).catch(function (err) {
-				console.log(err)
-			});
-			return rid
-		}
-	*/
-	function* isExistsRol(user) {
-		var rid = yield models.usrrol.find({
-            attributes: ['id'],
-            where: { 'uid': user.uid },
-        });
-		console.log(rid)
-	}
+
 
 }

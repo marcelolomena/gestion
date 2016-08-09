@@ -13,28 +13,6 @@ module.exports = function (passport) {
         var subMenu = function (op, menu, callback) {
             /*agregar query completa*/
 
-            /*
-            models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
-            models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
-            models.rol.belongsToMany(models.menu, { foreignKey: 'rid', through: models.rolfunc });
-            models.menu.belongsToMany(models.rol, { foreignKey: 'mid', through: models.rolfunc });
-
-            models.user.find({
-                where: { 'uid': id },
-                include: [
-                    {
-                        model: models.rol,
-                        include: [{ model: models.menu, where: { 'pid': { $eq: null } }, required: false }]
-                    }
-                ]
-                //group: ['[User].[first_name]', '[User].[last_name]', '[Rols.Menus].[descripcion]' , '[Rols.Menus].[url]' ]
-            }).then(function (usr) {
-            }).catch(function (err) {
-                callback(err, undefined)
-                //console.log("--------> " + err);
-            });
-            */
-
             return models.menu.findAll({
                 where: { 'pid': menu.id }
             }).then(function (submenu) {

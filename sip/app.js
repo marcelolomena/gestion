@@ -9,7 +9,11 @@ var express = require('express'),
   fs = require('fs'),
   FileStreamRotator = require('file-stream-rotator'),
   app = express(),
-  logDirectory = path.join(__dirname, 'log')
+  logDirectory = path.join(__dirname, 'log'),
+  passport = require('passport'),
+  session = require('express-session'),
+  SequelizeStore = require('connect-session-sequelize')(session.Store),
+  sequelize = require('./models/index').sequelize;
 
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
@@ -58,8 +62,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 // Configuring Passport
-var passport = require('passport');
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+//var passport = require('passport');
+//app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+//app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  store: new SequelizeStore({
+    checkExpirationInterval: 15 * 60 * 1000,
+    expiration: 24 * 60 * 60 * 1000,
+    db: sequelize
+  })
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
