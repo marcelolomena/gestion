@@ -53,6 +53,12 @@ module.exports = function (passport) {
     router.route('/roles/list')
         .post(isAuthenticated, rolesController.list);
 
+    router.route('/roles/list2/:id')
+        .post(isAuthenticated, rolesController.list2);
+
+    router.route('/getroles')
+        .post(isAuthenticated, rolesController.getRoles);
+
     router.route('/parametros/list')
         .post(isAuthenticated, parametroController.list);
 
