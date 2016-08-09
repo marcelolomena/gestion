@@ -1,36 +1,92 @@
 var login = require('./login');
 var models = require('../models');
+var sequelize = require('../models/index').sequelize;
 
-module.exports = function (passport) {
+module.exports = function(passport) {
 
     // Passport needs to be able to serialize and deserialize users to support persistent login sessions
-    passport.serializeUser(function (user, done) {
+    passport.serializeUser(function(user, done) {
         done(null, user.uid);
     });
 
-    passport.deserializeUser(function (id, done) {
+    passport.deserializeUser(function(id, done) {
 
-        var subMenu = function (op, menu, callback) {
+        var subMenu = function(op, menu, callback) {
             /*agregar query completa*/
 
             return models.menu.findAll({
                 where: { 'pid': menu.id }
-            }).then(function (submenu) {
+            }).then(function(submenu) {
                 var opt = {}
                 opt["menu"] = op
                 var subsub = []
-                submenu.forEach(function (opcion) {
+                submenu.forEach(function(opcion) {
                     subsub.push({ "opt": opcion.descripcion, "url": opcion.url })
                 });
                 opt["submenu"] = subsub
                 callback(undefined, opt)
-            }).catch(function (err) {
+            }).catch(function(err) {
                 callback(err, undefined)
                 //console.log("--------> " + err);
             });
         }
 
-        var Menu = function (user, callback) {
+        var NeoMenu = function(user, callback) {
+            var sql_menu = `
+                        select distinct e.id,e.descripcion from art_user a
+                        join sip.usr_rol b on a.uid = b.uid
+                        join sip.rol c on b.rid = c.id
+                        join sip.rol_func d on d.rid = c.id
+                        join sip.menu e on e.id = d.mid
+                        where a.uid=:uid and pid is null
+                      `
+            var sql_submenu = `
+                        select distinct e.id,e.descripcion from art_user a
+                        join sip.usr_rol b on a.uid = b.uid
+                        join sip.rol c on b.rid = c.id
+                        join sip.rol_func d on d.rid = c.id
+                        join sip.menu e on e.id = d.mid
+                        where a.uid=:uid and pid=:pid
+                      `
+            sequelize.query(sql_menu,
+                {
+                    replacements: { uid: user.uid },
+                    type: sequelize.QueryTypes.SELECT
+                }
+            ).then(function(rows) {
+                var todo = []
+                rows.forEach(function(menu) {
+                    var item = {}
+                    item["id"] = menu.id
+                    item["menu"] = menu.descripcion
+                    //console.log(menu.id)
+
+                    sequelize.query(sql_submenu,
+                        {
+                            replacements: { uid: user.uid, pid: menu.id },
+                            type: sequelize.QueryTypes.SELECT
+                        }
+                    ).then(function(submenu) {
+                        var opt = {}
+                        opt["menu"] = item
+                        var subsub = []
+                        submenu.forEach(function(opcion) {
+                            subsub.push({ "opt": opcion.descripcion, "url": opcion.url })
+                        });
+                        opt["submenu"] = subsub
+                        todo.push(opt);
+                    }).catch(function(err) {
+                        callback(err, 'undefined');
+                    });
+
+                });
+                callback('undefined', todo);
+            }).catch(function(err) {
+                callback(err, 'undefined');
+            });
+        }
+
+        var Menu = function(user, callback) {
             try {
                 var promises = []
                 //console.log("--->>>>>>> " + user.Rols.length);
@@ -38,13 +94,13 @@ module.exports = function (passport) {
                 var rol = user.rols[0];
                 //user.Rols[0].forEach(function (rol) {
 
-                rol.menus.forEach(function (menu) {
+                rol.menus.forEach(function(menu) {
                     var item = {}
                     item["id"] = menu.id
                     item["menu"] = menu.descripcion;
 
-                    var promise = new Promise(function (resolve, reject) {
-                        subMenu(item, menu, function (err, submenu) {
+                    var promise = new Promise(function(resolve, reject) {
+                        subMenu(item, menu, function(err, submenu) {
                             if (submenu)
                                 resolve(submenu);
                             else
@@ -55,7 +111,7 @@ module.exports = function (passport) {
                 });
                 //});
 
-                return Promise.all(promises).then(function (items) {
+                return Promise.all(promises).then(function(items) {
                     var menuPromises = [];
                     for (var i = 0; i < items.length; i++) {
                         menuPromises.push(items[i]);
@@ -82,7 +138,7 @@ module.exports = function (passport) {
                 }
             ]
             //group: ['[User].[first_name]', '[User].[last_name]', '[Rols.Menus].[descripcion]' , '[Rols.Menus].[url]' ]
-        }).then(function (usr) {
+        }).then(function(usr) {
             var usuario = []
             var nombre = {}
             nombre["nombre"] = usr.first_name + " " + usr.last_name
@@ -90,15 +146,22 @@ module.exports = function (passport) {
             nombre["rid"] = usr.rols[0].id
             usuario.push(nombre)
 
-            Menu(usr, function (menu) {
+
+            NeoMenu(usr, function(algo) {
+                console.dir(algo)
+            });            
+
+            Menu(usr, function(menu) {
                 var menus = {}
                 menus["menus"] = menu
                 var user = usuario.concat(menus);
-                //console.log(JSON.stringify(user))
+                //console.dir(user[1].menus)
                 done(null, user);
             });
 
-        }).catch(function (err) {
+
+
+        }).catch(function(err) {
             console.log("--------> " + err);
             done(err, null)
         });
