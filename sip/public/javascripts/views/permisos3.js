@@ -1,7 +1,8 @@
-function gridPermisos3(parentRowID, parentRowKey,abueloRowKey, suffix) {
+function gridPermisos3(parentRowID, parentRowKey,menuid,rolid, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
-    var abuelo = abueloRowKey;
+    var mid = menuid;
+    var rid = rolid;
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
     pager_id = 'p_' + subgrid_table_id;
@@ -25,9 +26,9 @@ function gridPermisos3(parentRowID, parentRowKey,abueloRowKey, suffix) {
     template += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/permisos/list3/" + parentRowKey + "/"+abuelo;
+    var childGridURL = "/permisos/list3/" + rolid + "/"+mid;
 
-    var modelRoles2 = [
+    var modelRoles3 = [
         {
             label: 'id',
             name: 'id',
@@ -43,7 +44,7 @@ function gridPermisos3(parentRowID, parentRowKey,abueloRowKey, suffix) {
             label: 'SubMenu', name: 'mid', search: false, editable: true, hidden: true, jsonmap:'menu.mid' ,
             edittype: "select",
             editoptions: {
-                dataUrl: '/getsubmenus?id='+parentRowKey,
+                dataUrl: '/getsubmenus?id='+mid,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     console.log(grid);
@@ -80,13 +81,13 @@ function gridPermisos3(parentRowID, parentRowKey,abueloRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Roles',
+        caption: 'Submenus',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelRoles2,
+        colModel: modelRoles3,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
@@ -121,16 +122,16 @@ function gridPermisos3(parentRowID, parentRowKey,abueloRowKey, suffix) {
             closeAfterAdd: true,
             recreateForm: true,
             mtype: "POST",
-            url: '/permisos/action',
+            url: '/permisos/action2',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Rol",
+            addCaption: "Agregar Submenu",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey };
+                return { rid: rolid };
             },
             beforeSubmit: function (postdata, formid) {
                 if (postdata.rid == 0) {
@@ -157,10 +158,10 @@ function gridPermisos3(parentRowID, parentRowKey,abueloRowKey, suffix) {
         {
             closeAfterDelete: true,
             recreateForm: true,
-            url: '/permisos/action',
+            url: '/permisos/action2',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Rol",
+            addCaption: "Eliminar Submenu",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {

@@ -204,8 +204,8 @@ exports.list3 = function (req, res) {
   var sord = req.body.sord;
   var filters = req.body.filters;
   var condition = "";
-  var rid = req.params.idabuelo;
-  var mid = req.params.id;
+  var rid = req.params.rid;
+  var mid = req.params.mid;
 
   if (!sidx)
     sidx = "mid";
@@ -227,6 +227,7 @@ exports.list3 = function (req, res) {
     "WHERE (a.[rid] = " + rid + " AND a.[borrado] = 1 AND menu.pid="+mid+") " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+    console.log("la query: "+sql0);
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -301,12 +302,12 @@ exports.list3 = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-/*
+
   switch (action) {
     case "add":
-      models.usrrol.create({
-        uid: req.body.parent_id,
-        rid: req.body.rid,
+      models.rolfunc.create({
+        rid: req.body.parent_id,
+        mid: req.body.mid,
         borrado: 1
       }).then(function (parametro) {
         res.json({ error_code: 0 });
@@ -317,7 +318,7 @@ exports.action = function (req, res) {
 
       break;
     case "del":
-      models.usrrol.destroy({
+      models.rolfunc.destroy({
         where: {
           id: req.body.id
         }
@@ -334,7 +335,45 @@ exports.action = function (req, res) {
       break;
 
   }
-*/
+
+}
+
+exports.action2 = function (req, res) {
+  var action = req.body.oper;
+
+  switch (action) {
+    case "add":
+      models.rolfunc.create({
+        rid: req.body.rid,
+        mid: req.body.mid,
+        borrado: 1
+      }).then(function (parametro) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+    case "del":
+      models.rolfunc.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          console.log('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        console.log(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+
 }
 
 exports.getMenus = function (req, res) {

@@ -70,11 +70,14 @@ module.exports = function (passport) {
     router.route('/permisos/list2/:id')
         .post(isAuthenticated, permisosController.list2);
 
-    router.route('/permisos/list3/:id/:idabuelo')
+    router.route('/permisos/list3/:rid/:mid')
         .post(isAuthenticated, permisosController.list3);
 
     router.route('/permisos/action')
         .post(isAuthenticated, permisosController.action);
+
+    router.route('/permisos/action2')
+        .post(isAuthenticated, permisosController.action2);
 
     router.route('/getroles')
         .get(isAuthenticated, rolesController.getRoles);

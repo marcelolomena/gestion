@@ -17,6 +17,7 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Rol{rid}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -34,12 +35,16 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
             hidden: true
         },
         {
+            label: 'Rolid', name: 'rid', width: 300, align: 'left',
+            search: true, editable: true, hidden: true, jsonmap: 'rid'
+        },
+        {
             label: 'Menu', name: 'menu', width: 300, align: 'left',
-            search: true, editable: false, hidden: false, jsonmap:'descripcion'
+            search: true, editable: false, hidden: false, jsonmap: 'descripcion'
         },
 
-        {  
-            label: 'Menu', name: 'mid', search: false, editable: true, hidden: true, jsonmap:'menu.mid' ,
+        {
+            label: 'Menu', name: 'mid', search: false, editable: true, hidden: true, jsonmap: 'mid',
             edittype: "select",
             editoptions: {
                 dataUrl: '/getmenus',
@@ -68,7 +73,7 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-      
+
 
     ];
 
@@ -79,7 +84,7 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Roles',
+        caption: 'Menus',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
@@ -129,7 +134,7 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
             url: '/permisos/action',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Rol",
+            addCaption: "Agregar Menu",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -138,8 +143,8 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.rid == 0) {
-                    return [false, "Rol: Debe seleccionar un valor", ""];
+                if (postdata.mid == 0) {
+                    return [false, "Menu: Debe seleccionar un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -162,10 +167,10 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
         {
             closeAfterDelete: true,
             recreateForm: true,
-            url: '/roles/action',
+            url: '/permisos/action',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Rol",
+            addCaption: "Eliminar Menu",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {
@@ -182,6 +187,16 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
         }
     );
     function showSubGrids2(subgrid_id, row_id) {
-        gridPermisos3(subgrid_id, row_id, parentRowKey, 'permisos3');
+
+        var grid = $('#' + childGridID);
+        console.log(grid);
+        //var rowKey = grid.getGridParam("selrow");
+        var rowData = grid.getRowData(row_id);
+        console.dir(rowData);
+        var menuid = rowData.mid;
+        var rolid = parentRowKey;
+        console.log("el menu: "+menuid);
+        console.log("el rol: "+rolid);
+        gridPermisos3(subgrid_id, row_id, menuid,rolid, 'permisos3');
     }
 }
