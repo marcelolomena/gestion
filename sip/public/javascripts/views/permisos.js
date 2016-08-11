@@ -1,33 +1,20 @@
 $(document).ready(function () {
 
-    var modelRoles = [
-        { label: 'id', name: 'uid', key: true, hidden: true },
+    var modelPermisos = [
+        { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'Nombre', name: 'first_name', width: 300, align: 'left',
+            label: 'Glosa rol', name: 'glosarol', width: 300, align: 'left',
             search: true, editable: true, hidden: false,
-            jsonmap: 'first_name'
-        },
-        {
-            label: 'Apellido', name: 'last_name', width: 300, align: 'left',
-            search: true, editable: true, hidden: false,
-            jsonmap: 'last_name'
-        },
-        {
-            label: 'Nombre de usuario', name: 'uname', width: 300, align: 'left',
-            search: true, editable: true, hidden: false
-        },
-        {
-            label: 'E-mail', name: 'email', width: 300, align: 'left',
-            search: true, editable: true, hidden: false
-        },
+            jsonmap: 'glosarol'
+        }
     ];
 
-    $("#table_roles").jqGrid({
-        url: '/roles/list',
+    $("#table_permisos").jqGrid({
+        url: '/permisos/list',
         mtype: "POST",
         datatype: "json",
         page: 1,
-        colModel: modelRoles,
+        colModel: modelPermisos,
         rowNum: 20,
         regional: 'es',
         height: 'auto',
@@ -41,11 +28,11 @@ $(document).ready(function () {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-        caption: 'Lista de Usuarios',
-        pager: "#pager_roles",
+        caption: 'Lista de Roles',
+        pager: "#pager_permisos",
         viewrecords: true,
-        rowList: [10, 20, 50,100],
-        editurl: '/roles/action',
+        rowList: [5, 10, 20, 50],
+        editurl: '/permisos/action',
         styleUI: "Bootstrap",
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
@@ -53,9 +40,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_roles").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_permisos").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#table_roles').jqGrid('navGrid', "#pager_roles", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_permisos').jqGrid('navGrid', "#pager_permisos", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
@@ -75,9 +62,9 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_roles_left").css("width", "");
+    $("#pager_permisos_left").css("width", "");
 
     function showSubGrids(subgrid_id, row_id) {
-        gridRoles2(subgrid_id, row_id, 'roles2');
+        gridPermisos2(subgrid_id, row_id, 'permisos2');
     }
 });
