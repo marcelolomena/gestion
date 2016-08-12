@@ -47,6 +47,7 @@ exports.action = function (req, res) {
         costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
+        extension: req.body.extension,
         numerocontrato: req.body.numerocontrato,
         numerosolicitudcontrato: req.body.numerosolicitudcontrato,
         borrado: 1
@@ -74,6 +75,7 @@ exports.action = function (req, res) {
         costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
+        extension: req.body.extension,
         numerocontrato: req.body.numerocontrato,
         numerosolicitudcontrato: req.body.numerosolicitudcontrato
       }, {

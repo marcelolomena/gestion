@@ -46,6 +46,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'><span style='color: red'>*</span>Para inscripción{parainscripcion}</div>";
+    template += "</div>";
+    
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
@@ -272,7 +276,16 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     $(el).mask('00.000', { reverse: true });
                 }
             }
-        }
+        },
+        {
+            label: 'Inscripción', name: 'parainscripcion', width: 20, align: 'left',
+            search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0", { placeholder: "_" });
+                }
+            },
+        },
 
     ];
 

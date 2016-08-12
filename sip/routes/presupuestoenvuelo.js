@@ -5,6 +5,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var presupuestoenvueloController = require('../controllers/presupuestoenvuelo');
 var tareaenvueloController = require('../controllers/tareaenvuelo');
 var fechaenvueloController = require('../controllers/fechaenvuelo');
+var conversionenvueloController = require('../controllers/conversionenvuelo');
 var flujopagoenvueloController = require('../controllers/flujopagoenvuelo');
 
 module.exports = function (passport) {
@@ -35,6 +36,12 @@ module.exports = function (passport) {
     router.route('/fechaenvuelo/action')
         .post(isAuthenticated, fechaenvueloController.action)
 
+    router.route('/conversionenvuelo/list/:id')
+        .post(isAuthenticated, conversionenvueloController.list);
+
+    router.route('/conversionenvuelo/action')
+        .post(isAuthenticated, conversionenvueloController.action)
+
     router.route('/flujopagoenvuelo/list/:id')
         .post(isAuthenticated, flujopagoenvueloController.list);
 
@@ -43,6 +50,9 @@ module.exports = function (passport) {
 
     router.route('/generarproyectoenvuelo/:id')
         .post(isAuthenticated, presupuestoenvueloController.generarproyectoenvuelo)
+
+    router.route('/proyectosportareaenvuelo/:idtareaenvuelo')
+        .get(isAuthenticated, flujopagoenvueloController.getProyectosPorTareaEnVuelo);
 
     return router;
 

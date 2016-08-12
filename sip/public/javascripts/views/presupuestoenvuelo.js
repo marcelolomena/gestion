@@ -34,13 +34,14 @@ $(document).ready(function () {
     template += "<div class='column-three'><span style='color: red'>*</span>Jefe Proyecto{uidjefeproyecto}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>PMO Responsable{uidpmoresponsable}</div>";
     template += "</div>";
-
+/*
     template += "<div class='form-row'>";
     template += "<div class='column-three'><span style='color: red'>*</span>Dolar{dolar}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>UF{uf}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
+*/
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
@@ -368,7 +369,7 @@ $(document).ready(function () {
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false},
         },
-
+/*
         {
             label: 'Dolar', name: 'dolar', width: 55, align: 'right',
             search: false, editable: true, hidden: false,
@@ -429,7 +430,7 @@ $(document).ready(function () {
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false},
         },
-
+*/
     ];
 
     $("#table_iniciativa").jqGrid({
@@ -652,5 +653,6 @@ $(document).ready(function () {
     function showSubGrids(subgrid_id, row_id) {
         gridTareaEnVuelo(subgrid_id, row_id, 'tareaenvuelo');
         gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
+        gridConversionEnVuelo(subgrid_id, row_id, 'conversionenvuelo');
     }
 });

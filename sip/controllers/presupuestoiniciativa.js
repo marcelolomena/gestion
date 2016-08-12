@@ -49,6 +49,7 @@ exports.action = function (req, res) {
         uf: uf,
         glosa: req.body.glosa,
         sap: req.body.sap,
+        parainscripcion: req.body.parainscripcion,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -72,6 +73,7 @@ exports.action = function (req, res) {
         dolar: dolar,
         glosa: req.body.glosa,
         sap: req.body.sap,
+        parainscripcion: req.body.parainscripcion,
         uf: uf
       }, {
           where: {
@@ -256,7 +258,7 @@ exports.listSAP = function (req, res) {
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
     "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] and iniciativafecha.tipofecha = 'Fecha Final Aprobación'" +
-    "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1) " +
+    "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 

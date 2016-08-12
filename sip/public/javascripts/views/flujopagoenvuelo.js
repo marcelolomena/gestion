@@ -33,6 +33,12 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
+    template += "<div class='column-half'>Proyecto{idproyecto}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tarea{idtarea}</div>";
+    template += "<div class='column-half'>Subtarea{idsubtarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -187,7 +193,157 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 }
             }, dataInit: function (elem) { $(elem).width(100); }
 
-        }
+        },
+        {
+            label: 'proyecto', name: 'idproyecto', search: false, editable: true, hidden: true,
+            jsonmap: 'art_subtask.art_task.art_projectmaster.pId',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/proyectosportareaenvuelo/' + parentRowKey,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idproyecto;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Proyecto--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].pId == thissid) {
+                            s += '<option value="' + data[i].pId + '" selected>' + data[i].project_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].pId + '">' + data[i].project_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#proyecto").val($('option:selected', this).val());
+                        var idProyecto = $('option:selected', this).val()
+                        if (idProyecto != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/tareasporproyecto/' + idProyecto,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idtarea;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Tarea--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].tId == thissid) {
+                                            s += '<option value="' + data[i].tId + '" selected>' + data[i].task_title + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].tId + '">' + data[i].task_title + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idtarea").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'tarea', name: 'idtarea', search: false, editable: true, hidden: true,
+            jsonmap: 'art_subtask.art_task.tId',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/tareasporiniciativa/' + parentRowKey,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idtarea;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tarea--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].tId == thissid) {
+                            s += '<option value="' + data[i].tId + '" selected>' + data[i].task_title + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].tId + '">' + data[i].task_title + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#tarea").val($('option:selected', this).val());
+                        var idTarea = $('option:selected', this).val()
+                        if (idTarea != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/subtareasportarea/' + idTarea,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idsubtarea;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Subtarea--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].sub_task_id == thissid) {
+                                            s += '<option value="' + data[i].sub_task_id + '" selected>' + data[i].title + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].sub_task_id + '">' + data[i].title + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idsubtarea").html(s);
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'Subtarea', name: 'subtarea', width: 200, align: 'left', 
+            jsonmap: 'art_sub_task.title',
+            search: true, editable: false, hidden: false,
+        },
+        {
+            label: 'idsubtarea', name: 'idsubtarea', search: false, editable: true, hidden: true,
+            jsonmap: 'art_sub_task.sub_task_id',
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/subtareasporiniciativa/' + parentRowKey,
+                buildSelect: function (response) {
+                    var grid = $('#' + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idsubtarea;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Subtarea--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].sub_task_id == thissid) {
+                            s += '<option value="' + data[i].sub_task_id + '" selected>' + data[i].title + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].sub_task_id + '">' + data[i].title + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#subtarea").val($('option:selected', this).val());
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
 
     ];
 

@@ -14,7 +14,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Servicio{idservicio}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Tarea{tarea}</div>";
+    template += "<div class='column-four'><span style='color: red'>*</span>Tarea{tarea}</div>";
+    template += "<div class='column-four'><span style='color: red'>*</span>Extensión{extension}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -206,6 +207,15 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             label: 'Tarea', name: 'tarea', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
+        },
+        {
+            label: 'Extensión', name: 'extension', width: 50, align: 'left',
+            search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('0', { reverse: true });
+                }
+            },
         },
         {
             label: 'Glosa PreFactura', name: 'glosa', width: 150, align: 'left',
@@ -432,6 +442,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             label: 'N° Sol. Contrato', name: 'numerosolicitudcontrato', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
         },
+
+        
       
 
     ];
