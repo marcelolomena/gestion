@@ -24,7 +24,8 @@
             "min": 5,
             "max": 100,
             "idle": 500000
-        }
+        },
+        "logging": false
     },
     "production": {
         "username": "art",
