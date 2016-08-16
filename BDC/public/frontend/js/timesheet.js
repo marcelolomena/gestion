@@ -154,7 +154,8 @@ var timesheetCalendar = {
         //alert(startDt + " " +endDt);
         var data = this.cData;
        
-        var today =  Date.parse($("#current-timesheet-date").val());
+        //var today =  Date.parse($("#current-timesheet-date").val());
+        var today =  new Date();
         var weekno = today.getWeek(); 
         var currentDate = today;
         var currentWeek =  new Date(startDt);
@@ -343,7 +344,8 @@ $(document).ready(function(){
     });
 	
 	var oldselectedDate = "";
-	 var today =  Date.parse($("#current-timesheet-date").val());
+	 //var today =  Date.parse($("#current-timesheet-date").val());
+	 var today =  new Date();
 	today.addDays(-3);
 	timesheetCalendar.arrayCount = 0;
 	timesheetCalendar.cStart = today;
@@ -351,7 +353,9 @@ $(document).ready(function(){
     timesheetCalendar.cEnd = today;
 	timesheetCalendar.generateCalendar();
 	
-	 var today =  Date.parse($("#current-timesheet-date").val());
+	 //var today =  Date.parse($("#current-timesheet-date").val());
+	 var today =  new Date();
+	//alert('HOY : ' + today)
 	oldselectedDate = today;
 	currentTitle();
 	getTimeSheetList(oldselectedDate);
@@ -421,7 +425,8 @@ $(document).ready(function(){
 			var _this = $(this);
 			_this.parent().parent().removeClass('highlight-class');
 		});
-		var today = Date.parse($("#current-timesheet-date").val());
+		//var today = Date.parse($("#current-timesheet-date").val());
+		var today =  new Date();
 		var selectedDate = new Date(jQuery(this).children().attr("id"));
 		if(today.getTime() >= selectedDate.getTime() ){
 			$('#subtask_div_change_id').addClass('display-none');
@@ -774,6 +779,7 @@ function keepSelected(selectedDate){
 //title for calender
 function currentTitle(){
 	var selectedDate = jQuery(".currentDate").children().attr("id");
+	//alert(selectedDate)
 	if(selectedDate.length > 0){
 		var sd = new Date(selectedDate);
 		$(".calendarTitle").html(sd.toString('dd-MM-yyyy'));
