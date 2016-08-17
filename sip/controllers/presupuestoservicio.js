@@ -26,96 +26,107 @@ exports.getPresupuestoServicios = function (req, res) {
     if (JSON.stringify(jsonObj.rules) != '[]') {
       jsonObj.rules.forEach(function (item) {
         if (item.op === 'cn')
-          if (item.field == 'nombre'){
-            condition += 'c.'+item.field + " like '%" + item.data + "%' AND ";
+          if (item.field == 'nombre') {
+            condition += 'c.' + item.field + " like '%" + item.data + "%' AND ";
           } else if (item.field == 'glosaservicio') {
-            condition += 'a.'+item.field + " like '%" + item.data + "%' AND ";
+            condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
           } else if (item.field == 'moneda') {
-            condition += 'd.'+item.field + " like '%" + item.data + "%' AND ";
+            condition += 'd.' + item.field + " like '%" + item.data + "%' AND ";
           } else if (item.field == 'razonsocial') {
-            condition += 'b.'+item.field + " like '%" + item.data + "%' AND ";
-          } 
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
+          }
       });
       condition = condition.substring(0, condition.length - 5);
-      console.log("***CONDICION:"+condition);
+      console.log("***CONDICION:" + condition);
     }
   }
-  sqlcount = "Select count(*) AS count  FROM sip.detallepre a "+
-    "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id "+
-    "LEFT JOIN sip.servicio c ON c.id = a.idservicio "+
-    "LEFT JOIN sip.moneda d ON a.idmoneda = d.id "+
-    "WHERE a.idpresupuesto="+id+ " ";
+  sqlcount = "Select count(*) AS count  FROM sip.detallepre a " +
+    "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
+    "LEFT JOIN sip.servicio c ON c.id = a.idservicio " +
+    "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
+    "WHERE a.idpresupuesto=" + id + " ";
   if (filters && condition != "") {
-    sqlcount += " AND "+condition+ " ";  
-  }    
-/*
-  var sql0 = "declare @rowsPerPage as bigint; " +
+    sqlcount += " AND " + condition + " ";
+  }
+  /*
+    var sql0 = "declare @rowsPerPage as bigint; " +
+      "declare @pageNum as bigint;" +
+      "set @rowsPerPage=" + rows + "; " +
+      "set @pageNum=" + page + ";   " +
+      "With SQLPaging As   ( " +
+      "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+      "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
+      "a.costoforecast, a.costoanual, a.comentario, a.glosaservicio, a.idproveedor, " +
+      "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.mesesentrecuotas, " +
+      "a.gastodiferido, b.razonsocial FROM sip.detallepre a " +
+      "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
+      "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
+      "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
+      "WHERE a.idpresupuesto=" + id + ")" +
+      "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+  
+    if (filters) {
+      var jsonObj = JSON.parse(filters);
+  
+      if (JSON.stringify(jsonObj.rules) != '[]') {
+  
+        jsonObj.rules.forEach(function (item) {
+  
+          if (item.op === 'cn')
+            condition += item.field + " like '%" + item.data + "%' AND"
+        });
+  */
+  var sql = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
-    "set @rowsPerPage=" + rows + "; " +
+    "set @rowsPerPage=" + rowspp + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
     "a.costoforecast, a.costoanual, a.comentario, a.glosaservicio, a.idproveedor, " +
     "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.mesesentrecuotas, " +
-    "a.gastodiferido, b.razonsocial FROM sip.detallepre a " +
+    "a.gastodiferido, b.razonsocial, a.desdediferido FROM sip.detallepre a " +
     "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
     "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
     "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
-    "WHERE a.idpresupuesto=" + id + ")" +
-    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+    "WHERE a.idpresupuesto=" + id + " ";
+  if (filters && condition != "") {
+    sql += " AND " + condition + ") ";
+  } else {
+    sql += ") ";
+  }
+  sql += "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
+  console.log(sql);
 
-    if (JSON.stringify(jsonObj.rules) != '[]') {
-
-      jsonObj.rules.forEach(function (item) {
-
-        if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
-      });
-*/
-        var sql = "declare @rowsPerPage as bigint; " +
-          "declare @pageNum as bigint;" +
-          "set @rowsPerPage=" + rowspp + "; " +
-          "set @pageNum=" + page + ";   " +
-          "With SQLPaging As   ( " +
-          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-          "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-          "a.costoforecast, a.costoanual, a.comentario, a.glosaservicio, a.idproveedor, " +
-          "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.mesesentrecuotas, " +
-          "a.gastodiferido, b.razonsocial FROM sip.detallepre a " +
-          "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
-          "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
-          "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
-          "WHERE a.idpresupuesto=" + id + " ";
-        if (filters && condition != "") {
-          sql += " AND "+condition + ") " ;
-        } else {
-          sql +=  ") " ;
-        }
-        sql += "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-      console.log(sql);
-
-      sequelize.query(sqlcount).spread(function (recs) { 
-        var records =  recs[0].count;
-        var total = Math.ceil(parseInt(recs[0].count) / rowspp);  
-        console.log("####COUNT:"+recs[0].count+" Total:"+total); 
-        sequelize.query(sql).spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows }); 
-        });        
-      });
-/*
-      models.detallepre.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        sequelize.query(sql)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-
+  sequelize.query(sqlcount).spread(function (recs) {
+    var records = recs[0].count;
+    var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+    console.log("####COUNT:" + recs[0].count + " Total:" + total);
+    sequelize.query(sql).spread(function (rows) {
+      res.json({ records: records, total: total, page: page, rows: rows });
+    });
+  });
+  /*
+        models.detallepre.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+          var total = Math.ceil(records / rows);
+          sequelize.query(sql)
+            .spread(function (rows) {
+              res.json({ records: records, total: total, page: page, rows: rows });
+            });
+        })
+  
+      } else {
+        console.log(sql0);
+        models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
+          var total = Math.ceil(records / rows);
+          sequelize.query(sql0)
+            .spread(function (rows) {
+              res.json({ records: records, total: total, page: page, rows: rows });
+            });
+        })
+      }
+  
     } else {
       console.log(sql0);
       models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
@@ -125,19 +136,8 @@ exports.getPresupuestoServicios = function (req, res) {
             res.json({ records: records, total: total, page: page, rows: rows });
           });
       })
-    }
-
-  } else {
-    console.log(sql0);
-    models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
-      var total = Math.ceil(records / rows);
-      sequelize.query(sql0)
-        .spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
-    })
-
-  }*/
+  
+    }*/
 };
 
 exports.getExcel = function (req, res) {
@@ -298,30 +298,151 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var idPre = req.params.id
   var monedas = getMonedas(idPre, req.body.idmoneda);
-  console.log("****MONEDAS+"+monedas);
-  
-  var estadoPrep = function (idPrep, callback){
-    var sql = "SELECT estado FROM sip.presupuesto WHERE id="+idPrep;
+  console.log("****MONEDAS+" + monedas);
+
+  var estadoPrep = function (idPrep, callback) {
+    var sql = "SELECT estado FROM sip.presupuesto WHERE id=" + idPrep;
     var estadoPrep;
     sequelize.query(sql)
       .spread(function (rows) {
-          if (rows.length > 0) {
-            console.log("***Estado:" + rows[0].estado);
-            estadoPrep = rows[0].estado;
-          } else {
-            estadoPrep = ""; //no existe el presupuesto
-          }
-          callback(estadoPrep);
+        if (rows.length > 0) {
+          console.log("***Estado:" + rows[0].estado);
+          estadoPrep = rows[0].estado;
+        } else {
+          estadoPrep = ""; //no existe el presupuesto
+        }
+        callback(estadoPrep);
       })
   }
-  
-  estadoPrep(idPre,  function (estado) {
+
+  estadoPrep(idPre, function (estado) {
     if (estado == "Aprobado") {
+      action = 'nada';
       res.json({ error_code: 10 });
+    } else {
+      switch (action) {
+        case "add":
+          console.log("***AGREGANDO***");
+          var idservicio = 0;
+          models.detallepre.create({
+            idpresupuesto: idPre,
+            idservicio: req.body.idservicio,
+            idmoneda: req.body.idmoneda,
+            comentario: req.body.comentario,
+            idproveedor: req.body.idproveedor,
+            glosaservicio: req.body.glosaservicio,
+            cuota: req.body.cuota,
+            numerocuota: req.body.numerocuota,
+            mesesentrecuotas: req.body.mesesentrecuotas,
+            desde: req.body.desde,
+            masiva: req.body.masiva,
+            gastodiferido: req.body.gastodiferido,
+            ivarecuperable: req.body.ivarecuperable,
+            desdediferido: req.body.desdediferido,
+            borrado: 1
+          }).then(function (servicio) {
+            idservicio = servicio.id;
+            console.log("****servicio:" + idservicio);
+            //Find en tabla valor moneda
+            //Then conversion
+            //var monedas = getMonedas(idPre, req.body.idmoneda);
+            //console.log("****MONEDAS+"+monedas);
+            //var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
+            var cuotas = calculoCuotas(
+              req.body.cuota,
+              req.body.numerocuota,
+              req.body.mesesentrecuotas,
+              req.body.desde,
+              req.body.masiva,
+              req.body.ivarecuperable,
+              monedas,
+              req.body.gastodiferido,
+              req.body.desdediferido
+            );
+            console.log("CUOTAS:" + cuotas);
+            insertaPeriodos(idservicio, cuotas, function (err, compromisos) {
+              console.log("***  ***ACTualizadetallepre:" + idservicio);
+              sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
+                + ';').then(function (response) {
+                  res.json({ error_code: 0 });
+                }).error(function (err) {
+                  res.json(err);
+                });
+            });
+          }).catch(function (err) {
+            console.log(err);
+            res.json({ error_code: 1 });
+          });
+
+
+          break;
+        case "edit":
+          console.log("***ACTUALIZANDO***");
+          models.detallepre.update({
+            idservicio: req.body.idservicio,
+            idmoneda: req.body.idmoneda,
+            idproveedor: req.body.idproveedor,
+            comentario: req.body.comentario,
+            glosaservicio: req.body.glosaservicio,
+            cuota: req.body.cuota,
+            numerocuota: req.body.numerocuota,
+            mesesentrecuotas: req.body.mesesentrecuotas,
+            desde: req.body.desde,
+            masiva: req.body.masiva,
+            gastodiferido: req.body.gastodiferido,
+            ivarecuperable: req.body.ivarecuperable,
+            desdediferido: req.body.desdediferido            
+          }, {
+              where: {
+                id: req.body.id
+              }
+            }).then(function (contrato) {
+              var idservicio = req.body.id;
+              //var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
+              var cuotas = calculoCuotas(
+                req.body.cuota,
+                req.body.numerocuota,
+                req.body.mesesentrecuotas,
+                req.body.desde,
+                req.body.masiva,
+                req.body.ivarecuperable,
+                monedas,
+                req.body.gastodiferido,
+                req.body.desdediferido
+              );
+              actualizaPeriodos(idservicio, cuotas, function (err, compromisos) {
+                console.log("***actualizadetallepre:" + idservicio);
+                sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
+                  + ';').then(function (response) {
+                    res.json({ error_code: 0 });
+                  }).error(function (err) {
+                    res.json(err);
+                  });
+              });
+
+            }).catch(function (err) {
+              console.log(err);
+              res.json({ error_code: 1 });
+            });
+          break;
+        case "del":
+          console.log("***ELIMINANDO***");
+          var id = req.body.id;
+          var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre=" + id + "; " +
+            "DELETE FROM sip.detallepre WHERE id=" + id;
+
+          sequelize.query(sql).then(function (response) {
+            res.json({ error_code: 0 });
+          }).error(function (err) {
+            res.json(err);
+          });
+
+          break;
+      }
     }
   });
 
-  
+
   var insertaPeriodos = function (idservicio, cuotas, callback) {
     console.log("insertaPeriodos:" + idservicio + "," + cuotas);
     models.sequelize.transaction({ autocommit: true }, function (t) {
@@ -339,16 +460,15 @@ exports.action = function (req, res) {
           'iddetallepre': idservicio,
           'periodo': periodo,
           'presupuestobasecaja': 0,
-          'presupuestobasecosto': 0,
-          'presupuestoorigen': 0,
-          'presupuestopesos': 0,
-          'caja': 0,
-          'costo': 0,
+          'presupuestoorigen': cuotas[0][i],
+          'presupuestopesos': cuotas[1][i],
+          'caja': cuotas[2][i],
+          'costo': cuotas[3][i],
           'cajacomprometido': 0,
           'costocomprometido': 0,
-          'totalcaja': 0,
-          'totalcosto': 0,
-          'disponible':0,
+          'totalcaja': cuotas[2][i],
+          'totalcosto': cuotas[3][i],
+          'disponible': cuotas[2][i],
           'borrado': 1
         }, { transaction: t });
 
@@ -356,8 +476,8 @@ exports.action = function (req, res) {
       };
       mes = 1;
       anio = anio + 1;
-      for (var i = 0; i < 12; i++) {
-        var mm = mes + i;
+      for (var i = 4; i < 16; i++) {
+        var mm = mes + i-4;
         var mmm = mm < 10 ? '0' + mm : mm;
         var periodo = anio + '' + mmm;
 
@@ -409,30 +529,59 @@ exports.action = function (req, res) {
       var promises = []
       var d = new Date();
       var anio = d.getFullYear()
-      var mes = 1;
-      anio = anio + 1;
-      for (var i = 0; i < 12; i++) {
-        var mm = mes + i;
+      
+      //Meses forecast
+      var mes = 9;
+      for (var i = 0; i < 4; i++) {
+        var mm = mes + (i);
         var mmm = mm < 10 ? '0' + mm : mm;
         var periodo = anio + '' + mmm;
         var totcaja = 0;
         var caja = cuotas[2][i];
 
-       var sql = "update sip.detalleplan set "+
-       "presupuestoorigen = "+cuotas[0][i]+", "+
-       "presupuestopesos ="+cuotas[1][i]+", "+
-       "caja="+cuotas[2][i] +", "+
-       "costo="+cuotas[3][i] + ", "+
-       "disponible="+cuotas[2][i]+"-cajacomprometido, "+    
-       "totalcaja="+cuotas[2][i]+", "+
-       "totalcosto="+cuotas[3][i]+"+costocomprometido "+
+        var sql = "update sip.detalleplan set " +
+          "presupuestoorigen = " + cuotas[0][i] + ", " +
+          "presupuestopesos =" + cuotas[1][i] + ", " +
+          "caja=" + cuotas[2][i] + ", " +
+          "costo=" + cuotas[3][i] + ", " +
+          "disponible=" + cuotas[2][i] + "-cajacomprometido, " +
+          "totalcaja=" + cuotas[2][i] + ", " +
+          "totalcosto=" + cuotas[3][i] + "+costocomprometido " +
 
-       "where iddetallepre="+idservicio+" and periodo="+periodo;
+          "where iddetallepre=" + idservicio + " and periodo=" + periodo;
 
         var newPromise = sequelize.query(sql)
-          .spread(function(results, metadata) {
+          .spread(function (results, metadata) {
           },
-        { transaction: t });
+          { transaction: t });
+        promises.push(newPromise);
+      };      
+      
+      //Meses año presupuesto
+      var mes = 1;
+      anio = anio + 1;
+      for (var i = 4; i < 12; i++) {
+        var mm = mes + (i-4);
+        var mmm = mm < 10 ? '0' + mm : mm;
+        var periodo = anio + '' + mmm;
+        var totcaja = 0;
+        var caja = cuotas[2][i];
+
+        var sql = "update sip.detalleplan set " +
+          "presupuestoorigen = " + cuotas[0][i] + ", " +
+          "presupuestopesos =" + cuotas[1][i] + ", " +
+          "caja=" + cuotas[2][i] + ", " +
+          "costo=" + cuotas[3][i] + ", " +
+          "disponible=" + cuotas[2][i] + "-cajacomprometido, " +
+          "totalcaja=" + cuotas[2][i] + ", " +
+          "totalcosto=" + cuotas[3][i] + "+costocomprometido " +
+
+          "where iddetallepre=" + idservicio + " and periodo=" + periodo;
+
+        var newPromise = sequelize.query(sql)
+          .spread(function (results, metadata) {
+          },
+          { transaction: t });
         promises.push(newPromise);
       };
       return Promise.all(promises).then(function (compromisos) {
@@ -451,128 +600,23 @@ exports.action = function (req, res) {
 
   }
 
-  switch (action) {
-    case "add":
-      console.log("***AGREGANDO***");
-      var idservicio = 0;
-      models.detallepre.create({
-        idpresupuesto: idPre,
-        idservicio: req.body.idservicio,
-        idmoneda: req.body.idmoneda,
-        comentario: req.body.comentario,
-        idproveedor: req.body.idproveedor,
-        glosaservicio: req.body.glosaservicio,
-        cuota: req.body.cuota,
-        numerocuota: req.body.numerocuota,
-        mesesentrecuotas: req.body.mesesentrecuotas,
-        desde: req.body.desde,
-        masiva: req.body.masiva,
-        gastodiferido: req.body.gastodiferido,
-        borrado: 1
-      }).then(function (servicio) {
-        idservicio = servicio.id;
-        console.log("****servicio:" + idservicio);
-        //Find en tabla valor moneda
-        //Then conversion
-        //var monedas = getMonedas(idPre, req.body.idmoneda);
-        //console.log("****MONEDAS+"+monedas);
-        //var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
-        var cuotas = calculoCuotas(
-          req.body.cuota,
-          req.body.numerocuota,
-          req.body.mesesentrecuotas,
-          req.body.desde,
-          req.body.masiva,
-          0.77,
-          monedas,
-          req.body.gastodiferido
-        );
-        console.log("CUOTAS:" + cuotas);
-        insertaPeriodos(idservicio, cuotas, function (err, compromisos) {
-          console.log("***  ***ACTualizadetallepre:" + idservicio);
-          sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
-            + ';').then(function (response) {
-              res.json({ error_code: 0 });
-            }).error(function (err) {
-              res.json(err);
-            });
-        });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-
-
-      break;
-    case "edit":
-      console.log("***ACTUALIZANDO***");
-      models.detallepre.update({
-        idservicio: req.body.idservicio,
-        idmoneda: req.body.idmoneda,
-        idproveedor: req.body.idproveedor,
-        comentario: req.body.comentario,
-        glosaservicio: req.body.glosaservicio,
-        cuota: req.body.cuota,
-        numerocuota: req.body.numerocuota,
-        mesesentrecuotas: req.body.mesesentrecuotas,
-        desde: req.body.desde,
-        masiva: req.body.masiva,
-        gastodiferido: req.body.gastodiferido
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          var idservicio = req.body.id;
-          //var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
-          var cuotas = calculoCuotas(
-            req.body.cuota,
-            req.body.numerocuota,
-            req.body.mesesentrecuotas,
-            req.body.desde,
-            req.body.masiva,
-            0.77,
-            monedas,
-            req.body.gastodiferido
-          );
-          actualizaPeriodos(idservicio, cuotas, function (err, compromisos) {
-            console.log("***actualizadetallepre:" + idservicio);
-            sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
-              + ';').then(function (response) {
-                res.json({ error_code: 0 });
-              }).error(function (err) {
-                res.json(err);
-              });
-          });
-
-        }).catch(function (err) {
-          console.log(err);
-          res.json({ error_code: 1 });
-        });
-      break;
-    case "del":
-      console.log("***ELIMINANDO***");
-      var id = req.body.id;
-      var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre=" + id + "; " +
-        "DELETE FROM sip.detallepre WHERE id=" + id;
-
-      sequelize.query(sql).then(function (response) {
-        res.json({ error_code: 0 });
-      }).error(function (err) {
-        res.json(err);
-      });
-
-      break;
-
-  }
 
 }
 
 function getMonedas(idpresupuesto, idmoneda) {
 
-  var sql = "DECLARE @ejercicio INT " +
-    "SELECT @ejercicio=idejercicio FROM sip.presupuesto WHERE id=" + idpresupuesto + " " +
-    "SELECT valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio AND idmoneda=" + idmoneda;
+  var sql = "DECLARE @periodo INT "+
+"DECLARE @ejercicio INT "+
+"DECLARE @ejercicio2 INT "+
+"DECLARE @anioactual INT "+
+"DECLARE @anioanterior INT "+
+"SELECT @ejercicio=a.idejercicio, @anioactual=b.ejercicio FROM sip.presupuesto a JOIN sip.ejercicios b ON a.idejercicio= b.id WHERE a.id="+idpresupuesto+" "+
+"SELECT @anioanterior = @anioactual -1 "+
+"SELECT @ejercicio2=id FROM sip.ejercicios WHERE ejercicio=@anioanterior "+
+"SELECT @periodo = convert(INT,concat(convert(VARCHAR(4), @anioanterior),'08')) "+
+"SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio2 AND idmoneda=7 AND periodo>@periodo "+
+"UNION "+
+"SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio AND idmoneda="+idmoneda
   var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
   //console.log("conversion:" + conversion);
   //console.log("*** SQL MOnedas" + sql);
@@ -584,45 +628,48 @@ function getMonedas(idpresupuesto, idmoneda) {
       }
       console.log("*********   ROWSSSSS:" + arr);
 
-    }).then ()
-    return arr;
+    }).then()
+  return arr;
 }
 
-function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion, diferido) {
+function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion, diferido, desdediferido) {
   console.log("CUPTAS DENTRO:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," + conversion);
   //var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
-  var origen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var pesos = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var caja = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  var costo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var origen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var pesos = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var caja = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var costo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   var mesesentre = parseInt(mesesentremedio);
 
 
-
-  for (i=mescuota1, j=0; i<caja.length+1 && j<ncuotas; i=parseInt(i)+mesesentre, j++) {
-    console.log("***SALTO:" + i + mesesentre);
+  //Caja
+  for (i = mescuota1, j = 0; i < caja.length + 1 && j < ncuotas; i = parseInt(i) + mesesentre, j++) {
+    console.log("***SALTO:" + (parseInt(i) + mesesentre));
     origen[i - 1] = cuota;
     pesos[i - 1] = cuota * conversion[i - 1];
     if (coniva == "1") {
+      
       var valorcaja = pesos[i - 1] * 1.19;
     } else {
       var valorcaja = pesos[i - 1];
     }
     caja[i - 1] = valorcaja;
   }
-  for (var i=mescuota1, j=0; i<caja.length+1 && j<ncuotas; i=parseInt(i)+mesesentre, j++) {
-    console.log("*****JJJJ:"+j);
+  //Costo con diferimiento
+  for (var i = desdediferido, j = 0, h=mescuota1; i < caja.length + 1 && j < ncuotas; i = parseInt(i) + mesesentre, j++, h=parseInt(h)+mesesentre) {
+    console.log("*****JJJJ:" + j);
     if (coniva == "1") {
-      var iva = pesos[i - 1] * 0.19;
+      var iva = pesos[h - 1] * 0.19;
     } else {
       var iva = 0;
     }
+    frecup = frecup/100;
     var recuperacion = iva * frecup;
-    var total = parseFloat(pesos[i - 1]) + parseFloat(recuperacion);
+    var total = parseFloat(pesos[h - 1]) + parseFloat(recuperacion);
     if (diferido == "1") {
-      var valorcosto = total / (mesesentre+1);
+      var valorcosto = total / (mesesentre);
       var valorcosto = valorcosto.toFixed(2);
-      for (k = i; k <= parseInt(i) + mesesentre-1 && k < caja.length + 1; k++) {
+      for (k = i; k <= parseInt(i) + mesesentre - 1 && k < caja.length + 1; k++) {
         costo[k - 1] = valorcosto;
       }
     } else {
@@ -652,15 +699,15 @@ exports.getPeriodos = function (req, res) {
   var d = new Date();
   var anio = d.getFullYear()
   var mes = 9;
-  /*
+  
   for (var i = 0; i < 4; i++) {
     var mm = mes + i;
     var mmm = mm < 10 ? '0' + mm : mm;
-    var periodo = anio + '' + mmm;
+    var periodo = parseInt(i)+1;
     var texto = mmm + '-' + anio;
     var newPromise = {'id':periodo, 'nombre': texto};
     promises.push(newPromise);
-  };*/
+  };
 
   mes = 1;
   anio = anio + 1;
@@ -668,11 +715,30 @@ exports.getPeriodos = function (req, res) {
     var mm = mes + i;
     var mmm = mm < 10 ? '0' + mm : mm;
     //var periodo = anio + '' + mmm;
-    var periodo = parseInt(mmm);
+    var periodo = parseInt(mmm)+4;
     var texto = mmm + '-' + anio;
     var newPromise = { 'id': periodo, 'nombre': texto };
     promises.push(newPromise);
   };
 
+  res.json(promises);
+};
+
+exports.getTipoRecupera = function (req, res) {
+  var promises = []
+  
+  var recname = 'No Recupera' 
+  var recid = 100
+  var newPromise = { 'id': recid, 'nombre': recname };
+  promises.push(newPromise);
+  var recname = 'Parcial' 
+  var recid = 77
+  var newPromise = { 'id': recid, 'nombre': recname };
+  promises.push(newPromise);
+  var recname = 'Total' 
+  var recid = 0
+  var newPromise = { 'id': recid, 'nombre': recname };
+  promises.push(newPromise);
+     
   res.json(promises);
 };
