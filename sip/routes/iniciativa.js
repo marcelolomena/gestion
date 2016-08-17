@@ -8,12 +8,26 @@ var iniciativafechaController = require('../controllers/iniciativafecha');
 var presupuestoiniciativaController = require('../controllers/presupuestoiniciativa');
 var tareasnuevosproyectosController = require('../controllers/tareasnuevosproyectos');
 var flujonuevatareaController = require('../controllers/flujonuevatarea');
+var compromisosporcuiController = require('../controllers/compromisosporcui');
 
 module.exports = function (passport) {
 
     router.get('/iniciativas', isAuthenticated, function (req, res) {
         res.render('iniciativas', { user: req.user });
     });
+
+    router.get('/compromisosporcui', isAuthenticated, function (req, res) {
+        res.render('compromisosporcui', { user: req.user });
+    });
+
+    router.route('/compromisosporcui/list')
+        .post(isAuthenticated, compromisosporcuiController.list);
+
+    router.route('/compromisosporcuiservicios/list/:id')
+        .post(isAuthenticated, compromisosporcuiController.list2);
+
+    router.route('/compromisosporcuiflujos/list/:id')
+        .post(isAuthenticated, compromisosporcuiController.list3);
 
     router.route('/iniciativas/list')
         .post(isAuthenticated, iniciativaController.list);
