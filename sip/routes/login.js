@@ -8,6 +8,7 @@ module.exports = function (passport) {
     /* GET login page. */
     router.get('/', function (req, res) {
         // Display the Login page with any flash message, if any
+        console.log("--->>" + req.flash('message'))
         res.render('index', { message: req.flash('message') });
     });
 
@@ -22,6 +23,7 @@ module.exports = function (passport) {
         failureFlash: true
     };
     //router.post('/login', passport.authenticate('login', redirects));
+
     router.post('/login', passport.authenticate('login', redirectsTwo),
         function (req, res) {
             // Explícitamente guardar la sesión antes de redirigir!
@@ -29,6 +31,7 @@ module.exports = function (passport) {
                 res.redirect('/home');
             })
         });
+
 
     /* GET Home Page */
     router.get('/home', isAuthenticated, function (req, res) {
