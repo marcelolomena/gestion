@@ -82,6 +82,9 @@ module.exports = function (passport) {
 
     router.route('/serviciosperiodos')
         .get(isAuthenticated, presupuestoServiciosController.getPeriodos);  
+
+    router.route('/tiporecupera')
+        .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);  
         
      return router;       
 
