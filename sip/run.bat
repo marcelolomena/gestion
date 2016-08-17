@@ -1,3 +1,5 @@
 REM Starting SIP
-SET NODE_ENV=development
+set NODE_ENV=development
+echo Starting SIP
+echo %PATH%
 npm start

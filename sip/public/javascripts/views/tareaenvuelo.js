@@ -14,7 +14,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Servicio{idservicio}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Tarea{tarea}</div>";
+    template += "<div class='column-four'><span style='color: red'>*</span>Tarea{tarea}</div>";
+    template += "<div class='column-four'><span style='color: red'>*</span>Extensión{extension}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -33,7 +34,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Requiere Contrato{reqcontrato}</div>";
+    template += "<div class='column-half'>Contrato{reqcontrato}</div>";
     template += "<div class='column-half'>Con IVA{coniva}</div>";
     template += "</div>";
 
@@ -43,7 +44,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Glosa{glosa}</div>";
+    template += "<div class='column-full'>Glosa PreFactura{glosa}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -208,7 +209,16 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
         },
         {
-            label: 'Glosa', name: 'glosa', width: 150, align: 'left',
+            label: 'Extensión', name: 'extension', width: 50, align: 'left',
+            search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('0', { reverse: true });
+                }
+            },
+        },
+        {
+            label: 'Glosa PreFactura', name: 'glosa', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
             edittype: "textarea", editrules: { required: false },
         },
@@ -245,14 +255,14 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -266,21 +276,21 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
             label: 'Fecha Fin', name: 'fechafin', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -294,13 +304,13 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
-            label: 'Requiere Contrato', name: 'reqcontrato',
+            label: 'Contrato', name: 'reqcontrato',
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",
@@ -365,12 +375,13 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
-            search: false, editable: true, hidden: false,
+            search: false, editable: true, hidden: true,
             editrules: {required: true},
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatter: 'number', 
+            formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    $(el).mask('000.000.000.000.000', { reverse: true });
                 }
             }
         },
@@ -383,7 +394,25 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
                     $(el).mask('000.000.000.000.000', { reverse: true });
                 }
             },
-            search: true, editable: true, hidden: false,
+            search: true, editable: true, hidden: true,
+        },
+        {
+            label: 'Costo Total', name: 'costototal', width: 100, align: 'left',
+            formatoptions: { decimalPlaces: 0 },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var valunitario = rowObject.costounitario;
+                var valcantidad = rowObject.cantidad;
+                dato = valunitario*valcantidad;
+                dato = parseInt(dato);
+                return dato;
+            },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            },
+            search: false, editable: false, hidden: false,
         },
         {
             label: 'Con IVA', name: 'coniva', search: false, editable: true, hidden: false,
@@ -413,6 +442,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             label: 'N° Sol. Contrato', name: 'numerosolicitudcontrato', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
         },
+
+        
       
 
     ];

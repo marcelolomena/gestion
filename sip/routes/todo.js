@@ -13,6 +13,8 @@ var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var graficoController = require('../controllers/graficotest');
 var testController = require('../controllers/test')
+var rolesController = require('../controllers/roles')
+var permisosController = require('../controllers/permisos')
 var express=require('express')
 var router=express.Router()
 var isAuthenticated=require('../policies/isAuthenticated')    
@@ -44,6 +46,48 @@ module.exports = function (passport) {
     router.get('/parametros', isAuthenticated, function (req, res) {
         res.render('parametros', { user: req.user });
     });
+
+    router.get('/roles', isAuthenticated, function (req, res) {
+        res.render('roles', { user: req.user });
+    });
+
+    router.route('/roles/list')
+        .post(isAuthenticated, rolesController.list);
+
+    router.route('/roles/list2/:id')
+        .post(isAuthenticated, rolesController.list2);
+
+    router.route('/roles/action')
+        .post(isAuthenticated, rolesController.action);
+
+    router.get('/permisos', isAuthenticated, function (req, res) {
+        res.render('permisos', { user: req.user });
+    });
+
+    router.route('/permisos/list')
+        .post(isAuthenticated, permisosController.list);
+
+    router.route('/permisos/list2/:id')
+        .post(isAuthenticated, permisosController.list2);
+
+    router.route('/permisos/list3/:rid/:mid')
+        .post(isAuthenticated, permisosController.list3);
+
+    router.route('/permisos/action')
+        .post(isAuthenticated, permisosController.action);
+
+    router.route('/permisos/action2')
+        .post(isAuthenticated, permisosController.action2);
+
+    router.route('/getroles')
+        .get(isAuthenticated, rolesController.getRoles);
+
+    router.route('/getmenus')
+        .get(isAuthenticated, permisosController.getMenus);
+
+    router.route('/getsubmenus')
+        .get(isAuthenticated, permisosController.getSubMenus);
+
     router.route('/parametros/list')
         .post(isAuthenticated, parametroController.list);
 

@@ -32,6 +32,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    idsubtarea: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'art_sub_task',
+        key: 'sub_task_id'
+      }
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

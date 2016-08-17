@@ -5,19 +5,31 @@ var utilSeq = require('../utils/seq');
 exports.action = function (req, res) {
   var action = req.body.oper;
   var porcentaje1, porcentaje2, dolar, uf = 0
+  var fecha;
 
   if (action != "del") {
-    if (req.body.porcentaje1 != "")
-      porcentaje1 = req.body.porcentaje1.split(".").join("").replace(",", ".")
-
-    if (req.body.porcentaje2 != "")
-      porcentaje2 = req.body.porcentaje2.split(".").join("").replace(",", ".")
+    if (req.body.porcentaje1 != "") {
+      //porcentaje1 = req.body.porcentaje1.split(".").join("").replace(",", ".")
+      porcentaje1 = parseFloat(req.body.porcentaje1) / 100;
+    } else {
+      porcentaje1 = 0.00;
+    }
+    if (req.body.porcentaje2 != "") {
+      //porcentaje2 = req.body.porcentaje2.split(".").join("").replace(",", ".")
+      porcentaje2 = parseFloat(req.body.porcentaje2) / 100;
+    } else {
+      porcentaje2 = 0.00;
+    }
 
     if (req.body.dolar != "")
       dolar = req.body.dolar.split(".").join("").replace(",", ".")
 
     if (req.body.uf != "")
       uf = req.body.uf.split(".").join("").replace(",", ".")
+
+    if (req.body.fechaconversion != "")
+      fecha = req.body.fechaconversion.split("-").reverse().join("-")
+
   }
 
   switch (action) {
@@ -32,11 +44,12 @@ exports.action = function (req, res) {
         beneficioscualitativos: req.body.beneficioscualitativos,
         uidlider: req.body.uidlider,
         uidjefeproyecto: req.body.uidjefeproyecto,
-        fechaconversion: req.body.fechaconversion,
+        fechaconversion: fecha,
         dolar: dolar,
         uf: uf,
         glosa: req.body.glosa,
         sap: req.body.sap,
+        parainscripcion: req.body.parainscripcion,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -56,10 +69,11 @@ exports.action = function (req, res) {
         beneficioscualitativos: req.body.beneficioscualitativos,
         uidlider: req.body.uidlider,
         uidjefeproyecto: req.body.uidjefeproyecto,
-        fechaconversion: req.body.fechaconversion,
+        fechaconversion: fecha,
         dolar: dolar,
         glosa: req.body.glosa,
         sap: req.body.sap,
+        parainscripcion: req.body.parainscripcion,
         uf: uf
       }, {
           where: {
@@ -243,8 +257,8 @@ exports.listSAP = function (req, res) {
     "as resultNum, a.*, iniciativaprograma.codigoart as codigoart, iniciativafecha.fecha as fechafinal " +
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
-     "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] and iniciativafecha.tipofecha = 'Fecha Final Aprobación'" +
-    "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1) " +
+    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] and iniciativafecha.tipofecha = 'Fecha Final Aprobación'" +
+    "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 

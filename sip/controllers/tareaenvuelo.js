@@ -4,7 +4,7 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 
-exports.pico = function (req, res) {
+exports.poco = function (req, res) {
     console.log("lala : " + req);
 }
 var log = function (inst) {
@@ -15,11 +15,19 @@ exports.action = function (req, res) {
     console.log("lala : " + req);
   var action = req.body.oper;
   var costounitario = 0
+  var fechainicio;
+  var fechafin;
   console.log(action);
 
   if (action != "del") {
     if (req.body.costounitario != "")
       costounitario = req.body.costounitario.split(".").join("").replace(",", ".")
+
+    if (req.body.fechainicio != "")
+      fechainicio = req.body.fechainicio.split("-").reverse().join("-")
+
+    if (req.body.fechafin != "")
+      fechafin = req.body.fechafin.split("-").reverse().join("-")
   }
   console.log(action);
   switch (action) {
@@ -32,13 +40,14 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
-        fechainicio: req.body.fechainicio,
-        fechafin: req.body.fechafin,
+        fechainicio: fechainicio,
+        fechafin: fechafin,
         reqcontrato: req.body.reqcontrato,
         idmoneda: req.body.idmoneda,
         costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
+        extension: req.body.extension,
         numerocontrato: req.body.numerocontrato,
         numerosolicitudcontrato: req.body.numerosolicitudcontrato,
         borrado: 1
@@ -59,13 +68,14 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
-        fechainicio: req.body.fechainicio,
-        fechafin: req.body.fechafin,
+        fechainicio: fechainicio,
+        fechafin: fechafin,
         reqcontrato: req.body.reqcontrato,
         idmoneda: req.body.idmoneda,
         costounitario: costounitario,
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
+        extension: req.body.extension,
         numerocontrato: req.body.numerocontrato,
         numerosolicitudcontrato: req.body.numerosolicitudcontrato
       }, {

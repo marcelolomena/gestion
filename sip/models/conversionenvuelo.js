@@ -1,38 +1,43 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('rolfunc', {
+  return sequelize.define('conversionenvuelo', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    rid: {
+    idpresupuestoenvuelo: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'rol',
+        model: 'presupuestoenvuelo',
         key: 'id'
       }
     },
-    fid: {
-      type: DataTypes.INTEGER,
+    dolar: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
-    mid: {
+    uf: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    fechaconversion: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    extension: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'menu',
-        key: 'id'
-      }
+      allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
+
   }, {
-    schema: 'sip',timestamps: false,tableName: 'rol_func'
+    schema: 'sip',timestamps: false,tableName: 'conversionenvuelo'
   });
 };

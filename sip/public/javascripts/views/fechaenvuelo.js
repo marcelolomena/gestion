@@ -73,17 +73,17 @@ function gridFechaEnVuelo(parentRowID, parentRowKey, suffix) {
         
         {
             label: 'Fecha', name: 'fecha', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: {required: true},
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                $("#" + childGridID)[0].triggerToolbar();
+                                childGridID[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -93,10 +93,10 @@ function gridFechaEnVuelo(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
-            }
+            },
         },
         {
             label: 'Comentario', name: 'comentario', width: 500,

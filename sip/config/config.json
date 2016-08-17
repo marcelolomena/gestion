@@ -10,7 +10,8 @@
             "min": 5,
             "max": 100,
             "idle": 500000
-        }
+        },
+        "logging": false
     },
     "testing": {
         "username": "art",
@@ -23,7 +24,8 @@
             "min": 5,
             "max": 100,
             "idle": 500000
-        }
+        },
+        "logging": false
     },
     "production": {
         "username": "art",
@@ -34,12 +36,13 @@
         "port": "1433",
         "dialectOptions": {
             "instanceName": "ARTBCH"
-        },        
+        },
         "pool": {
             "min": 5,
             "max": 100,
             "idle": 500000
-        }
+        },
+        "logging": false
     },
     "home": {
         "username": "pi",

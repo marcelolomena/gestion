@@ -34,13 +34,14 @@ $(document).ready(function () {
     template += "<div class='column-three'><span style='color: red'>*</span>Jefe Proyecto{uidjefeproyecto}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>PMO Responsable{uidpmoresponsable}</div>";
     template += "</div>";
-
+/*
     template += "<div class='form-row'>";
     template += "<div class='column-three'><span style='color: red'>*</span>Dolar{dolar}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>UF{uf}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
+*/
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
@@ -62,7 +63,7 @@ $(document).ready(function () {
             hidedlg: true
         },
         {
-            label: 'Proyecto', name: 'nombreproyecto', width: 200, align: 'left',
+            label: 'Proyecto', name: 'nombreproyecto', width: 250, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
             colMenu:true,
@@ -71,7 +72,7 @@ $(document).ready(function () {
         },
 
         {
-            label: 'SAP', name: 'sap', width: 60, align: 'left',
+            label: 'SAP', name: 'sap', width: 110, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
             editoptions: {
@@ -161,8 +162,8 @@ $(document).ready(function () {
                 grouping: false, freeze: false},
         },
         {
-            label: 'Cui 1', name: 'cuifinanciamiento1', width: 75, align: 'left',
-            search: true, editable: true, hidden: false,
+            label: 'Cui 1', name: 'cuifinanciamiento1', width: 120, align: 'left',
+            search: false, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
@@ -189,7 +190,7 @@ $(document).ready(function () {
                 dato = val*100;
                 return dato;
             },
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
             colMenu:true,
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
@@ -198,7 +199,7 @@ $(document).ready(function () {
         },
         {
             label: 'Cui 2', name: 'cuifinanciamiento2', width: 75, align: 'left',
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("0000", { placeholder: "____" });
@@ -226,7 +227,7 @@ $(document).ready(function () {
                 dato = val*100;
                 return dato;
             },
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editrules: { edithidden: false, required: false },
             colMenu:true,
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
@@ -285,7 +286,7 @@ $(document).ready(function () {
         },
         {
             label: 'Lider', name: 'lider', width: 120, align: 'left',
-            search: true, editable: true, hidden: false, jsonmap: "nombrelider",
+            search: false, editable: true, hidden: false, jsonmap: "nombrelider",
             colMenu:true,
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false},
@@ -325,7 +326,7 @@ $(document).ready(function () {
         },
         {
             label: 'Jefe Area Responsable', name: 'jefeproyecto', width: 150, align: 'left',
-            search: true, editable: true, hidden: false, jsonmap: "nombrejefe",
+            search: false, editable: true, hidden: false, jsonmap: "nombrejefe",
             colMenu:true,
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false},
@@ -363,14 +364,14 @@ $(document).ready(function () {
         },
         {
             label: 'PMO Responsable', name: 'pmoresponsable', width: 150, align: 'left',
-            search: true, editable: true, hidden: false, jsonmap: "nombrepmo",
+            search: false, editable: true, hidden: false, jsonmap: "nombrepmo",
             colMenu:true,
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false},
         },
-
+/*
         {
-            label: 'Dolar', name: 'dolar', width: 80, align: 'right',
+            label: 'Dolar', name: 'dolar', width: 55, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
@@ -385,7 +386,7 @@ $(document).ready(function () {
         },
 
         {
-            label: 'UF', name: 'uf', width: 80, align: 'right',
+            label: 'UF', name: 'uf', width: 60, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
@@ -399,7 +400,7 @@ $(document).ready(function () {
                 grouping: false, freeze: false},
         },
         {
-            label: 'Fecha Conv', name: 'fechaconversion', width: 110, align: 'left', search: false,
+            label: 'Fecha Conv', name: 'fechaconversion', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             editrules: { required: true },
@@ -429,7 +430,7 @@ $(document).ready(function () {
             coloptions: {sorting:false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false},
         },
-
+*/
     ];
 
     $("#table_iniciativa").jqGrid({
@@ -652,5 +653,6 @@ $(document).ready(function () {
     function showSubGrids(subgrid_id, row_id) {
         gridTareaEnVuelo(subgrid_id, row_id, 'tareaenvuelo');
         gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
+        gridConversionEnVuelo(subgrid_id, row_id, 'conversionenvuelo');
     }
 });

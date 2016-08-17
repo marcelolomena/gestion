@@ -4,13 +4,19 @@ var utilSeq = require('../utils/seq');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var fecha;
+
+  if (action != "del") {
+    if (req.body.fecha != "")
+      fecha = req.body.fecha.split("-").reverse().join("-")
+  }
 
   switch (action) {
     case "add":
       models.iniciativafecha.create({
         idiniciativaprograma: req.body.parent_id,
         tipofecha: req.body.tipofecha,
-        fecha: req.body.fecha,
+        fecha: fecha,
         comentario: req.body.comentario,
         borrado: 1
       }).then(function (iniciativa) {
@@ -25,7 +31,7 @@ exports.action = function (req, res) {
       models.iniciativafecha.update({
         idiniciativaprograma: req.body.parent_id,
         idtipofecha: req.body.idtipofecha,
-        fecha: req.body.fecha,
+        fecha: fecha,
         comentario: req.body.comentario
       }, {
           where: {

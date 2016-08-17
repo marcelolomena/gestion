@@ -4,12 +4,13 @@
  * Module dependencies.
  */
 
-var app = require('../app')
-var models = require("../models")
-var debug = require('debug')('sip:server')
-var http = require('http')
-var https = require('https')
-var fs = require('fs');
+var app = require('../app'),
+  models = require("../models"),
+  debug = require('debug')('sip:server'),
+  http = require('http'),
+  https = require('https'),
+  fs = require('fs'),
+  cluster = require('cluster');
 
 /**
  * Get port from environment and store in Express.
@@ -34,10 +35,30 @@ var io = require('socket.io')(secure_server);
  * Listen on provided port, on all network interfaces.
  */
 
-models.sequelize.sync().then(startApp)
-  .catch(function (e) {
-    throw new Error(e);
+if (cluster.isMaster) {
+  var numWorkers = require('os').cpus().length;
+
+  console.log('Iniciando cluster maestro con ' + numWorkers + ' trabajadores...');
+
+  for (var i = 0; i < numWorkers; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('online', function (worker) {
+    console.log('Trabajador ' + worker.process.pid + ' esta en linea');
   });
+
+  cluster.on('exit', function (worker, code, signal) {
+    console.log('Trabajador ' + worker.process.pid + ' muerto con codigo: ' + code + ', y señal: ' + signal);
+    console.log('Iniciando un nuevo trabajador');
+    cluster.fork();
+  });
+} else {
+  models.sequelize.sync().then(startApp)
+    .catch(function (e) {
+      throw new Error(e);
+    });
+}
 
 var handleClient = function (socket) {
   // we've got a client connection

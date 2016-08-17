@@ -11,12 +11,24 @@ exports.action = function (req, res) {
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
     var porcentaje = req.body.porcentaje
+    var fechainicio;
+    var fechafin;
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
-        if (porcentaje != "")
-            porcentaje = porcentaje.split(".").join("").replace(",", ".")
+        if (porcentaje != ""){
+            //porcentaje = porcentaje.split(".").join("").replace(",", ".")
+            porcentaje = parseFloat(req.body.porcentaje)/100;
+        }else{
+            porcentaje = 0.00;
+        }
+        if (req.body.fechainicio != "")
+            fechainicio = req.body.fechainicio.split("-").reverse().join("-")
+
+        if (req.body.fechafin != "")
+            fechafin = req.body.fechafin.split("-").reverse().join("-")
+            
     }
 
     switch (action) {
@@ -28,8 +40,8 @@ exports.action = function (req, res) {
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
-                fechainicio: req.body.fechainicio,
-                fechafin: req.body.fechafin,
+                fechainicio: fechainicio,
+                fechafin: fechafin,
                 cantidad: req.body.cantidad,
                 borrado: 1
             }).then(function (detalle) {
@@ -47,8 +59,8 @@ exports.action = function (req, res) {
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
                 idtipopago: req.body.idtipopago,
-                fechainicio: req.body.fechainicio,
-                fechafin: req.body.fechafin,
+                fechainicio: fechainicio,
+                fechafin: fechafin,
                 cantidad: req.body.cantidad,
             }, {
                     where: {
@@ -105,6 +117,9 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
+            models.flujopagoenvuelo.belongsTo(models.art_sub_task, { foreignKey: 'idsubtarea' });
+            models.art_sub_task.belongsTo(models.art_task, { foreignKey: 'task_id' });
+            models.art_task.belongsTo(models.art_project_master, { foreignKey: 'pId' });
             models.flujopagoenvuelo.belongsTo(models.parametro, { foreignKey: 'idtipopago' });
             models.flujopagoenvuelo.count({
                 where: data
@@ -117,6 +132,17 @@ exports.list = function (req, res) {
                     order: orden,
                     where: data,
                     include: [
+                        {
+                            model: models.art_sub_task,
+                            include: [
+                                {
+                                    model: models.art_task,
+                                    include: [
+                                        {
+                                            model: models.art_project_master
+                                        }]
+                                }]
+                        },
                         {
                             model: models.parametro
                         }]
@@ -135,9 +161,11 @@ exports.list = function (req, res) {
         }
     });
 };
-exports.getProyectosPorTareaNuevoProyecto = function (req, res) {
-    sequelize.query('select a.pId, a.project_name from art_project_master a join art_program b on a.program= b.program_id join sip.iniciativaprograma c on c.codigoart= b.program_code join sip.presupuestoiniciativa d on d.idiniciativaprograma=c.id join sip.tareasnuevosproyectos e on e.idpresupuestoiniciativa=d.id where e.id = :idtareanuevoproyecto and a.is_active=1',
-        { replacements: { idtareanuevoproyecto: req.params.idtareanuevoproyecto }, type: sequelize.QueryTypes.SELECT }
+exports.getProyectosPorTareaEnVuelo = function (req, res) {
+    sequelize.query('select a.pId, a.project_name from art_project_master a join art_program b on a.program= b.program_id '+
+    ' join sip.presupuestoenvuelo d on d.program_id=b.program_id join sip.tareaenvuelo e on e.idpresupuestoenvuelo=d.id '+
+    ' where e.id = :idtareaenvuelo and a.is_active=1',
+        { replacements: { idtareaenvuelo: req.params.idtareaenvuelo }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {

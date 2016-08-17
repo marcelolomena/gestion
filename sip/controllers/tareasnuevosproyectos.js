@@ -142,10 +142,18 @@ exports.getTipoPago = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var costounitario = 0
+  var fechainicio;
+  var fechafin;
 
   if (action != "del") {
     if (req.body.costounitario != "")
       costounitario = req.body.costounitario.split(".").join("").replace(",", ".")
+
+    if (req.body.fechainicio != "")
+      fechainicio = req.body.fechainicio.split("-").reverse().join("-")
+
+    if (req.body.fechafin != "")
+      fechafin = req.body.fechafin.split("-").reverse().join("-")
   }
 
   switch (action) {
@@ -157,8 +165,8 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
-        fechainicio: req.body.fechainicio,
-        fechafin: req.body.fechafin,
+        fechainicio: fechainicio,
+        fechafin: fechafin,
         reqcontrato: req.body.reqcontrato,
         idmoneda: req.body.idmoneda,
         costounitario: costounitario,
@@ -181,8 +189,8 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
-        fechainicio: req.body.fechainicio,
-        fechafin: req.body.fechafin,
+        fechainicio: fechainicio,
+        fechafin: fechafin,
         reqcontrato: req.body.reqcontrato,
         idmoneda: req.body.idmoneda,
         costounitario: costounitario,

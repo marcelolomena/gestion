@@ -96,6 +96,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    extension: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

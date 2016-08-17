@@ -49,7 +49,7 @@ object TimeSheetJira extends Controller {
       subtareasNonProject.put(nonProjectTasks)
       respuesta.put(subtareas)
       respuesta.put(subtareasNonProject)
-      Ok(subtareasNonProject.toString())
+      Ok(respuesta.toString())
   }
 
   /**

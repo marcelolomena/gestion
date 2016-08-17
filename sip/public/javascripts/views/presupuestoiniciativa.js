@@ -46,6 +46,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'><span style='color: red'>*</span>Para inscripción{parainscripcion}</div>";
+    template += "</div>";
+    
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
@@ -95,11 +99,17 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: '% Cui 1', name: 'porcentaje1', width: 50, align: 'left',
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
+                    $(el).mask('000', { reverse: true, placeholder: "___" });
                 }
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.porcentaje1;
+                dato = val*100;
+                return dato;
             },
             search: true, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
@@ -119,11 +129,17 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: '% Cui 2', name: 'porcentaje2', width: 50, align: 'left',
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
+                    $(el).mask('000', { reverse: true, placeholder: "___" });
                 }
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.porcentaje2;
+                dato = val*100;
+                return dato;
             },
             search: true, editable: true, hidden: false,
             editrules: { edithidden: false, required: false },
@@ -212,14 +228,14 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Fecha Conversión', name: 'fechaconversion', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true,
             editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
-                        format: 'yyyy-mm-dd',
+                        format: 'dd-mm-yyyy',
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
@@ -233,8 +249,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             editoptions: {
                 size: 10, maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                 }
             }
         },
@@ -242,10 +258,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'Dolar', name: 'dolar', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000,00', { reverse: true });
+                    $(el).mask('000', { reverse: true });
                 }
             }
         },
@@ -254,13 +270,22 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'UF', name: 'uf', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('00.000,00', { reverse: true });
+                    $(el).mask('00.000', { reverse: true });
                 }
             }
-        }
+        },
+        {
+            label: 'Inscripción', name: 'parainscripcion', width: 20, align: 'left',
+            search: true, editable: true, hidden: false,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0", { placeholder: "_" });
+                }
+            },
+        },
 
     ];
 
@@ -320,17 +345,19 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
                 }
-                var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
-                //console.log('porcentaje1: ' + elporcentaje1);
-                var elporcentaje2 = 0.00;
-                if(elporcentaje2!=""){
-                    elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                //var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
+                var elporcentaje1 = parseInt(postdata.porcentaje1);
+                console.log('porcentaje1: ' + elporcentaje1);
+                var elporcentaje2 = 0;
+                if(postdata.porcentaje2!=""){
+                    //elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                    elporcentaje2 = parseInt(postdata.porcentaje2);
                 }
-                //console.log('porcentaje2: ' + elporcentaje2);
+                console.log('porcentaje2: ' + elporcentaje2);
                 var lasuma = elporcentaje1 + elporcentaje2;
-                //console.log('total: ' + lasuma);
-                if (lasuma != 1) {
-                    return [false, "Porcentajes no suman 1", ""];
+                console.log('total: ' + lasuma);
+                if (lasuma != 100) {
+                    return [false, "Porcentajes no suman 100", ""];
                 }
                 else {
                     return [true, "", ""]
@@ -378,22 +405,23 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 } if (postdata.uidjefeproyecto == 0) {
                     return [false, "Jefe de Proyecto: Campo obligatorio", ""];
                 }
-                var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
-                //console.log('porcentaje1: ' + elporcentaje1);
-                var elporcentaje2 = 0.00;
-                if(elporcentaje2!=""){
-                    elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                //var elporcentaje1 = parseFloat(postdata.porcentaje1.split(".").join("").replace(",", "."));
+                var elporcentaje1 = parseInt(postdata.porcentaje1);
+                console.log('porcentaje1: ' + elporcentaje1);
+                var elporcentaje2 = 0;
+                if(postdata.porcentaje2!=""){
+                    //elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
+                    elporcentaje2 = parseInt(postdata.porcentaje2);
                 }
-                //console.log('porcentaje2: ' + elporcentaje2);
+                console.log('porcentaje2: ' + elporcentaje2);
                 var lasuma = elporcentaje1 + elporcentaje2;
-                //console.log('total: ' + lasuma);
-                if (lasuma != 1) {
-                    return [false, "Porcentajes no suman 1", ""];
+                console.log('total: ' + lasuma);
+                if (lasuma != 100) {
+                    return [false, "Porcentajes no suman 100", ""];
                 }
                 else {
                     return [true, "", ""]
                 }
-
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
