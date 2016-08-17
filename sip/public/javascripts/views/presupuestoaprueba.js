@@ -24,7 +24,7 @@ $(document).ready(function () {
     var modelPresupuesto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: false, editable: true,
+            label: 'CUI', name: 'CUI', width: 100, align: 'left', search: true, sortable: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -56,10 +56,10 @@ $(document).ready(function () {
                 }],*/
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-        { label: 'Responsable CUI', name: 'responsable', width: 200, align: 'left', search: false, editable: true },
+        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, sortable: false, editable: true },
+        { label: 'Responsable CUI', name: 'nombreresponsable', width: 200, align: 'left', search: true, sortable: false, editable: true },
         {
-            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', search: false, editable: true,
+            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', search: true, sortable: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -87,13 +87,13 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, editable: true },
-        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: false, editable: false},
-        { label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, editable: true,
+        { label: 'Versión', name: 'version', width: 80, align: 'left', search: false, sortable: false, editable: true },
+        { label: 'Estado', name: 'estado', width: 80, align: 'left', search: true, sortable: false, editable: false},
+        { label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }},
-        { label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, editable: true,
+        { label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }},
-        { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, editable: true }
+        { label: 'Descripción', name: 'descripcion', width: 200, align: 'left', search: false, sortable: false, editable: true }
     ];
     $("#grid").jqGrid({
         url: '/presupuestosconfirmados',

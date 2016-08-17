@@ -390,6 +390,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     var urlProveedoresServ = '/proveedorespreserv/' + parentRowKey;
     var urlFrecuencia = '/serviciosfrecuencia/';
     var urlPeriodo = '/serviciosperiodos/';
+    var urlRecupera = '/tiporecupera/';
 
     var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -426,17 +427,25 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Mes inicio {desde}</div>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Mes Primera Cuota {desde}</div>";
     tmplServ += "</div>";
-
+   
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Mes Inicio Servicio {desdediferido}</div>";
+    tmplServ += "</div>";        
+                           
+    tmplServ += "<div class='form-row'>";
+    tmplServ += "<div class='column-half'>Tipo Recuperación {ivarecuperable}</div>";
+    tmplServ += "</div>";
+    
     tmplServ += "<div class='form-row'>";
     tmplServ += "<div class='column-half'>Mas IVA {masiva}</div>";
     tmplServ += "</div>";
 
     tmplServ += "<div class='form-row'>";
     tmplServ += "<div class='column-half'>Gasto Diferido {gastodiferido}</div>";
-    tmplServ += "</div>";
-                                                 
+    tmplServ += "</div>";    
+                                                     
     tmplServ += "<hr style='width:100%;'/>";
     tmplServ += "<div> {sData} {cData}  </div>";
     tmplServ += "</div>";
@@ -624,7 +633,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },      
         {
-            label: 'Mes Inicio', name: 'desde', search: false, editable: true, hidden: true,
+            label: 'Mes Primera Cuota', name: 'desde', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: urlPeriodo,
@@ -632,7 +641,35 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
+                    var thissid = rowData.desde;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Periodo--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***desde:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    //console.log(s);
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }            
+        },
+        {
+            label: 'Mes Inicio Servicio', name: 'desdediferido', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: urlPeriodo,
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.desdediferido;
                     console.log(response);
                     var data = JSON.parse(response);
                     console.log(data);
@@ -650,15 +687,44 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return s + "</select>";
                 }
             }, dataInit: function (elem) { $(elem).width(200); }            
+        },         
+        {
+            label: 'Tipo Recuperación', name: 'ivarecuperable', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: urlRecupera,
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.ivarecuperable;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Periodo--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***tipoRecupera:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    //console.log(s);
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }            
         },
         {
             label: 'Mas IVA', name: 'masiva', search: false, editable: true, hidden: true,
             edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        },
+        },          
         {
             label: 'Gasto Diferido', name: 'gastodiferido', search: false, editable: true, hidden: true,
             edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        }         
+        },                 
+          
     ];
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
@@ -925,7 +991,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
-                hidden: true,
+                hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -935,7 +1001,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
-                hidden: true,
+                hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -945,7 +1011,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
-                hidden: true,
+                hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             }                          
                                                           
