@@ -34,7 +34,7 @@ exports.list = function (req, res) {
         "FROM sip.detalleserviciocto As A, sip.estructuracui AS B, sip.contrato AS C, sip.proveedor AS D " +
         "WHERE (B.Id = A.idcui And C.Id = A.idcontrato And D.Id = C.idproveedor And D.numrut <> 1 ) " +
         ") " +
-        "select * from SQLPaging with (nolock) "
+        "select * from SQLPaging with (nolock) order by nombre"
 
     models.detalleserviciocto.count({
     }).then(function (records) {
@@ -64,14 +64,12 @@ exports.list2 = function (req, res) {
 
     var order = sidx + " " + sord;
 
-    var sql0 = "declare @order as varchar; " +
-        "set @order = 'D.razonsocial, E.nombre, A.glosaservicio, C.numero, C.solicitudcontrato asc'; " +
-        "declare @rowsPerPage as bigint;  " +
+    var sql0 = "declare @rowsPerPage as bigint;  " +
         "declare @pageNum as bigint; " +
         "set @rowsPerPage= " + rows + " ;  " +
         "set @pageNum= " + page + " ; " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY @order )  " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY D.razonsocial, E.nombre, A.glosaservicio, C.numero, C.solicitudcontrato asc )  " +
         "as resultNum, A.Id, D.razonsocial, D.numrut, D.dvrut, D.id As IdProveedor, C.numero, C.nombre As nombreContrato, C.id As IdContrato,  " +
         "C.solicitudcontrato, C.idestadosol, C.idtiposolicitud, C.pmoresponsable,  E.nombre, E.id As IdServicio, A.glosaservicio,  " +
         "A.idcondicion, A.idplazocontrato, A.estadocontrato, F.glosamoneda, A.valorcuota, A.impuesto, A.factorimpuesto   " +
@@ -108,14 +106,12 @@ exports.list3 = function (req, res) {
 
     var order = sidx + " " + sord;
 
-    var sql0 = "declare @order as varchar; " +
-        "set @order = 'periodo asc'; " +
-        "declare @rowsPerPage as bigint;  " +
+    var sql0 = "declare @rowsPerPage as bigint;  " +
         "declare @pageNum as bigint; " +
         "set @rowsPerPage= " + rows + " ;  " +
         "set @pageNum= " + page + " ; " +
         "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY @order )  " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY periodo asc )  " +
         "as resultNum, periodo,montoorigen    " +
         "FROM sip.detallecompromiso " +
         "WHERE (iddetalleserviciocto = " + iddetalleservicio + "  )  " +
