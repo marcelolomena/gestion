@@ -27,6 +27,7 @@ module.exports = function (passport) {
     router.post('/login', passport.authenticate('login', redirectsTwo),
         function (req, res) {
             // Explícitamente guardar la sesión antes de redirigir!
+            //req.flash('message', 'Please check your email to confirm it.');
             req.session.save(() => {
                 res.redirect('/home');
             })

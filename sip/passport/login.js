@@ -16,13 +16,13 @@ module.exports = function (passport) {
 				if (!user) {
 					console.log('Usuario no encontrado. ' + username);
 					return done(null, false, req.flash('message', 'Usuario no encontrado.'));
-				}else{
-					co(function* () {	
+				} else {
+					co(function* () {
 						var rol = yield models.usrrol.find({
 							attributes: ['id'],
 							where: { 'uid': user.uid },
 						});
-						if(!rol){
+						if (!rol) {
 							console.log('No tiene rol');
 							return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page
 						} else {
@@ -32,12 +32,12 @@ module.exports = function (passport) {
 								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 							} else {
 								return done(null, user);
-							}							
+							}
 						}
 
 					}).catch(function (err) {
 						console.log("cago :" + err);
-					});								
+					});
 				}
 
 			}).catch(function (err) {
