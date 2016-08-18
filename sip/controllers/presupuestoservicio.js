@@ -560,7 +560,7 @@ exports.action = function (req, res) {
       //Meses año presupuesto
       var mes = 1;
       anio = anio + 1;
-      for (var i = 4; i < 12; i++) {
+      for (var i = 4; i < 16; i++) {
         var mm = mes + (i-4);
         var mmm = mm < 10 ? '0' + mm : mm;
         var periodo = anio + '' + mmm;
@@ -656,7 +656,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     caja[i - 1] = valorcaja;
   }
   //Costo con diferimiento
-  for (var i = desdediferido, j = 0, h=mescuota1; i < caja.length + 1 && j < ncuotas; i = parseInt(i) + mesesentre, j++, h=parseInt(h)+mesesentre) {
+  for (var i = desdediferido, j = 0, h=mescuota1; i < caja.length + 1 && j < ncuotas && h<17; i = parseInt(i) + mesesentre, j++, h=parseInt(h)+mesesentre) {
     console.log("*****JJJJ:" + j);
     if (coniva == "1") {
       var iva = pesos[h - 1] * 0.19;
