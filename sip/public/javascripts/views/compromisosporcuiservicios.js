@@ -50,7 +50,9 @@ function gridServicios(parentRowID, parentRowKey) {
         {
             label: 'Valor Cuota', name: 'valorcuota', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required: true }
+            editrules: { edithidden: false, required: true },
+            formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
         },
 
         {
@@ -73,7 +75,9 @@ function gridServicios(parentRowID, parentRowKey) {
         {
             label: 'Factor', name: 'factorimpuesto', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required: true }
+            editrules: { edithidden: false, required: true },
+            formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
         },
 
     ];
