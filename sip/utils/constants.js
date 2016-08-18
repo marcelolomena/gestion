@@ -7,9 +7,9 @@ function define(name, value) {
 
 define("PI", 3.14);
 //Define constantes con roles de sistema
-define("ROLADMDIVOT", 6);
-define("GERENTE", 1);
-define("PMO", 2);
-define("ADMINISTRADOR", 3);
-define("NEGOCIADOR", 4);
-define("CONTRATO", 5);
+define("ROLADMDIVOT", "ROLADMDIVOT");
+define("GERENTE", "GERENTE");
+define("PMO", "PMO");
+define("ADMINISTRADOR", "ADMINISTRADOR");
+define("NEGOCIADOR", "NEGOCIADOR");
+define("CONTRATO", "CONTRATO");
