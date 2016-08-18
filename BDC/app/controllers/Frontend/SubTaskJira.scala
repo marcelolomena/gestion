@@ -386,7 +386,7 @@ object SubTaskJira extends Controller {
         val project_id = Integer.parseInt(request.body.asFormUrlEncoded.get("project_id")(0).trim())
         val estimated_time = request.body.asFormUrlEncoded.get("estimated_time")(0).trim().toDouble
         val sub_task_id = request.body.asFormUrlEncoded.get("sub_task_id")(0).trim()
-        node.put("lastestId", sub_task_id)
+        //node.put("lastestId", sub_task_id)
         val user_Id = request.body.asFormUrlEncoded.get("user")(0).trim()
         val allocations = SubTaskServices.getAllocationObjIfUserAlreadyAssignedSubtask(sub_task_id, user_Id)
 
@@ -398,11 +398,13 @@ object SubTaskJira extends Controller {
           }
           val allocation_id = allocations.apply(0).id
           total_estimated_time += estimated_time
-          SubTaskServices.updateSubTaskAllocationByIdAndEstimationTime(allocation_id.get, total_estimated_time)
+          last = SubTaskServices.updateSubTaskAllocationByIdAndEstimationTime(allocation_id.get, total_estimated_time)
+          node.put("lastestId", last)
           node.put("status", "Success")
         } else {
           val subTaskDetails = SubTaskAllocation(None, sub_task_id.toInt, task_id, project_id, user_Id.toInt, estimated_time, 0)
           last = SubTaskServices.saveSubTaskAllocation(subTaskDetails)
+          node.put("lastestId", last)
           node.put("status", "Success")
         }
 
