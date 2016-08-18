@@ -702,7 +702,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     var data = JSON.parse(response);
                     console.log(data);
                     var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Periodo--</option>';
+                    s += '<option value="0">--Escoger Recuperación--</option>';
                     $.each(data, function (i, item) {
                         console.log("***tipoRecupera:" + data[i].id + ", " + thissid);
                         if (data[i].id == thissid) {
@@ -770,7 +770,9 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-
+                var num = new Number(postdata.cuota);
+                console.log("num:"+num);
+              
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un servicio", ""];
                 } if (postdata.glosaservicio == "") {
@@ -779,14 +781,16 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Moneda: Debe escoger una moneda", ""];
                 } if (postdata.idproveedor == 0) {
                     return [false, "Proveedor: Debe escoger un proveedor", ""];
-                } if (postdata.cuota == 0) {
-                    return [false, "Cuota: Debe ingresar la cuota", ""];
-                } if (postdata.numerocuota == 0) {
-                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
-                } if (postdata.mesesentrecuotas == 0) {
-                    return [false, "Meses Entre: Debe ingresar meses entre cuotas", ""];
+                } if (isNaN(num) || postdata.cuota <= 0) {
+                    return [false, "Cuota: Debe ingresar la cuota con valor mayor a cero", ""];
+                } if (postdata.numerocuota <= 0) {
+                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas mayor a 0", ""];
+                } if (postdata.mesesentrecuotas <= 0) {
+                    return [false, "Meses Entre: Debe ingresar meses entre cuotas mayor a 0", ""];
                 } if (postdata.desde == 0) {
                     return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
+                } if (postdata.desdediferido == 0) {
+                    return [false, "Desde: Debe ingresar mes de inicio de servicio", ""];                    
                 } else {
                     return [true, "", ""]
                 }
@@ -816,6 +820,9 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             },
             beforeSubmit: function (postdata, formid) {
                 //alert("postdata:"+postdata.idproveedor);
+                var num = new Number(postdata.cuota);
+                console.log("num:"+num);
+              
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe escoger un servicio", ""];
                 } if (postdata.glosaservicio == "") {
@@ -824,14 +831,16 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
                     return [false, "Moneda: Debe escoger una moneda", ""];
                 } if (postdata.idproveedor == 0) {
                     return [false, "Proveedor: Debe escoger un proveedor", ""];
-                } if (postdata.cuota == 0) {
-                    return [false, "Cuota: Debe ingresar la cuota", ""];
-                } if (postdata.numerocuota == 0) {
-                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas", ""];
-                } if (postdata.mesesentrecuotas == 0) {
-                    return [false, "Meses Entre: Debe ingresar meses entre cuotas", ""];
+                } if (isNaN(num) || postdata.cuota <= 0) {
+                    return [false, "Cuota: Debe ingresar la cuota con valor mayor a cero", ""];
+                } if (postdata.numerocuota <= 0) {
+                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas mayor a cero", ""];
+                } if (postdata.mesesentrecuotas <= 0) {
+                    return [false, "Meses Entre: Debe ingresar meses entre cuotas mayor a cero", ""];
                 } if (postdata.desde == 0) {
                     return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
+                } if (postdata.desdediferido == 0) {
+                    return [false, "Desde: Debe ingresar mes de inicio de servicio", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -991,7 +1000,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
-                hidden: false,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -1001,7 +1010,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
-                hidden: false,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -1011,7 +1020,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 align: 'right',
                 search: false,
                 width: 100,
-                hidden: false,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             }                          
                                                           
@@ -1052,10 +1061,11 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 var idxsel = grid.getInd(rowKey);
                 var rowData = grid.getRowData(rowKey);
                 postdata.idx = idxsel;
-                //var num = new Number(rowData.presupuestoorigen);
-                //if (isNaN(num)) {
-                //    return [false, "Debe ingresar un numero", ""];
-                //} 
+                var num = new Number(postdata.presupuestoorigen);
+                console.log("num:"+num);
+                if (isNaN(num) || num < 0) {
+                    return [false, "Debe ingresar un numero y con valor  mayor a 0", ""];
+                } 
                 return [true, "", ""]
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
