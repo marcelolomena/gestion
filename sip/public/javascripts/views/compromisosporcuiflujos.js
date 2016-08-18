@@ -32,6 +32,8 @@ function gridcompromisosporcuiflujos(parentRowID, parentRowKey, suffix) {
             label: 'Monto Origen', name: 'montoorigen', width: 100, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
+            formatter: 'number', 
+            formatoptions: { decimalPlaces: 2 },
         },
 
     ];
@@ -68,7 +70,7 @@ function gridcompromisosporcuiflujos(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
