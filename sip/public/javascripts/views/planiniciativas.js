@@ -12,7 +12,7 @@ $(document).ready(function () {
             search: true, editable: true, hidden: false,
         },
         {
-            label: 'Estado', name: 'estado', width:110, align: 'left',
+            label: 'Estado', name: 'estado', width: 110, align: 'left',
             search: true, editable: true, hidden: false,
         },
         {
@@ -51,39 +51,95 @@ $(document).ready(function () {
             label: 'Julio', name: 'JULIO', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var mes = rawObject.mesinicioprevisto;
+                if(mes==7){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
         {
             label: 'Agosto', name: 'AGOSTO', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var mes = rawObject.mesinicioprevisto;
+                if(mes==8){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
         {
             label: 'Septiembre', name: 'SEPTIEMBRE', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var mes = rawObject.mesinicioprevisto;
+                if(mes==9){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
         {
             label: 'Octubre', name: 'OCTUBRE', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var mes = rawObject.mesinicioprevisto;
+                if(mes==10){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
         {
             label: 'Noviembre', name: 'NOVIEMBRE', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var mes = rawObject.mesinicioprevisto;
+                if(mes==11){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
         {
             label: 'Diciembre', name: 'DICIEMBRE', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var mes = rawObject.mesinicioprevisto;
+                if(mes==12){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
         {
             label: '2017', name: '2017', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            cellattr: function (rowId, val, rawObject, cm, rdata) {
+			    var color;
+                var ano = rawObject.anoinicioprevisto;
+                if(ano==2017){
+                    color = '#00B050';
+                    return "style='background-color:" + color + "; color: white '";
+                }
+            }
         },
 
-        
+
     ];
     $("#table_planiniciativas").jqGrid({
         url: '/planiniciativas/list',
@@ -104,11 +160,30 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         editurl: '',
         styleUI: "Bootstrap",
-        
+
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
                 'errorThrown: ' + errorThrown);
+        },
+        loadComplete: function () {
+
+            var ids = jQuery("#table_planiniciativas").jqGrid('getDataIDs');
+            for (var i = 0; i < ids.length; i++) {
+                var rowId = ids[i];
+                var rowData = jQuery('#table_planiniciativas').jqGrid('getRowData', rowId);
+
+                console.log(rowData.mesinicioprevisto);
+                console.log(rowId);
+
+                if (rowData.mesinicioprevisto == 7) {
+                    console.log('es julio');
+                    $("#table_planiniciativas").jqGrid('setCell',i,"Julio","",{color:'red'});
+                }
+                if (rowData.mesinicioprevisto == 8) {
+                    $("#table_planiniciativas").jqGrid('setCell', i + 1, "AGOSTO", "", { color: 'green' });
+                }
+            }
         }
     });
 
@@ -153,7 +228,7 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
-            
+
         },
         {
             ajaxEditOptions: sipLibrary.jsonOptions,
