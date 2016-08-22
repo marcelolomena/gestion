@@ -452,7 +452,7 @@ object User extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-
+ 
   def usersList = Action { implicit request =>
     request.session.get("username").map { user =>
       val users = UserService.findUsers
@@ -460,6 +460,22 @@ object User extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
+  }
+
+  def usersListJira = Action { implicit request =>
+      var nodeusers = new JSONArray()
+      val users = UserService.findUsers
+      for (u <- users) {
+        var node = new JSONObject()
+        node.put("uname",u.uname)
+        node.put("first_name",u.first_name)
+        node.put("last_name",u.last_name)
+        node.put("email",u.email)
+        nodeusers.put(node)
+      }
+
+      Ok(nodeusers.toString())
+    
   }
 
   def saveUser = Action { implicit request =>

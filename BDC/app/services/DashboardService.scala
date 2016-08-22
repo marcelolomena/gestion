@@ -90,7 +90,10 @@ object DashboardService {
   }
 
   def reporteProgramaPorDepartamentoFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[PanelDepartamento] = {
-    //println(Json)
+    println(did)
+	println(pageSize)
+	println(pageNumber)
+	println(Json)
     var sqlString = "EXEC art.programas_por_departamento_filtrado {did},{PageSize},{PageNumber},{Json}"
 
     DB.withConnection { implicit connection =>
@@ -117,7 +120,7 @@ object DashboardService {
   }
 
   def cantidadProgramaPorDepartamentoFiltrado(did: String, Json: String): Int = {
-    //println(Json)
+    println(Json)
     var sqlString = "EXEC art.cantidad_programas_por_departamento_filtrado {did},{Json}"
 
     DB.withConnection { implicit connection =>

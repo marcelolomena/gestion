@@ -67,6 +67,7 @@ app.use(flash());
 //app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(session({
   secret: 'keyboard cat',
+  //cookie: { maxAge: 60000 },
   resave: false,
   saveUninitialized: false,
   store: new SequelizeStore({

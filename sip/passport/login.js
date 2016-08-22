@@ -13,29 +13,35 @@ module.exports = function (passport) {
 			models.user.find({
 				where: { 'uname': username }
 			}).then(function (user) {
+				if (!user) {
+					console.log('Usuario no encontrado. ' + username);
+					return done(null, false, req.flash('message', 'Usuario no encontrado.'));
+					//return done(null, false, {message: "Usuario no encontrado."});
+				} else {
+					co(function* () {
+						var rol = yield models.usrrol.find({
+							attributes: ['id'],
+							where: { 'uid': user.uid },
+						});
+						if (!rol) {
+							console.log('No tiene rol');
+							return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page
+							 //return done(null, false, {message: "Sin rol asignado."});
+						} else {
+							console.log("rol : " + rol.id);
+							if (!isValidPassword(user, password)) {
+								console.log('Clave inválida');
+								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
+								//return done(null, false, {message: "Clave inválida."});
+							} else {
+								return done(null, user);
+							}
+						}
 
-				co(function* () {
-					var rol = yield models.usrrol.find({
-						attributes: ['id'],
-						where: { 'uid': user.uid },
+					}).catch(function (err) {
+						console.log("cago :" + err);
 					});
-					//console.dir(rol);
-					//console.log(rol.id);
-					if (!user) {
-						console.log('Usuario no encontrado. ' + username);
-						return done(null, false, req.flash('message', 'Usuario no encontrado.'));
-					} else if (!isValidPassword(user, password)) {
-						console.log('Clave inválida');
-						return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
-					} else if (rol == null) {
-						console.log('No tiene rol');
-						return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page
-					} else {
-						return done(null, user);
-					}
-				}).catch(function (err) {
-					console.log(err);
-				});
+				}
 
 			}).catch(function (err) {
 				done(err)
