@@ -640,6 +640,7 @@ object Dashboard extends Controller {
     case "responsable" => " '%" + value + "%' "
     case "fecini"      => " '" + value + "'"
     case "feccom"      => " '" + value + "'"
+    case "estado"      => " '%" + value + "%' "
     case "pai"         => value
     case "pae"         => value
     case "spi"         => value
