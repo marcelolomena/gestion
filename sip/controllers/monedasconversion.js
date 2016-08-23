@@ -18,8 +18,8 @@ exports.list = function (req, res) {
     if (!sidx)
         sidx = "periodo";
 
-    if (!sord)
-        sord = "desc";
+   // if (!sord)
+    sord = "desc";
 
     var orden = sidx + " " + sord;
 
@@ -33,6 +33,7 @@ exports.list = function (req, res) {
         if (err) {
             console.log("->>> " + err)
         } else {
+              console.log("->>> " + filters)
             models.monedasconversion.count({
                 where: data
             }).then(function (records) {
@@ -40,8 +41,8 @@ exports.list = function (req, res) {
                 models.monedasconversion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    order: orden,
-                    where: data
+                    where: data,
+                    order: orden
                 }).then(function (conversiones) {
                     res.json({ records: records, total: total, page: page, rows: conversiones });
                 }).catch(function (err) {

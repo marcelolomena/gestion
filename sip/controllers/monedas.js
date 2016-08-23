@@ -126,10 +126,27 @@ exports.getExcel = function (req, res) {
       caption: 'GlosaMoneda',
       type: 'string',
       width: 50
-    }
+    },
+    {
+      caption: 'Ejercicio',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Periodo',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Valor de Conversion',
+      type: 'number',
+      width: 50
+    }            
   ];
 
-  var sql = "SELECT id,moneda,glosamoneda FROM sip.moneda order by moneda asc"
+  var sql = "SELECT a.id,a.moneda,a.glosamoneda,b.ejercicio,b.periodo,b.valorconversion "+
+            "From sip.moneda a, sip.monedasconversion b where a.id = b.idmoneda "+
+            "order by a.moneda,b.periodo asc"
   
   sequelize.query(sql)
     .spread(function (proyecto) {
@@ -137,7 +154,10 @@ exports.getExcel = function (req, res) {
       for (var i = 0; i < proyecto.length; i++) {
 
         a = [i + 1, proyecto[i].moneda,
-          proyecto[i].glosamoneda
+          proyecto[i].glosamoneda,
+          proyecto[i].ejercicio,
+          proyecto[i].periodo,
+          proyecto[i].valorconversion
         ];
         arr.push(a);
       }
