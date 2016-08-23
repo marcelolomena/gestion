@@ -21,7 +21,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, monedasController.getExcel);         
   
     router.route('/monedasconversion/list/:id')
-        .get(isAuthenticated, monedasConversionController.list);
+        .post(isAuthenticated, monedasConversionController.list);
 
     router.route('/monedasconversion/action')
         .post(isAuthenticated, monedasConversionController.action);

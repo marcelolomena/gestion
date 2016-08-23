@@ -179,14 +179,14 @@ function showChildGrid(parentRowID, parentRowKey) {
         var childGridURL = "/monedasconversion/list/" + parentRowKey;
 
         var modelConversion = [
-            { label: 'Ejercicio', name: 'ejercicio', width: 100, align: 'left', search: false, editable: true,},
+            { label: 'Ejercicio', name: 'ejercicio', width: 100, align: 'left', search: true, editable: true,},
             { label: 'Periodo', name: 'periodo', width: 100, align: 'center', search: true, editable: true, 
                      editoptions: {
                      dataInit: function (element) {
                         $(element).mask("000000", { placeholder: "______" });
                 }
             }, editrules: { required: true, number: true }},
-            { label: 'Moneda', name: 'moneda', width: 100, align: 'center', search: true, editable: true, },            
+            { label: 'Moneda', name: 'moneda', width: 100, align: 'center', search: false, editable: true, },            
             { label: 'Valor Conversión a Pesos', name: 'valorconversion', width: 200, align: 'center', search: false, editable: true,},
             { label: 'idEjercicio', name: 'idejercicio', width: 100, align: 'left', search: false, hidden: true,editable: true,},
             { label: 'idmoneda', name: 'idmoneda', width: 100, align: 'left', search: false, hidden: true,editable: true,},            
@@ -196,12 +196,14 @@ function showChildGrid(parentRowID, parentRowKey) {
 
         $("#" + childGridID).jqGrid({
             url: childGridURL,
-            mtype: "GET",
-            cache: false,
+            mtype: "post",
+          //  cache: false,
             datatype: "json",
             page: 1,
             colModel: modelConversion,
             caption: 'Monedas de Conversión a Pesos',
+            autowidth: true,  // set 'true' here
+            shrinkToFit: true, // well, it's 'true' by default
             rowNum: 10,
             rowList: [5, 10, 20, 50],
             viewrecords: true,
@@ -218,10 +220,14 @@ function showChildGrid(parentRowID, parentRowKey) {
                     $("#" + childGridID).addRowData("blankRow", { "ejercicio": "", "periodo": "No hay datos" });
                 }
             }
-        });
+        }).jqGrid('filterToolbar', { 
+         stringResult: true, 
+         searchOnEnter: false,
+         defaultSearch: 'cn',         
+         searchOperators: true });;
 
         $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-            edit: true, add: true, del: true, search: true, refresh: true, view: false, position: "left", cloneToTop: false
+            edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false
         },
             {
                 closeAfterEdit: true,
@@ -293,7 +299,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                 },
                 beforeShowForm: function (form) {
                     $('input#moneda', form).attr('readonly', 'readonly');
-                     var grid = $("#grid");
+                     var grid = $("#" + childGridID);
                      var rowData = grid.getRowData(parentRowKey);
                      moneda = rowData.moneda;
                      idmoneda = rowData.id;
