@@ -93,6 +93,18 @@ object User extends Controller {
     }
   }
 
+
+  def userjira(uname: String) = Action { implicit request =>
+      var user = UserService.findUserDetailsByUname(uname)
+      if (!user.isEmpty) {
+        Ok(user.get.uid.get.toString())
+      }else{
+        Ok("usuario no encontrado")
+      }
+  }
+
+
+
   /**
    * All employee listing
    */
@@ -464,7 +476,7 @@ object User extends Controller {
 
   def usersListJira = Action { implicit request =>
       var nodeusers = new JSONArray()
-      val users = UserService.findUsers
+      val users = UserService.findAllUserList
       for (u <- users) {
         var node = new JSONObject()
         node.put("uid",u.uid.get)

@@ -497,6 +497,7 @@ GET    /name-user/:id                                                           
 GET    /edit-user/:id                                                                                 controllers.Frontend.User.editUser(id : String)
 POST   /edit-user/:id                                                                                 controllers.Frontend.User.updateUser(id : String)
 GET    /employee/$employeeid<[A-Za-z0-9_-]+>                                                          controllers.Frontend.User.employeeDetails(employeeid:Long)
+GET    /user-jira/:uname                                                                              controllers.Frontend.User.userjira(uname:String)
 GET    /logs/:pagenumber    												                          controllers.Frontend.User.getLogList(pagenumber:Integer)
 GET    /user-management                                                                               controllers.Frontend.User.userManagement
 GET    /get-employee-list/:parentId/:parentType/:isSelfRef/:pagenumber                                controllers.Frontend.User.getEmployeeList(parentId: String, parentType : String, isSelfRef : Boolean,pagenumber:Integer)
