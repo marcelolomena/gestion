@@ -467,6 +467,7 @@ object User extends Controller {
       val users = UserService.findUsers
       for (u <- users) {
         var node = new JSONObject()
+        node.put("uid",u.uid.get)
         node.put("uname",u.uname)
         node.put("first_name",u.first_name)
         node.put("last_name",u.last_name)
