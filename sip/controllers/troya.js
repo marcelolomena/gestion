@@ -69,7 +69,8 @@ exports.proveedorcui = function (req, res) {
 };
 
 exports.getcui = function (req, res) {
-  var sql = "SELECT cui FROM sip.estructuracui WHERE uid="+req.user[0].uid;
+  var sql = "SELECT cui, nivel FROM sip.estructuracui WHERE uid="+req.user[0].uid +
+  " ORDER BY nivel asc";
   console.log("query:"+sql);
   sequelize.query(sql)
     .spread(function (rows) {

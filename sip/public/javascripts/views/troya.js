@@ -9,27 +9,37 @@ $(document).ready(function () {
         format: "dd/mm/yyyy"
     });      
                 
-    var cuiusr;
+    var cuiusr = [];
    
     $.ajax({ 
         url: "/cuiuser", 
         dataType: 'json', 
         async: false, 
         success: function(j){ 
-            $.each(j,function(i,item) {
-                cuiusr = item.cui;
-                console.log('***user cui:'+cuiusr);  
-            });
+            if (j.length > 0){
+                var nivel0 = j[0].nivel;
+                $.each(j,function(i,item) {
+                    console.log("nivel:"+item.nivel+","+nivel0);
+                    if (item.nivel == nivel0){
+                        
+                        cuiusr.push(item.cui);
+                    }
+                    console.log('***user cui:'+cuiusr);  
+                });
+            } else {
+                cuiusr.push("0");
+            }
+            console.log('** cui final:'+cuiusr); 
         } 
     });    
 
-    
-	$.getJSON("/troyacui/"+cuiusr, function (j) {
-		//$('#sap option').remove();
-		$.each(j, function (i, item) {
-			$('#cui').append('<option value="' + item.id + '">' + item.nombre + '</option>');
-		});
-	});    
+    for (var i=0; i<cuiusr.length; i++ ){    
+	    $.getJSON("/troyacui/"+cuiusr[i], function (j) {
+            $.each(j, function (i, item) {
+                $('#cui').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+            });
+	    });  
+    }  
 
     $("#cui").change(function(){
         scui = $(this).val();
