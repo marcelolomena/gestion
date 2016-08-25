@@ -44,12 +44,12 @@ object UserService extends CustomColumns {
 
   }
 
-  /*def findAllUserList(): Seq[UsersList] = {
+  def findAllUserList(): Seq[Users] = {
 		DB.withConnection { implicit connection =>
-			SQL("SELECT u.*  FROM art_user u").as(Users.userList *)
+			SQL("SELECT * FROM art_user order by first_name asc").as(Users.user *)
 		}
 
-	}*/
+	}
   def findUsers(): Seq[Users] = {
     DB.withConnection { implicit connection =>
       SQL("select * from art_user where isadmin <> 1  order by first_name asc").as(Users.user *)
@@ -370,6 +370,20 @@ object UserService extends CustomColumns {
     }
 
   }
+
+  def findUserDetailsByUname(uname: String) = {
+        DB.withConnection { implicit connection =>
+          val result = SQL(
+            "select * from art_user where email = {uname}").on(
+              'uname -> uname).as(
+                Users.user.singleOpt)
+          result
+
+      
+    }
+
+  }
+  
 
   /**
    * get user details by code

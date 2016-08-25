@@ -1,0 +1,11 @@
+extends base.jade
+block titulo
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Monedas
+block jsgrilla
+  script(type='text/javascript', src='/javascripts/views/monedas.js')
+block titulogrilla
+  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Monedas
+block grilla
+  table#grid
+  #pager    

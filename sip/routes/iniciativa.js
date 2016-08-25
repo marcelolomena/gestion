@@ -9,6 +9,7 @@ var presupuestoiniciativaController = require('../controllers/presupuestoiniciat
 var tareasnuevosproyectosController = require('../controllers/tareasnuevosproyectos');
 var flujonuevatareaController = require('../controllers/flujonuevatarea');
 var compromisosporcuiController = require('../controllers/compromisosporcui');
+var planiniciativasController = require('../controllers/planiniciativas');
 
 module.exports = function (passport) {
 
@@ -22,6 +23,13 @@ module.exports = function (passport) {
 
     router.route('/compromisosporcui/list')
         .post(isAuthenticated, compromisosporcuiController.list);
+
+    router.get('/planiniciativas', isAuthenticated, function (req, res) {
+        res.render('planiniciativas', { user: req.user });
+    });
+
+    router.route('/planiniciativas/list')
+        .post(isAuthenticated, planiniciativasController.list);
 
     router.route('/compromisosporcuiservicios/list/:id')
         .post(isAuthenticated, compromisosporcuiController.list2);
