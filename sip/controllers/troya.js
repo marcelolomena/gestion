@@ -8,7 +8,7 @@ exports.cuitroya = function (req, res) {
   console.log("******rol*********:" + req.user[0].rid);
   console.log("*ROLADM*:" + constants.ROLADMDIVOT);
   if (rol == constants.ROLADMDIVOT) {  
-    var sql = "SELECT id, nombre FROM sip.estructuracui " +
+    var sql = "SELECT id, nombre, cui FROM sip.estructuracui " +
       "ORDER BY nombre";
     sequelize.query(sql)
       .spread(function (rows) {
@@ -18,22 +18,22 @@ exports.cuitroya = function (req, res) {
       });    
   } else {
     var idcui = req.params.id
-    var sql = "select a.id, a.nombre "+
+    var sql = "select a.id, a.nombre, a.cui "+
       "from   sip.estructuracui a "+
       "where  a.cui = "+idcui +" "+
       "union "+
-      "select b.id, b.nombre "+
+      "select b.id, b.nombre, b.cui "+
       "from   sip.estructuracui a,sip.estructuracui b "+
       "where  a.cui = "+idcui +" "+
       "  and  a.cui = b.cuipadre "+
       "union "+
-      "select c.id, c.nombre "+
+      "select c.id, c.nombre, c.cui "+
       "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c "+
       "where  a.cui = "+idcui +" "+
       "  and  a.cui = b.cuipadre "+
       "  and  b.cui = c.cuipadre "+
       "union "+
-      "select d.id, d.nombre "+
+      "select d.id, d.nombre, d.cui "+
       "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d "+
       "where  a.cui = "+idcui +" "+
       "  and  a.cui = b.cuipadre "+

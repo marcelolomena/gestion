@@ -36,7 +36,8 @@ $(document).ready(function () {
     for (var i=0; i<cuiusr.length; i++ ){    
 	    $.getJSON("/troyacui/"+cuiusr[i], function (j) {
             $.each(j, function (i, item) {
-                $('#cui').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+                console.log("cui:"+item.nombre+","+item.cui);
+                $('#cui').append('<option value="' + item.id + '">' + item.cui + "-"+ item.nombre +'</option>');
             });
 	    });  
     }  
