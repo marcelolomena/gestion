@@ -11,7 +11,10 @@ module.exports = function (passport) {
     });
 
     router.route('/factura/prefactura')
-        .post(isAuthenticated, facturaController.generar);    
+        .post(isAuthenticated, facturaController.generar);
+
+    router.route('/factura/reporte')
+        .get(isAuthenticated, facturaController.generarReporte);             
 
     return router;
 

@@ -1,8 +1,8 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-var express = require('express')
-var router = express.Router()
 var phantom = require('phantom');
+var fs = require('fs');
+var jsreport = require('jsreport-core')()
 
 exports.generar = function (req, res) {
 
@@ -22,104 +22,73 @@ exports.generar = function (req, res) {
             var phInstance = null;
             var sitepage = null;
             var filePath = 'lana.pdf';
+
             phantom.create().then(function (ph) {
                 phInstance = ph;
                 return phInstance.createPage();
             }).then(function (page) {
-                console.log('page');
                 sitepage = page;
                 var paperSize = {
                     format: 'letter',
                     orientation: 'portrait',
                     margin: { left: "1.25cm", right: "1.25cm", top: "1.25cm", bottom: "1.25cm" }
                 };
+
                 page.setting('javascriptEnabled');
                 page.property('paperSize', paperSize);
                 page.property('viewportSize', { width: 704, height: 1054 });
                 page.property('zoomFactor', 0.9);
                 page.property('content', html);
             }).then(function (status) {
-                //console.log("status :" + status);
                 return sitepage.property('content');
             }).then(function (content) {
-                //console.dir(sitepage);
-                sitepage.render(filePath, { format: 'pdf', quality: '100' }).then(function (res) {
-                    sitepage.close();
-                    phInstance.exit();
-                    /*
+
+                sitepage.render(filePath, { format: 'pdf', quality: '100' }).then(function (result) {
                     setTimeout(function () {
                         sitepage.close();
                         phInstance.exit();
-                        //return callback(null, filePath);
-                    }, 10000);
-                    */
-                    res.json({ error_code: 0 });
+                    }, 25000);
+                    res.header('Content-disposition', 'inline; filename=' + filePath);
+                    res.header('Content-type', 'application/pdf');
+                    fs.createReadStream(filePath).pipe(res);
+
                 }).catch(function (err) {
-                    console.log(err);
+                    console.log("cago 1" + err);
                     sitepage.close();
                     phInstance.exit();
                 });
 
             }).catch(function (err) {
-                console.log(err);
+                console.log("cago 2" + err);
+                sitepage.close();
                 phInstance.exit();
             });
 
 
-            /*
-                        createPDF({}, prefactura, html, 'lolo.pdf', function (err, data) {
-                            console.log("aaaaaaaaaaaa ->> " + data);
-                            res.send("1");
-                        });
-            */
         });
 
     } catch (e) {
-        console.log(e);
+        console.log("cago 4 : " + e);
     }
 };
 
-/*
-var createPDF = function (options, html, filePath, callback) {
-    var phInstance = null;
-    var sitepage = null;
-    phantom.create().then(function (ph) {
-        phInstance = ph;
-        return phInstance.createPage();
-    }).then(function (page) {
-        console.log('page');
-        sitepage = page;
-        var paperSize = {
-            format: 'letter',
-            orientation: 'portrait',
-            margin: { left: "1.25cm", right: "1.25cm", top: "1.25cm", bottom: "1.25cm" }
-        };
-        page.setting('javascriptEnabled');
-        page.property('paperSize', paperSize);
-        page.property('viewportSize', { width: 704, height: 1054 });
-        page.property('zoomFactor', 0.9);
-        page.property('content', html);
-    }).then(function (status) {
-        console.log(status);
-        return sitepage.property('content');
-    }).then(function (content) {
-        console.log(content);
-        sitepage.render(filePath, { format: 'pdf', quality: '100' }).then(function (res) {
-            setTimeout(function () {
-                sitepage.close();
-                phInstance.exit();
-                //return callback(null, filePath);
-                callback(null, filePath);
-            }, 25000);
-        }).catch(function (err) {
-            console.log(err);
-            sitepage.close();
-            phInstance.exit();
-        });
 
-    }).catch(function (err) {
-        console.log(err);
-        phInstance.exit();
-    });
-};
-*/
+exports.generarReporte = function (req, res) {
+    jsreport.init().then(function () {
+        return jsreport.render({
+            template: {
+                content: '<h1>Hello {{:foo}}</h1>',
+                engine: 'jsrender',
+                recipe: 'phantom-pdf'
+            },
+            data: {
+                foo: "world"
+            }
+        }).then(function (resp) {
+            //prints pdf with headline Hello world
+            console.log(resp.content.toString())
+        });
+    }).catch(function (e) {
+        console.log(e)
+    })
+}
