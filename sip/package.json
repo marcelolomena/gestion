@@ -29,10 +29,6 @@
         "file-stream-rotator": "0.0.6",
         "winston": "2.2.0",
         "co": "4.6.0",
-        "connect-session-sequelize": "latest",
-        "phantom": "2.1.18",
-        "jsreport-core": "1.0.6",
-        "jsreport-jsrender": "1.0.1",
-        "jsreport-phantom-pdf": "1.0.3"
+        "connect-session-sequelize": "latest"
     }
 }
