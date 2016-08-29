@@ -42,10 +42,9 @@ exports.list = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta], "+ 
     " [cuentascontables].[invgasto], [cuentascontables].[idconcepto], [cuentascontables].[cuentaorigen], "+
-    " [cuentascontables].[borrado], [conceptospresupuestario].[id] AS [conceptospresupuestario.id], "+
-    " case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
-    " [conceptospresupuestario].[conceptopresupuestario] AS [conceptospresupuestario.conceptopresupuestario], "+
-    " [conceptospresupuestario].[glosaconcepto] AS [conceptospresupuestario.glosaconcepto] "+
+    " [cuentascontables].[borrado], case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
+    " [cuentascontables].agrupacion1,[cuentascontables].agrupacion2,[cuentascontables].tipocuenta,[cuentascontables].conceptogasto, "+
+    " [cuentascontables].quienpresupuesta "+
     " FROM [sip].[cuentascontables] AS [cuentascontables] "+
     " LEFT OUTER JOIN [sip].[conceptospresupuestarios] AS [conceptospresupuestario] ON [cuentascontables].[idconcepto] = [conceptospresupuestario].[id] "+ 
     " where [cuentascontables].borrado = 1 ORDER BY cuentacontable asc) " +
@@ -68,14 +67,11 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta], "+ 
-        " [cuentascontables].[invgasto], [cuentascontables].[idconcepto], [cuentascontables].[cuentaorigen], "+
-        " [cuentascontables].[borrado], [conceptospresupuestario].[id] AS [conceptospresupuestario.id], "+
-        " case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
-        " [conceptospresupuestario].[conceptopresupuestario] AS [conceptospresupuestario.conceptopresupuestario], "+
-        " [conceptospresupuestario].[glosaconcepto] AS [conceptospresupuestario.glosaconcepto] "+
+        "as resultNum, [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta],[cuentascontables].[cuentaorigen], "+
+        " [cuentascontables].[borrado], case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
+        " [cuentascontables].agrupacion1,[cuentascontables].agrupacion2,[cuentascontables].tipocuenta,[cuentascontables].conceptogasto, "+
+        " [cuentascontables].quienpresupuesta "+
         " FROM [sip].[cuentascontables] AS [cuentascontables] "+
-        " LEFT OUTER JOIN [sip].[conceptospresupuestarios] AS [conceptospresupuestario] ON [cuentascontables].[idconcepto] = [conceptospresupuestario].[id] "+ 
         " WHERE [cuentascontables].borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cuentacontable asc) " +
         " select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -127,6 +123,11 @@ exports.action = function (req, res) {
         nombrecuenta: req.body.nombrecuenta,
         cuentaorigen: req.body.cuentaorigen,
         invgasto: req.body.invgasto,
+        agrupacion1: req.body.agrupacion1,
+        agrupacion2: req.body.agrupacion2,
+        tipocuenta: req.body.tipocuenta,
+        conceptogasto: req.body.conceptogasto,
+        quienpresupuesta: req.body.quienpresupuesta,
         borrado: 1
       }).then(function (cuentas) {
         res.json({ error_code: 0 });
@@ -144,7 +145,12 @@ exports.action = function (req, res) {
         nombrecuenta: req.body.nombrecuenta,
         cuentaorigen: req.body.cuentaorigen,
         invgasto: req.body.invgasto,
-      }, {
+        agrupacion1: req.body.agrupacion1,
+        agrupacion2: req.body.agrupacion2,
+        tipocuenta: req.body.tipocuenta,
+        conceptogasto: req.body.conceptogasto,
+        quienpresupuesta: req.body.quienpresupuesta
+         }, {
           where: {
             id: req.body.id
           }

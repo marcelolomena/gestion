@@ -11,15 +11,21 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color:red'>* </span>Inversion/Gasto{invgasto}</div>";
+    template += "<div class='column-full'>Tipo Cuenta{tipocuenta}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Concepto Presupuestario{idconcepto}</div>";
+    template += "<div class='column-full'>Agrupación 1{agrupacion1}</div>";
+    template += "<div class='column-full'>Agrupación 2{agrupacion2}</div>";    
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'>Concepto Gasto{conceptogasto}</div>";
     template += "<div class='column-full'><span style='color:red'>* </span>Cuenta Origen{cuentaorigen}</div>";    
     template += "</div>";
 
-    template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>Concepto Presupuestario{glosaconcepto}</div>";
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'>Quien Presupuesta{quienpresupuesta}</div>"; 
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -40,41 +46,12 @@ $(document).ready(function () {
                 custom_element: sipLibrary.radioElemInvgasto
             }
         },
-        {
-            label: 'Concepto Presupuestario', name: 'idconcepto', search: false, editable: true,editrules: { required: true },
-            hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/cuentascontables/conceptospresupuestarios',
-                buildSelect: function (response) {
-                    var grid = $("#table_servicio2");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idconcepto;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Concepto Presupuestario--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].glosaconcepto + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].glosaconcepto + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        $("input#idconcepto").val($('option:selected', this).text());
-                    }
-                }],
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        {
-            label: 'Concepto Presupuestario', name: 'glosaconcepto', width: 300, align: 'left',
-            search: false, editable: true,jsonmap: "conceptospresupuestario.glosaconcepto", editrules: { required: false }, hidden: false
-        },
-        { label: 'Cuenta Origen', name: 'cuentaorigen', width: 100, align: 'left', search: true, editable: true, hidden: false },                        
+        { label: 'Agrupación 1', name: 'agrupacion1', width: 300, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Agrupación 2', name: 'agrupacion2', width: 300, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Tipo Cuenta', name: 'tipocuenta', width: 300, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Concepto Gasto', name: 'conceptogasto', width: 300, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Cuenta Origen', name: 'cuentaorigen', width: 100, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Quien Presupuesta', name: 'quienpresupuesta', width: 300, align: 'left', search: true, editable: true, hidden: false },
     ];
     $("#grid").jqGrid({
         url: '/cuentascontables/list',
