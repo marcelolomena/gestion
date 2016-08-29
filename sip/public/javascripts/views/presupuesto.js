@@ -91,11 +91,11 @@ $(document).ready(function () {
         { label: 'Versión', name: 'version', width: 80, align: 'left', search: false,sortable: false, editable: true },
         { label: 'Estado', name: 'estado', width: 100, align: 'left', search: true, sortable: false, editable: false },
         {
-            label: 'Monto Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
+            label: 'Forecast', name: 'montoforecast', width: 130, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Monto Anual', name: 'montoanual', width: 100, align: 'left', search: false, sortable: false, editable: true,
+            label: 'Ppto. Solicitado', name: 'montoanual', width: 120, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
@@ -512,6 +512,40 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             search: true, editable: true, edittype: "textarea"
         },
         {
+            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'right',
+            search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Proveedor', name: 'idproveedor', width: 100, align: 'right',
+            search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: urlProveedores,
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idproveedor;
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Proveedor--</option>';
+                    $.each(data, function (i, item) {
+                        console.log("***proveedor:" + data[i].id + ", " + thissid);
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombreproveedor + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
+                        }
+                    });
+                    console.log(s);
+                    return s + "</select>";
+                }
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },        
+        {
             label: 'Moneda', name: 'moneda', width: 100, align: 'right',
             search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
@@ -545,45 +579,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
         },
         {
-            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'right',
-            search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Proveedor', name: 'idproveedor', width: 100, align: 'right',
-            search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlProveedores,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Proveedor--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***proveedor:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombreproveedor + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
-                        }
-                    });
-                    console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        {
             label: 'Comentario', name: 'comentario',
             search: false, editable: true, edittype: "textarea", hidden: true,
         },
         {
-            label: 'Monto Forecast',
+            label: 'Forecast',
             name: 'montoforecast',
             width: 130,
             align: 'right',
@@ -592,7 +592,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Monto Anual',
+            label: 'Ppto. Solicitado',
             name: 'montoanual',
             width: 130,
             align: 'right',
@@ -921,6 +921,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 width: 200,
                 search: false,
                 sortable: false,
+                hidden: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
@@ -934,7 +935,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },            
             {
-                label: 'Ppto. Requerido Moneda Origen',
+                label: 'Ppto. Solicitado',
                 name: 'presupuestoorigen',
                 editable: true,
                 align: 'right',
@@ -964,7 +965,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Comprometido Caja',
+                label: 'Comprometido',
                 name: 'cajacomprometido',
                 editable: false,
                 align: 'right',
@@ -974,17 +975,17 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },
             {
-                label: 'Disponible',
+                label: 'No Comprometido',
                 name: 'disponible',
                 editable: false,
                 align: 'right',
                 search: false,
                 sortable: false,
-                width: 100,
+                width: 150,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 }
             },                
             {
-                label: 'Total Caja',
+                label: 'Ppto. Total',
                 name: 'totalcaja',
                 editable: false,
                 align: 'right',
