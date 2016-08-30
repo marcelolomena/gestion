@@ -20,6 +20,18 @@ $(document).ready(function () {
             label: 'E-mail', name: 'email', width: 300, align: 'left',
             search: true, editable: true, hidden: false
         },
+        {
+            label: 'Rol de Negocio', name: 'rolnegocio', width: 300, align: 'left',
+            search: true, editable: true, hidden: false
+        },
+        {
+            label: 'ID Delegado', name: 'uiddelegado', width: 300, align: 'left',
+            search: true, editable: true, hidden: true
+        },
+        {
+            label: 'Delegado', name: 'nombredelegado', width: 300, align: 'left',
+            search: true, editable: true, hidden: false
+        },
     ];
 
     $("#table_roldenegocio").jqGrid({
@@ -36,7 +48,7 @@ $(document).ready(function () {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         caption: 'Lista de Usuarios',
-        pager: "#pager_roles",
+        pager: "#pager_roldenegocio",
         viewrecords: true,
         rowList: [10, 20, 50,100],
         editurl: '/roles/action',
@@ -47,9 +59,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_roles").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_roldenegocio").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#table_roles').jqGrid('navGrid', "#pager_roles", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_roldenegocio').jqGrid('navGrid', "#pager_roldenegocio", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
@@ -69,7 +81,7 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_roles_left").css("width", "");
+    $("#pager_roldenegocio_left").css("width", "");
 
     
 });
