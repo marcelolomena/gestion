@@ -7,3 +7,4 @@ sistema control y gestión
 - add
 - commit -m [mensaje]
 - push
+- checkout prefacturas
