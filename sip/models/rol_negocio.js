@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    iddelegado: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

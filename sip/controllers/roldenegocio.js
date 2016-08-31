@@ -36,7 +36,7 @@ exports.list = function (req, res) {
       "set @pageNum=" + page + ";   " +
       "With SQLPaging As   ( " +
       "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-      "as resultNum, a.*, b.first_name, b.last_name, b.uname, b.email, c.uid as uiddelegado, c.first_name+c.last_name  as nombredelegado " +//, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe " +
+      "as resultNum, a.*, b.first_name+' '+b.last_name as nombre, b.uname, b.email, c.uid as uiddelegado, c.first_name+' '+c.last_name  as nombredelegado " +
       "FROM [sip].[rol_negocio] a LEFT OUTER JOIN [dbo].[art_user] b on a.uid=b.uid LEFT OUTER JOIN [dbo].[art_user] c on a.iddelegado=c.uid " +
       ") " +
       "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -48,7 +48,7 @@ exports.list = function (req, res) {
       "set @pageNum=" + page + ";   " +
       "With SQLPaging As   ( " +
       "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-      "as resultNum, a.*, b.first_name, b.last_name, b.uname, b.email, c.uid as uiddelegado, c.first_name+c.last_name  as nombredelegado " +//, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe " +
+      "as resultNum, a.*, b.first_name+' '+b.last_name as nombre, b.uname, b.email, c.uid as uiddelegado, c.first_name+' '+c.last_name  as nombredelegado " +
       "FROM [sip].[rol_negocio] a LEFT OUTER JOIN [dbo].[art_user] b on a.uid=b.uid LEFT OUTER JOIN [dbo].[art_user] c on a.iddelegado=c.uid " +
       "WHERE a.uid = " + uid + ") " +
       "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -72,7 +72,7 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.*, b.first_name, b.last_name, b.uname, b.email  " +//, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe " +
+        "as resultNum, a.*, b.first_name+' '+b.last_name as nombre, b.uname, b.email, c.uid as uiddelegado, c.first_name+' '+c.last_name  as nombredelegado " +
         "FROM [sip].[rol_negocio] a LEFT OUTER JOIN [dbo].[art_user] b on a.uid=b.uid" +
         "WHERE ( " + condition.substring(0, condition.length - 4) + ") )" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -124,29 +124,29 @@ exports.list = function (req, res) {
 
     if (rol != constants.ROLADMDIVOT) {
 
-        models.rol_negocio.count({
-          where: {
-            uid: uid
-          }
-        }).then(function (records) {
-          var total = Math.ceil(records / rows);
-          sequelize.query(sql0)
-            .spread(function (rows) {
-              res.json({ records: records, total: total, page: page, rows: rows });
-            });
-        })
-      } else {
-        models.rol_negocio.count({
-        }).then(function (records) {
-          var total = Math.ceil(records / rows);
-          sequelize.query(sql0)
-            .spread(function (rows) {
-              res.json({ records: records, total: total, page: page, rows: rows });
-            });
-        })
+      models.rol_negocio.count({
+        where: {
+          uid: uid
+        }
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })
+    } else {
+      models.rol_negocio.count({
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        sequelize.query(sql0)
+          .spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+          });
+      })
 
 
-      }
+    }
 
   }
 };
@@ -154,36 +154,25 @@ exports.list = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  console.log('la accion: ' + action);
+  console.log('el delegado: ' + req.body.uiddelegado);
+  console.log('el id: ' + req.body.id);
 
   switch (action) {
-    case "add":
-      models.usrrol.create({
-        uid: req.body.parent_id,
-        rid: req.body.rid,
-        borrado: 1
-      }).then(function (parametro) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-
-      break;
-    case "del":
-      models.usrrol.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          console.log('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        console.log(err);
-        res.json({ error_code: 1 });
-      });
-
+    case "edit":
+      models.rol_negocio.update({
+        rolnegocio: req.body.rolnegocio,
+        iddelegado: req.body.uiddelegado
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
       break;
 
   }

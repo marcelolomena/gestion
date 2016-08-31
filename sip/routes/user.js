@@ -22,17 +22,16 @@ module.exports = function (passport) {
         res.render('roldenegocio', { user: req.user });
     });
 
+    router.route('/usuariosdelegados/:uid')
+        .get(isAuthenticated, userController.getUsersDelegados)
+
+
     router.route('/roldenegocio/list')
         .post(isAuthenticated, roldenegocioController.list);
 
-        /*
+    router.route('/roldenegocio/action')
+        .post(isAuthenticated, roldenegocioController.action);
 
-    router.route('/roles/list2/:id')
-        .post(isAuthenticated, rolesController.list2);
-
-    router.route('/roles/action')
-        .post(isAuthenticated, rolesController.action);
-*/
     return router;
 
 }
