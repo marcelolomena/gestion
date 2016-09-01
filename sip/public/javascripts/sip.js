@@ -122,7 +122,7 @@ var sipLibrary = {
         if (value === '2') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio  + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
     }
     , currencyFormatter: function (cellvalue, options, rowObject) {
         var formatoptions = options.colModel.formatoptions || {};

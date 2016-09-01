@@ -58,7 +58,7 @@ exports.list = function (req, res) {
       jsonObj.rules.forEach(function (item) {
 
         if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
+          condition += item.field + " like '%" + item.data + "%' AND "
       });
 
       var sql = "declare @rowsPerPage as bigint; " +
@@ -215,23 +215,37 @@ exports.getExcel = function (req, res) {
       width: 50
     },
     {
-      caption: 'conceptopresupuestario',
+      caption: 'conceptogasto',
       type: 'string',
       width: 50
     },
     {
-      caption: 'glosaconcepto',
+      caption: 'agrupacion1',
       type: 'string',
       width: 50
-    }
+    },
+    {
+      caption: 'agrupacion2',
+      type: 'string',
+      width: 50
+    },    
+    {
+      caption: 'tipocuenta',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'quienpresupuesta',
+      type: 'string',
+      width: 50
+    }     
   ];
 
   var sql = "SELECT  [cuentascontables].[id], [cuentascontables].[cuentacontable], [cuentascontables].[nombrecuenta], "+    
     " case [cuentascontables].[invgasto] when 1 then 'Inversión' when 2 then 'Gasto' else '' End as glosatipo, "+
-    " [cuentascontables].[cuentaorigen],[conceptospresupuestario].[conceptopresupuestario] AS conceptopresupuestario, "+
-    " [conceptospresupuestario].[glosaconcepto] AS glosaconcepto"+
+    " [cuentascontables].[cuentaorigen],[cuentascontables].[conceptogasto],[cuentascontables].[agrupacion1],[cuentascontables].[agrupacion2], "+
+    " [cuentascontables].[tipocuenta],[cuentascontables].[quienpresupuesta] "+
     " FROM [sip].[cuentascontables] AS [cuentascontables] "+
-    " LEFT OUTER JOIN [sip].[conceptospresupuestarios] AS [conceptospresupuestario] ON [cuentascontables].[idconcepto] = [conceptospresupuestario].[id] "+ 
     " where [cuentascontables].borrado = 1 ORDER BY cuentacontable asc "
   
   sequelize.query(sql)
@@ -244,8 +258,11 @@ exports.getExcel = function (req, res) {
           cuentas[i].nombrecuenta,
           cuentas[i].glosatipo,
           cuentas[i].cuentaorigen,
-          cuentas[i].conceptopresupuestario,
-          cuentas[i].glosaconcepto
+          cuentas[i].conceptogasto,
+          cuentas[i].agrupacion1,
+          cuentas[i].agrupacion2,
+          cuentas[i].tipocuenta,
+          cuentas[i].quienpresupuesta                            
         ];
         arr.push(a);
       }
