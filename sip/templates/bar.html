@@ -1,0 +1,55 @@
+<table style='border-style:solid'>
+    <tr>
+        <th>Gerencia</th>
+        <th>Período</th>
+        <th>Caja</th>
+        <th>Costo</th>        
+    </tr>
+    {{#each books}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{author}}</td>
+        <td>{{sales}}</td>
+    </tr>
+    {{/each}}
+</table>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.8.1/jquery.flot.min.js"></script>
+<div id="placeholder" style="width:700px;height:350px"></div>
+
+<script>
+    $(function () {
+
+        var datum = {{{toJSON torta}}}
+        //var datam = datum.map(function(b) { return [ b.label, b.data ]});
+
+        var data = [{
+            "label": "gerencia A",
+            "data": [["2016", 100], ["2017", 120]]
+        },
+        {
+            "label": "gerencia B",
+            "data": [["2016", 80], ["2017", 90]]
+        }];
+
+        var options = {
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 0.6,
+                        align: 'center'
+                    },
+                },
+                yaxes: {
+                    min: 0
+                },
+                xaxis: {
+                    autoscaleMargin: .10
+                }
+            };
+
+            $.plot($('#placeholder'), data, options);
+
+    });
+</script>

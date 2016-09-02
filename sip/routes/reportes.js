@@ -10,7 +10,11 @@ module.exports = function (passport) {
         .get(isAuthenticated, reportesController.test);
 
     router.route('/reporte/troya')
-        .get(isAuthenticated, reportesController.troya);                          
+        .get(isAuthenticated, reportesController.troya); 
+
+    router.route('/reporte/gerencias')
+        .get(isAuthenticated, reportesController.gerencias);           
+
 
     return router;
 

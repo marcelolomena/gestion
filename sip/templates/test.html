@@ -16,8 +16,6 @@
 
 <h2>The book of the month</h2>
 
-
-
 <h2>Book sales chart</h2>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/flot/0.8.1/jquery.flot.min.js"></script>
@@ -29,6 +27,7 @@
         // stringified input data are later in browser interpretted as real object
         var data = {{{toJSON books}}}
         var books = data.map(function(b) { return [ b.name, b.sales ]});
+
         $.plot("#placeholder", [ books ],
         {
             series: {
