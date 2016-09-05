@@ -50,7 +50,7 @@ exports.list = function (req, res) {
       "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
       "as resultNum, a.*, b.first_name+' '+b.last_name as nombre, b.uname, b.email, c.uid as uiddelegado, c.first_name+' '+c.last_name  as nombredelegado " +
       "FROM [sip].[rol_negocio] a LEFT OUTER JOIN [dbo].[art_user] b on a.uid=b.uid LEFT OUTER JOIN [dbo].[art_user] c on a.iddelegado=c.uid " +
-      "WHERE a.uid = " + uid + ") " +
+      " WHERE a.uid = " + uid + ") " +
       "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
 
@@ -63,7 +63,12 @@ exports.list = function (req, res) {
       jsonObj.rules.forEach(function (item) {
 
         if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
+          if (item.field == "nombre"){
+            condition += "b.first_name like '%" + item.data + "%' AND"
+          }else{
+            condition += item.field + " like '%" + item.data + "%' AND"
+          }
+          
       });
 
       var sql = "declare @rowsPerPage as bigint; " +
@@ -73,8 +78,8 @@ exports.list = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         "as resultNum, a.*, b.first_name+' '+b.last_name as nombre, b.uname, b.email, c.uid as uiddelegado, c.first_name+' '+c.last_name  as nombredelegado " +
-        "FROM [sip].[rol_negocio] a LEFT OUTER JOIN [dbo].[art_user] b on a.uid=b.uid" +
-        "WHERE ( " + condition.substring(0, condition.length - 4) + ") )" +
+        "FROM [sip].[rol_negocio] a LEFT OUTER JOIN [dbo].[art_user] b on a.uid=b.uid LEFT OUTER JOIN [dbo].[art_user] c on a.iddelegado=c.uid " +
+        " WHERE ( " + condition.substring(0, condition.length - 4) + ") )" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       console.log(sql);

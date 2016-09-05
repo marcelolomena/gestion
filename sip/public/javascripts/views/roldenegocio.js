@@ -14,11 +14,11 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'><span style='color: red'>*</span>Rol de negocio {rolnegocio}</div>";
+    template += "<div class='column-full'>Rol de negocio {rolnegocio}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'><span style='color: red'>*</span>Delegado {uiddelegado}</div>";
+    template += "<div class='column-full'>Delegado {uiddelegado}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
