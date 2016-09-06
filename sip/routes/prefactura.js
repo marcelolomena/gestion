@@ -13,6 +13,13 @@ module.exports = function (passport) {
     router.route('/factura/prefactura')
         .post(isAuthenticated, prefacturaController.generar);
 
+    router.get('/prefactura', isAuthenticated, function (req, res) {
+        res.render('prefactura', { user: req.user });
+    });
+
+    router.route('/prefactura/solicitud')
+        .post(isAuthenticated, prefacturaController.solicitud);    
+
     return router;
 
 }

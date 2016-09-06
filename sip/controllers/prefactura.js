@@ -13,7 +13,7 @@ exports.generar = function (req, res) {
 
         var prefactura = req.body.prefactura;
 
-        console.log("[" + prefactura + "]");
+        //console.log("[" + prefactura + "]");
 
         req.app.render('test', { prefactura: prefactura }, function (err, html) {
             console.log(html)
@@ -70,3 +70,100 @@ exports.generar = function (req, res) {
         console.log("cago 4 : " + e);
     }
 };
+
+exports.solicitud = function (req, res) {
+    var page = req.body.page;
+    var rows = req.body.rows;
+    var sidx = req.body.sidx;
+    var sord = req.body.sord;
+    var filters = req.body.filters;
+    var condition = "";
+    //var idiniciativaprograma = req.params.id;
+
+    if (!sidx)
+        sidx = "a.[id]";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = sidx + " " + sord;
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sip.contrato A 
+            JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
+            JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
+            JOIN sip.estructuracui D ON B.idcui = D.id
+            WHERE C.periodo = :periodo 
+    `
+
+    var sql = `
+        With SQLPaging As   ( 
+        Select Top(:rowsPerPage * :pageNum) ROW_NUMBER() OVER (ORDER BY cui)
+        as resultNum,
+            D.cui,
+            D.nombre nombre_cui,
+            D.nombreresponsable responsable,
+            A.nombre contrato,
+            B.glosaservicio servicio,
+            C.costopesos costo
+            FROM sip.contrato A 
+            JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
+            JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
+            JOIN sip.estructuracui D ON B.idcui = D.id
+            WHERE C.periodo = :periodo
+            ORDER BY D.cui
+        )
+        select * from SQLPaging with (nolock) where resultNum > ((:pageNum - 1) * :rowsPerPage);    
+    `
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+
+        if (JSON.stringify(jsonObj.rules) != '[]') {
+
+            jsonObj.rules.forEach(function (item) {
+
+                if (item.op === 'cn')
+                    condition += item.field + " like '%" + item.data + "%' AND"
+            });
+
+            sequelize.query(sql,
+                {
+                    replacements: { pageNum: page, rowsPerPage: rows, periodo: periodo },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (rows) {
+                    res.json({ records: records, total: total, page: page, rows: contratos });
+                });
+
+
+
+        } else {
+
+
+        }
+
+    } else {
+        sequelize.query(count,
+            {
+                replacements: { periodo: periodo },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                sequelize.query(sql,
+                    {
+                        replacements: { pageNum: page, rowsPerPage: rows, periodo: periodo },
+                        type: sequelize.QueryTypes.SELECT
+                    }).then(function (rows) {
+                        res.json({ records: records, total: total, page: page, rows: rows });
+                    }).catch(function (e) {
+                        console.log(e)
+                    })
+
+            }).catch(function (e) {
+                console.log(e)
+            })
+    }
+
+}
