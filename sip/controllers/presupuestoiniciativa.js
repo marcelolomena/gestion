@@ -323,3 +323,24 @@ exports.listSAP = function (req, res) {
 
   }
 };
+exports.getJefe = function (req, res) {
+
+  var user = req.params.id;
+  console.log("el usuario: "+user);
+
+  var sql = "select jefe.uid idjefe, jefe.first_name+' '+jefe.last_name as nombrejefe from art_user jefe "+
+"where uname = ( "+
+"SELECT LEFT(a.emailJefe, CHARINDEX('@', a.emailJefe) - 1 ) unameRRHH "+
+"FROM dbo.RecursosHumanos a "+
+"where a.periodo=(select max(periodo) from RecursosHumanos) "+
+"and LEN(a.emailJefe) != 1 "+
+"and LEN(a.emailTrab) != 1 "+
+"and LEFT(a.emailTrab, CHARINDEX('@', a.emailTrab) - 1 ) = (select uname from art_user where uid="+user+")) "
+console.log(sql);
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+

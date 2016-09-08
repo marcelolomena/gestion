@@ -45,13 +45,20 @@ exports.getGraficoProveedor = function (req, res) {
     sequelize.query(sql)
       .spread(function (proyecto) {
       var data = '{"titulo":"Línea de Gasto","data":[';
-      for (var i = 0; i < proyecto.length; i++) {
-        var linea = '{"name":"'+proyecto[i].name+'","y":'+proyecto[i].monto+',"idcui":'+proyecto[i].cuiseccion+'},'
-        console.log(linea);
-        data = data + linea;
+      var total = 0;
+      if (proyecto.length > 0) {
+        for (var i = 0; i < proyecto.length; i++) {
+          var linea = '{"name":"'+proyecto[i].name+'","y":'+proyecto[i].monto+',"idcui":'+proyecto[i].cuiseccion+'},'
+          console.log(linea);
+          data = data + linea;
+          total = total + parseInt(proyecto[i].monto);
+        }
+      } else {
+        data = data + '{"name":"SIN DATOS","y":0,"idcui":"SIN DATOS"},';    
       }
+      console.log("Total:"+total);
       data = data.substring(0,data.length-1);
-      data = data + '],"showInLegend":false}';
+      data = data + '],"showInLegend":false, "total":'+total+'}';
       console.log(data);
       var obj = JSON.parse(data);
       res.json(obj);

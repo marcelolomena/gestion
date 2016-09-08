@@ -43,7 +43,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Glosa Factura{glosa}</div>";
+    template += "<div class='column-full'>Glosa Factura (Max 140){glosa}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -167,9 +167,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                                     s += '<option value="0">--Escoger CUI--</option>';
                                     $.each(data, function (i, item) {
                                         if (data[i].idcui == thissid) {
-                                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + ' - '+data[i].nombre+'</option>';
+                                            s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + ' - '+data[i].nombreresponsable+'</option>';
                                         } else {
-                                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + ' - '+data[i].nombre+'</option>';
+                                            s += '<option value="' + data[i].idcui + '">' + data[i].cui + ' - '+data[i].nombreresponsable+'</option>';
                                         }
                                     });
                                     s += "</select>";
@@ -213,7 +213,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             label: 'Glosa Factura', name: 'glosa', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
             edittype: "textarea", editrules: { required: false },
-            editoptions: {placeholder: "" }
+            editoptions: {maxlength:"140"},
         },
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 80, align: 'left',
@@ -381,10 +381,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             label: 'Costo Unitario', name: 'costounitario', width: 100, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: {required: true},
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
                 }
             }
         },
@@ -519,9 +519,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                             s += '<option value="0">--Escoger CUI--</option>';
                             $.each(data, function (i, item) {
                                 if (data[i].idcui == thisidcui) {
-                                    s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + ' - '+data[i].nombre+'</option>';
+                                    s += '<option value="' + data[i].idcui + '" selected>' + data[i].cui + ' - '+data[i].nombreresponsable+'</option>';
                                 } else {
-                                    s += '<option value="' + data[i].idcui + '">' + data[i].cui + ' - '+data[i].nombre+'</option>';
+                                    s += '<option value="' + data[i].idcui + '">' + data[i].cui + ' - '+data[i].nombreresponsable+'</option>';
                                 }
                             });
                             s += "</select>";

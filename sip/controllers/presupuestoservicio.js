@@ -544,9 +544,9 @@ exports.action = function (req, res) {
           "presupuestopesos =" + cuotas[1][i] + ", " +
           "caja=" + cuotas[2][i] + ", " +
           "costo=" + cuotas[3][i] + ", " +
-          "disponible=" + cuotas[2][i] + "-cajacomprometido, " +
+          "disponible=" + cuotas[2][i] + "-isnull(cajacomprometido,0), " +
           "totalcaja=" + cuotas[2][i] + ", " +
-          "totalcosto=" + cuotas[3][i] + "+costocomprometido " +
+          "totalcosto=" + cuotas[3][i] + " " +
 
           "where iddetallepre=" + idservicio + " and periodo=" + periodo;
 
@@ -572,9 +572,9 @@ exports.action = function (req, res) {
           "presupuestopesos =" + cuotas[1][i] + ", " +
           "caja=" + cuotas[2][i] + ", " +
           "costo=" + cuotas[3][i] + ", " +
-          "disponible=" + cuotas[2][i] + "-cajacomprometido, " +
+          "disponible=" + cuotas[2][i] + "-isnull(cajacomprometido,0), " +
           "totalcaja=" + cuotas[2][i] + ", " +
-          "totalcosto=" + cuotas[3][i] + "+costocomprometido " +
+          "totalcosto=" + cuotas[3][i] + " " +
 
           "where iddetallepre=" + idservicio + " and periodo=" + periodo;
 
@@ -614,7 +614,7 @@ function getMonedas(idpresupuesto, idmoneda) {
 "SELECT @anioanterior = @anioactual -1 "+
 "SELECT @ejercicio2=id FROM sip.ejercicios WHERE ejercicio=@anioanterior "+
 "SELECT @periodo = convert(INT,concat(convert(VARCHAR(4), @anioanterior),'08')) "+
-"SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio2 AND idmoneda=7 AND periodo>@periodo "+
+"SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio2 AND idmoneda="+idmoneda+" AND periodo>@periodo "+
 "UNION "+
 "SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio AND idmoneda="+idmoneda
   var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
@@ -656,6 +656,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     caja[i - 1] = valorcaja;
   }
   //Costo con diferimiento
+  frecup = frecup/100;
   for (var i = desdediferido, j = 0, h=mescuota1; i < caja.length + 1 && j < ncuotas && h<17; i = parseInt(i) + mesesentre, j++, h=parseInt(h)+mesesentre) {
     console.log("*****JJJJ:" + j);
     if (coniva == "1") {
@@ -663,7 +664,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     } else {
       var iva = 0;
     }
-    frecup = frecup/100;
+    //frecup = frecup/100;
     var recuperacion = iva * frecup;
     var total = parseFloat(pesos[h - 1]) + parseFloat(recuperacion);
     if (diferido == "1") {

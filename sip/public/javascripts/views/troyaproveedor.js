@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-
+    var total = 0;
     $.getJSON("/proveedores/combobox", function(j){
         $('#proveedor').append('<option value="0"> - Escoger Proveedor - </option>');            
         $.each(j,function(i,item) {
@@ -52,31 +52,43 @@ $(document).ready(function () {
 			success: function (data) {
 				optionsPieIncident.series.push(data);
 				var charPieDepa = new Highcharts.Chart(optionsPieIncident);
+                total = data.total;
+                var totalfmt = format1(total, "$");
+                console.log("total:"+totalfmt);
+                console.log("total1:"+totalfmt); 
+                loadGrid(idproveedor, totalfmt);                
 			},
 			error: function (e) {
 
 			}
-		});     
-        loadGrid(idproveedor);
+		});    
+
     });
     
 
 });
 
+function format1(n, currency) {
+    return currency + " " + n.toFixed(0).replace(/./g, function(c, i, a) {
+        return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "." + c : c;
+    });
+}
+
 var leida = false;
-function loadGrid(proveedor) {
+function loadGrid(proveedor, totalfact) {
+    console.log("total2:"+totalfact);
     //alert('showDocumentos:'+cui+","+proveedor+","+factura+", "+ fechaini+", "+fechafin);
 	var url = "/grillatroyaproveedor/"+proveedor;
 	var formatter = new Intl.NumberFormat();
 	if (leida){
         $("#grid").setGridParam({ postData: {page:1, rows:10} });
-        $("#grid").jqGrid('setCaption', "Facturas Proveedor por CUI").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+        $("#grid").jqGrid('setCaption', "Facturas Proveedor por CUI, (TOTAL:"+totalfact+")").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	} else {
-		showDocumentos(proveedor);
+		showDocumentos(proveedor, totalfact);
 	}
 }
 
-function showDocumentos(proveedor) {
+function showDocumentos(proveedor, totalfact) {
     
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/grillatroyaproveedor/"+proveedor;  
@@ -131,7 +143,7 @@ function showDocumentos(proveedor) {
                      formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    }                             
         ],
-		caption: "Facturas Proveedor por CUI",
+		caption: "Facturas Proveedor por CUI (TOTAL:"+totalfact+")",
  		height: 'auto',
         styleUI: "Bootstrap",         
         autowidth:false, 

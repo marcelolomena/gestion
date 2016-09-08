@@ -139,6 +139,9 @@ module.exports = function (passport) {
     router.route('/proveedorporcui/:idcui/:idservicio')
         .get(isAuthenticated, tareasnuevosproyectosController.getProveedorCUI);
 
+    router.route('/getjefe/:id')
+        .get(isAuthenticated, presupuestoiniciativaController.getJefe);
+
     return router;
 
 }
