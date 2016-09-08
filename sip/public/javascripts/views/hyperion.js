@@ -207,7 +207,7 @@ $(document).ready(function () {
             var $this = $(this);
 
             if (typeof (this.ftoolbar) !== "boolean") {
-                // create toolbar if needed
+
                 $this.jqGrid('filterToolbar',
                     { stringResult: true, searchOnEnter: true, defaultSearch: myDefaultSearch });
             }
@@ -226,7 +226,7 @@ $(document).ready(function () {
         tmplNames: myFilterTemplateNames,
         tmplFilters: myFilterTemplates
     });
-    //$grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false });
+
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pagerMaster', {
         caption: "",
@@ -234,28 +234,10 @@ $(document).ready(function () {
         title: "Procesar Hyperion",
         position: "last",
         onClickButton: function () {
-            //var grid = $("#gridMaster");
             var rowKey = $grid.getGridParam("selrow");
-
-            //var grid = $('#gridDetail');
-            //var rowKey = grid.getGridParam("selrow");
-
             var url = '/hyperion/csv/' + $("#filterTemplates").val();
             $grid.jqGrid('excelExport', { "url": url });
 
-            /*
-                        if (!rowKey)
-                            alert("No hay filas seleccionadas");
-                        else {
-                            var selectedIDs = grid.getGridParam("selarrrow");
-                            var result = "";
-                            for (var i = 0; i < selectedIDs.length; i++) {
-                                result += selectedIDs[i] + ",";
-                            }
-            
-                            alert(result);
-                        }
-            */
         }
     });
 

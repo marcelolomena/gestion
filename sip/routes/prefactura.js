@@ -20,6 +20,9 @@ module.exports = function (passport) {
     router.route('/prefactura/solicitud')
         .post(isAuthenticated, prefacturaController.solicitud);    
 
+    router.route('/prefactura/gensol')
+        .get(isAuthenticated, prefacturaController.gensol);          
+
     return router;
 
 }

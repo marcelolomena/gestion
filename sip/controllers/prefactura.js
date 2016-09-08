@@ -2,6 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var phantom = require('phantom');
 var fs = require('fs');
+var utilSeq = require('../utils/seq');
 
 exports.generar = function (req, res) {
 
@@ -12,8 +13,6 @@ exports.generar = function (req, res) {
         }
 
         var prefactura = req.body.prefactura;
-
-        //console.log("[" + prefactura + "]");
 
         req.app.render('test', { prefactura: prefactura }, function (err, html) {
             console.log(html)
@@ -52,13 +51,13 @@ exports.generar = function (req, res) {
                     fs.createReadStream(filePath).pipe(res);
 
                 }).catch(function (err) {
-                    console.log("cago 1" + err);
+                    console.log(err);
                     sitepage.close();
                     phInstance.exit();
                 });
 
             }).catch(function (err) {
-                console.log("cago 2" + err);
+                console.log(err);
                 sitepage.close();
                 phInstance.exit();
             });
@@ -67,10 +66,13 @@ exports.generar = function (req, res) {
         });
 
     } catch (e) {
-        console.log("cago 4 : " + e);
+        console.log(e);
     }
 };
 
+/*
+# Cambio en paginación
+*/
 exports.solicitud = function (req, res) {
     var page = req.body.page;
     var rows = req.body.rows;
@@ -78,15 +80,26 @@ exports.solicitud = function (req, res) {
     var sord = req.body.sord;
     var filters = req.body.filters;
     var condition = "";
-    //var idiniciativaprograma = req.params.id;
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
 
     if (!sidx)
-        sidx = "a.[id]";
+        sidx = "cui";
 
     if (!sord)
         sord = "asc";
 
-    var order = sidx + " " + sord;
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
 
     var count = `
             SELECT 
@@ -95,75 +108,124 @@ exports.solicitud = function (req, res) {
             JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
             JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
             JOIN sip.estructuracui D ON B.idcui = D.id
-            WHERE C.periodo = :periodo 
-    `
+            WHERE C.periodo = :periodo` + condition
 
     var sql = `
-        With SQLPaging As   ( 
-        Select Top(:rowsPerPage * :pageNum) ROW_NUMBER() OVER (ORDER BY cui)
-        as resultNum,
-            D.cui,
-            D.nombre nombre_cui,
-            D.nombreresponsable responsable,
-            A.nombre contrato,
-            B.glosaservicio servicio,
-            C.costopesos costo
-            FROM sip.contrato A 
-            JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
-            JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
-            JOIN sip.estructuracui D ON B.idcui = D.id
-            WHERE C.periodo = :periodo
-            ORDER BY D.cui
-        )
-        select * from SQLPaging with (nolock) where resultNum > ((:pageNum - 1) * :rowsPerPage);    
-    `
+            SELECT 
+                    D.cui,
+                    D.nombre nomcui,
+                    D.nombreresponsable, 
+                    A.nombre contrato,
+                    B.glosaservicio servicio,
+                    C.costopesos costo
+                    FROM sip.contrato A 
+                    JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
+                    JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
+                    JOIN sip.estructuracui D ON B.idcui = D.id
+                    WHERE C.periodo = :periodo` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-    if (filters) {
-        var jsonObj = JSON.parse(filters);
-
-        if (JSON.stringify(jsonObj.rules) != '[]') {
-
-            jsonObj.rules.forEach(function (item) {
-
-                if (item.op === 'cn')
-                    condition += item.field + " like '%" + item.data + "%' AND"
-            });
-
+    sequelize.query(count,
+        {
+            replacements: { periodo: periodo, condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
             sequelize.query(sql,
                 {
-                    replacements: { pageNum: page, rowsPerPage: rows, periodo: periodo },
+                    replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
                     type: sequelize.QueryTypes.SELECT
-                }).then(function (rows) {
-                    res.json({ records: records, total: total, page: page, rows: contratos });
-                });
+                }).then(function (data) {
+                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    console.log(e)
+                })
 
+        }).catch(function (e) {
+            console.log(e)
+        })
+}
 
+exports.gensol = function (req, res) {
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
 
-        } else {
-
-
-        }
-
-    } else {
-        sequelize.query(count,
+    models.sequelize.transaction({ autocommit: true }, function (t) {
+        sql = `
+                SELECT 
+                C.periodo,
+                C.id iddetallecompromiso,
+                NULL idprefactura,
+                D.id idcui,
+                A.idproveedor,
+                B.idservicio, 
+                B.glosaservicio,
+                A.id idcontrato,
+                C.montopesos,
+                0,
+                0,
+                NULL,
+                NULL,
+                0,
+                NULL,
+                0,
+                1
+                FROM sip.contrato A 
+                JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
+                JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
+                JOIN sip.estructuracui D ON B.idcui = D.id
+                WHERE C.periodo = :periodo
+        `
+        var promises = []
+        sequelize.query(sql,
             {
                 replacements: { periodo: periodo },
                 type: sequelize.QueryTypes.SELECT
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                sequelize.query(sql,
-                    {
-                        replacements: { pageNum: page, rowsPerPage: rows, periodo: periodo },
-                        type: sequelize.QueryTypes.SELECT
-                    }).then(function (rows) {
-                        res.json({ records: records, total: total, page: page, rows: rows });
-                    }).catch(function (e) {
-                        console.log(e)
-                    })
+            }).then(function (rows) {//rows.length
+                console.dir(rows)
+                for (var i = 0; i < 1; i++) {
 
+                    var newPromise = models.solicitudaprobacion.create({
+                        'periodo': rows[i].periodo,
+                        'iddetallecompromiso': rows[i].iddetallecompromiso,
+                        'idprefactura': rows[i].idprefactura,
+                        'idcui': rows[i].idcui,
+                        'idproveedor': rows[i].idproveedor,
+                        'idservicio': rows[i].idservicio,
+                        'glosaservicio': rows[i].glosaservicio,
+                        'idcontrato': rows[i].idcontrato,
+                        'montoapagar': rows[i].montopesos,
+                        'montoaprobado': 0,
+                        'montomulta': 0,
+                        'idcausalmulta': null,
+                        'glosamulta': null,
+                        'aprobado': 0,
+                        'glosaaprobacion': null,
+                        'idcalificacion': 0,
+                        'borrado': 1,
+                        'pending': true
+                    }, { transaction: t });
+
+                    promises.push(newPromise);
+                };
             }).catch(function (e) {
                 console.log(e)
             })
-    }
 
+
+        return Promise.all(promises).then(function (compromisos) {
+            var compromisoPromises = [];
+            for (var i = 0; i < compromisos.length; i++) {
+                compromisoPromises.push(compromisos[i]);
+            }
+            return Promise.all(compromisoPromises);
+        });
+
+    }).then(function (result) {
+        callback(result)
+    }).catch(function (err) {
+        console.log("--------> " + err);
+    });
 }
