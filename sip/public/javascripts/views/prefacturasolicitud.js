@@ -1,8 +1,7 @@
-
 $(document).ready(function () {
     var cuiusr = [];
    
-    $.ajax({ 
+    $.ajax({
         url: "/cuiuser", 
         dataType: 'json', 
         async: false, 
