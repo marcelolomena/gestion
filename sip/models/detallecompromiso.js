@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    valorcuota: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
     montoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
@@ -40,7 +44,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    valorcuota: {
+    estadopago: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    saldopago: {
       type: DataTypes.FLOAT,
       allowNull: true
     }

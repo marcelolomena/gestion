@@ -108,7 +108,7 @@ exports.solicitud = function (req, res) {
             JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
             JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
             JOIN sip.estructuracui D ON B.idcui = D.id
-            WHERE C.periodo = :periodo` + condition
+            WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition
 
     var sql = `
             SELECT 
@@ -122,7 +122,7 @@ exports.solicitud = function (req, res) {
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                     JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                     JOIN sip.estructuracui D ON B.idcui = D.id
-                    WHERE C.periodo = :periodo` + condition + order +
+                    WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
     sequelize.query(count,
@@ -152,9 +152,9 @@ exports.gensol = function (req, res) {
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
 
-
     sql = `
-                SELECT 
+                SELECT
+                C.id, 
                 C.periodo,
                 C.id iddetallecompromiso,
                 NULL idprefactura,
@@ -176,17 +176,18 @@ exports.gensol = function (req, res) {
                 JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                 JOIN sip.estructuracui D ON B.idcui = D.id
-                WHERE C.periodo = :periodo
+                WHERE C.estadopago IS NULL AND C.periodo = :periodo
         `
     var promises = []
+    var o_promises = []
     sequelize.query(sql,
         {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
-        }).then(function (rows) {//rows.length
-            console.dir(rows[0])
+        }).then(function (rows) {
+            
             models.sequelize.transaction({ autocommit: true }, function (t) {
-                for (var i = 0; i < 1; i++) {
+                for (var i = 0; i < rows.length; i++) {
                     var newPromise = models.solicitudaprobacion.create({
                         'periodo': rows[i].periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
@@ -207,23 +208,45 @@ exports.gensol = function (req, res) {
                         'borrado': 1,
                         'pending': true
                     }, { transaction: t });
-                    console.dir(newPromise)
-                    promises.push(newPromise);
 
+                    promises.push(newPromise);
 
                 };
 
-
                 return Promise.all(promises);
             }).then(function (result) {
-                console.log(result);
+                console.dir("EXITO GEN SOL");
             }).catch(function (err) {
                 console.log("--------> " + err);
+                //res.json({ error_code: 1 });
+            });
+            
+            models.sequelize.transaction({ autocommit: true }, function (t) {
+                for (var i = 0; i < rows.length; i++) {
+                    var otherPromise = models.detallecompromiso.update({
+                        estadopago: 'GENERADO'
+                    }, {
+                            where: { id: rows[i].id }
+                        }, { transaction: t });
+                        //console.log(otherPromise);
+                    o_promises.push(otherPromise);
+
+                };
+
+                return Promise.all(o_promises);
+            }).then(function (result) {
+                //console.dir(result);
+                console.dir("EXITO UPDATE DET");
+            }).catch(function (err) {
+                console.log("--------> " + err);
+                //res.json({ error_code: 1 });
             });
 
         }).catch(function (e) {
             console.log(e)
+            res.json({ error_code: 1 });
         })
 
+    res.json({ error_code: 0 });
 
 }

@@ -43,13 +43,36 @@ $(document).ready(function () {
     $grid.jqGrid('navGrid', '#pager', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pager', {
         caption: "",
-        buttonicon: "glyphicon glyphicon glyphicon-cog",
+        buttonicon: "glyphicon glyphicon glyphicon-send",
         title: "Generar Solicitudes",
         position: "last",
         onClickButton: function () {
-            if (confirm("¿Esta seguro de Confirmar la Generación de Solicitudes?")) {
-                $.get('/prefactura/gensol');
-            }
+            bootbox.confirm("¿Esta seguro de confirmar la generación de solicitudes?", function (confirmed) {
+                if (confirmed == true) {
+                    $.ajax({
+                        url: '/prefactura/gensol'
+                    }).done(function () {
+                        bootbox.alert("Generado!!…", function(){ /* your callback code */ })
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        bootbox.alert("Error!!…", function(){ /* your callback code */ })
+                    }).always(function () {
+                        bootbox.alert("Comenzó la generación", function(){ /* your callback code */ })
+                    });
+                }
+            });
         }
     });
+
+    $grid.jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon glyphicon-piggy-bank",
+        title: "Generar Prefacturas",
+        position: "last",
+        onClickButton: function () {
+            bootbox.confirm("¿Esta seguro de confirmar la generación de prefacturas?", function (confirmed) {
+                if (confirmed == true) {
+                }
+            });
+        }
+    });    
 });
