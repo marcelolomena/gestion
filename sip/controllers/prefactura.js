@@ -152,8 +152,8 @@ exports.gensol = function (req, res) {
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
 
-    models.sequelize.transaction({ autocommit: true }, function (t) {
-        sql = `
+
+    sql = `
                 SELECT 
                 C.periodo,
                 C.id iddetallecompromiso,
@@ -178,15 +178,15 @@ exports.gensol = function (req, res) {
                 JOIN sip.estructuracui D ON B.idcui = D.id
                 WHERE C.periodo = :periodo
         `
-        var promises = []
-        sequelize.query(sql,
-            {
-                replacements: { periodo: periodo },
-                type: sequelize.QueryTypes.SELECT
-            }).then(function (rows) {//rows.length
-                console.dir(rows)
+    var promises = []
+    sequelize.query(sql,
+        {
+            replacements: { periodo: periodo },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (rows) {//rows.length
+            console.dir(rows[0])
+            models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < 1; i++) {
-
                     var newPromise = models.solicitudaprobacion.create({
                         'periodo': rows[i].periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
@@ -199,7 +199,7 @@ exports.gensol = function (req, res) {
                         'montoapagar': rows[i].montopesos,
                         'montoaprobado': 0,
                         'montomulta': 0,
-                        'idcausalmulta': null,
+                        'idcausalmulta': 0,
                         'glosamulta': null,
                         'aprobado': 0,
                         'glosaaprobacion': null,
@@ -207,25 +207,23 @@ exports.gensol = function (req, res) {
                         'borrado': 1,
                         'pending': true
                     }, { transaction: t });
-
+                    console.dir(newPromise)
                     promises.push(newPromise);
+
+
                 };
-            }).catch(function (e) {
-                console.log(e)
-            })
 
 
-        return Promise.all(promises).then(function (compromisos) {
-            var compromisoPromises = [];
-            for (var i = 0; i < compromisos.length; i++) {
-                compromisoPromises.push(compromisos[i]);
-            }
-            return Promise.all(compromisoPromises);
-        });
+                return Promise.all(promises);
+            }).then(function (result) {
+                console.log(result);
+            }).catch(function (err) {
+                console.log("--------> " + err);
+            });
 
-    }).then(function (result) {
-        callback(result)
-    }).catch(function (err) {
-        console.log("--------> " + err);
-    });
+        }).catch(function (e) {
+            console.log(e)
+        })
+
+
 }
