@@ -15,7 +15,7 @@ $(document).ready(function () {
     ], $grid = $("#grid");
 
     $grid.jqGrid({
-        url: '/prefactura/lista',
+        url: '/solicitud/lista',
         mtype: "POST",
         datatype: "json",
         page: 1,
@@ -25,7 +25,7 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        caption: 'Generar Prefacturas',
+        caption: 'Solicitudes de Aprobación',
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],

@@ -4,7 +4,7 @@ var phantom = require('phantom');
 var fs = require('fs');
 var utilSeq = require('../utils/seq');
 
-exports.generar = function (req, res) {
+exports.test = function (req, res) {
 
     try {
 
@@ -73,7 +73,7 @@ exports.generar = function (req, res) {
 /*
 # Cambio en paginación
 */
-exports.solicitud = function (req, res) {
+exports.lista = function (req, res) {
     var page = req.body.page;
     var rows = req.body.rows;
     var sidx = req.body.sidx;
@@ -146,7 +146,7 @@ exports.solicitud = function (req, res) {
         })
 }
 
-exports.gensol = function (req, res) {
+exports.generar = function (req, res) {
     var iniDate = new Date();
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
