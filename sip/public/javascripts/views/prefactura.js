@@ -53,6 +53,7 @@ $(document).ready(function () {
                         url: '/prefactura/gensol'
                     }).done(function () {
                         bootbox.alert("Generado!!…", function(){ /* your callback code */ })
+                         $grid.trigger("reloadGrid");
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         bootbox.alert("Error!!…", function(){ /* your callback code */ })
                     }).always(function () {
