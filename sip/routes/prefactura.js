@@ -10,18 +10,22 @@ module.exports = function (passport) {
         res.render('factura', { user: req.user });
     });
 
-    router.route('/factura/prefactura')
-        .post(isAuthenticated, prefacturaController.generar);
+    router.get('/solicitud', isAuthenticated, function (req, res) {
+        res.render('solicitud', { user: req.user });
+    });
+
+    router.route('/solicitud/lista')
+        .post(isAuthenticated, prefacturaController.lista);    
+
+    router.route('/solicitud/generar')
+        .get(isAuthenticated, prefacturaController.generar);      
 
     router.get('/prefactura', isAuthenticated, function (req, res) {
         res.render('prefactura', { user: req.user });
     });
 
-    router.route('/prefactura/solicitud')
-        .post(isAuthenticated, prefacturaController.solicitud);    
-
-    router.route('/prefactura/gensol')
-        .get(isAuthenticated, prefacturaController.gensol);          
+    router.route('/factura/prefactura')
+        .post(isAuthenticated, prefacturaController.test);
 
     return router;
 

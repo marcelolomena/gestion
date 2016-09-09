@@ -15,7 +15,7 @@ $(document).ready(function () {
     ], $grid = $("#grid");
 
     $grid.jqGrid({
-        url: '/prefactura/solicitud',
+        url: '/solicitud/lista',
         mtype: "POST",
         datatype: "json",
         page: 1,
@@ -50,7 +50,7 @@ $(document).ready(function () {
             bootbox.confirm("¿Esta seguro de confirmar la generación de solicitudes?", function (confirmed) {
                 if (confirmed == true) {
                     $.ajax({
-                        url: '/prefactura/gensol'
+                        url: '/solicitud/generar'
                     }).done(function () {
                         bootbox.alert("Generado!!…", function(){ /* your callback code */ })
                          $grid.trigger("reloadGrid");
@@ -63,7 +63,7 @@ $(document).ready(function () {
             });
         }
     });
-
+/*
     $grid.jqGrid('navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon glyphicon-piggy-bank",
@@ -75,5 +75,6 @@ $(document).ready(function () {
                 }
             });
         }
-    });    
+    });
+*/        
 });
