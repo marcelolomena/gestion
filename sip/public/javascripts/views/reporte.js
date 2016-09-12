@@ -47,20 +47,7 @@ $(document).ready(function () {
         title: "Generar Solicitudes",
         position: "last",
         onClickButton: function () {
-            bootbox.confirm("¿Esta seguro de confirmar la generación de solicitudes?", function (confirmed) {
-                if (confirmed == true) {
-                    $.ajax({
-                        url: '/solicitud/generar'
-                    }).done(function () {
-                        bootbox.alert("Generado!!…", function(){ /* your callback code */ })
-                         $grid.trigger("reloadGrid");
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        bootbox.alert("Error!!…", function(){ /* your callback code */ })
-                    }).always(function () {
-                        bootbox.alert("Comenzó la generación", function(){ /* your callback code */ })
-                    });
-                }
-            });
+
         }
     });
        

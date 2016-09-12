@@ -10,13 +10,14 @@ module.exports = function (passport) {
         res.render('factura', { user: req.user });
     });
 
+    router.route('/factura/prefactura')
+        .post(isAuthenticated, prefacturaController.test);
+
+    ////////////////////            
+
     router.get('/solicitud', isAuthenticated, function (req, res) {
         res.render('solicitud', { user: req.user });
     });
-
-    router.get('/prefactura', isAuthenticated, function (req, res) {
-        res.render('prefactura', { user: req.user });
-    });    
 
     router.route('/solicitud/lista')
         .post(isAuthenticated, prefacturaController.lista);    
@@ -24,10 +25,9 @@ module.exports = function (passport) {
     router.route('/solicitud/generar')
         .get(isAuthenticated, prefacturaController.generar);      
 
-
-    ////////////////////
-    router.route('/factura/prefactura')
-        .post(isAuthenticated, prefacturaController.test);
+    router.get('/prefactura', isAuthenticated, function (req, res) {
+        res.render('prefactura', { user: req.user });
+    });    
 
     return router;
 
