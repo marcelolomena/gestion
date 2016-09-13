@@ -83,7 +83,7 @@ exports.lstDepartamentos = function (req, res) {
 		   ISNULL(A.costo,0) ejerciciouno,
 		   ISNULL(B.costo,0) ejerciciodos,
 		   ISNULL(A.costo,0)-ISNULL(B.costo,0) diferencia,
-		   ROUND(((ISNULL(A.costo,0)-ISNULL(B.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) porcentaje
+		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(A.costo,0)-ISNULL(B.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
 		   from 
 		   (
 			select 
