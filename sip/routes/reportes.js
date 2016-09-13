@@ -10,8 +10,14 @@ module.exports = function (passport) {
         res.render('reporte', { user: req.user });
     });
 
+    router.route('/reporte/lstGerencias')
+        .get(isAuthenticated, reportesController.lstGerencias);    
+
+    router.route('/reporte/lstDepartamentos/:id')
+        .get(isAuthenticated, reportesController.lstDepartamentos);           
+
     router.route('/reporte/gerencias')
-        .get(isAuthenticated, reportesController.gerencias);           
+        .get(isAuthenticated, reportesController.pdfManager);           
 
     return router;
 
