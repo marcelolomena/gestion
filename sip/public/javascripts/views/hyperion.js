@@ -246,6 +246,7 @@ $(document).ready(function () {
             templateOptions += '<option value="' + retorno[i].id + '">' +
                 retorno[i].glosaejercicio + '</option>';
         });
+
         $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
             myFilterTemplateLabel + '</label>' +
             '<select id="filterTemplates"><option value="0">Sin filtro</option>' +
