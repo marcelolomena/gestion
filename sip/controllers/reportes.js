@@ -222,6 +222,7 @@ exports.lstNames = function (req, res) {
 
 exports.lstConceptoGasto = function (req, res) {
     var _filters = req.query.filters;
+    var _gerencia = 0;
 
     //console.log("----------->>>> " + _filters)
 
@@ -229,6 +230,9 @@ exports.lstConceptoGasto = function (req, res) {
         var _jsonObj = JSON.parse(_filters);
         var _rules = _jsonObj.rules;
         _gerencia = _rules[0].data;
+    }
+
+    if (_gerencia > 0) {
 
         //console.log("----------->>>> " + _gerencia)
 
@@ -293,7 +297,7 @@ exports.lstConceptoGasto = function (req, res) {
             })
 
 
-    } else {
+    } else if (_gerencia == 0) {
 
         var sql =
             `
@@ -356,6 +360,105 @@ exports.lstConceptoGasto = function (req, res) {
 
     }
 
+}
+
+exports.repoGenPdf = function (req, res) {
+    try {
+        var pathPdf = path.join(__dirname, '..', 'pdf')
+
+        //console.log(pathPdf + path.sep)
+
+        var filePdf = 'gerencias.pdf'
+
+        var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'gerencias.js'), 'utf8');
+
+        var sql =
+            `
+           select
+		   A.cui id,
+		   A.nombre,
+		   ISNULL(A.costo,0) ejerciciouno,
+		   ISNULL(B.costo,0) ejerciciodos,
+		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) porcentaje
+		   from 
+		   (
+		    select 
+			Y.cui,
+			Y.nombre,
+			round(sum(X.costo)/1000000,0,1) costo
+			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+            where X.periodo >= 201509 AND X.periodo <= 201612 AND X.gerencia = Y.cui
+            group by Y.cui,
+			Y.nombre
+			) A LEFT OUTER JOIN
+			(
+           select 
+		   Y.cui,
+		   Y.nombre,
+		   round(sum(X.costo)/1000000,0,1) costo from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+           where X.periodo >= 201701 AND X.periodo <= 201712 AND X.gerencia = Y.cui
+           group by Y.cui,Y.nombre
+		   ) B ON A.cui = B.cui
+        `
+
+
+
+        sequelize.query(sql,
+            {
+                //replacements: { perini:2016 },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (rows) {
+
+                var datum = {
+                    "gerencias_1": rows_1,
+                    "gerencias_2": rows_2,
+                    "servicios_1": rows_3,
+                    "servicios_2": rows_4,
+                }
+
+                jsreport.init().then(function () {
+                    return jsreport.render({
+                        template: {
+                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'gerencias.html'), 'utf8'),
+                            helpers: helpers,
+                            engine: 'handlebars',
+                            recipe: 'phantom-pdf',
+                            phantom: {
+                                "orientation": "portrait",
+                                "format": "A4",
+                                //"margin": "1cm",
+                                //"headerHeight": "1cm"
+                            }
+                        },
+                        data: datum
+                    }).then(function (resp) {
+                        res.header('Content-disposition', 'inline; filename=' + filePdf);
+                        res.header('Content-type', 'application/pdf');
+                        resp.result.pipe(fs.createWriteStream(pathPdf + path.sep + filePdf))
+                            .on('finish', function () {
+                                fs.createReadStream(pathPdf + path.sep + filePdf).pipe(res)
+                                    .on('finish', function () {
+                                        fs.unlink(pathPdf + path.sep + filePdf);
+                                        //console.log('finalizo');
+                                    });
+                            });
+
+                    }).catch(function (e) {
+                        console.log(e)
+                    })
+                }).catch(function (e) {
+                    console.log(e)
+                })
+
+            }).catch(function (e) {
+                console.log(e)
+            })
+
+
+    } catch (e) {
+        console.log("error : " + e);
+    }
 }
 
 exports.pdfManager = function (req, res) {

@@ -2,6 +2,60 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
+    var options = {
+        chart: {
+            renderTo: '',
+            type: 'bar'
+        },
+        title: {
+            text: 'Presupuesto'
+        },
+        subtitle: {
+            text: 'Fuente: Sistema de Información Presupuestario'
+        },
+        xAxis: {
+            categories: [],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Monto (Millones)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' millones'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: []
+    };
+
     var modelGerencias = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Gerencia', name: 'nombre', width: 250, align: 'left', search: false, editable: false },
@@ -24,6 +78,7 @@ $(document).ready(function () {
         footerrow: true,
         userDataOnFooter: true,
         styleUI: "Bootstrap",
+        //guiStyle: "bootstrap",
         subGrid: true,
         subGridRowExpanded: departamentSubGrid,
         subGridOptions: {
@@ -33,10 +88,9 @@ $(document).ready(function () {
         loadError: sipLibrary.jqGrid_loadErrorHandler
     });
 
-
     var modelConceptoGasto = [
         { label: 'id', name: 'nombre', key: true, hidden: true },
-        { label: 'Concepto Gasto', name: 'nombre', width: 250, align: 'left', search: false },
+        { label: 'Concepto Gasto', name: 'nombre', width: 200, align: 'left', search: false },
         { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', formatter: 'number', search: false },
         { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', formatter: 'number', search: false },
         { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', formatter: 'number', search: false },
@@ -47,7 +101,7 @@ $(document).ready(function () {
             var cm = this.jqGrid('getGridParam', 'colModel'), i, l = cm.length;
             for (i = 0; i < l; i++) {
                 if ((cm[i].index || cm[i].name) === columnIndex) {
-                    return i; // return the colModel index
+                    return i; // return el colModel index
                 }
             }
             return -1;
@@ -76,8 +130,7 @@ $(document).ready(function () {
 
                 filters = $.parseJSON(postData.filters);
                 if (filters && filters.groupOp === "AND" && typeof (filters.groups) === "undefined") {
-                    // only in case of advance searching without grouping we import filters in the
-                    // searching toolbar
+
                     rules = filters.rules;
                     for (i = 0, l = rules.length; i < l; i++) {
                         rule = rules[i];
@@ -126,27 +179,24 @@ $(document).ready(function () {
         iTemplate,
         templateOptions = '',
         reloadWithNewFilterTemplate = function () {
-            try {
-                var iTemplate = parseInt($('#filterTemplates').val(), 10),
-                    postData = $gridConceptoGasto.jqGrid('getGridParam', 'postData');
-                if (isNaN(iTemplate)) {
-                    $gridConceptoGasto.jqGrid('setGridParam', { search: false });
-                } else if (iTemplate >= 0) {
-                    //console.log("---->>" + JSON.stringify(myDynamicFilterTemplates(iTemplate)));
-                    $.extend(postData, {
-                        filters: JSON.stringify(myDynamicFilterTemplates(iTemplate))
-                    });
-                    $gridConceptoGasto.jqGrid('setGridParam', { search: true });
-                }
-                $gridConceptoGasto.trigger('reloadGrid', [{ current: true, page: 1 }]);
-            } catch (e) {
-                console.log(e)
+            var iTemplate = parseInt($('#filterTemplates').val(), 10),
+                postData = $gridConceptoGasto.jqGrid('getGridParam', 'postData');
+            if (isNaN(iTemplate)) {
+                $gridConceptoGasto.jqGrid('setGridParam', { search: false });
+            } else if (iTemplate >= 0) {
+                $.extend(postData, {
+                    filters: JSON.stringify(myDynamicFilterTemplates(iTemplate))
+                });
+                $gridConceptoGasto.jqGrid('setGridParam', { search: true });
             }
+            if (postData)
+                paintBar(options, '/reporte/lstConceptoGasto?filters=' + encodeURIComponent(postData.filters));
+            $gridConceptoGasto.trigger('reloadGrid', [{ current: true, page: 1 }]);
         };
 
     $gridConceptoGasto.jqGrid({
         url: '/reporte/lstConceptoGasto',
-        datatype: "json",        
+        datatype: "json",
         //datatype: 'local',
         page: 1,
         colModel: modelConceptoGasto,
@@ -154,11 +204,12 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         //shrinkToFit: true,
-        viewrecords: true,
+        //viewrecords: true,
         footerrow: true,
         userDataOnFooter: true,
         caption: 'Concepto Gasto',
         styleUI: "Bootstrap",
+        //guiStyle: "bootstrap",
         toolbar: [true, "top"],
         loadComplete: function () {
             var $this = $(this);
@@ -205,24 +256,15 @@ $(document).ready(function () {
         });
     });
 
-    var graphArrayData = [];
-    var graph_1ArrayData = [];
-    var categorias = [];
-    var categorias_1 = [];
-    var serie1 = {};
-    var serie2 = {};
-    var serie1_1 = {};
-    var serie2_1 = {};
-
     fetchGridData();
 
     function fetchGridData() {
+        var categorias = [];
+        var serie1 = {};
+        var serie2 = {};
         var gridArrayData = [];
-        var grid_1ArrayData = [];
         var serie1ArrayData = [];
         var serie2ArrayData = [];
-        var serie1_1ArrayData = [];
-        var serie2_1ArrayData = [];
 
         $grid[0].grid.beginReq();
         $.ajax({
@@ -247,220 +289,114 @@ $(document).ready(function () {
                 serie1 = { name: '2016', data: serie1ArrayData };
                 serie2 = { name: '2017', data: serie2ArrayData };
 
-                graphArrayData.push(serie1)
-                graphArrayData.push(serie2)
-
                 $grid.jqGrid('setGridParam', { data: gridArrayData });
                 $grid.jqGrid('footerData', 'set', result.userdata);
                 $grid[0].grid.endReq();
                 $grid.trigger('reloadGrid');
 
-
-                $('#grafico_1').highcharts({
-                    chart: {
-                        type: 'bar'
-                    },
-                    title: {
-                        text: 'Presupuesto'
-                    },
-                    subtitle: {
-                        text: 'Fuente: Sistema de Información Presupuestario'
-                    },
-                    xAxis: {
-                        categories: categorias,
-                        title: {
-                            text: null
-                        }
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Monto (Millones)',
-                            align: 'high'
-                        },
-                        labels: {
-                            overflow: 'justify'
-                        }
-                    },
-                    tooltip: {
-                        valueSuffix: ' millones'
-                    },
-                    plotOptions: {
-                        bar: {
-                            dataLabels: {
-                                enabled: true
-                            }
-                        }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'top',
-                        x: -40,
-                        y: 80,
-                        floating: true,
-                        borderWidth: 1,
-                        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-                        shadow: true
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    series: graphArrayData
-                });
+                options.series[0] = serie1;
+                options.series[1] = serie2;
+                options.xAxis.categories = categorias;
+                options.chart.renderTo = 'grafico_1';
+                var chart = new Highcharts.Chart(options);
             }
         });
 
-
-        $gridConceptoGasto[0].grid.beginReq();
-        $.ajax({
-            url: "/reporte/lstConceptoGasto",
-            success: function (result) {
-
-                for (var i = 0; i < result.rows.length; i++) {
-                    var item = result.rows[i];
-                    grid_1ArrayData.push({
-                        //id: item.id,
-                        nombre: item.nombre,
-                        ejerciciouno: item.ejerciciouno,
-                        ejerciciodos: item.ejerciciodos,
-                        diferencia: item.diferencia,
-                        porcentaje: item.porcentaje
-                    });
-                    serie1_1ArrayData.push(item.ejerciciouno);
-                    serie2_1ArrayData.push(item.ejerciciodos);
-                    categorias_1.push(item.nombre)
-                }
-
-                serie1_1 = { name: '2016', data: serie1_1ArrayData };
-                serie2_1 = { name: '2017', data: serie2_1ArrayData };
-
-                graph_1ArrayData.push(serie1_1)
-                graph_1ArrayData.push(serie2_1)
-/*
-                $gridConceptoGasto.jqGrid('setGridParam', { data: grid_1ArrayData });
-                $gridConceptoGasto.jqGrid('footerData', 'set', result.userdata);
-                $gridConceptoGasto[0].grid.endReq();
-                $gridConceptoGasto.trigger('reloadGrid');
-*/
-
-                $('#grafico_2').highcharts({
-                    chart: {
-                        type: 'bar'
-                    },
-                    title: {
-                        text: 'Concepto Gasto'
-                    },
-                    subtitle: {
-                        text: 'Fuente: Sistema de Información Presupuestario'
-                    },
-                    xAxis: {
-                        categories: categorias_1,
-                        title: {
-                            text: null
-                        }
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Monto (Millones)',
-                            align: 'high'
-                        },
-                        labels: {
-                            overflow: 'justify'
-                        }
-                    },
-                    tooltip: {
-                        valueSuffix: ' millones'
-                    },
-                    plotOptions: {
-                        bar: {
-                            dataLabels: {
-                                enabled: true
-                            }
-                        }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'top',
-                        x: -40,
-                        y: 80,
-                        floating: true,
-                        borderWidth: 1,
-                        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-                        shadow: true
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    series: graph_1ArrayData
-                });
-
-            }
-        });
-
-
-    }
-
-    function departamentSubGrid(parentRowID, parentRowKey) {
-        var childGridID = parentRowID + "_table";
-        var childGridPagerID = parentRowID + "_pager";
-        var childGridURL = "/reporte/lstDepartamentos/" + parentRowKey;
-        $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
-        $("#" + childGridID).jqGrid({
-            url: childGridURL,
-            mtype: "GET",
-            datatype: "json",
-            page: 1,
-            colModel: [
-                { label: 'id', name: 'id', key: true, hidden: true },
-                { label: 'Departamento', name: 'nombre', width: 100 },
-                { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-                { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-                { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-                { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, editable: false }
-            ],
-            autowidth: true,
-            height: '100%',
-            styleUI: "Bootstrap",
-            footerrow: true,
-            userDataOnFooter: true,
-            subGrid: true,
-            subGridRowExpanded: serviceSubGrid,
-            subGridOptions: {
-                plusicon: "glyphicon-hand-right",
-                minusicon: "glyphicon-hand-down"
-            },
-        });
-    }
-
-    function serviceSubGrid(parentRowID, parentRowKey) {
-        var childGridID = parentRowID + "_table";
-        var childGridPagerID = parentRowID + "_pager";
-        var childGridURL = "/reporte/lstServices/" + parentRowKey;
-        $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
-        $("#" + childGridID).jqGrid({
-            url: childGridURL,
-            mtype: "GET",
-            datatype: "json",
-            page: 1,
-            colModel: [
-                { label: 'id', name: 'id', key: true, hidden: true },
-                { label: 'Servicio', name: 'nombre', width: 100 },
-                { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-                { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-                { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-                { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, editable: false }
-            ],
-            autowidth: true,
-            height: '100%',
-            styleUI: "Bootstrap",
-            footerrow: true,
-            userDataOnFooter: true
-        });
+        paintBar(options, '/reporte/lstConceptoGasto');
     }
 
 });
+
+function paintBar(options, url) {
+    var serie1_1 = {};
+    var serie2_1 = {};
+    var categorias_1 = [];
+    var serie1_1ArrayData = [];
+    var serie2_1ArrayData = [];
+
+    $.ajax({
+        url: url,
+        success: function (result) {
+
+            for (var i = 0; i < result.rows.length; i++) {
+                var item = result.rows[i];
+
+                serie1_1ArrayData.push(item.ejerciciouno);
+                serie2_1ArrayData.push(item.ejerciciodos);
+                categorias_1.push(item.nombre)
+            }
+
+            serie1_1 = { name: '2016', data: serie1_1ArrayData };
+            serie2_1 = { name: '2017', data: serie2_1ArrayData };
+
+            options.series[0] = serie1_1;
+            options.series[1] = serie2_1;
+            options.xAxis.categories = categorias_1;
+            options.chart.renderTo = 'grafico_2';
+            var chart1 = new Highcharts.Chart(options);
+
+        }
+    });
+}
+
+function departamentSubGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+    var childGridURL = "/reporte/lstDepartamentos/" + parentRowKey;
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+            { label: 'id', name: 'id', key: true, hidden: true },
+            { label: 'Departamento', name: 'nombre', width: 100 },
+            { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, editable: false }
+        ],
+        autowidth: true,
+        height: '100%',
+        styleUI: "Bootstrap",
+        //guiStyle: "bootstrap",
+        footerrow: true,
+        userDataOnFooter: true,
+        subGrid: true,
+        subGridRowExpanded: serviceSubGrid,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
+    });
+}
+
+function serviceSubGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+    var childGridURL = "/reporte/lstServices/" + parentRowKey;
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+            { label: 'id', name: 'id', key: true, hidden: true },
+            { label: 'Servicio', name: 'nombre', width: 100 },
+            { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, editable: false }
+        ],
+        autowidth: true,
+        height: '100%',
+        styleUI: "Bootstrap",
+        //guiStyle: "bootstrap",
+        footerrow: true,
+        userDataOnFooter: true
+    });
+}
