@@ -8,7 +8,7 @@ $(document).ready(function () {
             type: 'bar'
         },
         title: {
-            text: 'Presupuesto'
+            text: ''
         },
         subtitle: {
             text: 'Fuente: Sistema de Información Presupuestario'
@@ -313,6 +313,7 @@ $(document).ready(function () {
                 options.series[1] = serie2;
                 options.xAxis.categories = categorias;
                 options.chart.renderTo = 'grafico_1';
+                options.title.text = 'Presupuesto por Gerencia';
                 var chart = new Highcharts.Chart(options);
             }
         });
@@ -348,6 +349,7 @@ function paintBar(options, url) {
             options.series[1] = serie2_1;
             options.xAxis.categories = categorias_1;
             options.chart.renderTo = 'grafico_2';
+            options.title.text = 'Presupuesto por Concepto Presupuestario';
             var chart1 = new Highcharts.Chart(options);
 
         }
