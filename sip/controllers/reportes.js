@@ -362,13 +362,13 @@ exports.lstConceptoGasto = function (req, res) {
 
 }
 
-exports.repoGenPdf = function (req, res) {
+exports.reporteGerenciasPdf = function (req, res) {
     try {
         var pathPdf = path.join(__dirname, '..', 'pdf')
 
         //console.log(pathPdf + path.sep)
 
-        var filePdf = 'gerencias.pdf'
+        var filePdf = 'repo1.pdf'
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'gerencias.js'), 'utf8');
 
@@ -402,8 +402,6 @@ exports.repoGenPdf = function (req, res) {
 		   ) B ON A.cui = B.cui
         `
 
-
-
         sequelize.query(sql,
             {
                 //replacements: { perini:2016 },
@@ -411,16 +409,15 @@ exports.repoGenPdf = function (req, res) {
             }).then(function (rows) {
 
                 var datum = {
-                    "gerencias_1": rows_1,
-                    "gerencias_2": rows_2,
-                    "servicios_1": rows_3,
-                    "servicios_2": rows_4,
+                    "gerencias": rows,
                 }
+
+                //console.dir(datum);
 
                 jsreport.init().then(function () {
                     return jsreport.render({
                         template: {
-                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'gerencias.html'), 'utf8'),
+                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'reporte_gerencias.html'), 'utf8'),
                             helpers: helpers,
                             engine: 'handlebars',
                             recipe: 'phantom-pdf',
@@ -440,7 +437,7 @@ exports.repoGenPdf = function (req, res) {
                                 fs.createReadStream(pathPdf + path.sep + filePdf).pipe(res)
                                     .on('finish', function () {
                                         fs.unlink(pathPdf + path.sep + filePdf);
-                                        //console.log('finalizo');
+                                        console.log('finalizo');
                                     });
                             });
 

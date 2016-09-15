@@ -63,18 +63,5 @@ $(document).ready(function () {
             });
         }
     });
-/*
-    $grid.jqGrid('navButtonAdd', '#pager', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon glyphicon-piggy-bank",
-        title: "Generar Prefacturas",
-        position: "last",
-        onClickButton: function () {
-            bootbox.confirm("¿Esta seguro de confirmar la generación de prefacturas?", function (confirmed) {
-                if (confirmed == true) {
-                }
-            });
-        }
-    });
-*/        
+      
 });

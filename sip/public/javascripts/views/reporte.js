@@ -59,26 +59,29 @@ $(document).ready(function () {
     var modelGerencias = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Gerencia', name: 'nombre', width: 250, align: 'left', search: false, editable: false },
-        { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
-        { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+        { label: 'Presupuesto 2016', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+        { label: 'Presupuesto 2017', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
         { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
         { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, editable: false }
     ], $grid = $("#grid");
 
     $grid.jqGrid({
         datatype: 'local',
-        page: 1,
+        //page: 1,
         colModel: modelGerencias,
-        rowNum: 10,
+        //rowNum: 10,
         regional: 'es',
         height: 'auto',
         autowidth: true,
         caption: 'Gerencias',
-        viewrecords: true,
+        viewrecords: false,
         footerrow: true,
         userDataOnFooter: true,
         styleUI: "Bootstrap",
-        //guiStyle: "bootstrap",
+        pager: "#pager",
+        pgbuttons: false,
+        pgtext: "",
+        pginput: false,
         subGrid: true,
         subGridRowExpanded: departamentSubGrid,
         subGridOptions: {
@@ -88,11 +91,23 @@ $(document).ready(function () {
         loadError: sipLibrary.jqGrid_loadErrorHandler
     });
 
+    $grid.jqGrid('navGrid', '#pager', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
+    $grid.jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-dashboard",
+        title: "Reporte Gerencias",
+        position: "last",
+        onClickButton: function () {
+            PDFObject.embed("/reporte/repo1", "#outerDiv");
+        }
+    });
+
+
     var modelConceptoGasto = [
         { label: 'id', name: 'nombre', key: true, hidden: true },
         { label: 'Concepto Gasto', name: 'nombre', width: 200, align: 'left', search: false },
-        { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', formatter: 'number', search: false },
-        { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', formatter: 'number', search: false },
+        { label: 'Presupuesto 2016', name: 'ejerciciouno', width: 100, align: 'right', formatter: 'number', search: false },
+        { label: 'Presupuesto 2017', name: 'ejerciciodos', width: 100, align: 'right', formatter: 'number', search: false },
         { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', formatter: 'number', search: false },
         { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, stype: "select" }
     ], $gridConceptoGasto = $("#gridConceptoGasto"),

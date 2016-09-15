@@ -1,0 +1,218 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+        color: #3b3b3b;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+        //background: #2b2b2b;
+        background: #FFFFFF;
+    }
+    
+    .wrapper {
+        margin: 0 auto;
+        padding: 40px;
+        max-width: 800px;
+    }
+    
+    .table {
+        margin: 0 0 40px 0;
+        width: 100%;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        display: table;
+    }
+    
+    @media screen and (max-width: 580px) {
+        .table {
+            display: block;
+        }
+    }
+    
+    .row {
+        display: table-row;
+        background: #f6f6f6;
+    }
+    
+    .row:nth-of-type(odd) {
+        background: #e9e9e9;
+    }
+    
+    .row.header {
+        font-weight: 900;
+        color: #ffffff;
+        background: #ea6153;
+    }
+    
+    .row.green {
+        background: #27ae60;
+    }
+    
+    .row.blue {
+        background: #2980b9;
+    }
+    
+    @media screen and (max-width: 580px) {
+        .row {
+            padding: 8px 0;
+            display: block;
+        }
+    }
+    
+    .cell {
+        padding: 6px 12px;
+        display: table-cell;
+    }
+    
+    @media screen and (max-width: 580px) {
+        .cell {
+            padding: 2px 12px;
+            display: block;
+        }
+    }
+    
+    #placeholder {
+        width: 800px;
+        height: 500px;
+        position: relative;
+        margin: 0 auto;
+    }
+    
+    #placeholder2 {
+        width: 800px;
+        height: 1000px;
+        position: relative;
+        margin: 0 auto;
+    }
+</style>
+
+<div class="wrapper">
+
+    <div id="placeholder"></div>
+
+</div>
+
+<script src="../public/javascripts/jquery-1.12.3.min.js"></script>
+<script src="../public/javascripts/flot/jquery.flot.min.js"></script>
+<script src="../public/javascripts/flot/jquery.flot.categories.min.js"></script>
+<script src="../public/javascripts/flot/jquery.flot.axislabels.min.js"></script>
+<script src="../helpers/gerencias.js"></script>
+
+<script>
+    function iterCaja(data){
+        var res = [];
+        $.each(data, function(i, item){
+            res.push([item.ejerciciouno, i])
+        });
+        return res;
+    }
+    function iterNombre(data){
+        var res = [];
+        $.each(data, function(i, item){
+            res.push([i, item.nombre])
+        });
+        return res;
+    }    
+    $(function () {
+
+        var data = [{ gerencias:
+   [ { id: 1900,
+       nombre: 'Division Operaciones y Tecnologia',
+       ejerciciouno: 116,
+       ejerciciodos: 0,
+       diferencia: -116,
+       porcentaje: -100 },
+     { id: 4946,
+       nombre: 'Gerencia Oper. Productos y Serv.',
+       ejerciciouno: 55992,
+       ejerciciodos: 0,
+       diferencia: -55992,
+       porcentaje: -100 },
+     { id: 2259,
+       nombre: 'Gerencia Oper. y Tesoreria',
+       ejerciciouno: 1118,
+       ejerciciodos: 0,
+       diferencia: -1118,
+       porcentaje: -100 },
+     { id: 6991,
+       nombre: 'Gerencia PMO y Control Gestion',
+       ejerciciouno: 2917,
+       ejerciciodos: 2615,
+       diferencia: -302,
+       porcentaje: -10.35 },
+     { id: 6944,
+       nombre: 'Gerencia Seguridad Tec. e Innov.',
+       ejerciciouno: 4671,
+       ejerciciodos: 2184,
+       diferencia: -2487,
+       porcentaje: -53.24 },
+     { id: 6957,
+       nombre: 'Gerencia Tecnología e Infraestructura',
+       ejerciciouno: 8720,
+       ejerciciodos: 7299,
+       diferencia: -1421,
+       porcentaje: -16.3 },
+     { id: 6964,
+       nombre: 'Gerencia Tecnologia y Plan.',
+       ejerciciouno: 49797,
+       ejerciciodos: 52950,
+       diferencia: 3153,
+       porcentaje: 6.33 } ] }]
+
+
+        var gerencias = data.map(function(b) { return [ b.nombre, b.ejerciciouno, b.ejerciciodos, b.diferencia, b.porcentaje ]});
+		var rawData = iterCaja(data);
+		var dataSet = [{ label: "Gerencias", data: rawData, color: "#E8E800" }];
+   		var ticks = iterNombre(data);
+		
+        var options = {
+            series: {
+                bars: {
+                    show: true
+                }
+            },
+            bars: {
+                align: "center",
+                barWidth: 0.5,
+                horizontal: true,
+                fillColor: { colors: [{ opacity: 0.5 }, { opacity: 1}] },
+                lineWidth: 1
+            },
+            xaxis: {
+                axisLabel: "Monto MM",
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 8,
+                axisLabelFontFamily: 'Verdana, Arial',
+                axisLabelPadding: 10,
+                max: 2000,
+                tickColor: "#5E5E5E",
+                color: "black"
+            },
+            yaxis: {
+                axisLabel: "Servicios",
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 8,
+                axisLabelFontFamily: 'Verdana, Arial',
+                axisLabelPadding: 3,
+                tickColor: "#5E5E5E",
+                ticks: ticks,
+                color: "black"
+            },
+            legend: {
+                noColumns: 0,
+                labelBoxBorderColor: "#858585",
+                position: "ne"
+            },
+            grid: {
+                hoverable: true,
+                borderWidth: 2,
+                backgroundColor: { colors: ["#171717", "#4F4F4F"] }
+            }
+        };
+
+        $.plot($("#placeholder"), dataSet, options);                 
+
+    });
+</script>
