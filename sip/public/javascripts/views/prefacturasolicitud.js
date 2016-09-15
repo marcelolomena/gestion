@@ -155,7 +155,7 @@ function showDocumentos(cui, periodo) {
                    { label: 'Glosa Servicio',
                      name: 'glosaservicio',
                      width: 100,
-                     align: 'right',
+                     align: 'left',
                      search: false
                    },         
                    { label: 'Monto a Pagar',

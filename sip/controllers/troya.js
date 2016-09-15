@@ -94,7 +94,7 @@ exports.getfacturas = function (req, res) {
   "SELECT @cui=cui FROM sip.estructuracui WHERE id="+req.query.cui+"; "
   
   sql = sql +"With SQLPaging As   ( "+
-  "SELECT documento,tipodocumento, razonsocial, min(glosalinea) AS glosalinea, min(fechacontable) AS fechacontable, sum(monto) AS montop FROM sip.discoverer "+
+  "SELECT documento,tipodocumento, razonsocial, min(glosalinea) AS glosalinea, idproveedor, min(fechacontable) AS fechacontable, sum(monto) AS montop FROM sip.discoverer "+
   "WHERE cuiseccion=@cui AND idproveedor="+req.query.proveedor+" ";
   if (req.query.factura != "") {
     sql = sql +"AND documento="+req.query.factura+" ";
@@ -103,12 +103,13 @@ exports.getfacturas = function (req, res) {
     sql = sql +"AND fechacontable >= convert(datetime, '"+req.query.fechaini+"', 103) ";
     sql = sql +"AND fechacontable <= convert(datetime, '"+req.query.fechafin+"', 103) ";
   }
-  sql = sql + "GROUP BY documento,tipodocumento, razonsocial) ";
-  sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento ";
+  sql = sql + "GROUP BY documento,tipodocumento, razonsocial, idproveedor) ";
+  sql = sql + "SELECT a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable, sum(b.monto) AS montototal FROM SQLPaging a join sip.discoverer b ON a.documento=b.documento AND cuiseccion=@cui AND a.idproveedor = b.idproveedor ";
   sql = sql + "GROUP BY a.documento,a.tipodocumento, a.razonsocial, a.glosalinea, a.fechacontable ";
   sql = sql + "HAVING sum(b.monto)<>0 ";
   sql2 = sql + "ORDER BY a.documento OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
+  console.log("sql:"+sql2);
   sequelize.query(sql)
     .spread(function (rowscount) {
       //res.json(rows);

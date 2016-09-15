@@ -261,7 +261,7 @@ exports.action = function (req, res) {
           sequelize.query('EXECUTE sip.spActualizaPeriodoPresup ' + req.body.id
             + "," + req.body.presupuestoorigen
             + "," + req.body.periodo
-            + "," + req.body.idx
+            + "," + req.body.idx        
             + ';').then(function (response) {
               res.json({ error_code: 0 });
             }).error(function (err) {
@@ -274,6 +274,18 @@ exports.action = function (req, res) {
       }
     }
   });
-
-
 }
+
+exports.actioncosto = function (req, res) {
+  console.log("****Act COSTO:"+req.body.id+", "+req.body.costo);
+  sequelize.query('EXECUTE sip.ActCostoDetallePresup ' 
+      + req.body.id +","+
+      + req.body.costo
+    + ';').then(function (response) {
+      res.json({ error_code: 0 });
+    }).error(function (err) {
+      res.json(err);
+    });
+
+};
+
