@@ -187,7 +187,7 @@ exports.list = function (req, res) {
         "WHERE (a.[idiniciativaprograma] = " + idiniciativaprograma + " AND a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      //console.log(sql);
 
       models.presupuestoiniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);

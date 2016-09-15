@@ -1093,7 +1093,7 @@ function showExplicaciones(parentRowID, parentRowKey, titulo) {
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-
+    console.log("************showPresupuestoPeriodos");
     var grid = $("#" + childGridID);
     var rowKey = grid.getGridParam("selrow");
 
@@ -1247,14 +1247,14 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         viewrecords: false,
         width: null,
         shrinkToFit: false,
-        editurl: '/presupuestoperiodos/action',
+        editurl: '/presupuestoperiodoscosto/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID       
         //colMenu:true
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
+        edit: false,
         add: false,
         del: false,
         search: false,
@@ -1262,7 +1262,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         view: false, position: "left", cloneToTop: false
     },
         {
-            editCaption: "Modifica Periodo",
+           /* editCaption: "Modifica Periodo",
             closeAfterEdit: false,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -1288,10 +1288,10 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }           
+            }   */        
         }, {}
     );
-    /*
+    
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: "glyphicon glyphicon-pencil",
@@ -1305,11 +1305,11 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             for (var i = 0; i < ids.length; i++) {
                 subgrid.jqGrid('editRow', ids[i]);
             }
-            jQuery("#" + childGridID).setColProp('presupuestoorigen',{editable:true});
-            jQuery("#" + childGridID).setColProp('costo',{editable:false});            
+            //jQuery("#" + childGridID).setColProp('presupuestoorigen',{editable:true});
+            //jQuery("#" + childGridID).setColProp('costo',{editable:false});            
         }
-    });*/
-    /*
+    });
+
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: 'glyphicon glyphicon-save-file',
@@ -1321,22 +1321,12 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             var ids = subgrid.jqGrid('getDataIDs');
             for (var i = 0; i < ids.length; i++) {
                 //var rowData = subgrid.getRowData(ids[i]);
-                var rowId = ids[i];
-                var rowData = subgrid.jqGrid ('getRowData', rowId);                
-                console.log("row:"+JSON.stringify(rowData));
+                //var rowId = ids[i];
+                //var rowData = subgrid.jqGrid ('getRowData', rowId);                
+                //console.log("row:"+JSON.stringify(rowData));
                 
-                //subgrid.jqGrid('saveRow', ids[i]);
-                $.ajax({
-                    type: "GET",
-                    url: '/actualizaPeriodos/' + rowData.id+'/'+rowData.costo,
-                    async: false,
-                    success: function (data) {
-                        if (data.error_code != 0) {
-                            alert('Problemas al actualizar totales');
-                        }
-                    }
-                }); 
-                loadGrid();               
+                subgrid.jqGrid('saveRow', ids[i]);
+                //loadGrid();               
             }
             $.ajax({
                 type: "GET",
@@ -1352,7 +1342,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
                 }
             });
         }
-    });*/
+    });
 }
 
 function loadGrid(parentID) {

@@ -40,7 +40,8 @@
         "pool": {
             "min": 5,
             "max": 100,
-            "idle": 500000
+            "idle": 500000,
+            "maxIdleTime":10000
         },
         "logging": false
     },

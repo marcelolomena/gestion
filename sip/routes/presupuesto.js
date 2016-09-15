@@ -84,7 +84,14 @@ module.exports = function (passport) {
         .get(isAuthenticated, presupuestoServiciosController.getPeriodos);  
 
     router.route('/tiporecupera')
-        .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);  
+        .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);         
+
+    router.get('/presupuestoeditcosto', isAuthenticated, function (req, res) {
+        res.render('presupuestoeditcosto', { user: req.user });
+    });        
+    
+    router.route('/presupuestoperiodoscosto/action')
+        .post(isAuthenticated, presupuestoperiodosController.actioncosto);    
         
      return router;       
 
