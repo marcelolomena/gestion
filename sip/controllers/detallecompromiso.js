@@ -147,7 +147,7 @@ exports.list = function (req, res) {
                 var valmon = detallecto.idmoneda;
                 var valimp = detallecto.impuesto
                 var valfac = detallecto.factorimpuesto
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
+                //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = [], convert
                     for (var i = 0; i < param[0]; i++) {

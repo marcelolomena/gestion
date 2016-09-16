@@ -212,12 +212,12 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { required: true, edithidden: false }
         },
         {
             label: 'Sponsor', name: 'sponsor1', width: 150, align: 'left',
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
         },
         {
             label: 'Gerente', name: 'uidgerente',
@@ -258,7 +258,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { required: true, edithidden: false }
         },
         {
@@ -299,7 +299,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true },
         },
         {
@@ -340,12 +340,12 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Categoria', name: 'categoria', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Estado', name: 'estado', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
@@ -419,7 +419,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Inversión Estimada (US$)', name: 'pptoestimadoinversion', width: 190, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -429,7 +429,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Presupuesto Estimado (US$)', name: 'pptoestimadoprevisto', width: 225, align: 'left',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -439,7 +439,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Gasto Aprobado (CLP)', name: 'pptoaprobadogasto', width: 170, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
@@ -449,7 +449,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Inversión Aprobada (CLP)', name: 'pptoaprobadoinversion', width: 190, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
@@ -459,7 +459,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Presupuesto Aprobado (CLP)', name: 'pptoaprobadoprevisto', width: 225, align: 'left',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
                 dataInit: function (el) {
@@ -469,7 +469,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadodolares', width: 225, align: 'left',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
@@ -514,7 +514,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Duracion', name: 'duracion', width: 78, align: 'left',
-            search: true, editable: false, hidedlg: true, formatter: 'number',
+            search: false, editable: false, hidedlg: true, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editrules: { edithidden: false },
         },
@@ -563,7 +563,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false }
         },
         {
@@ -673,6 +673,11 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 $("#" + childGridID).addRowData("blankRow", { "codigoart": "", "nombre": "No hay datos" });
             }
         }
+    });
+
+    $("#" + childGridID).jqGrid('filterToolbar', {
+        stringResult: true, searchOperators: true,
+        searchOnEnter: false, defaultSearch: 'cn'
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {

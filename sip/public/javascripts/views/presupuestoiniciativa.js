@@ -13,7 +13,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Glosa{glosa}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Glosa(Max: 50){glosa}</div>";
     template += "<div class='column-half'>N° SAP{sap}</div>";
     template += "</div>";
 
@@ -28,11 +28,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Beneficios Cuantitativos{beneficioscuantitativos}</div>";
+    template += "<div class='column-full'>Beneficios Cuantitativos(Max 250){beneficioscuantitativos}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Beneficios Cualitativos{beneficioscualitativos}</div>";
+    template += "<div class='column-full'>Beneficios Cualitativos(Max 250){beneficioscualitativos}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -75,6 +75,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'Glosa', name: 'glosa', width: 100, align: 'left',
             search: true, editable: true, hidden: false,
+            editoptions: {size:10, maxlength: 50},
             editrules: { required: true },
         },
         {
@@ -147,12 +148,12 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
-            align: 'left', edittype: "textarea",
+            align: 'left', edittype: "textarea", editoptions: {maxlength:"250"},
             search: true, editable: true, hidden: false,
         },
         {
             label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200,
-            align: 'left', edittype: "textarea",
+            align: 'left', edittype: "textarea", editoptions: {maxlength:"250"},
             search: true, editable: true, hidden: false,
         },
         {
@@ -182,6 +183,37 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#lider").val($('option:selected', this).val());
+                        var idlider = $('option:selected', this).val();
+
+                        if (idlider != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/getjefe/' + idlider,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.uidjefeproyecto;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Jefe--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].idjefe == thissid) {
+                                            s += '<option value="' + data[i].idjefe + '" selected>' + data[i].nombrejefe + '</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].idjefe + '">' + data[i].nombrejefe + '</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    //lahora = new Date();
+                                    //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                    $("select#uidjefeproyecto").empty().html(s);
+                                    //lahora = new Date();
+                                    //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                }
+                            });
+                        }
+
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
@@ -197,24 +229,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuariosprograma/' + parentRowKey,
-                buildSelect: function (response) {
-                    var grid = $('#' + childGridID);
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.uidjefeproyecto;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Jefe de Proyecto--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].uid == thissid) {
-                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
+                value: "0:--Escoger Jefe Proyecto--",
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#jefeproyecto").val($('option:selected', this).val());
@@ -258,10 +273,10 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'Dolar', name: 'dolar', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('000', { reverse: true });
+                    $(el).mask('0.000,00', { reverse: true });
                 }
             }
         },
@@ -270,21 +285,32 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             label: 'UF', name: 'uf', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 dataInit: function (el) {
-                    $(el).mask('00.000', { reverse: true });
+                    $(el).mask('00.000,00', { reverse: true });
                 }
             }
         },
         {
             label: 'Inscripción', name: 'parainscripcion', width: 20, align: 'left',
             search: true, editable: true, hidden: false,
+            edittype: "custom",
             editoptions: {
-                dataInit: function (element) {
-                    $(element).mask("0", { placeholder: "_" });
-                }
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemInscripcion
             },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.parainscripcion;
+                if (val == 1) {
+                    dato = 'Sí';
+
+                } else if (val == 0) {
+                    dato = 'No';
+                }
+                return dato;
+            }
         },
 
     ];
@@ -380,6 +406,30 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
+
+
+                var thisidlider = rowData.uidlider;
+                var thisidjefe = rowData.uidjefeproyecto;
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/getjefe/' + thisidlider,
+                        success: function (data) {
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger Jefe--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].idjefe == thisidjefe) {
+                                    s += '<option value="' + data[i].idjefe + '" selected>' + data[i].nombrejefe+'</option>';
+                                } else {
+                                    s += '<option value="' + data[i].idjefe + '">' + data[i].nombrejefe+'</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("select#uidjefeproyecto").html(s);
+                        }
+                    });
+
+
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {

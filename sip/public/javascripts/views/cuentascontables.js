@@ -11,15 +11,21 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color:red'>* </span>Inversion/Gasto{invgasto}</div>";
+    template += "<div class='column-full'>Tipo Cuenta{tipocuenta}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Concepto Presupuestario{idconcepto}</div>";
-    template += "<div class='column-full'><span style='color:red'>* </span>Cuenta Origen{cuentaorigen}</div>";    
+    template += "<div class='column-full'>Agrupación 1{agrupacion1}</div>";
+    template += "<div class='column-full'>Agrupación 2{agrupacion2}</div>";    
     template += "</div>";
 
-    template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>Concepto Presupuestario{glosaconcepto}</div>";
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'>Concepto Gasto{conceptogasto}</div>";
+    template += "<div class='column-full'>Cuenta Origen{cuentaorigen}</div>";    
+    template += "</div>";
+
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'>Quien Presupuesta{quienpresupuesta}</div>"; 
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -28,53 +34,26 @@ $(document).ready(function () {
 
     var modelCuentas = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Cuenta Contable', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: true },
-        { label: 'Nombre', name: 'nombrecuenta', width: 300, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Inversión/Gasto', name: 'glosatipo', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Cuenta Contable', name: 'cuentacontable', width: 220, align: 'left', search: true, editable: true,
+                  editrules: { required: true} },
+        { label: 'Nombre', name: 'nombrecuenta', width: 400, align: 'left', search: true, editable: true, hidden: false, 
+                  editrules: { required: true}},
+        { label: 'Inversión/Gasto', name: 'glosatipo', width: 170, align: 'left', search: false, editable: false, hidden: false },
 
         {
             label: 'Inversion/Gasto', name: 'invgasto',width: 100, search: false, editable: true, hidden: true,
-            edittype: "custom",
+            edittype: "custom", editrules: { required: true},
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemInvgasto
             }
         },
-        {
-            label: 'Concepto Presupuestario', name: 'idconcepto', search: false, editable: true,editrules: { required: true },
-            hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/cuentascontables/conceptospresupuestarios',
-                buildSelect: function (response) {
-                    var grid = $("#table_servicio2");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idconcepto;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Concepto Presupuestario--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].glosaconcepto + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].glosaconcepto + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        $("input#idconcepto").val($('option:selected', this).text());
-                    }
-                }],
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },
-        {
-            label: 'Concepto Presupuestario', name: 'glosaconcepto', width: 300, align: 'left',
-            search: false, editable: true,jsonmap: "conceptospresupuestario.glosaconcepto", editrules: { required: false }, hidden: false
-        },
-        { label: 'Cuenta Origen', name: 'cuentaorigen', width: 100, align: 'left', search: true, editable: true, hidden: false },                        
+        { label: 'Agrupación 1', name: 'agrupacion1', width: 220, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Agrupación 2', name: 'agrupacion2', width: 220, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Tipo Cuenta', name: 'tipocuenta', width: 150, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Concepto Gasto', name: 'conceptogasto', width: 200, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Cuenta Origen', name: 'cuentaorigen', width: 150, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Quien Presupuesta', name: 'quienpresupuesta', width: 300, align: 'left', search: true, editable: true, hidden: false },
     ];
     $("#grid").jqGrid({
         url: '/cuentascontables/list',
@@ -111,8 +90,8 @@ $(document).ready(function () {
     $("#grid").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: true, add: true, del: true, search: true,
-        refresh: true, view: true, position: "left", cloneToTop: false
+        edit: true, add: true, del: true, search: false, 
+        refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
@@ -123,18 +102,7 @@ $(document).ready(function () {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
-
-                if (postdata.nombrecuenta == "") {
-                    return [false, "Nombre Cuenta: Debe escoger un valor", ""];
-                } if (postdata.invgasto == '0') {
-                    return [false, "Inversión/Gasto: Debe escoger un valor", ""];
-                } if (postdata.cuentaorigen == "") {
-                    return [false, "Cuenta Origen: Debe escoger un valor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
+            }, 
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -158,27 +126,31 @@ $(document).ready(function () {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
+            }, 
+            
+             beforeSubmit: function (postdata, formid) {
 
-                if (postdata.cuentacontable == "") {
+                if (postdata.invgasto == 0) {
                     return [false, "Cuenta Contable: Debe escoger un valor", ""];
-                } if (postdata.nombrecuenta == "") {
-                    return [false, "Nombre Cuenta: Debe escoger un valor", ""];
-                } if (postdata.invgasto == '0') {
-                    return [false, "Inversión/Gasto: Debe escoger un valor", ""];
-                } if (postdata.cuentaorigen == "") {
-                    return [false, "Cuenta Origen: Debe escoger un valor", ""];                                        
+             //   } else if (postdata.nombrecuenta == "") {
+             //       return [false, "Nombre Cuenta: Debe escoger un valor", ""];
+             //   } else if (postdata.invgasto == '0') {
+              //      return [false, "Inversión/Gasto: Debe escoger un valor", ""];
+              //  } else if (postdata.cuentaorigen == "") {
+              //      return [false, "Cuenta Origen: Debe escoger un valor", ""];                                        
                 } else {
-                    return [true, "", ""]
+                    return [true, "", ""];
                 }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, "Error en llamada a Servidor", ""];
-                else
-                    return [true, "", ""]
+
+                if (result.error_code != 0) {
+                    return [false, result.error_text, ""];
+                } else {
+                    return [true, "", ""];
+                }                    
 
             }, beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));

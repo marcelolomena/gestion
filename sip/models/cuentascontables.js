@@ -32,6 +32,26 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    agrupacion1: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    agrupacion2: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }, 
+    tipocuenta: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }, 
+    conceptogasto: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }, 
+    quienpresupuesta: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },                  
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

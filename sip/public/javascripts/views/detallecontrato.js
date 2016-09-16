@@ -226,6 +226,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     }
                 }
             },
+             {
+                label: 'Moneda', name: 'moneda.moneda', align: 'center', search: true, editable: true, hidden: false,
+                editrules: { edithidden: false }, hidedlg: true
+            },
             {
                 label: 'Cuota', name: 'valorcuota', width: 100, align: 'right',
                 search: true, editable: true, hidden: false,
@@ -259,7 +263,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         return s + "</select>";
                     }
                 }
-            },
+            },            
             {
                 label: 'idfrecuencia', name: 'idfrecuencia', search: false, editable: true, hidden: true,
                 edittype: "select",
@@ -366,7 +370,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             {
-                label: 'Condición', name: 'condicionnegociacion', align: 'center', search: true, editable: true, hidden: false,
+                label: 'Condición', name: 'condicionnegociacion', align: 'center', search: true, editable: true, hidden: true,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {

@@ -6,7 +6,7 @@ var co = require('co');
 
 module.exports = function (passport) {
 
-	passport.use('login', new LocalStrategy({
+	passport.use('local', new LocalStrategy({
 		passReqToCallback: true
 	},
         function (req, username, password, done) {
@@ -26,7 +26,7 @@ module.exports = function (passport) {
 						if (!rol) {
 							console.log('No tiene rol');
 							return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page
-							 //return done(null, false, {message: "Sin rol asignado."});
+							//return done(null, false, {message: "Sin rol asignado."});
 						} else {
 							console.log("rol : " + rol.id);
 							if (!isValidPassword(user, password)) {
@@ -39,7 +39,7 @@ module.exports = function (passport) {
 						}
 
 					}).catch(function (err) {
-						console.log("cago :" + err);
+						console.log(err);
 					});
 				}
 

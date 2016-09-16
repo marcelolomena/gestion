@@ -381,7 +381,12 @@ function getVersion(cui, ejercicio) {
 
 }
 
-function showPresupuestoServicios(parentRowID, parentRowKey) {
+function showServiciosYExplicacion(subgrid_id, row_id) {
+    showPresupuestoServicios(subgrid_id, row_id, 'Servicios');
+    showExplicaciones(subgrid_id, row_id, 'Explicaciones');
+}
+
+function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
     var childGridURL = "/presupuestoservicios/" + parentRowKey;
@@ -879,7 +884,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
 
 }
 
-function showPresupuestoPeriodos(parentRowID, parentRowKey) {
+function showExplicaciones(parentRowID, parentRowKey, titulo) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
 
@@ -887,7 +892,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     var rowKey = grid.getGridParam("selrow");
 
     // send the parent row primary key to the server so that we know which grid to show
-    var childGridURL = "/presupuestoperiodoslist/" + parentRowKey;
+    var childGridURL = "/presupuestoexplicaciones/" + parentRowKey;
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -1036,6 +1041,212 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         viewrecords: false,
         width: null,
         shrinkToFit: false,
+        editurl: '/presupuestoexplicaciones/action',
+        loadError: sipLibrary.jqGrid_loadErrorHandler,
+        pager: "#" + childGridPagerID       
+        //colMenu:true
+    });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: true,
+        add: false,
+        del: false,
+        search: false,
+        refresh: true,
+        view: false, position: "left", cloneToTop: false
+    },
+        {
+            editCaption: "Modifica Explicación",
+            closeAfterEdit: false,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeSubmit: function (postdata, formid) {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var idxsel = grid.getInd(rowKey);
+                var rowData = grid.getRowData(rowKey);
+                postdata.idx = idxsel;
+                var num = new Number(postdata.presupuestoorigen);
+                console.log("num:"+num);
+                if (isNaN(num) || num < 0) {
+                    return [false, "Debe ingresar un numero y con valor  mayor a 0", ""];
+                } 
+                return [true, "", ""]
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code == 10)
+                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];                
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }           
+        }, {}
+    );
+
+}
+
+
+
+function showPresupuestoPeriodos(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+
+    var grid = $("#" + childGridID);
+    var rowKey = grid.getGridParam("selrow");
+
+    // send the parent row primary key to the server so that we know which grid to show
+    var childGridURL = "/presupuestoperiodoslist/" + parentRowKey;
+
+    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        //page: 1,
+        colModel: [
+            {
+                label: 'id',
+                name: 'id',
+                width: 50,
+                key: true,
+                hidden: true
+            },
+            {
+                label: 'Periodo',
+                name: 'periodo',
+                search: false,
+                editable: true,
+                sortable: false,
+                width: 100,
+                editoptions: { size: 10, readonly: 'readonly'}               
+            },
+            {
+                label: 'Base Caja Versión Anterior',
+                name: 'presupuestobasecaja',
+                align: 'right',
+                width: 200,
+                search: false,
+                sortable: false,
+                hidden: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Base Costo',
+                name: 'presupuestobasecosto',
+                align: 'right',
+                width: 100,
+                search: false,
+                sortable: false,
+                hidden: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Ppto. Solicitado',
+                name: 'presupuestoorigen',
+                editable: true,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 230,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Valor Pesos',
+                name: 'presupuestopesos',
+                editable: false,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 150,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Ppto. Calculado',
+                name: 'caja',
+                editable: false,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 150,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Comprometido',
+                name: 'cajacomprometido',
+                editable: false,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 150,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'No Comprometido',
+                name: 'disponible',
+                editable: false,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 150,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },                
+            {
+                label: 'Ppto. Total',
+                name: 'totalcaja',
+                editable: false,
+                align: 'right',
+                search: false,
+                sortable: false,
+                width: 100,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Costo en Pesos',
+                name: 'costo',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 130,
+                hidden: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Compr. Costo',
+                name: 'costocomprometido',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                hidden: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Total Costo',
+                name: 'totalcosto',
+                editable: false,
+                align: 'right',
+                search: false,
+                width: 100,
+                hidden: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            }                          
+                                                          
+        ],
+        //viewrecords: true,
+        //rowNum: 16,
+        styleUI: "Bootstrap",
+        regional: "es",
+        pgbuttons: false,
+        pgtext: null,
+        height: 'auto',
+        viewrecords: false,
+        width: null,
+        shrinkToFit: false,
         editurl: '/presupuestoperiodos/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID       
@@ -1087,14 +1298,18 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         title: "Editar",
         position: "last",
         onClickButton: function () {
+            jQuery("#" + childGridID).setColProp('presupuestoorigen',{editable:false});
+            jQuery("#" + childGridID).setColProp('costo',{editable:true});
             var subgrid = $("#" + childGridID);
             var ids = subgrid.jqGrid('getDataIDs');
             for (var i = 0; i < ids.length; i++) {
                 subgrid.jqGrid('editRow', ids[i]);
             }
+            jQuery("#" + childGridID).setColProp('presupuestoorigen',{editable:true});
+            jQuery("#" + childGridID).setColProp('costo',{editable:false});            
         }
-    });
-
+    });*/
+    /*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: 'glyphicon glyphicon-save-file',
@@ -1105,7 +1320,23 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
             var subgrid = $("#" + childGridID);
             var ids = subgrid.jqGrid('getDataIDs');
             for (var i = 0; i < ids.length; i++) {
-                subgrid.jqGrid('saveRow', ids[i]);
+                //var rowData = subgrid.getRowData(ids[i]);
+                var rowId = ids[i];
+                var rowData = subgrid.jqGrid ('getRowData', rowId);                
+                console.log("row:"+JSON.stringify(rowData));
+                
+                //subgrid.jqGrid('saveRow', ids[i]);
+                $.ajax({
+                    type: "GET",
+                    url: '/actualizaPeriodos/' + rowData.id+'/'+rowData.costo,
+                    async: false,
+                    success: function (data) {
+                        if (data.error_code != 0) {
+                            alert('Problemas al actualizar totales');
+                        }
+                    }
+                }); 
+                loadGrid();               
             }
             $.ajax({
                 type: "GET",

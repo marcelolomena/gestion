@@ -385,6 +385,9 @@ exports.list = function (req, res) {
                             model: models.estructuracui
                         }, {
                             model: models.servicio
+                        },
+                        {
+                            model: models.moneda
                         }]
                 }).then(function (contratos) {
                     //console.dir(contratos)

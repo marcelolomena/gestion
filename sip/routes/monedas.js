@@ -7,8 +7,8 @@ var isAuthenticated = require('../policies/isAuthenticated')
 
 module.exports = function (passport) {
 
-    router.get('/monedas', isAuthenticated, function (req, res) {
-        res.render('monedas', { user: req.user });
+    router.get('/monedasconversion', isAuthenticated, function (req, res) {
+        res.render('monedasconversion', { user: req.user });
     });
 
     router.route('/monedas/list')

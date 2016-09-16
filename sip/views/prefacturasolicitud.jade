@@ -1,0 +1,22 @@
+extends base.jade
+block titulo
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Prefacturas 
+  link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
+block jsgrilla
+    script(type='text/javascript', src='/javascripts/views/prefacturasolicitud.js')
+block titulogrilla
+  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Solicitud de Aprobación
+block grilla
+  .cajaFormulario
+    .formSap
+      | Periodo:
+      input#periodo(type='text', name='periodo', disabled, style='line-height: 20px; width: 80px; margin-right: 50px') 
+      | Proveedor :  
+      select#cui
+  div(style='width: 100%')
+    #container2(style='width: 100%; display: inline-block;')
+      table#grid
+      #pager         
+       
+       

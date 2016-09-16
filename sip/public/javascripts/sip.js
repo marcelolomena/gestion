@@ -122,7 +122,22 @@ var sipLibrary = {
         if (value === '2') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio  + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+    },
+    radioElemInscripcion: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="parainscripcion" value="1"',
+            breakline = '/>Sí</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="parainscripcion" value="0"',
+            endnaradio = '/>No</label>';
+
+        if (value === 'Sí') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'No') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
     }
     , currencyFormatter: function (cellvalue, options, rowObject) {
         var formatoptions = options.colModel.formatoptions || {};
