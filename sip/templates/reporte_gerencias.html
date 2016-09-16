@@ -66,6 +66,12 @@
         display: table-cell;
     }
     
+    .cellamount {
+        padding: 6px 12px;
+        display: table-cell;
+        text-align: right;
+    }
+    
     @media screen and (max-width: 580px) {
         .cell {
             padding: 2px 12px;
@@ -79,13 +85,37 @@
         position: relative;
         margin: 0 auto;
     }
-    
-    #placeholder2 {
-        width: 800px;
-        height: 1000px;
-        position: relative;
-        margin: 0 auto;
+
+
+    .chart-container {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 20px 15px 15px 15px;
+        margin: 15px auto 30px auto;
+        border: 1px solid #ddd;
+        background: #fff;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        -o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
+    .chart-placeholder {
+        width: 100%;
+        height: 90px;
+        font-size: 14px;
+        line-height: 1em;
+    }
+    .legend table {
+        border-spacing: 5px;
+    }
+    .myCSSClass {
+        font-size: 9px;
+        color: #AD8200;
+        padding: 2px;
+        opacity: 0.80;
+    }    
+
 </style>
 
 <div class="wrapper">
@@ -96,16 +126,16 @@
             <div class="cell">
                 Gerencia
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 2016
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 2017
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 Diferencia
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 Porcentaje
             </div>
         </div>
@@ -114,16 +144,16 @@
             <div class="cell">
                 {{nombre}}
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 {{format ejerciciouno}}
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 {{format ejerciciodos}}
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 {{format diferencia}}
             </div>
-            <div class="cell">
+            <div class="cellamount">
                 {{format porcentaje}}
             </div>
         </div>
@@ -140,13 +170,20 @@
 <script src="http://localhost:3000/javascripts/flot/jquery.flot.axislabels.min.js"></script>
 
 <script>
-    function iterCaja(data){
+    function iterEjercicioUno(data){
         var res = [];
         $.each(data, function(i, item){
             res.push([item.ejerciciouno, i])
         });
         return res;
     }
+    function iterEjercicioDos(data){
+        var res = [];
+        $.each(data, function(i, item){
+            res.push([item.ejerciciodos, i])
+        });
+        return res;
+    }    
     function iterNombre(data){
         var res = [];
         $.each(data, function(i, item){
@@ -158,8 +195,11 @@
 
         var data = {{{toJSON gerencias}}}
         var gerencias = data.map(function(b) { return [ b.nombre, b.ejerciciouno, b.ejerciciodos, b.diferencia, b.porcentaje ]});
-		var rawData = iterCaja(data);
-		var dataSet = [{ label: "Gerencias", data: rawData, color: "#E8E800" }];
+		var serieUno = iterEjercicioUno(data);
+        var serieDos = iterEjercicioDos(data);
+
+		var dataSet = [{ label: "2016", data: serieUno, color: "#E8E800" }, { label: "2017", data: serieDos, color: "#7ac70c" }];
+        //var dataSet = [{ label: "2016", data: serieUno }, { label: "2017", data: serieDos }];        
    		var ticks = iterNombre(data);
 		
         var options = {
