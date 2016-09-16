@@ -48,34 +48,7 @@ exports.getPresupuestoServicios = function (req, res) {
   if (filters && condition != "") {
     sqlcount += " AND " + condition + " ";
   }
-  /*
-    var sql0 = "declare @rowsPerPage as bigint; " +
-      "declare @pageNum as bigint;" +
-      "set @rowsPerPage=" + rows + "; " +
-      "set @pageNum=" + page + ";   " +
-      "With SQLPaging As   ( " +
-      "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-      "as resultNum, a.id, c.nombre, a.idservicio, d.moneda, a.idmoneda, a.montoforecast, a.montoanual, " +
-      "a.costoforecast, a.costoanual, a.comentario, a.glosaservicio, a.idproveedor, " +
-      "a.cuota, a.numerocuota, a.idfrecuencia, a.desde, a.masiva, a.ivarecuperable, a.mesesentrecuotas, " +
-      "a.gastodiferido, b.razonsocial FROM sip.detallepre a " +
-      "LEFT JOIN sip.proveedor b ON a.idproveedor = b.id " +
-      "LEFT JOIN sip.servicio c ON c.id = a.idservicio  " +
-      "LEFT JOIN sip.moneda d ON a.idmoneda = d.id " +
-      "WHERE a.idpresupuesto=" + id + ")" +
-      "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-  
-    if (filters) {
-      var jsonObj = JSON.parse(filters);
-  
-      if (JSON.stringify(jsonObj.rules) != '[]') {
-  
-        jsonObj.rules.forEach(function (item) {
-  
-          if (item.op === 'cn')
-            condition += item.field + " like '%" + item.data + "%' AND"
-        });
-  */
+
   var sql = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rowspp + "; " +
@@ -107,37 +80,93 @@ exports.getPresupuestoServicios = function (req, res) {
       res.json({ records: records, total: total, page: page, rows: rows });
     });
   });
-  /*
-        models.detallepre.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-          var total = Math.ceil(records / rows);
-          sequelize.query(sql)
-            .spread(function (rows) {
-              res.json({ records: records, total: total, page: page, rows: rows });
-            });
-        })
-  
-      } else {
-        console.log(sql0);
-        models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
-          var total = Math.ceil(records / rows);
-          sequelize.query(sql0)
-            .spread(function (rows) {
-              res.json({ records: records, total: total, page: page, rows: rows });
-            });
-        })
-      }
-  
-    } else {
-      console.log(sql0);
-      models.detallepre.count({ where: [filtrosubgrilla] }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        sequelize.query(sql0)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-  
-    }*/
+
+};
+
+//Muestra los registros que deben tener explicación por diferencias entre compromiso y presupuesto
+exports.getExplicaciones = function (req, res) {
+  // Use the Proyectos model to find all proyectos
+  var page = req.query.page;
+  var rowspp = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var filters = req.query.filters;
+  var condition = "";
+  var id = req.params.id
+  var filtrosubgrilla = "idpresupuesto=" + id;
+
+  if (!sidx)
+    sidx = "a.id";
+
+  if (!sord)
+    sord = "desc";
+
+  var order = sidx + " " + sord;
+
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+      jsonObj.rules.forEach(function (item) {
+        if (item.op === 'cn')
+          if (item.field == 'nombre') {
+            condition += 'c.' + item.field + " like '%" + item.data + "%' AND ";
+          } else if (item.field == 'glosaservicio') {
+            condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+          } else if (item.field == 'moneda') {
+            condition += 'd.' + item.field + " like '%" + item.data + "%' AND ";
+          } else if (item.field == 'razonsocial') {
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
+          }
+      });
+      condition = condition.substring(0, condition.length - 5);
+      console.log("***CONDICION:" + condition);
+    }
+  }
+  sqlcount = "Select count(*) AS count  FROM sip.detallepre a " +
+    "JOIN sip.proveedor b ON a.idproveedor = b.id "+ 
+    "JOIN sip.servicio c ON c.id = a.idservicio "+  
+    "JOIN sip.detalleplan d ON a.id=d.iddetallepre "+
+    "WHERE a.idpresupuesto= "+ id + " "+
+    "GROUP BY a.id,c.nombre, a.glosaservicio, b.razonsocial, a.comentario "+
+    "HAVING ABS(sum(isnull(d.caja,0)) - sum(isnull(d.compromisopesos,0))) > 10000000 ";
+  if (filters && condition != "") {
+    sqlcount += " AND " + condition + " ";
+  }
+
+  var sql = "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rowspp + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+    "as resultNum,a.id, c.nombre, a.glosaservicio, b.razonsocial, a.comentario, "+ 
+    "sum(d.caja) presupuesto, sum(d.compromisopesos) compromiso "+ 
+    "FROM sip.detallepre a "+
+    "JOIN sip.proveedor b ON a.idproveedor = b.id "+ 
+    "JOIN sip.servicio c ON c.id = a.idservicio "+  
+    "JOIN sip.detalleplan d ON a.id=d.iddetallepre "+
+    "WHERE a.idpresupuesto= "+ id + " "+
+    "GROUP BY a.id,c.nombre, a.glosaservicio, b.razonsocial, a.comentario "+
+    "HAVING ABS(sum(isnull(d.caja,0)) - sum(isnull(d.compromisopesos,0))) > 10000000 ";  
+    
+  if (filters && condition != "") {
+    sql += " AND " + condition + ") ";
+  } else {
+    sql += ") ";
+  }
+  sql += "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+  console.log(sql);
+
+  sequelize.query(sqlcount).spread(function (recs) {
+    var records = recs[0].count;
+    var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+    console.log("####COUNT:" + recs[0].count + " Total:" + total);
+    sequelize.query(sql).spread(function (rows) {
+      res.json({ records: records, total: total, page: page, rows: rows });
+    });
+  });
+
 };
 
 exports.getExcel = function (req, res) {
@@ -429,9 +458,11 @@ exports.action = function (req, res) {
           console.log("***ELIMINANDO***");
           var id = req.body.id;
           var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre=" + id + "; " +
-            "DELETE FROM sip.detallepre WHERE id=" + id;
-
-          sequelize.query(sql).then(function (response) {
+             "EXECUTE sip.actualizadetallepre " + id+ "; ";
+            "DELETE FROM sip.detallepre WHERE id=" + id+ "; " +
+            console.log("sql:"+sql);
+          sequelize.query(sql).then(function (response) {     
+            
             res.json({ error_code: 0 });
           }).error(function (err) {
             res.json(err);
@@ -557,7 +588,7 @@ exports.action = function (req, res) {
         promises.push(newPromise);
       };      
       
-      //Meses aÃ±o presupuesto
+      //Meses año presupuesto
       var mes = 1;
       anio = anio + 1;
       for (var i = 4; i < 16; i++) {
@@ -619,7 +650,7 @@ function getMonedas(idpresupuesto, idmoneda) {
 "SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio AND idmoneda="+idmoneda
   var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
   //console.log("conversion:" + conversion);
-  //console.log("*** SQL MOnedas" + sql);
+  console.log("*** SQL MOnedas" + sql);
   var arr = [];
   sequelize.query(sql)
     .spread(function (rows) {

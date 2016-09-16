@@ -417,6 +417,7 @@ exports.action = function (req, res) {
     case "add":
       var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
         "WHERE b.idcui=" + id_cui + " AND b.idejercicio=" + ejercicio + " AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
+        console.log("coriiendo:" + sql);
       sequelize.query(sql)
         .spread(function (rows) {
           if (rows.length > 0) {
@@ -433,69 +434,37 @@ exports.action = function (req, res) {
               version: version,
               borrado: 1
             }).then(function (presupuesto) {
-              models.detallepre.findAll({
-                where: { 'idpresupuesto': idpre }
-              }).then(function (servicio) {
-                if (servicio.length > 0) {
-                  for (var i = 0; i < servicio.length; i++) {
-                    var idservorig = servicio[i].id;
-                    console.log("----->" + servicio[i].json)
-                    console.log("****LLamo InsertaPeriodo"); 
-                    sequelize.query('EXECUTE sip.InsertaPeriodo ' + servicio[i].id
-                      + "," + ejercicio
+              console.log("Creo presup:" + presupuesto.id+" idprebase:"+idpre);
+              if (idpre != null){
+                console.log("llamando a sip.CopiaPresupuesto:" + idpre+", "+id_cui+","+ejercicio+","+presupuesto.id);
+                sequelize.query("EXECUTE sip.CopiaPresupuesto " + idpre
+                +","+ id_cui
+                +","+ejercicio
+                +","+presupuesto.id
+                ).then(function (response) {
+                    console.log("****LLamo CopiaPresupuesto");
+                    res.json({ error_code: 0 }); 
+                }).error(function (err) {
+                        res.json(err);
+                });                    
+              } else {
+                    console.log("****LLamo InsertaServiciosPresupuesto"); 
+                    sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
                       + "," + id_cui
                       + "," + presupuesto.id
-                      + "," + servicio[i].idservicio
-                      + ",'" + servicio[i].glosaservicio                      
-                      + "'," + servicio[i].idproveedor
-                      + "," + servicio[i].idmoneda
-                      + "," + servicio[i].montoforecast
-                      + "," + servicio[i].montoanual
-                      + "," + servicio[i].cuota
-                      + "," + servicio[i].numerocuota
-                      + "," + servicio[i].desde
-                      + "," + servicio[i].masiva
-                      + "," + servicio[i].mesesentrecuotas
-                      + "," + servicio[i].gastodiferido                                    
-                      + ';').then(function (response) {
-                        console.log("****LLamo InsertaPeriodo");
+                      ).then(function (response) {
+                      //+ ';').then(function (response) {
+                        console.log("****LLamo InsertaServiciosPresupuesto"); 
+                        res.json({ error_code: 0 });                   
                       }).error(function (err) {
                         res.json(err);
-                      });
-                  }
-
-                  sequelize.query('EXECUTE sip.InsertaServiciosAdicionalesComp ' + ejercicio
-                    + "," + id_cui
-                    + "," + presupuesto.id
-                    + "," + servicio.length
-                    + ';').then(function (response) {
-                      console.log("****LLamo InsertaServiciosAdicionalesComp");   
-                      res.json({ error_code: 0 });                 
-                    }).error(function (err) {
-                      res.json(err);
-                    });                   
-                } else {
-                  console.log("****LLamo InsertaServiciosPresupuesto"); 
-                  sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
-                    + "," + id_cui
-                    + "," + presupuesto.id
-                    + ';').then(function (response) {
-                      console.log("****LLamo InsertaServiciosPresupuesto"); 
-                      res.json({ error_code: 0 });                   
-                    }).error(function (err) {
-                      res.json(err);
-                    });                  
-                }
-                //res.json({ error_code: 0 });
-              }).catch(function (err) {
-                res.json({ error_code: 1 });
-              });
+                      });                  
+               }
             }).catch(function (err) {
-              console.log(err);
               res.json({ error_code: 1 });
-            });
+            }); 
           }
-        });
+          }); 
       break;
     case "edit":
       models.presupuesto.update({
