@@ -85,8 +85,7 @@
         position: relative;
         margin: 0 auto;
     }
-
-
+    
     .chart-container {
         box-sizing: border-box;
         width: 100%;
@@ -94,28 +93,19 @@
         margin: 15px auto 30px auto;
         border: 1px solid #ddd;
         background: #fff;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-        -o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        -o-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        -ms-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     }
+    
     .chart-placeholder {
         width: 100%;
         height: 90px;
         font-size: 14px;
         line-height: 1em;
     }
-    .legend table {
-        border-spacing: 5px;
-    }
-    .myCSSClass {
-        font-size: 9px;
-        color: #AD8200;
-        padding: 2px;
-        opacity: 0.80;
-    }    
-
 </style>
 
 <div class="wrapper">
@@ -160,7 +150,7 @@
         {{/each}}
     </div>
 
-    <div id="placeholder"></div>
+    <div class="chart-container" style="width:800px;height:600px;"></div>
 
 </div>
 
@@ -170,84 +160,52 @@
 <script src="http://localhost:3000/javascripts/flot/jquery.flot.axislabels.min.js"></script>
 
 <script>
-    function iterEjercicioUno(data){
+    function DataUno(data){
         var res = [];
         $.each(data, function(i, item){
-            res.push([item.ejerciciouno, i])
+            res.push([item.nombre, item.ejerciciouno])
         });
         return res;
     }
-    function iterEjercicioDos(data){
+
+    function DataDos(data){
         var res = [];
         $.each(data, function(i, item){
-            res.push([item.ejerciciodos, i])
+            res.push([item.nombre, item.ejerciciodos])
         });
         return res;
     }    
-    function iterNombre(data){
-        var res = [];
-        $.each(data, function(i, item){
-            res.push([i, item.nombre])
-        });
-        return res;
-    }    
+
     $(function () {
 
         var data = {{{toJSON gerencias}}}
-        var gerencias = data.map(function(b) { return [ b.nombre, b.ejerciciouno, b.ejerciciodos, b.diferencia, b.porcentaje ]});
-		var serieUno = iterEjercicioUno(data);
-        var serieDos = iterEjercicioDos(data);
-
-		var dataSet = [{ label: "2016", data: serieUno, color: "#E8E800" }, { label: "2017", data: serieDos, color: "#7ac70c" }];
-        //var dataSet = [{ label: "2016", data: serieUno }, { label: "2017", data: serieDos }];        
-   		var ticks = iterNombre(data);
+        var gerencias = data.map(function(b) { return [ b.id, b.nombre, b.ejerciciouno, b.ejerciciodos, b.diferencia, b.porcentaje ]});
+		var serieUno = DataUno(data);
+        var serieDos = DataDos(data);
 		
-        var options = {
-            series: {
-                bars: {
-                    show: true
+        $.plot($(".chart-container"), 
+                [{  data: serieUno,
+                    bars: {
+                        show: true,
+                        barWidth: 0.2,
+                        align: "left",
+                    }
+                },
+                {
+                    data: serieDos,
+                    bars: {
+                        show: true,
+                        barWidth: 0.2,
+                        align: "right",
+                    }
                 }
-            },
-            bars: {
-                align: "center",
-                barWidth: 0.5,
-                horizontal: true,
-                fillColor: { colors: [{ opacity: 0.5 }, { opacity: 1}] },
-                lineWidth: 1
-            },
-            xaxis: {
-                axisLabel: "Monto MM",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 8,
-                axisLabelFontFamily: 'Verdana, Arial',
-                axisLabelPadding: 10,
-                max: 2000,
-                tickColor: "#5E5E5E",
-                color: "black"
-            },
-            yaxis: {
-                axisLabel: "Servicios",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 8,
-                axisLabelFontFamily: 'Verdana, Arial',
-                axisLabelPadding: 3,
-                tickColor: "#5E5E5E",
-                ticks: ticks,
-                color: "black"
-            },
-            legend: {
-                noColumns: 0,
-                labelBoxBorderColor: "#858585",
-                position: "ne"
-            },
-            grid: {
-                hoverable: true,
-                borderWidth: 2,
-                backgroundColor: { colors: ["#171717", "#4F4F4F"] }
-            }
-        };
-
-        $.plot($("#placeholder"), dataSet, options);                 
-
+                ],
+                {
+                    xaxis: {
+                        mode: "categories",
+                        tickLength: 0
+                    }
+                }
+        );
     });
 </script>

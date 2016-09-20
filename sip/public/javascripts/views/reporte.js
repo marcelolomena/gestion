@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
+
     var options = {
         chart: {
             renderTo: '',
@@ -104,7 +105,7 @@ $(document).ready(function () {
 
 
     var modelConceptoGasto = [
-        { label: 'id', name: 'nombre', key: true, hidden: true },
+        //{ label: 'id', name: 'nombre', key: true, hidden: true },
         { label: 'Concepto Gasto', name: 'nombre', width: 200, align: 'left', search: false },
         { label: 'Presupuesto 2016', name: 'ejerciciouno', width: 100, align: 'right', formatter: 'number', search: false },
         { label: 'Presupuesto 2017', name: 'ejerciciodos', width: 100, align: 'right', formatter: 'number', search: false },
@@ -212,20 +213,22 @@ $(document).ready(function () {
     $gridConceptoGasto.jqGrid({
         url: '/reporte/lstConceptoGasto',
         datatype: "json",
-        //datatype: 'local',
         page: 1,
         colModel: modelConceptoGasto,
         regional: 'es',
         height: 'auto',
         autowidth: true,
-        //shrinkToFit: true,
-        //viewrecords: true,
         footerrow: true,
         userDataOnFooter: true,
         caption: 'Concepto Gasto',
         styleUI: "Bootstrap",
-        //guiStyle: "bootstrap",
         toolbar: [true, "top"],
+        subGrid: true,
+        subGridRowExpanded: serviceFromConceptSubGrid,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
         loadComplete: function () {
             var $this = $(this);
 
@@ -378,7 +381,6 @@ function departamentSubGrid(parentRowID, parentRowKey) {
         autowidth: true,
         height: '100%',
         styleUI: "Bootstrap",
-        //guiStyle: "bootstrap",
         footerrow: true,
         userDataOnFooter: true,
         subGrid: true,
@@ -412,8 +414,48 @@ function serviceSubGrid(parentRowID, parentRowKey) {
         autowidth: true,
         height: '100%',
         styleUI: "Bootstrap",
-        //guiStyle: "bootstrap",
+        footerrow: true,
+        userDataOnFooter: true,
+    });
+}
+
+function serviceFromConceptSubGrid(parentRowID, parentRowKey) {
+
+    /*
+        // Encode the String
+        var encodedString = Base64.encode(parentRowKey);
+        console.log(encodedString); // Outputs: "SGVsbG8gV29ybGQh"
+    
+        // Decode the String
+        var decodedString = Base64.decode(encodedString);
+        console.log(decodedString); // Outputs: "Hello World!"
+    */
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+    //var childGridURL = "/reporte/lstServiceFromConcept/" + parentRowKey;
+    var childGridURL = "/reporte/lstServiceFromConcept/1";
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+            { label: 'id', name: 'id', key: true, hidden: true },
+            { label: 'Servicio', name: 'nombre', width: 100 },
+            { label: 'Presupuesto', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Presupuesto', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
+            { label: 'Porcentaje', name: 'porcentaje', width: 100, align: 'right', search: false, editable: false }
+        ],
+        autowidth: true,
+        height: '100%',
+        styleUI: "Bootstrap",
         footerrow: true,
         userDataOnFooter: true
     });
 }
+
+var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }

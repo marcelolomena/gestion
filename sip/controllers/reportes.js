@@ -11,16 +11,16 @@ exports.lstGerencias = function (req, res) {
            select
 		   A.cui id,
 		   A.nombre,
-		   ISNULL(A.costo,0) ejerciciouno,
-		   ISNULL(B.costo,0) ejerciciodos,
-		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
 		   ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) porcentaje
 		   from 
 		   (
 		    select 
 			Y.cui,
 			Y.nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
             where X.periodo >= 201509 AND X.periodo <= 201612 AND X.gerencia = Y.cui
             group by Y.cui,
@@ -30,7 +30,7 @@ exports.lstGerencias = function (req, res) {
            select 
 		   Y.cui,
 		   Y.nombre,
-		   round(sum(X.costo)/1000000,0,1) costo from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+		   SUM(X.costo)/1000000 costo from sip.v_reporte_presupuesto X, sip.estructuracui Y 
            where X.periodo >= 201701 AND X.periodo <= 201712 AND X.gerencia = Y.cui
            group by Y.cui,Y.nombre
 		   ) B ON A.cui = B.cui
@@ -78,16 +78,16 @@ exports.lstDepartamentos = function (req, res) {
            select
 		   A.cui id,
 		   A.nombre,
-		   ISNULL(A.costo,0) ejerciciouno,
-		   ISNULL(B.costo,0) ejerciciodos,
-		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
 		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
 		   from 
 		   (
 			select 
 			Y.cui,
 			Y.nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			sum(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
 			where X.periodo >= 201509 AND X.periodo <= 201612 AND X.gerencia = :id AND X.departamento = Y.cui
 			group by Y.cui,Y.nombre 
@@ -96,7 +96,7 @@ exports.lstDepartamentos = function (req, res) {
 			select 
 			Y.cui,
 			Y.nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			sum(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
 			where X.periodo >= 201701 AND X.periodo <= 201712 AND X.gerencia = :id AND X.departamento = Y.cui
 			group by Y.cui,Y.nombre 
@@ -144,15 +144,15 @@ exports.lstServices = function (req, res) {
         `
            select
 		   A.nombre,
-		   ISNULL(A.costo,0) ejerciciouno,
-		   ISNULL(B.costo,0) ejerciciodos,
-		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
 		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
 		   from 
 		   (
 		   select 
 			X.Servicio nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X
 			where X.periodo >= 201509 AND X.periodo <= 201612 AND X.departamento = :id
 			group by X.Servicio 
@@ -160,11 +160,10 @@ exports.lstServices = function (req, res) {
 			(
 		   select 
 			X.Servicio nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X
 			where X.periodo >= 201701 AND X.periodo <= 201712 AND X.departamento =  :id
 			group by X.Servicio 
-
 		   ) B ON A.nombre = B.nombre
         `
 
@@ -185,11 +184,7 @@ exports.lstServices = function (req, res) {
                         sum2 = sum2 + value
                 }
             }
-            console.log("sum1 : " + sum1);
-            console.log("sum2 : " + sum2);
-
             var p = ((sum1 - sum2) / sum1) * 100
-
             var datum = {
                 "rows": rows,
                 "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -224,8 +219,6 @@ exports.lstConceptoGasto = function (req, res) {
     var _filters = req.query.filters;
     var _gerencia = 0;
 
-    //console.log("----------->>>> " + _filters)
-
     if (_filters) {
         var _jsonObj = JSON.parse(_filters);
         var _rules = _jsonObj.rules;
@@ -233,22 +226,19 @@ exports.lstConceptoGasto = function (req, res) {
     }
 
     if (_gerencia > 0) {
-
-        //console.log("----------->>>> " + _gerencia)
-
         var sql =
             `
            select
 		   A.nombre,
-		   ISNULL(A.costo,0) ejerciciouno,
-		   ISNULL(B.costo,0) ejerciciodos,
-		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
 		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
 		   from 
 		   (
 			select 
 			X.conceptogasto nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X
             where X.periodo >= 201509 AND X.periodo <= 201612 and X.gerencia = :gerencia
             group by X.conceptogasto
@@ -256,7 +246,7 @@ exports.lstConceptoGasto = function (req, res) {
 			(
 			select 
 			X.conceptogasto nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X
             where X.periodo >= 201701 AND X.periodo <= 201712 and X.gerencia = :gerencia
             group by X.conceptogasto
@@ -275,7 +265,6 @@ exports.lstConceptoGasto = function (req, res) {
                     var obj = rows[i];
                     for (var key in obj) {
                         var value = obj[key];
-                        //console.log(key + ": " + value);
                         if (key == 'ejerciciouno')
                             sum1 = sum1 + value
                         else if (key == 'ejerciciodos')
@@ -303,15 +292,15 @@ exports.lstConceptoGasto = function (req, res) {
             `
            select
 		   A.nombre,
-		   ISNULL(A.costo,0) ejerciciouno,
-		   ISNULL(B.costo,0) ejerciciodos,
-		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
 		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
 		   from 
 		   (
 			select 
 			X.conceptogasto nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X
             where X.periodo >= 201509 AND X.periodo <= 201612
             group by X.conceptogasto
@@ -319,7 +308,7 @@ exports.lstConceptoGasto = function (req, res) {
 			(
 			select 
 			X.conceptogasto nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X
             where X.periodo >= 201701 AND X.periodo <= 201712
             group by X.conceptogasto
@@ -337,7 +326,6 @@ exports.lstConceptoGasto = function (req, res) {
                     var obj = rows[i];
                     for (var key in obj) {
                         var value = obj[key];
-                        //console.log(key + ": " + value);
                         if (key == 'ejerciciouno')
                             sum1 = sum1 + value
                         else if (key == 'ejerciciodos')
@@ -365,11 +353,7 @@ exports.lstConceptoGasto = function (req, res) {
 exports.reporteGerenciasPdf = function (req, res) {
     try {
         var pathPdf = path.join(__dirname, '..', 'pdf')
-
-        //console.log(pathPdf + path.sep)
-
         var filePdf = 'repo1.pdf'
-
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'gerencias.js'), 'utf8');
 
         var sql =
@@ -377,16 +361,16 @@ exports.reporteGerenciasPdf = function (req, res) {
            select
 		   A.cui id,
 		   A.nombre,
-		   ISNULL(A.costo,0) ejerciciouno,
-		   ISNULL(B.costo,0) ejerciciodos,
-		   ISNULL(B.costo,0)-ISNULL(A.costo,0) diferencia,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
 		   ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) porcentaje
 		   from 
 		   (
 		    select 
 			Y.cui,
 			Y.nombre,
-			round(sum(X.costo)/1000000,0,1) costo
+			SUM(X.costo)/1000000 costo
 			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
             where X.periodo >= 201509 AND X.periodo <= 201612 AND X.gerencia = Y.cui
             group by Y.cui,
@@ -396,7 +380,7 @@ exports.reporteGerenciasPdf = function (req, res) {
            select 
 		   Y.cui,
 		   Y.nombre,
-		   round(sum(X.costo)/1000000,0,1) costo from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+		   SUM(X.costo)/1000000 costo from sip.v_reporte_presupuesto X, sip.estructuracui Y 
            where X.periodo >= 201701 AND X.periodo <= 201712 AND X.gerencia = Y.cui
            group by Y.cui,Y.nombre
 		   ) B ON A.cui = B.cui
@@ -411,8 +395,6 @@ exports.reporteGerenciasPdf = function (req, res) {
                 var datum = {
                     "gerencias": rows,
                 }
-
-                //console.dir(datum);
 
                 jsreport.init().then(function () {
                     return jsreport.render({
@@ -583,4 +565,66 @@ exports.pdfManager = function (req, res) {
         console.log("error : " + e);
     }
 }
+
+exports.lstServiceFromConcept = function (req, res) {
+
+/*
+    var sql =
+        `
+           select
+		   A.nombre,
+		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
+		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
+		   from 
+		   (
+		   select 
+			X.Servicio nombre,
+			SUM(X.costo)/1000000 costo
+			from sip.v_reporte_presupuesto X
+			where X.periodo >= 201509 AND X.periodo <= 201612 AND X.departamento = :id
+			group by X.Servicio 
+			) A LEFT OUTER JOIN
+			(
+		   select 
+			X.Servicio nombre,
+			SUM(X.costo)/1000000 costo
+			from sip.v_reporte_presupuesto X
+			where X.periodo >= 201701 AND X.periodo <= 201712 AND X.departamento =  :id
+			group by X.Servicio 
+		   ) B ON A.nombre = B.nombre
+        `
+
+    sequelize.query(sql,
+        {
+            replacements: { id: req.params.id },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (rows) {
+
+            var sum1 = 0, sum2 = 0
+            for (var i = 0; i < rows.length; i++) {
+                var obj = rows[i];
+                for (var key in obj) {
+                    var value = obj[key];
+                    if (key == 'ejerciciouno')
+                        sum1 = sum1 + value
+                    else if (key == 'ejerciciodos')
+                        sum2 = sum2 + value
+                }
+            }
+            var p = ((sum1 - sum2) / sum1) * 100
+            var datum = {
+                "rows": rows,
+                "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
+            }
+
+            res.json(datum);
+        }).catch(function (e) {
+            console.log(e)
+            res.json({ error_code: 1 });
+        })
+*/        
+}
+
 
