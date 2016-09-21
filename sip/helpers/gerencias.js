@@ -5,3 +5,49 @@ function toJSON(data) {
 function format(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+
+function totalUno(data) {
+    var total = 0;
+
+    data.forEach(function (b) {
+        total = total + b.ejerciciouno;
+    });
+
+    return format(total.toFixed(2));
+}
+
+function totalDos(data) {
+    var total = 0;
+
+    data.forEach(function (b) {
+        total = total + b.ejerciciodos;
+    });
+
+    return format(total.toFixed(2));
+}
+
+function totalDiferencia(data) {
+    var totalUno = 0;
+    var totalDos = 0;
+
+    data.forEach(function (b) {
+        totalUno = totalUno + b.ejerciciouno;
+        totalDos = totalDos + b.ejerciciodos;
+    });
+
+    return format(totalUno.toFixed(2) - totalDos.toFixed(2));
+}
+
+function totalPorcentaje(data) {
+    var totalUno = 0;
+    var totalDos = 0;
+
+    data.forEach(function (b) {
+        totalUno = totalUno + b.ejerciciouno;
+        totalDos = totalDos + b.ejerciciodos;
+    });
+
+    var p = ((totalUno - totalDos) / totalUno) * 100
+
+    return format(p.toFixed(2));
+}

@@ -259,16 +259,18 @@ exports.lstConceptoGasto = function (req, res) {
                 replacements: { gerencia: _gerencia },
                 type: sequelize.QueryTypes.SELECT
             }).then(function (rows) {
-
                 var sum1 = 0, sum2 = 0
                 for (var i = 0; i < rows.length; i++) {
                     var obj = rows[i];
+
                     for (var key in obj) {
                         var value = obj[key];
-                        if (key == 'ejerciciouno')
+                        if (key == 'ejerciciouno') {
                             sum1 = sum1 + value
-                        else if (key == 'ejerciciodos')
+                        } else if (key == 'ejerciciodos') {
                             sum2 = sum2 + value
+                        }
+
                     }
                 }
 
@@ -326,10 +328,12 @@ exports.lstConceptoGasto = function (req, res) {
                     var obj = rows[i];
                     for (var key in obj) {
                         var value = obj[key];
-                        if (key == 'ejerciciouno')
+                        if (key == 'ejerciciouno') {
                             sum1 = sum1 + value
-                        else if (key == 'ejerciciodos')
+                        } else if (key == 'ejerciciodos') {
                             sum2 = sum2 + value
+                        }
+
                     }
                 }
 
@@ -567,64 +571,128 @@ exports.pdfManager = function (req, res) {
 }
 
 exports.lstServiceFromConcept = function (req, res) {
+    var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+    var _concepto = Base64.decode(req.params.nombre)
+    var _gerencia = req.params.id
+    console.log("----->>>" + _concepto)
+    console.log("----->>>" + _gerencia)
 
-/*
-    var sql =
-        `
-           select
-		   A.nombre,
-		   ROUND(ISNULL(A.costo,0),2) ejerciciouno,
-		   ROUND(ISNULL(B.costo,0),2) ejerciciodos,
-		   ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
-		   IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
-		   from 
-		   (
-		   select 
-			X.Servicio nombre,
-			SUM(X.costo)/1000000 costo
-			from sip.v_reporte_presupuesto X
-			where X.periodo >= 201509 AND X.periodo <= 201612 AND X.departamento = :id
-			group by X.Servicio 
-			) A LEFT OUTER JOIN
-			(
-		   select 
-			X.Servicio nombre,
-			SUM(X.costo)/1000000 costo
-			from sip.v_reporte_presupuesto X
-			where X.periodo >= 201701 AND X.periodo <= 201712 AND X.departamento =  :id
-			group by X.Servicio 
-		   ) B ON A.nombre = B.nombre
-        `
+    if (_gerencia > 0) {
+        var sql =
+            `
+               select
+               A.nombre,
+               ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+               ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+               ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
+               IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
+               from 
+               (
+               select 
+                X.Servicio nombre,
+                SUM(X.costo)/1000000 costo
+                from sip.v_reporte_presupuesto X
+                where X.periodo >= 201509 AND X.periodo <= 201612 AND X.departamento = :id AND X.conceptogasto = :concepto
+                group by X.Servicio 
+                ) A LEFT OUTER JOIN
+                (
+               select 
+                X.Servicio nombre,
+                SUM(X.costo)/1000000 costo
+                from sip.v_reporte_presupuesto X
+                where X.periodo >= 201701 AND X.periodo <= 201712 AND X.departamento =  :id AND X.conceptogasto = :concepto
+                group by X.Servicio 
+               ) B ON A.nombre = B.nombre
+            `
 
-    sequelize.query(sql,
-        {
-            replacements: { id: req.params.id },
-            type: sequelize.QueryTypes.SELECT
-        }).then(function (rows) {
+        sequelize.query(sql,
+            {
+                replacements: { id: _gerencia, concepto: _concepto },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (rows) {
 
-            var sum1 = 0, sum2 = 0
-            for (var i = 0; i < rows.length; i++) {
-                var obj = rows[i];
-                for (var key in obj) {
-                    var value = obj[key];
-                    if (key == 'ejerciciouno')
-                        sum1 = sum1 + value
-                    else if (key == 'ejerciciodos')
-                        sum2 = sum2 + value
+                var sum1 = 0, sum2 = 0
+                for (var i = 0; i < rows.length; i++) {
+                    var obj = rows[i];
+                    for (var key in obj) {
+                        var value = obj[key];
+                        if (key == 'ejerciciouno')
+                            sum1 = sum1 + value
+                        else if (key == 'ejerciciodos')
+                            sum2 = sum2 + value
+                    }
                 }
-            }
-            var p = ((sum1 - sum2) / sum1) * 100
-            var datum = {
-                "rows": rows,
-                "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
-            }
+                var p = ((sum1 - sum2) / sum1) * 100
+                var datum = {
+                    "rows": rows,
+                    "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
+                }
 
-            res.json(datum);
-        }).catch(function (e) {
-            console.log(e)
-            res.json({ error_code: 1 });
-        })
-*/        
+                res.json(datum);
+            }).catch(function (e) {
+                console.log(e)
+                res.json({ error_code: 1 });
+            })
+
+    } else if (_gerencia == 0) {
+        var sql =
+            `
+               select
+               A.nombre,
+               ROUND(ISNULL(A.costo,0),2) ejerciciouno,
+               ROUND(ISNULL(B.costo,0),2) ejerciciodos,
+               ROUND(ISNULL(B.costo,0)-ISNULL(A.costo,0),2) diferencia,
+               IIF(ISNULL(A.costo,0)!=0, ROUND(((ISNULL(B.costo,0)-ISNULL(A.costo,0) ) /ISNULL(A.costo,0)) * 100, 2) , 0) porcentaje
+               from 
+               (
+               select 
+                X.Servicio nombre,
+                SUM(X.costo)/1000000 costo
+                from sip.v_reporte_presupuesto X
+                where X.periodo >= 201509 AND X.periodo <= 201612 AND X.conceptogasto = :concepto
+                group by X.Servicio 
+                ) A LEFT OUTER JOIN
+                (
+               select 
+                X.Servicio nombre,
+                SUM(X.costo)/1000000 costo
+                from sip.v_reporte_presupuesto X
+                where X.periodo >= 201701 AND X.periodo <= 201712 AND X.conceptogasto =  :concepto
+                group by X.Servicio 
+               ) B ON A.nombre = B.nombre
+            `
+
+        sequelize.query(sql,
+            {
+                replacements: { concepto: _concepto },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (rows) {
+
+                var sum1 = 0, sum2 = 0
+                for (var i = 0; i < rows.length; i++) {
+                    var obj = rows[i];
+                    for (var key in obj) {
+                        var value = obj[key];
+                        if (key == 'ejerciciouno')
+                            sum1 = sum1 + value
+                        else if (key == 'ejerciciodos')
+                            sum2 = sum2 + value
+                    }
+                }
+                var p = ((sum1 - sum2) / sum1) * 100
+                var datum = {
+                    "rows": rows,
+                    "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
+                }
+
+                res.json(datum);
+            }).catch(function (e) {
+                console.log(e)
+                res.json({ error_code: 1 });
+            })
+
+    }
+
 }
 
 

@@ -28,7 +28,7 @@ module.exports = function (passport) {
     router.route('/reporte/gerencias')
         .get(isAuthenticated, reportesController.pdfManager);  
 
-    router.route('/reporte/lstServiceFromConcept/:name')
+    router.route('/reporte/lstServiceFromConcept/:nombre/:id')
         .get(isAuthenticated, reportesController.lstServiceFromConcept);             
 
     router.route('/reporte/repo1')
