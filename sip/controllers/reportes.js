@@ -121,8 +121,8 @@ exports.lstDepartamentos = function (req, res) {
                         sum2 = sum2 + value
                 }
             }
-            console.log("sum1 : " + sum1);
-            console.log("sum2 : " + sum2);
+            //console.log("sum1 : " + sum1);
+            //console.log("sum2 : " + sum2);
 
             var p = ((sum1 - sum2) / sum1) * 100
 
@@ -410,6 +410,7 @@ exports.reporteGerenciasPdf = function (req, res) {
                             phantom: {
                                 "orientation": "portrait",
                                 "format": "A4",
+                                "timeout": 180000
                                 //"margin": "1cm",
                                 //"headerHeight": "1cm"
                             }

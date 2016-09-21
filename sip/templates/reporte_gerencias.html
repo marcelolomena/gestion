@@ -168,16 +168,16 @@
 
     </div>
 
-    <div class="chart-container" style="width:800px;height:600px;"></div>
+    <div id="chart-container" style="width:800px;height:600px;"></div>
 
 </div>
 
 <script src="http://localhost:3000/javascripts/jquery-1.12.3.min.js"></script>
-<script src="http://localhost:3000/javascripts/flot/jquery.flot.min.js"></script>
-<script src="http://localhost:3000/javascripts/flot/jquery.flot.categories.min.js"></script>
-<script src="http://localhost:3000/javascripts/flot/jquery.flot.axislabels.min.js"></script>
+<script src="http://localhost:3000/javascripts/highcharts/highcharts.js"></script>
+<script src="http://localhost:3000/javascripts/highcharts/highcharts-3d.js"></script>
 
 <script>
+    
     function DataUno(data){
         var res = [];
         $.each(data, function(i, item){
@@ -194,36 +194,88 @@
         return res;
     }    
 
-    $(function () {
 
+    $(function () {
+        var options = {
+        chart: {
+            renderTo: '',
+            type: 'bar'
+        },
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: 'Fuente: Sistema de Información Presupuestario'
+        },
+        xAxis: {
+            categories: [],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Monto (Millones)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' millones'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: []
+          
+        };  
+
+        var categorias = [];
+        var serie1 = {};
+        var serie2 = {};
+        var serie1ArrayData = [];
+        var serie2ArrayData = [];
         var data = {{{toJSON gerencias}}}
         var gerencias = data.map(function(b) { return [ b.id, b.nombre, b.ejerciciouno, b.ejerciciodos, b.diferencia, b.porcentaje ]});
-		var serieUno = DataUno(data);
-        var serieDos = DataDos(data);
-		
-        $.plot($(".chart-container"), 
-                [{  data: serieUno,
-                    bars: {
-                        show: true,
-                        barWidth: 0.2,
-                        align: "left",
-                    }
-                },
-                {
-                    data: serieDos,
-                    bars: {
-                        show: true,
-                        barWidth: 0.2,
-                        align: "right",
-                    }
-                }
-                ],
-                {
-                    xaxis: {
-                        mode: "categories",
-                        tickLength: 0
-                    }
-                }
-        );
+
+        $.each(data, function(i, item){
+            serie1ArrayData.push(item.ejerciciouno)
+            serie2ArrayData.push(item.ejerciciodos)
+            categorias.push(item.nombre)
+        });
+
+
+
+                serie1 = { name: '2016', animation: false, data: serie1ArrayData };
+                serie2 = { name: '2017', animation: false, data: serie2ArrayData };
+
+                options.series[0] = serie1;
+                options.series[1] = serie2;
+                options.xAxis.categories = categorias;
+                options.chart.renderTo = 'chart-container';
+                options.title.text = 'Presupuesto por Gerencia';
+                var chart = new Highcharts.Chart(options);
+     
     });
 </script>

@@ -98,6 +98,8 @@
 <script src="../public/javascripts/flot/jquery.flot.min.js"></script>
 <script src="../public/javascripts/flot/jquery.flot.categories.min.js"></script>
 <script src="../public/javascripts/flot/jquery.flot.axislabels.min.js"></script>
+<script src="../public/javascripts/highcharts/highcharts.js"></script>
+<script src="../public/javascripts/highcharts/highcharts-3d.js"></script>
 <script src="../helpers/gerencias.js"></script>
 
 <script>
@@ -115,104 +117,69 @@
         });
         return res;
     }    
+    
     $(function () {
 
-        var data = [{ gerencias:
-   [ { id: 1900,
-       nombre: 'Division Operaciones y Tecnologia',
-       ejerciciouno: 116,
-       ejerciciodos: 0,
-       diferencia: -116,
-       porcentaje: -100 },
-     { id: 4946,
-       nombre: 'Gerencia Oper. Productos y Serv.',
-       ejerciciouno: 55992,
-       ejerciciodos: 0,
-       diferencia: -55992,
-       porcentaje: -100 },
-     { id: 2259,
-       nombre: 'Gerencia Oper. y Tesoreria',
-       ejerciciouno: 1118,
-       ejerciciodos: 0,
-       diferencia: -1118,
-       porcentaje: -100 },
-     { id: 6991,
-       nombre: 'Gerencia PMO y Control Gestion',
-       ejerciciouno: 2917,
-       ejerciciodos: 2615,
-       diferencia: -302,
-       porcentaje: -10.35 },
-     { id: 6944,
-       nombre: 'Gerencia Seguridad Tec. e Innov.',
-       ejerciciouno: 4671,
-       ejerciciodos: 2184,
-       diferencia: -2487,
-       porcentaje: -53.24 },
-     { id: 6957,
-       nombre: 'Gerencia Tecnología e Infraestructura',
-       ejerciciouno: 8720,
-       ejerciciodos: 7299,
-       diferencia: -1421,
-       porcentaje: -16.3 },
-     { id: 6964,
-       nombre: 'Gerencia Tecnologia y Plan.',
-       ejerciciouno: 49797,
-       ejerciciodos: 52950,
-       diferencia: 3153,
-       porcentaje: 6.33 } ] }]
-
-
-        var gerencias = data.map(function(b) { return [ b.nombre, b.ejerciciouno, b.ejerciciodos, b.diferencia, b.porcentaje ]});
-		var rawData = iterCaja(data);
-		var dataSet = [{ label: "Gerencias", data: rawData, color: "#E8E800" }];
-   		var ticks = iterNombre(data);
-		
-        var options = {
-            series: {
-                bars: {
-                    show: true
+$('#placeholder').highcharts({
+            chart: {
+                type: 'column',
+                options3d: {
+                    enabled: true,
+                    alpha: 15,
+                    beta: 15,
+                    viewDistance: 25,
+                    depth: 40
+                },
+                marginTop: 80,
+                marginRight: 40
+            },
+    
+            title: {
+                text: 'Total fruit consumption, grouped by gender'
+            },
+    
+            xAxis: {
+                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+            },
+    
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                title: {
+                    text: 'Number of fruits'
                 }
             },
-            bars: {
-                align: "center",
-                barWidth: 0.5,
-                horizontal: true,
-                fillColor: { colors: [{ opacity: 0.5 }, { opacity: 1}] },
-                lineWidth: 1
+    
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    depth: 40
+                }
             },
-            xaxis: {
-                axisLabel: "Monto MM",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 8,
-                axisLabelFontFamily: 'Verdana, Arial',
-                axisLabelPadding: 10,
-                max: 2000,
-                tickColor: "#5E5E5E",
-                color: "black"
-            },
-            yaxis: {
-                axisLabel: "Servicios",
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 8,
-                axisLabelFontFamily: 'Verdana, Arial',
-                axisLabelPadding: 3,
-                tickColor: "#5E5E5E",
-                ticks: ticks,
-                color: "black"
-            },
-            legend: {
-                noColumns: 0,
-                labelBoxBorderColor: "#858585",
-                position: "ne"
-            },
-            grid: {
-                hoverable: true,
-                borderWidth: 2,
-                backgroundColor: { colors: ["#171717", "#4F4F4F"] }
-            }
-        };
-
-        $.plot($("#placeholder"), dataSet, options);                 
+    
+            series: [{
+                animation: false,
+                name: 'John',
+                data: [5, 3, 4, 7, 2],
+                stack: 'male'
+            }, {
+                animation: false,
+                name: 'Joe',
+                data: [3, 4, 4, 2, 5],
+                stack: 'male'
+            }, {
+                animation: false,
+                name: 'Jane',
+                data: [2, 5, 6, 2, 1],
+                stack: 'female'
+            }, {
+                animation: false,
+                name: 'Janet',
+                data: [3, 0, 4, 4, 3],
+                stack: 'female'
+            }]
+        });
+              
 
     });
 </script>
