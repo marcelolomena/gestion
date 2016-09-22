@@ -2,7 +2,7 @@ extends base.jade
 block titulo
   title SIP Banco de Chile - Sistema Integrado de Presupuesto - Reportes
 block jsgrilla
-  script(type='text/javascript', src='/javascripts/views/reporte.js')
+  script(type='text/javascript', src='/javascripts/views/reportetroya.js')
   script(type='text/javascript', src='/javascripts/pdfobject.min.js')  
   script(type='text/javascript', src='/javascripts/highcharts/highcharts.js')
   style.
@@ -14,9 +14,9 @@ block titulogrilla
 block grilla
   //.gcontainer
   #outerDiv(style='margin:50px;height:100%')  
-   #grafico_1(style='height:100%')  
+   #grafico_1  
    table#grid
    #pager
-   #grafico_2(style='height:100%')   
+   #grafico_2   
    table#gridConceptoGasto
    #dialog(style='display: none')

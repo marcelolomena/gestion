@@ -68,9 +68,7 @@ $(document).ready(function () {
 
     $grid.jqGrid({
         datatype: 'local',
-        //page: 1,
         colModel: modelGerencias,
-        //rowNum: 10,
         regional: 'es',
         height: 'auto',
         autowidth: true,
