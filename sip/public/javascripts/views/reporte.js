@@ -212,6 +212,7 @@ $(document).ready(function () {
         url: '/reporte/lstConceptoGasto',
         datatype: "json",
         page: 1,
+        rowNum:-1,
         colModel: modelConceptoGasto,
         regional: 'es',
         height: 'auto',
