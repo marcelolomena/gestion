@@ -2,7 +2,6 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-
     var options = {
         chart: {
             renderTo: '',

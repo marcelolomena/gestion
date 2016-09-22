@@ -10,8 +10,15 @@ module.exports = function (passport) {
         res.render('reporte', { user: req.user });
     });
 
+    router.get('/reportetroya', isAuthenticated, function (req, res) {
+        res.render('reportetroya', { user: req.user });
+    });    
+
     router.route('/reporte/lstGerencias')
-        .get(isAuthenticated, reportesController.lstGerencias);    
+        .get(isAuthenticated, reportesController.lstGerencias);
+
+    router.route('/reporte/lstGerenciasTroya')
+        .get(isAuthenticated, reportesController.lstGerenciasTroya);    
 
     router.route('/reporte/lstDepartamentos/:id')
         .get(isAuthenticated, reportesController.lstDepartamentos);       
