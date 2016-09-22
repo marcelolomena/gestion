@@ -6,6 +6,9 @@
         "host": "200.14.166.182",
         "dialect": "mssql",
         "port": "1433",
+        "dialectOptions": {
+            "requestTimeout": 30000 
+        },
         "pool": {
             "min": 5,
             "max": 100,
@@ -35,13 +38,14 @@
         "dialect": "mssql",
         "port": "1433",
         "dialectOptions": {
+            "requestTimeout": 30000, 
             "instanceName": "ARTBCH"
         },
         "pool": {
-            "min": 5,
-            "max": 100,
-            "idle": 500000,
-            "maxIdleTime":10000
+            "min": 1,
+            "max": 10,
+            "idle": 10000,
+            "maxIdleTime": 10000
         },
         "logging": false
     },
