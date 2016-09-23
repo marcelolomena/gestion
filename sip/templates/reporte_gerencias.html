@@ -12,6 +12,14 @@
         background: #FFFFFF;
     }
     
+    .cabecera {
+        width: 800px;
+        margin: 0 auto 0 auto;
+        font-size: 25px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
     .wrapper {
         margin: 0 auto;
         padding: 40px;
@@ -107,7 +115,9 @@
         line-height: 1em;
     }
 </style>
-
+<div class="cabecera">
+    Presupuesto por Gerencia
+</div>
 <div class="wrapper">
 
     <div class="table">
@@ -168,7 +178,7 @@
 
     </div>
 
-    <div id="chart-container" style="width:800px;height:600px;"></div>
+    <div id="chart-container" style="width:800px;height:800px"></div>
 
 </div>
 
@@ -197,59 +207,81 @@
 
     $(function () {
         var options = {
-        chart: {
-            renderTo: '',
-            type: 'bar'
-        },
-        title: {
-            text: ''
-        },
-        subtitle: {
-            text: 'Fuente: Sistema de Información Presupuestario'
-        },
-        xAxis: {
-            categories: [],
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Monto (Millones)',
-                align: 'high'
+            chart: {
+                renderTo: '',
+                type: 'bar'
             },
-            labels: {
-                overflow: 'justify'
-            }
-        },
-        tooltip: {
-            valueSuffix: ' millones'
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: 'Fuente: Sistema de Información Presupuestario'
+            },
+            xAxis: {
+                categories: [],
+                title: {
+                    text: null
                 }
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 80,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-            shadow: true
-        },
-        credits: {
-            enabled: false
-        },
-        series: []
-          
-        };  
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Monto (Millones)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' millones'
+            },
+            plotOptions: {
+                plotOptions: {
+                    series: {
+                        dataLabels: {
+                            enabled: true,
+                            allowOverlap: true
+                        }
+                    }
+                },
+                bar: {
+                    pointPadding: 0.1,
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        crop: false,
+                        overflow: 'none',
+                        formatter: function () {
+                            if (this.y != 0) {
+                                return Highcharts.numberFormat(this.y,2);
+                            } else {
+                                return null;
+                            }
+                        },
+                        style: {
+                            fontSize: '10px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 80,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: []
+        };
 
         var categorias = [];
         var serie1 = {};

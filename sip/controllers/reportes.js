@@ -737,7 +737,7 @@ exports.lstGerenciasTroya = function (req, res) {
                 Y.cui,
                 Y.nombre,
                 SUM(X.costo)/1000000 costo
-                from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+                from sip.v_reporte_presupuesto2 X, sip.estructuracui Y 
                 where X.periodo between 201609 and 201612 AND X.gerencia = Y.cui
                 group by Y.cui,
                 Y.nombre
@@ -751,7 +751,7 @@ exports.lstGerenciasTroya = function (req, res) {
                 select 
                 Y.cui,
                 SUM(X.costo)/1000000 costo
-                from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+                from sip.v_reporte_presupuesto2 X, sip.estructuracui Y 
                 where X.periodo between 201701 and 201712 AND X.gerencia = Y.cui
                 group by Y.cui
     ) Q
