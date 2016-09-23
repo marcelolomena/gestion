@@ -55,7 +55,8 @@ exports.lstGerencias = function (req, res) {
                 }
             }
 
-            var p = ((sum1 - sum2) / sum1) * 100
+            //var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100            
 
             var datum = {
                 "rows": rows,
@@ -121,10 +122,8 @@ exports.lstDepartamentos = function (req, res) {
                         sum2 = sum2 + value
                 }
             }
-            //console.log("sum1 : " + sum1);
-            //console.log("sum2 : " + sum2);
 
-            var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100
 
             var datum = {
                 "rows": rows,
@@ -184,7 +183,7 @@ exports.lstServices = function (req, res) {
                         sum2 = sum2 + value
                 }
             }
-            var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100
             var datum = {
                 "rows": rows,
                 "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -285,7 +284,7 @@ exports.lstConceptoGasto = function (req, res) {
                     }
                 }
 
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
 
                 var datum = {
                     "rows": rows,
@@ -347,7 +346,7 @@ exports.lstConceptoGasto = function (req, res) {
                     }
                 }
 
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
 
                 var datum = {
                     "rows": rows,
@@ -633,7 +632,7 @@ exports.lstServiceFromConcept = function (req, res) {
                             sum2 = sum2 + value
                     }
                 }
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
                 var datum = {
                     "rows": rows,
                     "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -690,7 +689,7 @@ exports.lstServiceFromConcept = function (req, res) {
                             sum2 = sum2 + value
                     }
                 }
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
                 var datum = {
                     "rows": rows,
                     "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -771,7 +770,7 @@ ON P.cui = Q.cui
                 }
             }
 
-            var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100
 
             var datum = {
                 "rows": rows,
