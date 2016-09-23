@@ -708,48 +708,54 @@ exports.lstServiceFromConcept = function (req, res) {
 ///
 
 exports.lstGerenciasTroya = function (req, res) {
+    /*
+        sequelize.query("sip.ReportePresupuesto_2 1,1;", { type: sequelize.QueryTypes.RAW })
+            .then(function (summary) {
+                console.dir(summary)
+            })
+    */
 
     var sql =
         `
-SELECT
-		   P.cui id,
-		   P.nombre,
-		   ROUND(ISNULL(P.costo,0),2) ejerciciouno,
-		   ROUND(ISNULL(Q.costo,0),2) ejerciciodos,
-		   ROUND(ISNULL(Q.costo,0)-ISNULL(P.costo,0),2) diferencia,
-		   ROUND(((ISNULL(Q.costo,0)-ISNULL(P.costo,0) ) /ISNULL(P.costo,0)) * 100, 2) porcentaje
-  FROM 
-(
-           select
-		   A.cui cui,
-		   A.nombre,
-		   ROUND(ISNULL(A.costo,0) + ISNULL(B.costo,0),2) costo
-		   from 
-		   (
-		    select 
-			Y.cui,
-			Y.nombre,
-			SUM(X.costo)/1000000 costo
-			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
-            where X.periodo between 201609 and 201612 AND X.gerencia = Y.cui
-            group by Y.cui,
-			Y.nombre
-			) A LEFT OUTER JOIN
-			(
-			select cuinuevagerencia cui,sum(monto) costo from sip.troya 
-			where fecha between '2016-01-01' and '2016-08-31' and tipo = 'Real' group by cuinuevagerencia
-		   ) B ON A.cui = B.cui
-) P LEFT OUTER JOIN
-(
-		    select 
-			Y.cui,
-			SUM(X.costo)/1000000 costo
-			from sip.v_reporte_presupuesto X, sip.estructuracui Y 
-            where X.periodo between 201701 and 201712 AND X.gerencia = Y.cui
-            group by Y.cui
-) Q
-ON P.cui = Q.cui
-        `
+    SELECT
+               P.cui id,
+               P.nombre,
+               ROUND(ISNULL(P.costo,0),2) ejerciciouno,
+               ROUND(ISNULL(Q.costo,0),2) ejerciciodos,
+               ROUND(ISNULL(Q.costo,0)-ISNULL(P.costo,0),2) diferencia,
+               ROUND(((ISNULL(Q.costo,0)-ISNULL(P.costo,0) ) /ISNULL(P.costo,0)) * 100, 2) porcentaje
+      FROM 
+    (
+               select
+               A.cui cui,
+               A.nombre,
+               ROUND(ISNULL(A.costo,0) + ISNULL(B.costo,0),2) costo
+               from 
+               (
+                select 
+                Y.cui,
+                Y.nombre,
+                SUM(X.costo)/1000000 costo
+                from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+                where X.periodo between 201609 and 201612 AND X.gerencia = Y.cui
+                group by Y.cui,
+                Y.nombre
+                ) A LEFT OUTER JOIN
+                (
+                select cuinuevagerencia cui,sum(monto) costo from sip.troya 
+                where fecha between '2016-01-01' and '2016-08-31' and tipo = 'Real' group by cuinuevagerencia
+               ) B ON A.cui = B.cui
+    ) P LEFT OUTER JOIN
+    (
+                select 
+                Y.cui,
+                SUM(X.costo)/1000000 costo
+                from sip.v_reporte_presupuesto X, sip.estructuracui Y 
+                where X.periodo between 201701 and 201712 AND X.gerencia = Y.cui
+                group by Y.cui
+    ) Q
+    ON P.cui = Q.cui
+            `
 
     sequelize.query(sql,
         {
@@ -782,4 +788,5 @@ ON P.cui = Q.cui
             console.log(e)
             res.json({ error_code: 1 });
         })
+
 }
