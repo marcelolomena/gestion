@@ -6,6 +6,7 @@ var Sequelize = require("sequelize");
 //var env = process.env.NODE_ENV || "development";//development, home
 var env = process.env.NODE_ENV
 var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
+//console.log("la config: "+config);
 config.logging = function(sql){
 
   var sqlchico = sql.toLowerCase();
