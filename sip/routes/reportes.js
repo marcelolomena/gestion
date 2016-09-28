@@ -39,7 +39,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, reportesController.lstServiceFromConcept);             
 
     router.route('/reporte/repo1')
-        .get(isAuthenticated, reportesController.reporteGerenciasPdf);                
+        .get(isAuthenticated, reportesController.reporteGerenciasPdf);     
+
+    router.route('/reporte/lstDepartamentosTroya/:id')
+        .get(isAuthenticated, reportesController.lstDepartamentosTroya);                       
 
     return router;
 

@@ -350,6 +350,11 @@ $(document).ready(function () {
                 options.chart.renderTo = 'grafico_1';
                 options.title.text = 'Presupuesto por Gerencia';
                 var chart = new Highcharts.Chart(options);
+                if (chart.series[0].data.length > 0) {
+                    var baseHeight = 150;
+                    var extraHeightPerThing = 50;
+                    chart.setSize(null, baseHeight + chart.series[0].data.length * extraHeightPerThing);
+                }                
 
                 $grid.jqGrid('setGridParam', { data: gridArrayData });
                 $grid.jqGrid('footerData', 'set', result.userdata);
