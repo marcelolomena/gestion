@@ -351,8 +351,8 @@ $(document).ready(function () {
                 options.title.text = 'Presupuesto por Gerencia';
                 var chart = new Highcharts.Chart(options);
                 if (chart.series[0].data.length > 0) {
-                    var baseHeight = 150;
-                    var extraHeightPerThing = 50;
+                    var baseHeight = 10;
+                    var extraHeightPerThing = 100;
                     chart.setSize(null, baseHeight + chart.series[0].data.length * extraHeightPerThing);
                 }                
 
