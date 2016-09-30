@@ -794,7 +794,6 @@ exports.lstGerenciasTroya = function (req, res) {
 
 exports.lstDepartamentosTroya = function (req, res) {
 
-
     var sql =
         `
 SELECT 
