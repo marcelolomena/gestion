@@ -896,7 +896,7 @@ exports.testtroya = function (req, res) {
     var page = req.query.page;
     //console.log(page)
     var rows = req.query.rows;
-    var sidx = req.query.sidx;
+    var sidx = req.query.sidx.trim();
     var sord = req.query.sord;
     var filters = req.query.filters;
     var condition = "";
@@ -906,12 +906,16 @@ exports.testtroya = function (req, res) {
     var periodo = iniDate.getFullYear() + '' + mm;
 
     if (!sidx)
-        sidx = "nuevagerencia";
+        sidx = "nuevagerencia asc";
 
-    if (!sord)
-        sord = "asc";
+    var coma = sidx.substring(sidx.length - 1, sidx.length);
 
-    var order = " ORDER BY " + sidx + " " + sord + " ";
+    if (coma == ',')
+        sidx = sidx.substring(0, sidx.length - 1);
+
+    var order = " ORDER BY " + sidx + " ";
+
+    console.log(order)
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
@@ -921,13 +925,13 @@ exports.testtroya = function (req, res) {
         });
     }
 
-/*
-    if(!page)
-        page = 1
-
-    if(!rows)
-        rows = 10        
-*/    
+    /*
+        if(!page)
+            page = 1
+    
+        if(!rows)
+            rows = 10        
+    */
 
     var count = `
             SELECT 

@@ -2,24 +2,19 @@ extends base.jade
 block titulo
   title SIP Banco de Chile - Sistema Integrado de Presupuesto - Reporte Agrupado
 block jsgrilla
-  link(rel='stylesheet', href='stylesheets/jquery-ui.css', type='text/css', media='screen', charset='utf-8')
   script(type='text/javascript', src='/javascripts/views/reportepivote.js')
-  script(type='text/javascript', src='/javascripts/jquery-ui.js')
-  style.
-    .pdfobject-container { height: 500px;}
-    .pdfobject { border: 1px solid #666; }
-    #groups li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; height: 18px; }
-    #groups li span { position: absolute; margin-left: -1.3em; }      
 block titulogrilla
   //.header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
     //h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") REPORTE
 block grilla
-  //.gcontainer
   #outerDiv(style='margin:50px;height:100%')  
-   #groups
-    h1.ui-widget-header Agrupación
-     .ui-widget-content
-      ol
-       li.placeholder Arrastre la columna hacia aquí
-   table#grid
-   #pager
+   div(style='margin-left:20px;')
+      b Group By:
+      select#chngroup.form-control
+        option(value='nuevagerencia', selected='selected') Gerencia
+        option(value='nuevodepartamento') Departamento
+        option(value='clear') Remove Grouping
+      br
+      br
+      table#grid
+      #pager

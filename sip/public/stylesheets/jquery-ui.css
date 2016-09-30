@@ -68,7 +68,7 @@
 
 /* states and images */
 .ui-icon {
-	display: block;
+	display: inline;
 	text-indent: -99999px;
 	overflow: hidden;
 	background-repeat: no-repeat;
