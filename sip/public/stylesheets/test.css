@@ -594,3 +594,12 @@ img {
 .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th{
 	padding: 0px;
 }
+.ui-widget-header{
+	font-size:15px;
+}
+.placeholder{
+	font-size:12px;
+}
+.ui-droppable ui-sortable{
+	font-size:12px;
+}

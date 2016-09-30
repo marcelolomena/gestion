@@ -46,7 +46,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, reportesController.reporteGerenciasPdf);     
 
     router.route('/reporte/lstDepartamentosTroya/:id')
-        .get(isAuthenticated, reportesController.lstDepartamentosTroya);                       
+        .get(isAuthenticated, reportesController.lstDepartamentosTroya);   
+
+    router.route('/reporte/testtroya')
+        .get(isAuthenticated, reportesController.testtroya);                              
 
     return router;
 

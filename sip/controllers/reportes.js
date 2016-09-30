@@ -885,3 +885,78 @@ ON P.cui = Q.cui
         })
 
 }
+
+//
+
+/*
+# Cambio en paginación Toya
+*/
+exports.testtroya = function (req, res) {
+    console.dir(req.query)
+    var page = req.query.page;
+    //console.log(page)
+    var rows = req.query.rows;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var filters = req.query.filters;
+    var condition = "";
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
+
+    if (!sidx)
+        sidx = "nuevagerencia";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
+
+/*
+    if(!page)
+        page = 1
+
+    if(!rows)
+        rows = 10        
+*/    
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sip.troya A 
+            WHERE A.tipo = 'Real'` + condition
+
+    var sql = `
+            SELECT A.id,A.nuevagerencia, A.nuevodepartamento,A.seccion,A.monto FROM sip.troya A WHERE A.tipo = 'Real'` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+
+    sequelize.query(count,
+        {
+            replacements: { condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
+            sequelize.query(sql,
+                {
+                    replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    console.log(e)
+                })
+
+        }).catch(function (e) {
+            console.log(e)
+        })
+}
+//
