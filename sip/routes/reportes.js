@@ -12,6 +12,10 @@ module.exports = function (passport) {
 
     router.get('/reportetroya', isAuthenticated, function (req, res) {
         res.render('reportetroya', { user: req.user });
+    });
+
+    router.get('/reportepivote', isAuthenticated, function (req, res) {
+        res.render('reportepivote', { user: req.user });
     });    
 
     router.route('/reporte/lstGerencias')
