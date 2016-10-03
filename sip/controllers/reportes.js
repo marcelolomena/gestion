@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require("path");
 var jsreport = require('jsreport-core')()
 
+
 exports.lstGerencias = function (req, res) {
 
     var sql =
@@ -893,71 +894,81 @@ ON P.cui = Q.cui
 */
 exports.testtroya = function (req, res) {
     console.dir(req.query)
-    var page = req.query.page;
     //console.log(page)
-    var rows = req.query.rows;
-    var sidx = req.query.sidx.trim();
-    var sord = req.query.sord;
-    var filters = req.query.filters;
-    var condition = "";
-    var iniDate = new Date();
-    var mes = parseInt(iniDate.getMonth()) + 1
-    var mm = mes < 10 ? '0' + mes : mes;
-    var periodo = iniDate.getFullYear() + '' + mm;
-
-    if (!sidx)
-        sidx = "nuevagerencia asc";
-
-    var coma = sidx.substring(sidx.length - 1, sidx.length);
-
-    if (coma == ',')
-        sidx = sidx.substring(0, sidx.length - 1);
-
-    var order = " ORDER BY " + sidx + " ";
-
-    console.log(order)
-
-    if (filters) {
-        var jsonObj = JSON.parse(filters);
-        jsonObj.rules.forEach(function (item) {
-            if (item.op === 'cn')
-                condition += " AND " + item.field + " like '%" + item.data + "%'"
-        });
-    }
-
-    /*
-        if(!page)
-            page = 1
-    
-        if(!rows)
-            rows = 10        
-    */
+    var jsreport_xlsx = require('jsreport-xlsx')()
+    jsreport.use(jsreport_xlsx)
 
     var count = `
             SELECT 
             count(*) cantidad
             FROM sip.troya A 
-            WHERE A.tipo = 'Real'` + condition
+            WHERE A.tipo = 'Real'`
 
     var sql = `
-            SELECT A.id,A.nuevagerencia, A.nuevodepartamento,A.seccion,A.monto FROM sip.troya A WHERE A.tipo = 'Real'` + condition + order +
-        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+            SELECT A.id,A.nuevagerencia, A.nuevodepartamento,A.seccion,A.monto FROM sip.troya A WHERE A.tipo = 'Real'`
 
-    sequelize.query(count,
+    sequelize.query(sql,
         {
-            replacements: { condition: condition },
+            //replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
             type: sequelize.QueryTypes.SELECT
-        }).then(function (records) {
-            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
-            sequelize.query(sql,
-                {
-                    replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
-                    type: sequelize.QueryTypes.SELECT
-                }).then(function (data) {
-                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+        }).then(function (data) {
+
+            var datum = {
+                "food": [{
+                    "Name": "Cucomber",
+                    "Amount": 8
+                }, {
+                        "Name": "Apple",
+                        "Amount": 7
+                    }, {
+                        "Name": "Orange",
+                        "Amount": 6
+                    }, {
+                        "Name": "Carrot",
+                        "Amount": 41
+                    }, {
+                        "Name": "Potatoes",
+                        "Amount": 2
+                    }, {
+                        "Name": "Cucomber",
+                        "Amount": 11
+                    }, {
+                        "Name": "Apple",
+                        "Amount": 32
+                    }]
+            }
+
+            jsreport.init().then(function () {
+                return jsreport.render({
+                    template: {
+                        content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot.xml'), 'utf8'),
+                        helpers: helpers,
+                        engine: 'handlebars',
+                        recipe: 'xlsx',
+                        xlsxTemplates: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx'), 'utf8')
+                    },
+                    data: datum
+                }).then(function (resp) {
+                    console.log(resp)
+                    /*
+                    res.header('Content-disposition', 'inline; filename=' + filePdf);
+                    res.header('Content-type', 'application/pdf');
+                    resp.result.pipe(fs.createWriteStream(pathPdf + path.sep + filePdf))
+                        .on('finish', function () {
+                            fs.createReadStream(pathPdf + path.sep + filePdf).pipe(res)
+                                .on('finish', function () {
+                                    fs.unlink(pathPdf + path.sep + filePdf);
+                                    //console.log('finalizo');
+                                });
+                        });
+                    */
                 }).catch(function (e) {
                     console.log(e)
                 })
+            }).catch(function (e) {
+                console.log(e)
+            })
+
 
         }).catch(function (e) {
             console.log(e)

@@ -1,0 +1,10 @@
+{{#each food}}
+{{#xlsxAdd "xl/worksheets/sheet2.xml" "worksheet.sheetData[0].row"}}
+<row>
+    <c t="inlineStr"><is><t>{{Name}}</t></is></c>
+    <c><v>{{Amount}}</v></c>
+</row>
+{{/xlsxAdd}}
+{{/each}}
+
+{{{xlsxPrint}}}
