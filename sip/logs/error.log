@@ -1,0 +1,2358 @@
+2016-10-03T21:21:45.167Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-03T21:34:26.083Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-03T22:05:34.439Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-03T22:07:31.930Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-03T22:07:31.971Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-03T22:14:32.168Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-03T22:14:32.172Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-03T22:26:32.496Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-03T22:26:32.500Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-03T22:58:32.159Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-03T22:58:32.165Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-03T23:30:32.174Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-03T23:30:32.192Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T00:02:32.268Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T00:02:32.273Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T00:34:32.203Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T00:34:32.209Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T01:06:32.234Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T01:06:32.240Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T01:38:32.142Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T01:38:32.148Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T02:10:32.355Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T02:10:32.361Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T02:42:32.448Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T02:42:32.454Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T03:14:32.734Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T03:14:32.740Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T03:46:32.686Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T03:46:32.693Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T04:18:33.262Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T04:18:33.269Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T04:50:32.714Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T04:50:32.720Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T05:22:32.481Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T05:22:32.486Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T05:54:32.689Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T05:54:32.695Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T06:26:32.553Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T06:26:32.560Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T06:58:32.724Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T06:58:32.730Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T07:30:33.223Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T07:30:33.229Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T08:02:33.083Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T08:02:33.089Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T08:34:33.310Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T08:34:33.316Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T09:06:33.018Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T09:06:33.025Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T09:38:33.073Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T09:38:33.086Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T10:10:33.264Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T10:10:33.270Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T10:42:33.189Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T10:42:33.203Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T11:14:33.168Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T11:14:33.175Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T11:46:33.199Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T11:46:33.207Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T11:58:48.615Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T11:58:48.620Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T12:00:22.065Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T12:00:22.070Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T12:01:16.942Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T12:01:16.946Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T12:03:03.020Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T12:03:03.026Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T12:04:49.281Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T12:04:49.286Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T12:05:17.968Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T12:05:17.971Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T12:21:41.740Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-04T12:22:04.017Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=3
+2016-10-04T12:24:12.010Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-04T12:58:42.726Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T12:59:20.226Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T13:04:42.985Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T13:17:06.434Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid foo Error: Unable to find xlsx template with shortid foo
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=1
+2016-10-04T13:19:05.717Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid foo Error: Unable to find xlsx template with shortid foo
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=2
+2016-10-04T13:21:05.329Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid foo Error: Unable to find xlsx template with shortid foo
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=3
+2016-10-04T13:23:10.439Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid foo Error: Unable to find xlsx template with shortid foo
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=4
+2016-10-04T13:25:40.462Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid foo Error: Unable to find xlsx template with shortid foo
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=5
+2016-10-04T13:28:39.295Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid B16eC1gA Error: Unable to find xlsx template with shortid B16eC1gA
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=1
+2016-10-04T13:30:37.930Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid B16eC1gA Error: Unable to find xlsx template with shortid B16eC1gA
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=2
+2016-10-04T13:32:48.830Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid B16eC1gA Error: Unable to find xlsx template with shortid B16eC1gA
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=1
+2016-10-04T13:35:01.930Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid B16eC1gA Error: Unable to find xlsx template with shortid B16eC1gA
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=1
+2016-10-04T13:35:49.806Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T13:38:50.007Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T13:41:05.864Z - error: Error when processing render request Error during rendering report: Unable to find xlsx template with shortid B16eC1gA Error: Unable to find xlsx template with shortid B16eC1gA
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-xlsx\lib\index.js:120:17
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+    at doNTCallback0 (node.js:407:9)
+    at process._tickCallback (node.js:336:13) requestId=1
+2016-10-04T14:12:33.574Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-04T14:25:27.998Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T14:26:10.801Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T14:26:50.337Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T14:34:49.338Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T14:38:20.997Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T14:38:54.844Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T14:43:13.929Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-04T15:07:47.467Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T15:15:55.808Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T15:17:57.425Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T15:30:00.076Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T15:50:17.639Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T15:52:15.929Z - error: Error when processing render request Error during rendering report: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything Error: Unsupported module in tasks: path. To enable require on particular module, you need to update the configuration as {"tasks": { "allowedModules": ["path"] } } ... Alternatively you can also set "*" to allowedModules to enable everything
+    at _require (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:81:11)
+    at evalmachine.<anonymous>:7:14
+    at evalmachine.<anonymous>:351:3
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:150:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=2
+2016-10-04T15:57:55.550Z - error: Error when processing render request Error during rendering report: Cannot read property 'worksheet' of undefined TypeError: Cannot read property 'worksheet' of undefined
+    at eval (eval at safeGet (evalmachine.<anonymous>:133:7), <anonymous>:3:23)
+    at safeGet (evalmachine.<anonymous>:133:84)
+    at Object.add (evalmachine.<anonymous>:115:22)
+    at Object.<anonymous> (evalmachine.<anonymous>:340:17)
+    at eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:94)
+    at prog (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:219:12)
+    at execIteration (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:51:19)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\helpers\each.js:61:13)
+    at Object.eval (eval at createFunctionContext (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:5:34)
+    at main (C:\Users\marcelo\git\sip\node_modules\jsreport-handlebars\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17) requestId=1
+2016-10-04T15:59:53.915Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T15:59:53.920Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)
+2016-10-04T16:04:23.270Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T16:04:23.276Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at cb (net.js:1296:16)
+    at shared (cluster.js:582:5)
+    at Worker.<anonymous> (cluster.js:556:9)
+    at process.<anonymous> (cluster.js:710:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at internal/child_process.js:496:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:495:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:685:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\Users\marcelo\git\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\Users\marcelo\git\sip\controllers\reportes.js:945:22
+    at tryCatcher (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:502:31)
+    at Promise._settlePromise (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:559:18)
+    at Promise._settlePromise0 (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:604:10)
+    at Promise._settlePromises (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:683:18)
+    at Async._drainQueue (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\Users\marcelo\git\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:374:17)

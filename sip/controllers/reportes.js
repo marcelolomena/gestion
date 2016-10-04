@@ -2,8 +2,8 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var fs = require('fs');
 var path = require("path");
-var jsreport = require('jsreport-core')()
-
+//var jsreport = require('jsreport-core')()
+var jsreport = require('jsreport')()
 
 exports.lstGerencias = function (req, res) {
 
@@ -895,9 +895,13 @@ ON P.cui = Q.cui
 exports.testtroya = function (req, res) {
     console.dir(req.query)
     //console.log(page)
-    var jsreport_xlsx = require('jsreport-xlsx')()
-    jsreport.use(jsreport_xlsx)
-
+    //var jsreport_xlsx = require('jsreport-xlsx')()
+    //var jsreport_templates = require('jsreport-xlsx')()
+    //jsreport.use(jsreport_xlsx)
+    //require("jsreport").renderDefaults.extensions.push("xlsx");
+    //jsreport.renderDefaults.extensions.push("xlsx")
+    var pathPdf = path.join(__dirname, '..', 'pdf')
+    var filePdf = 'result.xlsx'
     var count = `
             SELECT 
             count(*) cantidad
@@ -915,13 +919,13 @@ exports.testtroya = function (req, res) {
 
             var datum = {
                 "food": [{
-                    "Name": "Cucomber",
+                    "Name": "Marcelo",
                     "Amount": 8
                 }, {
-                        "Name": "Apple",
+                        "Name": "Ignacio",
                         "Amount": 7
                     }, {
-                        "Name": "Orange",
+                        "Name": "Roberto",
                         "Amount": 6
                     }, {
                         "Name": "Carrot",
@@ -939,39 +943,46 @@ exports.testtroya = function (req, res) {
             }
 
             jsreport.init().then(function () {
-                return jsreport.render({
-                    template: {
-                        content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot.xml'), 'utf8'),
-                        helpers: helpers,
-                        engine: 'handlebars',
-                        recipe: 'xlsx',
-                        xlsxTemplates: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx'), 'utf8')
-                    },
-                    data: datum
-                }).then(function (resp) {
-                    console.log(resp)
+                jsreport.documentStore.collection('xlsxTemplates').insert({
+                    contentRaw: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx')),
+                    shortid: 'tula',
+                    name: 'tula'
+                }).then(function (tmpl) {
+
+                    //console.dir(tmpl.shortid)
                     /*
-                    res.header('Content-disposition', 'inline; filename=' + filePdf);
-                    res.header('Content-type', 'application/pdf');
-                    resp.result.pipe(fs.createWriteStream(pathPdf + path.sep + filePdf))
-                        .on('finish', function () {
-                            fs.createReadStream(pathPdf + path.sep + filePdf).pipe(res)
-                                .on('finish', function () {
-                                    fs.unlink(pathPdf + path.sep + filePdf);
-                                    //console.log('finalizo');
-                                });
-                        });
+                                        jsreport.documentStore.collection("xlsxTemplates")
+                                            .find({ shortid: "divot" })
+                                            .then(function (respuesta) {
+                                                console.dir(respuesta)
+                                            });
                     */
+
+                    return jsreport.render({
+                        template: {
+                            recipe: 'xlsx',
+                            engine: 'handlebars',
+                            xlsxTemplate: {
+                                shortid: 'tula'
+                            },
+                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
+                        },
+                        options: { preview: true },
+                        data: datum
+                    }).then((resp) => {
+                        console.dir(resp)
+                        res.send(resp.content.toString())
+
+                    }).catch(function (e) {
+                        console.log(e)
+                    })
+
                 }).catch(function (e) {
                     console.log(e)
                 })
             }).catch(function (e) {
                 console.log(e)
             })
-
-
-        }).catch(function (e) {
-            console.log(e)
         })
+
 }
-//
