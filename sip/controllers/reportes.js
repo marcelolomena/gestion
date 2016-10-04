@@ -907,46 +907,24 @@ exports.testtroya = function (req, res) {
             count(*) cantidad
             FROM sip.troya A 
             WHERE A.tipo = 'Real'`
-
+/*
     var sql = `
             SELECT A.id,A.nuevagerencia, A.nuevodepartamento,A.seccion,A.monto FROM sip.troya A WHERE A.tipo = 'Real'`
-
-    sequelize.query(sql,
-        {
-            //replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
-            type: sequelize.QueryTypes.SELECT
-        }).then(function (data) {
+*/
+var sql = "select TOP 50000 nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo,monto " +
+    "from sip.troya ";
+    sequelize.query(sql).spread(function (data) {
+        //console.dir(data);
 
             var datum = {
-                "food": [{
-                    "Name": "Marcelo",
-                    "Amount": 8
-                }, {
-                        "Name": "Ignacio",
-                        "Amount": 7
-                    }, {
-                        "Name": "Roberto",
-                        "Amount": 6
-                    }, {
-                        "Name": "Carrot",
-                        "Amount": 41
-                    }, {
-                        "Name": "Potatoes",
-                        "Amount": 2
-                    }, {
-                        "Name": "Cucomber",
-                        "Amount": 11
-                    }, {
-                        "Name": "Apple",
-                        "Amount": 32
-                    }]
+                "troya": data
             }
 
             jsreport.init().then(function () {
                 jsreport.documentStore.collection('xlsxTemplates').insert({
                     contentRaw: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx')),
-                    shortid: 'tula',
-                    name: 'tula'
+                    shortid: 'troya',
+                    name: 'troya'
                 }).then(function (tmpl) {
 
                     //console.dir(tmpl.shortid)
@@ -963,14 +941,14 @@ exports.testtroya = function (req, res) {
                             recipe: 'xlsx',
                             engine: 'handlebars',
                             xlsxTemplate: {
-                                shortid: 'tula'
+                                shortid: 'troya'
                             },
                             content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
                         },
                         options: { preview: true },
                         data: datum
                     }).then((resp) => {
-                        console.dir(resp)
+                        //console.dir(resp)
                         res.send(resp.content.toString())
 
                     }).catch(function (e) {

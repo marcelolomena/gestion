@@ -8246,3 +8246,1189 @@ From previous event:
 2016-10-04T16:08:31.960Z - debug: Successfully zipped now. requestId=1
 2016-10-04T16:08:33.300Z - debug: Skipping storing report. requestId=1
 2016-10-04T16:08:33.303Z - info: Rendering request 1 finished in 1995 ms requestId=1
+2016-10-04T16:23:07.348Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:23:07.372Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:23:07.454Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:23:07.736Z - info: Found 25 extensions
+2016-10-04T16:23:07.847Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:23:07.865Z - debug: Discovered 25 extensions
+2016-10-04T16:23:07.880Z - info: Using extension jsrender
+2016-10-04T16:23:07.895Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:23:07.897Z - info: Using extension browser-client
+2016-10-04T16:23:08.044Z - info: Using extension templates
+2016-10-04T16:23:08.086Z - info: Using extension studio
+2016-10-04T16:23:08.163Z - info: Using extension debug
+2016-10-04T16:23:08.170Z - info: Using extension express
+2016-10-04T16:23:08.337Z - info: Using extension fop-pdf
+2016-10-04T16:23:08.411Z - info: Using extension handlebars
+2016-10-04T16:23:08.418Z - info: Using extension resources
+2016-10-04T16:23:08.448Z - info: Using extension fs-store
+2016-10-04T16:23:09.182Z - info: Using extension images
+2016-10-04T16:23:09.514Z - info: Using extension authorization
+2016-10-04T16:23:09.528Z - debug: Extension authorization was disabled
+2016-10-04T16:23:09.529Z - info: Using extension licensing
+2016-10-04T16:23:09.604Z - info: Using extension phantom-pdf
+2016-10-04T16:23:09.709Z - info: Using extension text
+2016-10-04T16:23:09.714Z - info: Using extension reports
+2016-10-04T16:23:09.726Z - info: Using extension html-to-xlsx
+2016-10-04T16:23:09.954Z - info: Using extension child-templates
+2016-10-04T16:23:09.977Z - info: Using extension data
+2016-10-04T16:23:09.988Z - info: Using extension scripts
+2016-10-04T16:23:09.998Z - info: Using extension scheduling
+2016-10-04T16:23:10.354Z - info: Using extension xlsx
+2016-10-04T16:23:12.413Z - info: Using extension sample-template
+2016-10-04T16:23:12.420Z - info: Using extension public-templates
+2016-10-04T16:23:12.444Z - debug: Extension public-templates was disabled
+2016-10-04T16:23:12.451Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T16:23:13.019Z - info: Creating default express app.
+2016-10-04T16:23:13.426Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T16:23:13.438Z - warn: License not found, using free
+2016-10-04T16:23:13.470Z - info: reporter initialized
+2016-10-04T16:23:14.148Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T16:23:14.153Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T16:23:14.155Z - debug: Inline data specified. requestId=1
+2016-10-04T16:23:14.213Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T16:23:14.220Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T16:23:15.919Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 13:23:15 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T16:23:15.926Z - debug: Replaced images [] requestId=1
+2016-10-04T16:23:15.933Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T16:23:16.360Z - debug: Successfully zipped now. requestId=1
+2016-10-04T16:23:17.995Z - debug: Skipping storing report. requestId=1
+2016-10-04T16:23:17.997Z - info: Rendering request 1 finished in 3851 ms requestId=1
+2016-10-04T16:36:04.317Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:36:04.339Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:36:04.425Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:36:04.764Z - info: Found 25 extensions
+2016-10-04T16:36:04.828Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:36:04.847Z - debug: Discovered 25 extensions
+2016-10-04T16:36:04.862Z - info: Using extension jsrender
+2016-10-04T16:36:04.881Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:36:04.883Z - info: Using extension browser-client
+2016-10-04T16:36:05.035Z - info: Using extension templates
+2016-10-04T16:36:05.079Z - info: Using extension studio
+2016-10-04T16:36:05.154Z - info: Using extension debug
+2016-10-04T16:36:05.160Z - info: Using extension express
+2016-10-04T16:36:05.325Z - info: Using extension fop-pdf
+2016-10-04T16:36:05.393Z - info: Using extension handlebars
+2016-10-04T16:36:05.400Z - info: Using extension resources
+2016-10-04T16:36:05.426Z - info: Using extension fs-store
+2016-10-04T16:36:06.048Z - info: Using extension images
+2016-10-04T16:36:06.338Z - info: Using extension authorization
+2016-10-04T16:36:06.348Z - debug: Extension authorization was disabled
+2016-10-04T16:36:06.349Z - info: Using extension licensing
+2016-10-04T16:36:06.393Z - info: Using extension phantom-pdf
+2016-10-04T16:36:06.468Z - info: Using extension text
+2016-10-04T16:36:06.474Z - info: Using extension reports
+2016-10-04T16:36:06.485Z - info: Using extension html-to-xlsx
+2016-10-04T16:36:06.702Z - info: Using extension child-templates
+2016-10-04T16:36:06.725Z - info: Using extension data
+2016-10-04T16:36:06.733Z - info: Using extension scripts
+2016-10-04T16:36:06.743Z - info: Using extension scheduling
+2016-10-04T16:36:07.026Z - info: Using extension xlsx
+2016-10-04T16:36:09.211Z - info: Using extension sample-template
+2016-10-04T16:36:09.217Z - info: Using extension public-templates
+2016-10-04T16:36:09.236Z - debug: Extension public-templates was disabled
+2016-10-04T16:36:09.243Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T16:36:09.564Z - info: Creating default express app.
+2016-10-04T16:36:09.946Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T16:36:09.957Z - warn: License not found, using free
+2016-10-04T16:36:09.989Z - info: reporter initialized
+2016-10-04T16:37:06.552Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:37:06.573Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:37:06.653Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:37:06.981Z - info: Found 25 extensions
+2016-10-04T16:37:07.044Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:37:07.066Z - debug: Discovered 25 extensions
+2016-10-04T16:37:07.080Z - info: Using extension jsrender
+2016-10-04T16:37:07.098Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:37:07.099Z - info: Using extension browser-client
+2016-10-04T16:37:07.262Z - info: Using extension templates
+2016-10-04T16:37:07.306Z - info: Using extension studio
+2016-10-04T16:37:07.389Z - info: Using extension debug
+2016-10-04T16:37:07.395Z - info: Using extension express
+2016-10-04T16:37:07.566Z - info: Using extension fop-pdf
+2016-10-04T16:37:07.642Z - info: Using extension handlebars
+2016-10-04T16:37:07.649Z - info: Using extension resources
+2016-10-04T16:37:07.678Z - info: Using extension fs-store
+2016-10-04T16:37:08.458Z - info: Using extension images
+2016-10-04T16:37:08.704Z - info: Using extension authorization
+2016-10-04T16:37:08.715Z - debug: Extension authorization was disabled
+2016-10-04T16:37:08.716Z - info: Using extension licensing
+2016-10-04T16:37:08.757Z - info: Using extension phantom-pdf
+2016-10-04T16:37:08.829Z - info: Using extension text
+2016-10-04T16:37:08.833Z - info: Using extension reports
+2016-10-04T16:37:08.845Z - info: Using extension html-to-xlsx
+2016-10-04T16:37:09.039Z - info: Using extension child-templates
+2016-10-04T16:37:09.059Z - info: Using extension data
+2016-10-04T16:37:09.069Z - info: Using extension scripts
+2016-10-04T16:37:09.080Z - info: Using extension scheduling
+2016-10-04T16:37:09.293Z - info: Using extension xlsx
+2016-10-04T16:37:11.112Z - info: Using extension sample-template
+2016-10-04T16:37:11.120Z - info: Using extension public-templates
+2016-10-04T16:37:11.140Z - debug: Extension public-templates was disabled
+2016-10-04T16:37:11.146Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T16:37:11.501Z - info: Creating default express app.
+2016-10-04T16:37:11.909Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T16:37:11.920Z - warn: License not found, using free
+2016-10-04T16:37:11.942Z - info: reporter initialized
+2016-10-04T16:37:12.659Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T16:37:12.663Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T16:37:12.665Z - debug: Inline data specified. requestId=1
+2016-10-04T16:37:12.714Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T16:37:12.720Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T16:37:14.594Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 13:37:14 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T16:37:14.603Z - debug: Replaced images [] requestId=1
+2016-10-04T16:37:14.609Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T16:37:15.023Z - debug: Successfully zipped now. requestId=1
+2016-10-04T16:37:16.407Z - debug: Skipping storing report. requestId=1
+2016-10-04T16:37:16.410Z - info: Rendering request 1 finished in 3753 ms requestId=1
+2016-10-04T16:42:07.902Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:42:07.922Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:42:08.001Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:42:08.323Z - info: Found 25 extensions
+2016-10-04T16:42:08.383Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:42:08.405Z - debug: Discovered 25 extensions
+2016-10-04T16:42:08.419Z - info: Using extension jsrender
+2016-10-04T16:42:08.435Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:42:08.439Z - info: Using extension browser-client
+2016-10-04T16:42:08.599Z - info: Using extension templates
+2016-10-04T16:42:08.643Z - info: Using extension studio
+2016-10-04T16:42:08.727Z - info: Using extension debug
+2016-10-04T16:42:08.733Z - info: Using extension express
+2016-10-04T16:42:08.916Z - info: Using extension fop-pdf
+2016-10-04T16:42:08.992Z - info: Using extension handlebars
+2016-10-04T16:42:09.000Z - info: Using extension resources
+2016-10-04T16:42:09.030Z - info: Using extension fs-store
+2016-10-04T16:42:09.811Z - info: Using extension images
+2016-10-04T16:42:10.065Z - info: Using extension authorization
+2016-10-04T16:42:10.073Z - debug: Extension authorization was disabled
+2016-10-04T16:42:10.076Z - info: Using extension licensing
+2016-10-04T16:42:10.125Z - info: Using extension phantom-pdf
+2016-10-04T16:42:10.198Z - info: Using extension text
+2016-10-04T16:42:10.202Z - info: Using extension reports
+2016-10-04T16:42:10.215Z - info: Using extension html-to-xlsx
+2016-10-04T16:42:10.414Z - info: Using extension child-templates
+2016-10-04T16:42:10.433Z - info: Using extension data
+2016-10-04T16:42:10.445Z - info: Using extension scripts
+2016-10-04T16:42:10.455Z - info: Using extension scheduling
+2016-10-04T16:42:10.666Z - info: Using extension xlsx
+2016-10-04T16:42:12.482Z - info: Using extension sample-template
+2016-10-04T16:42:12.490Z - info: Using extension public-templates
+2016-10-04T16:42:12.509Z - debug: Extension public-templates was disabled
+2016-10-04T16:42:12.515Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T16:42:12.841Z - info: Creating default express app.
+2016-10-04T16:42:13.197Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T16:42:13.207Z - warn: License not found, using free
+2016-10-04T16:42:13.243Z - info: reporter initialized
+2016-10-04T16:42:13.998Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T16:42:14.002Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T16:42:14.005Z - debug: Inline data specified. requestId=1
+2016-10-04T16:42:14.052Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T16:42:14.059Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T16:42:15.923Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 13:42:15 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T16:42:15.931Z - debug: Replaced images [] requestId=1
+2016-10-04T16:42:15.939Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T16:42:16.384Z - debug: Successfully zipped now. requestId=1
+2016-10-04T16:42:17.792Z - debug: Skipping storing report. requestId=1
+2016-10-04T16:42:17.795Z - info: Rendering request 1 finished in 3799 ms requestId=1
+2016-10-04T16:50:31.349Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:50:31.365Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:50:31.433Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:50:31.718Z - info: Found 25 extensions
+2016-10-04T16:50:31.773Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:50:31.792Z - debug: Discovered 25 extensions
+2016-10-04T16:50:31.805Z - info: Using extension jsrender
+2016-10-04T16:50:31.822Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:50:31.823Z - info: Using extension browser-client
+2016-10-04T16:50:31.960Z - info: Using extension templates
+2016-10-04T16:50:31.998Z - info: Using extension studio
+2016-10-04T16:50:32.064Z - info: Using extension debug
+2016-10-04T16:50:32.070Z - info: Using extension express
+2016-10-04T16:50:32.219Z - info: Using extension fop-pdf
+2016-10-04T16:50:32.292Z - info: Using extension handlebars
+2016-10-04T16:50:32.299Z - info: Using extension resources
+2016-10-04T16:50:32.322Z - info: Using extension fs-store
+2016-10-04T16:50:32.874Z - info: Using extension images
+2016-10-04T16:50:33.150Z - info: Using extension authorization
+2016-10-04T16:50:33.160Z - debug: Extension authorization was disabled
+2016-10-04T16:50:33.162Z - info: Using extension licensing
+2016-10-04T16:50:33.203Z - info: Using extension phantom-pdf
+2016-10-04T16:50:33.272Z - info: Using extension text
+2016-10-04T16:50:33.278Z - info: Using extension reports
+2016-10-04T16:50:33.289Z - info: Using extension html-to-xlsx
+2016-10-04T16:50:33.484Z - info: Using extension child-templates
+2016-10-04T16:50:33.506Z - info: Using extension data
+2016-10-04T16:50:33.516Z - info: Using extension scripts
+2016-10-04T16:50:33.527Z - info: Using extension scheduling
+2016-10-04T16:50:33.782Z - info: Using extension xlsx
+2016-10-04T16:50:35.550Z - info: Using extension sample-template
+2016-10-04T16:50:35.557Z - info: Using extension public-templates
+2016-10-04T16:50:35.576Z - debug: Extension public-templates was disabled
+2016-10-04T16:50:35.587Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T16:50:35.953Z - info: Creating default express app.
+2016-10-04T16:50:36.306Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T16:50:36.318Z - warn: License not found, using free
+2016-10-04T16:50:36.352Z - info: reporter initialized
+2016-10-04T16:50:37.038Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T16:50:37.044Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T16:50:37.048Z - debug: Inline data specified. requestId=1
+2016-10-04T16:50:37.102Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T16:50:37.108Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T16:50:49.169Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 13:50:49 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T16:50:49.174Z - debug: Replaced images [] requestId=1
+2016-10-04T16:50:49.181Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T16:50:49.647Z - debug: Successfully zipped now. requestId=1
+2016-10-04T16:50:51.002Z - debug: Skipping storing report. requestId=1
+2016-10-04T16:50:51.005Z - info: Rendering request 1 finished in 13967 ms requestId=1
+2016-10-04T16:59:02.967Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:59:02.986Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:59:03.070Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:59:03.356Z - info: Found 25 extensions
+2016-10-04T16:59:03.422Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:59:03.442Z - debug: Discovered 25 extensions
+2016-10-04T16:59:03.457Z - info: Using extension jsrender
+2016-10-04T16:59:03.474Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:59:03.477Z - info: Using extension browser-client
+2016-10-04T16:59:03.633Z - info: Using extension templates
+2016-10-04T16:59:03.679Z - info: Using extension studio
+2016-10-04T16:59:03.752Z - info: Using extension debug
+2016-10-04T16:59:03.759Z - info: Using extension express
+2016-10-04T16:59:03.924Z - info: Using extension fop-pdf
+2016-10-04T16:59:03.996Z - info: Using extension handlebars
+2016-10-04T16:59:04.006Z - info: Using extension resources
+2016-10-04T16:59:04.034Z - info: Using extension fs-store
+2016-10-04T16:59:04.685Z - info: Using extension images
+2016-10-04T16:59:05.011Z - info: Using extension authorization
+2016-10-04T16:59:05.023Z - debug: Extension authorization was disabled
+2016-10-04T16:59:05.024Z - info: Using extension licensing
+2016-10-04T16:59:05.065Z - info: Using extension phantom-pdf
+2016-10-04T16:59:05.132Z - info: Using extension text
+2016-10-04T16:59:05.138Z - info: Using extension reports
+2016-10-04T16:59:05.150Z - info: Using extension html-to-xlsx
+2016-10-04T16:59:05.345Z - info: Using extension child-templates
+2016-10-04T16:59:05.368Z - info: Using extension data
+2016-10-04T16:59:05.379Z - info: Using extension scripts
+2016-10-04T16:59:05.390Z - info: Using extension scheduling
+2016-10-04T16:59:05.606Z - info: Using extension xlsx
+2016-10-04T16:59:07.367Z - info: Using extension sample-template
+2016-10-04T16:59:07.373Z - info: Using extension public-templates
+2016-10-04T16:59:07.395Z - debug: Extension public-templates was disabled
+2016-10-04T16:59:07.403Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T16:59:07.740Z - info: Creating default express app.
+2016-10-04T16:59:08.097Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T16:59:08.107Z - warn: License not found, using free
+2016-10-04T16:59:08.138Z - info: reporter initialized
+2016-10-04T16:59:08.785Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T16:59:08.791Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T16:59:08.796Z - debug: Inline data specified. requestId=1
+2016-10-04T16:59:08.856Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T16:59:08.863Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T16:59:10.540Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 13:59:10 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T16:59:10.546Z - debug: Replaced images [] requestId=1
+2016-10-04T16:59:10.552Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T16:59:10.928Z - debug: Successfully zipped now. requestId=1
+2016-10-04T16:59:12.805Z - debug: Skipping storing report. requestId=1
+2016-10-04T16:59:12.809Z - info: Rendering request 1 finished in 4026 ms requestId=1
+2016-10-04T16:59:56.371Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T16:59:56.424Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T16:59:56.517Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T16:59:56.765Z - info: Found 25 extensions
+2016-10-04T16:59:56.820Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T16:59:56.840Z - debug: Discovered 25 extensions
+2016-10-04T16:59:56.852Z - info: Using extension jsrender
+2016-10-04T16:59:56.868Z - debug: Extension authentication is disabled, skipping
+2016-10-04T16:59:56.872Z - info: Using extension browser-client
+2016-10-04T16:59:57.013Z - info: Using extension templates
+2016-10-04T16:59:57.053Z - info: Using extension studio
+2016-10-04T16:59:57.145Z - info: Using extension debug
+2016-10-04T16:59:57.150Z - info: Using extension express
+2016-10-04T16:59:57.319Z - info: Using extension fop-pdf
+2016-10-04T16:59:57.397Z - info: Using extension handlebars
+2016-10-04T16:59:57.403Z - info: Using extension resources
+2016-10-04T16:59:57.430Z - info: Using extension fs-store
+2016-10-04T16:59:58.073Z - info: Using extension images
+2016-10-04T16:59:58.360Z - info: Using extension authorization
+2016-10-04T16:59:58.371Z - debug: Extension authorization was disabled
+2016-10-04T16:59:58.372Z - info: Using extension licensing
+2016-10-04T16:59:58.418Z - info: Using extension phantom-pdf
+2016-10-04T16:59:58.500Z - info: Using extension text
+2016-10-04T16:59:58.505Z - info: Using extension reports
+2016-10-04T16:59:58.517Z - info: Using extension html-to-xlsx
+2016-10-04T16:59:58.773Z - info: Using extension child-templates
+2016-10-04T16:59:58.794Z - info: Using extension data
+2016-10-04T16:59:58.805Z - info: Using extension scripts
+2016-10-04T16:59:58.815Z - info: Using extension scheduling
+2016-10-04T16:59:59.109Z - info: Using extension xlsx
+2016-10-04T17:00:00.911Z - info: Using extension sample-template
+2016-10-04T17:00:00.917Z - info: Using extension public-templates
+2016-10-04T17:00:00.944Z - debug: Extension public-templates was disabled
+2016-10-04T17:00:00.968Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:00:01.313Z - info: Creating default express app.
+2016-10-04T17:00:01.720Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:00:01.730Z - warn: License not found, using free
+2016-10-04T17:00:01.764Z - info: reporter initialized
+2016-10-04T17:00:02.407Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:00:02.413Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:00:02.417Z - debug: Inline data specified. requestId=1
+2016-10-04T17:00:02.477Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:00:02.483Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:00:41.228Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:00:41.269Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:00:41.348Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:00:41.579Z - info: Found 25 extensions
+2016-10-04T17:00:41.635Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:00:41.658Z - debug: Discovered 25 extensions
+2016-10-04T17:00:41.670Z - info: Using extension jsrender
+2016-10-04T17:00:41.684Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:00:41.689Z - info: Using extension browser-client
+2016-10-04T17:00:41.832Z - info: Using extension templates
+2016-10-04T17:00:41.868Z - info: Using extension studio
+2016-10-04T17:00:41.950Z - info: Using extension debug
+2016-10-04T17:00:41.957Z - info: Using extension express
+2016-10-04T17:00:42.123Z - info: Using extension fop-pdf
+2016-10-04T17:00:42.195Z - info: Using extension handlebars
+2016-10-04T17:00:42.202Z - info: Using extension resources
+2016-10-04T17:00:42.227Z - info: Using extension fs-store
+2016-10-04T17:00:42.869Z - info: Using extension images
+2016-10-04T17:00:43.155Z - info: Using extension authorization
+2016-10-04T17:00:43.167Z - debug: Extension authorization was disabled
+2016-10-04T17:00:43.167Z - info: Using extension licensing
+2016-10-04T17:00:43.213Z - info: Using extension phantom-pdf
+2016-10-04T17:00:43.289Z - info: Using extension text
+2016-10-04T17:00:43.294Z - info: Using extension reports
+2016-10-04T17:00:43.308Z - info: Using extension html-to-xlsx
+2016-10-04T17:00:43.557Z - info: Using extension child-templates
+2016-10-04T17:00:43.580Z - info: Using extension data
+2016-10-04T17:00:43.590Z - info: Using extension scripts
+2016-10-04T17:00:43.601Z - info: Using extension scheduling
+2016-10-04T17:00:43.905Z - info: Using extension xlsx
+2016-10-04T17:00:45.669Z - info: Using extension sample-template
+2016-10-04T17:00:45.677Z - info: Using extension public-templates
+2016-10-04T17:00:45.697Z - debug: Extension public-templates was disabled
+2016-10-04T17:00:45.707Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:00:46.026Z - info: Creating default express app.
+2016-10-04T17:00:46.411Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:00:46.421Z - warn: License not found, using free
+2016-10-04T17:00:46.452Z - info: reporter initialized
+2016-10-04T17:00:47.097Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:00:47.102Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:00:47.104Z - debug: Inline data specified. requestId=1
+2016-10-04T17:00:47.161Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:00:47.167Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:00:48.806Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:00:48 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:00:48.813Z - debug: Replaced images [] requestId=1
+2016-10-04T17:00:48.820Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:00:49.199Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:00:50.566Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:00:50.569Z - info: Rendering request 1 finished in 3474 ms requestId=1
+2016-10-04T17:01:39.683Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:01:39.706Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:01:39.783Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:01:40.027Z - info: Found 25 extensions
+2016-10-04T17:01:40.090Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:01:40.110Z - debug: Discovered 25 extensions
+2016-10-04T17:01:40.123Z - info: Using extension jsrender
+2016-10-04T17:01:40.142Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:01:40.144Z - info: Using extension browser-client
+2016-10-04T17:01:40.341Z - info: Using extension templates
+2016-10-04T17:01:40.382Z - info: Using extension studio
+2016-10-04T17:01:40.449Z - info: Using extension debug
+2016-10-04T17:01:40.457Z - info: Using extension express
+2016-10-04T17:01:40.626Z - info: Using extension fop-pdf
+2016-10-04T17:01:40.697Z - info: Using extension handlebars
+2016-10-04T17:01:40.706Z - info: Using extension resources
+2016-10-04T17:01:40.732Z - info: Using extension fs-store
+2016-10-04T17:01:41.366Z - info: Using extension images
+2016-10-04T17:01:41.681Z - info: Using extension authorization
+2016-10-04T17:01:41.692Z - debug: Extension authorization was disabled
+2016-10-04T17:01:41.693Z - info: Using extension licensing
+2016-10-04T17:01:41.742Z - info: Using extension phantom-pdf
+2016-10-04T17:01:41.816Z - info: Using extension text
+2016-10-04T17:01:41.824Z - info: Using extension reports
+2016-10-04T17:01:41.840Z - info: Using extension html-to-xlsx
+2016-10-04T17:01:42.109Z - info: Using extension child-templates
+2016-10-04T17:01:42.133Z - info: Using extension data
+2016-10-04T17:01:42.144Z - info: Using extension scripts
+2016-10-04T17:01:42.156Z - info: Using extension scheduling
+2016-10-04T17:01:42.436Z - info: Using extension xlsx
+2016-10-04T17:01:44.419Z - info: Using extension sample-template
+2016-10-04T17:01:44.425Z - info: Using extension public-templates
+2016-10-04T17:01:44.446Z - debug: Extension public-templates was disabled
+2016-10-04T17:01:44.456Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:01:44.781Z - info: Creating default express app.
+2016-10-04T17:01:45.143Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:01:45.156Z - warn: License not found, using free
+2016-10-04T17:01:45.189Z - info: reporter initialized
+2016-10-04T17:01:45.901Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:01:45.907Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:01:45.909Z - debug: Inline data specified. requestId=1
+2016-10-04T17:01:45.957Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:01:45.963Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:01:47.615Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:01:47 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:01:47.621Z - debug: Replaced images [] requestId=1
+2016-10-04T17:01:47.627Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:01:47.996Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:01:49.359Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:01:49.362Z - info: Rendering request 1 finished in 3461 ms requestId=1
+2016-10-04T17:02:39.235Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:02:39.274Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:02:39.354Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:02:39.582Z - info: Found 25 extensions
+2016-10-04T17:02:39.641Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:02:39.659Z - debug: Discovered 25 extensions
+2016-10-04T17:02:39.673Z - info: Using extension jsrender
+2016-10-04T17:02:39.689Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:02:39.690Z - info: Using extension browser-client
+2016-10-04T17:02:39.838Z - info: Using extension templates
+2016-10-04T17:02:39.876Z - info: Using extension studio
+2016-10-04T17:02:39.961Z - info: Using extension debug
+2016-10-04T17:02:39.967Z - info: Using extension express
+2016-10-04T17:02:40.127Z - info: Using extension fop-pdf
+2016-10-04T17:02:40.198Z - info: Using extension handlebars
+2016-10-04T17:02:40.205Z - info: Using extension resources
+2016-10-04T17:02:40.233Z - info: Using extension fs-store
+2016-10-04T17:02:40.875Z - info: Using extension images
+2016-10-04T17:02:41.154Z - info: Using extension authorization
+2016-10-04T17:02:41.164Z - debug: Extension authorization was disabled
+2016-10-04T17:02:41.165Z - info: Using extension licensing
+2016-10-04T17:02:41.209Z - info: Using extension phantom-pdf
+2016-10-04T17:02:41.289Z - info: Using extension text
+2016-10-04T17:02:41.295Z - info: Using extension reports
+2016-10-04T17:02:41.310Z - info: Using extension html-to-xlsx
+2016-10-04T17:02:41.561Z - info: Using extension child-templates
+2016-10-04T17:02:41.584Z - info: Using extension data
+2016-10-04T17:02:41.595Z - info: Using extension scripts
+2016-10-04T17:02:41.607Z - info: Using extension scheduling
+2016-10-04T17:02:41.893Z - info: Using extension xlsx
+2016-10-04T17:02:43.636Z - info: Using extension sample-template
+2016-10-04T17:02:43.642Z - info: Using extension public-templates
+2016-10-04T17:02:43.661Z - debug: Extension public-templates was disabled
+2016-10-04T17:02:43.671Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:02:43.987Z - info: Creating default express app.
+2016-10-04T17:02:44.409Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:02:44.419Z - warn: License not found, using free
+2016-10-04T17:02:44.451Z - info: reporter initialized
+2016-10-04T17:02:45.292Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:02:45.300Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:02:45.303Z - debug: Inline data specified. requestId=1
+2016-10-04T17:02:45.361Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:02:45.368Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:02:47.066Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:02:46 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:02:47.073Z - debug: Replaced images [] requestId=1
+2016-10-04T17:02:47.079Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:02:47.460Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:02:48.823Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:02:48.826Z - info: Rendering request 1 finished in 3534 ms requestId=1
+2016-10-04T17:07:32.071Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:07:32.091Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:07:32.161Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:07:32.420Z - info: Found 25 extensions
+2016-10-04T17:07:32.483Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:07:32.502Z - debug: Discovered 25 extensions
+2016-10-04T17:07:32.515Z - info: Using extension jsrender
+2016-10-04T17:07:32.530Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:07:32.533Z - info: Using extension browser-client
+2016-10-04T17:07:32.675Z - info: Using extension templates
+2016-10-04T17:07:32.712Z - info: Using extension studio
+2016-10-04T17:07:32.858Z - info: Using extension debug
+2016-10-04T17:07:32.864Z - info: Using extension express
+2016-10-04T17:07:33.024Z - info: Using extension fop-pdf
+2016-10-04T17:07:33.091Z - info: Using extension handlebars
+2016-10-04T17:07:33.097Z - info: Using extension resources
+2016-10-04T17:07:33.120Z - info: Using extension fs-store
+2016-10-04T17:07:33.727Z - info: Using extension images
+2016-10-04T17:07:33.982Z - info: Using extension authorization
+2016-10-04T17:07:33.992Z - debug: Extension authorization was disabled
+2016-10-04T17:07:33.994Z - info: Using extension licensing
+2016-10-04T17:07:34.034Z - info: Using extension phantom-pdf
+2016-10-04T17:07:34.101Z - info: Using extension text
+2016-10-04T17:07:34.107Z - info: Using extension reports
+2016-10-04T17:07:34.117Z - info: Using extension html-to-xlsx
+2016-10-04T17:07:34.326Z - info: Using extension child-templates
+2016-10-04T17:07:34.346Z - info: Using extension data
+2016-10-04T17:07:34.356Z - info: Using extension scripts
+2016-10-04T17:07:34.366Z - info: Using extension scheduling
+2016-10-04T17:07:34.582Z - info: Using extension xlsx
+2016-10-04T17:07:36.363Z - info: Using extension sample-template
+2016-10-04T17:07:36.371Z - info: Using extension public-templates
+2016-10-04T17:07:36.391Z - debug: Extension public-templates was disabled
+2016-10-04T17:07:36.463Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:07:36.811Z - info: Creating default express app.
+2016-10-04T17:07:37.169Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:07:37.180Z - warn: License not found, using free
+2016-10-04T17:07:37.212Z - info: reporter initialized
+2016-10-04T17:07:37.918Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:07:37.924Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:07:37.927Z - debug: Inline data specified. requestId=1
+2016-10-04T17:07:37.979Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:07:37.984Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:09:47.277Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:09:47.285Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:09:47.313Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:09:47.389Z - info: Found 25 extensions
+2016-10-04T17:09:47.405Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:09:47.412Z - debug: Discovered 25 extensions
+2016-10-04T17:09:47.441Z - info: Using extension jsrender
+2016-10-04T17:09:47.447Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:09:47.447Z - info: Using extension browser-client
+2016-10-04T17:09:47.491Z - info: Using extension templates
+2016-10-04T17:09:47.503Z - info: Using extension studio
+2016-10-04T17:09:47.530Z - info: Using extension debug
+2016-10-04T17:09:47.532Z - info: Using extension express
+2016-10-04T17:09:47.578Z - info: Using extension fop-pdf
+2016-10-04T17:09:47.599Z - info: Using extension handlebars
+2016-10-04T17:09:47.602Z - info: Using extension resources
+2016-10-04T17:09:47.612Z - info: Using extension fs-store
+2016-10-04T17:09:47.813Z - info: Using extension images
+2016-10-04T17:09:47.896Z - info: Using extension authorization
+2016-10-04T17:09:47.898Z - debug: Extension authorization was disabled
+2016-10-04T17:09:47.898Z - info: Using extension licensing
+2016-10-04T17:09:47.909Z - info: Using extension phantom-pdf
+2016-10-04T17:09:47.929Z - info: Using extension text
+2016-10-04T17:09:47.931Z - info: Using extension reports
+2016-10-04T17:09:47.934Z - info: Using extension html-to-xlsx
+2016-10-04T17:09:48.021Z - info: Using extension child-templates
+2016-10-04T17:09:48.026Z - info: Using extension data
+2016-10-04T17:09:48.030Z - info: Using extension scripts
+2016-10-04T17:09:48.034Z - info: Using extension scheduling
+2016-10-04T17:09:48.104Z - info: Using extension xlsx
+2016-10-04T17:09:48.724Z - info: Using extension sample-template
+2016-10-04T17:09:48.726Z - info: Using extension public-templates
+2016-10-04T17:09:48.734Z - debug: Extension public-templates was disabled
+2016-10-04T17:09:48.736Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:09:48.883Z - info: Creating default express app.
+2016-10-04T17:09:49.026Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:09:49.029Z - warn: License not found, using free
+2016-10-04T17:09:49.038Z - info: reporter initialized
+2016-10-04T17:12:29.439Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:12:29.457Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:12:29.528Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:12:29.742Z - info: Found 25 extensions
+2016-10-04T17:12:29.799Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:12:29.817Z - debug: Discovered 25 extensions
+2016-10-04T17:12:29.831Z - info: Using extension jsrender
+2016-10-04T17:12:29.846Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:12:29.848Z - info: Using extension browser-client
+2016-10-04T17:12:29.982Z - info: Using extension templates
+2016-10-04T17:12:30.031Z - info: Using extension studio
+2016-10-04T17:12:30.098Z - info: Using extension debug
+2016-10-04T17:12:30.103Z - info: Using extension express
+2016-10-04T17:12:30.245Z - info: Using extension fop-pdf
+2016-10-04T17:12:30.307Z - info: Using extension handlebars
+2016-10-04T17:12:30.313Z - info: Using extension resources
+2016-10-04T17:12:30.335Z - info: Using extension fs-store
+2016-10-04T17:12:30.882Z - info: Using extension images
+2016-10-04T17:12:31.135Z - info: Using extension authorization
+2016-10-04T17:12:31.145Z - debug: Extension authorization was disabled
+2016-10-04T17:12:31.147Z - info: Using extension licensing
+2016-10-04T17:12:31.186Z - info: Using extension phantom-pdf
+2016-10-04T17:12:31.258Z - info: Using extension text
+2016-10-04T17:12:31.264Z - info: Using extension reports
+2016-10-04T17:12:31.277Z - info: Using extension html-to-xlsx
+2016-10-04T17:12:31.473Z - info: Using extension child-templates
+2016-10-04T17:12:31.493Z - info: Using extension data
+2016-10-04T17:12:31.500Z - info: Using extension scripts
+2016-10-04T17:12:31.510Z - info: Using extension scheduling
+2016-10-04T17:12:31.727Z - info: Using extension xlsx
+2016-10-04T17:12:33.476Z - info: Using extension sample-template
+2016-10-04T17:12:33.484Z - info: Using extension public-templates
+2016-10-04T17:12:33.505Z - debug: Extension public-templates was disabled
+2016-10-04T17:12:33.512Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:12:33.830Z - info: Creating default express app.
+2016-10-04T17:12:34.177Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:12:34.187Z - warn: License not found, using free
+2016-10-04T17:12:34.219Z - info: reporter initialized
+2016-10-04T17:12:34.899Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:12:34.905Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:12:34.908Z - debug: Inline data specified. requestId=1
+2016-10-04T17:12:34.957Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:12:34.963Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:12:46.682Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:12:36 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:12:46.799Z - debug: Replaced images [] requestId=1
+2016-10-04T17:12:47.031Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:12:51.374Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:12:57.337Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:12:57.341Z - info: Rendering request 1 finished in 22442 ms requestId=1
+2016-10-04T17:15:08.612Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:15:08.632Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:15:08.708Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:15:08.956Z - info: Found 25 extensions
+2016-10-04T17:15:09.011Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:15:09.029Z - debug: Discovered 25 extensions
+2016-10-04T17:15:09.041Z - info: Using extension jsrender
+2016-10-04T17:15:09.057Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:15:09.058Z - info: Using extension browser-client
+2016-10-04T17:15:09.196Z - info: Using extension templates
+2016-10-04T17:15:09.235Z - info: Using extension studio
+2016-10-04T17:15:09.302Z - info: Using extension debug
+2016-10-04T17:15:09.307Z - info: Using extension express
+2016-10-04T17:15:09.450Z - info: Using extension fop-pdf
+2016-10-04T17:15:09.517Z - info: Using extension handlebars
+2016-10-04T17:15:09.523Z - info: Using extension resources
+2016-10-04T17:15:09.557Z - info: Using extension fs-store
+2016-10-04T17:15:10.194Z - info: Using extension images
+2016-10-04T17:15:10.496Z - info: Using extension authorization
+2016-10-04T17:15:10.507Z - debug: Extension authorization was disabled
+2016-10-04T17:15:10.508Z - info: Using extension licensing
+2016-10-04T17:15:10.548Z - info: Using extension phantom-pdf
+2016-10-04T17:15:10.614Z - info: Using extension text
+2016-10-04T17:15:10.620Z - info: Using extension reports
+2016-10-04T17:15:10.630Z - info: Using extension html-to-xlsx
+2016-10-04T17:15:10.859Z - info: Using extension child-templates
+2016-10-04T17:15:10.878Z - info: Using extension data
+2016-10-04T17:15:10.889Z - info: Using extension scripts
+2016-10-04T17:15:10.899Z - info: Using extension scheduling
+2016-10-04T17:15:11.183Z - info: Using extension xlsx
+2016-10-04T17:15:13.141Z - info: Using extension sample-template
+2016-10-04T17:15:13.147Z - info: Using extension public-templates
+2016-10-04T17:15:13.167Z - debug: Extension public-templates was disabled
+2016-10-04T17:15:13.174Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:15:13.499Z - info: Creating default express app.
+2016-10-04T17:15:13.899Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:15:13.909Z - warn: License not found, using free
+2016-10-04T17:15:13.943Z - info: reporter initialized
+2016-10-04T17:15:14.645Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:15:14.651Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:15:14.653Z - debug: Inline data specified. requestId=1
+2016-10-04T17:15:14.706Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:15:14.712Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:17:10.486Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:19:30.850Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:19:30.871Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:19:30.944Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:19:31.191Z - info: Found 25 extensions
+2016-10-04T17:19:31.247Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:19:31.265Z - debug: Discovered 25 extensions
+2016-10-04T17:19:31.279Z - info: Using extension jsrender
+2016-10-04T17:19:31.293Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:19:31.295Z - info: Using extension browser-client
+2016-10-04T17:19:31.432Z - info: Using extension templates
+2016-10-04T17:19:31.471Z - info: Using extension studio
+2016-10-04T17:19:31.538Z - info: Using extension debug
+2016-10-04T17:19:31.543Z - info: Using extension express
+2016-10-04T17:19:31.684Z - info: Using extension fop-pdf
+2016-10-04T17:19:31.762Z - info: Using extension handlebars
+2016-10-04T17:19:31.769Z - info: Using extension resources
+2016-10-04T17:19:31.791Z - info: Using extension fs-store
+2016-10-04T17:19:32.346Z - info: Using extension images
+2016-10-04T17:19:32.614Z - info: Using extension authorization
+2016-10-04T17:19:32.624Z - debug: Extension authorization was disabled
+2016-10-04T17:19:32.626Z - info: Using extension licensing
+2016-10-04T17:19:32.671Z - info: Using extension phantom-pdf
+2016-10-04T17:19:32.735Z - info: Using extension text
+2016-10-04T17:19:32.740Z - info: Using extension reports
+2016-10-04T17:19:32.751Z - info: Using extension html-to-xlsx
+2016-10-04T17:19:32.986Z - info: Using extension child-templates
+2016-10-04T17:19:33.008Z - info: Using extension data
+2016-10-04T17:19:33.018Z - info: Using extension scripts
+2016-10-04T17:19:33.028Z - info: Using extension scheduling
+2016-10-04T17:19:33.319Z - info: Using extension xlsx
+2016-10-04T17:19:35.205Z - info: Using extension sample-template
+2016-10-04T17:19:35.212Z - info: Using extension public-templates
+2016-10-04T17:19:35.229Z - debug: Extension public-templates was disabled
+2016-10-04T17:19:35.235Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:19:35.599Z - info: Creating default express app.
+2016-10-04T17:19:35.958Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:19:35.968Z - warn: License not found, using free
+2016-10-04T17:19:36.000Z - info: reporter initialized
+2016-10-04T17:20:53.286Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:20:53.306Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:20:53.380Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:20:53.610Z - info: Found 25 extensions
+2016-10-04T17:20:53.666Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:20:53.686Z - debug: Discovered 25 extensions
+2016-10-04T17:20:53.697Z - info: Using extension jsrender
+2016-10-04T17:20:53.712Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:20:53.714Z - info: Using extension browser-client
+2016-10-04T17:20:53.877Z - info: Using extension templates
+2016-10-04T17:20:53.916Z - info: Using extension studio
+2016-10-04T17:20:53.982Z - info: Using extension debug
+2016-10-04T17:20:53.987Z - info: Using extension express
+2016-10-04T17:20:54.128Z - info: Using extension fop-pdf
+2016-10-04T17:20:54.194Z - info: Using extension handlebars
+2016-10-04T17:20:54.200Z - info: Using extension resources
+2016-10-04T17:20:54.223Z - info: Using extension fs-store
+2016-10-04T17:20:54.794Z - info: Using extension images
+2016-10-04T17:20:55.048Z - info: Using extension authorization
+2016-10-04T17:20:55.058Z - debug: Extension authorization was disabled
+2016-10-04T17:20:55.059Z - info: Using extension licensing
+2016-10-04T17:20:55.103Z - info: Using extension phantom-pdf
+2016-10-04T17:20:55.167Z - info: Using extension text
+2016-10-04T17:20:55.172Z - info: Using extension reports
+2016-10-04T17:20:55.184Z - info: Using extension html-to-xlsx
+2016-10-04T17:20:55.380Z - info: Using extension child-templates
+2016-10-04T17:20:55.398Z - info: Using extension data
+2016-10-04T17:20:55.420Z - info: Using extension scripts
+2016-10-04T17:20:55.430Z - info: Using extension scheduling
+2016-10-04T17:20:55.633Z - info: Using extension xlsx
+2016-10-04T17:20:57.445Z - info: Using extension sample-template
+2016-10-04T17:20:57.451Z - info: Using extension public-templates
+2016-10-04T17:20:57.472Z - debug: Extension public-templates was disabled
+2016-10-04T17:20:57.478Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:20:57.867Z - info: Creating default express app.
+2016-10-04T17:20:58.223Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:20:58.233Z - warn: License not found, using free
+2016-10-04T17:20:58.264Z - info: reporter initialized
+2016-10-04T17:20:58.976Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:20:58.983Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:20:58.986Z - debug: Inline data specified. requestId=1
+2016-10-04T17:20:59.036Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:20:59.042Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:22:51.999Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:24:56.799Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:24:56.814Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:24:56.892Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:24:57.111Z - info: Found 25 extensions
+2016-10-04T17:24:57.174Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:24:57.189Z - debug: Discovered 25 extensions
+2016-10-04T17:24:57.205Z - info: Using extension jsrender
+2016-10-04T17:24:57.221Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:24:57.221Z - info: Using extension browser-client
+2016-10-04T17:24:57.346Z - info: Using extension templates
+2016-10-04T17:24:57.393Z - info: Using extension studio
+2016-10-04T17:24:57.471Z - info: Using extension debug
+2016-10-04T17:24:57.486Z - info: Using extension express
+2016-10-04T17:24:57.611Z - info: Using extension fop-pdf
+2016-10-04T17:24:57.674Z - info: Using extension handlebars
+2016-10-04T17:24:57.689Z - info: Using extension resources
+2016-10-04T17:24:57.705Z - info: Using extension fs-store
+2016-10-04T17:24:58.236Z - info: Using extension images
+2016-10-04T17:24:58.471Z - info: Using extension authorization
+2016-10-04T17:24:58.486Z - debug: Extension authorization was disabled
+2016-10-04T17:24:58.486Z - info: Using extension licensing
+2016-10-04T17:24:58.533Z - info: Using extension phantom-pdf
+2016-10-04T17:24:58.596Z - info: Using extension text
+2016-10-04T17:24:58.596Z - info: Using extension reports
+2016-10-04T17:24:58.611Z - info: Using extension html-to-xlsx
+2016-10-04T17:24:58.799Z - info: Using extension child-templates
+2016-10-04T17:24:58.814Z - info: Using extension data
+2016-10-04T17:24:58.830Z - info: Using extension scripts
+2016-10-04T17:24:58.830Z - info: Using extension scheduling
+2016-10-04T17:24:59.033Z - info: Using extension xlsx
+2016-10-04T17:25:00.713Z - info: Using extension sample-template
+2016-10-04T17:25:00.728Z - info: Using extension public-templates
+2016-10-04T17:25:00.744Z - debug: Extension public-templates was disabled
+2016-10-04T17:25:00.744Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:25:01.041Z - info: Creating default express app.
+2016-10-04T17:25:01.410Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:25:01.410Z - warn: License not found, using free
+2016-10-04T17:25:01.445Z - info: reporter initialized
+2016-10-04T17:27:36.894Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:27:36.915Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:27:36.988Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:27:37.237Z - info: Found 25 extensions
+2016-10-04T17:27:37.292Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:27:37.310Z - debug: Discovered 25 extensions
+2016-10-04T17:27:37.322Z - info: Using extension jsrender
+2016-10-04T17:27:37.338Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:27:37.339Z - info: Using extension browser-client
+2016-10-04T17:27:37.475Z - info: Using extension templates
+2016-10-04T17:27:37.512Z - info: Using extension studio
+2016-10-04T17:27:37.582Z - info: Using extension debug
+2016-10-04T17:27:37.587Z - info: Using extension express
+2016-10-04T17:27:37.731Z - info: Using extension fop-pdf
+2016-10-04T17:27:37.803Z - info: Using extension handlebars
+2016-10-04T17:27:37.809Z - info: Using extension resources
+2016-10-04T17:27:37.833Z - info: Using extension fs-store
+2016-10-04T17:27:38.382Z - info: Using extension images
+2016-10-04T17:27:38.652Z - info: Using extension authorization
+2016-10-04T17:27:38.662Z - debug: Extension authorization was disabled
+2016-10-04T17:27:38.664Z - info: Using extension licensing
+2016-10-04T17:27:38.704Z - info: Using extension phantom-pdf
+2016-10-04T17:27:38.771Z - info: Using extension text
+2016-10-04T17:27:38.776Z - info: Using extension reports
+2016-10-04T17:27:38.787Z - info: Using extension html-to-xlsx
+2016-10-04T17:27:38.978Z - info: Using extension child-templates
+2016-10-04T17:27:38.998Z - info: Using extension data
+2016-10-04T17:27:39.008Z - info: Using extension scripts
+2016-10-04T17:27:39.018Z - info: Using extension scheduling
+2016-10-04T17:27:39.253Z - info: Using extension xlsx
+2016-10-04T17:27:40.993Z - info: Using extension sample-template
+2016-10-04T17:27:41.000Z - info: Using extension public-templates
+2016-10-04T17:27:41.019Z - debug: Extension public-templates was disabled
+2016-10-04T17:27:41.026Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:27:41.340Z - info: Creating default express app.
+2016-10-04T17:27:41.722Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:27:41.733Z - warn: License not found, using free
+2016-10-04T17:27:41.766Z - info: reporter initialized
+2016-10-04T17:27:42.420Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:27:42.425Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:27:42.429Z - debug: Inline data specified. requestId=1
+2016-10-04T17:27:42.487Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:27:42.493Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:29:27.138Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:27:46 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:29:28.330Z - debug: Replaced images [] requestId=1
+2016-10-04T17:29:30.064Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:30:14.395Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:30:14.403Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:30:14.465Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:30:14.703Z - info: Found 25 extensions
+2016-10-04T17:30:14.719Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:30:14.740Z - debug: Discovered 25 extensions
+2016-10-04T17:30:14.750Z - info: Using extension jsrender
+2016-10-04T17:30:14.764Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:30:14.765Z - info: Using extension browser-client
+2016-10-04T17:30:14.773Z - info: Using extension templates
+2016-10-04T17:30:14.777Z - info: Using extension studio
+2016-10-04T17:30:14.781Z - info: Using extension debug
+2016-10-04T17:30:14.784Z - info: Using extension express
+2016-10-04T17:30:14.787Z - info: Using extension fop-pdf
+2016-10-04T17:30:14.792Z - info: Using extension handlebars
+2016-10-04T17:30:14.796Z - info: Using extension resources
+2016-10-04T17:30:14.799Z - info: Using extension fs-store
+2016-10-04T17:30:14.804Z - info: Using extension images
+2016-10-04T17:30:14.810Z - info: Using extension authorization
+2016-10-04T17:30:14.813Z - debug: Extension authorization was disabled
+2016-10-04T17:30:14.814Z - info: Using extension licensing
+2016-10-04T17:30:14.817Z - info: Using extension phantom-pdf
+2016-10-04T17:30:14.820Z - info: Using extension text
+2016-10-04T17:30:14.825Z - info: Using extension reports
+2016-10-04T17:30:14.831Z - info: Using extension html-to-xlsx
+2016-10-04T17:30:14.837Z - info: Using extension child-templates
+2016-10-04T17:30:14.840Z - info: Using extension data
+2016-10-04T17:30:14.843Z - info: Using extension scripts
+2016-10-04T17:30:14.848Z - info: Using extension scheduling
+2016-10-04T17:30:14.851Z - info: Using extension xlsx
+2016-10-04T17:30:14.854Z - info: Using extension sample-template
+2016-10-04T17:30:14.859Z - info: Using extension public-templates
+2016-10-04T17:30:14.862Z - debug: Extension public-templates was disabled
+2016-10-04T17:30:14.864Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:30:15.068Z - info: Creating default express app.
+2016-10-04T17:30:15.252Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:874:11)
+    at exports._exceptionWithHostPort (util.js:897:20)
+    at cb (net.js:1299:16)
+    at shared (cluster.js:585:5)
+    at Worker.<anonymous> (cluster.js:559:9)
+    at process.<anonymous> (cluster.js:713:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at internal/child_process.js:497:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:496:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T17:30:15.266Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:874:11)
+    at exports._exceptionWithHostPort (util.js:897:20)
+    at cb (net.js:1299:16)
+    at shared (cluster.js:585:5)
+    at Worker.<anonymous> (cluster.js:559:9)
+    at process.<anonymous> (cluster.js:713:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at internal/child_process.js:497:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:496:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\git\gestion\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\git\gestion\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\git\gestion\sip\controllers\reportes.js:923:22
+    at tryCatcher (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:501:35)
+    at Promise._settlePromise (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:561:18)
+    at Promise._settlePromise0 (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:606:10)
+    at Promise._settlePromises (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:685:18)
+    at Promise._fulfill (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:630:18)
+    at PromiseArray._resolve (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:125:19)
+    at PromiseArray._promiseFulfilled (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:143:14)
+    at PromiseArray._iterate (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:113:31)
+    at PromiseArray.init [as _init] (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:77:10)
+    at Promise._settlePromise (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:558:21)
+    at Promise._settlePromise0 (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:606:10)
+    at Promise._settlePromises (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:685:18)
+    at Async._drainQueue (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+2016-10-04T17:30:16.043Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:32:38.087Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:32:38.110Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:32:38.179Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:32:38.441Z - info: Found 25 extensions
+2016-10-04T17:32:38.500Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:32:38.520Z - debug: Discovered 25 extensions
+2016-10-04T17:32:38.531Z - info: Using extension jsrender
+2016-10-04T17:32:38.546Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:32:38.547Z - info: Using extension browser-client
+2016-10-04T17:32:38.694Z - info: Using extension templates
+2016-10-04T17:32:38.730Z - info: Using extension studio
+2016-10-04T17:32:38.797Z - info: Using extension debug
+2016-10-04T17:32:38.803Z - info: Using extension express
+2016-10-04T17:32:38.951Z - info: Using extension fop-pdf
+2016-10-04T17:32:39.029Z - info: Using extension handlebars
+2016-10-04T17:32:39.036Z - info: Using extension resources
+2016-10-04T17:32:39.059Z - info: Using extension fs-store
+2016-10-04T17:32:39.615Z - info: Using extension images
+2016-10-04T17:32:39.878Z - info: Using extension authorization
+2016-10-04T17:32:39.889Z - debug: Extension authorization was disabled
+2016-10-04T17:32:39.890Z - info: Using extension licensing
+2016-10-04T17:32:39.932Z - info: Using extension phantom-pdf
+2016-10-04T17:32:40.001Z - info: Using extension text
+2016-10-04T17:32:40.007Z - info: Using extension reports
+2016-10-04T17:32:40.021Z - info: Using extension html-to-xlsx
+2016-10-04T17:32:40.216Z - info: Using extension child-templates
+2016-10-04T17:32:40.236Z - info: Using extension data
+2016-10-04T17:32:40.243Z - info: Using extension scripts
+2016-10-04T17:32:40.253Z - info: Using extension scheduling
+2016-10-04T17:32:40.488Z - info: Using extension xlsx
+2016-10-04T17:32:42.348Z - info: Using extension sample-template
+2016-10-04T17:32:42.354Z - info: Using extension public-templates
+2016-10-04T17:32:42.375Z - debug: Extension public-templates was disabled
+2016-10-04T17:32:42.385Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:32:42.782Z - info: Creating default express app.
+2016-10-04T17:32:43.172Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:32:43.182Z - warn: License not found, using free
+2016-10-04T17:32:43.212Z - info: reporter initialized
+2016-10-04T17:33:40.734Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:33:40.754Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:33:40.836Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:33:41.086Z - info: Found 25 extensions
+2016-10-04T17:33:41.142Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:33:41.160Z - debug: Discovered 25 extensions
+2016-10-04T17:33:41.174Z - info: Using extension jsrender
+2016-10-04T17:33:41.189Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:33:41.193Z - info: Using extension browser-client
+2016-10-04T17:33:41.333Z - info: Using extension templates
+2016-10-04T17:33:41.373Z - info: Using extension studio
+2016-10-04T17:33:41.438Z - info: Using extension debug
+2016-10-04T17:33:41.443Z - info: Using extension express
+2016-10-04T17:33:41.590Z - info: Using extension fop-pdf
+2016-10-04T17:33:41.661Z - info: Using extension handlebars
+2016-10-04T17:33:41.668Z - info: Using extension resources
+2016-10-04T17:33:41.691Z - info: Using extension fs-store
+2016-10-04T17:33:42.237Z - info: Using extension images
+2016-10-04T17:33:42.503Z - info: Using extension authorization
+2016-10-04T17:33:42.513Z - debug: Extension authorization was disabled
+2016-10-04T17:33:42.515Z - info: Using extension licensing
+2016-10-04T17:33:42.554Z - info: Using extension phantom-pdf
+2016-10-04T17:33:42.623Z - info: Using extension text
+2016-10-04T17:33:42.628Z - info: Using extension reports
+2016-10-04T17:33:42.640Z - info: Using extension html-to-xlsx
+2016-10-04T17:33:42.833Z - info: Using extension child-templates
+2016-10-04T17:33:42.854Z - info: Using extension data
+2016-10-04T17:33:42.861Z - info: Using extension scripts
+2016-10-04T17:33:42.870Z - info: Using extension scheduling
+2016-10-04T17:33:43.104Z - info: Using extension xlsx
+2016-10-04T17:33:44.848Z - info: Using extension sample-template
+2016-10-04T17:33:44.854Z - info: Using extension public-templates
+2016-10-04T17:33:44.873Z - debug: Extension public-templates was disabled
+2016-10-04T17:33:44.881Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:33:45.225Z - info: Creating default express app.
+2016-10-04T17:33:45.608Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:33:45.618Z - warn: License not found, using free
+2016-10-04T17:33:45.650Z - info: reporter initialized
+2016-10-04T17:33:46.291Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:33:46.297Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:33:46.300Z - debug: Inline data specified. requestId=1
+2016-10-04T17:33:46.354Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:33:46.362Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:35:25.826Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:33:50 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:35:26.931Z - debug: Replaced images [] requestId=1
+2016-10-04T17:35:28.999Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:36:02.568Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:36:43.568Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:36:43.583Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:36:43.684Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:36:43.952Z - info: Found 25 extensions
+2016-10-04T17:36:43.968Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:36:43.988Z - debug: Discovered 25 extensions
+2016-10-04T17:36:44.002Z - info: Using extension jsrender
+2016-10-04T17:36:44.017Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:36:44.020Z - info: Using extension browser-client
+2016-10-04T17:36:44.033Z - info: Using extension templates
+2016-10-04T17:36:44.037Z - info: Using extension studio
+2016-10-04T17:36:44.042Z - info: Using extension debug
+2016-10-04T17:36:44.046Z - info: Using extension express
+2016-10-04T17:36:44.053Z - info: Using extension fop-pdf
+2016-10-04T17:36:44.056Z - info: Using extension handlebars
+2016-10-04T17:36:44.062Z - info: Using extension resources
+2016-10-04T17:36:44.065Z - info: Using extension fs-store
+2016-10-04T17:36:44.074Z - info: Using extension images
+2016-10-04T17:36:44.083Z - info: Using extension authorization
+2016-10-04T17:36:44.085Z - debug: Extension authorization was disabled
+2016-10-04T17:36:44.086Z - info: Using extension licensing
+2016-10-04T17:36:44.089Z - info: Using extension phantom-pdf
+2016-10-04T17:36:44.095Z - info: Using extension text
+2016-10-04T17:36:44.099Z - info: Using extension reports
+2016-10-04T17:36:44.107Z - info: Using extension html-to-xlsx
+2016-10-04T17:36:44.111Z - info: Using extension child-templates
+2016-10-04T17:36:44.114Z - info: Using extension data
+2016-10-04T17:36:44.118Z - info: Using extension scripts
+2016-10-04T17:36:44.122Z - info: Using extension scheduling
+2016-10-04T17:36:44.128Z - info: Using extension xlsx
+2016-10-04T17:36:44.132Z - info: Using extension sample-template
+2016-10-04T17:36:44.135Z - info: Using extension public-templates
+2016-10-04T17:36:44.143Z - debug: Extension public-templates was disabled
+2016-10-04T17:36:44.149Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:36:44.347Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:36:44.385Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:36:44.387Z - info: Rendering request 1 finished in 178099 ms requestId=1
+2016-10-04T17:36:44.610Z - info: Creating default express app.
+2016-10-04T17:36:44.902Z - error: Error when starting http server on port 5488 Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:874:11)
+    at exports._exceptionWithHostPort (util.js:897:20)
+    at cb (net.js:1299:16)
+    at shared (cluster.js:585:5)
+    at Worker.<anonymous> (cluster.js:559:9)
+    at process.<anonymous> (cluster.js:713:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at internal/child_process.js:497:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:496:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+2016-10-04T17:36:44.917Z - error: Error occured during reporter init Error: bind EADDRINUSE null:5488
+    at Object.exports._errnoException (util.js:874:11)
+    at exports._exceptionWithHostPort (util.js:897:20)
+    at cb (net.js:1299:16)
+    at shared (cluster.js:585:5)
+    at Worker.<anonymous> (cluster.js:559:9)
+    at process.<anonymous> (cluster.js:713:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at internal/child_process.js:497:7
+    at process.handleConversion.net.Native.got (internal/child_process.js:43:7)
+    at process.<anonymous> (internal/child_process.js:496:13)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at handleMessage (internal/child_process.js:686:10)
+    at Pipe.channel.onread (internal/child_process.js:438:11)
+From previous event:
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (C:\git\gestion\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at Reporter.reporter.init (C:\git\gestion\sip\node_modules\jsreport\lib\extendInit.js:8:21)
+    at C:\git\gestion\sip\controllers\reportes.js:923:22
+    at tryCatcher (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:501:35)
+    at Promise._settlePromise (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:561:18)
+    at Promise._settlePromise0 (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:606:10)
+    at Promise._settlePromises (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:685:18)
+    at Promise._fulfill (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:630:18)
+    at PromiseArray._resolve (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:125:19)
+    at PromiseArray._promiseFulfilled (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:143:14)
+    at PromiseArray._iterate (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:113:31)
+    at PromiseArray.init [as _init] (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise_array.js:77:10)
+    at Promise._settlePromise (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:558:21)
+    at Promise._settlePromise0 (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:606:10)
+    at Promise._settlePromises (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:685:18)
+    at Async._drainQueue (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (C:\git\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+2016-10-04T17:38:30.447Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:38:30.467Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:38:30.541Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:38:30.761Z - info: Found 25 extensions
+2016-10-04T17:38:30.822Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:38:30.859Z - debug: Discovered 25 extensions
+2016-10-04T17:38:30.871Z - info: Using extension jsrender
+2016-10-04T17:38:30.890Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:38:30.892Z - info: Using extension browser-client
+2016-10-04T17:38:31.029Z - info: Using extension templates
+2016-10-04T17:38:31.064Z - info: Using extension studio
+2016-10-04T17:38:31.135Z - info: Using extension debug
+2016-10-04T17:38:31.140Z - info: Using extension express
+2016-10-04T17:38:31.282Z - info: Using extension fop-pdf
+2016-10-04T17:38:31.345Z - info: Using extension handlebars
+2016-10-04T17:38:31.352Z - info: Using extension resources
+2016-10-04T17:38:31.374Z - info: Using extension fs-store
+2016-10-04T17:38:31.946Z - info: Using extension images
+2016-10-04T17:38:32.194Z - info: Using extension authorization
+2016-10-04T17:38:32.204Z - debug: Extension authorization was disabled
+2016-10-04T17:38:32.206Z - info: Using extension licensing
+2016-10-04T17:38:32.245Z - info: Using extension phantom-pdf
+2016-10-04T17:38:32.314Z - info: Using extension text
+2016-10-04T17:38:32.320Z - info: Using extension reports
+2016-10-04T17:38:32.331Z - info: Using extension html-to-xlsx
+2016-10-04T17:38:32.539Z - info: Using extension child-templates
+2016-10-04T17:38:32.560Z - info: Using extension data
+2016-10-04T17:38:32.568Z - info: Using extension scripts
+2016-10-04T17:38:32.576Z - info: Using extension scheduling
+2016-10-04T17:38:32.780Z - info: Using extension xlsx
+2016-10-04T17:38:34.562Z - info: Using extension sample-template
+2016-10-04T17:38:34.568Z - info: Using extension public-templates
+2016-10-04T17:38:34.589Z - debug: Extension public-templates was disabled
+2016-10-04T17:38:34.599Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:38:35.036Z - info: Creating default express app.
+2016-10-04T17:38:35.408Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:38:35.418Z - warn: License not found, using free
+2016-10-04T17:38:35.449Z - info: reporter initialized
+2016-10-04T17:38:36.111Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:38:36.117Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:38:36.120Z - debug: Inline data specified. requestId=1
+2016-10-04T17:38:36.170Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:38:36.176Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:39:26.608Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:38:38 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:39:27.160Z - debug: Replaced images [] requestId=1
+2016-10-04T17:39:27.998Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:39:46.784Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:40:05.629Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:40:05.635Z - info: Rendering request 1 finished in 89524 ms requestId=1
+2016-10-04T17:42:37.121Z - info: Initializing jsreport in development mode using configuration file dev.config.json
+2016-10-04T17:42:37.147Z - info: Searching for available extensions in C:\git\gestion\sip\
+2016-10-04T17:42:37.225Z - info: Extensions location cache contains up to date information, skipping crawling in C:\git\gestion\sip\node_modules\
+2016-10-04T17:42:37.539Z - info: Found 25 extensions
+2016-10-04T17:42:37.594Z - debug: Writing extension locations cache to C:\Users\daniel\AppData\Local\Temp\jsreport-temp\extensions\locations.json
+2016-10-04T17:42:37.616Z - debug: Discovered 25 extensions
+2016-10-04T17:42:37.630Z - info: Using extension jsrender
+2016-10-04T17:42:37.651Z - debug: Extension authentication is disabled, skipping
+2016-10-04T17:42:37.654Z - info: Using extension browser-client
+2016-10-04T17:42:37.815Z - info: Using extension templates
+2016-10-04T17:42:37.852Z - info: Using extension studio
+2016-10-04T17:42:37.919Z - info: Using extension debug
+2016-10-04T17:42:37.926Z - info: Using extension express
+2016-10-04T17:42:38.091Z - info: Using extension fop-pdf
+2016-10-04T17:42:38.167Z - info: Using extension handlebars
+2016-10-04T17:42:38.175Z - info: Using extension resources
+2016-10-04T17:42:38.211Z - info: Using extension fs-store
+2016-10-04T17:42:38.798Z - info: Using extension images
+2016-10-04T17:42:39.100Z - info: Using extension authorization
+2016-10-04T17:42:39.111Z - debug: Extension authorization was disabled
+2016-10-04T17:42:39.112Z - info: Using extension licensing
+2016-10-04T17:42:39.163Z - info: Using extension phantom-pdf
+2016-10-04T17:42:39.231Z - info: Using extension text
+2016-10-04T17:42:39.236Z - info: Using extension reports
+2016-10-04T17:42:39.257Z - info: Using extension html-to-xlsx
+2016-10-04T17:42:39.457Z - info: Using extension child-templates
+2016-10-04T17:42:39.475Z - info: Using extension data
+2016-10-04T17:42:39.486Z - info: Using extension scripts
+2016-10-04T17:42:39.496Z - info: Using extension scheduling
+2016-10-04T17:42:39.717Z - info: Using extension xlsx
+2016-10-04T17:42:41.450Z - info: Using extension sample-template
+2016-10-04T17:42:41.457Z - info: Using extension public-templates
+2016-10-04T17:42:41.477Z - debug: Extension public-templates was disabled
+2016-10-04T17:42:41.484Z - info: Initializing fs storage at C:\git\gestion\sip\data
+2016-10-04T17:42:41.828Z - info: Creating default express app.
+2016-10-04T17:42:42.182Z - info: jsreport server successfully started on http port: 5488
+2016-10-04T17:42:42.192Z - warn: License not found, using free
+2016-10-04T17:42:42.225Z - info: reporter initialized
+2016-10-04T17:42:42.870Z - info: Starting rendering request 1 (user: null) requestId=1
+2016-10-04T17:42:42.875Z - info: Rendering anonymous template { recipe:xlsx,engine:handlebars} requestId=1
+2016-10-04T17:42:42.877Z - debug: Inline data specified. requestId=1
+2016-10-04T17:42:42.939Z - debug: Resources not defined for this template. requestId=1
+2016-10-04T17:42:42.945Z - debug: Rendering engine handlebars requestId=1
+2016-10-04T17:43:37.001Z - debug: Compiled template not found in the cache, compiling timestamp=Tue Oct 04 2016 14:42:45 GMT-0300 (Hora verano Sudamérica Pacífico), requestId=1
+2016-10-04T17:43:37.899Z - debug: Replaced images [] requestId=1
+2016-10-04T17:43:38.939Z - debug: Executing recipe xlsx requestId=1
+2016-10-04T17:43:58.031Z - debug: Successfully zipped now. requestId=1
+2016-10-04T17:44:16.710Z - debug: Skipping storing report. requestId=1
+2016-10-04T17:44:16.712Z - info: Rendering request 1 finished in 93844 ms requestId=1

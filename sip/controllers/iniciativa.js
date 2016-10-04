@@ -244,6 +244,23 @@ exports.list = function (req, res) {
   });
 
 }
+exports.listpivot = function (req, res) {
+  /*
+    var sql = "select nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo, sum(monto) as monto "+
+    "from sip.troya " +
+    "group by nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo";
+        */
+  console.log("vamo a rescatar la data...");
+  var sql = "select nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo,monto " +
+    "from sip.troya ";
+  sequelize.query(sql)
+    .spread(function (rows) {
+      console.log("listo, vamo a mostrarla...");
+      res.json(rows);
+      console.log("fin");
+    })
+}
+
 
 exports.combobox = function (req, res) {
   models.iniciativa.findAll({
@@ -259,32 +276,32 @@ exports.combobox = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  var gasto, inversion,previsto = 0
-  var gastoaprobado, inversionaprobada,aprobado,aprobadodolares = 0
-/*
-if (action != "del") {
-    if (req.body.pptoestimadogasto != "")
-      gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
-
-    if (req.body.pptoestimadoinversion != "")
-      inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
-      
-    if (req.body.pptoestimadoprevisto != "")
-      previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
-
-    if (req.body.pptoaprobadogasto != "")
-      gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
-
-    if (req.body.pptoaprobadoinversion != "")
-      inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
-      
-    if (req.body.pptoaprobadoprevisto != "")
-      aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
-
-    if (req.body.pptoaprobadodolares != "")
-      aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
-  }
-  */
+  var gasto, inversion, previsto = 0
+  var gastoaprobado, inversionaprobada, aprobado, aprobadodolares = 0
+  /*
+  if (action != "del") {
+      if (req.body.pptoestimadogasto != "")
+        gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
+  
+      if (req.body.pptoestimadoinversion != "")
+        inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+        
+      if (req.body.pptoestimadoprevisto != "")
+        previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
+  
+      if (req.body.pptoaprobadogasto != "")
+        gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
+  
+      if (req.body.pptoaprobadoinversion != "")
+        inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
+        
+      if (req.body.pptoaprobadoprevisto != "")
+        aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+  
+      if (req.body.pptoaprobadodolares != "")
+        aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
+    }
+    */
 
 
   switch (action) {
