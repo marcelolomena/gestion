@@ -3,7 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var fs = require('fs');
 var path = require("path");
 //var jsreport = require('jsreport-core')()
-var jsreport = require('jsreport')()
+//var jsreport = require('jsreport')()
 
 exports.lstGerencias = function (req, res) {
 
@@ -888,79 +888,142 @@ ON P.cui = Q.cui
 }
 
 //
-
+function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+}
 /*
 # Cambio en paginación Toya
 */
 exports.testtroya = function (req, res) {
-    console.dir(req.query)
-    //console.log(page)
-    //var jsreport_xlsx = require('jsreport-xlsx')()
-    //var jsreport_templates = require('jsreport-xlsx')()
-    //jsreport.use(jsreport_xlsx)
-    //require("jsreport").renderDefaults.extensions.push("xlsx");
-    //jsreport.renderDefaults.extensions.push("xlsx")
+    var jsreport = require('jsreport-core')({
+        rootDirectory: path.join(__dirname, '..'),
+        dataDirectory: path.join(__dirname, '..', 'data'),
+        tempDirectory: path.join(__dirname, '..', 'temp'),
+        scripts: {
+            timeout: 100000,
+            allowedModules: "*"
+        }, tasks: {
+            strategy: "in-process",
+            numberOfWorkers: 1,
+            host: "localhost",
+            portLeftBoundary: 3000,
+            portRightBoundary: 3000,
+            templateCache: {
+                max: 100,
+                enabled: true
+            }
+        }, loadConfig: false,
+        //autoTempCleanup: true,
+        //extensionsLocationCache: true
+    })
+    jsreport.use(require('jsreport-templates')())
+    jsreport.use(require('jsreport-xlsx')())
+    jsreport.use(require('jsreport-handlebars')())
+    var start = new Date();
+    console.info("Tiempo Inicial: %dms", start);
     var pathPdf = path.join(__dirname, '..', 'pdf')
     var filePdf = 'result.xlsx'
-    var count = `
-            SELECT 
-            count(*) cantidad
-            FROM sip.troya A 
-            WHERE A.tipo = 'Real'`
-/*
+
     var sql = `
-            SELECT A.id,A.nuevagerencia, A.nuevodepartamento,A.seccion,A.monto FROM sip.troya A WHERE A.tipo = 'Real'`
-*/
-var sql = "select TOP 50000 nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo,monto " +
-    "from sip.troya ";
-    sequelize.query(sql).spread(function (data) {
-        //console.dir(data);
+            SELECT top 300000 nuevagerencia,nuevodepartamento, nombrecuenta , fecha , tipo, monto FROM sip.troya `
 
-            var datum = {
-                "troya": data
-            }
+    setTimeout(function (argument) {
+        sequelize.query(sql,
+            {
+                //replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (data) {
+                console.log("fin sql")
+                var datum = {
+                    "food": data
+                }
 
-            jsreport.init().then(function () {
-                jsreport.documentStore.collection('xlsxTemplates').insert({
-                    contentRaw: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx')),
-                    shortid: 'troya',
-                    name: 'troya'
-                }).then(function (tmpl) {
+                jsreport.init().then(function () {
+                    jsreport.documentStore.collection('xlsxTemplates').insert({
+                        contentRaw: fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx')),
+                        shortid: 'pico',
+                        name: 'pico'
+                    }).then(function (tmpl) {
 
-                    //console.dir(tmpl.shortid)
-                    /*
-                                        jsreport.documentStore.collection("xlsxTemplates")
-                                            .find({ shortid: "divot" })
-                                            .then(function (respuesta) {
-                                                console.dir(respuesta)
-                                            });
-                    */
+                        //console.dir(tmpl.shortid)
+                        /*
+                                            jsreport.documentStore.collection("xlsxTemplates")
+                                                .find({ shortid: "divot" })
+                                                .then(function (respuesta) {
+                                                    console.dir(respuesta)
+                                                });
+                        */
 
-                    return jsreport.render({
-                        template: {
-                            recipe: 'xlsx',
-                            engine: 'handlebars',
-                            xlsxTemplate: {
-                                shortid: 'troya'
+                        return jsreport.render({
+                            template: {
+                                recipe: 'xlsx',
+                                engine: 'handlebars',
+                                xlsxTemplate: {
+                                    shortid: 'pico'
+                                },
+                                content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
                             },
-                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
-                        },
-                        options: { preview: true },
-                        data: datum
-                    }).then((resp) => {
-                        //console.dir(resp)
-                        res.send(resp.content.toString())
+                            //options: { preview: true },
+                            data: datum
+                        }).then(function (out) {
 
+                            res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
+                            res.header('Content-Disposition', 'inline; filename="hipertroyas.xlsx"');
+                            res.header('File-Extension', 'xlsx');
+                            out.result.pipe(res);
+
+                            var end = new Date() - start
+                            console.info("Tiempo Total: %dms", end);
+
+                        }).catch(function (e) {
+                            console.log(e)
+                        })
+                        /*
+                                                return jsreport.render({
+                                                    template: {
+                                                        recipe: 'xlsx',
+                                                        engine: 'handlebars',
+                                                        xlsxTemplate: {
+                                                            shortid: 'pico'
+                                                        },
+                                                        content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
+                                                    },
+                                                    //options: { preview: true },
+                                                    data: datum
+                                                }).then((resp) => {
+                        
+                                                    //res.send(resp.content.toString())
+                                                    resp.result.pipe(res);
+                        
+                                                    var end = new Date() - start
+                                                    console.info("Tiempo Total: %dms", end);
+                        
+                                                }).catch(function (e) {
+                                                    console.log(e)
+                                                })
+                        */
+                        /*
+                                                return jsreport.render({
+                                                    template: {
+                                                        recipe: 'xlsx',
+                                                        engine: 'handlebars',
+                                                        xlsxTemplate: {
+                                                            shortid: 'pico'
+                                                        },
+                                                        content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
+                                                    },
+                                                    data: datum
+                                                })
+                        */
                     }).catch(function (e) {
                         console.log(e)
                     })
-
                 }).catch(function (e) {
                     console.log(e)
                 })
-            }).catch(function (e) {
-                console.log(e)
             })
-        })
-
+    }, 1);
 }

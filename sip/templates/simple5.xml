@@ -1,4 +1,4 @@
-{{#each troya}}
+{{#each food}}
 {{#xlsxAdd "xl/worksheets/sheet2.xml" "worksheet.sheetData[0].row"}}
     <row>
         <c t="inlineStr"><is><t>{{nuevagerencia}}</t></is></c>
