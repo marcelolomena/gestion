@@ -31,6 +31,11 @@
         "co": "4.6.0",
         "connect-session-sequelize": "latest",
         "phantom": "2.1.18",
-        "jsreport": "latest"
+        "jsreport-core": "latest",
+        "jsreport-jsrender":"latest",
+        "jsreport-phantom-pdf": "latest",   
+        "jsreport-handlebars": "latest",                
+        "jsreport-templates": "latest",
+        "jsreport-xlsx": "latest"
     }
 }
