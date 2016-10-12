@@ -5,8 +5,8 @@ function gridDetail(parentRowID, parentRowKey) {
 
     templateDetalle += "<div class='form-row'>";
     templateDetalle += "<div class='column-three'>Periodo{periodo}</div>";
-    templateDetalle += "<div class='column-three'>Monto{montoorigen}</div>";
-    templateDetalle += "<div class='column-three'>Costo{costoorigen}</div>";
+    templateDetalle += "<div class='column-three'>Neto{valorcuota}</div>";
+
     templateDetalle += "</div>";
 
     templateDetalle += "<hr style='width:100%;'/>";
@@ -30,30 +30,21 @@ function gridDetail(parentRowID, parentRowKey) {
             { label: 'id', name: 'id', key: true, hidden: true },
             {
                 label: 'Período', name: 'periodo', width: 100, editable: true,
-                editoptions: {
-                    dataInit: function (element) {
-                        $(element).mask("000000", { placeholder: "______" });
-
-                    }
-                }, editrules: { required: true, number: true }
+                editoptions: { size: 10, readonly: 'readonly'}  
             },
             {
-                label: 'Caja', name: 'montoorigen', width: 150, editable: true,
+                label: 'Neto', name: 'valorcuota', width: 150, editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },            
+            {
+                label: 'Caja', name: 'montoorigen', width: 150, editable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
-                editoptions: {
-                    dataInit: function (el) {
-                        $(el).mask('000.000.000.000.000,00', { reverse: true });
-                    }
-                }, editrules: { required: false }
+                editoptions: { size: 10, readonly: 'readonly'} 
             },
             {
-                label: 'Impacto Operacional', name: 'costoorigen', width: 200, editable: true,
+                label: 'Impacto Operacional', name: 'costoorigen', width: 200, editable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
-                editoptions: {
-                    dataInit: function (el) {
-                        $(el).mask('000.000.000.000.000,00', { reverse: true });
-                    }
-                }, editrules: { required: false }
+                editoptions: { size: 10, readonly: 'readonly'} 
             }
         ],
         pager: "#" + childGridPagerID,
@@ -75,11 +66,45 @@ function gridDetail(parentRowID, parentRowKey) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: false, refresh: true,
+        edit: true, add: true, del: true, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
         {
-        },
+            editCaption: "Modifica Periodo",
+            closeAfterEdit: false,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeSubmit: function (postdata, formid) {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var idxsel = grid.getInd(rowKey);
+                var rowData = grid.getRowData(rowKey);
+                postdata.idx = idxsel;
+                var cuota = new Number(postdata.valorcuota);
+                console.log("cuota:"+cuota);
+                if (isNaN(cuota) || cuota < 0) {
+                    return [false, "Debe ingresar un numero y con valor  mayor o igual a 0", ""];
+                } else {
+                    console.log("actuaalizando:");
+                    postdata.montoorigen=cuota*1.19;
+                    rowData.montoorigen=cuota*1.19;
+                    console.log("actuaalizando:"+postdata.montoorigen);
+                    postdata.costoorigen=cuota + (cuota*0.19*0.77);
+                    rowData.costoorigen=cuota + (cuota*0.19*0.77);                   
+                }
+                return [true, "", ""]
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code == 10)
+                     return [false, "Contrato Aprobado, no se puede modificar, ", ""];                
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }           
+        },        
         {
             addCaption: "Agrega Periodo",
             closeAfterAdd: true,
@@ -106,13 +131,15 @@ function gridDetail(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0) {
+                if (result.error_code == 10){
+                    return [false, "Periodo ya existe", ""];
+                } else if (result.error_code != 0){
                     return [false, result.error_text, ""];
-                } else {
-                    $("#" + childGridID).trigger("reloadGrid");
-                    return [true, "", ""];
+                }else{
+                    return [true, "", ""]
                 }
             }, beforeShowForm: function (form) {
+                $("#periodo", form).removeAttr("readonly");
                 //sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -126,11 +153,13 @@ function gridDetail(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-
-                if (result.error_code != 0)
+                if (result.error_code == 10){
+                    return [false, "Periodo ya existe", ""];
+                } else if (result.error_code != 0){
                     return [false, result.error_text, ""];
-                else
+                }else{
                     return [true, "", ""]
+                }
             }
         },
         {
@@ -138,6 +167,7 @@ function gridDetail(parentRowID, parentRowKey) {
         }
     );
 
+/*
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: "glyphicon glyphicon-pencil",
@@ -151,7 +181,7 @@ function gridDetail(parentRowID, parentRowKey) {
             }
         }
     });
-
+    
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: 'glyphicon glyphicon-save-file',
@@ -187,7 +217,7 @@ function gridDetail(parentRowID, parentRowKey) {
             }
             subgrid.trigger('reloadGrid');
         }
-    });
+    });*/
 
     $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#0431B4");
 

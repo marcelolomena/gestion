@@ -21,11 +21,11 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Tipo<span style='color:red'>*</span>{tipocontrato}</div>";
-    template += "<div class='column-half'>Documento<span style='color:red'>*</span>{tipodocumento}</div>";
+    template += "<div class='column-half'>Documento<span style='color:red'>*</span>{idtipodocumento}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>PMO<span style='color:red'>*</span>{uidpmo}</div>";
+    template += "<div class='column-half'>Negociador<span style='color:red'>*</span>{uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -134,17 +134,64 @@ $(document).ready(function () {
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.radioElemContrato
+                custom_element: sipLibrary.radioElemContrato, 
             }
         },
-        {
+        /*{
             label: 'TipoDocumento', name: 'tipodocumento', search: false, editable: true, hidden: true,
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemDocumento
             }
+        },*/
+        {
+            label: 'Tipo Documento', name: 'tipodocumento', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/contrato/tipodocumento',
+                buildSelect: function (response) {
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger Tipo Documento--</option>';
+                    $.each(data, function (i, item) {
+                        s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                    });
+                    return s + "</select>";
+                }
+            },
         },
+        {
+            label: 'Tipo Documento', name: 'idtipodocumento', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/contrato/tipodocumento',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.plazocontrato;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo Documento--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#tipodocumento").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },        
         {
             label: 'Tipo Solicitud', name: 'tiposolicitud', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
@@ -193,10 +240,10 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'PMO', name: 'uidpmo', search: false, editable: true, hidden: true,
+            label: 'Negociador', name: 'uidpmo', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/usuarios_por_rol/PMO',
+                dataUrl: '/usuarios_por_rol/Negociador',
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
@@ -204,7 +251,7 @@ $(document).ready(function () {
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
-                    s += '<option value="0">--Escoger PMO--</option>';
+                    s += '<option value="0">--Escoger Negociador--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';

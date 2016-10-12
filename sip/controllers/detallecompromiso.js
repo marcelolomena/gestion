@@ -15,20 +15,20 @@ exports.action = function (req, res) {
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
 
-    if (action != "del") {
+/*    if (action != "del") {
         if (montoorigen != "")
             montoorigen = montoorigen.split(".").join("").replace(",", ".")
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
         if (valorcuota != "")
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
-    }
+    }*/
 
     console.log("montoorigen : " + montoorigen)
     console.log("costoorigen : " + costoorigen)
     switch (action) {
         case "add":
-            models.detallecompromiso.create({
+            /*models.detallecompromiso.create({
                 iddetalleserviciocto: req.params.idd,
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
@@ -40,8 +40,26 @@ exports.action = function (req, res) {
             }).catch(function (err) {
                 //console.log(err);
                 res.json({ error_code: 1 });
-            });
-
+            });*/
+            
+            var sql="SELECT * FROM sip.detallecompromiso WHERE iddetalleserviciocto="+req.params.idd +" AND periodo="+req.body.periodo;
+            sequelize.query(sql).spread(function (rows) {
+                if (rows.length > 0) {
+                    console.log("periodo repetido");
+                    res.json({ error_code: 10 });
+                } else {
+                    sequelize.query("EXECUTE sip.InsertaPeriodoContrato "+req.params.idd+","+
+                    req.body.periodo+","+valorcuota)
+                        .then(function (rows) {
+                            console.log("****Creo Periodo contrato"); 
+                            res.json({ error_code: 0 });
+                        }).catch(function (err) {
+                            console.log(err);
+                            res.json({ error_code: 1 });
+                        });                       
+                }
+            });            
+                
             break;
         case "edit":
             /*
@@ -55,7 +73,7 @@ exports.action = function (req, res) {
                             });
                         }
             */
-
+/*
             models.detallecompromiso.update({
                 periodo: req.body.periodo,
                 montoorigen: montoorigen,
@@ -70,8 +88,17 @@ exports.action = function (req, res) {
                 }).catch(function (err) {
                     console.log(err);
                     res.json({ error_code: 1 });
-                });
-
+                });*/
+                
+        sequelize.query("EXECUTE sip.UpdatePeriodoContrato "+req.body.id+","+
+        valorcuota)
+            .then(function (rows) {
+                console.log("****Actualizo Periodo contrato"); 
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                console.log(err);
+                res.json({ error_code: 1 });
+            });   
             break;
         case "del":
             models.detallecompromiso.destroy({
@@ -106,12 +133,21 @@ exports.list = function (req, res) {
         sord = "asc";
 
     var orden = sidx + " " + sord;
-
+       
+    sequelize.query("select * from sip.detallecompromiso where iddetalleserviciocto="+req.params.id)
+        .spread(function (rows) {
+        res.json({ records: 1, total: 1, page: 1, rows: rows });
+        });    
+    
+    
+/*
     var additional = [{
         "field": "iddetalleserviciocto",
         "op": "eq",
         "data": req.params.id
     }];
+    
+    
 
     var buscaParamValue = function (detallecto, callback) {
         return models.parametro.find({
@@ -211,5 +247,5 @@ exports.list = function (req, res) {
                 }
             })
         }
-    });
+    });*/
 };

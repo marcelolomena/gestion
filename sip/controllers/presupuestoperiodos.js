@@ -135,17 +135,17 @@ exports.getPresupuestoPeriodos = function (req, res) {
   } else {
     console.log(sql0);
     models.detalleplan.count({ where: [filtrosubgrilla] }).then(function (records) {
-      if (records > 0) {
+      //if (records > 0) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
           });
-      } else {
+      /*} else {
         insertaPeriodos(function (compromisos) {
           res.json({ records: 16, total: 16, page: 1, rows: compromisos });
         });
-      }
+      }*/
     })
 
   }

@@ -1,0 +1,22 @@
+extends base.jade
+block titulo
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Presupuesto Proyectos
+  link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
+block jsgrilla
+    script(src='/javascripts/highcharts/highcharts.js')
+    script(type='text/javascript', src='/javascripts/views/presupuestoproyectos.js')
+block titulogrilla
+  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Seguimiento de Gasto
+block grilla
+  .cajaFormulario
+    .formSap
+      | Ejercicio :  
+      select#ejercicio
+        option(value='0', selected='selected') - Escoger Ejercicio -
+    .formFactura
+    #buscar.btn Ejecutar 
+  div(style='width: 100%')
+    #container(style='width: 50%; float: left; display: inline-block;')
+      table#grid
+      #pager          

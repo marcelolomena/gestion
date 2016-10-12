@@ -145,7 +145,31 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    mesesentrecuotas: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },    
+    periodoprimeracuota: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    numerocuotas: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },     
+    periodoinicioservicio: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }, 
+    diferido: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }, 
+    saldopresupuesto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleserviciocto'
   });

@@ -247,7 +247,7 @@ exports.action = function (req, res) {
       break;
     case "edit":
       models.contrato.update({
-        tipocontrato: req.body.tipocontrato,
+        //tipocontrato: req.body.tipocontrato,
         tipodocumento: req.body.tipodocumento,
         solicitudcontrato: req.body.solicitudcontrato,
         idtiposolicitud: req.body.idtiposolicitud,
@@ -318,7 +318,7 @@ exports.listaporproveedor = function (req, res) {
 
 exports.list = function (req, res) {
 
-  //console.dir(req.session)
+  console.dir(req.session)
 
   var page = req.body.page;
   var rows = req.body.rows;
@@ -362,4 +362,42 @@ exports.list = function (req, res) {
     }
   });
 
+};
+
+exports.listaporproveedor = function (req, res) {
+  models.contrato.findAll({
+    atributes: ['id', 'nombre'],
+    where: [{ 'nombre': { $ne: null } }, {idproveedor : req.params.id}],
+    order: 'nombre'
+  }).then(function (contratos) {
+    res.json(contratos);
+  }).catch(function (err) {
+    //console.log(err);
+    res.json({ error_code: 1 });
+  });
+}
+
+exports.getFrecuencia = function (req, res) {
+
+  var sql = "SELECT id, nombre, valor FROM sip.parametro WHERE tipo='frecuenciafacturacion'";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.getTipoDocumentos = function (req, res) {
+
+  var promises = []
+  
+  var newPromise = {'id':1, 'nombre': 'Contrato'};
+  promises.push(newPromise);
+  var newPromise = {'id':2, 'nombre': 'Orden de Compra'};
+  promises.push(newPromise);
+  var newPromise = {'id':3, 'nombre': 'Cotización'};
+  promises.push(newPromise);  
+
+  res.json(promises);
 };

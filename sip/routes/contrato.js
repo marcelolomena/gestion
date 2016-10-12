@@ -45,6 +45,15 @@ module.exports = function (passport) {
     router.route('/contratoproyecto/action/:id')
         .post(isAuthenticated, contratoservicioController.oper);
 
+    router.route('/contratoperiodos')
+        .get(isAuthenticated, contratoservicioController.getPeriodos);  
+        
+    router.route('/contratoservicio/saldopresup/:id/:id2')
+        .get(isAuthenticated, contratoservicioController.getSaldoPresup);            
+
+    router.route('/contrato/tipodocumento')
+        .get(isAuthenticated, contratoController.getTipoDocumentos);   
+        
     return router;
 
 }
