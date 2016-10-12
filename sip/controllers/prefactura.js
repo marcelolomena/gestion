@@ -9,7 +9,7 @@ exports.test = function (req, res) {
     try {
 
         if (!req.body.prefactura) {
-            return next(new Error('No se enviaron datos de prefactura'));
+            return new Error('No se enviaron datos de prefactura');
         }
 
         var prefactura = req.body.prefactura;

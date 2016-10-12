@@ -49,7 +49,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, reportesController.lstDepartamentosTroya);   
 
     router.route('/reporte/testtroya')
-        .get(isAuthenticated, reportesController.testtroya);   
+        .post(isAuthenticated, reportesController.testtroya);   
 
     router.route('/reporte/integrado')
         .get(isAuthenticated, reportesController.reporteIntegrado);                                   
