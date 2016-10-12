@@ -19,7 +19,7 @@ module.exports = function (passport) {
 					//return done(null, false, {message: "Usuario no encontrado."});
 				} else {
 					co(function* () {
-						var rol = yield models.usrrol.find({
+						var rol = yield models.usrrol.findAll({
 							attributes: ['id'],
 							where: { 'uid': user.uid },
 						});

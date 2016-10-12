@@ -2,7 +2,9 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var fs = require('fs');
 var path = require("path");
-var jsreport = require('jsreport-core')()
+var co = require('co');
+//var jsreport = require('jsreport-core')()
+//var jsreport = require('jsreport')()
 
 exports.lstGerencias = function (req, res) {
 
@@ -55,7 +57,8 @@ exports.lstGerencias = function (req, res) {
                 }
             }
 
-            var p = ((sum1 - sum2) / sum1) * 100
+            //var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100
 
             var datum = {
                 "rows": rows,
@@ -121,10 +124,8 @@ exports.lstDepartamentos = function (req, res) {
                         sum2 = sum2 + value
                 }
             }
-            //console.log("sum1 : " + sum1);
-            //console.log("sum2 : " + sum2);
 
-            var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100
 
             var datum = {
                 "rows": rows,
@@ -184,7 +185,7 @@ exports.lstServices = function (req, res) {
                         sum2 = sum2 + value
                 }
             }
-            var p = ((sum1 - sum2) / sum1) * 100
+            var p = ((sum2 - sum1) / sum1) * 100
             var datum = {
                 "rows": rows,
                 "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -217,7 +218,19 @@ exports.lstNames = function (req, res) {
 
 exports.lstConceptoGasto = function (req, res) {
     var _filters = req.query.filters;
+    var _sidx = req.query.sidx;
+    var _sord = req.query.sord;
     var _gerencia = 0;
+    var _order = ''
+
+    //console.log(_sidx)
+    //console.log(_sord)
+
+    if (_sidx)
+        _order = ' ORDER BY ' + _sidx + ' ' + _sord
+    else
+        _order = ' ORDER BY ejerciciodos desc'
+
 
     if (_filters) {
         var _jsonObj = JSON.parse(_filters);
@@ -251,8 +264,7 @@ exports.lstConceptoGasto = function (req, res) {
             where X.periodo >= 201701 AND X.periodo <= 201712 and X.gerencia = :gerencia
             group by X.conceptogasto
 		   ) B ON A.nombre = B.nombre
-		   ORDER BY nombre
-        `
+        ` + _order
 
         sequelize.query(sql,
             {
@@ -274,7 +286,7 @@ exports.lstConceptoGasto = function (req, res) {
                     }
                 }
 
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
 
                 var datum = {
                     "rows": rows,
@@ -315,8 +327,7 @@ exports.lstConceptoGasto = function (req, res) {
             where X.periodo >= 201701 AND X.periodo <= 201712
             group by X.conceptogasto
 		   ) B ON A.nombre = B.nombre
-		   ORDER BY nombre
-        `
+        ` + _order
 
         sequelize.query(sql,
             {
@@ -337,7 +348,7 @@ exports.lstConceptoGasto = function (req, res) {
                     }
                 }
 
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
 
                 var datum = {
                     "rows": rows,
@@ -356,6 +367,7 @@ exports.lstConceptoGasto = function (req, res) {
 
 exports.reporteGerenciasPdf = function (req, res) {
     try {
+        var jsreport = require('jsreport-core')
         var pathPdf = path.join(__dirname, '..', 'pdf')
         var filePdf = 'repo1.pdf'
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'gerencias.js'), 'utf8');
@@ -448,6 +460,7 @@ exports.reporteGerenciasPdf = function (req, res) {
 exports.pdfManager = function (req, res) {
 
     try {
+        var jsreport = require('jsreport-core')
         var pathPdf = path.join(__dirname, '..', 'pdf')
 
         //console.log(pathPdf + path.sep)
@@ -572,11 +585,12 @@ exports.pdfManager = function (req, res) {
 }
 
 exports.lstServiceFromConcept = function (req, res) {
+
     var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
     var _concepto = Base64.decode(req.params.nombre)
     var _gerencia = req.params.id
-    console.log("----->>>" + _concepto)
-    console.log("----->>>" + _gerencia)
+    //console.log("----->>>" + _concepto)
+    //console.log("----->>>" + _gerencia)
 
     if (_gerencia > 0) {
         var sql =
@@ -593,7 +607,7 @@ exports.lstServiceFromConcept = function (req, res) {
                 X.Servicio nombre,
                 SUM(X.costo)/1000000 costo
                 from sip.v_reporte_presupuesto X
-                where X.periodo >= 201509 AND X.periodo <= 201612 AND X.departamento = :id AND X.conceptogasto = :concepto
+                where X.periodo >= 201509 AND X.periodo <= 201612 AND X.gerencia = :id AND X.conceptogasto = :concepto
                 group by X.Servicio 
                 ) A LEFT OUTER JOIN
                 (
@@ -601,7 +615,7 @@ exports.lstServiceFromConcept = function (req, res) {
                 X.Servicio nombre,
                 SUM(X.costo)/1000000 costo
                 from sip.v_reporte_presupuesto X
-                where X.periodo >= 201701 AND X.periodo <= 201712 AND X.departamento =  :id AND X.conceptogasto = :concepto
+                where X.periodo >= 201701 AND X.periodo <= 201712 AND X.gerencia =  :id AND X.conceptogasto = :concepto
                 group by X.Servicio 
                ) B ON A.nombre = B.nombre
             `
@@ -623,7 +637,7 @@ exports.lstServiceFromConcept = function (req, res) {
                             sum2 = sum2 + value
                     }
                 }
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
                 var datum = {
                     "rows": rows,
                     "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -680,7 +694,7 @@ exports.lstServiceFromConcept = function (req, res) {
                             sum2 = sum2 + value
                     }
                 }
-                var p = ((sum1 - sum2) / sum1) * 100
+                var p = ((sum2 - sum1) / sum1) * 100
                 var datum = {
                     "rows": rows,
                     "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
@@ -696,4 +710,352 @@ exports.lstServiceFromConcept = function (req, res) {
 
 }
 
+///
+
+exports.lstGerenciasTroya = function (req, res) {
+    /*
+        sequelize.query("sip.ReportePresupuesto_2 1,1;", { type: sequelize.QueryTypes.RAW })
+            .then(function (summary) {
+                console.dir(summary)
+            })
+    */
+
+    var sql =
+        `
+    SELECT 
+    ISNULL(P.cui,Q.cui) id,
+    ISNULL(P.nombre,Q.nombre) nombre,
+    ROUND(ISNULL(P.costo,0),2) ejerciciouno,
+    ROUND(ISNULL(Q.costo,0),2) ejerciciodos,
+    ROUND(ISNULL(Q.costo,0)-ISNULL(P.costo,0),2) diferencia,
+    IIF(P.costo != 0,ROUND(((ISNULL(Q.costo,0)-ISNULL(P.costo,0) ) /ISNULL(P.costo,0)) * 100, 2),0) porcentaje
+    FROM
+    (
+        SELECT ISNULL(V.cui,W.cui) cui, ISNULL(V.nombre,W.nombre) nombre, ISNULL(V.costo,0) + ISNULL(W.costo,0) costo FROM
+        (
+            SELECT 
+            Y.cui,
+            Y.nombre,
+            SUM(X.costo)/1000000 costo
+            FROM sip.v_reporte_presupuesto2 X, sip.estructuracui Y 
+            WHERE X.periodo between 201609 and 201612 AND X.gerencia = Y.cui
+            GROUP BY Y.cui, Y.nombre
+        ) V
+        RIGHT OUTER JOIN
+        (	
+            SELECT cuinuevagerencia cui,nuevagerencia nombre,sum(monto) costo FROM sip.troya 
+            WHERE fecha between '2016-01-01' and '2016-08-31' and tipo = 'Real' 
+            GROUP BY cuinuevagerencia,nuevagerencia
+        ) W
+        ON V.cui = W.cui
+
+    ) P LEFT OUTER JOIN
+    (
+        SELECT 
+        Y.cui,
+        Y.nombre,
+        SUM(X.costo)/1000000 costo
+        FROM sip.v_reporte_presupuesto2 X, sip.estructuracui Y 
+        WHERE X.periodo between 201701 and 201712 AND X.gerencia = Y.cui
+        GROUP BY Y.cui, Y.nombre
+    ) Q
+    ON P.cui = Q.cui
+            `
+
+    sequelize.query(sql,
+        {
+            //replacements: { perini:2016 },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (rows) {
+
+            var sum1 = 0, sum2 = 0
+            for (var i = 0; i < rows.length; i++) {
+                var obj = rows[i];
+                for (var key in obj) {
+                    var value = obj[key];
+                    //console.log(key + ": " + value);
+                    if (key == 'ejerciciouno')
+                        sum1 = sum1 + value
+                    else if (key == 'ejerciciodos')
+                        sum2 = sum2 + value
+                }
+            }
+
+            var p = ((sum2 - sum1) / sum1) * 100
+
+            var datum = {
+                "rows": rows,
+                "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
+            }
+
+            res.json(datum);
+        }).catch(function (e) {
+            console.log(e)
+            res.json({ error_code: 1 });
+        })
+
+}
+
+exports.lstDepartamentosTroya = function (req, res) {
+
+    var sql =
+        `
+SELECT 
+    ISNULL(P.cui,Q.cui) id,
+    ISNULL(P.nombre,Q.nombre) nombre,
+    ROUND(ISNULL(P.costo,0),2) ejerciciouno,
+    ROUND(ISNULL(Q.costo,0),2) ejerciciodos,
+    ROUND(ISNULL(Q.costo,0)-ISNULL(P.costo,0),2) diferencia,
+    IIF(P.costo != 0,ROUND(((ISNULL(Q.costo,0)-ISNULL(P.costo,0) ) /ISNULL(P.costo,0)) * 100, 2),0) porcentaje
+    FROM
+    (
+		SELECT ISNULL(V.cui, W.cui) cui, ISNULL(V.nombre, W.nombre) nombre, ISNULL(V.costo,0) + ISNULL(W.costo,0) costo 
+		FROM
+		(            
+					SELECT X.cui, X.nombre, ISNULL(Y.costo, 0) costo FROM
+					(
+						SELECT cui,nombre FROM sip.estructuracui where cuipadre = :id
+					) X
+					LEFT OUTER JOIN
+					(
+						SELECT 
+						departamento,
+						SUM(costo)/1000000 costo
+						FROM sip.v_reporte_presupuesto2
+						WHERE 
+						periodo between 201609 and 201612 AND gerencia = :id
+						GROUP BY departamento
+					) Y
+					ON X.cui=Y.departamento
+		) V
+		RIGHT OUTER JOIN
+		(
+					SELECT nuevocuidepartamento cui,nuevodepartamento nombre,sum(monto) costo FROM sip.troya 
+					WHERE fecha between '2016-01-01' and '2016-08-31' and tipo = 'Real' AND cuinuevagerencia = :id
+					GROUP BY nuevocuidepartamento,nuevodepartamento
+		) W
+		ON V.cui=W.cui
+    ) P LEFT OUTER JOIN
+    (
+		SELECT X.cui, X.nombre, ISNULL(Y.costo, 0) costo FROM
+		(
+			SELECT cui,nombre FROM sip.estructuracui where cuipadre = :id
+		) X
+		LEFT OUTER JOIN
+		(
+			SELECT 
+			departamento,
+			SUM(costo)/1000000 costo
+			FROM sip.v_reporte_presupuesto2
+			WHERE 
+			periodo between 201701 and 201712 AND gerencia = :id
+			GROUP BY departamento
+		) Y
+		ON X.cui=Y.departamento
+) Q
+ON P.cui = Q.cui        
+            `
+
+    sequelize.query(sql,
+        {
+            replacements: { id: req.params.id },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (rows) {
+
+            var sum1 = 0, sum2 = 0
+            for (var i = 0; i < rows.length; i++) {
+                var obj = rows[i];
+                for (var key in obj) {
+                    var value = obj[key];
+                    //console.log(key + ": " + value);
+                    if (key == 'ejerciciouno')
+                        sum1 = sum1 + value
+                    else if (key == 'ejerciciodos')
+                        sum2 = sum2 + value
+                }
+            }
+
+            var p = ((sum2 - sum1) / sum1) * 100
+
+            var datum = {
+                "rows": rows,
+                "userdata": { "id": "", "nombre": "Total", "ejerciciouno": sum1, "ejerciciodos": sum2, "diferencia": sum2 - sum1, "porcentaje": p.toFixed(2) }
+            }
+
+            res.json(datum);
+        }).catch(function (e) {
+            console.log(e)
+            res.json({ error_code: 1 });
+        })
+
+}
+
+/*
+# Cambio en paginación Toya
+*/
+exports.testtroya = function (req, res) {
+    var jsreport = require('jsreport-core')({
+        rootDirectory: path.join(__dirname, '..'),
+        dataDirectory: path.join(__dirname, '..', 'data'),
+        tempDirectory: path.join(__dirname, '..', 'temp'),
+        scripts: {
+            timeout: 100000,
+            allowedModules: "*"
+        }, tasks: {
+            strategy: "in-process",
+            numberOfWorkers: 1,
+            templateCache: {
+                max: 100,
+                enabled: true
+            }
+        }, loadConfig: false,
+        autoTempCleanup: true,
+        extensionsLocationCache: true
+    })
+    jsreport.use(require('jsreport-templates')())
+    jsreport.use(require('jsreport-xlsx')())
+    jsreport.use(require('jsreport-handlebars')())
+
+
+    co(function* () {
+        var start = new Date();
+        var tml = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx'))
+        var pre = new Date() - start
+        console.info("Tiempo En Leer Template guaton xlsx: %dms", pre);
+
+        var datafill = fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
+
+        var sql = `
+            SELECT nuevagerencia,nuevodepartamento, nombrecuenta , fecha , tipo, monto FROM sip.troya `
+
+
+        var _troya = yield sequelize.query(sql,
+            {
+                type: sequelize.QueryTypes.SELECT
+            })
+
+        console.log("troya")
+
+
+        var datum = {
+            "food": _troya
+        }
+
+
+        jsreport.init().then(function () {
+            jsreport.documentStore.collection('xlsxTemplates').insert({
+                contentRaw: tml,
+                shortid: 'pico',
+                name: 'pico'
+            }).then(function (tmpl) {
+                console.log("render")
+                jsreport.render({
+                    template: {
+                        recipe: 'xlsx',
+                        engine: 'handlebars',
+                        xlsxTemplate: {
+                            shortid: 'pico'
+                        },
+                        content: datafill
+                    },
+                    //options: { preview: true },
+                    data: datum
+                }).then(function (out) {
+                    //res.send(out.content.toString())
+                    res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
+                    res.header('Content-Disposition', 'inline; filename="troyudo.xlsx"');
+                    res.header('File-Extension', 'xlsx');
+                    out.result.pipe(res);
+                    var end = new Date() - start
+                    console.info("Tiempo Total: %dms", end);
+
+                }).catch(function (e) {
+                    console.log(e)
+                })
+
+            }).catch(function (e) {
+                console.log(e)
+            })
+
+        });
+
+    });
+
+    /*
+        setTimeout(function (argument) {
+            sequelize.query(sql,
+                {
+                    //replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    var qry = new Date() - start
+                    console.info("Tiempo En ejecutar query : %dms", qry);
+                    var datum = {
+                        "food": data
+                    }
+    
+                    jsreport.init().then(function () {
+                        jsreport.documentStore.collection('xlsxTemplates').insert({
+                            contentRaw: tml,
+                            shortid: 'pico',
+                            name: 'pico'
+                        }).then(function (tmpl) {
+    
+                            //console.dir(tmpl.shortid)
+    
+    
+                            return jsreport.render({
+                                template: {
+                                    recipe: 'xlsx',
+                                    engine: 'handlebars',
+                                    xlsxTemplate: {
+                                        shortid: 'pico'
+                                    },
+                                    content: datafill
+                                },
+                                options: { preview: true },
+                                data: datum
+                            }).then(function (out) {
+                                res.send(out.content.toString())
+      
+                                var end = new Date() - start
+                                console.info("Tiempo Total: %dms", end);
+    
+                            }).catch(function (e) {
+                                console.log(e)
+                            })
+    
+                        }).catch(function (e) {
+                            console.log(e)
+                        })
+                    }).catch(function (e) {
+                        console.log(e)
+                    })
+                })
+        }, 1);
+    */
+}
+
+/*
+  res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
+  res.header('Content-Disposition', 'inline; filename="hipertroyas.xlsx"');
+  res.header('File-Extension', 'xlsx');
+  out.result.pipe(res);
+  */
+/*
+                    jsreport.documentStore.collection("xlsxTemplates")
+                        .find({ shortid: "divot" })
+                        .then(function (respuesta) {
+                            console.dir(respuesta)
+                        });
+*/
+exports.reporteIntegrado = function (req, res) {
+    //var contents = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template-full.xlsx'));
+    res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
+    res.header('Content-Disposition', 'inline; filename="fulltroya.xlsx"');
+    res.header('File-Extension', 'xlsx');
+
+    fs.createReadStream(path.join(__dirname, '..', 'templates', 'pivot-template-full.xlsx')).pipe(res);
+
+}
 

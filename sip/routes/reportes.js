@@ -10,8 +10,19 @@ module.exports = function (passport) {
         res.render('reporte', { user: req.user });
     });
 
+    router.get('/reportetroya', isAuthenticated, function (req, res) {
+        res.render('reportetroya', { user: req.user });
+    });
+
+    router.get('/reportepivote', isAuthenticated, function (req, res) {
+        res.render('reportepivote', { user: req.user });
+    });    
+
     router.route('/reporte/lstGerencias')
-        .get(isAuthenticated, reportesController.lstGerencias);    
+        .get(isAuthenticated, reportesController.lstGerencias);
+
+    router.route('/reporte/lstGerenciasTroya')
+        .get(isAuthenticated, reportesController.lstGerenciasTroya);    
 
     router.route('/reporte/lstDepartamentos/:id')
         .get(isAuthenticated, reportesController.lstDepartamentos);       
@@ -32,7 +43,16 @@ module.exports = function (passport) {
         .get(isAuthenticated, reportesController.lstServiceFromConcept);             
 
     router.route('/reporte/repo1')
-        .get(isAuthenticated, reportesController.reporteGerenciasPdf);                
+        .get(isAuthenticated, reportesController.reporteGerenciasPdf);     
+
+    router.route('/reporte/lstDepartamentosTroya/:id')
+        .get(isAuthenticated, reportesController.lstDepartamentosTroya);   
+
+    router.route('/reporte/testtroya')
+        .get(isAuthenticated, reportesController.testtroya);   
+
+    router.route('/reporte/integrado')
+        .get(isAuthenticated, reportesController.reporteIntegrado);                                   
 
     return router;
 

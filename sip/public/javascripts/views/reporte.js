@@ -2,6 +2,11 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
+    Highcharts.setOptions({
+        lang: {
+            numericSymbols: ['M']
+        }
+    });
 
     var options = {
         chart: {
@@ -34,9 +39,32 @@ $(document).ready(function () {
             valueSuffix: ' millones'
         },
         plotOptions: {
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        allowOverlap: true
+                    }
+                }
+            },
             bar: {
+                pointPadding: 0.1,
+                borderWidth: 0,
                 dataLabels: {
-                    enabled: true
+                    enabled: true,
+                    crop: false,
+                    overflow: 'none',
+                    formatter: function () {
+                        if (this.y != 0) {
+                            return Highcharts.numberFormat(this.y, 2);
+                        } else {
+                            return null;
+                        }
+                    },
+                    style: {
+                        fontSize: '10px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
                 }
             }
         },
@@ -68,9 +96,7 @@ $(document).ready(function () {
 
     $grid.jqGrid({
         datatype: 'local',
-        //page: 1,
         colModel: modelGerencias,
-        //rowNum: 10,
         regional: 'es',
         height: 'auto',
         autowidth: true,
@@ -214,6 +240,7 @@ $(document).ready(function () {
         url: '/reporte/lstConceptoGasto',
         datatype: "json",
         page: 1,
+        rowNum: -1,
         colModel: modelConceptoGasto,
         regional: 'es',
         height: 'auto',
@@ -305,19 +332,34 @@ $(document).ready(function () {
                 }
 
                 serie1 = { name: '2016', data: serie1ArrayData };
-                serie2 = { name: '2017', data: serie2ArrayData };
+                serie2 = { name: '2017', data: serie2ArrayData/*, pointWidth: 20*/ };
+
+                options.series[0] = serie1;
+                options.series[1] = serie2;
+                options.xAxis.categories = categorias;
+                options.xAxis.labels = {
+                    style: {
+                        color: '#0B2161',
+                        font: '14px Helvetica',
+                        fontWeight: 'bold'
+                    },
+                    formatter: function () {
+                        return this.value;
+                    }
+                };
+                options.chart.renderTo = 'grafico_1';
+                options.title.text = 'Presupuesto por Gerencia';
+                var chart = new Highcharts.Chart(options);
+                if (chart.series[0].data.length > 0) {
+                    var baseHeight = 10;
+                    var extraHeightPerThing = 100;
+                    chart.setSize(null, baseHeight + chart.series[0].data.length * extraHeightPerThing);
+                }                
 
                 $grid.jqGrid('setGridParam', { data: gridArrayData });
                 $grid.jqGrid('footerData', 'set', result.userdata);
                 $grid[0].grid.endReq();
                 $grid.trigger('reloadGrid');
-
-                options.series[0] = serie1;
-                options.series[1] = serie2;
-                options.xAxis.categories = categorias;
-                options.chart.renderTo = 'grafico_1';
-                options.title.text = 'Presupuesto por Gerencia';
-                var chart = new Highcharts.Chart(options);
             }
         });
 
@@ -351,10 +393,24 @@ function paintBar(options, url) {
             options.series[0] = serie1_1;
             options.series[1] = serie2_1;
             options.xAxis.categories = categorias_1;
+            options.xAxis.labels = {
+                style: {
+                    color: '#525151',
+                    font: '10px Helvetica',
+                    fontWeight: 'bold'
+                },
+                formatter: function () {
+                    return this.value;
+                }
+            };
             options.chart.renderTo = 'grafico_2';
             options.title.text = 'Presupuesto por Concepto Presupuestario';
             var chart1 = new Highcharts.Chart(options);
-
+            if (chart1.series[0].data.length > 0) {
+                var baseHeight = 150;
+                var extraHeightPerThing = 25;
+                chart1.setSize(null, baseHeight + chart1.series[0].data.length * extraHeightPerThing);
+            }
         }
     });
 }

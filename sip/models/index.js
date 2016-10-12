@@ -6,6 +6,23 @@ var Sequelize = require("sequelize");
 //var env = process.env.NODE_ENV || "development";//development, home
 var env = process.env.NODE_ENV
 var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
+//console.log("la config: "+config);
+config.logging = function(sql){
+
+  var sqlchico = sql.toLowerCase();
+
+  if(sqlchico.indexOf('[sip].[registro]') == -1 && sqlchico.indexOf('[sessions]') == -1 && 
+  (sqlchico.indexOf('update') != -1 || sqlchico.indexOf('delete') != -1 || sqlchico.indexOf('insert') != -1 )){
+    var models = require('../models');
+    //console.log("||||||||||||||||: "+sql);
+    var fecha = new Date();
+    models.registro.create({
+        query: sql,
+        fecha: fecha
+      })
+  }
+
+};
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db = {};
 

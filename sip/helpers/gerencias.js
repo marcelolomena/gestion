@@ -35,7 +35,7 @@ function totalDiferencia(data) {
         totalDos = totalDos + b.ejerciciodos;
     });
 
-    return (totalUno - totalDos).toFixed(2);
+    return (totalDos - totalUno).toFixed(2);
 }
 
 function totalPorcentaje(data) {
@@ -47,7 +47,7 @@ function totalPorcentaje(data) {
         totalDos = totalDos + b.ejerciciodos;
     });
 
-    var p = ((totalUno - totalDos) / totalUno) * 100
+    var p = ((totalDos - totalUno) / totalUno) * 100
 
     return format(p.toFixed(2));
 }

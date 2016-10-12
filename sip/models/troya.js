@@ -96,7 +96,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     cuentaorigen: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.STRING,
       allowNull: true
     },
     nombrecuentaorigen: {
@@ -117,6 +117,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     borrado: {
       type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    cuinuevagerencia: {
+      type: DataTypes.FLOAT,
       allowNull: true
     }
   }, {
