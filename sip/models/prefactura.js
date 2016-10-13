@@ -39,6 +39,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    idmoneda: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     fecha: {
       type: DataTypes.DATE,
       allowNull: true
