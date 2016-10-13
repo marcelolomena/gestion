@@ -1021,76 +1021,9 @@ exports.testtroya = function (req, res) {
             console.log(e)
             res.end(e.message);
         })
-
-
-    /*
-        setTimeout(function (argument) {
-            sequelize.query(sql,
-                {
-                    //replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
-                    type: sequelize.QueryTypes.SELECT
-                }).then(function (data) {
-                    var qry = new Date() - start
-                    console.info("Tiempo En ejecutar query : %dms", qry);
-                    var datum = {
-                        "food": data
-                    }
-    
-                    jsreport.init().then(function () {
-                        jsreport.documentStore.collection('xlsxTemplates').insert({
-                            contentRaw: tml,
-                            shortid: 'pico',
-                            name: 'pico'
-                        }).then(function (tmpl) {
-    
-                            //console.dir(tmpl.shortid)
-    
-    
-                            return jsreport.render({
-                                template: {
-                                    recipe: 'xlsx',
-                                    engine: 'handlebars',
-                                    xlsxTemplate: {
-                                        shortid: 'pico'
-                                    },
-                                    content: datafill
-                                },
-                                options: { preview: true },
-                                data: datum
-                            }).then(function (out) {
-                                res.send(out.content.toString())
-      
-                                var end = new Date() - start
-                                console.info("Tiempo Total: %dms", end);
-    
-                            }).catch(function (e) {
-                                console.log(e)
-                            })
-    
-                        }).catch(function (e) {
-                            console.log(e)
-                        })
-                    }).catch(function (e) {
-                        console.log(e)
-                    })
-                })
-        }, 1);
-    */
+  
 }
 
-/*
-  res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
-  res.header('Content-Disposition', 'inline; filename="hipertroyas.xlsx"');
-  res.header('File-Extension', 'xlsx');
-  out.result.pipe(res);
-  */
-/*
-                    jsreport.documentStore.collection("xlsxTemplates")
-                        .find({ shortid: "divot" })
-                        .then(function (respuesta) {
-                            console.dir(respuesta)
-                        });
-*/
 exports.reporteIntegrado = function (req, res) {
     //var contents = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template-full.xlsx'));
     res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
@@ -1100,28 +1033,3 @@ exports.reporteIntegrado = function (req, res) {
     fs.createReadStream(path.join(__dirname, '..', 'templates', 'pivot-template-full.xlsx')).pipe(res);
 
 }
-
-               /*then(function (out) {
-
-                    //res.send(out.content.toString())
-                    console.log("guadando el archivo")
-
-                    var end = new Date() - start
-                    console.info("Tiempo Total: %dms", end);
-                    res.json(out.content.toString());
-
-                    try {
-                        res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
-                        res.header('Content-Disposition', 'inline; filename="troyudo.xlsx"');
-                        res.header('File-Extension', 'xlsx');
-                        //out.result.pipe(res);
-                        var wbout = out.content;
-                        res.send(new Buffer(wbout));
-
-                        var end = new Date() - start
-                        console.info("Tiempo Total: %dms", end);
-                    } catch (e) {
-                        console.info("que pacho : ", e);
-                    }
-                    */
-
