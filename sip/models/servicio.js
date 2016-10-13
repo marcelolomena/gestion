@@ -36,6 +36,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    tiposervicio: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },  
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
