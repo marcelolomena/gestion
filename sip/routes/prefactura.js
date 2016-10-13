@@ -7,14 +7,13 @@ var prefacturasController = require('../controllers/prefacturas');
 
 module.exports = function (passport) {
 
+    ////Test Pdf Phantom
     router.get('/factura', isAuthenticated, function (req, res) {
         res.render('factura', { user: req.user });
     });
 
-    router.route('/factura/prefactura')
-        .post(isAuthenticated, prefacturaController.test);
-
-    ////////////////////            
+    router.route('/factura/prefactura/:id')
+        .get(isAuthenticated, prefacturaController.test);
 
     router.get('/solicitud', isAuthenticated, function (req, res) {
         res.render('solicitud', { user: req.user });

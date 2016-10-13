@@ -30,7 +30,6 @@
         "winston": "2.2.0",
         "co": "4.6.0",
         "connect-session-sequelize": "latest",
-        "phantom": "2.1.18",
         "jsreport-core": "latest",
         "jsreport": "latest",
         "jsreport-templates": "latest",
