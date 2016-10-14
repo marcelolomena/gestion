@@ -1,13 +1,11 @@
 var express = require('express'),
   path = require('path'),
   favicon = require('serve-favicon'),
-  morgan = require('morgan'),
   winston = require('winston'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   flash = require('express-flash'),
   fs = require('fs'),
-  FileStreamRotator = require('file-stream-rotator'),
   app = express(),
   logDirectory = path.join(__dirname, 'log'),
   passport = require('passport'),
@@ -17,32 +15,22 @@ var express = require('express'),
 
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
-// create a rotating write stream
-var accessLogStream = FileStreamRotator.getStream({
-  date_format: 'YYYYMMDD',
-  filename: path.join(logDirectory, 'access-%DATE%.log'),
-  frequency: 'daily',
-  verbose: false
-})
-
+const tsFormat = () => (new Date()).toLocaleTimeString();
 
 var logger = new (winston.Logger)({
   transports: [
-    new (winston.transports.File)({
-      name: 'info-file',
-      filename: 'log/filelog-info.log',
-      level: 'info'
-    }),
-    new (winston.transports.File)({
-      name: 'error-file',
-      filename: 'log/filelog-error.log',
-      level: 'error'
-    }),
     new winston.transports.Console({
       level: 'debug',
       handleExceptions: true,
-      json: false,
+      timestamp: tsFormat,
       colorize: true
+    }),
+    new (require('winston-daily-rotate-file'))({
+      filename: `${logDirectory}/sip.log`,
+      timestamp: tsFormat,
+      datePattern: 'dd-MM-yyyy',
+      prepend: true,
+      level: app.get('env') === 'development' ? 'verbose' : 'info'
     })
   ]
 });
@@ -50,11 +38,7 @@ var logger = new (winston.Logger)({
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-//app.use(logger('dev'));
-app.use(morgan('combined', { stream: accessLogStream }))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -62,9 +46,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 // Configuring Passport
-//var passport = require('passport');
-//app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-//app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(session({
   secret: 'keyboard cat',
   //cookie: { maxAge: 60000 },
@@ -94,8 +75,6 @@ app.use(function (req, res, next) {
 
 // error handlers
 
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function (err, req, res, next) {
     logger.error(err);
