@@ -21,7 +21,7 @@ exports.test = function (req, res) {
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
-                WHERE a.id=1 
+                WHERE a.id=:id
             `
 
         sequelize.query(sql_1,

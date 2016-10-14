@@ -79,7 +79,7 @@ $(document).ready(function () {
     var modelPrefacturas = [
         { label: 'Numero Prefactura', name: 'id', key: true, hidden: false, formatter: returnTaskLink },
         {
-            label: 'Periodo', name: 'periodo', width: 400, align: 'left',
+            label: 'Periodo', name: 'periodo', width: 200, align: 'left',
             search: true, editable: true, hidden: false
         },
         {
@@ -119,7 +119,7 @@ $(document).ready(function () {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Proveedor', name: 'proveedor', width: 150, align: 'left',
+            label: 'Proveedor', name: 'proveedor', width: 450, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
@@ -239,7 +239,7 @@ $(document).ready(function () {
         
         {
             label: 'Estado', name: 'estado', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: true, editable: true, hidedlg: true, hidden: true,
             editrules: { edithidden: false, required: true }
         },
         
@@ -275,7 +275,7 @@ $(document).ready(function () {
     });
 
     $('#table_prefacturas').jqGrid('navGrid', "#pager_prefacturas", {
-        edit: true, add: true, del: true, search: false, refresh: true,
+        edit: false, add: false, del: false, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
         {
