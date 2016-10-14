@@ -13,8 +13,8 @@ exports.getSolicitudAprob = function (req, res) {
   "SELECT @PageSize="+filas+"; "+
   "DECLARE @PageNumber INT; "+
   "SELECT @PageNumber="+page+"; "+  
-  "SELECT a.*, b.razonsocial, c.periodo AS periodocompromiso FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor "+ 
-  "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso "+
+  "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor "+ 
+  "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso JOIN sip.servicio d ON a.idservicio=d.id "+
   "WHERE a.periodo = "+periodo+" AND a.idcui= "+cui+" ";
   var sql2 = sql + "ORDER BY b.razonsocial, a.periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
@@ -73,4 +73,55 @@ exports.getDetalleSolicitud = function (req, res) {
           res.json({ error_code: 1 });
     });
   });
+}
+
+exports.getCausalMulta = function (req, res) {
+  var sql = "SELECT id, nombre FROM sip.parametro WHERE tipo='causalmulta'";
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};
+
+exports.getCalificacion = function (req, res) {
+  var sql = "SELECT id, nombre FROM sip.parametro WHERE tipo='calificacion'";
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};
+
+exports.action = function (req, res) {
+  var action = req.body.oper;
+  console.log("Action:"+action);
+  console.log("Id:"+req.body.id);
+  switch (action) {
+    case "add":
+      //nada
+      break;
+    case "edit":
+      models.solicitudaprobacion.update({
+        aprobado: req.body.aprobado,
+        montoaprobado: req.body.montoaprobado,
+        glosaaprobacion: req.body.glosaaprobacion,
+        montomulta:req.body.montomulta,
+        glosamulta:req.body.glosamulta,
+        idcalificacion:req.body.idcalificacion,
+        idcausalmulta:req.body.idcausalmulta
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          console.log(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      //nada
+      break;
+
+  }
 }

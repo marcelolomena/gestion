@@ -18,13 +18,15 @@ exports.action = function (req, res) {
             "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, "+
             "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, "+
             "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, "+
-            "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, diferido, saldopresupuesto, tipogeneracion) "+
+            "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, "+
+            "diferido, saldopresupuesto, tipogeneracion, comentario) "+
             "VALUES ("+req.body.parent_id+",'"+ anexo+"',"+ req.body.idcui+","+req.body.idservicio+", @ctacontable,'"+req.body.fechainicio+"','"+
             req.body.fechatermino+"','"+req.body.fechacontrol+"',"+req.body.valorcuota+","+ req.body.valorcuota+","+ req.body.idmoneda+","+
             req.body.idplazocontrato+","+req.body.idcondicion+","+
             req.body.impuesto+","+ req.body.factorimpuesto+","+req.body.idcontactoproveedor+","+req.body.idestadocto+",'"+
             req.body.glosaservicio+"',1,"+req.body.mesesentrecuotas+","+req.body.periodoprimeracuota+","+
-            req.body.numerocuotas+","+req.body.periodoinicioservicio+","+req.body.diferido+","+req.body.saldopresupuesto+","+req.body.tipogeneracion+ "); "+
+            req.body.numerocuotas+","+req.body.periodoinicioservicio+","+req.body.diferido+","+req.body.saldopresupuesto+","+
+            req.body.tipogeneracion+",'"+req.body.comentario+ "'); "+
             "DECLARE @id INT;"+
             "select @id = @@IDENTITY; "+
             "select @id as id;";
@@ -68,7 +70,8 @@ exports.action = function (req, res) {
             ", impuesto="+req.body.impuesto+", factorimpuesto="+req.body.factorimpuesto+", idcontactoproveedor="+req.body.idcontactoproveedor+
             ", idestadocto="+req.body.idestadocto+", glosaservicio='"+req.body.glosaservicio+"', mesesentrecuotas="+req.body.mesesentrecuotas+
             ", periodoprimeracuota="+req.body.periodoprimeracuota+", numerocuotas="+req.body.numerocuotas+", periodoinicioservicio="+req.body.periodoinicioservicio+
-            ", diferido="+req.body.diferido+", saldopresupuesto="+req.body.saldopresupuesto+", tipogeneracion="+req.body.tipogeneracion+" "+
+            ", diferido="+req.body.diferido+", saldopresupuesto="+req.body.saldopresupuesto+", tipogeneracion="+req.body.tipogeneracion+
+            ", comentario='"+req.body.comentario+"' "+
             "WHERE id="+req.body.id;
             console.log("sql:"+sql);
             sequelize.query(sql).spread(function (contratosrv) {

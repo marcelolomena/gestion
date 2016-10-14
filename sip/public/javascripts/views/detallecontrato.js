@@ -74,6 +74,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Descripción<span style='color:red'>*</span>{glosaservicio}</div>";
     templateServicio += "</div>";
     
+    templateServicio += "<div class='form-row'>";     
+    templateServicio += "<div class='column-half'>Comentario<span style='color:red'>*</span>{comentario}</div>";
+    templateServicio += "</div>";         
+      
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Más IVA<span style='color:red'>*</span>{impuesto}</div>";  
     templateServicio += "<div class='column-half'>Diferido<span style='color:red'>*</span>{diferido}</div>";
@@ -106,13 +110,14 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.cui;
+                        var thissid = rowData.idcui;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger CUI--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].nombre == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            console.log("nombre:"+data[i].id+" = this:"+thissid);
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' +  data[i].cui+'-'+data[i].nombre + '</option>';
                             } else {
                                 s += '<option value="' + data[i].id + '">' + data[i].cui+'-'+data[i].nombre + '</option>';
                             }
@@ -555,7 +560,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Calculo Automático', name: 'tipogeneracion', search: false, editable: true, hidden: true,
                 edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-            }                                                    
+            },
+            {
+                label: 'Comentario', name: 'comentario', search: false, editable: true, hidden: false,
+                edittype: "textarea"
+            }                                                       
         ],
         shrinkToFit: true,
         autowidth: true,
@@ -673,20 +682,21 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     var thiscid = rowData.idcui;
                     $.ajax({
                         type: "GET",
-                        url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thissid,
+                        url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thiscid,
                         async: false,
                         success: function (data) {
                             var r = "<select>";
-                            r += '<option value="0">--Escoger CUI--</option>';
+                            r += '<option value="0">--Escoger Servicio--</option>';
                             $.each(data, function (i, item) {
-                                if (data[i].estructuracui.id == thiscid) {
-                                    r += '<option value="' + data[i].estructuracui.id + '" selected>' + data[i].estructuracui.cui +'-'+data[i].estructuracui.nombre+ '</option>';
+                                console.log("nombresrv:"+data[i].id+" = thissrv:"+thissid);
+                                if (data[i].id == thissid) {
+                                    r += '<option value="' + data[i].id + '" selected>' + data[i].nombre+ '</option>';
                                 } else {
-                                    r += '<option value="' + data[i].estructuracui.id + '">' + data[i].estructuracui.cui +'-'+data[i].estructuracui.nombre+ '</option>';
+                                    r += '<option value="' + data[i].id + '" >' + data[i].nombre+ '</option>';
                                 }
                             });
                             r += "</select>";
-                            $("#idcui").html(r);
+                            $("#idservicio").html(r);
                         }
                     });
 
@@ -848,7 +858,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
     templateTarea += "<div class='form-row'>";
     templateTarea += "<div class='column-full'>Descripción{glosaservicio}</div>";
     templateTarea += "</div>";
-
+       
     templateTarea += "<div class='form-row' style='display: none;'>";
     templateTarea += "<div class='column-half'>frecuenciafacturacion {frecuenciafacturacion}</div>";
     templateTarea += "<div class='column-half'>plazocontrato {plazocontrato}</div>";
@@ -1237,6 +1247,7 @@ function showSubGrid_JQGrid3(subgrid_id, row_id, suffix) {
                 label: 'Descripción', name: 'glosaservicio', search: true, editable: true, hidden: false,
                 edittype: "textarea"
             }
+         
         ],
         viewrecords: true,
         shrinkToFit: false,

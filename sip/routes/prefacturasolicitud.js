@@ -12,7 +12,16 @@ module.exports = function (passport) {
     
     router.route('/prefacturasolicitud/:cui/:periodo')
         .get(isAuthenticated, prefacturasolicitudController.getSolicitudAprob);
-                
+        
+    router.route('/prefacturasolicitud/causalmulta')
+        .get(isAuthenticated, prefacturasolicitudController.getCausalMulta);        
+
+    router.route('/prefacturasolicitud/calificacion')
+        .get(isAuthenticated, prefacturasolicitudController.getCalificacion);  
+        
+    router.route('/prefacturasolicitud/action')
+        .post(isAuthenticated, prefacturasolicitudController.action);        
+        
     return router;
 
 }
