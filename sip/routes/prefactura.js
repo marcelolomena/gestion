@@ -24,7 +24,6 @@ module.exports = function (passport) {
         res.render('prefactura', { user: req.user });
     });  
 
-
     router.get('/prefacturas', isAuthenticated, function (req, res) {
         res.render('prefacturas', { user: req.user });
     });  

@@ -26,14 +26,15 @@ var logger = new (winston.Logger)({
       colorize: true
     }),
     new (require('winston-daily-rotate-file'))({
-      filename: `${logDirectory}/sip.log`,
+      filename: `${logDirectory}` + path.sep + `sip.log`,
       timestamp: tsFormat,
       datePattern: 'dd-MM-yyyy',
-      prepend: true,
+      handleExceptions: true,
       level: app.get('env') === 'development' ? 'verbose' : 'info'
     })
   ]
 });
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -68,7 +69,7 @@ var routes = require('./routes')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('Página no encontrada');
   err.status = 404;
   next(err);
 });
