@@ -68,57 +68,42 @@ function loadGrid(cui, periodo) {
 
 function showDocumentos(cui, periodo) {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
-
+    
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Periodo {periodo}</div>";
+    tmpl += "<div class='column-full' style='display: none;'>Periodo {iddetallecompromiso}</div>";    
     tmpl += "</div>";
-
+    
     tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Periodo {periodo}</div>";    
     tmpl += "<div class='column-full'>Servicio {nombre}</div>";
     tmpl += "</div>";
 
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Glosa Servicio {glosaservicio}</div>";
-    tmpl += "</div>";
-
     tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-full'>Glosa Servicio {glosaservicio}</div>";    
     tmpl += "<div class='column-half'>Monto a Pagar {montoapagar}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Aprobado {aprobado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto a Aprobado {montoaprobado}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Glosa Aprobación {glosaaprobacion}</div>";
+    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";      
     tmpl += "</div>";
-
+        
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
-    tmpl += "</div>";
-    
-    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
     tmpl += "<div class='column-half'>Monto Multa {montomulta}</div>";
     tmpl += "</div>";    
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
-    tmpl += "</div>";        
-
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";
+    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
     tmpl += "</div>";
     
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'> </div>";
-    tmpl += "</div>";
-        
     tmpl += "<hr style='width:100%;'/>";
-    tmpl += "<div> {sData} {cData}  </div>";
+    tmpl += "<div class='form-row' > {sData} {cData}  </div>";
     tmpl += "</div>";    
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/prefacturasolicitud/"+cui+"/"+periodo;
@@ -133,10 +118,15 @@ function showDocumentos(cui, periodo) {
                       hidden:true,
                       key: true
                    },
+                   { label: 'iddetallecompromiso',
+                      name: 'iddetallecompromiso',
+                      width: 50,
+                      hidden:true,
+                      editable: true,
+                   },                   
                    { label: 'Proveedor',
                      name: 'razonsocial',  
                      search: false,
-                     key: true, 
                      align: 'left',                 
                      width: 250,
                      editable: true,
@@ -175,13 +165,51 @@ function showDocumentos(cui, periodo) {
                      formatter: 'number', formatoptions: { decimalPlaces: 0 },
                      editoptions: { size: 10, readonly: 'readonly'}                                    
                     },                                                     
-                   { label: 'Aprobado',
+                   { label: 'Estado',
                      name: 'aprobado',
                      search: false,
                      align: 'left',
-                     width: 50,
+                     width: 80,
                      editable: true,
-                     edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "0"}                     
+                    hidden: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        var dato = '';
+                        var val = rowObject.aprobado;
+                        if (val == 0) {
+                            dato = 'Pendiente';
+                        } else if (val == 1) {
+                            dato = 'Aprobado';
+                        } else if (val == 2) {
+                            dato = 'Rechazado';                            
+                        }
+                        return dato;
+                    },                      
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: "/prefacturasolicitud/estadosolicitud",
+                        buildSelect: function (response) {
+                            var grid = $("#grid");
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.idproveedor;
+                            console.log(response);
+                            var data = JSON.parse(response);
+                            console.log(data);
+                            var s = "<select>";//el default
+                            //s += '<option value="0">--Escoger Estado--</option>';
+                            $.each(data, function (i, item) {
+                                console.log("***proveedor:" + data[i].id + ", " + thissid);
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            console.log(s);
+                            return s + "</select>";
+                        }
+                    }, dataInit: function (elem) { $(elem).width(200); }                     
+                                          
                    },
                    { label: 'Monto Aprobado',
                      name: 'montoaprobado',
@@ -204,7 +232,8 @@ function showDocumentos(cui, periodo) {
                      width: 100,
                      search: false,
                      align: 'left',
-                     editable: true,hidden: true,edittype: "select",
+                     editable: true,hidden: true,          
+                   edittype: "select",
                     editoptions: {
                         dataUrl: "/prefacturasolicitud/calificacion",
                         buildSelect: function (response) {
@@ -230,6 +259,14 @@ function showDocumentos(cui, periodo) {
                         }
                     }, dataInit: function (elem) { $(elem).width(200); }                     
                    },   
+                   { label: 'Glosa Multa',
+                     name: 'glosamulta',
+                     width: 200,
+                     search: false,
+                     align: 'left',
+                     editable: true,
+                     edittype: "textarea"
+                   },                   
                    { label: 'Monto Multa',
                      name: 'montomulta',
                      width: 100,
@@ -269,14 +306,6 @@ function showDocumentos(cui, periodo) {
                         }
                     }, dataInit: function (elem) { $(elem).width(200); }                     
                      
-                   },
-                   { label: 'Glosa Multa',
-                     name: 'glosamulta',
-                     width: 200,
-                     search: false,
-                     align: 'left',
-                     editable: true,
-                     edittype: "textarea"
                    }
                               
         ],

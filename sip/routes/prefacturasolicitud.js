@@ -18,6 +18,9 @@ module.exports = function (passport) {
 
     router.route('/prefacturasolicitud/calificacion')
         .get(isAuthenticated, prefacturasolicitudController.getCalificacion);  
+
+    router.route('/prefacturasolicitud/estadosolicitud')
+        .get(isAuthenticated, prefacturasolicitudController.getEstadoSolicitud);          
         
     router.route('/prefacturasolicitud/action')
         .post(isAuthenticated, prefacturasolicitudController.action);        
