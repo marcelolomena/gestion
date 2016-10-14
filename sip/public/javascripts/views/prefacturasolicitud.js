@@ -45,9 +45,12 @@ $(document).ready(function () {
 function getPeriodo() {
     var d = new Date();
     var anio = d.getFullYear();
+    console.log("anio:"+anio);
     var mes = parseInt(d.getMonth()) + 1;  
+    console.log("mes:"+mes);
     var mesok = mes < 10 ? '0' + mes : mes;
-    return anio+mesok;
+    console.log("mesok:"+mesok);
+    return anio+''+mesok;
     
 }
 
@@ -65,146 +68,244 @@ function loadGrid(cui, periodo) {
 
 function showDocumentos(cui, periodo) {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
-
+    
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>CUI {idcui}</div>";
+    tmpl += "<div class='column-full' style='display: none;'>Periodo {iddetallecompromiso}</div>";    
     tmpl += "</div>";
-
+    
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Servicio {idservicio}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Glosa Servicio {glosaservicio}</div>";
+    tmpl += "<div class='column-full'>Periodo {periodo}</div>";    
+    tmpl += "<div class='column-full'>Servicio {nombre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-full'>Glosa Servicio {glosaservicio}</div>";    
     tmpl += "<div class='column-half'>Monto a Pagar {montoapagar}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Aprobado {aprobado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto a Aprobado {montoaprobado}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Glosa Aprobación {glosaaprobacion}</div>";
+    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";      
     tmpl += "</div>";
-
+        
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
-    tmpl += "</div>";
-    
-    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
     tmpl += "<div class='column-half'>Monto Multa {montomulta}</div>";
     tmpl += "</div>";    
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Causa Multa {idcausamulta}</div>";
-    tmpl += "</div>";        
-
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";
+    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
     tmpl += "</div>";
-        
+    
     tmpl += "<hr style='width:100%;'/>";
-    tmpl += "<div> {sData} {cData}  </div>";
+    tmpl += "<div class='form-row' > {sData} {cData}  </div>";
     tmpl += "</div>";    
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/prefacturasolicitud/"+cui+"/"+periodo;
     $("#grid").jqGrid({
         url: childGridURL,
         mtype: "GET",
-        datatype: "json",
-        postData: {
-            page: function () {
-                return 1;
-            },
-            rows: function () {
-                return 10;
-            }                                          
-        },        
+        datatype: "json",    
         colModel: [
                    { label: 'id',
                       name: 'id',
                       width: 50,
-                      hidden:true
+                      hidden:true,
+                      key: true
                    },
+                   { label: 'iddetallecompromiso',
+                      name: 'iddetallecompromiso',
+                      width: 50,
+                      hidden:true,
+                      editable: true,
+                   },                   
                    { label: 'Proveedor',
                      name: 'razonsocial',  
                      search: false,
-                     key: true, 
                      align: 'left',                 
-                     width: 50
+                     width: 250,
+                     editable: true,
+                     editoptions: { size: 10, readonly: 'readonly'}  
                    },        
                    { label: 'Periodo',
-                     name: 'periodocompromiso',
-                     width: 100,
+                     name: 'periodo',
+                     width: 70,
                      align: 'right',
-                     search: false
+                     search: false,
+                     editable: true,
+                     editoptions: { size: 10, readonly: 'readonly'}                       
                    },  
                    { label: 'Servicio',
-                     name: 'servicio',
-                     width: 100,
-                     align: 'right',
-                     search: false
+                     name: 'nombre',
+                     width: 200,
+                     align: 'left',
+                     search: false,
+                     editable: true,
+                     editoptions: { size: 10, readonly: 'readonly'}                       
                    },  
                    { label: 'Glosa Servicio',
                      name: 'glosaservicio',
-                     width: 100,
+                     width: 250,
                      align: 'left',
-                     search: false
+                     search: false,
+                     editable: true,
+                     editoptions: { size: 10, readonly: 'readonly'}                       
                    },         
                    { label: 'Monto a Pagar',
                      name: 'montoapagar',  
                      search: false,
                      align: 'left',                 
-                     width: 100                   
+                     width: 100,
+                     editable: true,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                     editoptions: { size: 10, readonly: 'readonly'}                                    
                     },                                                     
-                   { label: 'Aprobado',
+                   { label: 'Estado',
                      name: 'aprobado',
                      search: false,
                      align: 'left',
-                     width: 80
+                     width: 80,
+                     editable: true,
+                    hidden: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        var dato = '';
+                        var val = rowObject.aprobado;
+                        if (val == 0) {
+                            dato = 'Pendiente';
+                        } else if (val == 1) {
+                            dato = 'Aprobado';
+                        } else if (val == 2) {
+                            dato = 'Rechazado';                            
+                        }
+                        return dato;
+                    },                      
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: "/prefacturasolicitud/estadosolicitud",
+                        buildSelect: function (response) {
+                            var grid = $("#grid");
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.idproveedor;
+                            console.log(response);
+                            var data = JSON.parse(response);
+                            console.log(data);
+                            var s = "<select>";//el default
+                            //s += '<option value="0">--Escoger Estado--</option>';
+                            $.each(data, function (i, item) {
+                                console.log("***proveedor:" + data[i].id + ", " + thissid);
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            console.log(s);
+                            return s + "</select>";
+                        }
+                    }, dataInit: function (elem) { $(elem).width(200); }                     
+                                          
                    },
                    { label: 'Monto Aprobado',
                      name: 'montoaprobado',
                      width: 100,
                      search: false,
-                     align: 'left'
+                     align: 'left',
+                     editable: true,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
                    },
                    { label: 'Glosa Aprobación',
                      name: 'glosaaprobacion',
                      width: 200,
                      search: false,
-                     align: 'left'
+                     align: 'left',
+                     editable: true,
+                     edittype: "textarea"
                    },
                    { label: 'Calificación',
                      name: 'idcalificacion',
                      width: 100,
                      search: false,
-                     align: 'left'
+                     align: 'left',
+                     editable: true,hidden: true,          
+                   edittype: "select",
+                    editoptions: {
+                        dataUrl: "/prefacturasolicitud/calificacion",
+                        buildSelect: function (response) {
+                            var grid = $("#grid");
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.idproveedor;
+                            console.log(response);
+                            var data = JSON.parse(response);
+                            console.log(data);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Calificación--</option>';
+                            $.each(data, function (i, item) {
+                                console.log("***proveedor:" + data[i].id + ", " + thissid);
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            console.log(s);
+                            return s + "</select>";
+                        }
+                    }, dataInit: function (elem) { $(elem).width(200); }                     
                    },   
+                   { label: 'Glosa Multa',
+                     name: 'glosamulta',
+                     width: 200,
+                     search: false,
+                     align: 'left',
+                     editable: true,
+                     edittype: "textarea"
+                   },                   
                    { label: 'Monto Multa',
                      name: 'montomulta',
                      width: 100,
                      search: false,
-                     align: 'left'
+                     align: 'left',
+                     editable: true,
+                     formatter: 'number', formatoptions: { decimalPlaces: 0 }                     
                    },         
                    { label: 'Causal Multa',
                      name: 'idcausalmulta',
                      width: 100,
                      search: false,
-                     align: 'left'
-                   },
-                   { label: 'Glosa Multa',
-                     name: 'glosamulta',
-                     width: 200,
-                     search: false,
-                     align: 'left'
+                     align: 'left',
+                     editable: true,hidden: true,edittype: "select",
+                    editoptions: {
+                        dataUrl: "/prefacturasolicitud/causalmulta",
+                        buildSelect: function (response) {
+                            var grid = $("#grid");
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.idproveedor;
+                            console.log(response);
+                            var data = JSON.parse(response);
+                            console.log(data);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Causal Multa--</option>';
+                            $.each(data, function (i, item) {
+                                console.log("***proveedor:" + data[i].id + ", " + thissid);
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            console.log(s);
+                            return s + "</select>";
+                        }
+                    }, dataInit: function (elem) { $(elem).width(200); }                     
+                     
                    }
                               
         ],
@@ -220,16 +321,10 @@ function showDocumentos(cui, periodo) {
         rowList: [5, 10, 20, 50],
         sortname: 'id',
         sortorder: 'asc',
-        viewrecords: true,            
-        regional : "es",
-        loadComplete: function () {
-            var $grid = $("#grid");
-            var colSum = $grid.jqGrid('getCol', 'monto', false, 'sum');
-            $grid.jqGrid('footerData', 'set', { monto: colSum });
-        },               
-        subGrid: false, 
-        footerrow: true,
-        userDataOnFooter: true                        
+        viewrecords: true, 
+        editurl: '/prefacturasolicitud/action',           
+        regional : "es",             
+        subGrid: false                      
     });
 
     $("#grid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
@@ -238,7 +333,7 @@ function showDocumentos(cui, periodo) {
         edit: true,        
         add: false,
         del: false,
-        search: false, // show search button on the toolbar
+        search: false,
         refresh: true
     },
         {
@@ -246,36 +341,10 @@ function showDocumentos(cui, periodo) {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
+            serializeEditData: sipLibrary.createJSON,            
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                /*if (rowData.estado == 'Aprobado') {
-                    return [false, "No puede editar presupuestos en estado Aprobado", ""];
-                } else { 
-                    if (rowData.idcui != postdata.idcui) {
-                        return [false, "NO puede cambiar el CUI base", ""];
-                    } if (rowData.idejercicio != postdata.idejercicio) {
-                        return [false, "NO puede cambiar el Ejercicio base", ""];
-                    }
-                    return [true, "", ""]
-                }*/
-            },
-            beforeShowForm: function (postdata, formid) {
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var s = grid.jqGrid('getGridParam', 'selarrrow');
-                /*window.setTimeout(function () {
-                    $("#idcui").attr('disabled', true);
-                    $("#idejercicio").attr('disabled', true);
-                }, 1000);*/
-
             }
         },{}
     

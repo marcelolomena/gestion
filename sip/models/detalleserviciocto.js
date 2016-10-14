@@ -169,6 +169,14 @@ module.exports = function(sequelize, DataTypes) {
     saldopresupuesto: {
       type: DataTypes.FLOAT,
       allowNull: true
+    },
+    tipogeneracion: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }, 
+    comentario: {
+      type: DataTypes.STRING,
+      allowNull: true
     }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleserviciocto'
