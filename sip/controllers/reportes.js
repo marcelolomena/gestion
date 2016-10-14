@@ -2,9 +2,31 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var fs = require('fs');
 var path = require("path");
-var co = require('co');
+
 //var jsreport = require('jsreport-core')()
 //var jsreport = require('jsreport')()
+var jsreport = require('jsreport-core')({
+    rootDirectory: path.join(__dirname, '..'),
+    dataDirectory: path.join(__dirname, '..', 'data'),
+    tempDirectory: path.join(__dirname, '..', 'temp'),
+    scripts: {
+        timeout: 600000,
+        allowedModules: "*"
+    }, tasks: {
+        strategy: "in-process",
+        numberOfWorkers: 1,
+        templateCache: {
+            max: 100,
+            enabled: true
+        }
+    }, express: {
+        renderTimeout: 600000,
+        inputRequestLimit: "512mb"
+    }, loadConfig: false,
+    autoTempCleanup: true,
+    extensionsLocationCache: true,
+    logger: { providerName: "console" }
+})
 
 exports.lstGerencias = function (req, res) {
 
@@ -367,7 +389,7 @@ exports.lstConceptoGasto = function (req, res) {
 
 exports.reporteGerenciasPdf = function (req, res) {
     try {
-        var jsreport = require('jsreport-core')
+
         var pathPdf = path.join(__dirname, '..', 'pdf')
         var filePdf = 'repo1.pdf'
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'gerencias.js'), 'utf8');
@@ -441,14 +463,14 @@ exports.reporteGerenciasPdf = function (req, res) {
                             });
 
                     }).catch(function (e) {
-                        console.log(e)
+                        console.log("Pdf 1: " + e)
                     })
                 }).catch(function (e) {
-                    console.log(e)
+                    console.log("Pdf 2: " + e)
                 })
 
             }).catch(function (e) {
-                console.log(e)
+                console.log("Pdf 3: " + e)
             })
 
 
@@ -460,7 +482,7 @@ exports.reporteGerenciasPdf = function (req, res) {
 exports.pdfManager = function (req, res) {
 
     try {
-        var jsreport = require('jsreport-core')
+        var jsreport = require('jsreport-core')()
         var pathPdf = path.join(__dirname, '..', 'pdf')
 
         //console.log(pathPdf + path.sep)
@@ -894,161 +916,114 @@ ON P.cui = Q.cui
 # Cambio en paginación Toya
 */
 exports.testtroya = function (req, res) {
-    var jsreport = require('jsreport-core')({
-        rootDirectory: path.join(__dirname, '..'),
-        dataDirectory: path.join(__dirname, '..', 'data'),
-        tempDirectory: path.join(__dirname, '..', 'temp'),
-        scripts: {
-            timeout: 100000,
-            allowedModules: "*"
-        }, tasks: {
-            strategy: "in-process",
-            numberOfWorkers: 1,
-            templateCache: {
-                max: 100,
-                enabled: true
-            }
-        }, loadConfig: false,
-        autoTempCleanup: true,
-        extensionsLocationCache: true
-    })
     jsreport.use(require('jsreport-templates')())
     jsreport.use(require('jsreport-xlsx')())
     jsreport.use(require('jsreport-handlebars')())
+    var start = new Date();
+    var tml = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx'))
+    var pre = new Date() - start
 
+    console.info("Tiempo En Leer Template guaton xlsx: %dms", pre);
 
-    co(function* () {
-        var start = new Date();
-        var tml = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx'))
-        var pre = new Date() - start
-        console.info("Tiempo En Leer Template guaton xlsx: %dms", pre);
+    var datafill = fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
 
-        var datafill = fs.readFileSync(path.join(__dirname, '..', 'templates', 'simple5.xml'), 'utf8')
-
-        var sql = `
+    var sql = `
             SELECT nuevagerencia,nuevodepartamento, nombrecuenta , fecha , tipo, monto FROM sip.troya `
 
 
-        var _troya = yield sequelize.query(sql,
-            {
-                type: sequelize.QueryTypes.SELECT
-            })
+    return sequelize.query(sql,
+        {
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (_troya) {
 
-        console.log("troya")
+            console.log("troya")
+
+            var datum = {
+                "food": _troya
+            }
 
 
-        var datum = {
-            "food": _troya
-        }
+            jsreport.init().then(function () {
+
+                jsreport.documentStore.collection('xlsxTemplates').insert({
+                    contentRaw: tml,
+                    shortid: 'pico',
+                    name: 'pico'
+                }).then(function (tmpl) {
 
 
-        jsreport.init().then(function () {
-            jsreport.documentStore.collection('xlsxTemplates').insert({
-                contentRaw: tml,
-                shortid: 'pico',
-                name: 'pico'
-            }).then(function (tmpl) {
-                console.log("render")
-                jsreport.render({
-                    template: {
-                        recipe: 'xlsx',
-                        engine: 'handlebars',
-                        xlsxTemplate: {
-                            shortid: 'pico'
+                    jsreport.beforeRenderListeners.add('inicio', function (request, response) {
+                        console.log("inicio render")
+                    })
+
+                    jsreport.renderErrorListeners.add('panico', function (request, response, err) {
+                        console.log("salio mal : " + err)
+                    })
+
+                    jsreport.afterRenderListeners.add('fin', function (request, response) {
+                        console.log("fin render")
+                        var end = new Date() - start
+                        //console.log("response.content.toString()")
+                        console.info("Tiempo Total: %dms", end);
+                    })
+
+                    return jsreport.render({
+                        template: {
+                            recipe: 'xlsx',
+                            engine: 'handlebars',
+                            xlsxTemplate: {
+                                shortid: 'pico'
+                            },
+                            content: datafill
                         },
-                        content: datafill
-                    },
-                    //options: { preview: true },
-                    data: datum
-                }).then(function (out) {
-                    //res.send(out.content.toString())
-                    res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
-                    res.header('Content-Disposition', 'inline; filename="troyudo.xlsx"');
-                    res.header('File-Extension', 'xlsx');
-                    out.result.pipe(res);
-                    var end = new Date() - start
-                    console.info("Tiempo Total: %dms", end);
+                        options: { preview: true },
+                        data: datum
+                    }).then(function (out) {
+                        //
+                        try {
+                            console.log('finalizo');
+                            res.send(out.content.toString())
+                            /*
+                            out.stream.pipe(res);
+                            out.result.pipe(fs.createWriteStream(path.join(__dirname, '..', 'temp', 'reporte.xlsx')))
+                                .on('finish', function () {
+                                    console.log("termino de grabar")
+                                    res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
+                                    res.header('Content-Disposition', 'inline; filename="hipertroyas.xlsx"');
+                                    fs.createReadStream(path.join(__dirname, '..', 'temp', 'reporte.xlsx')).pipe(res)
+                                        .on('finish', function () {
+                                            fs.unlink(path.join(__dirname, '..', 'temp', 'reporte.xlsx'));
+                                            console.log('finalizo');
+                                        });
+                                });
+                            */
+                        } catch (e) {
+                            console.info("que pacho : ", e);
+                            res.end(e.message);
+                        }
+                    }).catch(function (e) {
+                        console.log(e)
+                        res.end(e.message);
+                    })
 
                 }).catch(function (e) {
                     console.log(e)
+                    res.end(e.message);
                 })
 
             }).catch(function (e) {
                 console.log(e)
-            })
+                res.end(e.message);
+            });
 
-        });
 
-    });
-
-    /*
-        setTimeout(function (argument) {
-            sequelize.query(sql,
-                {
-                    //replacements: { page: parseInt(page), rows: parseInt(rows), condition: condition },
-                    type: sequelize.QueryTypes.SELECT
-                }).then(function (data) {
-                    var qry = new Date() - start
-                    console.info("Tiempo En ejecutar query : %dms", qry);
-                    var datum = {
-                        "food": data
-                    }
-    
-                    jsreport.init().then(function () {
-                        jsreport.documentStore.collection('xlsxTemplates').insert({
-                            contentRaw: tml,
-                            shortid: 'pico',
-                            name: 'pico'
-                        }).then(function (tmpl) {
-    
-                            //console.dir(tmpl.shortid)
-    
-    
-                            return jsreport.render({
-                                template: {
-                                    recipe: 'xlsx',
-                                    engine: 'handlebars',
-                                    xlsxTemplate: {
-                                        shortid: 'pico'
-                                    },
-                                    content: datafill
-                                },
-                                options: { preview: true },
-                                data: datum
-                            }).then(function (out) {
-                                res.send(out.content.toString())
-      
-                                var end = new Date() - start
-                                console.info("Tiempo Total: %dms", end);
-    
-                            }).catch(function (e) {
-                                console.log(e)
-                            })
-    
-                        }).catch(function (e) {
-                            console.log(e)
-                        })
-                    }).catch(function (e) {
-                        console.log(e)
-                    })
-                })
-        }, 1);
-    */
+        }).catch(function (e) {
+            console.log(e)
+            res.end(e.message);
+        })
+  
 }
 
-/*
-  res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
-  res.header('Content-Disposition', 'inline; filename="hipertroyas.xlsx"');
-  res.header('File-Extension', 'xlsx');
-  out.result.pipe(res);
-  */
-/*
-                    jsreport.documentStore.collection("xlsxTemplates")
-                        .find({ shortid: "divot" })
-                        .then(function (respuesta) {
-                            console.dir(respuesta)
-                        });
-*/
 exports.reporteIntegrado = function (req, res) {
     //var contents = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template-full.xlsx'));
     res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
@@ -1058,4 +1033,3 @@ exports.reporteIntegrado = function (req, res) {
     fs.createReadStream(path.join(__dirname, '..', 'templates', 'pivot-template-full.xlsx')).pipe(res);
 
 }
-

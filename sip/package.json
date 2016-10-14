@@ -3,7 +3,7 @@
     "version": "0.0.2",
     "private": true,
     "scripts": {
-        "start": "node --max-old-space-size=10000 ./bin/www"
+        "start": "node  --max-old-space-size=10000 ./bin/www"
     },
     "dependencies": {
         "mssql": "latest",
@@ -30,12 +30,10 @@
         "winston": "2.2.0",
         "co": "4.6.0",
         "connect-session-sequelize": "latest",
-        "phantom": "2.1.18",
         "jsreport-core": "latest",
-        "jsreport-jsrender":"latest",
-        "jsreport-phantom-pdf": "latest",   
-        "jsreport-handlebars": "latest",                
+        "jsreport": "latest",
         "jsreport-templates": "latest",
-        "jsreport-xlsx": "latest"
+        "jsreport-xlsx":"latest",
+        "jsreport-handlebars":"latest"
     }
 }

@@ -3,18 +3,9 @@ block titulo
   title SIP Banco de Chile - Sistema Integrado de Presupuesto - Reporte Agrupado
 block jsgrilla
   script(type='text/javascript', src='/javascripts/views/reportepivote.js')
+  script(type='text/javascript', src='/javascripts/pdfobject.min.js')    
 block titulogrilla
   //.header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
     //h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") REPORTE
 block grilla
-  #outerDiv(style='margin:50px;height:100%')  
-   div(style='margin-left:20px;')
-      b Group By:
-      select#chngroup.form-control
-        option(value='nuevagerencia', selected='selected') Gerencia
-        option(value='nuevodepartamento') Departamento
-        option(value='clear') Remove Grouping
-      br
-      br
-      table#grid
-      #pager
+  button#xlsx Reporte

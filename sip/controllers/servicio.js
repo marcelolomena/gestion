@@ -90,6 +90,7 @@ exports.action = function (req, res) {
         cuentacontable: req.body.cuentacontable,
         agrupacionsap: req.body.agrupacionsap,
         secuenciasap: req.body.secuenciasap,
+        tiposervicio: req.body.tiposervicio,
         borrado: 1
       }).then(function (servicio) {
         res.json({ error_code: 0 });
@@ -107,7 +108,8 @@ exports.action = function (req, res) {
         idcuenta: req.body.idcuenta,
         cuentacontable: req.body.cuentacontable,
         agrupacionsap: req.body.agrupacionsap,
-        secuenciasap: req.body.secuenciasap,        
+        secuenciasap: req.body.secuenciasap,
+        tiposervicio: req.body.tiposervicio,        
       }, {
           where: {
             id: req.body.id
@@ -173,7 +175,12 @@ exports.getExcel = function (req, res) {
       caption: 'secuenciasap',
       type: 'number',
       width: 50
-    },    
+    },  
+    {
+      caption: 'Tipo Servicio',
+      type: 'string',
+      width: 50
+    },  
     {
       caption: 'Cuenta Contable',
       type: 'string',
@@ -186,7 +193,7 @@ exports.getExcel = function (req, res) {
     }
   ];
   
- var sql = "SELECT a.id, a.nombre, a.tarea,a.agrupacionsap,a.secuenciasap "+
+ var sql = "SELECT a.id, a.nombre, a.tarea,a.agrupacionsap,a.secuenciasap,a.tiposervicio "+
     ",b.cuentacontable,b.nombrecuenta "+
     "FROM sip.servicio a left join sip.cuentascontables b on a.idcuenta = b.id "+
     "Where a.borrado = 1 order by a.nombre"
@@ -200,6 +207,7 @@ exports.getExcel = function (req, res) {
           servicio[i].tarea,
           servicio[i].agrupacionsap,
           servicio[i].secuenciasap,
+          servicio[i].tiposervicio,
           servicio[i].cuentacontable,
           servicio[i].nombrecuenta
         ];

@@ -1,74 +1,75 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-var phantom = require('phantom');
 var fs = require('fs');
+var path = require("path");
 var utilSeq = require('../utils/seq');
 
 exports.test = function (req, res) {
 
     try {
+        var jsreport = require('jsreport-core')()
+        var pathPdf = path.join(__dirname, '..', 'pdf')
 
-        if (!req.body.prefactura) {
-            return next(new Error('No se enviaron datos de prefactura'));
-        }
+        var filePdf = 'prefactura.pdf'
 
-        var prefactura = req.body.prefactura;
+        var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
-        req.app.render('test', { prefactura: prefactura }, function (err, html) {
-            console.log(html)
+        var sql_1 =
+            `
+            SELECT  
+                b.glosaservicio,b.montoaprobado,c.razonsocial
+                FROM sip.prefactura a
+                JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
+                JOIN sip.proveedor c ON a.idproveedor = c.id
+                WHERE a.id=1 
+            `
 
-            var phInstance = null;
-            var sitepage = null;
-            var filePath = 'lana.pdf';
+        sequelize.query(sql_1,
+            {
+                replacements: { id: req.params.id },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (rows) {
 
-            phantom.create().then(function (ph) {
-                phInstance = ph;
-                return phInstance.createPage();
-            }).then(function (page) {
-                sitepage = page;
-                var paperSize = {
-                    format: 'letter',
-                    orientation: 'portrait',
-                    margin: { left: "1.25cm", right: "1.25cm", top: "1.25cm", bottom: "1.25cm" }
-                };
 
-                page.setting('javascriptEnabled');
-                page.property('paperSize', paperSize);
-                page.property('viewportSize', { width: 704, height: 1054 });
-                page.property('zoomFactor', 0.9);
-                page.property('content', html);
-            }).then(function (status) {
-                return sitepage.property('content');
-            }).then(function (content) {
+                var datum = {
+                    "prefactura": rows
+                }
 
-                sitepage.render(filePath, { format: 'pdf', quality: '100' }).then(function (result) {
-                    setTimeout(function () {
-                        sitepage.close();
-                        phInstance.exit();
-                    }, 25000);
-                    res.header('Content-disposition', 'inline; filename=' + filePath);
-                    res.header('Content-type', 'application/pdf');
-                    fs.createReadStream(filePath).pipe(res);
+                jsreport.init().then(function () {
+                    return jsreport.render({
+                        template: {
+                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'prefactura.html'), 'utf8'),
+                            helpers: helpers,
+                            engine: 'handlebars',
+                            recipe: 'phantom-pdf',
+                            phantom: {
+                                orientation: 'portrait',
+                                format: 'A4',
+                            }
+                        },
+                        data: datum
+                    }).then(function (resp) {
+                        res.header('Content-type', 'application/pdf');
+                        resp.stream.pipe(res);
+                        console.info("es nuevo")
 
-                }).catch(function (err) {
-                    console.log(err);
-                    sitepage.close();
-                    phInstance.exit();
-                });
+                    }).catch(function (e) {
+                        console.log(e)
+                    })
+
+                }).catch(function (e) {
+                    console.log(e)
+                })
 
             }).catch(function (err) {
-                console.log(err);
-                sitepage.close();
-                phInstance.exit();
+                console.log(err)
             });
 
-
-        });
-
     } catch (e) {
-        console.log(e);
+        console.log("error : " + e);
     }
-};
+}
+
 
 /*
 # Cambio en paginación
@@ -185,7 +186,7 @@ exports.generar = function (req, res) {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-            
+
             models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     var newPromise = models.solicitudaprobacion.create({
@@ -220,7 +221,7 @@ exports.generar = function (req, res) {
                 console.log("--------> " + err);
                 //res.json({ error_code: 1 });
             });
-            
+
             models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     var otherPromise = models.detallecompromiso.update({
@@ -228,7 +229,7 @@ exports.generar = function (req, res) {
                     }, {
                             where: { id: rows[i].id }
                         }, { transaction: t });
-                        //console.log(otherPromise);
+                    //console.log(otherPromise);
                     o_promises.push(otherPromise);
 
                 };

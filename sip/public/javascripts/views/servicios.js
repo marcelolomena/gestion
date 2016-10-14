@@ -28,6 +28,10 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>cuentacontable {cuentacontable}</div>";
     tmpl += "<div class='column-half'>Criticidad {criticidad}</div>";
     tmpl += "</div>";
+    
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'><span style='color:red'>* </span>Tipo Servicio {tiposervicio}</div>";
+    tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
@@ -37,7 +41,7 @@ $(document).ready(function () {
         {   label: 'id', name: 'id', key: true, hidden: true },
         {   label: 'idcuenta', name: 'idcuenta', hidden: true },
         {
-            label: 'Nombre', name: 'nombre', width: 600, align: 'left',
+            label: 'Nombre', name: 'nombre', width: 500, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
         {
@@ -106,7 +110,49 @@ $(document).ready(function () {
                     $(element).mask("000000", { placeholder: "_________" });
 
                 },editrules: { required: false }, hidden: false
-        }},                
+             },
+        },
+                {
+            label: 'Tipo Servicio', name: 'tiposervicio',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/tiposervicio',
+                buildSelect: function (response) {
+                    var grid = $("#table_servicio");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.tipo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger Tipo Servicio--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].nombre + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].nombre + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        if ($('option:selected', this).val() != 0) {
+                            $("input#tiposervicio").val('option:selected', this).text();
+                        } else {
+                            $("input#tiposervicio").val("");
+                        }
+                    }
+                }],
+            },
+            dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Tipo Servicio', name: 'tiposervicio', width: 250, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
+        },          
     ];
 
     $("#table_servicio").jqGrid({
@@ -190,8 +236,8 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                    if (postdata.pid == 0) {
-                        return [false, "CuentasContables: Debe escoger un valor", ""];
+                    if (postdata.tiposervicio == "0") {
+                        return [false, "Tipo Servicio: Debe escoger un valor", ""]; 
                     } else {
                         return [true, "", ""]
                     }
