@@ -26,13 +26,16 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.*, proveedor.[razonsocial] as proveedor, estructuracui.[cui] as cui " +
+        "as resultNum, a.*, proveedor.[razonsocial] as proveedor, estructuracui.[cui] as cui, moneda.glosamoneda as moneda " +
         "FROM [sip].[prefactura] a " +
         " LEFT OUTER JOIN [sip].[proveedor] proveedor  ON a.[idproveedor] = proveedor.[id] " +
         " LEFT OUTER JOIN  [sip].[estructuracui] estructuracui  ON a.[idcui] = estructuracui.[id] " +
+        " LEFT OUTER JOIN  [sip].[moneda] moneda  ON a.[idmoneda] = moneda.[id] " +
         "WHERE (a.[borrado] = 1) " +
         ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+         console.log(sql0);
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
@@ -51,10 +54,11 @@ exports.list = function (req, res) {
                 "set @pageNum=" + page + ";   " +
                 "With SQLPaging As   ( " +
                 "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-                "as resultNum, a.*, proveedor.[razonsocial] as proveedor, estructuracui.[cui] as cui " +
+                "as resultNum, a.*, proveedor.[razonsocial] as proveedor, estructuracui.[cui] as cui, moneda.glosamoneda as moneda " +
                 "FROM [sip].[prefactura] a " +
                 " LEFT OUTER JOIN [sip].[proveedor] proveedor  ON a.[idproveedor] = proveedor.[id] " +
                 " LEFT OUTER JOIN  [sip].[estructuracui] estructuracui  ON a.[idcui] = estructuracui.[id] " +
+                " LEFT OUTER JOIN  [sip].[moneda] moneda  ON a.[idmoneda] = moneda.[id] " +
                 "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
                 "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
