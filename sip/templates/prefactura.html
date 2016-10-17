@@ -45,6 +45,7 @@
 					<th>
 						<h4>Servicio</h4>
 					</th>
+<!--					
 					<th>
 						<h4>Descripción</h4>
 					</th>
@@ -54,8 +55,9 @@
 					<th>
 						<h4>Tarifa / Precio</h4>
 					</th>
+-->					
 					<th>
-						<h4>Sub-Total</h4>
+						<h4>Precio</h4>
 					</th>
 				</tr>
 			</thead>
@@ -63,9 +65,11 @@
 				{{#each prefactura}}
 				<tr>
 					<td>{{glosaservicio}}</td>
+<!--					
 					<td><a href="#"> Título de su artículo aquí </a></td>
 					<td class="text-right">-</td>
 					<td class="text-right">$ {{format montoaprobado}}</td>
+-->					
 					<td class="text-right">$ {{format montoaprobado}}</td>
 				</tr>
 				{{/each}}

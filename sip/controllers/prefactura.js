@@ -14,6 +14,7 @@ exports.test = function (req, res) {
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
+/*
         var sql_1 =
             `
             SELECT  
@@ -24,6 +25,27 @@ exports.test = function (req, res) {
 				JOIN sip.contactoproveedor d ON c.id = d.idproveedor
                 WHERE a.id=:id
             `
+*/
+var sql_1 =
+            `
+                SELECT 
+				a.id, b.glosaservicio,
+                IIF(e.glosamoneda ='CLP',ROUND(b.montoaprobado,0),ROUND(b.montoaprobado,0)) montoaprobado,
+                c.razonsocial,d.contacto,d.correo, d.id,e.glosamoneda
+                FROM sip.prefactura a
+                JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
+                JOIN sip.proveedor c ON a.idproveedor = c.id
+				JOIN sip.moneda e ON a.idmoneda = e.id
+				JOIN 
+				(
+					SELECT z.idproveedor,w.id, w.contacto,w.correo FROM sip.contactoproveedor w
+					RIGHT OUTER JOIN
+					(
+						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
+					) z ON w.id= z.idcontacto
+				) d ON c.id = d.idproveedor
+                WHERE a.id=:id          
+            `            
 
         sequelize.query(sql_1,
             {
@@ -110,7 +132,8 @@ exports.lista = function (req, res) {
             JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
             JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
             JOIN sip.estructuracui D ON B.idcui = D.id
-            WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition
+            JOIN sip.proveedor E ON A.idproveedor = E.id
+            WHERE C.estadopago IS NULL AND C.montopesos != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition
 
     var sql = `
             SELECT 
@@ -124,7 +147,8 @@ exports.lista = function (req, res) {
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                     JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                     JOIN sip.estructuracui D ON B.idcui = D.id
-                    WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition + order +
+                    JOIN sip.proveedor E ON A.idproveedor = E.id
+                    WHERE C.estadopago IS NULL AND C.montopesos != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
         console.log("lala : " + sql)
