@@ -67,6 +67,7 @@ function loadGrid(cui, periodo) {
 }
 
 function showDocumentos(cui, periodo) {
+
     var tmpl = "<div id='responsive-form' class='clearfix'>";
     
     tmpl += "<div class='form-row'>";
@@ -89,21 +90,21 @@ function showDocumentos(cui, periodo) {
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Glosa Aprobación {glosaaprobacion}</div>";
-    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";      
+    tmpl += "<div class='column-half'>Glosa Aprobación {glosaaprobacion}</div>";     
     tmpl += "</div>";
-        
+    
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
+    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";     
+    tmpl += "</div>";
+            
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
     tmpl += "<div class='column-half'>Monto Multa {montomulta}</div>";
     tmpl += "</div>";    
     
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
-    tmpl += "</div>";
-    
     tmpl += "<hr style='width:100%;'/>";
-    tmpl += "<div class='form-row' > {sData} {cData}  </div>";
+    tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";    
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/prefacturasolicitud/"+cui+"/"+periodo;
@@ -122,23 +123,16 @@ function showDocumentos(cui, periodo) {
                       name: 'iddetallecompromiso',
                       width: 50,
                       hidden:true,
-                      editable: true,
-                   },                   
-                   { label: 'Proveedor',
-                     name: 'razonsocial',  
-                     search: false,
-                     align: 'left',                 
-                     width: 250,
-                     editable: true,
-                     editoptions: { size: 10, readonly: 'readonly'}  
-                   },        
+                      editable: true
+                   },                          
                    { label: 'Periodo',
                      name: 'periodo',
                      width: 70,
-                     align: 'right',
+                     align: 'left',
                      search: false,
                      editable: true,
-                     editoptions: { size: 10, readonly: 'readonly'}                       
+                     hidden:false,
+                     editoptions: { size: 5, readonly: 'readonly'}                       
                    },  
                    { label: 'Servicio',
                      name: 'nombre',
@@ -146,7 +140,7 @@ function showDocumentos(cui, periodo) {
                      align: 'left',
                      search: false,
                      editable: true,
-                     editoptions: { size: 10, readonly: 'readonly'}                       
+                     editoptions: { size: 5, readonly: 'readonly'}                       
                    },  
                    { label: 'Glosa Servicio',
                      name: 'glosaservicio',
@@ -154,7 +148,8 @@ function showDocumentos(cui, periodo) {
                      align: 'left',
                      search: false,
                      editable: true,
-                     editoptions: { size: 10, readonly: 'readonly'}                       
+                     edittype: "textarea",
+                     editoptions: { size: 5, readonly: 'readonly'}                       
                    },         
                    { label: 'Monto a Pagar',
                      name: 'montoapagar',  
@@ -163,7 +158,7 @@ function showDocumentos(cui, periodo) {
                      width: 100,
                      editable: true,
                      formatter: 'number', formatoptions: { decimalPlaces: 0 },
-                     editoptions: { size: 10, readonly: 'readonly'}                                    
+                     editoptions: { size: 5, readonly: 'readonly'}                                    
                     },                                                     
                    { label: 'Estado',
                      name: 'aprobado',
@@ -171,7 +166,6 @@ function showDocumentos(cui, periodo) {
                      align: 'left',
                      width: 80,
                      editable: true,
-                    hidden: false,
                     formatter: function (cellvalue, options, rowObject) {
                         var dato = '';
                         var val = rowObject.aprobado;
@@ -311,12 +305,11 @@ function showDocumentos(cui, periodo) {
         ],
 		caption: "Solicitud de Aprobación",
  		height: 'auto',
-        styleUI: "Bootstrap",         
-        autowidth:false, 
+        styleUI: "Bootstrap",        
         sortable: "true",
         pager: "#pager",
-        jsonReader: {cell:""},
         page: 1,
+        shrinkToFit: false,
         rowNum: 10,  
         rowList: [5, 10, 20, 50],
         sortname: 'id',
@@ -334,12 +327,16 @@ function showDocumentos(cui, periodo) {
         add: false,
         del: false,
         search: false,
-        refresh: true
+        refresh: true,
+        cloneToTop: false
     },
         {
-            editCaption: "Modifica Solicitud",
+            editCaption: "Modifica Solicitud Aprobación",
             closeAfterEdit: true,
             recreateForm: true,
+            top: 10,
+            left: 10,
+            width:850,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,            
             template: tmpl,
