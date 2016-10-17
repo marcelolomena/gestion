@@ -1,6 +1,5 @@
-function returnTaskLink(cellValue, options, rowdata, action) 
-{
-    return "<a href='/factura/prefactura/" + rowdata.id + "' >" + cellValue +"</a>";
+function returnTaskLink(cellValue, options, rowdata, action) {
+    return "<a href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + "</a>";
 }
 
 $(document).ready(function () {
@@ -236,13 +235,13 @@ $(document).ready(function () {
                 }
             }
         },
-        
+
         {
             label: 'Estado', name: 'estado', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true, hidden: true,
             editrules: { edithidden: false, required: true }
         },
-        
+
     ];
     $("#table_prefacturas").jqGrid({
         url: '/prefacturas/list',
@@ -263,6 +262,12 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         editurl: '/prefacturas/action',
         styleUI: "Bootstrap",
+        subGrid: true,
+        subGridRowExpanded: gridSolicitudes,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
@@ -279,89 +284,38 @@ $(document).ready(function () {
         view: false, position: "left", cloneToTop: false
     },
         {
-            editCaption: "Modifica Iniciativa",
-            closeAfterEdit: true,
-            recreateForm: true,
-            //mtype: 'POST',
-            //url: '/iniciativas/update',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmpl,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
-                $('input#pptoestimadogasto', form).attr('readonly', 'readonly');
-                $('input#pptoestimadoinversion', form).attr('readonly', 'readonly');
-                $('input#pptoestimadoprevisto', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadogasto', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadoinversion', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadoprevisto', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadodolares', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
-            }
+
         },
         {
-            addCaption: "Agrega Iniciativa",
-            closeAfterAdd: true,
-            recreateForm: true,
-            //mtype: 'POST',
-            //url: '/iniciativas/add',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmpl,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0) {
-                    return [false, result.error_text, ""];
-                } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
-                    return [true, "", ""];
-                }
-            }, beforeShowForm: function (form) {
-                $('input#pptoestimadogasto', form).attr('readonly', 'readonly');
-                $('input#pptoestimadoinversion', form).attr('readonly', 'readonly');
-                $('input#pptoestimadoprevisto', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadogasto', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadoinversion', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadoprevisto', form).attr('readonly', 'readonly');
-                $('input#pptoaprobadodolares', form).attr('readonly', 'readonly');
-                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
-            }
+
         },
         {
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
         },
         {
             recreateFilter: true
         }
     );
+    $('#table_prefacturas').jqGrid('navButtonAdd', '#pager_prefacturas', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon glyphicon-send",
+        title: "Generar Prefacturas",
+        position: "last",
+        onClickButton: function () {
+            bootbox.confirm("¿Esta seguro que desea generar las prefacturas para el periodo actual?", function (confirmed) {
+                if (confirmed == true) {
+                    $.ajax({
+                        url: '/generarprefacturas'
+                    }).done(function () {
+                        bootbox.alert("Se han generado las prefacturas del periodo", function () { /* your callback code */ })
+                        $grid.trigger("reloadGrid");
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        bootbox.alert("Error!!…", function () { /* your callback code */ })
+                    }).always(function () {
+                        bootbox.alert("Ha comenzado la generación", function () { /* your callback code */ })
+                    });
+                }
+            });
+        }
+    });
     $("#pager_prefacturas_left").css("width", "");
 });
