@@ -85,7 +85,7 @@ function showDocumentos(cui, periodo) {
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto a Aprobado {montoaprobado}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Aprobado {montoaprobado}</div>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";
     tmpl += "</div>";
     
@@ -201,7 +201,24 @@ function showDocumentos(cui, periodo) {
                             });
                             console.log(s);
                             return s + "</select>";
-                        }
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                var estado = $('option:selected', this).val()                                
+                                console.log("Change");
+                                var grid = $("#grid");
+                                var rowKey = grid.getGridParam("selrow");
+                                var rowData = grid.getRowData(rowKey);
+                                var monto = rowData.montoapagar;  
+                                console.log("monto:"+monto);
+                                console.log("estado:"+estado);     
+                                if (estado == "1"){          
+                                    $("input#montoaprobado").val(monto);
+                                } else {
+                                    $("input#montoaprobado").val("0");
+                                }              
+                            }
+                        }],                        
                     }, dataInit: function (elem) { $(elem).width(200); }                     
                                           
                    },
@@ -342,7 +359,19 @@ function showDocumentos(cui, periodo) {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }
+            },
+            beforeSubmit: function (postdata, formid) {
+                var monto = new Number(postdata.montoaprobado);
+                console.log("num:"+monto);     
+                if (monto < 0) {
+                    return [false, "Monto: El monto no puede ser menor a cero", ""];                    
+                } else if (postdata.aprobado == 0) {
+                   return [false, "Estado: El estado deber ser Aprobado o Rechazado", ""]; 
+                } else {
+                    return [true, "", ""]
+                }
+
+            }                      
         },{}
     
     );  
