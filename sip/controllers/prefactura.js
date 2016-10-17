@@ -17,10 +17,11 @@ exports.test = function (req, res) {
         var sql_1 =
             `
             SELECT  
-                b.glosaservicio,b.montoaprobado,c.razonsocial
+                a.id, b.glosaservicio,b.montoaprobado,c.razonsocial,d.contacto,d.correo
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
+				JOIN sip.contactoproveedor d ON c.id = d.idproveedor
                 WHERE a.id=:id
             `
 
@@ -126,6 +127,10 @@ exports.lista = function (req, res) {
                     WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
+        console.log("lala : " + sql)
+        console.log("lilo : " + periodo)
+
+
     sequelize.query(count,
         {
             replacements: { periodo: periodo, condition: condition },
@@ -177,7 +182,12 @@ exports.generar = function (req, res) {
                 JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                 JOIN sip.estructuracui D ON B.idcui = D.id
-                WHERE C.estadopago IS NULL AND C.periodo = :periodo
+				JOIN sip.proveedor E ON A.idproveedor = E.id
+                WHERE
+				 C.estadopago IS NULL AND 
+				 C.periodo = :periodo AND
+				C.montopesos != 0 AND
+				E.numrut != 1
         `
     var promises = []
     var o_promises = []

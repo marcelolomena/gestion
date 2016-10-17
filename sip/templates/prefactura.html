@@ -4,8 +4,9 @@
 <script>
     $(function () {
         var data = {{{toJSON prefactura}}}
-        var prefactura = data.map(function(b) { return [ b.glosaservicio, b.montoaprobado,b.razonsocial ]});
+        var prefactura = data.map(function(b) { return [ b.id, b.glosaservicio, b.montoaprobado,b.razonsocial,b.contacto,b.correo ]});
     });
+
 </script>
 <div class="container">
 	<div class="row">
@@ -16,7 +17,7 @@
 			</div>
 			<div class="col-xs-6 text-right">
 				<h1>PRE-FACTURA</h1>
-				<h1><small>Nº 167</small></h1>
+				<h1><small>Nº {{getId prefactura}}</small></h1>
 			</div>
 		</div>
 		<hr>
@@ -26,7 +27,7 @@
 					<div class="panel-heading">
 						<h4>De: <a href="#">Su Nombre</a></h4>
 					</div>
-					<div class="panel-body">Dirección más detalles</div>
+					<div class="panel-body"></div>
 				</div>
 			</div>
 			<div class="col-xs-5 col-xs-offset-2 text-right">
@@ -34,7 +35,7 @@
 					<div class="panel-heading">
 						<h4>Para : <a href="#">{{getProveedor prefactura}}</a></h4>
 					</div>
-					<div class="panel-body">Dirección detalles más detalles</div>
+					<div class="panel-body">{{getContacto prefactura}} - {{getCorreo prefactura}}</div>
 				</div>
 			</div>
 		</div>
@@ -64,15 +65,15 @@
 					<td>{{glosaservicio}}</td>
 					<td><a href="#"> Título de su artículo aquí </a></td>
 					<td class="text-right">-</td>
-					<td class="text-right">{{montoaprobado}} $</td>
-					<td class="text-right">{{montoaprobado}} $</td>
+					<td class="text-right">$ {{format montoaprobado}}</td>
+					<td class="text-right">$ {{format montoaprobado}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 		<div class="row text-right">
-			<div class="col-xs-3 col-xs-offset-7"><strong>Sub Total:<br>Impuestos (IVA 21%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>1,200.00 $<br>252.00 $<br>1,452.00 $<br></strong></div>
+			<div class="col-xs-3 col-xs-offset-7"><strong>Sub Total:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
+			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totaliva prefactura}}<br>$ {{total prefactura}}<br></strong></div>
 		</div>
 		<div class="row">
 			<div class="col-xs-5">
