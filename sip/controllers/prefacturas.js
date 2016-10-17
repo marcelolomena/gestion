@@ -164,3 +164,71 @@ exports.generar = function (req, res) {
         });
 
 };
+
+exports.solicitudesaprobadas = function (req, res) {
+    var page = req.body.page;
+    var rows = req.body.rows;
+    var sidx = req.body.sidx;
+    var sord = req.body.sord;
+    var filters = req.body.filters;
+    var condition = "";
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
+
+    if (!sidx)
+        sidx = "id";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sip.solicitudaprobacion a 
+            where a.periodo= :periodo and a.idprefactura is null 
+            and a.aprobado=1 ` + condition
+
+    var sql = `
+            SELECT 
+                    *
+                    FROM sip.solicitudaprobacion a 
+            where a.periodo= :periodo and a.idprefactura is null 
+            and a.aprobado=1 ` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+
+        console.log("lala : " + sql)
+        console.log("lilo : " + periodo)
+
+
+    sequelize.query(count,
+        {
+            replacements: { periodo: periodo, condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
+            sequelize.query(sql,
+                {
+                    replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    console.log(e)
+                })
+
+        }).catch(function (e) {
+            console.log(e)
+        })
+}
