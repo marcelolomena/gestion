@@ -39,7 +39,9 @@ function totaliva(data) {
         total = total + b.montoaprobado;
     });
 
-    return format(total * 0.19);
+    total = total * 0.19;
+
+    return format(total.toFixed());
 }
 
 function total(data) {
@@ -49,5 +51,7 @@ function total(data) {
         total = total + b.montoaprobado;
     });
 
-    return format(total * 1.19);
+    total = total * 1.19
+
+    return format(total.toFixed());
 }
