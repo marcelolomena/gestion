@@ -1,5 +1,5 @@
 function returnTaskLink(cellValue, options, rowdata, action) {
-    return "<a href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + "</a>";
+    return "<a href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
 }
 
 $(document).ready(function () {
@@ -78,43 +78,12 @@ $(document).ready(function () {
     var modelPrefacturas = [
         { label: 'Numero Prefactura', name: 'id', key: true, hidden: false, formatter: returnTaskLink },
         {
-            label: 'Periodo', name: 'periodo', width: 200, align: 'left',
+            label: 'Periodo', name: 'periodo', width: 100, align: 'left',
             search: true, editable: true, hidden: false
         },
         {
             label: 'Proveedor', name: 'idproveedor',
             search: false, editable: true, hidden: true,
-            editrules: { required: true },
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/divisiones',
-                buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.iddivision;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger División--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].idRRHH == thissid) {
-                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        if ($('option:selected', this).val() != 0) {
-                            $("input#divisionsponsor").val($('option:selected', this).text());
-                        } else {
-                            $("input#divisionsponsor").val("");
-                        }
-                    }
-                }],
-            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
@@ -122,40 +91,20 @@ $(document).ready(function () {
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
+        
+        {
+            label: 'Contrato', name: 'idcontrato', width: 150, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
+        },
+        {
+            label: 'Contrato', name: 'idcontrato',
+            search: false, editable: true, hidden: true,
+            dataInit: function (elem) { $(elem).width(200); }
+        },
         {
             label: 'CUI', name: 'idcui',
             search: false, editable: true, hidden: true,
-            editrules: { required: true },
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/divisiones',
-                buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.iddivision;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger División--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].idRRHH == thissid) {
-                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        if ($('option:selected', this).val() != 0) {
-                            $("input#divisionsponsor").val($('option:selected', this).text());
-                        } else {
-                            $("input#divisionsponsor").val("");
-                        }
-                    }
-                }],
-            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
@@ -163,47 +112,21 @@ $(document).ready(function () {
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
+
         {
-            label: 'Contrato', name: 'idcontrato',
+            label: 'Moneda', name: 'idmoneda',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
-            editoptions: {
-                dataUrl: '/divisiones',
-                buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.iddivision;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger División--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].idRRHH == thissid) {
-                            s += '<option value="' + data[i].idRRHH + '" selected>' + data[i].division + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].idRRHH + '">' + data[i].division + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        if ($('option:selected', this).val() != 0) {
-                            $("input#divisionsponsor").val($('option:selected', this).text());
-                        } else {
-                            $("input#divisionsponsor").val("");
-                        }
-                    }
-                }],
-            },
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Contrato', name: 'idcontrato', width: 150, align: 'left',
+            label: 'Moneda', name: 'moneda', width: 80, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
+        
+        
         {
             label: 'Factura', name: 'factura', width: 200, align: 'left',
             search: true, editable: true, hidedlg: true
