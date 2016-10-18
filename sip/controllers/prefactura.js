@@ -193,7 +193,7 @@ exports.generar = function (req, res) {
                 B.idservicio, 
                 B.glosaservicio,
                 A.id idcontrato,
-                C.montoorigen * F.valorconversion montoorigen,
+                C.montoorigen * F.valormensual montoorigen,
                 0,
                 0,
                 NULL,
