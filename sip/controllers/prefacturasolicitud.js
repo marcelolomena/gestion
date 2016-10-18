@@ -15,7 +15,7 @@ exports.getSolicitudAprob = function (req, res) {
     "SELECT @PageNumber=" + page + "; " +
     "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor " +
     "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso JOIN sip.servicio d ON a.idservicio=d.id " +
-    "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + " ";
+    "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + "  AND idprefactura IS NULL ";
   var sql2 = sql + "ORDER BY b.razonsocial, a.periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
   console.log("query:" + sql2);
