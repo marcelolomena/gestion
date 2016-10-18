@@ -1,7 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var paramService = require('../service/param');
-
+var logger = require("../utils/logger");
 var log = function (inst) {
     console.dir(inst.get())
 }

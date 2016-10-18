@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
-
+var logger = require("../utils/logger");
 exports.getContactos = function (req, res) {
   //var idContrato = req.params.id
   console.log(">>>>>>>>>>>>>>>>>>>>>>> idproveedor [" + req.params.id + "]");

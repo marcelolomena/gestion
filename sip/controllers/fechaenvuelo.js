@@ -1,7 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
-
+var logger = require("../utils/logger");
 exports.action = function (req, res) {
   var action = req.body.oper;
   var fecha;

@@ -1,6 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-
+var logger = require("../utils/logger");
 exports.getPrograma = function (req, res) {
     models.programa.find({ where: { 'program_id': req.params.id } }).then(function (programa) {
         res.json(programa);

@@ -1,6 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-
+var logger = require("../utils/logger");
 exports.getUsersByRol = function (req, res) {
     models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
     models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });

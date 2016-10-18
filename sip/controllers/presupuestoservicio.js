@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var logger = require("../utils/logger");
 // Create endpoint /proyecto for GET
 exports.getPresupuestoServicios = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -83,7 +84,7 @@ exports.getPresupuestoServicios = function (req, res) {
 
 };
 
-//Muestra los registros que deben tener explicación por diferencias entre compromiso y presupuesto
+//Muestra los registros que deben tener explicaciï¿½n por diferencias entre compromiso y presupuesto
 exports.getExplicaciones = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
@@ -588,7 +589,7 @@ exports.action = function (req, res) {
         promises.push(newPromise);
       };      
       
-      //Meses año presupuesto
+      //Meses aï¿½o presupuesto
       var mes = 1;
       anio = anio + 1;
       for (var i = 4; i < 16; i++) {

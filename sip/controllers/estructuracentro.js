@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
-
+var logger = require("../utils/logger");
 exports.cabeceracentro = function (req, res) {
     
   var sql = "SELECT  id,nombre,iddivision,e.division,e.uidresponsable,first_name+' '+last_name as responsable  FROM sip.estructuracentro e, " +

@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var logger = require("../utils/logger");
 // Create endpoint /iniciativas for GET
 exports.getErogacionesPaginados = function (req, res) {
   // Use the Iniciativas model to find all iniciativas

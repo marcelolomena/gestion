@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
-
+var logger = require("../utils/logger");
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;

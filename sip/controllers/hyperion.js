@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var co = require('co');
-
+var logger = require("../utils/logger");
 exports.csv = function (req, res) {
     var _idejercicio = req.params.idejercicio;
     //console.log("_idejercicio" + _idejercicio);

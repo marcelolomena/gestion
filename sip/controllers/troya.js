@@ -1,7 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var constants = require("../utils/constants");
-
+var logger = require("../utils/logger");
 exports.cuitroya = function (req, res) {
   var rol = req.user[0].rid;
   console.log("******usr*********:" + req.user[0].uid);

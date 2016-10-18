@@ -1,6 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-
+var logger = require("../utils/logger");
 exports.graficoDataOld = function (req, res) {
 
   var data = '{"titulo":"Erogaciones por SAP","data":[{"name":"Motor Pagos","y":43,"dId":6079},{"name":"Migración Tarjetas","y":96,"dId":6293},{"name":"Renovación Leasing","y":70,"dId":6355},{"name":"Hub Contable","y":43,"dId":6637},{"name":"Control de Margenes","y":13,"dId":6935},{"name":"Camara Compensación","y":38,"dId":6949}],"showInLegend":false}';

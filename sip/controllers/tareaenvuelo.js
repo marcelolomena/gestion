@@ -3,7 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
-
+var logger = require("../utils/logger");
 exports.poco = function (req, res) {
     console.log("lala : " + req);
 }

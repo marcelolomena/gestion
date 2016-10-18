@@ -142,7 +142,7 @@ exports.lista = function (req, res) {
                     D.nombreresponsable, 
                     A.nombre contrato,
                     B.glosaservicio servicio,
-                    C.costopesos costo
+                    C.montoorigen costo
                     FROM sip.contrato A 
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                     JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
@@ -193,7 +193,7 @@ exports.generar = function (req, res) {
                 B.idservicio, 
                 B.glosaservicio,
                 A.id idcontrato,
-                C.montoorigen,
+                C.montoorigen * F.valorconversion montoorigen,
                 0,
                 0,
                 NULL,
@@ -207,9 +207,11 @@ exports.generar = function (req, res) {
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                 JOIN sip.estructuracui D ON B.idcui = D.id
 				JOIN sip.proveedor E ON A.idproveedor = E.id
+				JOIN sip.monedasconversion F ON F.idmoneda = B.idmoneda 
                 WHERE
 				 C.estadopago IS NULL AND 
 				 C.periodo = :periodo AND
+				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
 				E.numrut != 1
         `
@@ -232,7 +234,7 @@ exports.generar = function (req, res) {
                         'idservicio': rows[i].idservicio,
                         'glosaservicio': rows[i].glosaservicio,
                         'idcontrato': rows[i].idcontrato,
-                        'montoapagar': rows[i].montopesos,
+                        'montoapagar': rows[i].montoorigen,
                         'montoaprobado': 0,
                         'montomulta': 0,
                         'idcausalmulta': 0,
