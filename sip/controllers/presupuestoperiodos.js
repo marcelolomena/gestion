@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var logger = require("../utils/logger");
 // Create endpoint /proyecto for GET
 exports.getPresupuestoPeriodos = function (req, res) {
   // Use the Proyectos model to find all proyectos

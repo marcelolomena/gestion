@@ -3,26 +3,49 @@ var sequelize = require('../models/index').sequelize;
 var fs = require('fs');
 var path = require("path");
 var utilSeq = require('../utils/seq');
+var logger = require("../utils/logger");
 
 exports.test = function (req, res) {
 
     try {
-        var jsreport = require('jsreport-core')()
-        var pathPdf = path.join(__dirname, '..', 'pdf')
-
-        var filePdf = 'prefactura.pdf'
+        var jsreport = require('jsreport-core')({
+            logger: { providerName: "winston" }
+        })
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
+        /*
+                var sql_1 =
+                    `
+                    SELECT  
+                        a.id, b.glosaservicio,b.montoaprobado,c.razonsocial,d.contacto,d.correo
+                        FROM sip.prefactura a
+                        JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
+                        JOIN sip.proveedor c ON a.idproveedor = c.id
+                        JOIN sip.contactoproveedor d ON c.id = d.idproveedor
+                        WHERE a.id=:id
+                    `
+        */
+        logger.info("generando prefactura")
         var sql_1 =
             `
-            SELECT  
-                a.id, b.glosaservicio,b.montoaprobado,c.razonsocial,d.contacto,d.correo
+                SELECT 
+				a.id, b.glosaservicio,
+                IIF(e.glosamoneda ='CLP',ROUND(b.montoaprobado,0),ROUND(b.montoaprobado,0)) montoaprobado,
+                c.razonsocial,d.contacto,d.correo, e.glosamoneda
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
-				JOIN sip.contactoproveedor d ON c.id = d.idproveedor
-                WHERE a.id=:id
+				JOIN sip.moneda e ON a.idmoneda = e.id
+				JOIN 
+				(
+					SELECT z.idproveedor,w.id, w.contacto,w.correo FROM sip.contactoproveedor w
+					RIGHT OUTER JOIN
+					(
+						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
+					) z ON w.id= z.idcontacto
+				) d ON c.id = d.idproveedor
+                WHERE a.id=:id          
             `
 
         sequelize.query(sql_1,
@@ -52,8 +75,7 @@ exports.test = function (req, res) {
                     }).then(function (resp) {
                         res.header('Content-type', 'application/pdf');
                         resp.stream.pipe(res);
-                        console.info("es nuevo")
-
+                        //console.info("es nuevo")
                     }).catch(function (e) {
                         console.log(e)
                     })
@@ -110,7 +132,8 @@ exports.lista = function (req, res) {
             JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
             JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
             JOIN sip.estructuracui D ON B.idcui = D.id
-            WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition
+            JOIN sip.proveedor E ON A.idproveedor = E.id
+            WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition
 
     var sql = `
             SELECT 
@@ -119,16 +142,17 @@ exports.lista = function (req, res) {
                     D.nombreresponsable, 
                     A.nombre contrato,
                     B.glosaservicio servicio,
-                    C.costopesos costo
+                    C.montoorigen costo
                     FROM sip.contrato A 
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                     JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                     JOIN sip.estructuracui D ON B.idcui = D.id
-                    WHERE C.estadopago IS NULL AND C.periodo = :periodo` + condition + order +
+                    JOIN sip.proveedor E ON A.idproveedor = E.id
+                    WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-        console.log("lala : " + sql)
-        console.log("lilo : " + periodo)
+    console.log("lala : " + sql)
+    console.log("lilo : " + periodo)
 
 
     sequelize.query(count,
@@ -169,7 +193,7 @@ exports.generar = function (req, res) {
                 B.idservicio, 
                 B.glosaservicio,
                 A.id idcontrato,
-                C.montopesos,
+                C.montoorigen * F.valorconversion montoorigen,
                 0,
                 0,
                 NULL,
@@ -183,10 +207,12 @@ exports.generar = function (req, res) {
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
                 JOIN sip.estructuracui D ON B.idcui = D.id
 				JOIN sip.proveedor E ON A.idproveedor = E.id
+				JOIN sip.monedasconversion F ON F.idmoneda = B.idmoneda 
                 WHERE
 				 C.estadopago IS NULL AND 
 				 C.periodo = :periodo AND
-				C.montopesos != 0 AND
+				 F.periodo = :periodo AND
+				C.montoorigen != 0 AND
 				E.numrut != 1
         `
     var promises = []
@@ -208,7 +234,7 @@ exports.generar = function (req, res) {
                         'idservicio': rows[i].idservicio,
                         'glosaservicio': rows[i].glosaservicio,
                         'idcontrato': rows[i].idcontrato,
-                        'montoapagar': rows[i].montopesos,
+                        'montoapagar': rows[i].montoorigen,
                         'montoaprobado': 0,
                         'montomulta': 0,
                         'idcausalmulta': 0,

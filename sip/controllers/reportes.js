@@ -2,9 +2,8 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var fs = require('fs');
 var path = require("path");
+var logger = require("../utils/logger");
 
-//var jsreport = require('jsreport-core')()
-//var jsreport = require('jsreport')()
 var jsreport = require('jsreport-core')({
     rootDirectory: path.join(__dirname, '..'),
     dataDirectory: path.join(__dirname, '..', 'data'),

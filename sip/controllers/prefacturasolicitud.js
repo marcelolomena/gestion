@@ -1,6 +1,6 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
-
+var logger = require("../utils/logger");
 exports.getSolicitudAprob = function (req, res) {
   var page = req.query.page;
   var filas = req.query.rows;

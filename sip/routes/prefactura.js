@@ -38,6 +38,13 @@ module.exports = function (passport) {
     router.route('/generarprefacturas')
         .get(isAuthenticated, prefacturasController.generar); 
 
+    router.route('/solicitudesaprobadas')
+        .post(isAuthenticated, prefacturasController.solicitudesaprobadas); 
+
+    router.get('/genprefacturas', isAuthenticated, function (req, res) {
+        res.render('genprefacturas', { user: req.user });
+    });
+
     return router;
 
 }

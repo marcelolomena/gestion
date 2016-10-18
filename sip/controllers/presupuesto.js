@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var constants = require("../utils/constants");
-
+var logger = require("../utils/logger");
 var log = function (inst) {
   console.dir(inst.get())
 }

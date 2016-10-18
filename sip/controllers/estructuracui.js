@@ -2,7 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
-
+var logger = require("../utils/logger");
 exports.getEstructuraCui = function (req, res) {
   var idestructura = req.params.id;
   var idpadre = req.params.idpadre;

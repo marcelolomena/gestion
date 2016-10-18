@@ -4,7 +4,7 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var constants = require("../utils/constants");
-
+var logger = require("../utils/logger");
 var log = function (inst) {
     console.dir(inst.get())
 }

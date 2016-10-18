@@ -1,7 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
-
+var logger = require("../utils/logger");
 
 exports.getCuiServicios = function (req, res) {
  var id = req.params.id;

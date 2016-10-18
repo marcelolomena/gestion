@@ -218,27 +218,6 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    $('#table_prefacturas').jqGrid('navButtonAdd', '#pager_prefacturas', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon glyphicon-send",
-        title: "Generar Prefacturas",
-        position: "last",
-        onClickButton: function () {
-            bootbox.confirm("¿Esta seguro que desea generar las prefacturas para el periodo actual?", function (confirmed) {
-                if (confirmed == true) {
-                    $.ajax({
-                        url: '/generarprefacturas'
-                    }).done(function () {
-                        bootbox.alert("Se han generado las prefacturas del periodo", function () { /* your callback code */ })
-                        $grid.trigger("reloadGrid");
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        bootbox.alert("Error!!…", function () { /* your callback code */ })
-                    }).always(function () {
-                        bootbox.alert("Ha comenzado la generación", function () { /* your callback code */ })
-                    });
-                }
-            });
-        }
-    });
+    
     $("#pager_prefacturas_left").css("width", "");
 });

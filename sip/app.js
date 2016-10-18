@@ -1,7 +1,6 @@
 var express = require('express'),
   path = require('path'),
   favicon = require('serve-favicon'),
-  winston = require('winston'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   flash = require('express-flash'),
@@ -11,30 +10,13 @@ var express = require('express'),
   passport = require('passport'),
   session = require('express-session'),
   SequelizeStore = require('connect-session-sequelize')(session.Store),
-  sequelize = require('./models/index').sequelize;
+  sequelize = require('./models/index').sequelize,
+  logger = require("./utils/logger");
+
+
+logger.debug("iniciando")
 
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
-
-const tsFormat = () => (new Date()).toLocaleTimeString();
-
-var logger = new (winston.Logger)({
-  transports: [
-    new winston.transports.Console({
-      level: 'debug',
-      handleExceptions: true,
-      timestamp: tsFormat,
-      colorize: true
-    }),
-    new (require('winston-daily-rotate-file'))({
-      filename: `${logDirectory}` + path.sep + `sip.log`,
-      timestamp: tsFormat,
-      datePattern: 'dd-MM-yyyy',
-      handleExceptions: true,
-      level: app.get('env') === 'development' ? 'verbose' : 'info'
-    })
-  ]
-});
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

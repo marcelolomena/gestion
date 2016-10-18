@@ -1,5 +1,5 @@
 var models = require('../models');
-
+var logger = require("../utils/logger");
 var log = function (inst) {
     console.dir(inst.get())
 }

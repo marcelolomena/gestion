@@ -11,7 +11,7 @@ $(document).ready(function () {
         { label: 'Responsable', name: 'nombreresponsable', width: 250, align: 'left', search: true, editable: false },
         { label: 'Contrato', name: 'contrato', width: 250, align: 'left', search: true, editable: false },
         { label: 'Servicio', name: 'servicio', width: 250, align: 'left', search: true, editable: false },
-        { label: 'Costo', name: 'costo', width: 150, align: 'left', search: true, editable: false }
+        { label: 'Monto', name: 'costo', width: 150, align: 'left', search: true, editable: false }
     ], $grid = $("#grid");
 
     $grid.jqGrid({
