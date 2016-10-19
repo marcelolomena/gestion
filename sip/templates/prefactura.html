@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link href="http://localhost:3000/stylesheets/bootstrap.min.css" rel="stylesheet" />
+<script src="http://localhost:3000/javascripts/jquery-1.12.3.js" />
 <script>
     $(function () {
         var data = {{{toJSON prefactura}}}
         var prefactura = data.map(function(b) { return [ b.id, b.glosaservicio, b.montoaprobado,b.razonsocial,b.contacto,b.correo ]});
     });
-
 </script>
 <div class="container">
 	<div class="row">

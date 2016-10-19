@@ -4,13 +4,12 @@ var fs = require('fs');
 var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-
+var winston = require('winston')
 exports.test = function (req, res) {
 
     try {
-        var jsreport = require('jsreport-core')({
-            logger: { providerName: "winston" }
-        })
+        var jsreport = require('jsreport-core')()
+        jsreport.logger.add(winston.transports.Console, { level: 'info' })
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 

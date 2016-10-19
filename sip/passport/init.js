@@ -62,7 +62,7 @@ module.exports = function (passport) {
                         type: sequelize.QueryTypes.SELECT
                     }
                 ).catch(function (err) {
-                    console.log(err)
+                    logger.error(err)
                     callback(err, 'undefined');
                 });
                 var todo = []
@@ -72,7 +72,7 @@ module.exports = function (passport) {
                     item["menu"] = menu.descripcion
 
                     var promise = new Promise(function (resolve, reject) {
-                        NeoSubMenu(item, user, menu, function (err, submenu) {
+                        return NeoSubMenu(item, user, menu, function (err, submenu) {
                             if (submenu)
                                 resolve(submenu);
                             else
@@ -127,7 +127,7 @@ module.exports = function (passport) {
                 //nombre["rid"] = usr.rols[0].id
                 nombre["rid"] = _rolnegocio.rolnegocio
                 usuario.push(nombre)
-                NeoMenu(usr, function (menu) {
+                return NeoMenu(usr, function (menu) {
                     var supermenu = [];
                     menu.forEach(function (opt) {
                         if (opt.submenu.length != 0) {
