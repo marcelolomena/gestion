@@ -17,14 +17,44 @@ exports.test = function (req, res) {
         var sql_1 =
             `
                 SELECT 
-				a.id, b.glosaservicio,
-                IIF(e.glosamoneda ='CLP',ROUND(b.montoaprobado,0),ROUND(b.montoaprobado,0)) montoaprobado,
-                c.razonsocial,d.contacto,d.correo, e.glosamoneda, f.nombre
+				a.id,
+				a.subtotal,
+				a.totalmulta,
+				a.impuesto,
+				a.totalimpuesto,
+				a.totalprefactura,
+				a.fecha,
+				b.glosaservicio,
+				b.montoneto,
+   				b.montomulta,
+                c.razonsocial,
+				c.numrut,
+				c.dvrut,
+				d.contacto,
+				d.correo,
+				e.glosamoneda,
+				f.nombre cui,
+				f.nombreresponsable,
+				h.fechainicio,
+				h.fechatermino,
+				i.nombre servicio,
+				j.cuentacontable,
+				j.nombrecuenta,
+				k.id idcontrato,
+				k.numero,
+				m.glosaCargoAct
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
 				JOIN sip.moneda e ON a.idmoneda = e.id
-				JOIN sip.estructuracui f ON f.id = a.idcui
+				JOIN sip.detallecompromiso g ON g.id = b.iddetallecompromiso
+				JOIN sip.detalleserviciocto h ON h.id = g.iddetalleserviciocto
+				JOIN sip.estructuracui f ON f.id = h.idcui
+				JOIN sip.servicio i  ON i.id = h.idservicio
+				JOIN sip.cuentascontables j ON j.id = h.idcuenta
+				JOIN sip.contrato k ON k.id = h.idcontrato
+				JOIN dbo.art_user l ON l.uid = f.uid
+				JOIN dbo.RecursosHumanos m ON l.email = m.emailTrab
 				JOIN 
 				(
 					SELECT z.idproveedor,w.id, w.contacto,w.correo FROM sip.contactoproveedor w
@@ -33,7 +63,7 @@ exports.test = function (req, res) {
 						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
 					) z ON w.id= z.idcontacto
 				) d ON c.id = d.idproveedor
-                WHERE a.id=:id       
+                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)       
             `
 
         sequelize.query(sql_1,
@@ -41,8 +71,7 @@ exports.test = function (req, res) {
                 replacements: { id: req.params.id },
                 type: sequelize.QueryTypes.SELECT
             }).then(function (rows) {
-
-
+                logger.debug(rows)
                 var datum = {
                     "prefactura": rows
                 }

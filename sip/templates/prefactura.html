@@ -5,7 +5,7 @@
 <script>
     $(function () {
         var data = {{{toJSON prefactura}}}
-        var prefactura = data.map(function(b) { return [ b.id, b.glosaservicio, b.montoaprobado,b.razonsocial,b.contacto,b.correo ]});
+        var prefactura = data.map(function(b) { return [ b.id, b.glosaservicio, b.montoneto,b.glosamoneda ]});
     });
 </script>
 <div class="container">
@@ -25,7 +25,12 @@
 			<div class="col-xs-5">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>De: <a href="#">{{getCui prefactura}}</a></h4>
+						<h4>De: {{getCui prefactura}}</h4>
+						<p>{{getNombreResponsable prefactura}}</p>
+						<p>{{getCuentaContable prefactura}}</p>
+						<p>{{getNombreCuenta prefactura}}</p>
+						<p>{{getNumeroContrato prefactura}}</p>
+						<p>{{getCargo prefactura}}</p>
 					</div>
 					<div class="panel-body"></div>
 				</div>
@@ -33,7 +38,7 @@
 			<div class="col-xs-5 col-xs-offset-2 text-right">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>Para : <a href="#">{{getProveedor prefactura}}</a></h4>
+						<h4>Para : <a href="#">{{getProveedor prefactura}}, Rut : {{getRutProveedor prefactura}}</a></h4>
 					</div>
 					<div class="panel-body">{{getContacto prefactura}} - {{getCorreo prefactura}}</div>
 				</div>
@@ -46,6 +51,9 @@
 						<h4>Servicio</h4>
 					</th>
 					<th>
+						<h4>Moneda</h4>
+					</th>					
+					<th>
 						<h4>Precio</h4>
 					</th>
 				</tr>
@@ -54,22 +62,23 @@
 				{{#each prefactura}}
 				<tr>
 					<td>{{glosaservicio}}</td>
-					<td class="text-right">$ {{format montoaprobado}}</td>
+					<td>{{glosamoneda}}</td>					
+					<td class="text-right">$ {{format montoneto}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 		<div class="row text-right">
 			<div class="col-xs-3 col-xs-offset-7"><strong>Sub Total:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totaliva prefactura}}<br>$ {{total prefactura}}<br></strong></div>
+			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
 		</div>
 		<div class="row">
 			<div class="col-xs-5">
 				<div class="panel panel-info">
 					<div class="panel-heading">
-						<h4>Datos bancarios</h4>
+						<h4>Datos Generales</h4>
 					</div>
-					<div class="panel-body">Marcelo <br> BANCO<br> Número de cuenta: 12345678<br></div>
+					<div class="panel-body">XXXXX</div>
 				</div>
 			</div>
 			<div class="col-xs-7">
