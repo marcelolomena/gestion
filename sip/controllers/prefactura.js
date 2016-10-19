@@ -177,7 +177,11 @@ exports.generar = function (req, res) {
                 B.idservicio, 
                 B.glosaservicio,
                 A.id idcontrato,
-                C.montoorigen * F.valormensual montoorigen,
+                C.valorcuota montoneto,
+				IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoimpuesto,
+				C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
+				F.valorconversion,
+				F.valorconversion * (C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0)) montoapagarpesos,
                 0,
                 0,
                 NULL,
@@ -206,7 +210,7 @@ exports.generar = function (req, res) {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-
+            logger.debug(rows)
             models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     var newPromise = models.solicitudaprobacion.create({
@@ -218,7 +222,7 @@ exports.generar = function (req, res) {
                         'idservicio': rows[i].idservicio,
                         'glosaservicio': rows[i].glosaservicio,
                         'idcontrato': rows[i].idcontrato,
-                        'montoapagar': rows[i].montoorigen,
+                        'montoapagar': rows[i].montoapagar,
                         'montoaprobado': 0,
                         'montomulta': 0,
                         'idcausalmulta': 0,
@@ -227,6 +231,12 @@ exports.generar = function (req, res) {
                         'glosaaprobacion': null,
                         'idcalificacion': 0,
                         'borrado': 1,
+                        'montoapagarpesos': rows[i].montoapagarpesos,
+                        'montomultapesos': 0,
+                        'montoimpuesto': rows[i].montoimpuesto,
+                        'factorconversion': rows[i].valorconversion,
+                        'montoaprobadopesos': 0, 
+                        'montoneto': rows[i].montoneto,                  
                         'pending': true
                     }, { transaction: t });
 
@@ -236,7 +246,7 @@ exports.generar = function (req, res) {
 
                 return Promise.all(promises);
             }).then(function (result) {
-                console.dir("EXITO GEN SOL");
+                logger.debug("EXITO GEN SOL");
             }).catch(function (err) {
                 logger.error(err)
             });
@@ -254,7 +264,7 @@ exports.generar = function (req, res) {
 
                 return Promise.all(o_promises);
             }).then(function (result) {
-                console.dir("EXITO UPDATE DET");
+                logger.debug("EXITO UPDATE DET");
             }).catch(function (err) {
                 logger.error(err)
             });
