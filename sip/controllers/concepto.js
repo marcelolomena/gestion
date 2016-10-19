@@ -3,10 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
-// 
+
 exports.list = function (req, res) {
 
   var page = req.body.page;
@@ -25,7 +22,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.error(err)
     } else {
       models.conceptospresupuestarios.count({
         where: data
@@ -40,7 +37,7 @@ exports.list = function (req, res) {
           //Contrato.forEach(log)
           res.json({ records: records, total: total, page: page, rows: conceptos });
         }).catch(function (err) {
-          //console.log(err);
+                        logger.error(e)  
           res.json({ error_code: 1 });
         });
       })
@@ -63,7 +60,7 @@ exports.action = function (req, res) {
       }).then(function (plantilla) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -78,7 +75,7 @@ exports.action = function (req, res) {
         }).then(function (plantilla) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -89,11 +86,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -110,7 +107,7 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  console.log("En getExcel");
+  logger.info("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -149,7 +146,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 

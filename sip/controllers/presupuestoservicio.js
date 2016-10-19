@@ -38,7 +38,7 @@ exports.getPresupuestoServicios = function (req, res) {
           }
       });
       condition = condition.substring(0, condition.length - 5);
-      console.log("***CONDICION:" + condition);
+      logger.debug("***CONDICION:" + condition);
     }
   }
   sqlcount = "Select count(*) AS count  FROM sip.detallepre a " +
@@ -71,12 +71,12 @@ exports.getPresupuestoServicios = function (req, res) {
   }
   sql += "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-  console.log(sql);
+  logger.debug(sql);
 
   sequelize.query(sqlcount).spread(function (recs) {
     var records = recs[0].count;
     var total = Math.ceil(parseInt(recs[0].count) / rowspp);
-    console.log("####COUNT:" + recs[0].count + " Total:" + total);
+    logger.debug("####COUNT:" + recs[0].count + " Total:" + total);
     sequelize.query(sql).spread(function (rows) {
       res.json({ records: records, total: total, page: page, rows: rows });
     });
@@ -120,7 +120,7 @@ exports.getExplicaciones = function (req, res) {
           }
       });
       condition = condition.substring(0, condition.length - 5);
-      console.log("***CONDICION:" + condition);
+      logger.debug("***CONDICION:" + condition);
     }
   }
   sqlcount = "Select count(*) AS count  FROM sip.detallepre a " +
@@ -157,12 +157,12 @@ exports.getExplicaciones = function (req, res) {
   }
   sql += "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-  console.log(sql);
+  logger.debug(sql);
 
   sequelize.query(sqlcount).spread(function (recs) {
     var records = recs[0].count;
     var total = Math.ceil(parseInt(recs[0].count) / rowspp);
-    console.log("####COUNT:" + recs[0].count + " Total:" + total);
+    logger.debug("####COUNT:" + recs[0].count + " Total:" + total);
     sequelize.query(sql).spread(function (rows) {
       res.json({ records: records, total: total, page: page, rows: rows });
     });
@@ -180,7 +180,7 @@ exports.getExcel = function (req, res) {
   var id = req.params.id
   var filtrosubgrilla = "idpresupuesto=" + id;
 
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -231,7 +231,7 @@ exports.getExcel = function (req, res) {
     "LEFT JOIN sip.presupuesto e ON a.idpresupuesto=e.id LEFT JOIN sip.estructuracui f ON e.idcui=f.id " +
     "WHERE a.idpresupuesto=" + id + " order by cuentacontable";
 
-  console.log("sql:" + sql);
+  logger.debug("sql:" + sql);
   sequelize.query(sql)
     .spread(function (proyecto) {
       var arr = []
@@ -254,7 +254,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 
@@ -328,7 +328,7 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   var idPre = req.params.id
   var monedas = getMonedas(idPre, req.body.idmoneda);
-  console.log("****MONEDAS+" + monedas);
+  logger.debug("****MONEDAS+" + monedas);
 
   var estadoPrep = function (idPrep, callback) {
     var sql = "SELECT estado FROM sip.presupuesto WHERE id=" + idPrep;
@@ -336,7 +336,7 @@ exports.action = function (req, res) {
     sequelize.query(sql)
       .spread(function (rows) {
         if (rows.length > 0) {
-          console.log("***Estado:" + rows[0].estado);
+          logger.debug("***Estado:" + rows[0].estado);
           estadoPrep = rows[0].estado;
         } else {
           estadoPrep = ""; //no existe el presupuesto
@@ -352,7 +352,7 @@ exports.action = function (req, res) {
     } else {
       switch (action) {
         case "add":
-          console.log("***AGREGANDO***");
+          logger.debug("***AGREGANDO***");
           var idservicio = 0;
           models.detallepre.create({
             idpresupuesto: idPre,
@@ -372,11 +372,11 @@ exports.action = function (req, res) {
             borrado: 1
           }).then(function (servicio) {
             idservicio = servicio.id;
-            console.log("****servicio:" + idservicio);
+            logger.debug("****servicio:" + idservicio);
             //Find en tabla valor moneda
             //Then conversion
             //var monedas = getMonedas(idPre, req.body.idmoneda);
-            //console.log("****MONEDAS+"+monedas);
+            //logger.debug("****MONEDAS+"+monedas);
             //var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
             var cuotas = calculoCuotas(
               req.body.cuota,
@@ -389,9 +389,9 @@ exports.action = function (req, res) {
               req.body.gastodiferido,
               req.body.desdediferido
             );
-            console.log("CUOTAS:" + cuotas);
+            logger.debug("CUOTAS:" + cuotas);
             insertaPeriodos(idservicio, cuotas, function (err, compromisos) {
-              console.log("***  ***ACTualizadetallepre:" + idservicio);
+              logger.debug("***  ***ACTualizadetallepre:" + idservicio);
               sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
                 + ';').then(function (response) {
                   res.json({ error_code: 0 });
@@ -400,14 +400,14 @@ exports.action = function (req, res) {
                 });
             });
           }).catch(function (err) {
-            console.log(err);
+            logger.error(err);
             res.json({ error_code: 1 });
           });
 
 
           break;
         case "edit":
-          console.log("***ACTUALIZANDO***");
+          logger.debug("***ACTUALIZANDO***");
           models.detallepre.update({
             idservicio: req.body.idservicio,
             idmoneda: req.body.idmoneda,
@@ -441,7 +441,7 @@ exports.action = function (req, res) {
                 req.body.desdediferido
               );
               actualizaPeriodos(idservicio, cuotas, function (err, compromisos) {
-                console.log("***actualizadetallepre:" + idservicio);
+                logger.debug("***actualizadetallepre:" + idservicio);
                 sequelize.query('EXECUTE sip.actualizadetallepre ' + idservicio
                   + ';').then(function (response) {
                     res.json({ error_code: 0 });
@@ -451,17 +451,17 @@ exports.action = function (req, res) {
               });
 
             }).catch(function (err) {
-              console.log(err);
+              logger.error(err);
               res.json({ error_code: 1 });
             });
           break;
         case "del":
-          console.log("***ELIMINANDO***");
+          logger.debug("***ELIMINANDO***");
           var id = req.body.id;
           var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre=" + id + "; " +
              "EXECUTE sip.actualizadetallepre " + id+ "; ";
             "DELETE FROM sip.detallepre WHERE id=" + id+ "; " +
-            console.log("sql:"+sql);
+            logger.debug("sql:"+sql);
           sequelize.query(sql).then(function (response) {     
             
             res.json({ error_code: 0 });
@@ -476,14 +476,14 @@ exports.action = function (req, res) {
 
 
   var insertaPeriodos = function (idservicio, cuotas, callback) {
-    console.log("insertaPeriodos:" + idservicio + "," + cuotas);
+    logger.debug("insertaPeriodos:" + idservicio + "," + cuotas);
     models.sequelize.transaction({ autocommit: true }, function (t) {
 
       var promises = []
       var d = new Date();
       var anio = d.getFullYear()
       var mes = 9;
-      console.log("Recibe:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
+      logger.debug("Recibe:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
       for (var i = 0; i < 4; i++) {
         var mm = mes + i;
         var mmm = mm < 10 ? '0' + mm : mm;
@@ -542,6 +542,7 @@ exports.action = function (req, res) {
     }).then(function (result) {
       callback(result)
     }).catch(function (err) {
+      logger.error(err)
       return err;
     });
 
@@ -556,7 +557,7 @@ exports.action = function (req, res) {
   }
 
   var actualizaPeriodos = function (idservicio, cuotas, callback) {
-    console.log("actualizaPeriodos:" + idservicio + "," + cuotas);
+    logger.debug("actualizaPeriodos:" + idservicio + "," + cuotas);
     models.sequelize.transaction({ autocommit: true }, function (t) {
       var promises = []
       var d = new Date();
@@ -627,6 +628,7 @@ exports.action = function (req, res) {
     }).then(function (result) {
       callback(result)
     }).catch(function (err) {
+      logger.error(err)
       return err;
     });
 
@@ -650,22 +652,22 @@ function getMonedas(idpresupuesto, idmoneda) {
 "UNION "+
 "SELECT periodo, valorconversion FROM sip.monedasconversion WHERE idejercicio=@ejercicio AND idmoneda="+idmoneda
   var conversion = [26100, 26200, 26000, 26300, 26400, 26500, 26600, 26700, 26800, 26900, 27000, 26100];
-  //console.log("conversion:" + conversion);
-  console.log("*** SQL MOnedas" + sql);
+  //logger.debug("conversion:" + conversion);
+  logger.debug("*** SQL MOnedas" + sql);
   var arr = [];
   sequelize.query(sql)
     .spread(function (rows) {
       for (var i in rows) {
         arr.push(rows[i].valorconversion);
       }
-      console.log("*********   ROWSSSSS:" + arr);
+      logger.debug("*********   ROWSSSSS:" + arr);
 
     }).then()
   return arr;
 }
 
 function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, conversion, diferido, desdediferido) {
-  console.log("CUPTAS DENTRO:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," + conversion);
+  logger.debug("CUPTAS DENTRO:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," + conversion);
   //var conversion = [26100,26200,26000,26300,26400,26500,26600,26700,26800,26900,27000,26100];
   var origen = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   var pesos = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -676,7 +678,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
 
   //Caja
   for (i = mescuota1, j = 0; i < caja.length + 1 && j < ncuotas; i = parseInt(i) + mesesentre, j++) {
-    console.log("***SALTO:" + (parseInt(i) + mesesentre));
+    logger.debug("***SALTO:" + (parseInt(i) + mesesentre));
     origen[i - 1] = cuota;
     pesos[i - 1] = cuota * conversion[i - 1];
     if (coniva == "1") {
@@ -690,7 +692,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
   //Costo con diferimiento
   frecup = frecup/100;
   for (var i = desdediferido, j = 0, h=mescuota1; i < caja.length + 1 && j < ncuotas && h<17; i = parseInt(i) + mesesentre, j++, h=parseInt(h)+mesesentre) {
-    console.log("*****JJJJ:" + j);
+    logger.debug("*****JJJJ:" + j);
     if (coniva == "1") {
       var iva = pesos[h - 1] * 0.19;
     } else {
@@ -711,7 +713,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
 
   }
   var todo = [origen, pesos, caja, costo];
-  console.log(todo);
+  logger.debug(todo);
   return todo;
 }
 

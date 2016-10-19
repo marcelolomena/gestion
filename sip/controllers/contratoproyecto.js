@@ -31,7 +31,7 @@ exports.list = function (req, res) {
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
 
         if (err) {
-            console.log("->>> " + err)
+            logger.error(e)
         } else {
             models.DetalleServicioCto.belongsTo(models.Contrato, { foreignKey: 'idcontrato' });
             models.DetalleServicioCto.count({
@@ -50,7 +50,7 @@ exports.list = function (req, res) {
                     //Contrato.forEach(log)
                     res.json({ records: records, total: total, page: page, rows: contratos });
                 }).catch(function (err) {
-                    //console.log(err);
+                    logger.error(err)
                     res.json({ error_code: 1 });
                 });
             })

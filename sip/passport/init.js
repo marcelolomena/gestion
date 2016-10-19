@@ -2,7 +2,7 @@ var login = require('./login');
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var co = require('co');
-
+var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     // Passport needs to be able to serialize and deserialize users to support persistent login sessions
@@ -38,6 +38,7 @@ module.exports = function (passport) {
                 callback(undefined, opt)
 
             }).catch(function (err) {
+                logger.error(err)
                 callback(err, undefined)
             });
 
@@ -91,8 +92,8 @@ module.exports = function (passport) {
                 });
 
             }).catch(function (err) {
+                logger.error(err)
                 callback(err, 'undefined');
-                console.log(err);
             });
 
         }
@@ -106,7 +107,7 @@ module.exports = function (passport) {
             var _rolnegocio = yield models.rol_negocio.find({
                 where: { 'uid': id }
             }).catch(function (err) {
-                console.log(err)
+                logger.error(err)
             });
 
             models.user.find({
@@ -141,13 +142,13 @@ module.exports = function (passport) {
 
 
             }).catch(function (err) {
-                console.log(err);                
+                logger.error(err)               
                 callback(err, 'undefined');
             });
 
 
         }).catch(function (err) {
-            console.log("--------> " + err);
+            logger.error(err)
             done(err, null)
         });
 

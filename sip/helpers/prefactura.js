@@ -22,6 +22,11 @@ function getCorreo(data) {
     return data[0].correo;
 }
 
+
+function getCui(data) {
+    return data[0].nombre;
+}
+
 function subtotal(data) {
     var total = 0;
 

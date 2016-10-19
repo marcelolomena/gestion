@@ -54,7 +54,7 @@ exports.action = function (req, res) {
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -82,7 +82,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -93,11 +93,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -122,7 +122,7 @@ exports.actualiSAP = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0, sap: req.body.sap });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -187,7 +187,7 @@ exports.list = function (req, res) {
         "WHERE (a.[idiniciativaprograma] = " + idiniciativaprograma + " AND a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.presupuestoiniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -286,7 +286,7 @@ exports.listSAP = function (req, res) {
         ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.presupuestoiniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -326,7 +326,7 @@ exports.listSAP = function (req, res) {
 exports.getJefe = function (req, res) {
 
   var user = req.params.id;
-  console.log("el usuario: "+user);
+  logger.debug("el usuario: "+user);
 
   var sql = "select jefe.uid idjefe, jefe.first_name+' '+jefe.last_name as nombrejefe from art_user jefe "+
 "where uname = ( "+
@@ -336,7 +336,7 @@ exports.getJefe = function (req, res) {
 "and LEN(a.emailJefe) != 1 "+
 "and LEN(a.emailTrab) != 1 "+
 "and LEFT(a.emailTrab, CHARINDEX('@', a.emailTrab) - 1 ) = (select uname from art_user where uid="+user+")) "
-console.log(sql);
+logger.debug(sql);
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);

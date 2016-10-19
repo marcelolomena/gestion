@@ -4,9 +4,6 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.list = function (req, res) {
   var page = req.body.page;
@@ -58,7 +55,7 @@ exports.list = function (req, res) {
         "WHERE ( " + condition.substring(0, condition.length - 4) + ") )" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.registro.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -108,11 +105,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 

@@ -4,9 +4,7 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
+
 
 exports.list = function (req, res) {
   var page = req.body.page;
@@ -82,7 +80,7 @@ exports.list = function (req, res) {
         " WHERE ( " + condition.substring(0, condition.length - 4) + ") )" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.rol_negocio.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -159,9 +157,9 @@ exports.list = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  console.log('la accion: ' + action);
-  console.log('el delegado: ' + req.body.uiddelegado);
-  console.log('el id: ' + req.body.id);
+  logger.debug('la accion: ' + action);
+  logger.debug('el delegado: ' + req.body.uiddelegado);
+  logger.debug('el id: ' + req.body.id);
 
   switch (action) {
     case "edit":
@@ -175,7 +173,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;

@@ -4,9 +4,6 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.list = function (req, res) {
   var page = req.body.page;
@@ -58,7 +55,7 @@ exports.list = function (req, res) {
         "WHERE ( " + condition.substring(0, condition.length - 4) + ") )" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.rol.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -149,7 +146,7 @@ exports.list2 = function (req, res) {
         "WHERE (a.[rid] = " + rid + " AND a.[borrado] = 1 AND menu.nivel=0) AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.rolfunc.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -169,7 +166,7 @@ exports.list2 = function (req, res) {
       }).then(function (records) {
 
         var total = Math.ceil(records / rows);
-        console.log(sql0);
+        logger.debug(sql0);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
@@ -178,7 +175,7 @@ exports.list2 = function (req, res) {
     }
 
   } else {
-      console.log(sql0)
+      logger.debug(sql0)
     models.rolfunc.count({
       where:
       {
@@ -187,7 +184,7 @@ exports.list2 = function (req, res) {
     }).then(function (records) {
         
       var total = Math.ceil(records / rows);
-      console.log(sql0);
+      logger.debug(sql0);
       sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
@@ -227,7 +224,7 @@ exports.list3 = function (req, res) {
     "WHERE (a.[rid] = " + rid + " AND a.[borrado] = 1 AND menu.pid="+mid+") " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-    console.log("la query: "+sql0);
+    logger.debug("la query: "+sql0);
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -252,7 +249,7 @@ exports.list3 = function (req, res) {
         "WHERE (a.[rid] = " + rid + " AND a.[borrado] = 1 AND menu.pid="+mid+") AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.rolfunc.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -272,7 +269,7 @@ exports.list3 = function (req, res) {
       }).then(function (records) {
 
         var total = Math.ceil(records / rows);
-        console.log(sql0);
+        logger.debug(sql0);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
@@ -281,7 +278,7 @@ exports.list3 = function (req, res) {
     }
 
   } else {
-      console.log(sql0)
+      logger.debug(sql0)
     models.rolfunc.count({
       where:
       {
@@ -290,7 +287,7 @@ exports.list3 = function (req, res) {
     }).then(function (records) {
         
       var total = Math.ceil(records / rows);
-      console.log(sql0);
+      logger.debug(sql0);
       sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
@@ -312,7 +309,7 @@ exports.action = function (req, res) {
       }).then(function (parametro) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -324,11 +321,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -350,7 +347,7 @@ exports.action2 = function (req, res) {
       }).then(function (parametro) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -362,11 +359,11 @@ exports.action2 = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -394,7 +391,7 @@ exports.getSubMenus = function (req, res) {
 
   var sql = "select * from sip.menu " +
     "where borrado=1 and  pid="+padre+" order by descripcion";
-    console.log(sql);
+    logger.debug(sql);
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);

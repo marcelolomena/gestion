@@ -5,9 +5,6 @@ var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var constants = require("../utils/constants");
 var logger = require("../utils/logger");
-var log = function (inst) {
-    console.dir(inst.get())
-}
 
 exports.list = function (req, res) {
     var page = req.body.page;
@@ -22,11 +19,10 @@ exports.list = function (req, res) {
     var rol = req.user[0].rid;
     if (rol != constants.ROLADMDIVOT) {
       var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
-      console.log("query:" + sql1);
+
       sequelize.query(sql1)
         .spread(function (rows) {
           if (rows.length > 0) {
-            console.log("query:" + rows + ", valor:" + rows[0].cui);
             idcui = rows[0].cui;
           } else {
             idcui = 0; //cui no existente para que no encuentre nada
@@ -56,13 +52,13 @@ exports.list = function (req, res) {
           sequelize.query(sql)
             .spread(function (rows) {
               var cuis = "";
-              console.log("En cuis:" + rows);
+
               for (i = 0; i < rows.length; i++) {
-                //console.log("cui:" + rows[i].id);
+
                 cuis = cuis + rows[i].id + ",";
               }
               //return cuis.substring(0, cuis.length - 1);
-              console.log("antes call:" + cuis.substring(0, cuis.length - 1));
+
               callback(cuis.substring(0, cuis.length - 1));
             });
         });
@@ -72,7 +68,7 @@ exports.list = function (req, res) {
   };
 
     superCui(req.user[0].uid, function (elcui) {
-      console.log('elcui:' + elcui)
+
       var rol = req.user[0].rid;
       var sqlok;
       if (rol == constants.ROLADMDIVOT) {

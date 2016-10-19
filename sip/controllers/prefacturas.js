@@ -35,7 +35,7 @@ exports.list = function (req, res) {
         ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-         console.log(sql0);
+         logger.debug(sql0);
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
@@ -62,7 +62,7 @@ exports.list = function (req, res) {
                 "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
                 "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-            console.log(sql);
+            logger.debug(sql);
 
             models.prefactura.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
                 var total = Math.ceil(records / rows);
@@ -124,7 +124,7 @@ exports.solicitudesporfactura = function (req, res) {
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (err) {
-            console.log("->>> " + err)
+            logger.debug("->>> " + err)
         } else {
             models.solicitudaprobacion.count({
                 where: data
@@ -138,7 +138,7 @@ exports.solicitudesporfactura = function (req, res) {
                 }).then(function (iniciativas) {
                     res.json({ records: records, total: total, page: page, rows: iniciativas });
                 }).catch(function (err) {
-                    //console.log(err);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
             })
@@ -155,11 +155,12 @@ exports.generar = function (req, res) {
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
 
-    console.log("****El peridodo:" + periodo);
+    logger.debug("****El peridodo:" + periodo);
     sequelize.query('EXECUTE sip.generaprefacturas '
         + periodo + ';').then(function (response) {
             res.json({ error_code: 0 });
         }).error(function (err) {
+            logger.error(err)
             res.json(err);
         });
 
@@ -208,8 +209,8 @@ exports.solicitudesaprobadas = function (req, res) {
             and a.aprobado=1 ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-        console.log("lala : " + sql)
-        console.log("lilo : " + periodo)
+        logger.debug("lala : " + sql)
+        logger.debug("lilo : " + periodo)
 
 
     sequelize.query(count,
@@ -225,10 +226,10 @@ exports.solicitudesaprobadas = function (req, res) {
                 }).then(function (data) {
                     res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
                 }).catch(function (e) {
-                    console.log(e)
+                    logger.error(e)
                 })
 
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
         })
 }

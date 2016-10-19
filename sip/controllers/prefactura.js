@@ -14,29 +14,18 @@ exports.test = function (req, res) {
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
-        /*
-                var sql_1 =
-                    `
-                    SELECT  
-                        a.id, b.glosaservicio,b.montoaprobado,c.razonsocial,d.contacto,d.correo
-                        FROM sip.prefactura a
-                        JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
-                        JOIN sip.proveedor c ON a.idproveedor = c.id
-                        JOIN sip.contactoproveedor d ON c.id = d.idproveedor
-                        WHERE a.id=:id
-                    `
-        */
         logger.info("generando prefactura")
         var sql_1 =
             `
                 SELECT 
 				a.id, b.glosaservicio,
                 IIF(e.glosamoneda ='CLP',ROUND(b.montoaprobado,0),ROUND(b.montoaprobado,0)) montoaprobado,
-                c.razonsocial,d.contacto,d.correo, e.glosamoneda
+                c.razonsocial,d.contacto,d.correo, e.glosamoneda, f.nombre
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
 				JOIN sip.moneda e ON a.idmoneda = e.id
+				JOIN sip.estructuracui f ON f.id = a.idcui
 				JOIN 
 				(
 					SELECT z.idproveedor,w.id, w.contacto,w.correo FROM sip.contactoproveedor w
@@ -45,7 +34,7 @@ exports.test = function (req, res) {
 						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
 					) z ON w.id= z.idcontacto
 				) d ON c.id = d.idproveedor
-                WHERE a.id=:id          
+                WHERE a.id=:id       
             `
 
         sequelize.query(sql_1,
@@ -77,19 +66,19 @@ exports.test = function (req, res) {
                         resp.stream.pipe(res);
                         //console.info("es nuevo")
                     }).catch(function (e) {
-                        console.log(e)
+                        logger.error(e)
                     })
 
                 }).catch(function (e) {
-                    console.log(e)
+                    logger.error(e)
                 })
 
             }).catch(function (err) {
-                console.log(err)
+                logger.error(e)
             });
 
     } catch (e) {
-        console.log("error : " + e);
+        logger.error(e)
     }
 }
 
@@ -151,10 +140,6 @@ exports.lista = function (req, res) {
                     WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-    console.log("lala : " + sql)
-    console.log("lilo : " + periodo)
-
-
     sequelize.query(count,
         {
             replacements: { periodo: periodo, condition: condition },
@@ -168,11 +153,11 @@ exports.lista = function (req, res) {
                 }).then(function (data) {
                     res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
                 }).catch(function (e) {
-                    console.log(e)
+                    logger.error(e)
                 })
 
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
         })
 }
 
@@ -254,8 +239,7 @@ exports.generar = function (req, res) {
             }).then(function (result) {
                 console.dir("EXITO GEN SOL");
             }).catch(function (err) {
-                console.log("--------> " + err);
-                //res.json({ error_code: 1 });
+                logger.error(err)
             });
 
             models.sequelize.transaction({ autocommit: true }, function (t) {
@@ -265,22 +249,19 @@ exports.generar = function (req, res) {
                     }, {
                             where: { id: rows[i].id }
                         }, { transaction: t });
-                    //console.log(otherPromise);
                     o_promises.push(otherPromise);
 
                 };
 
                 return Promise.all(o_promises);
             }).then(function (result) {
-                //console.dir(result);
                 console.dir("EXITO UPDATE DET");
             }).catch(function (err) {
-                console.log("--------> " + err);
-                //res.json({ error_code: 1 });
+                logger.error(err)
             });
 
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 

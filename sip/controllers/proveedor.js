@@ -23,7 +23,7 @@ exports.action = function (req, res) {
       }).then(function (proveedor) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
@@ -44,7 +44,7 @@ exports.action = function (req, res) {
         }).then(function (proveedor) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -55,11 +55,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
@@ -74,7 +74,7 @@ exports.combobox = function (req, res) {
     //iniciativas.forEach(log)
     res.json(proveedores);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -106,8 +106,8 @@ exports.list = function (req, res) {
     "from sip.proveedor where proveedor.borrado = 1 ORDER BY razonsocial asc )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql0);
-            console.log(sql);
+      logger.debug(sql0);
+            logger.debug(sql);
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -135,7 +135,7 @@ exports.list = function (req, res) {
         "from sip.proveedor where proveedor.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY razonsocial asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.proveedor.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -147,7 +147,7 @@ exports.list = function (req, res) {
        })
 
     } else {
-            console.log(sql0);
+            logger.debug(sql0);
       models.proveedor.count().then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
@@ -158,7 +158,7 @@ exports.list = function (req, res) {
   }
   }
   else {
-      console.log(sql0);
+      logger.debug(sql0);
       models.proveedor.count().then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
@@ -179,7 +179,7 @@ exports.list2 = function (req, res) {
   var sidx = req.body.sidx;
   var sord = req.body.sord;
 
-  console.log("->>> " + filters)
+  logger.debug("->>> " + filters)
 
   // JSON.stringify(jsonObj.rules)
 
@@ -187,7 +187,7 @@ exports.list2 = function (req, res) {
   //    filters.rules.field = "rtrim(convert(varchar,[proveedor].[numrut]))+'-'+[proveedor].[dvrut]";
   //  }
 
-  //console.log("->>> " + filters)
+  //logger.debug("->>> " + filters)
 
   if (!sidx)
     sidx = "razonsocial";
@@ -199,9 +199,9 @@ exports.list2 = function (req, res) {
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.debug("->>> " + err)
     } else {
-      //console.log("data->>> " + data[1].rules)
+      //logger.debug("data->>> " + data[1].rules)
       models.proveedor.count({        
         where: data
       }).then(function (records) {
@@ -215,7 +215,7 @@ exports.list2 = function (req, res) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: proveedores });
         }).catch(function (err) {
-          //console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -231,7 +231,7 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -286,7 +286,7 @@ exports.getExcel = function (req, res) {
           proyecto[i].fono,
           proyecto[i].correo
         ];
-        console.log(a);
+        logger.debug(a);
         arr.push(a);
       }
       conf.rows = arr;
@@ -297,7 +297,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 

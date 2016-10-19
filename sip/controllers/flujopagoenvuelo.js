@@ -2,9 +2,6 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-    console.dir(inst.get())
-}
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -47,7 +44,7 @@ exports.action = function (req, res) {
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err);
                 res.json({ error_code: 1 });
             });
 
@@ -69,7 +66,7 @@ exports.action = function (req, res) {
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
             break;
@@ -80,11 +77,11 @@ exports.action = function (req, res) {
                 }
             }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
-                    console.log('Deleted successfully');
+                    logger.debug('Deleted successfully');
                 }
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err);
                 res.json({ error_code: 1 });
             });
 
@@ -115,7 +112,7 @@ exports.list = function (req, res) {
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (err) {
-            console.log("->>> " + err)
+            logger.debug("->>> " + err)
         } else {
             models.flujopagoenvuelo.belongsTo(models.art_sub_task, { foreignKey: 'idsubtarea' });
             models.art_sub_task.belongsTo(models.art_task, { foreignKey: 'task_id' });
@@ -149,7 +146,7 @@ exports.list = function (req, res) {
                 }).then(function (compromisos) {
                     res.json({ records: records, total: total, page: page, rows: compromisos });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
                 //} else {
@@ -169,7 +166,7 @@ exports.getProyectosPorTareaEnVuelo = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };
@@ -180,7 +177,7 @@ exports.getTareasPorProyecto = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };
@@ -191,7 +188,7 @@ exports.getTareasPorTareaNuevoProyecto = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };
@@ -202,7 +199,7 @@ exports.getSubtareasPorTarea = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };
@@ -213,7 +210,7 @@ exports.getSubtareasPorTareaNuevoProyecto = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };

@@ -74,6 +74,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
     }).then(function (result) {
       callback(result)
     }).catch(function (err) {
+      logger.error(err)
       return next(err);
     });
 
@@ -112,7 +113,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
         "WHERE iddetallepre=" + id + " " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.detalleplan.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -123,7 +124,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
       })
 
     } else {
-      console.log(sql0);
+      logger.debug(sql0);
       models.detalleplan.count({ where: [filtrosubgrilla] }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
@@ -134,7 +135,7 @@ exports.getPresupuestoPeriodos = function (req, res) {
     }
 
   } else {
-    console.log(sql0);
+    logger.debug(sql0);
     models.detalleplan.count({ where: [filtrosubgrilla] }).then(function (records) {
       //if (records > 0) {
         var total = Math.ceil(records / rows);
@@ -162,7 +163,7 @@ exports.getExcel = function (req, res) {
   var id = req.params.id
   var filtrosubgrilla = "idpresupuesto=" + id;
 
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -195,7 +196,7 @@ exports.getExcel = function (req, res) {
     "FROM sip.detalleplan " +
     "WHERE a.iddetallepre=" + id + " order by periodo";
 
-  console.log("sql:" + sql);
+  logger.debug("sql:" + sql);
   sequelize.query(sql)
     .spread(function (proyecto) {
       var arr = []
@@ -217,7 +218,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.err(err);
       res.json({ error_code: 100 });
     });
 
@@ -227,11 +228,11 @@ exports.getExcel = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var idServ = req.params.id
-  console.log("***ActionPeriodos:" + req.body.id);
+  logger.debug("***ActionPeriodos:" + req.body.id);
   var idPeriodo = req.body.id;
 
   var estadoPrep = function (idperiodo, callback) {
-    console.log("***EstadoPrep" + idperiodo);
+    logger.debug("***EstadoPrep" + idperiodo);
     var sql = "declare @idservicio int " +
       "SELECT @idservicio=iddetallepre FROM sip.detalleplan WHERE id=" + idperiodo + " " +
       "SELECT b.estado FROM sip.detallepre a JOIN sip.presupuesto b ON a.idpresupuesto=b.id " +
@@ -240,7 +241,7 @@ exports.action = function (req, res) {
     sequelize.query(sql)
       .spread(function (rows) {
         if (rows.length > 0) {
-          console.log("***Estado:" + rows[0].estado);
+          logger.debug("***Estado:" + rows[0].estado);
           estadoPrep = rows[0].estado;
         } else {
           estadoPrep = ""; //no existe el presupuesto
@@ -255,10 +256,10 @@ exports.action = function (req, res) {
     } else {
       switch (action) {
         case "add":
-          console.log("No se puede agregar");
+          logger.debug("No se puede agregar");
           break;
         case "edit":
-          console.log("Edit:" + req.body.id + "," + req.body.presupuestoorigen + "," + req.body.periodo);
+          logger.debug("Edit:" + req.body.id + "," + req.body.presupuestoorigen + "," + req.body.periodo);
           sequelize.query('EXECUTE sip.spActualizaPeriodoPresup ' + req.body.id
             + "," + req.body.presupuestoorigen
             + "," + req.body.periodo
@@ -270,7 +271,7 @@ exports.action = function (req, res) {
             });
           break;
         case "del":
-          console.log("No se puede eliminar");
+          logger.debug("No se puede eliminar");
           break;
       }
     }
@@ -278,7 +279,7 @@ exports.action = function (req, res) {
 }
 
 exports.actioncosto = function (req, res) {
-  console.log("****Act COSTO:"+req.body.id+", "+req.body.costo);
+  logger.debug("****Act COSTO:"+req.body.id+", "+req.body.costo);
   sequelize.query('EXECUTE sip.ActCostoDetallePresup ' 
       + req.body.id +","+
       + req.body.costo

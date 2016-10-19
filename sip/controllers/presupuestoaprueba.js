@@ -3,9 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var constants = require("../utils/constants");
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
+
 // Create endpoint /proyecto for GET
 exports.getPresupuestosConfirmados = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -38,7 +36,7 @@ exports.getPresupuestosConfirmados = function (req, res) {
           }
       });
       condition = condition.substring(0, condition.length - 5);
-      console.log("***CONDICION:" + condition);
+      logger.debug("***CONDICION:" + condition);
     }
   }
   sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id JOIN sip.ejercicios c ON c.id=a.idejercicio ";
@@ -60,7 +58,7 @@ exports.getPresupuestosConfirmados = function (req, res) {
       "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
       "Where a.estado='Confirmado' or a.estado='Aprobado' ";
     if (filters && condition != "") {
-      console.log("**" + condition + "**");
+      logger.debug("**" + condition + "**");
       sqlok += "AND " + condition + " ";
     }
     sqlok += "ORDER BY a.estado desc) " +
@@ -73,29 +71,31 @@ exports.getPresupuestosConfirmados = function (req, res) {
 }
 
   exports.aprueba = function (req, res) {
-    console.log("****ids:" + req.params.ids);
+    logger.debug("****ids:" + req.params.ids);
     var ids = req.params.ids;
     var ids2 = ids.split(",");
     for (i = 0; i < ids2.length; i++) {
       sql = "UPDATE sip.presupuesto SET estado='Aprobado' WHERE id=" + ids2[i];
       sequelize.query(sql).then(function (response) {
         res.json({ error_code: 0 });
-      }).error(function (err) {
-        res.json(err);
-      });
+      }).catch(function (err) {
+              logger.error(err)
+              res.json(err);
+            }); 
     }
   };
 
   exports.desaprueba = function (req, res) {
-    console.log("****ids:" + req.params.ids);
+    logger.debug("****ids:" + req.params.ids);
     var ids = req.params.ids;
     var ids2 = ids.split(",");
     for (i = 0; i < ids2.length; i++) {
       sql = "UPDATE sip.presupuesto SET estado='Confirmado' WHERE id=" + ids2[i];
       sequelize.query(sql).then(function (response) {
         res.json({ error_code: 0 });
-      }).error(function (err) {
-        res.json(err);
-      });
+      }).catch(function (err) {
+              logger.error(err)
+              res.json(err);
+            }); 
     }
   };

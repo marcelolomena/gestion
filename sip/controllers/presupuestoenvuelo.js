@@ -4,9 +4,6 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.getPersonal = function (req, res) {
 
@@ -172,7 +169,7 @@ exports.getExcel = function (req, res) {
           res.end(result, 'binary');
 
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -198,7 +195,7 @@ exports.get = function (req, res) {
   models.presupuestoenvuelo.find({ where: { 'id': req.params.id } }).then(function (iniciativa) {
     res.json(iniciativa);
   }).catch(function (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 };
@@ -261,7 +258,7 @@ exports.list = function (req, res) {
         "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.presupuestoenvuelo.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -301,7 +298,7 @@ exports.list = function (req, res) {
   /*
     utilSeq.buildCondition(filters, function (err, data) {
       if (err) {
-        console.log("->>> " + err)
+        logger.debug("->>> " + err)
       } else {
         models.presupuestoenvuelo.belongsTo(models.programa, { foreignKey: 'program_id'});
         models.presupuestoenvuelo.count({
@@ -323,7 +320,7 @@ exports.list = function (req, res) {
             //iniciativas.forEach(log)
             res.json({ records: records, total: total, page: page, rows: iniciativas });
           }).catch(function (err) {
-            console.log(err);
+            logger.debug(err);
             res.json({ error_code: 1 });
           });
         })
@@ -340,7 +337,7 @@ exports.combobox = function (req, res) {
     //iniciativas.forEach(log)
     res.json(iniciativas);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -352,7 +349,7 @@ exports.combobox = function (req, res) {
     //iniciativas.forEach(log)
     res.json(iniciativas);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -398,7 +395,7 @@ exports.generarproyectoenvuelo = function (req, res) {
     }).then(function (tareaenvuelo) {
       callback(tareaenvuelo)
     }).catch(function (err) {
-      console.log("--------> " + err);
+      logger.debug("--------> " + err);
     });
   }
 
@@ -438,7 +435,7 @@ exports.generarproyectoenvuelo = function (req, res) {
     }).then(function (flujopagoenvuelo) {
       callback(flujopagoenvuelo)
     }).catch(function (err) {
-      console.log("--------> " + err);
+      logger.debug("--------> " + err);
     });
   }
 
@@ -503,7 +500,7 @@ exports.generarproyectoenvuelo = function (req, res) {
       });
       res.json(presupuestoenvuelo);
     }).catch(function (err) {
-      console.log(err);
+      logger.debug(err);
       res.json({ error_code: 1 });
     });
   })
@@ -514,7 +511,7 @@ exports.generarproyectoenvuelo = function (req, res) {
 exports.generarproyectoenvuelo = function (req, res) {
   sequelize.query('EXECUTE sip.generarproyectoenvuelo ' + 
   req.params.id).then(function (response) {
-      console.log("****Ejecutando SP sip.generarproyectoenvuelo");
+      logger.debug("****Ejecutando SP sip.generarproyectoenvuelo");
       console.dir(response);
       res.json(response)
     }).error(function (err) {
@@ -573,7 +570,7 @@ exports.action = function (req, res) {
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
@@ -601,7 +598,7 @@ exports.action = function (req, res) {
         }).then(function (contrato) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -612,11 +609,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 

@@ -10,7 +10,7 @@ exports.graficoDataOld = function (req, res) {
 
 exports.graficoDataPres = function (req, res) {
   var id = req.params.idsap
-  console.log("sap:"+id);
+  logger.debug("sap:"+id);
   
  var sql = " SELECT nombre, presupuestopesos as monto, id "+
  "FROM sip.detalleproyecto "+
@@ -21,16 +21,16 @@ exports.graficoDataPres = function (req, res) {
       var data = '{"titulo":"Erogaciones por SAP","data":[';
       for (var i = 0; i < proyecto.length; i++) {
         var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].monto+',"dId":'+proyecto[i].id+'},'
-        console.log(linea);
+        logger.debug(linea);
         data = data + linea;
       }
       data = data.substring(0,data.length-1);
       data = data + '],"showInLegend":false}';
-      console.log(data);
+      logger.debug(data);
       var obj = JSON.parse(data);
       res.json(obj);
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 
@@ -38,7 +38,7 @@ exports.graficoDataPres = function (req, res) {
 
 exports.graficoDataReal = function (req, res) {
   var id = req.params.idsap
-  console.log("sap:"+id);
+  logger.debug("sap:"+id);
   
  var sql = " SELECT nombre, realacumuladopesos as monto, id "+
  "FROM sip.detalleproyecto "+
@@ -49,16 +49,16 @@ exports.graficoDataReal = function (req, res) {
       var data = '{"titulo":"REAL Erogaciones por SAP","data":[';
       for (var i = 0; i < proyecto.length; i++) {
         var linea = '{"name":"'+proyecto[i].nombre+'","y":'+proyecto[i].monto+',"dId":'+proyecto[i].id+'},'
-        console.log(linea);
+        logger.debug(linea);
         data = data + linea;
       }
       data = data.substring(0,data.length-1);
       data = data + '],"showInLegend":false}';
-      console.log(data);
+      logger.debug(data);
       var obj = JSON.parse(data);
       res.json(obj);
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 
@@ -66,7 +66,7 @@ exports.graficoDataReal = function (req, res) {
 
 exports.sapgrafico = function (req, res) {
   
-  console.log("--------------------->>" + req.user[0].uid)
+  logger.debug("--------------------->>" + req.user[0].uid)
     models.proyecto.findAll({
         attributes: ['id', 'sap', 'nombre']
     }).then(function (proyecto) {
@@ -74,7 +74,7 @@ exports.sapgrafico = function (req, res) {
         //res.json({ resultado: proyecto, uid: req.user[0].uid });
         res.json(proyecto);
     }).catch(function (err) {
-        //console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
     });
 }

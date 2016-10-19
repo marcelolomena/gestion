@@ -4,9 +4,6 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.getPersonal = function (req, res) {
 
@@ -172,7 +169,7 @@ exports.getExcel = function (req, res) {
           res.end(result, 'binary');
 
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -198,7 +195,7 @@ exports.get = function (req, res) {
   models.iniciativa.find({ where: { 'id': req.params.id } }).then(function (iniciativa) {
     res.json(iniciativa);
   }).catch(function (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 };
@@ -221,7 +218,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.debug("->>> " + err)
     } else {
       models.iniciativa.count({
         where: data
@@ -236,7 +233,7 @@ exports.list = function (req, res) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: iniciativas });
         }).catch(function (err) {
-          //console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -250,14 +247,14 @@ exports.listpivot = function (req, res) {
     "from sip.troya " +
     "group by nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo";
         */
-  console.log("vamo a rescatar la data...");
+  logger.debug("vamo a rescatar la data...");
   var sql = "select nuevagerencia, nuevodepartamento, nombrecuenta, fecha, tipo,monto " +
     "from sip.troya ";
   sequelize.query(sql)
     .spread(function (rows) {
-      console.log("listo, vamo a mostrarla...");
+      logger.debug("listo, vamo a mostrarla...");
       res.json(rows);
-      console.log("fin");
+      logger.debug("fin");
     })
 }
 
@@ -269,7 +266,7 @@ exports.combobox = function (req, res) {
     //iniciativas.forEach(log)
     res.json(iniciativas);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -344,7 +341,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       } else {
@@ -385,7 +382,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       }
@@ -432,7 +429,7 @@ exports.action = function (req, res) {
           }).then(function (contrato) {
             res.json({ error_code: 0 });
           }).catch(function (err) {
-            console.log(err);
+            logger.error(err);
             res.json({ error_code: 1 });
           });
       } else {
@@ -476,7 +473,7 @@ exports.action = function (req, res) {
           }).then(function (contrato) {
             res.json({ error_code: 0 });
           }).catch(function (err) {
-            console.log(err);
+            logger.error(err);
             res.json({ error_code: 1 });
           });
       }
@@ -488,11 +485,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 

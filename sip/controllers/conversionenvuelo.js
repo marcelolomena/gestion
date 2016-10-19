@@ -29,7 +29,7 @@ exports.action = function (req, res) {
             }).then(function (iniciativa) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err);
                 res.json({ error_code: 1 });
             });
 
@@ -47,7 +47,7 @@ exports.action = function (req, res) {
                 }).then(function (iniciativa) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
             break;
@@ -58,11 +58,11 @@ exports.action = function (req, res) {
                 }
             }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
-                    console.log('Deleted successfully');
+                    logger.debug('Deleted successfully');
                 }
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err);
                 res.json({ error_code: 1 });
             });
 
@@ -94,12 +94,12 @@ exports.list = function (req, res) {
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (err) {
-            console.log("->>> " + err)
+            logger.debug("->>> " + err)
         } else {
             models.conversionenvuelo.count({
                 where: data
             }).then(function (records) {
-                console.log("campos: " + records);
+                logger.debug("campos: " + records);
                 var total = Math.ceil(records / rows);
                 models.conversionenvuelo.findAll({
                     offset: parseInt(rows * (page - 1)),
@@ -109,7 +109,7 @@ exports.list = function (req, res) {
                 }).then(function (iniciativas) {
                     res.json({ records: records, total: total, page: page, rows: iniciativas });
                 }).catch(function (err) {
-                    //console.log(err);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
             })

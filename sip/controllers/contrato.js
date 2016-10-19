@@ -3,9 +3,6 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.excel = function (req, res) {
   var page = req.query.page;
@@ -14,148 +11,148 @@ exports.excel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  //console.log("Creando Excel");
+
   var conf = {}
   conf.cols = [{
     caption: 'Id Contrato',
     type: 'number',
     width: 3
   },
-    {
-      caption: 'Contrato',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Solicitud',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Proveedor',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Estado Solicitud',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Número',
-      type: 'number',
-      width: 10
-    },
-    {
-      caption: 'Tipo Solicitud',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'PMO',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Id Servicio',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Anexo',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'CUI',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Servicio',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Cuenta',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Fecha Inicio',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Fecha Término',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Fecha Control',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Valor Cuota',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Frecuencia',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Plazo',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Condición',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Impuesto',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Factor',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Estado',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Descripción',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Id Compromiso',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Periodo',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Monto',
-      type: 'number',
-      width: 30
-    },
-    {
-      caption: 'Costo',
-      type: 'number',
-      width: 30
-    }
+  {
+    caption: 'Contrato',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Solicitud',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Proveedor',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Estado Solicitud',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Número',
+    type: 'number',
+    width: 10
+  },
+  {
+    caption: 'Tipo Solicitud',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'PMO',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Id Servicio',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Anexo',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'CUI',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Servicio',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Cuenta',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Fecha Inicio',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Fecha Término',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Fecha Control',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Valor Cuota',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Frecuencia',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Plazo',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Condición',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Impuesto',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Factor',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Estado',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Descripción',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Id Compromiso',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Periodo',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Monto',
+    type: 'number',
+    width: 30
+  },
+  {
+    caption: 'Costo',
+    type: 'number',
+    width: 30
+  }
   ];
 
   var sql = "SELECT a.*,b.razonsocial as proveedor, " +
@@ -175,32 +172,32 @@ exports.excel = function (req, res) {
       var arr = []
       for (var i = 0; i < proyecto.length; i++) {
         a = [proyecto[i].id, proyecto[i].nombre,
-          proyecto[i].solicitudcontrato,
-          proyecto[i].proveedor,
-          proyecto[i].estadosolicitud,
-          proyecto[i].numero,
-          proyecto[i].tiposolicitud,
-          proyecto[i].pmoresponsable,
-          proyecto[i].idservicio,
-          proyecto[i].anexo,
-          proyecto[i].idcui,
-          proyecto[i].servicio,
-          proyecto[i].cuentacontable,
-          proyecto[i].fechainicio,
-          proyecto[i].fechatermino,
-          proyecto[i].fechacontrol,
-          proyecto[i].valorcuota,
-          proyecto[i].frecuenciafacturacion,
-          proyecto[i].plazocontrato,
-          proyecto[i].condicionnegociacion,
-          proyecto[i].impuesto,
-          proyecto[i].factorimpuesto,
-          proyecto[i].estadocontrato,
-          proyecto[i].glosaservicio,
-          proyecto[i].idcompromiso,
-          proyecto[i].periodo,
-          proyecto[i].montoorigen,
-          proyecto[i].costoorigen
+        proyecto[i].solicitudcontrato,
+        proyecto[i].proveedor,
+        proyecto[i].estadosolicitud,
+        proyecto[i].numero,
+        proyecto[i].tiposolicitud,
+        proyecto[i].pmoresponsable,
+        proyecto[i].idservicio,
+        proyecto[i].anexo,
+        proyecto[i].idcui,
+        proyecto[i].servicio,
+        proyecto[i].cuentacontable,
+        proyecto[i].fechainicio,
+        proyecto[i].fechatermino,
+        proyecto[i].fechacontrol,
+        proyecto[i].valorcuota,
+        proyecto[i].frecuenciafacturacion,
+        proyecto[i].plazocontrato,
+        proyecto[i].condicionnegociacion,
+        proyecto[i].impuesto,
+        proyecto[i].factorimpuesto,
+        proyecto[i].estadocontrato,
+        proyecto[i].glosaservicio,
+        proyecto[i].idcompromiso,
+        proyecto[i].periodo,
+        proyecto[i].montoorigen,
+        proyecto[i].costoorigen
         ];
         arr.push(a);
       }
@@ -212,7 +209,7 @@ exports.excel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err)
       res.json({ error_code: 100 });
     });
 
@@ -240,7 +237,7 @@ exports.action = function (req, res) {
       }).then(function (contrato) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err)
         res.json({ error_code: 1 });
       });
 
@@ -266,7 +263,7 @@ exports.action = function (req, res) {
         }).then(function (contrato) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err)
           res.json({ error_code: 1 });
         });
       break;
@@ -277,11 +274,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err)
         res.json({ error_code: 1 });
       });
 
@@ -298,7 +295,7 @@ exports.listall = function (req, res) {
   }).then(function (contratos) {
     res.json(contratos);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -306,12 +303,12 @@ exports.listall = function (req, res) {
 exports.listaporproveedor = function (req, res) {
   models.contrato.findAll({
     atributes: ['id', 'nombre'],
-    where: [{ 'nombre': { $ne: null } }, {idproveedor : req.params.id}],
+    where: [{ 'nombre': { $ne: null } }, { idproveedor: req.params.id }],
     order: 'nombre'
   }).then(function (contratos) {
     res.json(contratos);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -336,7 +333,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.debug("->>> " + err)
     } else {
       models.contrato.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
       models.contrato.count({
@@ -355,7 +352,7 @@ exports.list = function (req, res) {
           //Contrato.forEach(log)
           res.json({ records: records, total: total, page: page, rows: contratos });
         }).catch(function (err) {
-          //console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -367,12 +364,12 @@ exports.list = function (req, res) {
 exports.listaporproveedor = function (req, res) {
   models.contrato.findAll({
     atributes: ['id', 'nombre'],
-    where: [{ 'nombre': { $ne: null } }, {idproveedor : req.params.id}],
+    where: [{ 'nombre': { $ne: null } }, { idproveedor: req.params.id }],
     order: 'nombre'
   }).then(function (contratos) {
     res.json(contratos);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -391,13 +388,13 @@ exports.getFrecuencia = function (req, res) {
 exports.getTipoDocumentos = function (req, res) {
 
   var promises = []
-  
-  var newPromise = {'id':1, 'nombre': 'Contrato'};
+
+  var newPromise = { 'id': 1, 'nombre': 'Contrato' };
   promises.push(newPromise);
-  var newPromise = {'id':2, 'nombre': 'Orden de Compra'};
+  var newPromise = { 'id': 2, 'nombre': 'Orden de Compra' };
   promises.push(newPromise);
-  var newPromise = {'id':3, 'nombre': 'Cotización'};
-  promises.push(newPromise);  
+  var newPromise = { 'id': 3, 'nombre': 'Cotización' };
+  promises.push(newPromise);
 
   res.json(promises);
 };

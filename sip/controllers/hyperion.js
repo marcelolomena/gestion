@@ -5,7 +5,7 @@ var co = require('co');
 var logger = require("../utils/logger");
 exports.csv = function (req, res) {
     var _idejercicio = req.params.idejercicio;
-    //console.log("_idejercicio" + _idejercicio);
+    //logger.debug("_idejercicio" + _idejercicio);
 
     //var sql_head_0 = `SELECT cuentacontable "cuenta",gerencia "gerencia",departamento "departamento",seccion "seccion", `
     var sql_head_0 = `SELECT cuentacontable cuenta,gerencia,departamento,seccion, `
@@ -113,14 +113,14 @@ exports.csv = function (req, res) {
                 attributes: ['id', 'ejercicio'],
                 where: { 'id': _idejercicio },
             }).catch(function (err) {
-                console.log(err)
+                logger.error(err)
             });
         } else if (_idejercicio == 0) {
             exer = yield models.ejercicios.find({
                 attributes: ['id', 'ejercicio'],
                 where: { 'ejercicio': (new Date).getFullYear() },
             }).catch(function (err) {
-                console.log(err)
+                logger.error(err)
             });
             //console.dir(exer)
         }
@@ -159,13 +159,13 @@ exports.csv = function (req, res) {
                 res.set('Content-Type', 'text/csv');
                 res.status(200).send(csv);
             }).catch(function (err) {
-                console.log(err)
+                logger.error(err)
                 res.json({ error_code: 1 });
             });
         });
 
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
     });
 
 }
@@ -184,7 +184,7 @@ exports.listcui = function (req, res) {
     }).then(function (presupuesto) {
         res.json(presupuesto);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
     });
 }
 
@@ -195,7 +195,7 @@ exports.ejercicios = function (req, res) {
     }).then(function (ejercicios) {
         res.json(ejercicios);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
     });
 }
 
@@ -214,7 +214,7 @@ exports.presupuesto = function (req, res) {
     }).then(function (presupuesto) {
         res.json(presupuesto);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
     });
 }
 
@@ -247,7 +247,7 @@ exports.colnames = function (req, res) {
     }).then(function (presupuesto) {
         res.json(presupuesto);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
     });
 
 }
@@ -267,9 +267,9 @@ exports.estructura = function (req, res) {
             attributes: ['ejercicio'],
             where: { 'id': _rules[0].data },
         }).then(function (ex) {
-            console.log("----------------------------> " + ex.ejercicio)
+            logger.debug("----------------------------> " + ex.ejercicio)
         }).catch(function (err) {
-            console.log(err)
+            logger.debug(err)
         });
     }*/
     var sql_head_0 = `SELECT COUNT(*) cant FROM`
@@ -356,7 +356,7 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
                 attributes: ['id'],
                 where: { 'ejercicio': (new Date).getFullYear() - 1 },
             }).catch(function (err) {
-                console.log(err)
+                logger.error(err)
             });
             //console.dir(exer)
             idejercicio = exer.id
@@ -377,15 +377,15 @@ ROWS FETCH NEXT :PageSize ROWS ONLY
                     var total = Math.ceil(records / _rows);
                     res.json({ records: records, total: total, page: _page, rows: rows });
                 }).catch(function (err) {
-                    console.log(err)
+                    logger.error(err)
                     res.json({ error_code: 1 });
                 });
 
         }).catch(function (err) {
-            console.log(err)
+            logger.error(err)
         });
     }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
     });
 
 }
@@ -419,14 +419,14 @@ exports.list2 = function (req, res) {
                 callback('no rows', undefined)
             }
         }).catch(function (err) {
-            console.log(err)
+            logger.error(err)
         });
     }
 
     if (idcui > 0) {
         yearExercise(idcui, function (err, year) {
             if (year) {
-                console.log(year)
+                logger.debug(year)
                 utilSeq.getPeriodRange(year - 1, function (err, range) {
                     var acum = ''
                     var min = range[0]
@@ -538,6 +538,7 @@ exports.list2 = function (req, res) {
                     ).then(function (rows) {
                         res.json(rows);
                     }).catch(function (err) {
+                        logger.error(err)
                         res.json({ error_code: 1 });
                     });
                 });
@@ -614,9 +615,10 @@ exports.list = function (req, res) {
 
     sequelize.query(sql, { replacements: { ano: ano, periodo: ssql, idcui: parseInt(idcui), estado: estado }, type: sequelize.QueryTypes.SELECT }
     ).then(function (rows) {
-        console.dir(rows)
+        //console.dir(rows)
         res.json(rows);
     }).catch(function (err) {
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };

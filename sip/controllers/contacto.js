@@ -5,11 +5,11 @@ var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 exports.getContactos = function (req, res) {
   //var idContrato = req.params.id
-  console.log(">>>>>>>>>>>>>>>>>>>>>>> idproveedor [" + req.params.id + "]");
+  logger.debug(">>>>>>>>>>>>>>>>>>>>>>> idproveedor [" + req.params.id + "]");
   models.contactoproveedor.findAll({ where: [{ 'borrado': 1 }, { 'idproveedor': req.params.id }], order: 'contacto' }).then(function (contacto) {
     res.json(contacto);
   }).catch(function (err) {
-    console.log(err);
+    logger.error(e)
     res.json({ error_code: 1 });
   });
 };
@@ -28,7 +28,7 @@ exports.action = function (req, res) {
       }).then(function (contactos) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(e)
         res.json({ error_code: 1 });
       });
       break;
@@ -45,7 +45,7 @@ exports.action = function (req, res) {
         }).then(function (contactos) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(e)
           res.json({ error_code: 1 });
         });
       break;
@@ -56,11 +56,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(e)
         res.json({ error_code: 1 });
       });
       break;
@@ -90,7 +90,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.err(err)
     } else {
       models.contactoproveedor.count({
         where: data
@@ -104,7 +104,7 @@ exports.list = function (req, res) {
         }).then(function (contactos) {
           res.json({ records: records, total: total, page: page, rows: contactos });
         }).catch(function (err) {
-          //console.log(err);
+          logger.error(e)
           res.json({ error_code: 1 });
         });
       })
