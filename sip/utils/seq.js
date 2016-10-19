@@ -1,3 +1,4 @@
+var logger = require("./logger");
 module.exports = (function () {
     Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator) {
         var n = this,
@@ -40,6 +41,7 @@ module.exports = (function () {
 
             condition.push({ borrado: 1 })
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, condition);
@@ -102,6 +104,7 @@ module.exports = (function () {
 
             //condition.push({ borrado: 1 })
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, condition);
@@ -144,6 +147,7 @@ module.exports = (function () {
 
             condition.push({ borrado: 1 })
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, condition);
@@ -164,6 +168,7 @@ module.exports = (function () {
             }
 
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, range);
@@ -185,6 +190,7 @@ module.exports = (function () {
             }
 
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, range);
@@ -208,6 +214,7 @@ module.exports = (function () {
                 range.push(parseInt(period));
             }
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, range);
@@ -233,6 +240,7 @@ module.exports = (function () {
                 periodIni++;
             }
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
         callback(undefined, period);
