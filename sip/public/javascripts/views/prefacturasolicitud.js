@@ -103,7 +103,8 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-full'>Monto Neto a Pagar {montoneto}</div>";
+    tmpl += "<div class='column-half'>Monto Neto a Pagar {montoneto}</div>";
+    tmpl += "<div class='column-half'>Moneda {moneda}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
@@ -197,6 +198,15 @@ function showDocumentos(cui, periodo, proveedor) {
                 formatter: 'number', formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5, readonly: 'readonly' }
             },
+            {
+                label: 'Moneda',
+                name: 'moneda',
+                search: false,
+                align: 'left',
+                width: 100,
+                editable: true,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },            
             {
                 label: 'Estado',
                 name: 'aprobado',

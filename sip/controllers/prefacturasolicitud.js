@@ -16,8 +16,11 @@ exports.getSolicitudAprob = function (req, res) {
     "SELECT @PageSize=" + filas + "; " +
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
-    "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor " +
+    "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso, f.moneda "+ 
+    "FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor " +
     "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso JOIN sip.servicio d ON a.idservicio=d.id " +
+    "JOIN sip.detalleserviciocto e ON c.iddetalleserviciocto=e.id "+
+    "JOIN sip.moneda f ON e.idmoneda=f.id "+
     "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + "  AND idprefactura IS NULL ";
     if (proveedor != "0"){
       sql=sql+"AND idproveedor="+proveedor+" ";
