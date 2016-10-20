@@ -85,7 +85,7 @@
 	border-left-style: none;
 	margin-left:10px;
 }
-.btn {
+#buscar {
 	background: #047ac9;
 	background-image: -webkit-linear-gradient(top, #047ac9, #024066);
 	background-image: -moz-linear-gradient(top, #047ac9, #024066);
@@ -109,7 +109,7 @@
 	bottom: -10px;
 }
 
-.btn:hover {
+#buscar:hover {
 	background: #78ad28;
 	background-image: -webkit-linear-gradient(top, #78ad28, #659419);
 	background-image: -moz-linear-gradient(top, #78ad28, #659419);
