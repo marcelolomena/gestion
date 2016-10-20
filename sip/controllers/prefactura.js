@@ -4,12 +4,12 @@ var fs = require('fs');
 var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var winston = require('winston')
+//var winston = require('winston')
 exports.test = function (req, res) {
 
     try {
         var jsreport = require('jsreport-core')()
-        jsreport.logger.add(winston.transports.Console, { level: 'info' })
+        //jsreport.logger.add(winston.transports.Console, { level: 'info' })
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
@@ -18,15 +18,17 @@ exports.test = function (req, res) {
             `
                 SELECT 
 				a.id,
-				a.subtotal,
-				a.totalmulta,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotal), 1))) subtotal,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalmulta), 1))) totalmulta,
 				a.impuesto,
-				a.totalimpuesto,
-				a.totalprefactura,
-				a.fecha,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))) totalimpuesto,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))) totalprefactura,
+				CONVERT(varchar(10),a.fecha,103) fecha,
 				b.glosaservicio,
-				b.montoneto,
-   				b.montomulta,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))) montoaprobado,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
+				b.factorconversion,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoaprobadopesos), 1))) montoaprobadopesos,
                 c.razonsocial,
 				c.numrut,
 				c.dvrut,
@@ -35,8 +37,8 @@ exports.test = function (req, res) {
 				e.glosamoneda,
 				f.nombre cui,
 				f.nombreresponsable,
-				h.fechainicio,
-				h.fechatermino,
+				CONVERT(varchar(10),h.fechainicio,103) fechainicio,
+				CONVERT(varchar(10),h.fechatermino,103) fechatermino,
 				i.nombre servicio,
 				j.cuentacontable,
 				j.nombrecuenta,

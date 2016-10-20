@@ -27,7 +27,7 @@ function getCui(data) {
 }
 
 function subtotal(data) {
-    return data[0].subtotal.toFixed();
+    return data[0].subtotal;
 }
 
 function impuesto(data) {
@@ -35,22 +35,22 @@ function impuesto(data) {
 }
 
 function totalimpuesto(data) {
-    return data[0].totalimpuesto.toFixed();
+    return data[0].totalimpuesto;
 }
 
 function totalprefactura(data) {
-    return data[0].totalprefactura.toFixed();
+    return data[0].totalprefactura;
 }
 
 function montomulta(data) {
-    return data[0].montomulta.toFixed();
+    return data[0].montomulta;
 }
 
 function montoneto(data) {
-    return data[0].montoneto.toFixed();
+    return data[0].montoneto;
 }
 
-function fecha(data) {
+function getFecha(data) {
     return data[0].fecha;
 }
 
@@ -64,14 +64,6 @@ function getGlosaMoneda(data) {
 
 function getNombreResponsable(data) {
     return data[0].nombreresponsable;
-}
-
-function getFechaInicio(data) {
-    return data[0].fechainicio;
-}
-
-function getFechaTermino(data) {
-    return data[0].fechatermino;
 }
 
 function getServicio(data) {
