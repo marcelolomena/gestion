@@ -1,6 +1,8 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
+var constants = require("../utils/constants");
+
 exports.getSolicitudAprob = function (req, res) {
   var page = req.query.page;
   var filas = req.query.rows;
@@ -8,6 +10,7 @@ exports.getSolicitudAprob = function (req, res) {
   var sord = req.query.sord;
   var cui = req.params.cui
   var periodo = req.params.periodo
+  var proveedor = req.params.proveedor
 
   var sql = "DECLARE @PageSize INT; " +
     "SELECT @PageSize=" + filas + "; " +
@@ -16,6 +19,9 @@ exports.getSolicitudAprob = function (req, res) {
     "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor " +
     "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso JOIN sip.servicio d ON a.idservicio=d.id " +
     "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + "  AND idprefactura IS NULL ";
+    if (proveedor != "0"){
+      sql=sql+"AND idproveedor="+proveedor+" ";
+    }    
   var sql2 = sql + "ORDER BY b.razonsocial, a.periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
   console.log("query:" + sql2);
@@ -109,19 +115,14 @@ exports.action = function (req, res) {
       //nada
       break;
     case "edit":
-      models.solicitudaprobacion.update({
-        aprobado: req.body.aprobado,
-        montoaprobado: req.body.montoaprobado,
-        glosaaprobacion: req.body.glosaaprobacion,
-        montomulta: req.body.montomulta,
-        glosamulta: req.body.glosamulta,
-        idcalificacion: req.body.idcalificacion,
-        idcausalmulta: req.body.idcausalmulta
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
+      var sql="UPDATE sip.solicitudaprobacion SET "+
+      "aprobado="+req.body.aprobado+", montoaprobado="+req.body.montoaprobado+
+      ", glosaaprobacion='"+req.body.glosaaprobacion+"', montoaprobadopesos="+parseInt(req.body.montoaprobado)+"*factorconversion"+
+      ", montomulta="+req.body.montomulta+", montomultapesos="+parseInt(req.body.montomulta)+"*factorconversion"+
+      ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+
+      ", idcausalmulta="+req.body.idcausalmulta+" "+
+      "WHERE id="+req.body.id;
+       sequelize.query(sql).then(function (contrato) {
           console.log("Aprobado:" + req.body.aprobado);
           if (req.body.aprobado == 1) {
             console.log("Dentro Aprobado:" + req.body.montoapagar + "," + req.body.montoaprobado);
@@ -170,3 +171,63 @@ exports.action = function (req, res) {
 
   }
 }
+
+exports.cuisprefactura = function (req, res) {
+  var rol = req.user[0].rid;
+  console.log("******usr*********:" + req.user[0].uid);
+  console.log("******rol*********:" + req.user[0].rid);
+  console.log("*ROLADM*:" + constants.ROLADMDIVOT);
+  var periodo = req.params.periodo
+  if (rol == constants.ROLADMDIVOT) {  
+    var sql = "SELECT id, nombre, cui FROM sip.estructuracui "+
+      "where id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+
+      " AND idprefactura is NULL) "+
+      "ORDER BY nombre";
+    sequelize.query(sql)
+      .spread(function (rows) {
+        res.json(rows);
+      }).catch(function (err) {
+        res.json({ error_code: 1 });
+      });    
+  } else {
+    var idcui = req.params.id
+    var sql = "select a.id, a.nombre, a.cui "+
+      "from   sip.estructuracui a "+
+      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+"  AND idprefactura is NULL) "+
+      "union "+
+      "select b.id, b.nombre, b.cui "+
+      "from   sip.estructuracui a,sip.estructuracui b "+
+      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+" AND idprefactura is NULL) "+
+      "  and  a.cui = b.cuipadre "+
+      "union "+
+      "select c.id, c.nombre, c.cui "+
+      "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c "+
+      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+" AND idprefactura is NULL) "+
+      "  and  a.cui = b.cuipadre "+
+      "  and  b.cui = c.cuipadre "+
+      "union "+
+      "select d.id, d.nombre, d.cui "+
+      "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d "+
+      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+" AND idprefactura is NULL) "+
+      "  and  a.cui = b.cuipadre "+
+      "  and  b.cui = c.cuipadre "+
+      "  and  c.cui = d.cuipadre ";
+
+    sequelize.query(sql)
+      .spread(function (rows) {
+        res.json(rows);
+      });
+  }
+};
+
+exports.getProveedores = function (req, res) {
+  var cui = req.params.cui
+  var periodo = req.params.periodo
+  var sql = "SELECT DISTINCT a.idproveedor, b.razonsocial  FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON a.idproveedor=b.id"+
+    " WHERE periodo="+ periodo +" AND idcui="+cui;
+  console.log("query:"+sql)
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};

@@ -21,9 +21,11 @@ $(document).ready(function () {
             console.log('** cui final:'+cuiusr); 
         } 
     });    
-
+    
+    $('#cui').append('<option value="0"> - Escoger CUI - </option>');     
     for (var i=0; i<cuiusr.length; i++ ){    
-	    $.getJSON("/troyacui/"+cuiusr[i], function (j) {
+	    $.getJSON("/cuisprefactura/"+cuiusr[i]+"/"+getPeriodo(), function (j) {
+            
             $.each(j, function (i, item) {
                 console.log("cui:"+item.nombre+","+item.cui);
                 $('#cui').append('<option value="' + item.id + '">' + item.cui + "-"+ item.nombre +'</option>');
@@ -34,10 +36,22 @@ $(document).ready(function () {
     $('#periodo').val(getPeriodo());
     
     $("#cui").change(function(){
-        var idcui = $(this).val();  
-        var periodo = $('#periodo').val();
-        loadGrid(idcui, periodo);
+        scui = $(this).val();
+        $.getJSON("/prefactura/proveedores/"+scui+"/"+getPeriodo(), function(j){
+            $('#proveedor option').remove();
+            $('#proveedor').append('<option value="0"> - Escoger Proveedor - </option>');            
+            $.each(j,function(i,item) {
+                $('#proveedor').append('<option value="'+item.idproveedor+'">'+item.razonsocial+'</option>');
+            });
+        });
     });
+    
+    $("#buscar").click(function(){
+        var idcui = $('#cui').val();  
+        var periodo = $('#periodo').val();
+        var proveedor = $('#proveedor').val();
+        loadGrid(idcui, periodo, proveedor);
+    });    
     
 
 });
@@ -55,18 +69,18 @@ function getPeriodo() {
 }
 
 var leida = false;
-function loadGrid(cui, periodo) {
-	var url = "/prefacturasolicitud/"+cui+"/"+periodo;
+function loadGrid(cui, periodo, proveedor) {
+	var url = "/prefacturasolicitud/"+cui+"/"+periodo+"/"+proveedor;
 	var formatter = new Intl.NumberFormat();
 	if (leida){
         $("#grid").setGridParam({ postData: {page:1, rows:10} });
         $("#grid").jqGrid('setCaption', "Facturas Proveedor por CUI").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	} else {
-		showDocumentos(cui,periodo);
+		showDocumentos(cui,periodo, proveedor);
 	}
 }
 
-function showDocumentos(cui, periodo) {
+function showDocumentos(cui, periodo, proveedor) {
 
     var tmpl = "<div id='responsive-form' class='clearfix'>";
     
@@ -75,22 +89,27 @@ function showDocumentos(cui, periodo) {
     tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Periodo {periodo}</div>";    
-    tmpl += "<div class='column-full'>Servicio {nombre}</div>";
+    tmpl += "<div class='column-half'>Periodo {periodo}</div>";    
+    tmpl += "<div class='column-half'>Servicio {nombre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-full'>Glosa Servicio {glosaservicio}</div>";    
-    tmpl += "<div class='column-half'>Monto a Pagar {montoapagar}</div>";
+    
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Aprobado {montoaprobado}</div>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";
+    tmpl += "<div class='column-half'>Monto Neto a Pagar {montoneto}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto Aprobado {montoaprobado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Glosa Aprobación {glosaaprobacion}</div>";     
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";     
+    tmpl += "</div>";
+    
+    
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-full'>Glosa Aprobación {glosaaprobacion}</div>";     
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
@@ -103,11 +122,15 @@ function showDocumentos(cui, periodo) {
     tmpl += "<div class='column-half'>Monto Multa {montomulta}</div>";
     tmpl += "</div>";    
     
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
+    tmpl += "</div>"; 
+    
     tmpl += "<hr style='width:100%;'/>";
-    tmpl += "<div> {sData} {cData}  </div>";
+    tmpl += "<div align='left'> {sData} {cData}  </div>";
     tmpl += "</div>";    
     // send the parent row primary key to the server so that we know which grid to show
-    var childGridURL = "/prefacturasolicitud/"+cui+"/"+periodo;
+    var childGridURL = "/prefacturasolicitud/"+cui+"/"+periodo+"/"+proveedor;
     $("#grid").jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -134,6 +157,14 @@ function showDocumentos(cui, periodo) {
                      hidden:false,
                      editoptions: { size: 5, readonly: 'readonly'}                       
                    },  
+                   { label: 'Proveedor',
+                     name: 'razonsocial',
+                     width: 200,
+                     align: 'left',
+                     search: false,
+                     editable: true,
+                     editoptions: { size: 5, readonly: 'readonly'}                       
+                   },                   
                    { label: 'Servicio',
                      name: 'nombre',
                      width: 200,

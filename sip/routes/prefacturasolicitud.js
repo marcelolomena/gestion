@@ -10,7 +10,7 @@ module.exports = function (passport) {
         res.render('prefacturasolicitud', { user: req.user });
     });
     
-    router.route('/prefacturasolicitud/:cui/:periodo')
+    router.route('/prefacturasolicitud/:cui/:periodo/:proveedor')
         .get(isAuthenticated, prefacturasolicitudController.getSolicitudAprob);
         
     router.route('/prefacturasolicitud/causalmulta')
@@ -20,7 +20,13 @@ module.exports = function (passport) {
         .get(isAuthenticated, prefacturasolicitudController.getCalificacion);  
 
     router.route('/prefacturasolicitud/estadosolicitud')
-        .get(isAuthenticated, prefacturasolicitudController.getEstadoSolicitud);          
+        .get(isAuthenticated, prefacturasolicitudController.getEstadoSolicitud);   
+
+    router.route('/cuisprefactura/:id/:periodo')
+        .get(isAuthenticated, prefacturasolicitudController.cuisprefactura);         
+        
+    router.route('/prefactura/proveedores/:cui/:periodo')
+        .get(isAuthenticated, prefacturasolicitudController.getProveedores);  
         
     router.route('/prefacturasolicitud/action')
         .post(isAuthenticated, prefacturasolicitudController.action);        
