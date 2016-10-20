@@ -5,33 +5,62 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     var modelSolicitudes = [
-        { label: 'id', name: 'id', key: true, hidden: true },  
-        { label: 'Glosa Servicio',
+        { label: 'id', name: 'id', key: true, hidden: true },
+        {
+            label: 'Glosa Servicio',
             name: 'glosaservicio',
-            width: 450,
+            width: 350,
             align: 'left',
             search: false,
             editable: true,
-            editoptions: { size: 10, readonly: 'readonly'}                       
-        },         
-        { label: 'Monto a Pagar',
-            name: 'montoapagar',  
+            editoptions: { size: 10, readonly: 'readonly' }
+        },
+        {
+            label: 'Moneda', name: 'glosamoneda', width: 80, align: 'left',
+            search: false, editable: true, hidedlg: true
+        },
+        {
+            label: 'Monto Compromiso',
+            name: 'montoneto',
             search: false,
-            align: 'left',                 
+            align: 'left',
             width: 100,
             editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editoptions: { size: 10, readonly: 'readonly'}                                    
-        },  
-        { label: 'Monto Aprobado',
-                     name: 'montoaprobado',
-                     width: 100,
-                     search: false,
-                     align: 'left',
-                     editable: true,
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   },
-        { label: 'Glosa Aprobación',
+            editoptions: { size: 10, readonly: 'readonly' }
+        },
+        {
+            label: 'Monto Aprobado',
+            name: 'montoaprobado',
+            width: 100,
+            search: false,
+            align: 'left',
+            editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Estado',
+            name: 'aprobado',
+            search: false,
+            align: 'left',
+            width: 80,
+            editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.aprobado;
+                if (val == 0) {
+                    dato = 'Pendiente';
+                } else if (val == 1) {
+                    dato = 'Aprobado';
+                } else if (val == 2) {
+                    dato = 'Rechazado';
+                }
+                return dato;
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+        {
+            label: 'Glosa Estado',
             name: 'glosaaprobacion',
             width: 200,
             search: false,
@@ -39,27 +68,8 @@ $(document).ready(function () {
             editable: true,
             edittype: "textarea"
         },
-        { label: 'Estado',
-                     name: 'aprobado',
-                     search: false,
-                     align: 'left',
-                     width: 80,
-                     editable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        var dato = '';
-                        var val = rowObject.aprobado;
-                        if (val == 0) {
-                            dato = 'Pendiente';
-                        } else if (val == 1) {
-                            dato = 'Aprobado';
-                        } else if (val == 2) {
-                            dato = 'Rechazado';                            
-                        }
-                        return dato;
-                    }, dataInit: function (elem) { $(elem).width(200); }                     
-                                          
-                   },
-                   
+
+
     ], $grid = $("#grid");
 
     $grid.jqGrid({
@@ -111,5 +121,5 @@ $(document).ready(function () {
             });
         }
     });
-      
+
 });
