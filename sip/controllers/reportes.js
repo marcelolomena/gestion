@@ -70,7 +70,7 @@ exports.lstGerencias = function (req, res) {
                 var obj = rows[i];
                 for (var key in obj) {
                     var value = obj[key];
-                    //console.log(key + ": " + value);
+                    //logger.debug(key + ": " + value);
                     if (key == 'ejerciciouno')
                         sum1 = sum1 + value
                     else if (key == 'ejerciciodos')
@@ -88,7 +88,7 @@ exports.lstGerencias = function (req, res) {
 
             res.json(datum);
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 }
@@ -96,7 +96,7 @@ exports.lstGerencias = function (req, res) {
 exports.lstDepartamentos = function (req, res) {
 
     //var id = req.params.id
-    //console.log(id)
+    //logger.debug(id)
     var sql =
         `
            select
@@ -138,7 +138,7 @@ exports.lstDepartamentos = function (req, res) {
                 var obj = rows[i];
                 for (var key in obj) {
                     var value = obj[key];
-                    //console.log(key + ": " + value);
+                    //logger.debug(key + ": " + value);
                     if (key == 'ejerciciouno')
                         sum1 = sum1 + value
                     else if (key == 'ejerciciodos')
@@ -155,7 +155,7 @@ exports.lstDepartamentos = function (req, res) {
 
             res.json(datum);
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 }
@@ -214,7 +214,7 @@ exports.lstServices = function (req, res) {
 
             res.json(datum);
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 }
@@ -232,7 +232,7 @@ exports.lstNames = function (req, res) {
         }).then(function (rows) {
             res.json(rows);
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 }
@@ -244,8 +244,8 @@ exports.lstConceptoGasto = function (req, res) {
     var _gerencia = 0;
     var _order = ''
 
-    //console.log(_sidx)
-    //console.log(_sord)
+    //logger.debug(_sidx)
+    //logger.debug(_sord)
 
     if (_sidx)
         _order = ' ORDER BY ' + _sidx + ' ' + _sord
@@ -316,7 +316,7 @@ exports.lstConceptoGasto = function (req, res) {
 
                 res.json(datum);
             }).catch(function (e) {
-                console.log(e)
+                logger.error(e)
                 res.json({ error_code: 1 });
             })
 
@@ -378,7 +378,7 @@ exports.lstConceptoGasto = function (req, res) {
 
                 res.json(datum);
             }).catch(function (e) {
-                console.log(e)
+                logger.error(e)
                 res.json({ error_code: 1 });
             })
 
@@ -457,24 +457,24 @@ exports.reporteGerenciasPdf = function (req, res) {
                                 fs.createReadStream(pathPdf + path.sep + filePdf).pipe(res)
                                     .on('finish', function () {
                                         fs.unlink(pathPdf + path.sep + filePdf);
-                                        console.log('finalizo');
+                                        logger.debug('finalizo');
                                     });
                             });
 
                     }).catch(function (e) {
-                        console.log("Pdf 1: " + e)
+                        logger.error("Pdf 1: " + e)
                     })
                 }).catch(function (e) {
-                    console.log("Pdf 2: " + e)
+                    logger.error("Pdf 2: " + e)
                 })
 
             }).catch(function (e) {
-                console.log("Pdf 3: " + e)
+                logger.error("Pdf 3: " + e)
             })
 
 
     } catch (e) {
-        console.log("error : " + e);
+        logger.error("error : " + e);
     }
 }
 
@@ -484,7 +484,7 @@ exports.pdfManager = function (req, res) {
         var jsreport = require('jsreport-core')()
         var pathPdf = path.join(__dirname, '..', 'pdf')
 
-        //console.log(pathPdf + path.sep)
+        //logger.debug(pathPdf + path.sep)
 
         var filePdf = 'gerencias.pdf'
 
@@ -574,34 +574,34 @@ exports.pdfManager = function (req, res) {
                                                         fs.createReadStream(pathPdf + path.sep + filePdf).pipe(res)
                                                             .on('finish', function () {
                                                                 fs.unlink(pathPdf + path.sep + filePdf);
-                                                                //console.log('finalizo');
+                                                                //logger.debug('finalizo');
                                                             });
                                                     });
 
                                             }).catch(function (e) {
-                                                console.log(e)
+                                                logger.error(e)
                                             })
                                         }).catch(function (e) {
-                                            console.log(e)
+                                            logger.error(e)
                                         })
 
                                     }).catch(function (e) {
-                                        console.log(e)
+                                        logger.error(e)
                                     })
                             }).catch(function (e) {
-                                console.log(e)
+                                logger.error(e)
                             })
 
                     }).catch(function (e) {
-                        console.log(e)
+                        logger.error(e)
                     })
 
             }).catch(function (err) {
-                console.log(err)
+                logger.error(err)
             });
 
     } catch (e) {
-        console.log("error : " + e);
+        logger.error(e);
     }
 }
 
@@ -610,8 +610,8 @@ exports.lstServiceFromConcept = function (req, res) {
     var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
     var _concepto = Base64.decode(req.params.nombre)
     var _gerencia = req.params.id
-    //console.log("----->>>" + _concepto)
-    //console.log("----->>>" + _gerencia)
+    //logger.debug("----->>>" + _concepto)
+    //logger.debug("----->>>" + _gerencia)
 
     if (_gerencia > 0) {
         var sql =
@@ -666,7 +666,7 @@ exports.lstServiceFromConcept = function (req, res) {
 
                 res.json(datum);
             }).catch(function (e) {
-                console.log(e)
+                logger.error(e)
                 res.json({ error_code: 1 });
             })
 
@@ -723,7 +723,7 @@ exports.lstServiceFromConcept = function (req, res) {
 
                 res.json(datum);
             }).catch(function (e) {
-                console.log(e)
+                logger.error(e)
                 res.json({ error_code: 1 });
             })
 
@@ -794,7 +794,7 @@ exports.lstGerenciasTroya = function (req, res) {
                 var obj = rows[i];
                 for (var key in obj) {
                     var value = obj[key];
-                    //console.log(key + ": " + value);
+                    //logger.debug(key + ": " + value);
                     if (key == 'ejerciciouno')
                         sum1 = sum1 + value
                     else if (key == 'ejerciciodos')
@@ -811,7 +811,7 @@ exports.lstGerenciasTroya = function (req, res) {
 
             res.json(datum);
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 
@@ -888,7 +888,7 @@ ON P.cui = Q.cui
                 var obj = rows[i];
                 for (var key in obj) {
                     var value = obj[key];
-                    //console.log(key + ": " + value);
+                    //logger.debug(key + ": " + value);
                     if (key == 'ejerciciouno')
                         sum1 = sum1 + value
                     else if (key == 'ejerciciodos')
@@ -905,7 +905,7 @@ ON P.cui = Q.cui
 
             res.json(datum);
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 
@@ -935,7 +935,7 @@ exports.testtroya = function (req, res) {
             type: sequelize.QueryTypes.SELECT
         }).then(function (_troya) {
 
-            console.log("troya")
+            logger.debug("troya")
 
             var datum = {
                 "food": _troya
@@ -952,17 +952,17 @@ exports.testtroya = function (req, res) {
 
 
                     jsreport.beforeRenderListeners.add('inicio', function (request, response) {
-                        console.log("inicio render")
+                        logger.debug("inicio render")
                     })
 
                     jsreport.renderErrorListeners.add('panico', function (request, response, err) {
-                        console.log("salio mal : " + err)
+                        logger.debug("salio mal : " + err)
                     })
 
                     jsreport.afterRenderListeners.add('fin', function (request, response) {
-                        console.log("fin render")
+                        logger.debug("fin render")
                         var end = new Date() - start
-                        //console.log("response.content.toString()")
+                        //logger.debug("response.content.toString()")
                         console.info("Tiempo Total: %dms", end);
                     })
 
@@ -980,44 +980,44 @@ exports.testtroya = function (req, res) {
                     }).then(function (out) {
                         //
                         try {
-                            console.log('finalizo');
+                            logger.debug('finalizo');
                             res.send(out.content.toString())
                             /*
                             out.stream.pipe(res);
                             out.result.pipe(fs.createWriteStream(path.join(__dirname, '..', 'temp', 'reporte.xlsx')))
                                 .on('finish', function () {
-                                    console.log("termino de grabar")
+                                    logger.debug("termino de grabar")
                                     res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheetf');
                                     res.header('Content-Disposition', 'inline; filename="hipertroyas.xlsx"');
                                     fs.createReadStream(path.join(__dirname, '..', 'temp', 'reporte.xlsx')).pipe(res)
                                         .on('finish', function () {
                                             fs.unlink(path.join(__dirname, '..', 'temp', 'reporte.xlsx'));
-                                            console.log('finalizo');
+                                            logger.debug('finalizo');
                                         });
                                 });
                             */
                         } catch (e) {
-                            console.info("que pacho : ", e);
+                            logger.error(e);
                             res.end(e.message);
                         }
                     }).catch(function (e) {
-                        console.log(e)
+                        logger.error(e)
                         res.end(e.message);
                     })
 
                 }).catch(function (e) {
-                    console.log(e)
+                    logger.error(e)
                     res.end(e.message);
                 })
 
             }).catch(function (e) {
-                console.log(e)
+                logger.error(e)
                 res.end(e.message);
             });
 
 
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.end(e.message);
         })
   

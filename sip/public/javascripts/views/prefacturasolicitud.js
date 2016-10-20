@@ -183,7 +183,7 @@ function showDocumentos(cui, periodo, proveedor) {
                      editoptions: { size: 5, readonly: 'readonly'}                       
                    },         
                    { label: 'Monto a Pagar',
-                     name: 'montoapagar',  
+                     name: 'montoneto',  
                      search: false,
                      align: 'left',                 
                      width: 100,

@@ -20,6 +20,7 @@ exports.getProgramas = function (req, res) {
     }).then(function (programa) {
         res.json(programa);
     }).catch(function (err) {
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 };

@@ -4,9 +4,6 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.list = function (req, res) {
 
@@ -28,7 +25,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.debug("->>> " + err)
     } else {
       models.nuevosproyectos.belongsTo(models.iniciativaprograma, { foreignKey: 'idiniciativaprograma' });
       models.nuevosproyectos.belongsTo(models.moneda, { foreignKey: 'idmoneda' });
@@ -55,7 +52,7 @@ exports.list = function (req, res) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: iniciativas });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -76,7 +73,7 @@ exports.action = function (req, res) {
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -92,7 +89,7 @@ exports.action = function (req, res) {
         }).then(function (contrato) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -103,11 +100,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 

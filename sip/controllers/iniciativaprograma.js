@@ -11,7 +11,7 @@ exports.action = function (req, res) {
   if (action != "del") {
     if (req.body.pptoestimadogasto != "")
       gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
-    console.log("*************el gasto: "+gasto);
+    logger.debug("*************el gasto: "+gasto);
 
     if (req.body.pptoestimadoinversion != "")
       inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
@@ -30,7 +30,7 @@ exports.action = function (req, res) {
 
     if (req.body.pptoaprobadodolares != "")
       aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
-    console.log("*************el aprobadodolares: "+aprobadodolares);
+    logger.debug("*************el aprobadodolares: "+aprobadodolares);
 
     if (req.body.program_id != "0")
       programid = req.body.program_id
@@ -84,7 +84,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       } else {
@@ -132,7 +132,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       }
@@ -183,11 +183,11 @@ exports.action = function (req, res) {
               id: req.body.id
             }
           }).then(function (iniciativa) {
-            console.log("*************el gasto modificado es: "+parseFloat(gasto));
+            logger.debug("*************el gasto modificado es: "+parseFloat(gasto));
             res.json({ error_code: 0 });
           }).catch(function (err) {
-            console.log(err);
-            console.log("*************el gasto modificado es: "+parseFloat(gasto));
+            logger.error(err);
+            logger.debug("*************el gasto modificado es: "+parseFloat(gasto));
             res.json({ error_code: 1 });
           });
       } else {
@@ -237,7 +237,7 @@ exports.action = function (req, res) {
           }).then(function (iniciativa) {
             res.json({ error_code: 0 });
           }).catch(function (err) {
-            console.log(err);
+            logger.error(err);
             res.json({ error_code: 1 });
           });
       }
@@ -250,11 +250,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -277,9 +277,9 @@ exports.actualizaMontos = function (req, res) {
     }
   }).then(function (iniciativasp) {
     iniciativasp.forEach(function (element) {
-      console.log('sumo '+pptoestimadogasto+' mas '+element.pptoestimadogasto);
+      logger.debug('sumo '+pptoestimadogasto+' mas '+element.pptoestimadogasto);
       pptoestimadogasto = pptoestimadogasto + element.pptoestimadogasto;
-      console.log('y el resultado es: '+pptoestimadogasto);
+      logger.debug('y el resultado es: '+pptoestimadogasto);
       pptoestimadoinversion = pptoestimadoinversion + element.pptoestimadoinversion;
       pptoestimadoprevisto = pptoestimadoprevisto + element.pptoestimadoprevisto;
       pptoaprobadogasto = pptoaprobadogasto + element.pptoaprobadogasto;
@@ -303,7 +303,7 @@ exports.actualizaMontos = function (req, res) {
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
   })
@@ -322,7 +322,7 @@ exports.codigoart = function (req, res) {
     else
       throw new Error('no data');
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 };
@@ -337,7 +337,7 @@ exports.combobox = function (req, res) {
     //iniciativas.forEach(log)
     res.json(iniciativas);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -348,7 +348,7 @@ exports.comboboxtotal = function (req, res) {
     //iniciativas.forEach(log)
     res.json(iniciativas);
   }).catch(function (err) {
-    //console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 }
@@ -377,7 +377,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.debug("->>> " + err)
     } else {
       models.iniciativaprograma.count({
         where: data
@@ -391,7 +391,7 @@ exports.list = function (req, res) {
         }).then(function (iniciativas) {
           res.json({ records: records, total: total, page: page, rows: iniciativas });
         }).catch(function (err) {
-          //console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })

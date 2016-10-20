@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link href="http://localhost:3000/stylesheets/bootstrap.min.css" rel="stylesheet" />
+<script src="http://localhost:3000/javascripts/jquery-1.12.3.js" />
 <script>
     $(function () {
         var data = {{{toJSON prefactura}}}
-        var prefactura = data.map(function(b) { return [ b.id, b.glosaservicio, b.montoaprobado,b.razonsocial,b.contacto,b.correo ]});
+        var prefactura = data.map(function(b) { return [ b.id,
+		 b.glosaservicio, 
+		 b.montoaprobado, 
+		 b.montoaprobadopesos, 
+		 b.factorconversion,
+		 b.glosamoneda,
+		 b.fechainicio,
+		 b.fechatermino,
+		 b.cuentacontable,
+		 b.nombrecuenta ]});
     });
-
 </script>
 <div class="container">
 	<div class="row">
@@ -25,7 +34,10 @@
 			<div class="col-xs-5">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>De: <a href="#">Su Nombre</a></h4>
+						<h4>Cui: {{getCui prefactura}}</h4>
+						<p>Responsable: {{getNombreResponsable prefactura}} - {{getCargo prefactura}}</p>
+						<p>Nº Contrato: {{getNumeroContrato prefactura}}</p>
+						<p>Fecha Pre-Factura: {{getFecha prefactura}}</p>
 					</div>
 					<div class="panel-body"></div>
 				</div>
@@ -33,9 +45,10 @@
 			<div class="col-xs-5 col-xs-offset-2 text-right">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>Para : <a href="#">{{getProveedor prefactura}}</a></h4>
+						<h4>Proveedor: {{getProveedor prefactura}} </h4>
+						<p>Rut : {{getRutProveedor prefactura}}</p>
 					</div>
-					<div class="panel-body">{{getContacto prefactura}} - {{getCorreo prefactura}}</div>
+					<div class="panel-body">Contacto: {{getContacto prefactura}} - {{getCorreo prefactura}}</div>
 				</div>
 			</div>
 		</div>
@@ -53,23 +66,24 @@
 			<tbody>
 				{{#each prefactura}}
 				<tr>
-					<td>{{glosaservicio}}</td>
-					<td class="text-right">$ {{format montoaprobado}}</td>
+					<td>{{glosaservicio}}<br>Fecha Inicio:{{fechainicio}}, Fecha Término: {{fechatermino}}, Monto Origen: {{montoaprobado}} {{glosamoneda}}, Valor Conversión: {{factorconversion}}<br>Nombre Cuenta:{{nombrecuenta}}, Nº Cuenta:  {{cuentacontable}}</td>
+					<td class="text-right">$ {{montoaprobadopesos}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 		<div class="row text-right">
 			<div class="col-xs-3 col-xs-offset-7"><strong>Sub Total:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totaliva prefactura}}<br>$ {{total prefactura}}<br></strong></div>
+			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
 		</div>
+		<!--
 		<div class="row">
 			<div class="col-xs-5">
 				<div class="panel panel-info">
 					<div class="panel-heading">
-						<h4>Datos bancarios</h4>
+						<h4>Datos Generales</h4>
 					</div>
-					<div class="panel-body">Marcelo <br> BANCO<br> Número de cuenta: 12345678<br></div>
+					<div class="panel-body">XXXXX</div>
 				</div>
 			</div>
 			<div class="col-xs-7">
@@ -83,5 +97,6 @@
 				</div>
 			</div>
 		</div>
+		-->
 	</div>
 </div>

@@ -96,7 +96,7 @@ exports.getExcel = function (req, res) {
   var id = req.params.id
   var filtrosubgrilla = "idproyecto="+id;
     
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -173,7 +173,7 @@ exports.getExcel = function (req, res) {
           proyecto[i].toriginalactual,
           proyecto[i].montosum
         ];
-        //console.log("compromiso:"+proyecto[i].compromiso)
+        //logger.debug("compromiso:"+proyecto[i].compromiso)
         arr.push(a);
       }
       conf.rows = arr;
@@ -184,7 +184,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 

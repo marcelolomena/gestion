@@ -20,8 +20,8 @@ exports.getGrillaProveedor = function (req, res) {
   sequelize.query(sql)
     .spread(function (rows) {
       //res.json(rows);
-      console.log("***ROWS***:"+rows);
-      console.log("***Length***:"+rows.length);
+      logger.debug("***ROWS***:"+rows);
+      logger.debug("***Length***:"+rows.length);
       records=rows.length;  
     }).then(function(response){      
       sequelize.query(sql2)
@@ -29,6 +29,7 @@ exports.getGrillaProveedor = function (req, res) {
       var total=Math.ceil(records / filas);
       res.json({ records: records, total: total, page: page, rows: rows });
     }).catch(function (err) {
+      logger.error(err)
           res.json({ error_code: 1 });
     });
   });
@@ -36,7 +37,7 @@ exports.getGrillaProveedor = function (req, res) {
 
 exports.getGraficoProveedor = function (req, res) {
   var id = req.params.id
-  console.log("proveedor:"+id);
+  logger.debug("proveedor:"+id);
   
  var sql = "SELECT nombrecentrocosto AS name, cuiseccion, sum(monto) AS monto FROM sip.discoverer "+ 
 "WHERE idproveedor = "+id+" "+
@@ -49,21 +50,21 @@ exports.getGraficoProveedor = function (req, res) {
       if (proyecto.length > 0) {
         for (var i = 0; i < proyecto.length; i++) {
           var linea = '{"name":"'+proyecto[i].name+'","y":'+proyecto[i].monto+',"idcui":'+proyecto[i].cuiseccion+'},'
-          console.log(linea);
+          logger.debug(linea);
           data = data + linea;
           total = total + parseInt(proyecto[i].monto);
         }
       } else {
         data = data + '{"name":"SIN DATOS","y":0,"idcui":"SIN DATOS"},';    
       }
-      console.log("Total:"+total);
+      logger.debug("Total:"+total);
       data = data.substring(0,data.length-1);
       data = data + '],"showInLegend":false, "total":'+total+'}';
-      console.log(data);
+      logger.debug(data);
       var obj = JSON.parse(data);
       res.json(obj);
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 
@@ -94,8 +95,8 @@ exports.getDetalleFacturas = function (req, res) {
   sequelize.query(sql)
     .spread(function (rows) {
       //res.json(rows);
-      console.log("***ROWS***:"+rows);
-      console.log("***Length***:"+rows.length);
+      logger.debug("***ROWS***:"+rows);
+      logger.debug("***Length***:"+rows.length);
       records=rows.length;      
     }).then(function(response){      
       sequelize.query(sql2)
@@ -103,6 +104,7 @@ exports.getDetalleFacturas = function (req, res) {
       var total=Math.ceil(records / filas);
       res.json({ records: records, total: total, page: page, rows: rows });
     }).catch(function (err) {
+      logger.error(err)
           res.json({ error_code: 1 });
     });
   });

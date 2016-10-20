@@ -3,9 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var constants = require("../utils/constants");
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
+
 // Create endpoint /proyecto for GET
 exports.getPresupuestoPaginados = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -29,11 +27,11 @@ exports.getPresupuestoPaginados = function (req, res) {
     var rol = req.user[0].rid;
     if (rol != constants.ROLADMDIVOT) {
       var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
-      console.log("query:" + sql1);
+      logger.debug("query:" + sql1);
       sequelize.query(sql1)
         .spread(function (rows) {
           if (rows.length > 0) {
-            console.log("query:" + rows + ", valor:" + rows[0].cui);
+            logger.debug("query:" + rows + ", valor:" + rows[0].cui);
             idcui = rows[0].cui;
           } else {
             idcui = 0; //cui no existente para que no encuentre nada
@@ -63,13 +61,13 @@ exports.getPresupuestoPaginados = function (req, res) {
           sequelize.query(sql)
             .spread(function (rows) {
               var cuis = "";
-              console.log("En cuis:" + rows);
+              logger.debug("En cuis:" + rows);
               for (i = 0; i < rows.length; i++) {
-                //console.log("cui:" + rows[i].id);
+                //logger.debug("cui:" + rows[i].id);
                 cuis = cuis + rows[i].id + ",";
               }
               //return cuis.substring(0, cuis.length - 1);
-              console.log("antes call:" + cuis.substring(0, cuis.length - 1));
+              logger.debug("antes call:" + cuis.substring(0, cuis.length - 1));
               callback(cuis.substring(0, cuis.length - 1));
             });
         });
@@ -92,7 +90,7 @@ exports.getPresupuestoPaginados = function (req, res) {
           } 
       });
       condition = condition.substring(0, condition.length - 5);
-      console.log("***CONDICION:"+condition);
+      logger.debug("***CONDICION:"+condition);
     }
   }
   sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id JOIN sip.ejercicios c ON c.id=a.idejercicio ";
@@ -103,9 +101,9 @@ exports.getPresupuestoPaginados = function (req, res) {
   sequelize.query(sqlcount).spread(function (recs) { 
     var records =  recs[0].count;
     var total = Math.ceil(parseInt(recs[0].count) / rowspp);  
-    console.log("####COUNT:"+recs[0].count+" Total:"+total); 
+    logger.debug("####COUNT:"+recs[0].count+" Total:"+total); 
     superCui(req.user[0].uid, function (elcui) {
-      console.log('elcui:' + elcui)
+      logger.debug('elcui:' + elcui)
       var rol = req.user[0].rid;
       var sqlok;
       if (rol == constants.ROLADMDIVOT) {
@@ -119,7 +117,7 @@ exports.getPresupuestoPaginados = function (req, res) {
         "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
         "JOIN sip.ejercicios c ON c.id=a.idejercicio " ;
         if (filters && condition != "") {
-          console.log("**"+condition+"**");
+          logger.debug("**"+condition+"**");
           sqlok += "WHERE "+condition+ " ";  
         }           
         sqlok += "ORDER BY id desc) " +
@@ -136,7 +134,7 @@ exports.getPresupuestoPaginados = function (req, res) {
         "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
         "WHERE a.idcui IN (" + elcui + ") " ;
         if (filters && condition != ""){
-          console.log("**"+condition+"**");
+          logger.debug("**"+condition+"**");
           sqlok += "AND "+ condition+ " ";
         } 
         sqlok += "ORDER BY id desc) " +
@@ -152,11 +150,11 @@ exports.getPresupuestoPaginados = function (req, res) {
 
 function getCuis(uid) {
   var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
-  console.log("query:" + sql1);
+  logger.debug("query:" + sql1);
   sequelize.query(sql1)
     .spread(function (rows) {
       if (rows.length > 0) {
-        console.log("query:" + rows + ", valor:" + rows[0].cui);
+        logger.debug("query:" + rows + ", valor:" + rows[0].cui);
         idcui = rows[0].cui;
       } else {
         idcui = 0; //cui no existente para que no encuentre nada
@@ -186,9 +184,9 @@ function getCuis(uid) {
       sequelize.query(sql)
         .spread(function (rows) {
           var cuis;
-          console.log("En cuis:" + rows);
+          logger.debug("En cuis:" + rows);
           for (i = 0; i < rows.length; i++) {
-            console.log("cui:" + rows[i].id);
+            logger.debug("cui:" + rows[i].id);
             cuis = cuis + rows[i].id + ",";
           }
           return cuis.substring(0, cuis.length - 1);
@@ -203,7 +201,7 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -286,15 +284,15 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.err(err);
       res.json({ error_code: 100 });
     });
 
 };
 
 exports.getUsersByRol = function (req, res) {
-  //console.log(req.query.rol);
-  console.log(req.params.rol);
+  //logger.debug(req.query.rol);
+  logger.debug(req.params.rol);
 
   models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
   models.rol.belongsToMany(models.user, { foreignKey: 'id', through: models.usrrol });
@@ -310,7 +308,7 @@ exports.getUsersByRol = function (req, res) {
     //gerentes.forEach(log)
     res.json(gerentes);
   }).catch(function (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 
@@ -319,9 +317,9 @@ exports.getUsersByRol = function (req, res) {
 exports.getCUIs = function (req, res) {
   var idcui;
   var rol = req.user[0].rid;
-  console.log("******usr*********:" + req.user[0].uid);
-  console.log("******rol*********:" + req.user[0].rid);
-  console.log("*ROLADM*:" + constants.ROLADMDIVOT);
+  logger.debug("******usr*********:" + req.user[0].uid);
+  logger.debug("******rol*********:" + req.user[0].rid);
+  logger.debug("*ROLADM*:" + constants.ROLADMDIVOT);
   if (rol == constants.ROLADMDIVOT) {
     var sql = "SELECT id, nombre FROM sip.estructuracui " +
       "ORDER BY nombre";
@@ -329,15 +327,16 @@ exports.getCUIs = function (req, res) {
       .spread(function (rows) {
         res.json(rows);
       }).catch(function (err) {
+        logger.error(err)
         res.json({ error_code: 1 });
       });
   } else {
     var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + req.user[0].uid;
-    console.log("query:" + sql1);
+    logger.debug("query:" + sql1);
     sequelize.query(sql1)
       .spread(function (rows) {
         if (rows.length > 0) {
-          console.log("query:" + rows + ", valor:" + rows[0].cui);
+          logger.debug("query:" + rows + ", valor:" + rows[0].cui);
           idcui = rows[0].cui;
         } else {
           idcui = 0; //cui no existente para que no encuentre nada
@@ -368,6 +367,7 @@ exports.getCUIs = function (req, res) {
           .spread(function (rows) {
             res.json(rows);
           }).catch(function (err) {
+            logger.error(err)
             res.json({ error_code: 1 });
           });
       });
@@ -392,7 +392,7 @@ exports.getVersion = function (req, res) {
   var sql = "SELECT max(version) AS version " +
     "FROM sip.presupuesto WHERE idcui=" + cui + " AND idejercicio=" + ejercicio;
 
-  console.log("***SQL***:" + sql);
+  logger.debug("***SQL***:" + sql);
   sequelize.query(sql)
     .spread(function (rows) {
       if (rows.length > 0) {
@@ -410,14 +410,14 @@ exports.action = function (req, res) {
   var version = req.body.version;
   var id_cui = req.body.idcui;
   var ejercicio = req.body.idejercicio;
-  console.log("Id Prep:" + idpre);
-  console.log("Ejercicio:" + ejercicio);
-  console.log("montos:"+req.body.montoforecast+", "+req.body.montoanual)
+  logger.debug("Id Prep:" + idpre);
+  logger.debug("Ejercicio:" + ejercicio);
+  logger.debug("montos:"+req.body.montoforecast+", "+req.body.montoanual)
   switch (action) {
     case "add":
       var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
         "WHERE b.idcui=" + id_cui + " AND b.idejercicio=" + ejercicio + " AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
-        console.log("coriiendo:" + sql);
+        logger.debug("coriiendo:" + sql);
       sequelize.query(sql)
         .spread(function (rows) {
           if (rows.length > 0) {
@@ -434,33 +434,34 @@ exports.action = function (req, res) {
               version: version,
               borrado: 1
             }).then(function (presupuesto) {
-              console.log("Creo presup:" + presupuesto.id+" idprebase:"+idpre);
+              logger.debug("Creo presup:" + presupuesto.id+" idprebase:"+idpre);
               if (idpre != null){
-                console.log("llamando a sip.CopiaPresupuesto:" + idpre+", "+id_cui+","+ejercicio+","+presupuesto.id);
+                logger.debug("llamando a sip.CopiaPresupuesto:" + idpre+", "+id_cui+","+ejercicio+","+presupuesto.id);
                 sequelize.query("EXECUTE sip.CopiaPresupuesto " + idpre
                 +","+ id_cui
                 +","+ejercicio
                 +","+presupuesto.id
                 ).then(function (response) {
-                    console.log("****LLamo CopiaPresupuesto");
+                    logger.debug("****LLamo CopiaPresupuesto");
                     res.json({ error_code: 0 }); 
                 }).error(function (err) {
                         res.json(err);
                 });                    
               } else {
-                    console.log("****LLamo InsertaServiciosPresupuesto"); 
+                    logger.debug("****LLamo InsertaServiciosPresupuesto"); 
                     sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
                       + "," + id_cui
                       + "," + presupuesto.id
                       ).then(function (response) {
                       //+ ';').then(function (response) {
-                        console.log("****LLamo InsertaServiciosPresupuesto"); 
+                        logger.debug("****LLamo InsertaServiciosPresupuesto"); 
                         res.json({ error_code: 0 });                   
                       }).error(function (err) {
                         res.json(err);
                       });                  
                }
             }).catch(function (err) {
+              logger.error(err)
               res.json({ error_code: 1 });
             }); 
           }
@@ -478,7 +479,7 @@ exports.action = function (req, res) {
         }).then(function (contrato) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -486,27 +487,29 @@ exports.action = function (req, res) {
       sequelize.query('EXECUTE sip.EliminaPresupuesto ' + req.body.id
         + ';').then(function (response) {
           res.json({ error_code: 0 });
-        }).error(function (err) {
-          res.json(err);
-        });
+        }).catch(function (err) {
+              logger.error(err)
+              res.json(err);
+            }); 
       break;
 
   }
 }
 
 exports.updateTotales = function (req, res) {
-  console.log("****id:"+req.params.id);
+  logger.debug("****id:"+req.params.id);
   sequelize.query('EXECUTE sip.actualizadetallepre ' + req.params.id
     + ';').then(function (response) {
       res.json({ error_code: 0 });
-    }).error(function (err) {
-      res.json(err);
-    });
+    }).catch(function (err) {
+              logger.error(err)
+              res.json(err);
+            }); 
 
 };
 
 exports.confirma = function (req, res) {
-  console.log("****id:"+req.params.id+" estado:"+req.params.estado);
+  logger.debug("****id:"+req.params.id+" estado:"+req.params.estado);
   var id = req.params.id;
   var estado = req.params.estado;
   var idcui = req.params.idcui;
@@ -522,20 +525,23 @@ exports.confirma = function (req, res) {
           sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
           sequelize.query(sql).then(function (response) {
               res.json({ error_code: 0 });
-            }).error(function (err) {
+            }).catch(function (err) {
+              logger.error(err)
               res.json(err);
-            });
+            }); 
         }     
     }).catch(function (err) {
+      logger.error(err)
       res.json({ error_code: 1 });
     });
   } else {
       sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
       sequelize.query(sql).then(function (response) {
           res.json({ error_code: 0 });
-        }).error(function (err) {
-          res.json(err);
-        });    
+        }).catch(function (err) {
+              logger.error(err)
+              res.json(err);
+            });    
   }
 
 };

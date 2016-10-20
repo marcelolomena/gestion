@@ -7,75 +7,33 @@ exports.action = function (req, res) {
     var valorcuota = req.body.valorcuota
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
-    var anexo = req.body.anexo == "" ? "ND": req.body.anexo;
-    var saldopresupuesto = req.body.saldopresupuesto == "" ? "0": req.body.saldopresupuesto;
-    
+    var anexo = req.body.anexo == "" ? "ND" : req.body.anexo;
+    var saldopresupuesto = req.body.saldopresupuesto == "" ? "0" : req.body.saldopresupuesto;
+
 
     switch (action) {
         case "add":
-            var sql = "DECLARE @ctacontable INT; "+
-            "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id="+ req.body.idservicio+"; "+
-            "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, "+
-            "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, "+
-            "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, "+
-            "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, "+
-            "diferido, saldopresupuesto, tipogeneracion, comentario) "+
-            "VALUES ("+req.body.parent_id+",'"+ anexo+"',"+ req.body.idcui+","+req.body.idservicio+", @ctacontable,'"+req.body.fechainicio+"','"+
-            req.body.fechatermino+"','"+req.body.fechacontrol+"',"+req.body.valorcuota+","+ req.body.valorcuota+","+ req.body.idmoneda+","+
-            req.body.idplazocontrato+","+req.body.idcondicion+","+
-            req.body.impuesto+","+ req.body.factorimpuesto+","+req.body.idcontactoproveedor+","+req.body.idestadocto+",'"+
-            req.body.glosaservicio+"',1,"+req.body.mesesentrecuotas+","+req.body.periodoprimeracuota+","+
-            req.body.numerocuotas+","+req.body.periodoinicioservicio+","+req.body.diferido+","+req.body.saldopresupuesto+","+
-            req.body.tipogeneracion+",'"+req.body.comentario+ "'); "+
-            "DECLARE @id INT;"+
-            "select @id = @@IDENTITY; "+
-            "select @id as id;";
+            var sql = "DECLARE @ctacontable INT; " +
+                "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
+                "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, " +
+                "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
+                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, " +
+                "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
+                "diferido, saldopresupuesto, tipogeneracion, comentario) " +
+                "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
+                req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
+                req.body.idplazocontrato + "," + req.body.idcondicion + "," +
+                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",'" +
+                req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
+                req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
+                req.body.tipogeneracion + ",'" + req.body.comentario + "'); " +
+                "DECLARE @id INT;" +
+                "select @id = @@IDENTITY; " +
+                "select @id as id;";
             sequelize.query(sql).spread(function (contratosrv) {
-                    console.log("------------>cc:"+contratosrv);
-                    console.log("------------>ID:"+contratosrv[0].id)
-                    if (req.body.tipogeneracion == 1){
-                        var cuotas = calculoCuotas(
-                            req.body.valorcuota,
-                            req.body.numerocuotas,
-                            req.body.mesesentrecuotas,
-                            req.body.periodoprimeracuota,
-                            req.body.impuesto,
-                            req.body.factorimpuesto,
-                            req.body.diferido,
-                            req.body.periodoinicioservicio
-                        );
-                        var mesini = req.body.periodoinicioservicio;
-                        var mescuota = req.body.periodoprimeracuota;
-                        var inicio = mesini < mescuota ? meisini : mescuota;
-                        insertaPeriodos(contratosrv[0].id, cuotas, inicio, function (err, compromisos) {
-                            console.log("***Periodos Creados");
-                        });
-                    }
-                    res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    console.log(err);
-                    res.json({ error_code: 1 });
-                });
-
-            break;
-        case "edit":
-            var anexo = req.body.anexo == "" ? "ND": req.body.anexo;
-            
-            var sql="DECLARE @ctacontable INT; "+
-            "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id="+ req.body.idservicio+"; "+
-            "UPDATE sip.detalleserviciocto set anexo='"+anexo+"', idcui="+req.body.idcui+", idservicio="+req.body.idservicio+
-            ", idcuenta=@ctacontable, fechainicio='"+req.body.fechainicio+"', fechatermino='"+req.body.fechatermino+
-            "', fechacontrol='"+req.body.fechacontrol+"', valorcuota="+req.body.valorcuota+", valortotal="+req.body.valorcuota+
-            ", idmoneda="+req.body.idmoneda+", idplazocontrato="+req.body.idplazocontrato+", idcondicion="+req.body.idcondicion+
-            ", impuesto="+req.body.impuesto+", factorimpuesto="+req.body.factorimpuesto+", idcontactoproveedor="+req.body.idcontactoproveedor+
-            ", idestadocto="+req.body.idestadocto+", glosaservicio='"+req.body.glosaservicio+"', mesesentrecuotas="+req.body.mesesentrecuotas+
-            ", periodoprimeracuota="+req.body.periodoprimeracuota+", numerocuotas="+req.body.numerocuotas+", periodoinicioservicio="+req.body.periodoinicioservicio+
-            ", diferido="+req.body.diferido+", saldopresupuesto="+req.body.saldopresupuesto+", tipogeneracion="+req.body.tipogeneracion+
-            ", comentario='"+req.body.comentario+"' "+
-            "WHERE id="+req.body.id;
-            console.log("sql:"+sql);
-            sequelize.query(sql).spread(function (contratosrv) {
-                if (req.body.tipogeneracion == 1){
+                logger.debug("------------>cc:" + contratosrv);
+                logger.debug("------------>ID:" + contratosrv[0].id)
+                if (req.body.tipogeneracion == 1) {
                     var cuotas = calculoCuotas(
                         req.body.valorcuota,
                         req.body.numerocuotas,
@@ -85,28 +43,70 @@ exports.action = function (req, res) {
                         req.body.factorimpuesto,
                         req.body.diferido,
                         req.body.periodoinicioservicio
-                    );                
+                    );
                     var mesini = req.body.periodoinicioservicio;
                     var mescuota = req.body.periodoprimeracuota;
-                    console.log("***mesini:"+mesini+", mescuota:"+mescuota);
+                    var inicio = mesini < mescuota ? meisini : mescuota;
+                    insertaPeriodos(contratosrv[0].id, cuotas, inicio, function (err, compromisos) {
+                        logger.debug("***Periodos Creados");
+                    });
+                }
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ error_code: 1 });
+            });
+
+            break;
+        case "edit":
+            var anexo = req.body.anexo == "" ? "ND" : req.body.anexo;
+
+            var sql = "DECLARE @ctacontable INT; " +
+                "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
+                "UPDATE sip.detalleserviciocto set anexo='" + anexo + "', idcui=" + req.body.idcui + ", idservicio=" + req.body.idservicio +
+                ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
+                "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + req.body.valorcuota + ", valortotal=" + req.body.valorcuota +
+                ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
+                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + ", idcontactoproveedor=" + req.body.idcontactoproveedor +
+                ", idestadocto=" + req.body.idestadocto + ", glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
+                ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
+                ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
+                ", comentario='" + req.body.comentario + "' " +
+                "WHERE id=" + req.body.id;
+            logger.debug("sql:" + sql);
+            sequelize.query(sql).spread(function (contratosrv) {
+                if (req.body.tipogeneracion == 1) {
+                    var cuotas = calculoCuotas(
+                        req.body.valorcuota,
+                        req.body.numerocuotas,
+                        req.body.mesesentrecuotas,
+                        req.body.periodoprimeracuota,
+                        req.body.impuesto,
+                        req.body.factorimpuesto,
+                        req.body.diferido,
+                        req.body.periodoinicioservicio
+                    );
+                    var mesini = req.body.periodoinicioservicio;
+                    var mescuota = req.body.periodoprimeracuota;
+                    logger.debug("***mesini:" + mesini + ", mescuota:" + mescuota);
                     var inicio = mesini < mescuota ? mesini : mescuota;
                     borraPeriodos(req.body.id, function (nada) {
-                        console.log("***Parametros:"+req.body.id+","+ cuotas+","+ inicio);
+                        logger.debug("***Parametros:" + req.body.id + "," + cuotas + "," + inicio);
                         actualizaPeriodos(req.body.id, cuotas, inicio, function (err, compromisos) {
-                            console.log("***Periodos Actualizados");
+                            logger.debug("***Periodos Actualizados");
                         });
                         res.json({ error_code: 0 });
                     });
                 } else {
                     borraPeriodos(req.body.id, function (nada) {
                         res.json({ error_code: 0 });
-                    });  
+                    });
                 }
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err)
                 res.json({ error_code: 1 });
-            });                
-            
+            });
+
             break;
         case "del":
             models.detallecompromiso.destroy({
@@ -122,12 +122,12 @@ exports.action = function (req, res) {
                 }).then(function (rowDeleted) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.error(err)
                     res.json({ error_code: 1 });
                 });
 
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err)
                 res.json({ error_code: 1 });
             });
 
@@ -136,7 +136,7 @@ exports.action = function (req, res) {
 
 
     var insertaPeriodos = function (idservicio, cuotas, mesini, callback) {
-        console.log("insertaPeriodos:" + idservicio + "," + cuotas + " mini:" + mesini);
+        logger.debug("insertaPeriodos:" + idservicio + "," + cuotas + " mini:" + mesini);
         models.sequelize.transaction({ autocommit: true }, function (t) {
 
             var promises = []
@@ -144,12 +144,12 @@ exports.action = function (req, res) {
             var anio = d.getFullYear()
             var mes = 1; //parseInt(mesini);
             var mesidx = 0;
-            console.log("Recibe:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
+            logger.debug("Recibe:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
             for (var i = 0; i < cuotas[0].length; i++) {
                 var mm = mes + parseInt(mesidx);
                 var mmm = mm < 10 ? '0' + mm : mm;
                 var periodo = anio + '' + mmm;
-                console.log("Periodo:"+periodo);
+                logger.debug("Periodo:" + periodo);
                 var newPromise = models.detallecompromiso.create({
                     'iddetalleserviciocto': idservicio,
                     'periodo': periodo, 'borrado': 1,
@@ -177,21 +177,22 @@ exports.action = function (req, res) {
         }).then(function (result) {
             callback(result)
         }).catch(function (err) {
+            logger.error(err)
             return err;
         });
 
     }
-    
+
     var borraPeriodos = function (idservicio, callback) {
-        var sqldel = "delete from sip.detallecompromiso where iddetalleserviciocto="+idservicio;
+        var sqldel = "delete from sip.detallecompromiso where iddetalleserviciocto=" + idservicio;
         var borraperiodos = sequelize.query(sqldel)
             .spread(function (results) {
-                callback("*");   
-        });
+                callback("*");
+            });
     }
-    
+
     var actualizaPeriodos = function (idservicio, cuotas, mesini, callback) {
-        console.log("actualizaPeriodos:" + idservicio + "," + cuotas + " mini:" + mesini);
+        logger.debug("actualizaPeriodos:" + idservicio + "," + cuotas + " mini:" + mesini);
         models.sequelize.transaction({ autocommit: true }, function (t) {
 
             var promises = []
@@ -205,13 +206,13 @@ exports.action = function (req, res) {
                     .spread(function (results, metadata) {
                 }, { transaction: t });
             promises.push(borraperiodos);*/
-            
-            console.log("Actualiza:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
+
+            logger.debug("Actualiza:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
             for (var i = 0; i < cuotas[0].length; i++) {
                 var mm = mes + parseInt(mesidx);
                 var mmm = mm < 10 ? '0' + mm : mm;
                 var periodo = anio + '' + mmm;
-                console.log("Periodo:"+periodo);
+                logger.debug("Periodo:" + periodo);
                 var newPromise = models.detallecompromiso.create({
                     'iddetalleserviciocto': idservicio,
                     'periodo': periodo, 'borrado': 1,
@@ -239,33 +240,34 @@ exports.action = function (req, res) {
         }).then(function (result) {
             callback(result)
         }).catch(function (err) {
+            logger.error(err)
             return err;
         });
 
     }
-    
+
 }
 
 function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, diferido, desdediferido) {
-    console.log("CUOTAS DENTRO:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," +diferido + "," +desdediferido);
+    logger.debug("CUOTAS DENTRO:" + cuota + "," + ncuotas + "," + mesesentremedio + "," + mescuota1 + "," + coniva + "," + frecup + "," + diferido + "," + desdediferido);
     var origen = [];
     var caja = [];
     var costo = [];
-    var delta = parseInt(mescuota1)-parseInt(desdediferido);
+    var delta = parseInt(mescuota1) - parseInt(desdediferido);
     delta = Math.abs(delta);
     var delta = parseInt(mescuota1) > parseInt(desdediferido) ? parseInt(mescuota1) : parseInt(desdediferido);
-    for (var i = 0; i < (parseInt(ncuotas) * parseInt(mesesentremedio))+delta; i++) {
-        console.log("llenando");
+    for (var i = 0; i < (parseInt(ncuotas) * parseInt(mesesentremedio)) + delta; i++) {
+        logger.debug("llenando");
         origen.push(0);
         caja.push(0);
         costo.push(0);
     }
-    console.log("origen:"+origen);
+    logger.debug("origen:" + origen);
     var mesesentre = parseInt(mesesentremedio);
 
     //Caja
     for (i = mescuota1, j = 0; i < caja.length + 1 && j < ncuotas; i = parseInt(i) + mesesentre, j++) {
-        //console.log("***SALTO:" + (parseInt(i) + mesesentre));
+        //logger.debug("***SALTO:" + (parseInt(i) + mesesentre));
         origen[i - 1] = cuota;
         if (coniva == "1") {
             var valorcaja = origen[i - 1] * 1.19;
@@ -277,7 +279,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     //Costo con diferimiento
     //frecup = parseFloat(frecup) / 100; //En BD el dato es int por eso tiene un 77
     for (var i = desdediferido, j = 0, h = mescuota1; i <= caja.length + 1 && j < ncuotas && h <= costo.length; i = parseInt(i) + mesesentre, j++ , h = parseInt(h) + mesesentre) {
-        console.log("*****JJJJ:" + j+ " h:"+h+ " i:"+i);
+        logger.debug("*****JJJJ:" + j + " h:" + h + " i:" + i);
         if (coniva == "1") {
             var iva = origen[h - 1] * 0.19;
         } else {
@@ -298,7 +300,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
 
     }
     var todo = [origen, caja, costo];
-    console.log(todo);
+    logger.debug(todo);
     return todo;
 }
 
@@ -322,8 +324,8 @@ exports.oper = function (req, res) {
     switch (action) {
         case "add":
             //var factor = req.body.impuesto == 1 ? 1.19 : 1;
-            //console.log("idcuenta ------------------> " + servicio.idcuenta);
-            //console.log("cuentacontable ------------------> " + servicio.CuentasContable.cuentacontable);
+            //logger.debug("idcuenta ------------------> " + servicio.idcuenta);
+            //logger.debug("cuentacontable ------------------> " + servicio.CuentasContable.cuentacontable);
             models.detalleserviciocto.create({
                 idcontrato: req.body.parent_id,
                 anexo: req.body.anexo,
@@ -356,7 +358,7 @@ exports.oper = function (req, res) {
             }).then(function (contrato) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err)
                 res.json({ error_code: 1 });
             });
 
@@ -397,7 +399,7 @@ exports.oper = function (req, res) {
                 }).then(function (contrato) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.error(err)
                     res.json({ error_code: 1 });
                 });
             break;
@@ -415,12 +417,12 @@ exports.oper = function (req, res) {
                 }).then(function (rowDeleted) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.error(err)
                     res.json({ error_code: 1 });
                 });
 
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err)
                 res.json({ error_code: 1 });
             });
 
@@ -435,7 +437,7 @@ exports.sap = function (req, res) {
         //console.dir(proyecto)
         res.json(proyecto);
     }).catch(function (err) {
-        //console.log(err);
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 }
@@ -457,19 +459,19 @@ exports.plantillapresupuesto = function (req, res) {
     }).then(function (plantillapresupuesto) {
         res.json(plantillapresupuesto);
     }).catch(function (err) {
-        console.log(err);
+        logger.debug(err);
         res.json({ error_code: 1 });
     });*/
-    
-    var sql="SELECT a.idcui AS id, b.cui, b.nombre  FROM sip.plantillapresupuesto a JOIN sip.estructuracui b ON a.idcui=b.id WHERE idproveedor="+req.params.id+
-            " GROUP BY a.idcui, b.cui, b.nombre ";
+
+    var sql = "SELECT a.idcui AS id, b.cui, b.nombre  FROM sip.plantillapresupuesto a JOIN sip.estructuracui b ON a.idcui=b.id WHERE idproveedor=" + req.params.id +
+        " GROUP BY a.idcui, b.cui, b.nombre ";
     sequelize.query(sql).spread(function (cuis) {
-        console.log("Rescato cuis");
+        logger.debug("Rescato cuis");
         res.json(cuis);
     }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
-    });     
+    });
 
 }
 
@@ -486,20 +488,20 @@ exports.cuiforservice = function (req, res) {
     }).then(function (plantillapresupuesto) {
         res.json(plantillapresupuesto);
     }).catch(function (err) {
-        console.log(err);
+        logger.debug(err);
         res.json({ error_code: 1 });
     });*/
 
-    var sql="SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id "+ 
-        "WHERE a.idproveedor="+req.params.idp+" AND a.idcui="+req.params.ids+" AND b.tiposervicio='Continuidad' "+
+    var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
+        "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND b.tiposervicio='Continuidad' " +
         "GROUP BY a.idservicio, b.nombre";
     sequelize.query(sql).spread(function (cuis) {
-        console.log("Rescato servicios");
+        logger.debug("Rescato servicios");
         res.json(cuis);
     }).catch(function (err) {
-        console.log(err);
+        logger.error(err)
         res.json({ error_code: 1 });
-    });  
+    });
 }
 
 exports.tarea = function (req, res) {
@@ -509,7 +511,7 @@ exports.tarea = function (req, res) {
     }).then(function (proyecto) {
         res.json(proyecto);
     }).catch(function (err) {
-        //console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
     });
 }
@@ -536,12 +538,12 @@ exports.list = function (req, res) {
         "data": req.params.id
     }];
 
-    //console.log(")))))))))))))))))))))) " + req.user.last_name)
+    //logger.debug(")))))))))))))))))))))) " + req.user.last_name)
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
 
         if (err) {
-            console.log("->>> " + err)
+            logger.debug("->>> " + err)
         } else {
 
             models.detalleserviciocto.belongsTo(models.contrato, { foreignKey: 'idcontrato' });
@@ -562,15 +564,15 @@ exports.list = function (req, res) {
                     include: [{
                         model: models.contrato
                     }, {
-                            model: models.estructuracui
-                        }, {
-                            model: models.servicio
-                        }]
+                        model: models.estructuracui
+                    }, {
+                        model: models.servicio
+                    }]
                 }).then(function (contratos) {
                     //console.dir(contratos)
                     res.json({ records: records, total: total, page: page, rows: contratos });
                 }).catch(function (err) {
-                    //console.log(err);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
             })
@@ -582,50 +584,50 @@ exports.list = function (req, res) {
 
 exports.getPeriodos = function (req, res) {
 
-  var promises = []
-  var d = new Date();
-  var anio = d.getFullYear()
-  mes = 1;
-  for (var i = 0; i < 12; i++) {
-    var mm = mes + i;
-    var mmm = mm < 10 ? '0' + mm : mm;
-    //var periodo = anio + '' + mmm;
-    var periodo = parseInt(mmm);
-    var texto = mmm + '-' + anio;
-    var newPromise = { 'id': periodo, 'nombre': texto };
-    promises.push(newPromise);
-  };
-  anio = anio+1;
-  for (var i = 0; i < 12; i++) {
-    var mm = mes + i;
-    var mmm = mm < 10 ? '0' + mm : mm;
-    //var periodo = anio + '' + mmm;
-    var periodo = parseInt(mmm)+12;
-    var texto = mmm + '-' + anio;
-    var newPromise = { 'id': periodo, 'nombre': texto };
-    promises.push(newPromise);
-  };  
-  res.json(promises);
+    var promises = []
+    var d = new Date();
+    var anio = d.getFullYear()
+    mes = 1;
+    for (var i = 0; i < 12; i++) {
+        var mm = mes + i;
+        var mmm = mm < 10 ? '0' + mm : mm;
+        //var periodo = anio + '' + mmm;
+        var periodo = parseInt(mmm);
+        var texto = mmm + '-' + anio;
+        var newPromise = { 'id': periodo, 'nombre': texto };
+        promises.push(newPromise);
+    };
+    anio = anio + 1;
+    for (var i = 0; i < 12; i++) {
+        var mm = mes + i;
+        var mmm = mm < 10 ? '0' + mm : mm;
+        //var periodo = anio + '' + mmm;
+        var periodo = parseInt(mmm) + 12;
+        var texto = mmm + '-' + anio;
+        var newPromise = { 'id': periodo, 'nombre': texto };
+        promises.push(newPromise);
+    };
+    res.json(promises);
 };
 
 exports.getSaldoPresup = function (req, res) {
-console.log("En getSaldoPresup");
-  var serv = req.params.id;
-  var cui = req.params.id2;
-  var d = new Date();
-  var anio = d.getFullYear();
-  var sql = "DECLARE @ejer int; "+
-  "SELECT @ejer=id FROM sip.ejercicios WHERE ejercicio="+anio+"; "+ 
-  "select montopresupuestocaja from sip.saldospresupuestos where "+
-  " idcui="+cui+" and idservicio="+serv+" and idejercicio=@ejer";
-  console.log("query:"+sql);
+    logger.debug("En getSaldoPresup");
+    var serv = req.params.id;
+    var cui = req.params.id2;
+    var d = new Date();
+    var anio = d.getFullYear();
+    var sql = "DECLARE @ejer int; " +
+        "SELECT @ejer=id FROM sip.ejercicios WHERE ejercicio=" + anio + "; " +
+        "select montopresupuestocaja from sip.saldospresupuestos where " +
+        " idcui=" + cui + " and idservicio=" + serv + " and idejercicio=@ejer";
+    logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (saldo) {
-        console.log("En getSaldoPresup 2:"+saldo[0].montopresupuestocaja);
+        logger.debug("En getSaldoPresup 2:" + saldo[0].montopresupuestocaja);
         res.json(saldo);
     }).catch(function (err) {
-        console.log(err);
+        logger.debug(err);
         res.json({ error_code: 1 });
-    });  
+    });
 
 
 };

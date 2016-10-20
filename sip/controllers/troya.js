@@ -4,9 +4,9 @@ var constants = require("../utils/constants");
 var logger = require("../utils/logger");
 exports.cuitroya = function (req, res) {
   var rol = req.user[0].rid;
-  console.log("******usr*********:" + req.user[0].uid);
-  console.log("******rol*********:" + req.user[0].rid);
-  console.log("*ROLADM*:" + constants.ROLADMDIVOT);
+  logger.debug("******usr*********:" + req.user[0].uid);
+  logger.debug("******rol*********:" + req.user[0].rid);
+  logger.debug("*ROLADM*:" + constants.ROLADMDIVOT);
   if (rol == constants.ROLADMDIVOT) {  
     var sql = "SELECT id, nombre, cui FROM sip.estructuracui " +
       "ORDER BY nombre";
@@ -14,6 +14,7 @@ exports.cuitroya = function (req, res) {
       .spread(function (rows) {
         res.json(rows);
       }).catch(function (err) {
+        logger.error(err)
         res.json({ error_code: 1 });
       });    
   } else {
@@ -71,7 +72,7 @@ exports.proveedorcui = function (req, res) {
 exports.getcui = function (req, res) {
   var sql = "SELECT cui, nivel FROM sip.estructuracui WHERE uid="+req.user[0].uid +
   " ORDER BY nivel asc";
-  console.log("query:"+sql);
+  logger.debug("query:"+sql);
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -109,12 +110,12 @@ exports.getfacturas = function (req, res) {
   sql = sql + "HAVING sum(b.monto)<>0 ";
   sql2 = sql + "ORDER BY a.documento OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
-  console.log("sql:"+sql2);
+  logger.debug("sql:"+sql2);
   sequelize.query(sql)
     .spread(function (rowscount) {
       //res.json(rows);
-      console.log("***ROWS***:"+rowscount);
-      console.log("***Length***:"+rowscount.length);
+      logger.debug("***ROWS***:"+rowscount);
+      logger.debug("***Length***:"+rowscount.length);
       records=rowscount.length;
     }).then(function(response){      
       sequelize.query(sql2)
@@ -122,6 +123,7 @@ exports.getfacturas = function (req, res) {
       var total=Math.ceil(records / filas);
       res.json({ records: records, total: total, page: page, rows: rows });
     }).catch(function (err) {
+        logger.error(err)
           res.json({ error_code: 1 });
     });
   });
@@ -130,7 +132,7 @@ exports.getfacturas = function (req, res) {
 exports.getDetalle = function (req, res) {
   var id = req.params.id
   var proveedor = req.query.proveedor;
-  console.log("*** Prov en Controller:"+proveedor);
+  logger.debug("*** Prov en Controller:"+proveedor);
   
   var sql = "With SQLPaging As   (  "+ 
     "SELECT cuiseccion, nombrecentrocosto, cuentacontable, nombrecuentaorigen, min(id) AS id, sum(monto) as monto "+

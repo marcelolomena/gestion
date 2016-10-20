@@ -57,7 +57,7 @@ exports.getProyectosPaginados = function (req, res) {
         "FROM sip.proyecto WHERE " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
-        console.log(sql);
+        logger.debug(sql);
 
       models.proyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -98,7 +98,7 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -290,15 +290,15 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 
 };
 
 exports.getUsersByRol = function (req, res) {
-  //console.log(req.query.rol);
-  console.log(req.params.rol);
+  //logger.debug(req.query.rol);
+  logger.debug(req.params.rol);
 
   models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
   models.rol.belongsToMany(models.user, { foreignKey: 'id', through: models.usrrol });
@@ -314,7 +314,7 @@ exports.getUsersByRol = function (req, res) {
     //gerentes.forEach(log)
     res.json(gerentes);
   }).catch(function (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 

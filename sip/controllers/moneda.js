@@ -7,7 +7,7 @@ exports.getMonedas = function (req, res) {
     models.moneda.findAll({ where: { 'borrado': 1 }, order: 'glosamoneda' }).then(function (moneda) {
         res.json(moneda);
     }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
     });
 

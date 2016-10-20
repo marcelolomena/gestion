@@ -4,39 +4,59 @@ var fs = require('fs');
 var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-
+//var winston = require('winston')
 exports.test = function (req, res) {
 
     try {
-        var jsreport = require('jsreport-core')({
-            logger: { providerName: "winston" }
-        })
+        var jsreport = require('jsreport-core')()
+        //jsreport.logger.add(winston.transports.Console, { level: 'info' })
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
-        /*
-                var sql_1 =
-                    `
-                    SELECT  
-                        a.id, b.glosaservicio,b.montoaprobado,c.razonsocial,d.contacto,d.correo
-                        FROM sip.prefactura a
-                        JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
-                        JOIN sip.proveedor c ON a.idproveedor = c.id
-                        JOIN sip.contactoproveedor d ON c.id = d.idproveedor
-                        WHERE a.id=:id
-                    `
-        */
         logger.info("generando prefactura")
         var sql_1 =
             `
                 SELECT 
-				a.id, b.glosaservicio,
-                IIF(e.glosamoneda ='CLP',ROUND(b.montoaprobado,0),ROUND(b.montoaprobado,0)) montoaprobado,
-                c.razonsocial,d.contacto,d.correo, e.glosamoneda
+				a.id,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotal), 1))) subtotal,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalmulta), 1))) totalmulta,
+				a.impuesto,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))) totalimpuesto,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))) totalprefactura,
+				CONVERT(varchar(10),a.fecha,103) fecha,
+				b.glosaservicio,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))) montoaprobado,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
+				b.factorconversion,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoaprobadopesos), 1))) montoaprobadopesos,
+                c.razonsocial,
+				c.numrut,
+				c.dvrut,
+				d.contacto,
+				d.correo,
+				e.glosamoneda,
+				f.nombre cui,
+				f.nombreresponsable,
+				CONVERT(varchar(10),h.fechainicio,103) fechainicio,
+				CONVERT(varchar(10),h.fechatermino,103) fechatermino,
+				i.nombre servicio,
+				j.cuentacontable,
+				j.nombrecuenta,
+				k.id idcontrato,
+				k.numero,
+				m.glosaCargoAct
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
 				JOIN sip.moneda e ON a.idmoneda = e.id
+				JOIN sip.detallecompromiso g ON g.id = b.iddetallecompromiso
+				JOIN sip.detalleserviciocto h ON h.id = g.iddetalleserviciocto
+				JOIN sip.estructuracui f ON f.id = h.idcui
+				JOIN sip.servicio i  ON i.id = h.idservicio
+				JOIN sip.cuentascontables j ON j.id = h.idcuenta
+				JOIN sip.contrato k ON k.id = h.idcontrato
+				JOIN dbo.art_user l ON l.uid = f.uid
+				JOIN dbo.RecursosHumanos m ON l.email = m.emailTrab
 				JOIN 
 				(
 					SELECT z.idproveedor,w.id, w.contacto,w.correo FROM sip.contactoproveedor w
@@ -45,7 +65,7 @@ exports.test = function (req, res) {
 						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
 					) z ON w.id= z.idcontacto
 				) d ON c.id = d.idproveedor
-                WHERE a.id=:id          
+                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)       
             `
 
         sequelize.query(sql_1,
@@ -53,8 +73,7 @@ exports.test = function (req, res) {
                 replacements: { id: req.params.id },
                 type: sequelize.QueryTypes.SELECT
             }).then(function (rows) {
-
-
+                logger.debug(rows)
                 var datum = {
                     "prefactura": rows
                 }
@@ -77,19 +96,19 @@ exports.test = function (req, res) {
                         resp.stream.pipe(res);
                         //console.info("es nuevo")
                     }).catch(function (e) {
-                        console.log(e)
+                        logger.error(e)
                     })
 
                 }).catch(function (e) {
-                    console.log(e)
+                    logger.error(e)
                 })
 
             }).catch(function (err) {
-                console.log(err)
+                logger.error(e)
             });
 
     } catch (e) {
-        console.log("error : " + e);
+        logger.error(e)
     }
 }
 
@@ -151,10 +170,6 @@ exports.lista = function (req, res) {
                     WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-    console.log("lala : " + sql)
-    console.log("lilo : " + periodo)
-
-
     sequelize.query(count,
         {
             replacements: { periodo: periodo, condition: condition },
@@ -168,11 +183,11 @@ exports.lista = function (req, res) {
                 }).then(function (data) {
                     res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
                 }).catch(function (e) {
-                    console.log(e)
+                    logger.error(e)
                 })
 
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
         })
 }
 
@@ -193,7 +208,11 @@ exports.generar = function (req, res) {
                 B.idservicio, 
                 B.glosaservicio,
                 A.id idcontrato,
-                C.montoorigen * F.valorconversion montoorigen,
+                C.valorcuota montoneto,
+				IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoimpuesto,
+				C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
+				F.valorconversion,
+				F.valorconversion * (C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0)) montoapagarpesos,
                 0,
                 0,
                 NULL,
@@ -222,7 +241,7 @@ exports.generar = function (req, res) {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-
+            logger.debug(rows)
             models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     var newPromise = models.solicitudaprobacion.create({
@@ -234,7 +253,7 @@ exports.generar = function (req, res) {
                         'idservicio': rows[i].idservicio,
                         'glosaservicio': rows[i].glosaservicio,
                         'idcontrato': rows[i].idcontrato,
-                        'montoapagar': rows[i].montoorigen,
+                        'montoapagar': rows[i].montoapagar,
                         'montoaprobado': 0,
                         'montomulta': 0,
                         'idcausalmulta': 0,
@@ -243,6 +262,12 @@ exports.generar = function (req, res) {
                         'glosaaprobacion': null,
                         'idcalificacion': 0,
                         'borrado': 1,
+                        'montoapagarpesos': rows[i].montoapagarpesos,
+                        'montomultapesos': 0,
+                        'montoimpuesto': rows[i].montoimpuesto,
+                        'factorconversion': rows[i].valorconversion,
+                        'montoaprobadopesos': 0, 
+                        'montoneto': rows[i].montoneto,                  
                         'pending': true
                     }, { transaction: t });
 
@@ -252,10 +277,9 @@ exports.generar = function (req, res) {
 
                 return Promise.all(promises);
             }).then(function (result) {
-                console.dir("EXITO GEN SOL");
+                logger.debug("EXITO GEN SOL");
             }).catch(function (err) {
-                console.log("--------> " + err);
-                //res.json({ error_code: 1 });
+                logger.error(err)
             });
 
             models.sequelize.transaction({ autocommit: true }, function (t) {
@@ -265,22 +289,19 @@ exports.generar = function (req, res) {
                     }, {
                             where: { id: rows[i].id }
                         }, { transaction: t });
-                    //console.log(otherPromise);
                     o_promises.push(otherPromise);
 
                 };
 
                 return Promise.all(o_promises);
             }).then(function (result) {
-                //console.dir(result);
-                console.dir("EXITO UPDATE DET");
+                logger.debug("EXITO UPDATE DET");
             }).catch(function (err) {
-                console.log("--------> " + err);
-                //res.json({ error_code: 1 });
+                logger.error(err)
             });
 
         }).catch(function (e) {
-            console.log(e)
+            logger.error(e)
             res.json({ error_code: 1 });
         })
 

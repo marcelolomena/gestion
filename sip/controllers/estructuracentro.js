@@ -45,6 +45,7 @@ exports.action = function (req, res) {
            }).then(function (estructuracui) {
                res.json({ error_code: 0 });
               }).catch(function (err) {
+                logger.error(err)
                res.json({ error_code: 1 });
               });
            });
@@ -62,7 +63,7 @@ exports.action = function (req, res) {
         }).then(function (estructuracentro) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -73,11 +74,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 

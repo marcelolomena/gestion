@@ -22,11 +22,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     idprefactura: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'prefactura',
-        key: 'id'
-      }
+      allowNull: true
     },
     idcui: {
       type: DataTypes.INTEGER,
@@ -99,8 +95,32 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    montoapagarpesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montomultapesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoimpuesto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    factorconversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoaprobadopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoneto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'solicitudaprobacion'
+    schema: 'sip', timestamps: false, tableName: 'solicitudaprobacion'
   });
 };

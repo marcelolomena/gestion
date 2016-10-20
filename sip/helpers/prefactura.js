@@ -22,36 +22,66 @@ function getCorreo(data) {
     return data[0].correo;
 }
 
+function getCui(data) {
+    return data[0].cui;
+}
+
 function subtotal(data) {
-    var total = 0;
-
-    data.forEach(function (b) {
-        total = total + b.montoaprobado;
-    });
-
-    return format(total);
+    return data[0].subtotal;
 }
 
-function totaliva(data) {
-    var total = 0;
-
-    data.forEach(function (b) {
-        total = total + b.montoaprobado;
-    });
-
-    total = total * 0.19;
-
-    return format(total.toFixed());
+function impuesto(data) {
+    return data[0].impuesto.toFixed();
 }
 
-function total(data) {
-    var total = 0;
+function totalimpuesto(data) {
+    return data[0].totalimpuesto;
+}
 
-    data.forEach(function (b) {
-        total = total + b.montoaprobado;
-    });
+function totalprefactura(data) {
+    return data[0].totalprefactura;
+}
 
-    total = total * 1.19
+function montomulta(data) {
+    return data[0].montomulta;
+}
 
-    return format(total.toFixed());
+function montoneto(data) {
+    return data[0].montoneto;
+}
+
+function getFecha(data) {
+    return data[0].fecha;
+}
+
+function getRutProveedor(data) {
+    return format(data[0].numrut) + '-' + data[0].dvrut;
+}
+
+function getGlosaMoneda(data) {
+    return data[0].glosamoneda;
+}
+
+function getNombreResponsable(data) {
+    return data[0].nombreresponsable;
+}
+
+function getServicio(data) {
+    return data[0].servicio;
+}
+
+function getCuentaContable(data) {
+    return data[0].cuentacontable;
+}
+
+function getNombreCuenta(data) {
+    return data[0].nombrecuenta;
+}
+
+function getNumeroContrato(data) {
+    return data[0].numero;
+}
+
+function getCargo(data) {
+    return data[0].glosaCargoAct;
 }

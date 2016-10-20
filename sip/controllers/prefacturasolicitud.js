@@ -24,12 +24,12 @@ exports.getSolicitudAprob = function (req, res) {
     }    
   var sql2 = sql + "ORDER BY b.razonsocial, a.periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
-  console.log("query:" + sql2);
+  logger.debug("query:" + sql2);
   sequelize.query(sql)
     .spread(function (rows) {
       //res.json(rows);
-      console.log("***ROWS***:" + rows);
-      console.log("***Length***:" + rows.length);
+      logger.debug("***ROWS***:" + rows);
+      logger.debug("***Length***:" + rows.length);
       records = rows.length;
     }).then(function (response) {
       sequelize.query(sql2)
@@ -37,6 +37,7 @@ exports.getSolicitudAprob = function (req, res) {
           var total = Math.ceil(records / filas);
           res.json({ records: records, total: total, page: page, rows: rows });
         }).catch(function (err) {
+          logger.error(err)
           res.json({ error_code: 1 });
         });
     });
@@ -67,8 +68,8 @@ exports.getDetalleSolicitud = function (req, res) {
   sequelize.query(sql)
     .spread(function (rows) {
       //res.json(rows);
-      console.log("***ROWS***:" + rows);
-      console.log("***Length***:" + rows.length);
+      logger.debug("***ROWS***:" + rows);
+      logger.debug("***Length***:" + rows.length);
       records = rows.length;
     }).then(function (response) {
       sequelize.query(sql2)
@@ -76,6 +77,7 @@ exports.getDetalleSolicitud = function (req, res) {
           var total = Math.ceil(records / filas);
           res.json({ records: records, total: total, page: page, rows: rows });
         }).catch(function (err) {
+          logger.error(err)
           res.json({ error_code: 1 });
         });
     });
@@ -107,8 +109,8 @@ exports.getEstadoSolicitud = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-  console.log("Action:" + action);
-  console.log("Id:" + req.body.id);
+  logger.debug("Action:" + action);
+  logger.debug("Id:" + req.body.id);
 
   switch (action) {
     case "add":
@@ -122,15 +124,17 @@ exports.action = function (req, res) {
       ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+
       ", idcausalmulta="+req.body.idcausalmulta+" "+
       "WHERE id="+req.body.id;
+      logger.debug("sql:" + sql);
        sequelize.query(sql).then(function (contrato) {
-          console.log("Aprobado:" + req.body.aprobado);
+          logger.debug("Aprobado:" + req.body.aprobado);
+
           if (req.body.aprobado == 1) {
-            console.log("Dentro Aprobado:" + req.body.montoapagar + "," + req.body.montoaprobado);
-            if (req.body.montoapagar == req.body.montoaprobado) {
+            logger.debug("Dentro Aprobado:" + req.body.montoapagar + "," + req.body.montoaprobado);
+            if (req.body.montoneto == req.body.montoaprobado) {
               //deja compromiso en estado pagado
               var sql = "UPDATE sip.detallecompromiso SET estadopago='PAGADO', saldopago=0 " +
                 "WHERE id=" + req.body.iddetallecompromiso;
-              console.log("query:" + sql);
+              logger.debug("query:" + sql);
               sequelize.query(sql)
                 .spread(function (rows) {
                   res.json(rows);
@@ -139,9 +143,9 @@ exports.action = function (req, res) {
             } else {
               //deja compromiso en estado abonado
               var sql = "UPDATE sip.detallecompromiso SET estadopago='ABONADO'," +
-                "saldopago=" + req.body.montoapagar + "-" + req.body.montoaprobado + " " +
+                "saldopago=" + req.body.montoneto + "-" + req.body.montoaprobado + " " +
                 "WHERE id=" + req.body.iddetallecompromiso;
-              console.log("query:" + sql);
+              logger.debug("query:" + sql);
               sequelize.query(sql)
                 .spread(function (rows) {
                   res.json(rows);
@@ -151,7 +155,7 @@ exports.action = function (req, res) {
             //deja compromiso en estado rechazado
             var sql = "UPDATE sip.detallecompromiso SET estadopago='RECHAZADO' " +
               "WHERE id=" + req.body.iddetallecompromiso;
-            console.log("query:" + sql);
+            logger.debug("query:" + sql);
             sequelize.query(sql)
               .spread(function (rows) {
                 res.json(rows);
@@ -160,7 +164,7 @@ exports.action = function (req, res) {
 
           //res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
 

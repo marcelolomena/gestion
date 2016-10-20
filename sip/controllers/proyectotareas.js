@@ -53,7 +53,7 @@ exports.getProyectosTareas = function (req, res) {
         "FROM sip.detalleproyecto WHERE " + condition.substring(0, condition.length - 4) + ")" +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
         
-        console.log(sql);
+        logger.debug(sql);
 
       models.detalleproyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -97,7 +97,7 @@ exports.getExcel = function (req, res) {
   var id = req.params.id
   var filtrosubgrilla = "idproyecto="+id;
     
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
     caption: 'id',
@@ -173,7 +173,7 @@ exports.getExcel = function (req, res) {
           (proyecto[i].realacumuladopesos=='0')?'0':proyecto[i].realacumuladopesos,
           proyecto[i].saldopesos
         ];
-        //console.log("compromiso:"+proyecto[i].compromiso)
+        //logger.debug("compromiso:"+proyecto[i].compromiso)
         arr.push(a);
       }
       conf.rows = arr;
@@ -184,7 +184,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
   

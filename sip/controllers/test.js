@@ -1,8 +1,5 @@
 var models = require('../models');
 var logger = require("../utils/logger");
-var log = function (inst) {
-    console.dir(inst.get())
-}
 
 exports.test = function (req, res) {
 
@@ -19,7 +16,7 @@ exports.test = function (req, res) {
             opt["submenu"] = subsub
             callback(opt)
         }).catch(function (err) {
-            console.log("--------> " + err);
+            logger.error(err);
         });
     }
 
@@ -52,6 +49,7 @@ exports.test = function (req, res) {
             });
 
         } catch (e) {
+            logger.error(e)
             return callback(e);
         }
     }
@@ -79,10 +77,10 @@ exports.test = function (req, res) {
             var menus = {}
             menus["menus"] = menu
             var toti = usuario.concat(menus);
-            //console.log(JSON.stringify(toti))
+            //logger.debug(JSON.stringify(toti))
         });
 
     }).catch(function (err) {
-        console.log("--------> " + err);
+        logger.error(err);
     });
 }

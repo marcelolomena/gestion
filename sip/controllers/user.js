@@ -15,6 +15,7 @@ exports.getUsersByRol = function (req, res) {
     }).then(function (gerentes) {
         res.json(gerentes);
     }).catch(function (err) {
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 }
@@ -25,20 +26,20 @@ exports.getUsersByRolART = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 }
 
 exports.getUsersDelegados = function (req, res) {
     var uid = req.params.uid;
-    console.log('este es el uid que llega: '+uid);
+    logger.debug('este es el uid que llega: '+uid);
     sequelize.query('select usuario.uid, usuario.first_name, usuario.last_name from sip.estructuracui a join sip.estructuracui parientes  on a.cui=parientes.cuipadre  or a.cuipadre=parientes.cui or a.cuipadre=parientes.cuipadre join dbo.art_user usuario on parientes.uid = usuario.uid where a.uid=:uid group by usuario.uid, usuario.first_name, usuario.last_name',
         { replacements: { uid: uid }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 }
@@ -49,7 +50,7 @@ exports.getUsersProgramMember = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 }
@@ -59,7 +60,7 @@ exports.getUsersByProgram = function (req, res) {
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
-        console.log(err)
+        logger.error(err)
         res.json({ error_code: 1 });
     });
 }

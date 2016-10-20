@@ -3,7 +3,7 @@ var User = require('../models/art_user');
 var models = require('../models');
 var bCrypt = require('bcryptjs');
 var co = require('co');
-
+var logger = require("../utils/logger");
 module.exports = function (passport) {
 
 	passport.use('local', new LocalStrategy({
@@ -14,7 +14,7 @@ module.exports = function (passport) {
 				where: { 'uname': username }
 			}).then(function (user) {
 				if (!user) {
-					console.log('Usuario no encontrado. ' + username);
+					logger.debug('Usuario no encontrado. ' + username);
 					return done(null, false, req.flash('message', 'Usuario no encontrado.'));
 					//return done(null, false, {message: "Usuario no encontrado."});
 				} else {
@@ -24,13 +24,13 @@ module.exports = function (passport) {
 							where: { 'uid': user.uid },
 						});
 						if (!rol) {
-							console.log('No tiene rol');
+							logger.debug('No tiene rol');
 							return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page
 							//return done(null, false, {message: "Sin rol asignado."});
 						} else {
-							console.log("rol : " + rol.id);
+							logger.debug("rol : " + rol.id);
 							if (!isValidPassword(user, password)) {
-								console.log('Clave inválida');
+								logger.debug('Clave inválida');
 								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 								//return done(null, false, {message: "Clave inválida."});
 							} else {
@@ -39,11 +39,12 @@ module.exports = function (passport) {
 						}
 
 					}).catch(function (err) {
-						console.log(err);
+						logger.error(err)
 					});
 				}
 
 			}).catch(function (err) {
+				logger.error(err)
 				done(err)
 			});
 

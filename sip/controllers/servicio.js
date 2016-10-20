@@ -4,16 +4,13 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-  console.dir(inst.get())
-}
 
 exports.getServicios = function (req, res) {
 
   models.servicio.findAll({ where: { 'borrado': 1 }, order: 'nombre' }).then(function (programa) {
     res.json(programa);
   }).catch(function (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ error_code: 1 });
   });
 
@@ -49,7 +46,7 @@ exports.list = function (req, res) {
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      console.log("->>> " + err)
+      logger.debug("->>> " + err)
     } else {
       models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
       models.servicio.count({
@@ -68,7 +65,7 @@ exports.list = function (req, res) {
           //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: servicios });
         }).catch(function (err) {
-          //console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -95,7 +92,7 @@ exports.action = function (req, res) {
       }).then(function (servicio) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -117,7 +114,7 @@ exports.action = function (req, res) {
         }).then(function (servicio) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          console.log(err);
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -128,11 +125,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          console.log('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        console.log(err);
+        logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -148,7 +145,7 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
-  console.log("En getExcel");
+  logger.debug("En getExcel");
   var conf = {}
   conf.cols = [
     {
@@ -211,7 +208,7 @@ exports.getExcel = function (req, res) {
           servicio[i].cuentacontable,
           servicio[i].nombrecuenta
         ];
-        console.log(a);
+        logger.debug(a);
         arr.push(a);
       }
       conf.rows = arr;
@@ -222,7 +219,7 @@ exports.getExcel = function (req, res) {
       res.end(result, 'binary');
 
     }).catch(function (err) {
-      console.log(err);
+      logger.error(err);
       res.json({ error_code: 100 });
     });
 

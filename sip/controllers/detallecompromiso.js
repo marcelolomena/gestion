@@ -2,9 +2,6 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-var log = function (inst) {
-    console.dir(inst.get())
-}
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -24,8 +21,8 @@ exports.action = function (req, res) {
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
     }*/
 
-    console.log("montoorigen : " + montoorigen)
-    console.log("costoorigen : " + costoorigen)
+    logger.debug("montoorigen : " + montoorigen)
+    logger.debug("costoorigen : " + costoorigen)
     switch (action) {
         case "add":
             /*models.detallecompromiso.create({
@@ -38,23 +35,23 @@ exports.action = function (req, res) {
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                //console.log(err);
+                //logger.debug(err);
                 res.json({ error_code: 1 });
             });*/
             
             var sql="SELECT * FROM sip.detallecompromiso WHERE iddetalleserviciocto="+req.params.idd +" AND periodo="+req.body.periodo;
             sequelize.query(sql).spread(function (rows) {
                 if (rows.length > 0) {
-                    console.log("periodo repetido");
+                    logger.debug("periodo repetido");
                     res.json({ error_code: 10 });
                 } else {
                     sequelize.query("EXECUTE sip.InsertaPeriodoContrato "+req.params.idd+","+
                     req.body.periodo+","+valorcuota)
                         .then(function (rows) {
-                            console.log("****Creo Periodo contrato"); 
+                            logger.debug("****Creo Periodo contrato"); 
                             res.json({ error_code: 0 });
                         }).catch(function (err) {
-                            console.log(err);
+                            logger.error(err);
                             res.json({ error_code: 1 });
                         });                       
                 }
@@ -69,7 +66,7 @@ exports.action = function (req, res) {
                             }).then(function (monedasconversion) {
                                 callback(monedasconversion[0].valorconversion);
                             }).catch(function (err) {
-                                console.log(err);
+                                logger.debug(err);
                             });
                         }
             */
@@ -86,17 +83,17 @@ exports.action = function (req, res) {
                 }).then(function (detalle) {
                     res.json({ error_code: 0 });
                 }).catch(function (err) {
-                    console.log(err);
+                    logger.debug(err);
                     res.json({ error_code: 1 });
                 });*/
                 
         sequelize.query("EXECUTE sip.UpdatePeriodoContrato "+req.body.id+","+
         valorcuota)
             .then(function (rows) {
-                console.log("****Actualizo Periodo contrato"); 
+                logger.debug("****Actualizo Periodo contrato"); 
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err);
                 res.json({ error_code: 1 });
             });   
             break;
@@ -107,11 +104,11 @@ exports.action = function (req, res) {
                 }
             }).then(function (rowDeleted) {
                 if (rowDeleted === 1) {
-                    console.log('Deleted successfully');
+                    logger.debug('Deleted successfully');
                 }
                 res.json({ error_code: 0 });
             }).catch(function (err) {
-                console.log(err);
+                logger.error(err);
                 res.json({ error_code: 1 });
             });
 
@@ -170,7 +167,7 @@ exports.list = function (req, res) {
             }
 
         }).catch(function (err) {
-            console.log("Que paso?> " + err);
+            logger.debug("Que paso?> " + err);
         });
     }
 
@@ -183,12 +180,12 @@ exports.list = function (req, res) {
                 var valmon = detallecto.idmoneda;
                 var valimp = detallecto.impuesto
                 var valfac = detallecto.factorimpuesto
-                //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
+                //logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     var promises = [], convert
                     for (var i = 0; i < param[0]; i++) {
-                        //console.log("montoorigen = " + valcuo + valcuo * valimp);
-                        //console.log("costoorigen = " + valcuo + valcuo * valimp * valfac);
+                        //logger.debug("montoorigen = " + valcuo + valcuo * valimp);
+                        //logger.debug("costoorigen = " + valcuo + valcuo * valimp * valfac);
                         var newPromise = models.detallecompromiso.create({
                             'iddetalleserviciocto': req.params.id,
                             'periodo': param[1][i], 'borrado': 1,
@@ -211,18 +208,18 @@ exports.list = function (req, res) {
                 }).then(function (result) {
                     callback(result)
                 }).catch(function (err) {
-                    console.log("--------> " + err);
+                    logger.debug("--------> " + err);
                 });
 
             })
         }).catch(function (err) {
-            console.log(err);
+            logger.debug(err);
         });
     }
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (err) {
-            console.log("->>> " + err)
+            logger.debug("->>> " + err)
         } else {
             models.detallecompromiso.count({
                 where: data
@@ -237,7 +234,7 @@ exports.list = function (req, res) {
                     }).then(function (compromisos) {
                         res.json({ records: records, total: total, page: page, rows: compromisos });
                     }).catch(function (err) {
-                        console.log(err);
+                        logger.debug(err);
                         res.json({ error_code: 1 });
                     });
                 } else {

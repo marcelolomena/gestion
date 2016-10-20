@@ -10,7 +10,8 @@ var app = require('../app'),
   http = require('http'),
   https = require('https'),
   fs = require('fs'),
-  cluster = require('cluster');
+  cluster = require('cluster'),
+  logger = require("../utils/logger");
 
 /**
  * Get port from environment and store in Express.
@@ -40,32 +41,31 @@ var io = require('socket.io')(secure_server);
 if (cluster.isMaster) {
   var numWorkers = require('os').cpus().length;
 
-  console.log('Iniciando cluster maestro con ' + numWorkers + ' trabajadores...');
+  logger.debug('Iniciando cluster maestro con ' + numWorkers + ' trabajadores...');
 
   for (var i = 0; i < numWorkers; i++) {
     cluster.fork();
   }
 
   cluster.on('online', function (worker) {
-    console.log('Trabajador ' + worker.process.pid + ' esta en linea');
+    logger.debug('Trabajador ' + worker.process.pid + ' esta en linea');
   });
 
   cluster.on('exit', function (worker, code, signal) {
-    console.log('Trabajador ' + worker.process.pid + ' muerto con codigo: ' + code + ', y señal: ' + signal);
-    console.log('Iniciando un nuevo trabajador');
+    logger.debug('Trabajador ' + worker.process.pid + ' muerto con codigo: ' + code + ', y señal: ' + signal);
+    logger.debug('Iniciando un nuevo trabajador');
     cluster.fork();
   });
 } else {
   models.sequelize.sync().then(startApp)
     .catch(function (e) {
+      logger.error(e)
       throw new Error(e);
     });
 }
 
 
 var handleClient = function (socket) {
-  // we've got a client connection
-  // convenience function to log server messages on the client
   function log() {
     var array = [">>> Mensaje desde el servidor: "];
     for (var i = 0; i < arguments.length; i++) {
@@ -75,12 +75,12 @@ var handleClient = function (socket) {
   }
 
   socket.on('message', function (message) {
-    log('Got message:', message);
+    logger.debug(message);
     //console.log("------------->>" + message)
 
     if (message === 'bye') {
       socket.disconnect();
-      console.log("socket.disconnect()")
+      logger.debug("socket.disconnect()")
     }
     // for a real app, would be room only (not broadcast)
     socket.broadcast.emit('message', message);
@@ -94,7 +94,7 @@ var handleClient = function (socket) {
     //for (var i in sala) numClients++;
     if (sala) numClients = sala.length;
 
-    console.log("numClients ->>>>>>>>>>> " + numClients)
+    logger.debug("numClients ->>>>>>>>>>> " + numClients)
 
     log('Sala ' + room + ' tiene ' + numClients + ' cliente(s)');
     log('Peticion para crear o unirse a una sala ' + room);
@@ -161,11 +161,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      logger.error(bind + ' no tiene acceso');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      logger.error(bind + ' ya esta en uso');
       process.exit(1);
       break;
     default:
@@ -182,5 +182,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  logger.debug('Escuchando en ' + bind);
 }

@@ -42,7 +42,7 @@ exports.list = function (req, res) {
     " where plantillapresupuesto.idcui = " + id + " AND plantillapresupuesto.borrado = 1 ORDER BY cui asc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql0);
+      logger.debug(sql0);
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -82,7 +82,7 @@ exports.list = function (req, res) {
         "WHERE  plantillapresupuesto.idcui =" + id + " AND plantillapresupuesto.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY cui asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      console.log(sql);
+      logger.debug(sql);
 
       models.plantillapresupuesto.count({ where: [condition1.substring(0, condition1.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
