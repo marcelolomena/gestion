@@ -18,6 +18,7 @@ exports.test = function (req, res) {
             `
                 SELECT 
 				a.id,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))) subtotalsinmulta,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotal), 1))) subtotal,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalmulta), 1))) totalmulta,
 				a.impuesto,

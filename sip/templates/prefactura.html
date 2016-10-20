@@ -14,7 +14,8 @@
 		 b.fechainicio,
 		 b.fechatermino,
 		 b.cuentacontable,
-		 b.nombrecuenta ]});
+		 b.nombrecuenta,
+		 b.montomulta ]});
     });
 </script>
 <div class="container">
@@ -79,8 +80,8 @@
 			</tbody>
 		</table>
 		<div class="row text-right">
-			<div class="col-xs-3 col-xs-offset-7"><strong>Sub Total:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
+			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>Multas:<br>Sub Total con multa:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
+			<div class="col-xs-2"><strong>${{subtotalsinmulta prefactura}}<br>$- {{totalmulta prefactura}}<br>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
 		</div>
 		<!--
 		<div class="row">

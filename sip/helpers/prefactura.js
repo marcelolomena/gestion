@@ -34,6 +34,10 @@ function subtotal(data) {
     return data[0].subtotal;
 }
 
+function subtotalsinmulta(data) {
+    return data[0].subtotalsinmulta;
+}
+
 function impuesto(data) {
     return data[0].impuesto.toFixed();
 }
@@ -42,12 +46,16 @@ function totalimpuesto(data) {
     return data[0].totalimpuesto;
 }
 
+function totalmulta(data) {
+    return data[0].totalmulta;
+}
+
 function totalprefactura(data) {
     return data[0].totalprefactura;
 }
 
-function montomulta(data) {
-    return data[0].montomulta;
+function existe(x) {
+    return true;
 }
 
 function montoneto(data) {
