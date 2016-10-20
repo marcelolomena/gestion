@@ -50,3 +50,152 @@ From previous event:
     at trim_prefix (C:\git\gestion\sip\node_modules\express\lib\router\index.js:312:13)
     at C:\git\gestion\sip\node_modules\express\lib\router\index.js:280:7
     at Function.process_params (C:\git\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+13:25:08 - info: generando prefactura
+13:27:10 - info: generando prefactura
+13:27:34 - info: generando prefactura
+13:28:11 - info: generando prefactura
+13:28:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:30:11 - info: generando prefactura
+13:30:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:32:11 - info: generando prefactura
+13:32:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:34:12 - info: generando prefactura
+13:34:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:36:16 - info: generando prefactura
+13:36:18 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:38:46 - info: generando prefactura
+13:38:48 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:41:47 - info: generando prefactura
+13:41:48 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:47:42 - info: generando prefactura
+13:48:18 - info: generando prefactura
+13:51:34 - info: generando prefactura
+13:53:51 - info: generando prefactura
+13:58:52 - info: generando prefactura
+14:00:10 - info: generando prefactura
+14:00:46 - info: generando prefactura
+14:01:10 - info: generando prefactura
+14:01:46 - info: generando prefactura
+14:02:32 - info: generando prefactura
+14:03:44 - info: generando prefactura
+14:06:49 - info: generando prefactura
+14:07:33 - info: generando prefactura

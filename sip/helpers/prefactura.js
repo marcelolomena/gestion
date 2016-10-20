@@ -22,6 +22,10 @@ function getCorreo(data) {
     return data[0].correo;
 }
 
+function getEmailResponsable(data) {
+    return data[0].email;
+}
+
 function getCui(data) {
     return data[0].cui;
 }
