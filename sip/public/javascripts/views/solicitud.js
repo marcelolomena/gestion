@@ -31,14 +31,14 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
         loadError: sipLibrary.jqGrid_loadErrorHandler
-    }).jqGrid('filterToolbar', {
+    })/*.jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,
         defaultSearch: "cn",
         searchOperators: true,
         beforeSearch: function () { },
         afterSearch: function () { }
-    });
+    }); */
 
     $grid.jqGrid('navGrid', '#pager', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pager', {

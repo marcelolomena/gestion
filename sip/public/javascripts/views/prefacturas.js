@@ -197,10 +197,12 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
+    /*
     $("#table_prefacturas").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
+    */
 
     $('#table_prefacturas').jqGrid('navGrid', "#pager_prefacturas", {
         edit: false, add: false, del: false, search: false, refresh: true,

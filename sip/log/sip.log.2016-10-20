@@ -1,1 +1,52 @@
 12:21:26 - error: uncaughtException: Unexpected token << date=Thu Oct 20 2016 12:21:26 GMT-0400 (Hora est. Sudamérica Pacífico), pid=7904, uid=null, gid=null, cwd=E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip, execPath=C:\Program Files\nodejs\node.exe, version=v4.6.0, argv=[C:\Program Files\nodejs\node.exe, E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\bin\www], rss=70569984, heapTotal=62102864, heapUsed=30716360, loadavg=[0, 0, 0], uptime=424545.5197274, trace=[column=16, file=vm.js, function=exports.runInThisContext, line=53, method=runInThisContext, native=false, column=25, file=module.js, function=Module._compile, line=373, method=_compile, native=false, column=10, file=module.js, function=Object.Module._extensions..js, line=416, method=Module._extensions..js, native=false, column=32, file=module.js, function=Module.load, line=343, method=load, native=false, column=12, file=module.js, function=Function.Module._load, line=300, method=Module._load, native=false, column=17, file=module.js, function=Module.require, line=353, method=require, native=false, column=17, file=internal/module.js, function=require, line=12, method=null, native=false, column=37, file=E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\routes\prefacturasolicitud.js, function=, line=5, method=null, native=false, column=26, file=module.js, function=Module._compile, line=409, method=_compile, native=false, column=10, file=module.js, function=Object.Module._extensions..js, line=416, method=Module._extensions..js, native=false, column=32, file=module.js, function=Module.load, line=343, method=load, native=false, column=12, file=module.js, function=Function.Module._load, line=300, method=Module._load, native=false, column=17, file=module.js, function=Module.require, line=353, method=require, native=false, column=17, file=internal/module.js, function=require, line=12, method=null, native=false, column=26, file=E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\routes\index.js, function=null, line=19, method=null, native=false, column=null, file=null, function=Array.forEach, line=null, method=forEach, native=true], stack=[SyntaxError: Unexpected token <<,     at exports.runInThisContext (vm.js:53:16),     at Module._compile (module.js:373:25),     at Object.Module._extensions..js (module.js:416:10),     at Module.load (module.js:343:32),     at Function.Module._load (module.js:300:12),     at Module.require (module.js:353:17),     at require (internal/module.js:12:17),     at Object.<anonymous> (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\routes\prefacturasolicitud.js:5:37),     at Module._compile (module.js:409:26),     at Object.Module._extensions..js (module.js:416:10),     at Module.load (module.js:343:32),     at Function.Module._load (module.js:300:12),     at Module.require (module.js:353:17),     at require (internal/module.js:12:17),     at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\routes\index.js:19:26,     at Array.forEach (native)]
+13:19:34 - error:  SequelizeDatabaseError: Invalid column name 'nomcui'.
+    at Query.formatError (C:\git\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:250:10)
+    at Request.userCallback (C:\git\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:82:25)
+    at Request.callback (C:\git\gestion\sip\node_modules\tedious\lib\request.js:33:27)
+    at Connection.message (C:\git\gestion\sip\node_modules\tedious\lib\connection.js:1179:27)
+    at Connection.dispatchEvent (C:\git\gestion\sip\node_modules\tedious\lib\connection.js:519:45)
+    at MessageIO.<anonymous> (C:\git\gestion\sip\node_modules\tedious\lib\connection.js:439:23)
+    at emitNone (events.js:67:13)
+    at MessageIO.emit (events.js:166:7)
+    at ReadablePacketStream.<anonymous> (C:\git\gestion\sip\node_modules\tedious\lib\message-io.js:92:15)
+    at emitOne (events.js:77:13)
+    at ReadablePacketStream.emit (events.js:169:7)
+    at readableAddChunk (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_readable.js:213:18)
+    at ReadablePacketStream.Readable.push (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_readable.js:172:10)
+    at ReadablePacketStream.Transform.push (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_transform.js:123:32)
+    at ReadablePacketStream._transform (C:\git\gestion\sip\node_modules\tedious\lib\message-io.js:57:16)
+    at ReadablePacketStream.Transform._read (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_transform.js:159:10)
+    at ReadablePacketStream.Transform._write (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_transform.js:147:83)
+    at doWrite (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_writable.js:319:64)
+    at writeOrBuffer (C:\git\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_writable.js:308:5)
+From previous event:
+    at Query._run (C:\git\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:44:17)
+    at C:\git\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:115:17
+From previous event:
+    at Query.run (C:\git\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:114:18)
+    at C:\git\gestion\sip\node_modules\sequelize\lib\sequelize.js:843:20
+    at C:\git\gestion\sip\node_modules\retry-as-promised\index.js:38:21
+From previous event:
+    at retryAsPromised (C:\git\gestion\sip\node_modules\retry-as-promised\index.js:27:10)
+    at C:\git\gestion\sip\node_modules\sequelize\lib\sequelize.js:842:12
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\git\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Sequelize.query (C:\git\gestion\sip\node_modules\sequelize\lib\sequelize.js:839:5)
+    at exports.lista (C:\git\gestion\sip\controllers\prefactura.js:173:15)
+    at Layer.handle [as handle_request] (C:\git\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\git\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (C:\git\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (C:\git\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\git\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (C:\git\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (C:\git\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at C:\git\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (C:\git\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\git\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (C:\git\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\git\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\git\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\git\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at C:\git\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (C:\git\gestion\sip\node_modules\express\lib\router\index.js:330:12)
