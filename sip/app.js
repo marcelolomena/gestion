@@ -31,7 +31,7 @@ app.use(flash());
 // Configuring Passport
 app.use(session({
   secret: 'keyboard cat',
-  //cookie: { maxAge: 60000 },
+  cookie: {secure: false, maxAge: (24*60*60*1000)},
   resave: false,
   saveUninitialized: false,
   store: new SequelizeStore({

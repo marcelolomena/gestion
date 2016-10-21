@@ -9,7 +9,7 @@ module.exports = function (passport) {
 	passport.use('local', new LocalStrategy({
 		passReqToCallback: true
 	},
-        function (req, username, password, done) {
+		function (req, username, password, done) {
 			models.user.find({
 				where: { 'uname': username }
 			}).then(function (user) {
@@ -18,6 +18,7 @@ module.exports = function (passport) {
 					return done(null, false, req.flash('message', 'Usuario no encontrado.'));
 					//return done(null, false, {message: "Usuario no encontrado."});
 				} else {
+
 					co(function* () {
 						var rol = yield models.usrrol.findAll({
 							attributes: ['id'],
@@ -48,13 +49,13 @@ module.exports = function (passport) {
 				done(err)
 			});
 
-        })
-    );
+		})
+	);
 
-    var isValidPassword = function (user, password) {
-        return bCrypt.compareSync(password, user.password);
+	var isValidPassword = function (user, password) {
+		return bCrypt.compareSync(password, user.password);
 
-    }
+	}
 
 
 }
