@@ -202,3 +202,195 @@ From previous event:
 14:10:14 - info: generando prefactura
 14:11:02 - info: generando prefactura
 14:11:25 - info: generando prefactura
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:57:15 - info: generando prefactura
+16:11:30 - info: generando prefactura
+16:11:32 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:13:30 - info: generando prefactura
+16:13:32 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:20:58 - info: generando prefactura
+16:20:59 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:21:12 - info: generando prefactura
+16:21:14 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:21:36 - info: generando prefactura
+16:21:56 - info: generando prefactura
+16:23:43 - info: generando prefactura

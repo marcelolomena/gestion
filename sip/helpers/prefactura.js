@@ -54,10 +54,6 @@ function totalprefactura(data) {
     return data[0].totalprefactura;
 }
 
-function existe(x) {
-    return true;
-}
-
 function montoneto(data) {
     return data[0].montoneto;
 }
