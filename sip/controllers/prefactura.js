@@ -157,18 +157,20 @@ exports.lista = function (req, res) {
             WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition
 
     var sql = `
-            SELECT 
+            SELECT  C.periodo,
                     D.cui,
                     D.nombre nomcui,
                     D.nombreresponsable, 
                     A.nombre contrato,
                     B.glosaservicio servicio,
+                    M.moneda,
                     C.montoorigen costo
                     FROM sip.contrato A 
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
-                    JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
-                    JOIN sip.estructuracui D ON B.idcui = D.id
+                    JOIN sip.detallecompromiso C ON B.id  = C.iddetalleserviciocto
+                    JOIN sip.estructuracui D ON B.idcui   = D.id
                     JOIN sip.proveedor E ON A.idproveedor = E.id
+                    JOIN sip.moneda M ON B.idmoneda = M.id
                     WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
