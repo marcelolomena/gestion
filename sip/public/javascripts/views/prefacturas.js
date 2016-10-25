@@ -126,11 +126,6 @@ $(document).ready(function () {
             editrules: { edithidden: false, required: true }
         },
         
-        
-        {
-            label: 'Factura', name: 'factura', width: 200, align: 'left',
-            search: true, editable: true, hidedlg: true
-        },
         {
             label: 'Fecha', name: 'fecha', width: 130, align: 'left',
             search: false, editable: true, formatter: 'date',
