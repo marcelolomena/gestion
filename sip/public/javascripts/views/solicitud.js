@@ -6,12 +6,14 @@ $(document).ready(function () {
 
     var modelSolicitudAprobacion = [
         { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'Periodo', name: 'periodo', width: 70, align: 'left', search: true, editable: false },
         { label: 'Cui', name: 'cui', width: 50, align: 'left', search: true, editable: false },
         { label: 'Nombre Cui', name: 'nomcui', width: 250, align: 'left', search: true, editable: false },
         { label: 'Responsable', name: 'nombreresponsable', width: 250, align: 'left', search: true, editable: false },
         { label: 'Contrato', name: 'contrato', width: 250, align: 'left', search: true, editable: false },
         { label: 'Servicio', name: 'servicio', width: 250, align: 'left', search: true, editable: false },
-        { label: 'Monto', name: 'costo', width: 150, align: 'left', search: true, editable: false }
+        { label: 'Moneda', name: 'moneda', width: 70, align: 'left', search: true, editable: false },
+        { label: 'Monto', name: 'costo', width: 150, align: 'right', search: true, editable: false }
     ], $grid = $("#grid");
 
     $grid.jqGrid({

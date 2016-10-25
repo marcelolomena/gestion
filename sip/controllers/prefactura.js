@@ -18,6 +18,7 @@ exports.test = function (req, res) {
             `
                 SELECT 
 				a.id,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))) subtotalsinmulta,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotal), 1))) subtotal,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalmulta), 1))) totalmulta,
 				a.impuesto,
@@ -27,7 +28,7 @@ exports.test = function (req, res) {
 				b.glosaservicio,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))) montoaprobado,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
-				b.factorconversion,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))+1,len(CONVERT(varchar, CONVERT(money, b.factorconversion), 1))) factorconversion,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoaprobadopesos), 1))) montoaprobadopesos,
                 c.razonsocial,
 				c.numrut,
@@ -44,7 +45,8 @@ exports.test = function (req, res) {
 				j.nombrecuenta,
 				k.id idcontrato,
 				k.numero,
-				m.glosaCargoAct
+				m.glosaCargoAct,
+                l.email
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
@@ -155,18 +157,20 @@ exports.lista = function (req, res) {
             WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition
 
     var sql = `
-            SELECT 
+            SELECT  C.periodo,
                     D.cui,
                     D.nombre nomcui,
                     D.nombreresponsable, 
                     A.nombre contrato,
                     B.glosaservicio servicio,
+                    M.moneda,
                     C.montoorigen costo
                     FROM sip.contrato A 
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
-                    JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
-                    JOIN sip.estructuracui D ON B.idcui = D.id
+                    JOIN sip.detallecompromiso C ON B.id  = C.iddetalleserviciocto
+                    JOIN sip.estructuracui D ON B.idcui   = D.id
                     JOIN sip.proveedor E ON A.idproveedor = E.id
+                    JOIN sip.moneda M ON B.idmoneda = M.id
                     WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
@@ -248,6 +252,7 @@ exports.generar = function (req, res) {
                         'periodo': rows[i].periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
                         'idprefactura': rows[i].idprefactura,
+                        'idfacturacion': rows[i].iddetallecompromiso,
                         'idcui': rows[i].idcui,
                         'idproveedor': rows[i].idproveedor,
                         'idservicio': rows[i].idservicio,

@@ -14,7 +14,8 @@
 		 b.fechainicio,
 		 b.fechatermino,
 		 b.cuentacontable,
-		 b.nombrecuenta ]});
+		 b.nombrecuenta,
+		 b.montomulta ]});
     });
 </script>
 <div class="container">
@@ -25,8 +26,8 @@
 				<h1><img src="http://localhost:3000/images/logo.png" style="height:151px;"></h1>
 			</div>
 			<div class="col-xs-6 text-right">
-				<h1>PRE-FACTURA</h1>
-				<h1><small>Nº {{getId prefactura}}</small></h1>
+				<h1>PRE-FACTURA Nº {{getId prefactura}}</h1>
+				<h2><small>Nº Contrato: {{getNumeroContrato prefactura}} <br/>Fecha: {{getFecha prefactura}}</small></h2>
 			</div>
 		</div>
 		<hr>
@@ -35,20 +36,26 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4>Cui: {{getCui prefactura}}</h4>
-						<p>Responsable: {{getNombreResponsable prefactura}} - {{getCargo prefactura}}</p>
-						<p>Nº Contrato: {{getNumeroContrato prefactura}}</p>
-						<p>Fecha Pre-Factura: {{getFecha prefactura}}</p>
+						
 					</div>
-					<div class="panel-body"></div>
+					<div class="panel-body">
+						<p>Responsable: {{getNombreResponsable prefactura}}</p>
+						<p>Cargo: {{getCargo prefactura}}</p>
+						<p>Email: {{getEmailResponsable prefactura}}</p>
+					</div>
 				</div>
 			</div>
 			<div class="col-xs-5 col-xs-offset-2 text-right">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4>Proveedor: {{getProveedor prefactura}} </h4>
-						<p>Rut : {{getRutProveedor prefactura}}</p>
+						
 					</div>
-					<div class="panel-body">Contacto: {{getContacto prefactura}} - {{getCorreo prefactura}}</div>
+					<div class="panel-body">
+						<p>Rut : {{getRutProveedor prefactura}}</p>
+						<p>Contacto: {{getContacto prefactura}}</p>
+						<p>Email: {{getCorreo prefactura}}</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -59,7 +66,7 @@
 						<h4>Servicio</h4>
 					</th>
 					<th>
-						<h4>Precio</h4>
+						<h4 align=center>Precio</h4>
 					</th>
 				</tr>
 			</thead>
@@ -73,8 +80,8 @@
 			</tbody>
 		</table>
 		<div class="row text-right">
-			<div class="col-xs-3 col-xs-offset-7"><strong>Sub Total:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
+			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>Multas:<br>Sub Total con multa:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
+			<div class="col-xs-2"><strong>${{subtotalsinmulta prefactura}}<br>$- {{totalmulta prefactura}}<br>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
 		</div>
 		<!--
 		<div class="row">

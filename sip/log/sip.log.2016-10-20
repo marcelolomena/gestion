@@ -50,6 +50,7 @@ From previous event:
     at trim_prefix (C:\git\gestion\sip\node_modules\express\lib\router\index.js:312:13)
     at C:\git\gestion\sip\node_modules\express\lib\router\index.js:280:7
     at Function.process_params (C:\git\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+<<<<<<< HEAD
 16:15:23 - error:  Error: E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\views\prefacturasolicitud.jade:18
     16|       select#cui(style='margin-right: 50px') 
     17|       Proveedor:
@@ -175,3 +176,349 @@ unexpected token "newline"
     at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
     at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
     at Parser.parseBlock (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:535:14)
+=======
+13:25:08 - info: generando prefactura
+13:27:10 - info: generando prefactura
+13:27:34 - info: generando prefactura
+13:28:11 - info: generando prefactura
+13:28:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:30:11 - info: generando prefactura
+13:30:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:32:11 - info: generando prefactura
+13:32:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:34:12 - info: generando prefactura
+13:34:13 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:36:16 - info: generando prefactura
+13:36:18 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:38:46 - info: generando prefactura
+13:38:48 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:41:47 - info: generando prefactura
+13:41:48 - error:  TypeError: Cannot read property 'id' of undefined
+    at Object.getId (evalmachine.<anonymous>:14:19)
+    at Object.eval (eval at createFunctionContext (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js:254:23), <anonymous>:8:68)
+    at main (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:173:32)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\runtime.js:176:12)
+    at ret (C:\git\gestion\sip\node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js:525:21)
+    at C:\git\gestion\sip\node_modules\jsreport-handlebars\lib\handlebarsEngine.js:26:14
+    at evalmachine.<anonymous>:1:41
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\git\gestion\sip\node_modules\jsreport-core\lib\render\engineScript.js:168:8)
+From previous event:
+    at C:\git\gestion\sip\node_modules\jsreport-core\lib\render\render.js:143:54
+    at _fulfilled (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\git\gestion\sip\node_modules\listener-collection\node_modules\q\q.js:110:17)
+13:47:42 - info: generando prefactura
+13:48:18 - info: generando prefactura
+13:51:34 - info: generando prefactura
+13:53:51 - info: generando prefactura
+13:58:52 - info: generando prefactura
+14:00:10 - info: generando prefactura
+14:00:46 - info: generando prefactura
+14:01:10 - info: generando prefactura
+14:01:46 - info: generando prefactura
+14:02:32 - info: generando prefactura
+14:03:44 - info: generando prefactura
+14:06:49 - info: generando prefactura
+14:07:33 - info: generando prefactura
+14:10:14 - info: generando prefactura
+14:11:02 - info: generando prefactura
+14:11:25 - info: generando prefactura
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:56:57 - error:  SequelizeConnectionError: Failed to connect to 200.14.166.182:1433 in 15000ms
+    at Connection.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:109:16)
+    at emitOne (events.js:77:13)
+    at Connection.emit (events.js:169:7)
+    at Connection.connectTimeout (C:\Users\marcelo\git\sip\node_modules\tedious\lib\connection.js:467:12)
+    at Timer.listOnTimeout (timers.js:92:15)
+From previous event:
+    at ConnectionManager.connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\mssql\connection-manager.js:41:10)
+    at null.<anonymous> (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:247:43)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at ConnectionManager.$connect (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:246:70)
+    at ConnectionManager.getConnection (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\dialects\abstract\connection-manager.js:203:44)
+    at Sequelize.query (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:838:83)
+    at Sequelize.authenticate (C:\Users\marcelo\git\sip\node_modules\sequelize\lib\sequelize.js:1079:15)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\models\index.js:30:22)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+    at Object.<anonymous> (C:\Users\marcelo\git\sip\app.js:13:15)
+    at Module._compile (module.js:409:26)
+    at Object.Module._extensions..js (module.js:416:10)
+    at Module.load (module.js:343:32)
+    at Function.Module._load (module.js:300:12)
+    at Module.require (module.js:353:17)
+    at require (internal/module.js:12:17)
+15:57:15 - info: generando prefactura
+16:11:30 - info: generando prefactura
+16:11:32 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:13:30 - info: generando prefactura
+16:13:32 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:20:58 - info: generando prefactura
+16:20:59 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:21:12 - info: generando prefactura
+16:21:14 - error:  ReferenceError: Handlebars is not defined
+    at evalmachine.<anonymous>:61:1
+    at ContextifyScript.Script.runInNewContext (vm.js:18:15)
+    at Object.exports.runInNewContext (vm.js:49:17)
+    at module.exports (C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\engineScript.js:155:10)
+    at process.<anonymous> (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\script-manager\lib\worker-processes.js:45:38)
+    at emitTwo (events.js:87:13)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\lib\render\render.js:144:54
+    at _fulfilled (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:794:54)
+    at self.promiseDispatch.done (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:823:30)
+    at Promise.promise.promiseDispatch (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:756:13)
+    at C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:564:44
+    at flush (C:\Users\marcelo\git\sip\node_modules\jsreport-core\node_modules\listener-collection\node_modules\q\q.js:110:17)
+16:21:36 - info: generando prefactura
+16:21:56 - info: generando prefactura
+16:23:43 - info: generando prefactura
+>>>>>>> 4664e87003070ec44a724a445ecc1a274e252f9b

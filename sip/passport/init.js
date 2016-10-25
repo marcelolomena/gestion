@@ -142,7 +142,7 @@ module.exports = function (passport) {
 
 
             }).catch(function (err) {
-                logger.error(err)               
+                logger.error(err)
                 callback(err, 'undefined');
             });
 
@@ -152,8 +152,10 @@ module.exports = function (passport) {
             done(err, null)
         });
 
+
     });
 
     login(passport);
 
 }
+

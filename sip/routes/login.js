@@ -2,7 +2,7 @@
 var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
-
+var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     /* GET login page. */
@@ -44,7 +44,7 @@ module.exports = function (passport) {
     router.get('/signout', function (req, res) {
         req.session.destroy(function (err) {
             if (err) {
-                console.log(err);
+                logger.error(err);
             } else {
                 req.logout();
                 res.redirect('/');

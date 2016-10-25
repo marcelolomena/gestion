@@ -22,12 +22,20 @@ function getCorreo(data) {
     return data[0].correo;
 }
 
+function getEmailResponsable(data) {
+    return data[0].email;
+}
+
 function getCui(data) {
     return data[0].cui;
 }
 
 function subtotal(data) {
     return data[0].subtotal;
+}
+
+function subtotalsinmulta(data) {
+    return data[0].subtotalsinmulta;
 }
 
 function impuesto(data) {
@@ -38,12 +46,12 @@ function totalimpuesto(data) {
     return data[0].totalimpuesto;
 }
 
-function totalprefactura(data) {
-    return data[0].totalprefactura;
+function totalmulta(data) {
+    return data[0].totalmulta;
 }
 
-function montomulta(data) {
-    return data[0].montomulta;
+function totalprefactura(data) {
+    return data[0].totalprefactura;
 }
 
 function montoneto(data) {

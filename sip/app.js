@@ -20,7 +20,7 @@ fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,7 +31,7 @@ app.use(flash());
 // Configuring Passport
 app.use(session({
   secret: 'keyboard cat',
-  //cookie: { maxAge: 60000 },
+  cookie: {secure: false, maxAge: (24*60*60*1000)},
   resave: false,
   saveUninitialized: false,
   store: new SequelizeStore({

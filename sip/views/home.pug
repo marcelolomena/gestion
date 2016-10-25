@@ -1,0 +1,115 @@
+html
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    title SIP Banco de Chile - Sistema Integrado de Presupuesto
+    link(rel='stylesheet', href='/stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/style.css', type='text/css', media='screen', charset='utf-8')    
+    link(rel='stylesheet', href='/stylesheets/menu.css', type='text/css', media='screen', charset='utf-8') 
+    link(rel='stylesheet', href='/stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
+    script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
+    script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')
+    script(type='text/javascript', src='/javascripts/jsplug.js')
+    script(type='text/javascript', src='/javascripts/script.js')    
+  body
+    .container
+      include sidebar.pug
+      .main-content
+        .swipe-area
+        a#sidebar-toggle(href='#', data-toggle='.container')
+          span.bar
+          span.bar
+          span.bar
+        .content
+          header.bg-theme
+            .wrap-header
+              .row
+                a(href='/home')
+                  img(src='../../images/header.png', width='384', height='95')
+                img(src='../images/vacio.png', width='300', height='4', border='0')
+                img(src='../images/header_titulo.png', width='384', height='95', border='0')
+          p(style='color: #f1563a')  
+          .zerogrid
+            .header
+              h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:center") • BIENVENIDOS •
+            .row
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#')
+                        img(src='../images/dashboard.jpg', alt='Dashboard', width='200', height='170', border='0', title='DASHBOARD')
+                    .item-info
+                      h3 DASHBOARD
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/proyectos.jpg', alt='', width='200', height='170', border='0', title='PROYECTOS')
+                    .item-info
+                      h3 PROYECTOS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/continuidad.jpg', alt='', width='200', height='170', border='0', title='CONTINUIDAD')
+                    .item-info
+                      h3 CONTINUIDAD
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/contratos.jpg', alt='', width='200', height='170', border='0', title='CONTRATOS')
+                    .item-info
+                      h3 CONTRATOS
+                  .item.t-center
+          .zerogrid
+            .row
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/prefacturas.jpg', alt='', border='0', title='PRE FACTURAS')
+                    .item-info
+                      h3 PRE FACTURAS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/facturas.jpg', alt='', border='0', title='FACTURAS')
+                    .item-info
+                      h3 FACTURAS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='/parametros')
+                        img(src='../images/parametros.jpg', alt='', border='0', title='PARAMETROS')
+                    .item-info
+                      h3 PARAMETROS
+                  .item.t-center
+              .col-1-3
+                .wrap-col
+                  .item.t-center
+                    .item-container
+                      a(href='#', target='_blank')
+                        img(src='../images/reportes.jpg', alt='', border='0', title='REPORTES')
+                    .item-info
+                      h3 REPORTES
+                  .item.t-center
+          .zerogrid
+            .row
+              br
+              br
+              br
+              br
