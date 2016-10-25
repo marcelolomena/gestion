@@ -252,6 +252,7 @@ exports.generar = function (req, res) {
                         'periodo': rows[i].periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
                         'idprefactura': rows[i].idprefactura,
+                        'idfacturacion': rows[i].iddetallecompromiso,
                         'idcui': rows[i].idcui,
                         'idproveedor': rows[i].idproveedor,
                         'idservicio': rows[i].idservicio,

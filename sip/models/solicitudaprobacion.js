@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    idfacturacion: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     idprefactura: {
       type: DataTypes.INTEGER,
       allowNull: true
