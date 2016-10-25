@@ -1,0 +1,4 @@
+usar crontab -e y pegar la siguiente linea
+para que el job se ejecute a las 6 AM del ultimo dia del mes todos los meses
+0 6 28,29,30,31 * * /root/bin/lastdayofmonth.sh
+la shell debe tener permisos de ejecucion: chmod u+x lastdayofmonth.sh
