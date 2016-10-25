@@ -3,6 +3,7 @@ var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var prefacturasolicitudController = require('../controllers/prefacturasolicitud');
+var facturasController = require('../controllers/facturas');
 
 module.exports = function (passport) {
 
@@ -30,7 +31,20 @@ module.exports = function (passport) {
         
     router.route('/prefacturasolicitud/action')
         .post(isAuthenticated, prefacturasolicitudController.action);        
+
+    router.get('/facturas', isAuthenticated, function (req, res) {
+        res.render('facturas', { user: req.user });
+    });
+    
+    router.route('/facturaslist')
+        .get(isAuthenticated, facturasController.getFacturas);
         
+    router.route('/facturas/proveedores')
+        .get(isAuthenticated, facturasController.getProveedores);       
+
+    router.route('/facturas/action')
+        .post(isAuthenticated, facturasController.action);            
+                
     return router;
 
 }

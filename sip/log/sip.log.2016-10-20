@@ -50,3 +50,128 @@ From previous event:
     at trim_prefix (C:\git\gestion\sip\node_modules\express\lib\router\index.js:312:13)
     at C:\git\gestion\sip\node_modules\express\lib\router\index.js:280:7
     at Function.process_params (C:\git\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+16:15:23 - error:  Error: E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\views\prefacturasolicitud.jade:18
+    16|       select#cui(style='margin-right: 50px') 
+    17|       Proveedor:
+  > 18|       select#proveedor
+    19|      .formSap2
+    20|      #buscar.btn Buscar       
+    21|   div(style='width: 100%')
+
+unexpected token "newline"
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:254:15)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:819:29)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.parseBlock (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:535:14)
+16:16:13 - error:  Error: E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\views\prefacturasolicitud.jade:18
+    16|       select#cui(style='margin-right: 50px') 
+    17|       Proveedor:
+  > 18|       select#proveedor
+    19|      .formSap2
+    20|      #buscar.btn Buscar       
+    21|   div(style='width: 100%')
+
+unexpected token "newline"
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:254:15)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:819:29)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.parseBlock (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:535:14)
+16:16:15 - error:  Error: E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\views\prefacturasolicitud.jade:18
+    16|       select#cui(style='margin-right: 50px') 
+    17|       Proveedor:
+  > 18|       select#proveedor
+    19|      .formSap2
+    20|      #buscar.btn Buscar       
+    21|   div(style='width: 100%')
+
+unexpected token "newline"
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:254:15)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:819:29)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.parseBlock (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:535:14)
+16:16:17 - error:  Error: E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\views\prefacturasolicitud.jade:18
+    16|       select#cui(style='margin-right: 50px') 
+    17|       Proveedor:
+  > 18|       select#proveedor
+    19|      .formSap2
+    20|      #buscar.btn Buscar       
+    21|   div(style='width: 100%')
+
+unexpected token "newline"
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:254:15)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:819:29)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.parseBlock (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:535:14)
+16:16:24 - error:  Error: E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\views\prefacturasolicitud.jade:18
+    16|       select#cui(style='margin-right: 50px') 
+    17|       Proveedor:
+  > 18|       select#proveedor
+    19|      .formSap2
+    20|      #buscar.btn Buscar       
+    21|   div(style='width: 100%')
+
+unexpected token "newline"
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:254:15)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:819:29)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.tag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:838:24)
+    at Parser.parseTag (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:759:17)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:211:21)
+    at Parser.parseExpr (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:252:21)
+    at Parser.block (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:729:25)
+    at Parser.parseBlock (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jade\lib\parser.js:535:14)
