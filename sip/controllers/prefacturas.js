@@ -203,11 +203,14 @@ exports.solicitudesaprobadas = function (req, res) {
 
     var sql = `
             SELECT 
-                    a.*, d.glosamoneda
+                    a.*, d.glosamoneda, e.cui, f.razonsocial, g.nombre
                     FROM sip.solicitudaprobacion a 
                     join sip.detallecompromiso b on  a.iddetallecompromiso=b.id
 		            join sip.detalleserviciocto c on b.iddetalleserviciocto=c.id
                     join sip.moneda d on c.idmoneda=d.id
+					join sip.estructuracui e on a.idcui=e.id
+					join sip.proveedor f on a.idproveedor=f.id
+					join sip.servicio g on a.idservicio= g.id 
             where a.periodo= :periodo and a.idprefactura is null 
             and a.aprobado=1 ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
