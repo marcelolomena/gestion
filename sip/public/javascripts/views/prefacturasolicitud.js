@@ -28,7 +28,7 @@ $(document).ready(function () {
 
             $.each(j, function (i, item) {
                 console.log("cui:" + item.nombre + "," + item.cui);
-                $('#cui').append('<option value="' + item.id + '">' + item.cui + "-" + item.nombre + '</option>');
+                $('#cui').append('<option value="' + item.id + '">' + item.cui + "-" + item.nombre.substring(0,35) + '</option>');
             });
         });
     }
@@ -41,7 +41,7 @@ $(document).ready(function () {
             $('#proveedor option').remove();
             $('#proveedor').append('<option value="0"> - Escoger Proveedor - </option>');
             $.each(j, function (i, item) {
-                $('#proveedor').append('<option value="' + item.idproveedor + '">' + item.razonsocial + '</option>');
+                $('#proveedor').append('<option value="' + item.idproveedor + '">' + item.razonsocial.substring(0,35) + '</option>');
             });
         });
     });
@@ -161,9 +161,19 @@ function showDocumentos(cui, periodo, proveedor) {
                 editoptions: { size: 5, readonly: 'readonly' }
             },
             {
+                label: 'CUI',
+                name: 'cui',
+                width: 50,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },            
+            {
                 label: 'Proveedor',
                 name: 'razonsocial',
-                width: 200,
+                width: 220,
                 align: 'left',
                 search: false,
                 editable: true,
@@ -172,7 +182,7 @@ function showDocumentos(cui, periodo, proveedor) {
             {
                 label: 'Servicio',
                 name: 'nombre',
-                width: 200,
+                width: 220,
                 align: 'left',
                 search: false,
                 editable: true,
@@ -185,6 +195,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 align: 'left',
                 search: false,
                 editable: true,
+                hidden: true,
                 edittype: "textarea",
                 editoptions: { size: 5, readonly: 'readonly' }
             },
@@ -193,7 +204,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 name: 'montoneto',
                 search: false,
                 align: 'left',
-                width: 100,
+                width: 120,
                 editable: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5, readonly: 'readonly' }
@@ -242,9 +253,9 @@ function showDocumentos(cui, periodo, proveedor) {
                         $.each(data, function (i, item) {
                             console.log("***proveedor:" + data[i].id + ", " + thissid);
                             if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '" selected>' + data[i]+ '</option>';
                             } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i] + '</option>';
                             }
                         });
                         console.log(s);
@@ -285,13 +296,14 @@ function showDocumentos(cui, periodo, proveedor) {
                 width: 200,
                 search: false,
                 align: 'left',
+                hidden: true,
                 editable: true,
                 edittype: "textarea"
-            },
+            },         
             {
                 label: 'Calificación',
                 name: 'idcalificacion',
-                width: 100,
+                width: 150,
                 search: false,
                 align: 'left',
                 editable: true, hidden: true,
@@ -328,6 +340,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 search: false,
                 align: 'left',
                 editable: true,
+                hidden: true,
                 edittype: "textarea"
             },
             {
@@ -371,7 +384,11 @@ function showDocumentos(cui, periodo, proveedor) {
                     }
                 }, dataInit: function (elem) { $(elem).width(200); }
 
-            }
+            },
+            {
+                label: 'Calificación', name: 'calificacion', width: 120, align: 'left', sortable: false, search: false, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            }            
 
         ],
         caption: "Solicitud de Aprobación",

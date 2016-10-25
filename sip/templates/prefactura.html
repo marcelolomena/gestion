@@ -6,6 +6,7 @@
     $(function () {
         var data = {{{toJSON prefactura}}}
         var prefactura = data.map(function(b) { return [ b.id,
+		 b.servicio,
 		 b.glosaservicio, 
 		 b.montoaprobado, 
 		 b.montoaprobadopesos, 
@@ -15,7 +16,10 @@
 		 b.fechatermino,
 		 b.cuentacontable,
 		 b.nombrecuenta,
-		 b.montomulta ]});
+		 b.montomulta,
+		 b.nombreresponsable,
+		 b.numcui,
+		 b.montoapagar ]});
     });
 </script>
 <div class="container">
@@ -29,6 +33,7 @@
 				<h1>PRE-FACTURA Nº {{getId prefactura}}</h1>
 				<h2><small>Nº Contrato: {{getNumeroContrato prefactura}} <br/>Fecha: {{getFecha prefactura}}</small></h2>
 			</div>
+
 		</div>
 		<hr>
 		<div class="row">
@@ -36,7 +41,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4>Cui: {{getCui prefactura}}</h4>
-						
+
 					</div>
 					<div class="panel-body">
 						<p>Responsable: {{getNombreResponsable prefactura}}</p>
@@ -49,7 +54,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4>Proveedor: {{getProveedor prefactura}} </h4>
-						
+
 					</div>
 					<div class="panel-body">
 						<p>Rut : {{getRutProveedor prefactura}}</p>
@@ -63,25 +68,45 @@
 			<thead>
 				<tr>
 					<th>
+						<h4>Código</h4>
+					</th>					
+					<th>
 						<h4>Servicio</h4>
 					</th>
 					<th>
-						<h4 align=center>Precio</h4>
+						<h4>Cantidad</h4>
+					</th>
+					<th>
+						<h4>Precio Unitario</h4>
+					</th>
+					<th>
+						<h4 align=center>Valor</h4>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{{#each prefactura}}
 				<tr>
-					<td>{{glosaservicio}}<br>Fecha Inicio:{{fechainicio}}, Fecha Término: {{fechatermino}}, Monto Origen: {{montoaprobado}} {{glosamoneda}}, Valor Conversión: {{factorconversion}}<br>Nombre Cuenta:{{nombrecuenta}}, Nº Cuenta:  {{cuentacontable}}</td>
+					<td>XXX</td>
+					<td>
+						Servicio: {{servicio}}<br>
+						Glosa de Servicio: {{glosaservicio}}<br>
+						Monto Aprobado a Facturar: <br>
+						Tipo de Cambio: {{factorconversion}}<br>
+						Cuenta Contable: {{cuentacontable}},{{nombrecuenta}}<br>
+						Cui: {{numcui}}<br>
+						At: {{nombreresponsable}}<br>
+					</td>
+					<td class="text-right">1</td>
+					<td class="text-right">1</td>
 					<td class="text-right">$ {{montoaprobadopesos}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 		<div class="row text-right">
-			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>Multas:<br>Sub Total con multa:<br>Impuestos (IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>${{subtotalsinmulta prefactura}}<br>$- {{totalmulta prefactura}}<br>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
+			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>(IVA 19%):<br>Total:<br></strong></div>
+			<div class="col-xs-2"><strong>${{subtotalsinmulta prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
 		</div>
 		<!--
 		<div class="row">

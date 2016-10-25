@@ -3,7 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 var constants = require("../utils/constants");
 
-exports.getSolicitudAprob = function (req, res) {
+exports.getFacturas = function (req, res) {
   var page = req.query.page;
   var filas = req.query.rows;
   var sidx = req.query.sidx;
@@ -16,18 +16,9 @@ exports.getSolicitudAprob = function (req, res) {
     "SELECT @PageSize=" + filas + "; " +
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
-    "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso, f.moneda, g.nombre AS calificacion, h.cui "+ 
-    "FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor " +
-    "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso JOIN sip.servicio d ON a.idservicio=d.id " +
-    "JOIN sip.detalleserviciocto e ON c.iddetalleserviciocto=e.id "+
-    "JOIN sip.moneda f ON e.idmoneda=f.id "+
-    "LEFT JOIN sip.parametro g ON a.idcalificacion = g.id "+
-    "JOIN sip.estructuracui h ON a.idcui = h.id "+
-    "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + "  AND idprefactura IS NULL ";
-    if (proveedor != "0"){
-      sql=sql+"AND idproveedor="+proveedor+" ";
-    }    
-  var sql2 = sql + "ORDER BY b.razonsocial, a.periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    "SELECT a.*, b.razonsocial "+ 
+    "FROM sip.factura a JOIN sip.proveedor b ON b.id = a.idproveedor ";
+  var sql2 = sql + "ORDER BY a.numero OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
   logger.debug("query:" + sql2);
   sequelize.query(sql)
@@ -181,59 +172,10 @@ exports.action = function (req, res) {
   }
 }
 
-exports.cuisprefactura = function (req, res) {
-  var rol = req.user[0].rid;
-  console.log("******usr*********:" + req.user[0].uid);
-  console.log("******rol*********:" + req.user[0].rid);
-  console.log("*ROLADM*:" + constants.ROLADMDIVOT);
-  var periodo = req.params.periodo
-  if (rol == constants.ROLADMDIVOT) {  
-    var sql = "SELECT id, nombre, cui FROM sip.estructuracui "+
-      "where id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+
-      " AND idprefactura is NULL) "+
-      "ORDER BY nombre";
-    sequelize.query(sql)
-      .spread(function (rows) {
-        res.json(rows);
-      }).catch(function (err) {
-        res.json({ error_code: 1 });
-      });    
-  } else {
-    var idcui = req.params.id
-    var sql = "select a.id, a.nombre, a.cui "+
-      "from   sip.estructuracui a "+
-      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+"  AND idprefactura is NULL) "+
-      "union "+
-      "select b.id, b.nombre, b.cui "+
-      "from   sip.estructuracui a,sip.estructuracui b "+
-      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+" AND idprefactura is NULL) "+
-      "  and  a.cui = b.cuipadre "+
-      "union "+
-      "select c.id, c.nombre, c.cui "+
-      "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c "+
-      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+" AND idprefactura is NULL) "+
-      "  and  a.cui = b.cuipadre "+
-      "  and  b.cui = c.cuipadre "+
-      "union "+
-      "select d.id, d.nombre, d.cui "+
-      "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d "+
-      "where  a.cui = "+idcui +" AND a.id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+" AND idprefactura is NULL) "+
-      "  and  a.cui = b.cuipadre "+
-      "  and  b.cui = c.cuipadre "+
-      "  and  c.cui = d.cuipadre ";
-
-    sequelize.query(sql)
-      .spread(function (rows) {
-        res.json(rows);
-      });
-  }
-};
-
 exports.getProveedores = function (req, res) {
   var cui = req.params.cui
   var periodo = req.params.periodo
-  var sql = "SELECT DISTINCT a.idproveedor, b.razonsocial  FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON a.idproveedor=b.id"+
-    " WHERE periodo="+ periodo +" AND idcui="+cui;
+  var sql = "SELECT DISTINCT a.idproveedor, b.razonsocial  FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON a.idproveedor=b.id";
   console.log("query:"+sql)
   sequelize.query(sql)
     .spread(function (rows) {

@@ -4,6 +4,7 @@
 	border: 1px solid #a3cbe0;
 	margin-left: 5px;
 	margin-right: 15px;
+    position: relative;
 }
 .formSap {
 	font-family: Arial, Helvetica, sans-serif;
@@ -11,7 +12,7 @@
 	color: #036;
 	line-height: 48px;
 	height: 48px;
-	padding-left: 15px;
+	padding-left: 5px;
 }
 .formSap #cui {
 	color: #036;
@@ -22,7 +23,7 @@
 	text-align: left;
 	border: 1px solid #7fb2cc;
 	background-color: #ecf4f7;
-	margin-left: 30px;
+	margin-left: 10px;
 }
 .formSap .titForm {
 	width: 50px;
@@ -58,7 +59,7 @@
 	padding-left: 5px;
 }
 .titCajaPeriodo {
-	margin-left: 10px;
+	margin-left: 0px;
 }
 .formFactura #fechaini {
 	border: 1px solid #7fb2cc;
@@ -74,16 +75,18 @@
 	height: 27px;
 	line-height: 24px;
 }
-.formFactura #button {
+.formFactura #buscar {
 	background-color: #069;
 	height: 28px;
 	width: 100px;
 	color: #FFF;
 	border-top-style: none;
-	border-right-style: none;
+	border-right-style: 10px;
 	border-bottom-style: none;
 	border-left-style: none;
 	margin-left:10px;
+    margin-right:10px;
+    padding-right: 20px;    
 }
 #buscar {
 	background: #047ac9;
@@ -103,10 +106,9 @@
 	padding-right: 20px;
 	padding-bottom: 8px;
 	padding-left: 20px;
-	float: left;
+	float: right;
 	position: relative;
-	left: 1050px;
-	bottom: -10px;
+    margin-right:10px;
 }
 
 #buscar:hover {
