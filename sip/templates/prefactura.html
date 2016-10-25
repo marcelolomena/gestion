@@ -9,7 +9,8 @@
 		 b.servicio,
 		 b.glosaservicio, 
 		 b.montoaprobado, 
-		 b.montoaprobadopesos, 
+		 b.montoaprobadopesos,
+		 b.montoapagarpesos, 
 		 b.factorconversion,
 		 b.glosamoneda,
 		 b.fechainicio,
@@ -19,7 +20,9 @@
 		 b.montomulta,
 		 b.nombreresponsable,
 		 b.numcui,
-		 b.montoapagar ]});
+		 b.montoapagar,
+         b.idfacturacion
+		]});
     });
 </script>
 <div class="container">
@@ -77,23 +80,23 @@
 						<h4>Cantidad</h4>
 					</th>
 					<th>
-						<h4>Precio Unitario</h4>
+						<h4>Precio</h4>
 					</th>
 					<th>
-						<h4 align=center>Valor</h4>
+						<h4 align=center>Total</h4>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{{#each prefactura}}
 				<tr>
-					<td>XXX</td>
+					<td>{{idfacturacion}}</td>
 					<td>
 						Servicio: {{servicio}}<br>
 						Glosa de Servicio: {{glosaservicio}}<br>
-						Monto Aprobado a Facturar: <br>
+						Monto Aprobado a Facturar: {{montoapagarpesos}}<br>
 						Tipo de Cambio: {{factorconversion}}<br>
-						Cuenta Contable: {{cuentacontable}},{{nombrecuenta}}<br>
+						Cuenta Contable: {{cuentacontable}}, {{nombrecuenta}}<br>
 						Cui: {{numcui}}<br>
 						At: {{nombreresponsable}}<br>
 					</td>
