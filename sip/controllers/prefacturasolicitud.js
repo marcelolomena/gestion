@@ -126,6 +126,7 @@ exports.action = function (req, res) {
       "aprobado="+req.body.aprobado+", montoaprobado="+req.body.montoaprobado+
       ", glosaaprobacion='"+req.body.glosaaprobacion+"', montoaprobadopesos="+parseInt(req.body.montoaprobado)+"*factorconversion"+
       ", montomulta="+req.body.montomulta+", montomultapesos="+parseInt(req.body.montomulta)+"*factorconversion"+
+      ", montototalpesos=("+parseInt(req.body.montoaprobado)+"*factorconversion)-("+parseInt(req.body.montomulta)+"*factorconversion)"+
       ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+
       ", idcausalmulta="+req.body.idcausalmulta+" "+
       "WHERE id="+req.body.id;
