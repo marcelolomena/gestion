@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
-//var winston = require('winston')
+
 exports.test = function (req, res) {
 
     try {
@@ -30,12 +30,14 @@ exports.test = function (req, res) {
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))+1,len(CONVERT(varchar, CONVERT(money, b.factorconversion), 1))) factorconversion,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoaprobadopesos), 1))) montoaprobadopesos,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))) montoapagar,
                 c.razonsocial,
 				c.numrut,
 				c.dvrut,
 				d.contacto,
 				d.correo,
 				e.glosamoneda,
+                f.cui numcui,
 				f.nombre cui,
 				f.nombreresponsable,
 				CONVERT(varchar(10),h.fechainicio,103) fechainicio,
