@@ -89,7 +89,7 @@ $(document).ready(function () {
         styleUI: "Bootstrap",
         editurl: '/facturas/action',
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
-        subGridRowExpanded: showPresupuestoServicios, // javascript function that will take care of showing the child grid        
+        subGridRowExpanded: showItemsFacturas, // javascript function that will take care of showing the child grid        
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
@@ -254,7 +254,8 @@ $(document).ready(function () {
 });
 
 
-function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
+function showItemsFacturas(parentRowID, parentRowKey) {
+    console.log("en shoitem");
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
     var childGridURL = "/presupuestoservicios/" + parentRowKey;
@@ -265,486 +266,372 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
     var urlPeriodo = '/serviciosperiodos/';
     var urlRecupera = '/tiporecupera/';
 
-    var tmplServ = "<div id='responsive-form' class='clearfix'>";
+    var tmpl = "<div id='responsive-form' class='clearfix'>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-full'><span style='color:red'>*</span>Servicio {idservicio}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full' style='display: none;'>Periodo {iddetallecompromiso}</div>";
+    tmpl += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Glosa Servicio {glosaservicio}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Periodo {periodo}</div>";
+    tmpl += "<div class='column-half'>Proveedor {razonsocial}</div>";
+    tmpl += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-full'><span style='color:red'>*</span>Moneda {idmoneda}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Servicio {nombre}</div>";
+    tmpl += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-full'><span style='color:red'>*</span>Proveedor {idproveedor}</div>";
-    tmplServ += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Comentario {comentario}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-full'>Glosa Servicio {glosaservicio}</div>";
+    tmpl += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Cuota {cuota}</div>";
-    tmplServ += "</div>";    
-
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Número Cuotas {numerocuota}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Monto Neto a Pagar {montoneto}</div>";
+    tmpl += "<div class='column-half'>Moneda {moneda}</div>";
+    tmpl += "</div>";
     
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Meses entre cuotas {mesesentrecuotas}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto Aprobado {montoaprobado}</div>";
+    tmpl += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Mes Primera Cuota {desde}</div>";
-    tmplServ += "</div>";
-   
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'><span style='color:red'>*</span>Mes Inicio Servicio {desdediferido}</div>";
-    tmplServ += "</div>";        
-                           
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Tipo Recuperación {ivarecuperable}</div>";
-    tmplServ += "</div>";
-    
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Mas IVA {masiva}</div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-full'>Glosa Estado {glosaaprobacion}</div>";
+    tmpl += "</div>";
 
-    tmplServ += "<div class='form-row'>";
-    tmplServ += "<div class='column-half'>Gasto Diferido {gastodiferido}</div>";
-    tmplServ += "</div>";    
-                                                     
-    tmplServ += "<hr style='width:100%;'/>";
-    tmplServ += "<div> {sData} {cData}  </div>";
-    tmplServ += "</div>";
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
+    tmpl += "<div class='column-half'>Monto Neto Multa {montomulta}</div>";
+    tmpl += "</div>";
 
-    var modelPresupuestoServ = [
-        {
-            label: 'id', name: 'id', width: 50, key: true, hidden: true
-        },
-        {
-            label: 'Servicio', name: 'nombre', search: true, width: 290,
-            editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Servicio', name: 'idservicio', search: false, width: 200,
-            editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlServicios,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idservicio;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Servicio--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***data:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        var servicio = $('option:selected', this).val()
-                        if (servicio != "0") {
-                            $.ajax({
-                                type: "GET",
-                                url: urlProveedoresServ + '/' + servicio,
-                                async: false,
-                                success: function (data) {
-                                    var s = "<select>";//el default
-                                    s += '<option value="0" selected>--Escoger Proveedor--</option>';
-                                    $.each(data, function (i, item) {
-                                        s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
-                                    });
-                                    s += "</select>";
-                                    $("select#idproveedor").html(s);
-                                }
-                            });
-                        }
-                    }
-                }],
-            }, dataInit: function (elem) { $(elem).width(200); }
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";
+    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
+    tmpl += "</div>";
 
-        },
-        {
-            label: 'Glosa Servicio', name: 'glosaservicio', width: 300,
-            search: true, editable: true, edittype: "textarea"
-        },
-        {
-            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'right',
-            search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Proveedor', name: 'idproveedor', width: 100, align: 'right',
-            search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlProveedores,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Proveedor--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***proveedor:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombreproveedor + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombreproveedor + '</option>';
-                        }
-                    });
-                    console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }
-        },        
-        {
-            label: 'Moneda', name: 'moneda', width: 100, align: 'right',
-            search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Moneda', name: 'idmoneda', width: 100, align: 'right',
-            search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/monedas',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idmoneda;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Moneda--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***monedas:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].moneda + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].moneda + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }
-
-        },
-        {
-            label: 'Comentario', name: 'comentario',
-            search: false, editable: true, edittype: "textarea", hidden: true,
-        },
-        {
-            label: 'Forecast',
-            name: 'montoforecast',
-            width: 130,
-            align: 'right',
-            search: false,
-            editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Ppto. Solicitado',
-            name: 'montoanual',
-            width: 130,
-            align: 'right',
-            search: false,
-            editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Costo Forecast',
-            name: 'costoforecast',
-            width: 130,
-            align: 'right',
-            search: false,
-            editable: true,
-            hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'Costo Anual',
-            name: 'costoanual',
-            width: 130,
-            align: 'right',
-            search: false,
-            editable: true,
-            hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },        
-        {
-            label: 'Cuota', name: 'cuota', search: false, editable: true, hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },        
-        {
-            label: '# Cuotas', name: 'numerocuota', search: false, editable: true, hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },   
-        {
-            label: 'Meses entre cuotas', name: 'mesesentrecuotas', search: false, editable: true, hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },      
-        {
-            label: 'Mes Primera Cuota', name: 'desde', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlPeriodo,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.desde;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Periodo--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***desde:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    //console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }            
-        },
-        {
-            label: 'Mes Inicio Servicio', name: 'desdediferido', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlPeriodo,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.desdediferido;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Periodo--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***proveedor:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    //console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }            
-        },         
-        {
-            label: 'Tipo Recuperación', name: 'ivarecuperable', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: urlRecupera,
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.ivarecuperable;
-                    console.log(response);
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Recuperación--</option>';
-                    $.each(data, function (i, item) {
-                        console.log("***tipoRecupera:" + data[i].id + ", " + thissid);
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    //console.log(s);
-                    return s + "</select>";
-                }
-            }, dataInit: function (elem) { $(elem).width(200); }            
-        },
-        {
-            label: 'Mas IVA', name: 'masiva', search: false, editable: true, hidden: true,
-            edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        },          
-        {
-            label: 'Gasto Diferido', name: 'gastodiferido', search: false, editable: true, hidden: true,
-            edittype: "checkbox", editoptions: {value: "1:0", defaultValue: "1"}
-        },                 
-          
-    ];
-
-    // add a table and pager HTML elements to the parent grid row - we will render the child grid here
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
-    $("#" + childGridID).jqGrid({
+    tmpl += "<hr style='width:100%;'/>";
+    tmpl += "<div align='left'> {sData} {cData}  </div>";
+    tmpl += "</div>";
+    // send the parent row primary key to the server so that we know which grid to show
+    var grid = $("#grid");
+    var rowKey = grid.getGridParam("selrow");
+    var rowData = grid.getRowData(rowKey);
+    var proveedor = rowData.idproveedor;   
+    var cui =  rowData.idcui;
+    var childGridURL = "/facturasdetalle/" + cui + "/" + proveedor;
+    $("#grid").jqGrid({
         url: childGridURL,
         mtype: "GET",
         datatype: "json",
-        page: 1,
-        colModel: modelPresupuestoServ,
-        viewrecords: true,
-        styleUI: "Bootstrap",
-        regional: 'es',
+        colModel: [
+            {
+                label: 'id',
+                name: 'id',
+                width: 50,
+                hidden: true,
+                key: true
+            },
+            {
+                label: 'iddetallecompromiso',
+                name: 'iddetallecompromiso',
+                width: 50,
+                hidden: true,
+                editable: true
+            },
+            {
+                label: 'Periodo',
+                name: 'periodo',
+                width: 70,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
+            {
+                label: 'CUI',
+                name: 'cui',
+                width: 50,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },            
+            {
+                label: 'Proveedor',
+                name: 'razonsocial',
+                width: 220,
+                align: 'left',
+                search: false,
+                editable: true,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
+            {
+                label: 'Servicio',
+                name: 'nombre',
+                width: 220,
+                align: 'left',
+                search: false,
+                editable: true,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
+            {
+                label: 'Glosa Servicio',
+                name: 'glosaservicio',
+                width: 250,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "textarea",
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
+            {
+                label: 'Monto a Pagar',
+                name: 'montoneto',
+                search: false,
+                align: 'left',
+                width: 120,
+                editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
+            {
+                label: 'Moneda',
+                name: 'moneda',
+                search: false,
+                align: 'left',
+                width: 100,
+                editable: true,
+                editoptions: { size: 5, readonly: 'readonly' }
+            },            
+            {
+                label: 'Estado',
+                name: 'aprobado',
+                search: false,
+                align: 'left',
+                width: 80,
+                editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    var dato = '';
+                    var val = rowObject.aprobado;
+                    if (val == 0) {
+                        dato = 'Pendiente';
+                    } else if (val == 1) {
+                        dato = 'Aprobado';
+                    } else if (val == 2) {
+                        dato = 'Rechazado';
+                    }
+                    return dato;
+                },
+                edittype: "select",
+                editoptions: {
+                    dataUrl: "/prefacturasolicitud/estadosolicitud",
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.idproveedor;
+                        console.log(response);
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        var s = "<select>";//el default
+                        //s += '<option value="0">--Escoger Estado--</option>';
+                        $.each(data, function (i, item) {
+                            console.log("***proveedor:" + data[i].id + ", " + thissid);
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i]+ '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i] + '</option>';
+                            }
+                        });
+                        console.log(s);
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var estado = $('option:selected', this).val()
+                            console.log("Change");
+                            var grid = $("#grid");
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var monto = rowData.montoneto;
+                            console.log("monto:" + monto);
+                            console.log("estado:" + estado);
+                            if (estado == "1") {
+                                $("input#montoaprobado").val(monto);
+                            } else {
+                                $("input#montoaprobado").val("0");
+                            }
+                        }
+                    }],
+                }, dataInit: function (elem) { $(elem).width(200); }
+
+            },
+            {
+                label: 'Monto Aprobado',
+                name: 'montoaprobado',
+                width: 100,
+                search: false,
+                align: 'left',
+                editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Glosa Aprobación',
+                name: 'glosaaprobacion',
+                width: 200,
+                search: false,
+                align: 'left',
+                hidden: true,
+                editable: true,
+                edittype: "textarea"
+            },         
+            {
+                label: 'Calificación',
+                name: 'idcalificacion',
+                width: 150,
+                search: false,
+                align: 'left',
+                editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: "/prefacturasolicitud/calificacion",
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.idproveedor;
+                        console.log(response);
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Calificación--</option>';
+                        $.each(data, function (i, item) {
+                            console.log("***proveedor:" + data[i].id + ", " + thissid);
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        console.log(s);
+                        return s + "</select>";
+                    }
+                }, dataInit: function (elem) { $(elem).width(200); }
+            },
+            {
+                label: 'Glosa Multa',
+                name: 'glosamulta',
+                width: 200,
+                search: false,
+                align: 'left',
+                editable: true,
+                hidden: true,
+                edittype: "textarea"
+            },
+            {
+                label: 'Monto Multa',
+                name: 'montomulta',
+                width: 100,
+                search: false,
+                align: 'left',
+                editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Causal Multa',
+                name: 'idcausalmulta',
+                width: 100,
+                search: false,
+                align: 'left',
+                editable: true, hidden: true, edittype: "select",
+                editoptions: {
+                    dataUrl: "/prefacturasolicitud/causalmulta",
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.idproveedor;
+                        console.log(response);
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Causal Multa--</option>';
+                        $.each(data, function (i, item) {
+                            console.log("***proveedor:" + data[i].id + ", " + thissid);
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        console.log(s);
+                        return s + "</select>";
+                    }
+                }, dataInit: function (elem) { $(elem).width(200); }
+
+            },
+            {
+                label: 'Calificación', name: 'calificacion', width: 120, align: 'left', sortable: false, search: false, editable: true,
+                editrules: { edithidden: false }, hidedlg: true
+            }            
+
+        ],
+        caption: "Solicitud de Aprobación",
         height: 'auto',
-        width: null,
+        styleUI: "Bootstrap",
+        multiselect: true,
+        sortable: "true",
+        pager: "#pager",
+        page: 1,
         shrinkToFit: false,
         rowNum: 10,
         rowList: [5, 10, 20, 50],
-        editurl: '/presupuestoservicios/action/' + parentRowKey,
-        subGrid: true, // set the subGrid property to true to show expand buttons for each row
-        subGridRowExpanded: showPresupuestoPeriodos, // javascript function that will take care of showing the child grid                
-        pager: "#" + childGridPagerID
+        sortname: 'id',
+        sortorder: 'asc',
+        viewrecords: true,
+        editurl: '/prefacturasolicitud/action',
+        regional: "es",
+        subGrid: false
     });
 
-    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+    $("#grid").jqGrid('navGrid', "#pager", {
         edit: true,
-        add: true,
-        del: true,
+        add: false,
+        del: false,
+        search: false,
         refresh: true,
-        search: false
+        cloneToTop: false
     },
         {
-            editCaption: "Modifica Servicio",
+            editCaption: "Modifica Solicitud Aprobación",
             closeAfterEdit: true,
             recreateForm: true,
+            top: 10,
+            left: 10,
+            width: 850,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            template: tmplServ,
+            template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-                var num = new Number(postdata.cuota);
-                console.log("num:"+num);
-              
-                if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un servicio", ""];
-                } if (postdata.glosaservicio == "") {
-                    return [false, "Glosa: Debe ingresar una glosa de servicio", ""];
-                } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger una moneda", ""];
-                } if (postdata.idproveedor == 0) {
-                    return [false, "Proveedor: Debe escoger un proveedor", ""];
-                } if (isNaN(num) || postdata.cuota <= 0) {
-                    return [false, "Cuota: Debe ingresar la cuota con valor mayor a cero", ""];
-                } if (postdata.numerocuota <= 0) {
-                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas mayor a 0", ""];
-                } if (postdata.mesesentrecuotas <= 0) {
-                    return [false, "Meses Entre: Debe ingresar meses entre cuotas mayor a 0", ""];
-                } if (postdata.desde == 0) {
-                    return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
-                } if (postdata.desdediferido == 0) {
-                    return [false, "Desde: Debe ingresar mes de inicio de servicio", ""];                    
+                var monto = new Number(postdata.montoaprobado);
+                console.log("num:" + monto);
+                if (monto < 0) {
+                    return [false, "Monto: El monto no puede ser menor a cero", ""];
+                } else if (postdata.aprobado == 0) {
+                    return [false, "Estado: El estado deber ser Aprobado o Rechazado", ""];
                 } else {
                     return [true, "", ""]
                 }
 
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code == 10)
-                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
-        },
-        {
-            addCaption: "Agrega Servicio",
-            closeAfterAdd: true,
-            recreateForm: true,
-            //mtype: 'GET',
-            //url: '/iniciativas/add',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: tmplServ,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                //alert("postdata:"+postdata.idproveedor);
-                var num = new Number(postdata.cuota);
-                console.log("num:"+num);
-              
-                if (postdata.idservicio == 0) {
-                    return [false, "Servicio: Debe escoger un servicio", ""];
-                } if (postdata.glosaservicio == "") {
-                    return [false, "Glosa: Debe ingresar una glosa de servicio", ""];
-                } if (postdata.idmoneda == 0) {
-                    return [false, "Moneda: Debe escoger una moneda", ""];
-                } if (postdata.idproveedor == 0) {
-                    return [false, "Proveedor: Debe escoger un proveedor", ""];
-                } if (isNaN(num) || postdata.cuota <= 0) {
-                    return [false, "Cuota: Debe ingresar la cuota con valor mayor a cero", ""];
-                } if (postdata.numerocuota <= 0) {
-                    return [false, "Num. Cuotas: Debe ingresar el número de cuotas mayor a cero", ""];
-                } if (postdata.mesesentrecuotas <= 0) {
-                    return [false, "Meses Entre: Debe ingresar meses entre cuotas mayor a cero", ""];
-                } if (postdata.desde == 0) {
-                    return [false, "Desde: Debe ingresar mes de inicio de cuotas", ""];
-                } if (postdata.desdediferido == 0) {
-                    return [false, "Desde: Debe ingresar mes de inicio de servicio", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code == 10)
-                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];                
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Servicio",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code == 10)
-                     return [false, "Presupuesto Aprobado, no se puede modificar, ", ""];                
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
             }
         }, {}
 

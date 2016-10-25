@@ -253,9 +253,9 @@ function showDocumentos(cui, periodo, proveedor) {
                         $.each(data, function (i, item) {
                             console.log("***proveedor:" + data[i].id + ", " + thissid);
                             if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i]+ '</option>';
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre+ '</option>';
                             } else {
-                                s += '<option value="' + data[i].id + '">' + data[i] + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                             }
                         });
                         console.log(s);

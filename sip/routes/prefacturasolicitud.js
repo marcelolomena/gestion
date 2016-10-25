@@ -43,7 +43,10 @@ module.exports = function (passport) {
         .get(isAuthenticated, facturasController.getProveedores);       
 
     router.route('/facturas/action')
-        .post(isAuthenticated, facturasController.action);            
+        .post(isAuthenticated, facturasController.action);          
+        
+    router.route('/facturasdetalle/:cui/:proveedor')
+        .post(isAuthenticated, facturasController.getDetalleFacturas);                       
                 
     return router;
 
