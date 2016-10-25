@@ -21,7 +21,9 @@
 		 b.nombreresponsable,
 		 b.numcui,
 		 b.montoapagar,
-         b.idfacturacion
+         b.idfacturacion,
+		 b.montomultapesos,
+		 b.montototalpesos
 		]});
     });
 </script>
@@ -83,6 +85,9 @@
 						<h4>Precio</h4>
 					</th>
 					<th>
+						<h4>Multa</h4>
+					</th>
+					<th>
 						<h4 align=center>Total</h4>
 					</th>
 				</tr>
@@ -94,15 +99,16 @@
 					<td>
 						Servicio: {{servicio}}<br>
 						Glosa de Servicio: {{glosaservicio}}<br>
-						Monto Aprobado a Facturar: {{montoapagarpesos}}<br>
+						Monto Aprobado a Facturar: {{montoaprobado}}<br>
 						Tipo de Cambio: {{factorconversion}}<br>
 						Cuenta Contable: {{cuentacontable}}, {{nombrecuenta}}<br>
 						Cui: {{numcui}}<br>
 						At: {{nombreresponsable}}<br>
 					</td>
 					<td class="text-right">1</td>
-					<td class="text-right">1</td>
-					<td class="text-right">$ {{montoaprobadopesos}}</td>
+					<td class="text-right">{{montoaprobadopesos}}</td>
+					<td class="text-right">{{montomultapesos}}</td>					
+					<td class="text-right">{{montototalpesos}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
