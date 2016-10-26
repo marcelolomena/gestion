@@ -96,6 +96,7 @@ exports.test = function (req, res) {
                             phantom: {
                                 orientation: 'portrait',
                                 format: 'A4',
+                                margin: '1.5cm'
                             }
                         },
                         data: datum

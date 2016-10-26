@@ -31,6 +31,9 @@ module.exports = function (passport) {
     router.route('/prefacturas/list')
         .post(isAuthenticated, prefacturasController.list); 
 
+    router.get('/pert', isAuthenticated, function (req, res) {
+        res.render('pert', { user: req.user });
+    });
 
     router.route('/solicitudesporfactura/:id')
         .post(isAuthenticated, prefacturasController.solicitudesporfactura); 
