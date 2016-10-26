@@ -45,6 +45,9 @@ module.exports = function (passport) {
         res.render('genprefacturas', { user: req.user });
     });
 
+    router.route('/desgloseporsolicitud/:id')
+        .post(isAuthenticated, prefacturasController.desgloseporsolicitud); 
+
     return router;
 
 }

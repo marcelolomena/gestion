@@ -1,4 +1,4 @@
-function gridSolicitudes(parentRowID, parentRowKey) {
+function gridDesglose(parentRowID, parentRowKey) {
     var tmplP = "<div id='responsive-form' class='clearfix'>";
 
     tmplP += "<div class='form-row'>";
@@ -21,42 +21,41 @@ function gridSolicitudes(parentRowID, parentRowKey) {
 
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-    var childGridURL = "/solicitudesporfactura/" + parentRowKey;
+    var childGridURL = "/desgloseporsolicitud/" + parentRowKey;
 
     var modelSolicitudes = [
         { label: 'id', name: 'id', key: true, hidden: true },  
-        { label: 'Glosa Servicio',
-            name: 'glosaservicio',
-            width: 450,
+        { label: 'Cui',
+            name: 'cui',
+            width: 100,
             align: 'left',
             search: false,
             editable: true,
             editoptions: { size: 10, readonly: 'readonly'}                       
         },         
-        { label: 'Monto a Pagar',
-            name: 'montoapagar',  
+        { label: 'Cuenta Contable',
+            name: 'cuentacontable',  
             search: false,
             align: 'left',                 
             width: 100,
             editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editoptions: { size: 10, readonly: 'readonly'}                                    
         },  
-        { label: 'Monto Aprobado',
-                     name: 'montoaprobado',
-                     width: 100,
-                     search: false,
-                     align: 'left',
-                     editable: true,
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   },
-        { label: 'Glosa Aprobación',
-            name: 'glosaaprobacion',
+        { label: 'Nombre Cuenta',
+            name: 'nombrecuenta',
+            width: 100,
+            search: false,
+            align: 'left',
+            editable: true,
+            
+        },
+        { label: 'Porcentaje',
+            name: 'porcentaje',
             width: 200,
             search: false,
             align: 'left',
             editable: true,
-            edittype: "textarea"
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
     ];
 
@@ -76,12 +75,6 @@ function gridSolicitudes(parentRowID, parentRowKey) {
         colModel: modelSolicitudes,
         viewrecords: true,
         styleUI: "Bootstrap",
-        subGrid: true,
-        subGridRowExpanded: gridDesglose,
-        subGridOptions: {
-            plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
-        },
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,

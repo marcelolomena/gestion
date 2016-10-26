@@ -10,52 +10,6 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color: red'>*</span> División {iddivision}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Sponsor {sponsor1}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color: red'>*</span>PMO {uidpmo}</div>";
-    tmpl += "<div class='column-half'><span style='color: red'>*</span>Gerente {uidgerente}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color: red'>*</span>Estado {idestado}</div>";
-    tmpl += "<div class='column-half'><span style='color: red'>*</span>Categoría {idcategoria}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-four'>Q1 {q1}</div>";
-    tmpl += "<div class='column-four'>Q2 {q2}</div>";
-    tmpl += "<div class='column-four'>Q3 {q3}</div>";
-    tmpl += "<div class='column-four'>Q4 {q4}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Fecha Último Comité {fechacomite}</div>";
-    tmpl += "<div class='column-half'><span style='color: red'>*</span>Año {ano}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-three'>Gasto Estimado {pptoestimadogasto}</div>";
-    tmpl += "<div class='column-three'>Inversión Estimada {pptoestimadoinversion}</div>";
-    tmpl += "<div class='column-three'>Presupuesto Estimado {pptoestimadoprevisto}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Importante: Los montos estimados están en Dolares.</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-three'>Gasto Aprobado {pptoaprobadogasto}</div>";
-    tmpl += "<div class='column-three'>Inversión Aprobada {pptoaprobadoinversion}</div>";
-    tmpl += "<div class='column-three'>PresupuestoAprobado{pptoaprobadoprevisto}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Importante: Los montos aprobados están en Pesos.</div>";
     tmpl += "</div>";
 
@@ -65,10 +19,6 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>estado {estado}</div>";
-    tmpl += "<div class='column-half'>categoria {categoria}</div>";
-    tmpl += "<div class='column-half'>pmoresponsable {pmoresponsable}</div>";
-    tmpl += "<div class='column-half'>gerenteresponsable {gerenteresponsable}</div>";
-    tmpl += "<div class='column-half'>divisionsponsor {divisionsponsor}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
