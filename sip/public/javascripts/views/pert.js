@@ -176,14 +176,14 @@ $(document).ready(function () {
     // here's the data defining the graph
     var nodeDataArray = [
         { key: 1, text: "Start", length: 0, earlyStart: 0, lateFinish: 0, critical: true },
-        { key: 2, text: "a", length: 4, earlyStart: 0, lateFinish: 4, critical: true },
-        { key: 3, text: "b", length: 5.33, earlyStart: 0, lateFinish: 9.17, critical: false },
-        { key: 4, text: "c", length: 5.17, earlyStart: 4, lateFinish: 9.17, critical: true },
-        { key: 5, text: "d", length: 6.33, earlyStart: 4, lateFinish: 15.01, critical: false },
-        { key: 6, text: "e", length: 5.17, earlyStart: 9.17, lateFinish: 14.34, critical: true },
-        { key: 7, text: "f", length: 4.5, earlyStart: 10.33, lateFinish: 19.51, critical: false },
-        { key: 8, text: "g", length: 5.17, earlyStart: 14.34, lateFinish: 19.51, critical: true },
-        { key: 9, text: "Finish", length: 0, earlyStart: 19.51, lateFinish: 19.51, critical: true }
+        { key: 2, text: "Ingresar Solicitud", length: 4, earlyStart: 0, lateFinish: 4, critical: true },
+        { key: 3, text: "Validar y activar solicitud", length: 5.33, earlyStart: 0, lateFinish: 9.17, critical: false },
+        { key: 4, text: "Generar RPF", length: 5.17, earlyStart: 4, lateFinish: 9.17, critical: true },
+        { key: 5, text: "Enviar Invitaciones", length: 6.33, earlyStart: 4, lateFinish: 15.01, critical: false },
+        { key: 6, text: "Recibir Y valorar Propuestas", length: 5.17, earlyStart: 9.17, lateFinish: 14.34, critical: true },
+        { key: 7, text: "Generar Ficha", length: 4.5, earlyStart: 10.33, lateFinish: 19.51, critical: false },
+        { key: 8, text: "TAREA EXTERNA", length: 5.17, earlyStart: 14.34, lateFinish: 19.51, critical: true },
+        { key: 9, text: "Ajustar Clausulas Legales", length: 0, earlyStart: 19.51, lateFinish: 19.51, critical: true }
     ];
     var linkDataArray = [
         { from: 1, to: 2 },
