@@ -13,6 +13,12 @@ module.exports = function (passport) {
     router.route('/cargas/list')
         .get(isAuthenticated, cargasController.list);
 
+    router.route('/cargas/guardar')
+        .post(isAuthenticated, cargasController.guardar);        
+
+    router.route('/cargas/archivo')
+        .post(isAuthenticated, cargasController.archivo);          
+
     router.route('/detallecarga/:id')
         .get(isAuthenticated, cargasController.detallecarga);             
   
