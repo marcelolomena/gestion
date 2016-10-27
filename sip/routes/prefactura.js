@@ -51,6 +51,9 @@ module.exports = function (passport) {
     router.route('/desgloseporsolicitud/:id')
         .post(isAuthenticated, prefacturasController.desgloseporsolicitud); 
 
+    router.route('/desglosecontable/action')
+        .post(isAuthenticated, prefacturasController.actiondesglose);
+
     return router;
 
 }
