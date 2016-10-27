@@ -307,3 +307,69 @@ exports.desgloseporsolicitud = function (req, res) {
             logger.error(e)
         })
 }
+
+exports.actiondesglose = function (req, res) {
+  var action = req.body.oper;
+  /*
+  var porcentaje = 0.00
+  
+  if (action != "del") {
+    if (req.body.porcentaje != ""){
+      porcentaje1 = parseFloat(req.body.porcentaje)/100;
+    }else{
+      porcentaje = 0.00;
+    }
+  }
+  */
+
+  switch (action) {
+    case "add":
+      models.desglosecontable.create({
+        idsolicitud: req.body.parent_id,
+        idcui: req.body.idcui,
+        idcuentacontable: req.body.idcuentacontable,
+        porcentaje: req.body.porcentaje,
+        borrado: 1
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
+      break;
+    case "edit":
+      models.desglosecontable.update({
+        idcui: req.body.idcui,
+        idcuentacontable: req.body.idcuentacontable,
+        porcentaje: req.body.porcentaje
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          logger.error(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      models.desglosecontable.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          logger.debug('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+
+}

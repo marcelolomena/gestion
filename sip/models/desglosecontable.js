@@ -8,6 +8,14 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    idsolicitud: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'solicitudaprobacion',
+        key: 'id'
+      }
+    },
     idcui: {
       type: DataTypes.INTEGER,
       allowNull: true,
