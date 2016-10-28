@@ -87,22 +87,17 @@ $(document).ready(function () {
             recreateForm: true,
             mtype: 'POST',
             url: '/cargas/guardar',
-            afterSubmit: UploadImage
+            afterSubmit: UploadFile
         }, {}, {}
 
     );
 
-    function UploadImage(response, postdata) {
+    function UploadFile(response, postdata) {
 
         var data = $.parseJSON(response.responseText);
-        console.log("paso la cosa")
-        console.dir(data)
         if (data.error_code == 0) {
-            //if (data.success == true) {
-            console.log("entro bien")
             if ($("#fileToUpload").val() != "") {
-                console.log("hasta el fondo")
-                ajaxFileUpload(postdata.id);
+                ajaxFileUpload(data.id);
             }
         }
 
@@ -110,24 +105,28 @@ $(document).ready(function () {
 
     }
 
+
     function ajaxFileUpload(id) {
-        console.log("id: " + id)
-        $.ajaxFileUpload
-            (
-            {
+        var dialog = bootbox.dialog({
+            title: 'Se inicia la carga en la base de datos',
+            message: '<p><i class="fa fa-spin fa-spinner"></i> Cargando...</p>'
+        });
+        dialog.init(function () {
+            $.ajaxFileUpload({
                 url: '/cargas/archivo',
                 secureuri: false,
                 fileElementId: 'fileToUpload',
                 dataType: 'json',
                 data: { id: id },
                 success: function (data, status) {
-                    console.log(data)
-
                     if (typeof (data.success) != 'undefined') {
                         if (data.success == true) {
-                            return;
+                            //bootbox.alert(data.message, function () { /* your callback code */ });
+                            dialog.find('.bootbox-body').html(data.message);
+                            //alert(data.message);
                         } else {
-                            alert(data.message);
+                            //bootbox.alert(data.message, function () { /* your callback code */ });
+                            dialog.find('.bootbox-body').html(data.message);
                         }
                     }
                     else {
@@ -137,8 +136,8 @@ $(document).ready(function () {
                 error: function (data, status, e) {
                     return alert('Failed to upload csv!');
                 }
-            }
-            )
+            })
+        });
     }
 
     $("#grid").jqGrid('navButtonAdd', "#pager", {

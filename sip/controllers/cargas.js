@@ -206,8 +206,24 @@ exports.detallecarga = function (req, res) {
 
 exports.guardar = function (req, res) {
 
-  logger.debug("llegoooo");
-  res.json({ error_code: 0 });
+  models.detallecargas.create({
+    idlogcargas: req.body.id,
+    fechaarchivo: new Date(),
+    fechaproceso: new Date(),
+    usuario: req.session.passport.user,
+    nroregistros: 0,
+    nombre1: '',
+    control1: 'inicio',
+    nombre2: '',
+    control2: '',
+    borrado: 1
+  }).then(function (detallecargas) {
+    res.json({ error_code: 0, id: detallecargas.id, message: 'inicio carga', success: true });
+  }).catch(function (err) {
+    logger.error(err)
+    res.json({ error_code: 1, id: 0, message: err, success: false });
+  });
+
 }
 
 exports.archivo = function (req, res) {
@@ -216,26 +232,26 @@ exports.archivo = function (req, res) {
     var busboy = new Busboy({ headers: req.headers });
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
-      logger.debug(fieldname)
-      logger.debug(filename)
-
       var saveTo = path.join(__dirname, '..', 'temp', filename);
+
       file.pipe(fs.createWriteStream(saveTo));
 
-      var input = fs.createReadStream(saveTo);
-      var parser = csv.parse({
-        columns: true,
-        relax: true
-      });
-
       var inserter = async.cargo(function (tasks, inserterCallback) {
-        models.troya.bulkCreate(tasks).then(function () {
+        models.troya.bulkCreate(tasks).then(function (troya) {
           inserterCallback();
-        }
-        );
+        }).catch(function (err) {
+          logger.error(err)
+        });
       },
         1000
       );
+
+      var input = fs.createReadStream(saveTo, { encoding: 'utf8' });
+      var parser = csv.parse({
+        columns: true,
+        relax: true,
+        delimiter: ';'
+      });
 
       parser.on('readable', function () {
         while (line = parser.read()) {
@@ -243,28 +259,44 @@ exports.archivo = function (req, res) {
         }
       });
 
+      parser.on('error', function (err) {
+        logger.error(err.message);
+      });
+
       parser.on('end', function (count) {
         inserter.drain = function () {
-          //doneLoadingCallback();
-          logger.debug("listo")
+          logger.debug("listo en db")
         }
       });
 
       input.pipe(parser);
 
     });
+    busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+      logger.debug('Campo [' + fieldname + ']: valor: ' + val);
+
+      models.detallecargas.update({
+        fechaproceso: new Date(),
+        control2: 'archivo recibido'
+      }, {
+          where: {
+            id: val
+          }
+        }).then(function (detallecargas) {
+          logger.debug("cambio estado")
+        }).catch(function (err) {
+          logger.error(err)
+        });
+
+    });
     busboy.on('finish', function () {
-      res.writeHead(200, { 'Connection': 'close' });
-      res.end("Eso es todo!");
+      res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
     });
 
     return req.pipe(busboy);
   }
   res.writeHead(404);
   res.end();
-
-
-
 
 }
 
