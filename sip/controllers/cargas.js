@@ -233,6 +233,7 @@ exports.archivo = function (req, res) {
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
       var saveTo = path.join(__dirname, '..', 'temp', filename);
+      var tbuf = 1000;
 
       file.pipe(fs.createWriteStream(saveTo));
       var inserter = async.cargo(function (tasks, inserterCallback) {
@@ -242,7 +243,7 @@ exports.archivo = function (req, res) {
           logger.error(err)
         });
       },
-        1000
+        tbuf
       );
 
       var input = fs.createReadStream(saveTo, { encoding: 'utf8' });
@@ -251,13 +252,14 @@ exports.archivo = function (req, res) {
         relax: true,
         delimiter: ';'
       });
+
       var carrusel = [];
+
       parser.on('readable', function () {
         while (line = parser.read()) {
           //inserter.push(line);
           carrusel.push(line);
         }
-        //logger.debug("paso por aca")
       });
 
       parser.on('error', function (err) {
@@ -266,33 +268,50 @@ exports.archivo = function (req, res) {
 
       parser.on('end', function (count) {
         var j = 0;
+        var t = 0;
+        var minbuf = 0
         var turro = [];
-        logger.debug("el largo : " + carrusel.length)
+        var cola = [];
 
+        //logger.debug("resto : " + carrusel.length % tbuf)
+        //logger.debug("parte entera : " + Math.floor(carrusel.length / tbuf))
 
-        for (var i = 0; carrusel.length; i++) {
+        var maxbuf = Math.floor(carrusel.length / tbuf)
 
-          if (j % 1000) {
-            logger.debug("SI")
+        for (var i = 0; i < carrusel.length; i++) {
+          
+
+          if (j % tbuf == 0 && j > 0) {
+
+            for (var k = 0; k < tbuf; k++) {
+              inserter.push(turro[k]);
+            }
+            turro.length = 0;
+            j = 0;
+            minbuf = minbuf + 1;
+
           } else {
 
+            if (minbuf < maxbuf) {
+              turro[j] = carrusel[i];
+              j = j + 1;
+            } else {
+              cola[t] = carrusel[i];
+              t = t + 1;
+            }
+
           }
-          /*
-                    if (j % 1000 ) {
-                      logger.debug("largo cola : " + j)
-                      //inserter.push(turro);
-                      turro.length = 0;
-                      j = 0;
-                    } else {
-                      turro[j] = carrusel[i];
-                      j = j + 1;
-                    }
-          */
+
+        }
+        //logger.debug("tam cola : " + cola.length)
+        for (var k = 0; k < cola.length; k++) {
+          inserter.push(cola[k]);
         }
 
         inserter.drain = function () {
           logger.debug("listo en db")
         }
+
       });
 
       input.pipe(parser);

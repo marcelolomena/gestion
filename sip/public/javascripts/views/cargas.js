@@ -28,7 +28,7 @@ $(document).ready(function () {
         { label: 'Frecuencia', name: 'frecuencia', width: 100, align: 'left', search: true, editable: true },
         { label: 'Tipo de Carga', name: 'tipocarga', width: 100, align: 'left', search: true, editable: true },
         {
-            label: 'fileToUpload',
+            label: 'Archivo',
             name: 'fileToUpload',
             align: 'left',
             hidden: true,
