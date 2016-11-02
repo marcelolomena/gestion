@@ -16,7 +16,7 @@ exports.list = function (req, res) {
     //var idiniciativaprograma = req.params.id;
 
     var superCui = function (uid, callback) {
-    var rol = req.user[0].rid;
+    var rol = req.usreq.session.passport.sidebar[0].rid;
     if (rol != constants.ROLADMDIVOT) {
       var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
 
@@ -67,9 +67,9 @@ exports.list = function (req, res) {
     }
   };
 
-    superCui(req.user[0].uid, function (elcui) {
+    superCui(req.session.passport.user, function (elcui) {
 
-      var rol = req.user[0].rid;
+      var rol = req.session.passport.sidebar[0].rid;
       var sqlok;
       if (rol == constants.ROLADMDIVOT) {
         sqlok = "declare @rowsPerPage as bigint; " +

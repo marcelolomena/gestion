@@ -4,8 +4,8 @@ var constants = require("../utils/constants");
 var logger = require("../utils/logger");
 exports.cuitroya = function (req, res) {
   var rol = req.user[0].rid;
-  logger.debug("******usr*********:" + req.user[0].uid);
-  logger.debug("******rol*********:" + req.user[0].rid);
+  logger.debug("******usr*********:" + req.session.passport.user);
+  logger.debug("******rol*********:" + req.session.passport.sidebar[0].rid);
   logger.debug("*ROLADM*:" + constants.ROLADMDIVOT);
   if (rol == constants.ROLADMDIVOT) {  
     var sql = "SELECT id, nombre, cui FROM sip.estructuracui " +
@@ -70,7 +70,7 @@ exports.proveedorcui = function (req, res) {
 };
 
 exports.getcui = function (req, res) {
-  var sql = "SELECT cui, nivel FROM sip.estructuracui WHERE uid="+req.user[0].uid +
+  var sql = "SELECT cui, nivel FROM sip.estructuracui WHERE uid="+req.session.passport.user +
   " ORDER BY nivel asc";
   logger.debug("query:"+sql);
   sequelize.query(sql)
