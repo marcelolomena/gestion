@@ -51,9 +51,8 @@ module.exports = function (passport) {
     router.route('/facturasdetalle/:id')
         .get(isAuthenticated, facturasController.getDetalleFacturas);   
 
-    router.route('/getsolicitud/:id')
+    router.route('/getsolicitud/:id/:idproveedor')
         .get(isAuthenticated, facturasController.getSolicitudAprob);           
-                
 
     router.route('/getdesglosecontable/:id')
         .get(isAuthenticated, facturasController.getDesglose); 

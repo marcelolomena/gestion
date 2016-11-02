@@ -285,7 +285,8 @@ exports.getSolicitudAprob = function (req, res) {
   var idfacturacion = req.params.id
   var periodo = req.params.periodo
   var sql = "SELECT idprefactura,glosaservicio, round(montoneto, 0) AS montoneto, round(montoapagarpesos,0) AS montoapagarpesos " +
-    " from sip.solicitudaprobacion where idfacturacion=" + idfacturacion;
+    "from sip.solicitudaprobacion a JOIN sip.factura b ON a.idproveedor=b.idproveedor "+
+    "where idfacturacion=" + idfacturacion+" and  b.id ="+req.params.idproveedor;
   console.log("query:" + sql)
   sequelize.query(sql)
     .spread(function (rows) {

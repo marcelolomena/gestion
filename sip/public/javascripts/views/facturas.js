@@ -312,12 +312,16 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                     size: 5,
                     dataEvents: [{
                         type: 'change', fn: function (e) {
+                            var grid = $("#grid");
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);  
+                            console.log("rowData:"+rowData);                            
                             var thissid = $(this).val();
                             $.ajax({
                                 type: "GET",
-                                url: '/getsolicitud/' + thissid,
+                                url: '/getsolicitud/' + thissid+'/'+parentRowKey,
                                 async: false,
-                                success: function (data) {
+                                success: function (data) {                                 
                                     if (data.length > 0){
                                         console.log("glosa:"+data[0].glosaservicio);
                                         $("textarea#glosaserviciopf").val(data[0].glosaservicio);
@@ -332,7 +336,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                                         $("input#cantidad").val(1);
                                         $("input#total").val(data[0].montoapagarpesos);                                      
                                     } else {
-                                        alert("No existe id en una prefactura");
+                                        alert("No existe id de prefactura para el proveedor");
                                     }
                                 }
                             });
