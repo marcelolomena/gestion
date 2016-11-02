@@ -14,18 +14,18 @@ var planiniciativasController = require('../controllers/planiniciativas');
 module.exports = function (passport) {
 
     router.get('/iniciativas', isAuthenticated, function (req, res) {
-        res.render('iniciativas', { user: req.user });
+        res.render('iniciativas', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/compromisosporcui', isAuthenticated, function (req, res) {
-        res.render('compromisosporcui', { user: req.user });
+        res.render('compromisosporcui', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/compromisosporcui/list')
         .post(isAuthenticated, compromisosporcuiController.list);
 
     router.get('/planiniciativas', isAuthenticated, function (req, res) {
-        res.render('planiniciativas', { user: req.user });
+        res.render('planiniciativas', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/planiniciativas/list')

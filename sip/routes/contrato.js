@@ -8,7 +8,7 @@ var contratoController = require('../controllers/contrato');
 module.exports = function (passport) {
 
     router.get('/contratos', isAuthenticated, function (req, res) {
-        res.render('contratos', { user: req.user });
+        res.render('contratos', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/contratos/list')

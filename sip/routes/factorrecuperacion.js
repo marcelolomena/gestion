@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/factorrecuperacion', isAuthenticated, function (req, res) {
-        res.render('factorrecuperacion', { user: req.user });
+        res.render('factorrecuperacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/factorrecuperacion/list')
@@ -17,8 +17,8 @@ module.exports = function (passport) {
         .post(isAuthenticated, recuperacionController.action);
 
     router.route('/factorrecuperacion/excel')
-        .get(isAuthenticated, recuperacionController.getExcel);         
-  
+        .get(isAuthenticated, recuperacionController.getExcel);
+
     return router;
 
 }

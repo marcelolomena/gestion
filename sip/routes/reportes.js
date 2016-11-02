@@ -7,52 +7,52 @@ var reportesController = require('../controllers/reportes');
 module.exports = function (passport) {
 
     router.get('/reporte', isAuthenticated, function (req, res) {
-        res.render('reporte', { user: req.user });
+        res.render('reporte', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/reportetroya', isAuthenticated, function (req, res) {
-        res.render('reportetroya', { user: req.user });
+        res.render('reportetroya', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/reportepivote', isAuthenticated, function (req, res) {
-        res.render('reportepivote', { user: req.user });
-    });    
+        res.render('reportepivote', { user: req.user, data: req.session.passport.sidebar });
+    });
 
     router.route('/reporte/lstGerencias')
         .get(isAuthenticated, reportesController.lstGerencias);
 
     router.route('/reporte/lstGerenciasTroya')
-        .get(isAuthenticated, reportesController.lstGerenciasTroya);    
+        .get(isAuthenticated, reportesController.lstGerenciasTroya);
 
     router.route('/reporte/lstDepartamentos/:id')
-        .get(isAuthenticated, reportesController.lstDepartamentos);       
+        .get(isAuthenticated, reportesController.lstDepartamentos);
 
     router.route('/reporte/lstServices/:id')
-        .get(isAuthenticated, reportesController.lstServices); 
+        .get(isAuthenticated, reportesController.lstServices);
 
     router.route('/reporte/lstConceptoGasto')
-        .get(isAuthenticated, reportesController.lstConceptoGasto);             
+        .get(isAuthenticated, reportesController.lstConceptoGasto);
 
     router.route('/reporte/names')
-        .get(isAuthenticated, reportesController.lstNames);       
+        .get(isAuthenticated, reportesController.lstNames);
 
     router.route('/reporte/gerencias')
-        .get(isAuthenticated, reportesController.pdfManager);  
+        .get(isAuthenticated, reportesController.pdfManager);
 
     router.route('/reporte/lstServiceFromConcept/:nombre/:id')
-        .get(isAuthenticated, reportesController.lstServiceFromConcept);             
+        .get(isAuthenticated, reportesController.lstServiceFromConcept);
 
     router.route('/reporte/repo1')
-        .get(isAuthenticated, reportesController.reporteGerenciasPdf);     
+        .get(isAuthenticated, reportesController.reporteGerenciasPdf);
 
     router.route('/reporte/lstDepartamentosTroya/:id')
-        .get(isAuthenticated, reportesController.lstDepartamentosTroya);   
+        .get(isAuthenticated, reportesController.lstDepartamentosTroya);
 
     router.route('/reporte/testtroya')
-        .post(isAuthenticated, reportesController.testtroya);   
+        .post(isAuthenticated, reportesController.testtroya);
 
     router.route('/reporte/integrado')
-        .get(isAuthenticated, reportesController.reporteIntegrado);                                   
+        .get(isAuthenticated, reportesController.reporteIntegrado);
 
     return router;
 

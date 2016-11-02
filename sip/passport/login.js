@@ -35,6 +35,7 @@ module.exports = function (passport) {
 								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 								//return done(null, false, {message: "Clave inválida."});
 							} else {
+
 								return done(null, user);
 							}
 						}
