@@ -11,11 +11,11 @@ var flujopagoenvueloController = require('../controllers/flujopagoenvuelo');
 module.exports = function (passport) {
 
     router.get('/presupuestoenvuelo', isAuthenticated, function (req, res) {
-        res.render('presupuestoenvuelo', { user: req.user });
+        res.render('presupuestoenvuelo', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/inscripcionsap', isAuthenticated, function (req, res) {
-        res.render('inscripcionsap', { user: req.user });
+        res.render('inscripcionsap', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/presupuestoenvuelo/list')

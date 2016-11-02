@@ -123,6 +123,10 @@ module.exports = function(sequelize, DataTypes) {
     montoneto: {
       type: DataTypes.FLOAT,
       allowNull: true
+    },
+    montototalpesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
     }
   }, {
     schema: 'sip', timestamps: false, tableName: 'solicitudaprobacion'

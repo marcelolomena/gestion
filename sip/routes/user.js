@@ -19,7 +19,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, userController.getUsersByProgram);
 
     router.get('/roldenegocio', isAuthenticated, function (req, res) {
-        res.render('roldenegocio', { user: req.user });
+        res.render('roldenegocio', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/usuariosdelegados/:uid')

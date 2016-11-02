@@ -239,3 +239,137 @@ exports.solicitudesaprobadas = function (req, res) {
             logger.error(e)
         })
 }
+
+exports.desgloseporsolicitud = function (req, res) {
+    var page = req.body.page;
+    var rows = req.body.rows;
+    var sidx = req.body.sidx;
+    var sord = req.body.sord;
+    var idsolicitud = req.params.id;
+    var filters = req.body.filters;
+    var condition = "";
+
+    if (!sidx)
+        sidx = "id";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sip.desglosecontable a 
+            where a.idsolicitud =  `+ idsolicitud +
+            `  ` + condition
+
+    var sql = `
+            SELECT 
+                    a.* ,b.cui, c.cuentacontable, c.nombrecuenta 
+                    FROM sip.desglosecontable a 
+                    join sip.estructuracui b on a.idcui=b.id 
+					join sip.cuentascontables c on a.idcuentacontable=c.id
+            where a.idsolicitud = `+ idsolicitud+
+            `  ` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+
+        logger.debug("lala : " + sql)
+        logger.debug("lili : " + idsolicitud)
+        
+
+
+    sequelize.query(count,
+        {
+            replacements: { idsolicitud: idsolicitud, condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
+            sequelize.query(sql,
+                {
+                    replacements: { page: parseInt(page), rows: parseInt(rows), idsolicitud: idsolicitud, condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    logger.error(e)
+                })
+
+        }).catch(function (e) {
+            logger.error(e)
+        })
+}
+
+exports.actiondesglose = function (req, res) {
+  var action = req.body.oper;
+  /*
+  var porcentaje = 0.00
+  
+  if (action != "del") {
+    if (req.body.porcentaje != ""){
+      porcentaje1 = parseFloat(req.body.porcentaje)/100;
+    }else{
+      porcentaje = 0.00;
+    }
+  }
+  */
+
+  switch (action) {
+    case "add":
+      models.desglosecontable.create({
+        idsolicitud: req.body.parent_id,
+        idcui: req.body.idcui,
+        idcuentacontable: req.body.idcuentacontable,
+        porcentaje: req.body.porcentaje,
+        borrado: 1
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
+      break;
+    case "edit":
+      models.desglosecontable.update({
+        idcui: req.body.idcui,
+        idcuentacontable: req.body.idcuentacontable,
+        porcentaje: req.body.porcentaje
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          logger.error(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      models.desglosecontable.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          logger.debug('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+
+}

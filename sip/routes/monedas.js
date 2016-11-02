@@ -8,7 +8,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/monedasconversion', isAuthenticated, function (req, res) {
-        res.render('monedasconversion', { user: req.user });
+        res.render('monedasconversion', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/monedas/list')
@@ -18,8 +18,8 @@ module.exports = function (passport) {
         .post(isAuthenticated, monedasController.action);
 
     router.route('/monedas/excel')
-        .get(isAuthenticated, monedasController.getExcel);         
-  
+        .get(isAuthenticated, monedasController.getExcel);
+
     router.route('/monedasconversion/list/:id')
         .post(isAuthenticated, monedasConversionController.list);
 

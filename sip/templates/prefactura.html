@@ -9,7 +9,8 @@
 		 b.servicio,
 		 b.glosaservicio, 
 		 b.montoaprobado, 
-		 b.montoaprobadopesos, 
+		 b.montoaprobadopesos,
+		 b.montoapagarpesos, 
 		 b.factorconversion,
 		 b.glosamoneda,
 		 b.fechainicio,
@@ -19,7 +20,11 @@
 		 b.montomulta,
 		 b.nombreresponsable,
 		 b.numcui,
-		 b.montoapagar ]});
+		 b.montoapagar,
+         b.idfacturacion,
+		 b.montomultapesos,
+		 b.montototalpesos
+		]});
     });
 </script>
 <div class="container">
@@ -77,36 +82,40 @@
 						<h4>Cantidad</h4>
 					</th>
 					<th>
-						<h4>Precio Unitario</h4>
+						<h4>Precio</h4>
 					</th>
 					<th>
-						<h4 align=center>Valor</h4>
+						<h4>Multa</h4>
+					</th>
+					<th>
+						<h4 align=center>Total</h4>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{{#each prefactura}}
 				<tr>
-					<td>XXX</td>
+					<td>{{idfacturacion}}</td>
 					<td>
 						Servicio: {{servicio}}<br>
 						Glosa de Servicio: {{glosaservicio}}<br>
-						Monto Aprobado a Facturar: <br>
+						Monto Aprobado a Facturar: {{montototalpesos}}<br>
 						Tipo de Cambio: {{factorconversion}}<br>
-						Cuenta Contable: {{cuentacontable}},{{nombrecuenta}}<br>
+						Cuenta Contable: {{cuentacontable}}, {{nombrecuenta}}<br>
 						Cui: {{numcui}}<br>
 						At: {{nombreresponsable}}<br>
 					</td>
 					<td class="text-right">1</td>
-					<td class="text-right">1</td>
-					<td class="text-right">$ {{montoaprobadopesos}}</td>
+					<td class="text-right">{{montoaprobadopesos}}</td>
+					<td class="text-right">{{montomultapesos}}</td>					
+					<td class="text-right">{{montototalpesos}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 		<div class="row text-right">
 			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>(IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>${{subtotalsinmulta prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
+			<div class="col-xs-2"><strong>{{subtotalsinmulta prefactura}}<br>{{totalimpuesto prefactura}}<br>{{totalprefactura prefactura}}<br></strong></div>
 		</div>
 		<!--
 		<div class="row">

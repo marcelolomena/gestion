@@ -32,7 +32,11 @@
         "jsreport-core": "latest",
         "jsreport": "latest",
         "jsreport-templates": "latest",
-        "jsreport-xlsx":"latest",
-        "jsreport-handlebars":"latest"
+        "jsreport-xlsx": "latest",
+        "jsreport-handlebars": "latest",
+        "dicer": "latest",
+        "busboy": "latest",
+        "async": "latest",
+        "csv": "latest"
     }
 }

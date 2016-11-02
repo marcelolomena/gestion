@@ -10,11 +10,11 @@ var presupuestoapruebaController = require('../controllers/presupuestoaprueba');
 module.exports = function (passport) {
 
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
-        res.render('presupuesto', { user: req.user });
+        res.render('presupuesto', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/presupuestoaprobacion', isAuthenticated, function (req, res) {
-        res.render('presupuestoaprueba', { user: req.user });
+        res.render('presupuestoaprueba', { user: req.user, data: req.session.passport.sidebar });
     });
     
     router.route('/presupuestoperiodoslist/:id')
@@ -87,7 +87,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);         
 
     router.get('/presupuestoeditcosto', isAuthenticated, function (req, res) {
-        res.render('presupuestoeditcosto', { user: req.user });
+        res.render('presupuestoeditcosto', { user: req.user, data: req.session.passport.sidebar });
     });        
     
     router.route('/presupuestoperiodoscosto/action')

@@ -26,11 +26,15 @@ exports.test = function (req, res) {
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))) totalprefactura,
 				CONVERT(varchar(10),a.fecha,103) fecha,
 				b.glosaservicio,
+                b.idfacturacion,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))) montoaprobado,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))+1,len(CONVERT(varchar, CONVERT(money, b.factorconversion), 1))) factorconversion,
-				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoaprobadopesos), 1))) montoaprobadopesos,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.')  montoaprobadopesos,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomultapesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomultapesos), 1))-1) ,',','.')  montomultapesos,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))) montoapagar,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoapagarpesos), 1))) montoapagarpesos,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montototalpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montototalpesos), 1))-1) ,',','.')  montototalpesos,                                
                 c.razonsocial,
 				c.numrut,
 				c.dvrut,
@@ -92,6 +96,7 @@ exports.test = function (req, res) {
                             phantom: {
                                 orientation: 'portrait',
                                 format: 'A4',
+                                margin: '1.5cm'
                             }
                         },
                         data: datum
@@ -242,12 +247,13 @@ exports.generar = function (req, res) {
         `
     var promises = []
     var o_promises = []
+    var s_promises = []
     sequelize.query(sql,
         {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-            logger.debug(rows)
+            //logger.debug(rows)
             models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     var newPromise = models.solicitudaprobacion.create({
@@ -273,8 +279,8 @@ exports.generar = function (req, res) {
                         'montomultapesos': 0,
                         'montoimpuesto': rows[i].montoimpuesto,
                         'factorconversion': rows[i].valorconversion,
-                        'montoaprobadopesos': 0, 
-                        'montoneto': rows[i].montoneto,                  
+                        'montoaprobadopesos': 0,
+                        'montoneto': rows[i].montoneto,
                         'pending': true
                     }, { transaction: t });
 
@@ -284,7 +290,26 @@ exports.generar = function (req, res) {
 
                 return Promise.all(promises);
             }).then(function (result) {
-                logger.debug("EXITO GEN SOL");
+
+                models.sequelize.transaction({ autocommit: true }, function (t) {
+                    for (var i = 0; i < result.length; i++) {
+                        var myPromise = models.solicitudaprobacion.update({
+                            idfacturacion: result[i].periodo.toString() + result[i].id.toString()
+                        }, {
+                                where: { id: result[i].id }
+                            }, { transaction: t });
+                        s_promises.push(myPromise);
+
+                    };
+
+                    return Promise.all(s_promises);
+                }).then(function (result) {
+                    logger.debug("EXITO AL GENERAR IDITEM");
+                }).catch(function (err) {
+                    logger.error(err)
+                });
+
+
             }).catch(function (err) {
                 logger.error(err)
             });
