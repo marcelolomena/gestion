@@ -24,7 +24,7 @@ function gridSolicitudes(parentRowID, parentRowKey) {
     var childGridURL = "/solicitudesporfactura/" + parentRowKey;
 
     var modelSolicitudes = [
-        { label: 'id', name: 'id', key: true, hidden: true },  
+        { label: 'Id', name: 'id', key: true, hidden: false, search: false },  
         { label: 'Glosa Servicio',
             name: 'glosaservicio',
             width: 450,
