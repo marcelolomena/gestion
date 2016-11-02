@@ -183,9 +183,9 @@ exports.action = function (req, res) {
 }
 
 exports.cuisprefactura = function (req, res) {
-  var rol = req.user[0].rid;
-  console.log("******usr*********:" + req.user[0].uid);
-  console.log("******rol*********:" + req.user[0].rid);
+  var rol = req.session.passport.sidebar[0].rid;
+  console.log("******usr*********:" + req.session.passport.user);
+  console.log("******rol*********:" + req.session.passport.sidebar[0].rid);
   console.log("*ROLADM*:" + constants.ROLADMDIVOT);
   var periodo = req.params.periodo
   if (rol == constants.ROLADMDIVOT) {  

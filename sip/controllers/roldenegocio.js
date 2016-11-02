@@ -24,8 +24,8 @@ exports.list = function (req, res) {
 
   var order = sidx + " " + sord;
 
-  var rol = req.user[0].rid;
-  var uid = req.user[0].uid;
+  var rol = req.session.passport.sidebar[0].rid;
+  var uid = req.session.passport.user;
   if (rol == constants.ROLADMDIVOT) {
 
     var sql0 = "declare @rowsPerPage as bigint; " +

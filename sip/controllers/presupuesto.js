@@ -21,10 +21,10 @@ exports.getPresupuestoPaginados = function (req, res) {
     sord = "desc";
 
   var order = sidx + " " + sord;
-  //var cuis = getCuis(req.user[0].uid);
+  //var cuis = getCuis(req.session.passport.user);
 
   var superCui = function (uid, callback) {
-    var rol = req.user[0].rid;
+    var rol = req.session.passport.sidebar[0].rid;
     if (rol != constants.ROLADMDIVOT) {
       var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
       logger.debug("query:" + sql1);
@@ -102,9 +102,11 @@ exports.getPresupuestoPaginados = function (req, res) {
     var records =  recs[0].count;
     var total = Math.ceil(parseInt(recs[0].count) / rowspp);  
     logger.debug("####COUNT:"+recs[0].count+" Total:"+total); 
-    superCui(req.user[0].uid, function (elcui) {
+    logger.debug("EL SUPER ID : " + req.session.passport.user)
+    logger.debug("ROL : " + req.session.passport.sidebar[0].rid)
+    superCui(req.session.passport.user, function (elcui) {//req.user[0].uid
       logger.debug('elcui:' + elcui)
-      var rol = req.user[0].rid;
+      var rol = req.session.passport.sidebar[0].rid;//req.user[0].rid;
       var sqlok;
       if (rol == constants.ROLADMDIVOT) {
         sqlok = "declare @rowsPerPage as bigint; " +
@@ -316,9 +318,9 @@ exports.getUsersByRol = function (req, res) {
 
 exports.getCUIs = function (req, res) {
   var idcui;
-  var rol = req.user[0].rid;
-  logger.debug("******usr*********:" + req.user[0].uid);
-  logger.debug("******rol*********:" + req.user[0].rid);
+  var rol = req.session.passport.sidebar[0].rid;
+  logger.debug("******usr*********:" + req.session.passport.user);
+  logger.debug("******rol*********:" + req.session.passport.sidebar[0].rid);
   logger.debug("*ROLADM*:" + constants.ROLADMDIVOT);
   if (rol == constants.ROLADMDIVOT) {
     var sql = "SELECT id, nombre FROM sip.estructuracui " +
@@ -331,7 +333,7 @@ exports.getCUIs = function (req, res) {
         res.json({ error_code: 1 });
       });
   } else {
-    var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + req.user[0].uid;
+    var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + req.session.passport.user;
     logger.debug("query:" + sql1);
     sequelize.query(sql1)
       .spread(function (rows) {

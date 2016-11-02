@@ -60,7 +60,7 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Fecha', name: 'fecha', width: 100, align: 'left', search: true, sortable: false, editable: true, 
+        { label: 'Fecha', name: 'fecha', width: 100, align: 'left', search: false, sortable: false, editable: true, 
             formatter: 'date',
             formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editoptions: {
@@ -71,11 +71,11 @@ $(document).ready(function () {
                 }
             }        
         },
-        { label: 'Monto Neto', name: 'subtotal', width: 200, align: 'right', search: true, sortable: false, editable: true,
+        { label: 'Monto Neto', name: 'subtotal', width: 200, align: 'right', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 } },
-        {label: 'Impuesto', name: 'impuesto', width: 80, align: 'right', sortable: false, search: true, editable: true,
+        {label: 'Impuesto', name: 'impuesto', width: 80, align: 'right', sortable: false, search: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 } },      
-        { label: 'Total', name: 'total', width: 200, align: 'right', search: true, sortable: false, editable: true,
+        { label: 'Total', name: 'total', width: 200, align: 'right', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 } }
         
     ];

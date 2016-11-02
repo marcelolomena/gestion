@@ -66,12 +66,12 @@ exports.graficoDataReal = function (req, res) {
 
 exports.sapgrafico = function (req, res) {
   
-  logger.debug("--------------------->>" + req.user[0].uid)
+  logger.debug("--------------------->>" + req.session.passport.user)
     models.proyecto.findAll({
         attributes: ['id', 'sap', 'nombre']
     }).then(function (proyecto) {
         //console.dir(proyecto)
-        //res.json({ resultado: proyecto, uid: req.user[0].uid });
+        //res.json({ resultado: proyecto, uid: req.session.passport.user });
         res.json(proyecto);
     }).catch(function (err) {
         logger.error(err);

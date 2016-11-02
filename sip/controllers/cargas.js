@@ -235,7 +235,6 @@ exports.archivo = function (req, res) {
       var saveTo = path.join(__dirname, '..', 'temp', filename);
 
       file.pipe(fs.createWriteStream(saveTo));
-
       var inserter = async.cargo(function (tasks, inserterCallback) {
         models.troya.bulkCreate(tasks).then(function (troya) {
           inserterCallback();
@@ -252,11 +251,13 @@ exports.archivo = function (req, res) {
         relax: true,
         delimiter: ';'
       });
-
+      var carrusel = [];
       parser.on('readable', function () {
         while (line = parser.read()) {
-          inserter.push(line);
+          //inserter.push(line);
+          carrusel.push(line);
         }
+        //logger.debug("paso por aca")
       });
 
       parser.on('error', function (err) {
@@ -264,6 +265,31 @@ exports.archivo = function (req, res) {
       });
 
       parser.on('end', function (count) {
+        var j = 0;
+        var turro = [];
+        logger.debug("el largo : " + carrusel.length)
+
+
+        for (var i = 0; carrusel.length; i++) {
+
+          if (j % 1000) {
+            logger.debug("SI")
+          } else {
+
+          }
+          /*
+                    if (j % 1000 ) {
+                      logger.debug("largo cola : " + j)
+                      //inserter.push(turro);
+                      turro.length = 0;
+                      j = 0;
+                    } else {
+                      turro[j] = carrusel[i];
+                      j = j + 1;
+                    }
+          */
+        }
+
         inserter.drain = function () {
           logger.debug("listo en db")
         }
@@ -283,7 +309,7 @@ exports.archivo = function (req, res) {
             id: val
           }
         }).then(function (detallecargas) {
-          logger.debug("cambio estado")
+          logger.debug("cambiando estado de carga")
         }).catch(function (err) {
           logger.error(err)
         });
