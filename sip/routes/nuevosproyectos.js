@@ -9,7 +9,7 @@ var flujoNuevaTareaController = require('../controllers/flujonuevatarea');
 module.exports = function (passport) {
 
     router.get('/nuevosproyectos', isAuthenticated, function (req, res) {
-        res.render('nuevosproyectos', { user: req.user })
+        res.render('nuevosproyectos', { user: req.user, data: req.session.passport.sidebar })
     });
 
     router.route('/nuevosproyectos/list')
@@ -18,20 +18,11 @@ module.exports = function (passport) {
     router.route('/nuevosproyectos/action')
         .post(isAuthenticated, nuevosProyectosController.action);
 
-    //router.route('/nuevosproyectos/excel')
-        //.get(isAuthenticated, nuevosProyectosController.excel);
-
     router.route('/tareasnuevosproyectos/:id')
         .post(isAuthenticated, tareasNuevosProyectosController.list);
 
     router.route('/tareasnuevosproyectos/action/:idd')
         .post(isAuthenticated, tareasNuevosProyectosController.action);
-
-    //router.route('/flujonuevatarea/:id')
-      //  .post(isAuthenticated, flujoNuevaTareaController.list);
-
-    //router.route('/flujonuevatarea/:idd/action')
-      //  .post(isAuthenticated, flujoNuevaTareaController.action);
 
     return router;
 

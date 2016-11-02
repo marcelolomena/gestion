@@ -16,14 +16,14 @@ var testController = require('../controllers/test')
 var rolesController = require('../controllers/roles')
 var permisosController = require('../controllers/permisos')
 var registroController = require('../controllers/registro')
-var express=require('express')
-var router=express.Router()
-var isAuthenticated=require('../policies/isAuthenticated')    
+var express = require('express')
+var router = express.Router()
+var isAuthenticated = require('../policies/isAuthenticated')
 
 module.exports = function (passport) {
 
     router.get('/proveedores', isAuthenticated, function (req, res) {
-        res.render('proveedores', { user: req.user });
+        res.render('proveedores', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/proveedores/combobox')
@@ -45,11 +45,11 @@ module.exports = function (passport) {
         .post(isAuthenticated, contactoController.action);
 
     router.get('/parametros', isAuthenticated, function (req, res) {
-        res.render('parametros', { user: req.user });
+        res.render('parametros', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/roles', isAuthenticated, function (req, res) {
-        res.render('roles', { user: req.user });
+        res.render('roles', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/roles/list')
@@ -62,7 +62,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, rolesController.action);
 
     router.get('/permisos', isAuthenticated, function (req, res) {
-        res.render('permisos', { user: req.user });
+        res.render('permisos', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/permisos/list')
@@ -102,7 +102,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, paramController.getListParam);
 
     router.get('/proyectos', isAuthenticated, function (req, res) {
-        res.render('proyectos', { user: req.user });
+        res.render('proyectos', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/proyectoslist')
@@ -130,7 +130,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, parametroController.getTipos);
 
     router.get('/erogaciones', isAuthenticated, function (req, res) {
-        res.render('erogaciones');
+        res.render('erogaciones', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/erogacioneslist/:id')
@@ -161,7 +161,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, contactoController.getContactos);
 
     router.get('/serviciosext', isAuthenticated, function (req, res) {
-        res.render('servicios', { user: req.user });
+        res.render('servicios', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/serviciosext/list')
@@ -180,7 +180,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, testController.test);
 
     router.get('/graficotest', isAuthenticated, function (req, res) {
-        res.render('grafico', { user: req.user });
+        res.render('grafico', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/graficodatareal/:idsap')
@@ -193,7 +193,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, graficoController.sapgrafico);
 
     router.get('/registro', isAuthenticated, function (req, res) {
-        res.render('registro', { user: req.user });
+        res.render('registro', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/registro/list')

@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/cuentascontables', isAuthenticated, function (req, res) {
-        res.render('cuentascontables', { user: req.user });
+        res.render('cuentascontables', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/cuentascontables/list')
@@ -17,11 +17,11 @@ module.exports = function (passport) {
         .post(isAuthenticated, cuentasController.action);
 
     router.route('/cuentascontables/excel')
-        .get(isAuthenticated, cuentasController.getExcel);         
-    
+        .get(isAuthenticated, cuentasController.getExcel);
+
     router.route('/cuentascontables/conceptospresupuestarios')
-        .get(isAuthenticated, cuentasController.getConceptos);             
-  
+        .get(isAuthenticated, cuentasController.getConceptos);
+
     return router;
 
 }

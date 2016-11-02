@@ -3,6 +3,8 @@ var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var logger = require("../utils/logger");
+var menu = require('../utils/menu');
+
 module.exports = function (passport) {
 
     /* GET login page. */
@@ -28,16 +30,22 @@ module.exports = function (passport) {
 
     router.post('/login', passport.authenticate('local', redirectsTwo),
         function (req, res) {
-            // Explícitamente guardar la sesión antes de redirigir!
-            //req.flash('message', 'Please check your email to confirm it.');
-            req.session.save(() => {
-                res.redirect('/home');
-            })
+            menu.builUserdMenu(req.user, function (err, data) {
+                if (data) {
+                    // Explícitamente guardar la sesión antes de redirigir!
+                    //req.flash('message', 'Please check your email to confirm it.');
+                    //req.session.passport.sidebar.rid
+                    req.session.save(() => {
+                        req.session.passport.sidebar = data
+                        res.render('home', { data: data });
+                    })
+                }
+            });
         });
 
     /* GET Home Page */
     router.get('/home', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar });
     });
 
     /* Handle Logout */

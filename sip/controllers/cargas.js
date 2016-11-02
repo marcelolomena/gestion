@@ -3,7 +3,12 @@ var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
- 
+var Busboy = require('busboy');
+var path = require('path');
+var fs = require('fs');
+var async = require('async');
+var csv = require('csv');
+
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
@@ -20,14 +25,14 @@ exports.list = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-  
+
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, id,archivo, fechaarchivo, frecuencia,tipocarga " +
+    "as resultNum, id,archivo, fechaarchivo, frecuencia,tipocarga, '' fileToUpload " +
     "FROM sip.logcargas " +
     " where borrado = 1 ORDER BY id asc) " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -49,7 +54,7 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, id,archivo, fechaarchivo, frecuencia,tipocarga " +
+        "as resultNum, id,archivo, fechaarchivo, frecuencia,tipocarga, '' fileToUpload " +
         "FROM sip.logcargas " +
         "WHERE borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY id asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -92,15 +97,15 @@ exports.action = function (req, res) {
   var action = req.body.oper;
 
   switch (action) {
-   
-    case "add":
-    var proveedor 
 
-     if (req.body.razonsocial == 0)
-       { provedor = 'NULL'}
-     else
-       {proveedor= req.body.razonsocial}
-               
+    case "add":
+      var proveedor
+
+      if (req.body.razonsocial == 0)
+      { provedor = 'NULL' }
+      else
+      { proveedor = req.body.razonsocial }
+
       models.plantillapresupuesto.create({
         idcui: req.body.parent_id,
         idservicio: req.body.idservicio,
@@ -173,10 +178,10 @@ exports.detallecarga = function (req, res) {
     "data": req.params.id
   }];
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      logger.debug("->>> " + err)
+    } else {
       models.detallecargas.count({
         where: data
       }).then(function (records) {
@@ -190,7 +195,7 @@ exports.detallecarga = function (req, res) {
           //Contrato.forEach(log)
           res.json({ records: records, total: total, page: page, rows: dcargas });
         }).catch(function (err) {
-                        logger.error(e)  
+          logger.error(e)
           res.json({ error_code: 1 });
         });
       })
@@ -198,3 +203,100 @@ exports.detallecarga = function (req, res) {
   });
 
 };
+
+exports.guardar = function (req, res) {
+
+  models.detallecargas.create({
+    idlogcargas: req.body.id,
+    fechaarchivo: new Date(),
+    fechaproceso: new Date(),
+    usuario: req.session.passport.user,
+    nroregistros: 0,
+    nombre1: '',
+    control1: 'inicio',
+    nombre2: '',
+    control2: '',
+    borrado: 1
+  }).then(function (detallecargas) {
+    res.json({ error_code: 0, id: detallecargas.id, message: 'inicio carga', success: true });
+  }).catch(function (err) {
+    logger.error(err)
+    res.json({ error_code: 1, id: 0, message: err, success: false });
+  });
+
+}
+
+exports.archivo = function (req, res) {
+
+  if (req.method === 'POST') {
+    var busboy = new Busboy({ headers: req.headers });
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+
+      var saveTo = path.join(__dirname, '..', 'temp', filename);
+
+      file.pipe(fs.createWriteStream(saveTo));
+
+      var inserter = async.cargo(function (tasks, inserterCallback) {
+        models.troya.bulkCreate(tasks).then(function (troya) {
+          inserterCallback();
+        }).catch(function (err) {
+          logger.error(err)
+        });
+      },
+        1000
+      );
+
+      var input = fs.createReadStream(saveTo, { encoding: 'utf8' });
+      var parser = csv.parse({
+        columns: true,
+        relax: true,
+        delimiter: ';'
+      });
+
+      parser.on('readable', function () {
+        while (line = parser.read()) {
+          inserter.push(line);
+        }
+      });
+
+      parser.on('error', function (err) {
+        logger.error(err.message);
+      });
+
+      parser.on('end', function (count) {
+        inserter.drain = function () {
+          logger.debug("listo en db")
+        }
+      });
+
+      input.pipe(parser);
+
+    });
+    busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+      logger.debug('Campo [' + fieldname + ']: valor: ' + val);
+
+      models.detallecargas.update({
+        fechaproceso: new Date(),
+        control2: 'archivo recibido'
+      }, {
+          where: {
+            id: val
+          }
+        }).then(function (detallecargas) {
+          logger.debug("cambio estado")
+        }).catch(function (err) {
+          logger.error(err)
+        });
+
+    });
+    busboy.on('finish', function () {
+      res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
+    });
+
+    return req.pipe(busboy);
+  }
+  res.writeHead(404);
+  res.end();
+
+}
+

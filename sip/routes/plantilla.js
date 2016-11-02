@@ -9,7 +9,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/plantilla', isAuthenticated, function (req, res) {
-        res.render('plantilla', { user: req.user });
+        res.render('plantilla', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/plantilla/list')
@@ -22,14 +22,14 @@ module.exports = function (passport) {
         .get(isAuthenticated, plantillaController.getExcel);
 
     router.route('/detalleplantilla/:id')
-        .get(isAuthenticated, detalleplantillaController.list);      
-        
+        .get(isAuthenticated, detalleplantillaController.list);
+
     router.route('/cuiservicios/:id')
-        .get(isAuthenticated, plantillacuiController.getCuiServicios);  
-        
+        .get(isAuthenticated, plantillacuiController.getCuiServicios);
+
     router.route('/cuiproveedores/:id/:idservicio')
-        .get(isAuthenticated, plantillacuiController.getCuiProveedores);                
-  
+        .get(isAuthenticated, plantillacuiController.getCuiProveedores);
+
     return router;
 
 }

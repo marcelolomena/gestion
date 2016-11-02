@@ -5,9 +5,10 @@ $(document).ready(function () {
     var modelcargas = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Archivo', name: 'archivo', width: 50, align: 'left', search: true, editable: false, hidden: false },
-        { label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 50, align: 'left', search: false,
+        {
+            label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 50, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: {required: true},
+            editable: true, editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -26,6 +27,19 @@ $(document).ready(function () {
         },
         { label: 'Frecuencia', name: 'frecuencia', width: 100, align: 'left', search: true, editable: true },
         { label: 'Tipo de Carga', name: 'tipocarga', width: 100, align: 'left', search: true, editable: true },
+        {
+            label: 'fileToUpload',
+            name: 'fileToUpload',
+            align: 'left',
+            hidden: true,
+            editable: true,
+            edittype: 'file',
+            editrules: { edithidden: true },
+            editoptions: {
+                enctype: "multipart/form-data"
+            },
+            search: false
+        }
     ];
     $("#grid").jqGrid({
         url: '/cargas/list',
@@ -59,16 +73,72 @@ $(document).ready(function () {
         },
     });
 
-    $("#grid").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
+    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: false, add: false, del: false, search: false,
+        edit: true, add: false, del: false, search: false,
         refresh: true, view: true, position: "left", cloneToTop: false
     },
+
         {
-            recreateFilter: true
-        }
+            editCaption: "Carga de Archivo",
+            closeAfterEdit: true,
+            recreateForm: true,
+            mtype: 'POST',
+            url: '/cargas/guardar',
+            afterSubmit: UploadFile
+        }, {}, {}
+
     );
+
+    function UploadFile(response, postdata) {
+
+        var data = $.parseJSON(response.responseText);
+        if (data.error_code == 0) {
+            if ($("#fileToUpload").val() != "") {
+                ajaxFileUpload(data.id);
+            }
+        }
+
+        return [data.success, data.message, data.id];
+
+    }
+
+
+    function ajaxFileUpload(id) {
+        var dialog = bootbox.dialog({
+            title: 'Se inicia la carga en la base de datos',
+            message: '<p><i class="fa fa-spin fa-spinner"></i> Cargando...</p>'
+        });
+        dialog.init(function () {
+            $.ajaxFileUpload({
+                url: '/cargas/archivo',
+                secureuri: false,
+                fileElementId: 'fileToUpload',
+                dataType: 'json',
+                data: { id: id },
+                success: function (data, status) {
+                    if (typeof (data.success) != 'undefined') {
+                        if (data.success == true) {
+                            //bootbox.alert(data.message, function () { /* your callback code */ });
+                            dialog.find('.bootbox-body').html(data.message);
+                            //alert(data.message);
+                        } else {
+                            //bootbox.alert(data.message, function () { /* your callback code */ });
+                            dialog.find('.bootbox-body').html(data.message);
+                        }
+                    }
+                    else {
+                        return alert('Failed to upload csv!');
+                    }
+                },
+                error: function (data, status, e) {
+                    return alert('Failed to upload csv!');
+                }
+            })
+        });
+    }
 
     $("#grid").jqGrid('navButtonAdd', "#pager", {
         caption: "",
@@ -102,9 +172,10 @@ function showChildGrid(parentRowID, parentRowKey) {
     var modelDetalle = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idlogcargas', name: 'idlogcargas', hidden: true },
-        { label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 100, align: 'left', search: false,
+        {
+            label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: {required: true},
+            editable: true, editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -121,9 +192,10 @@ function showChildGrid(parentRowID, parentRowKey) {
                 sopt: ["eq", "le", "ge"]
             },
         },
-        { label: 'Fecha Proceso Carga', name: 'fechaproceso', width: 100, align: 'left', search: false,
+        {
+            label: 'Fecha Proceso Carga', name: 'fechaproceso', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: {required: true},
+            editable: true, editrules: { required: true },
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
@@ -139,13 +211,13 @@ function showChildGrid(parentRowID, parentRowKey) {
                 },
                 sopt: ["eq", "le", "ge"]
             },
-        },        
-        { label: 'Usuario', name: 'usuario', search: true,editable: true, width: 100, editrules: { edithidden: false }, hidedlg: false,search: false },
-        { label: 'Número Registros', name: 'nroregistros', search: true,editable: true,width: 100, editrules: { edithidden: false }, hidedlg: true,search: false },
-        { label: 'Nombre Control 1', name: 'nombre1', editable: true,width: 100, editrules: { edithidden: false }, hidedlg: true,search: false },
-        { label: 'Control 1', name: 'control1', editable: true, width: 100,editrules: { edithidden: false }, hidedlg: true ,search: false},
-        { label: 'Nombre Control 2', name: 'nombre2', editable: true,width: 100, editrules: { edithidden: false }, hidedlg: true ,search: false},
-        { label: 'Control 2', name: 'control2', editable: true, width: 100,editrules: { edithidden: false }, hidedlg: true ,search: false},        
+        },
+        { label: 'Usuario', name: 'usuario', search: true, editable: true, width: 100, editrules: { edithidden: false }, hidedlg: false, search: false },
+        { label: 'Número Registros', name: 'nroregistros', search: true, editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
+        { label: 'Nombre Control 1', name: 'nombre1', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
+        { label: 'Control 1', name: 'control1', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
+        { label: 'Nombre Control 2', name: 'nombre2', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
+        { label: 'Control 2', name: 'control2', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
     ];
 
     $("#" + childGridID).jqGrid({
@@ -167,6 +239,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             minusicon: "glyphicon-hand-down"
         },
         regional: 'es',
+
         height: 'auto',
         pager: "#" + childGridPagerID,
         gridComplete: function () {
@@ -178,12 +251,12 @@ function showChildGrid(parentRowID, parentRowKey) {
         }
     });
 
-    $("#" + childGridID).jqGrid('filterToolbar', {  stringResult: false, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: false, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
-                
+
         {
             recreateFilter: true
         }

@@ -1,13 +1,13 @@
 #sidebar
   .perfil_sesion
     .user
-     #p #{user[0].nombre}
+     #p #{data[0].nombre}
     .usuario1 
     .usuario3
       a(href='signout') Cerrar Sesión
   #cssmenu
     ul
-      each val in user[1].menus
+      each val in data[1].menus
         li.has-sub
           a(href='#')
             span=val.menu.menu

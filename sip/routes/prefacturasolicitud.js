@@ -8,7 +8,7 @@ var facturasController = require('../controllers/facturas');
 module.exports = function (passport) {
 
     router.get('/prefacturasolicitud', isAuthenticated, function (req, res) {
-        res.render('prefacturasolicitud', { user: req.user });
+        res.render('prefacturasolicitud', { user: req.user, data: req.session.passport.sidebar });
     });
     
     router.route('/prefacturasolicitud/:cui/:periodo/:proveedor')
@@ -33,7 +33,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, prefacturasolicitudController.action);        
 
     router.get('/facturas', isAuthenticated, function (req, res) {
-        res.render('facturas', { user: req.user });
+        res.render('facturas', { user: req.user, data: req.session.passport.sidebar });
     });
     
     router.route('/facturaslist')
@@ -44,10 +44,20 @@ module.exports = function (passport) {
 
     router.route('/facturas/action')
         .post(isAuthenticated, facturasController.action);          
+
+    router.route('/facturas/actionDetalle/:id')
+        .post(isAuthenticated, facturasController.actionDetalle);             
         
-    router.route('/facturasdetalle/:cui/:proveedor')
-        .post(isAuthenticated, facturasController.getDetalleFacturas);                       
+    router.route('/facturasdetalle/:id')
+        .get(isAuthenticated, facturasController.getDetalleFacturas);   
+
+    router.route('/getsolicitud/:id')
+        .get(isAuthenticated, facturasController.getSolicitudAprob);           
                 
+
+    router.route('/getdesglosecontable/:id')
+        .get(isAuthenticated, facturasController.getDesglose); 
+        
     return router;
 
 }
