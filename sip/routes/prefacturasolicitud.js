@@ -44,10 +44,20 @@ module.exports = function (passport) {
 
     router.route('/facturas/action')
         .post(isAuthenticated, facturasController.action);          
+
+    router.route('/facturas/actionDetalle/:id')
+        .post(isAuthenticated, facturasController.actionDetalle);             
         
-    router.route('/facturasdetalle/:cui/:proveedor')
-        .post(isAuthenticated, facturasController.getDetalleFacturas);                       
+    router.route('/facturasdetalle/:id')
+        .get(isAuthenticated, facturasController.getDetalleFacturas);   
+
+    router.route('/getsolicitud/:id')
+        .get(isAuthenticated, facturasController.getSolicitudAprob);           
                 
+
+    router.route('/getdesglosecontable/:id')
+        .get(isAuthenticated, facturasController.getDesglose); 
+        
     return router;
 
 }

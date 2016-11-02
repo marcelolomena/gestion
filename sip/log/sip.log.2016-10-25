@@ -1,0 +1,119 @@
+17:48:28 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+18:07:53 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+18:08:03 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+18:08:37 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+18:11:35 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+18:13:09 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+18:15:33 - error:  Error: Página no encontrada
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\app.js:54:13
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:618:15
