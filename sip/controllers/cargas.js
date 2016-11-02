@@ -251,13 +251,13 @@ exports.archivo = function (req, res) {
         relax: true,
         delimiter: ';'
       });
-      var input = [];
+      var carrusel = [];
       parser.on('readable', function () {
         while (line = parser.read()) {
           //inserter.push(line);
-          input.push(line);
+          carrusel.push(line);
         }
-        ogger.debug("paso por aca")
+        //logger.debug("paso por aca")
       });
 
       parser.on('error', function (err) {
@@ -267,22 +267,29 @@ exports.archivo = function (req, res) {
       parser.on('end', function (count) {
         var j = 0;
         var turro = [];
-        logger.debug("el largo : " + input.length)
-        for (var i = 0; input.length; i++) {
-          logger.debug("pico")
-          if (j < 1000) {
-            logger.debug("poto")
-            turro[j] = input[i];
-            logger.debug(turro[j])
-            j = j + 1;
+        logger.debug("el largo : " + carrusel.length)
 
+
+        for (var i = 0; carrusel.length; i++) {
+
+          if (j % 1000) {
+            logger.debug("SI")
           } else {
-            logger.debug("tula")
-            inserter.push(turro[j]);
-            turro.length = 0;
-            j = 0;
+
           }
+          /*
+                    if (j % 1000 ) {
+                      logger.debug("largo cola : " + j)
+                      //inserter.push(turro);
+                      turro.length = 0;
+                      j = 0;
+                    } else {
+                      turro[j] = carrusel[i];
+                      j = j + 1;
+                    }
+          */
         }
+
         inserter.drain = function () {
           logger.debug("listo en db")
         }
