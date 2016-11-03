@@ -194,7 +194,7 @@ $(document).ready(function () {
                 }, dataInit: function (elem) { $(elem).width(200); }
             },
             {
-                label: 'Glosa Multa',
+                label: 'Glosa Descuento',
                 name: 'glosamulta',
                 width: 200,
                 search: false,
@@ -204,7 +204,7 @@ $(document).ready(function () {
                 edittype: "textarea"
             },
             {
-                label: 'Monto Multa',
+                label: 'Monto Descuento',
                 name: 'montomulta',
                 width: 100,
                 search: false,

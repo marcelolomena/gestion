@@ -53,6 +53,9 @@ module.exports = function (passport) {
 
     router.route('/desglosecontable/action')
         .post(isAuthenticated, prefacturasController.actiondesglose);
+    
+    router.route('/porcentajedesglose/:parentRowKey')
+        .get(isAuthenticated, prefacturasController.porcentajedesglose);
 
     return router;
 
