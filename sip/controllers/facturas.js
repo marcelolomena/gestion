@@ -75,7 +75,7 @@ exports.getDetalleFacturas = function (req, res) {
     "SELECT @PageSize=" + filas + "; " +
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
-    "SELECT a.* FROM sip.detallefactura a " +
+    "SELECT a.*, ivacredito+total as totalapagar FROM sip.detallefactura a " +
     "LEFT JOIN sip.prefactura b ON b.id = a.idprefactura " +
     "WHERE a.idfactura=" + id + " ";
   var sql2 = sql + "ORDER BY a.id OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
@@ -207,11 +207,12 @@ exports.actionDetalle = function (req, res) {
             sql2 = "DECLARE @monto float;" +
               "DECLARE @periodo INT;" +
               "DECLARE @factorrecupera FLOAT;" +
-              "SELECT @monto=a.montopesos, @periodo=b.periodo FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
+              "DECLARE @montoimpuesto float;"+
+              "SELECT @monto=a.montopesos, @periodo=b.periodo, @montoimpuesto=montoimpuesto*factorconversion FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
               "WHERE a.idfacturacion=" + req.body.idfacturacion + ";" +
               "SELECT @factorrecupera=factorrecuperacion FROM sip.factoriva WHERE periodo=@periodo;" +
               "INSERT sip.desgloseitemfactura " +
-              "SELECT " + id + ", idcui, idcuentacontable, porcentaje*@monto/100, porcentaje, 1, (porcentaje*@monto/100)*(1 + @factorrecupera*0.19), (porcentaje*@monto/100)*@factorrecupera*0.19 " +
+              "SELECT " + id + ", idcui, idcuentacontable, porcentaje*@monto/100, porcentaje, 1, (porcentaje*@montoimpuesto/100)*(1 + @factorrecupera*0.19), (porcentaje*@montoimpuesto/100)*@factorrecupera*0.19 " +
               "FROM sip.desglosecontable WHERE idsolicitud=" + req.body.idfacturacion;
             console.log("query2:" + sql2);
             sequelize.query(sql2).spread(function (rows) {
@@ -300,7 +301,8 @@ exports.getProveedores = function (req, res) {
 exports.getSolicitudAprob = function (req, res) {
   var idfacturacion = req.params.id
   var periodo = req.params.periodo
-  var sql = "SELECT idprefactura,glosaservicio, round(montoaprobado, 0) AS montoneto, round(montoaprobadopesos,0) AS montoapagarpesos " +
+  var sql = "SELECT idprefactura,glosaservicio, montoaprobado-montomulta AS montoneto, round(montototalpesos,0) AS montoapagarpesos, " +
+    "factorconversion "+
     "from sip.solicitudaprobacion a JOIN sip.factura b ON a.idproveedor=b.idproveedor " +
     "where idfacturacion=" + idfacturacion + " and  b.id =" + req.params.idproveedor;
   console.log("query:" + sql)
