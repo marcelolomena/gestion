@@ -233,6 +233,7 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
+        idcontactofacturacion: req.body.idcontactofacturacion,
         borrado: 1
       }).then(function (contrato) {
         res.json({ error_code: 0 });
@@ -255,7 +256,8 @@ exports.action = function (req, res) {
         nombre: req.body.nombre,
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable
+        pmoresponsable: req.body.pmoresponsable,
+        idcontactofacturacion:req.body.idcontactofacturacion
       }, {
           where: {
             id: req.body.id
@@ -336,6 +338,7 @@ exports.list = function (req, res) {
       logger.debug("->>> " + err)
     } else {
       models.contrato.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+      models.contrato.belongsTo(models.contactoproveedor, { foreignKey: 'idcontactofacturacion' });
       models.contrato.count({
         where: data
       }).then(function (records) {
@@ -346,8 +349,11 @@ exports.list = function (req, res) {
           order: orden,
           where: data,
           include: [{
-            model: models.proveedor
-          }]
+                      model: models.proveedor
+                    },{
+                      model: models.contactoproveedor
+                    }
+          ]
         }).then(function (contratos) {
           //Contrato.forEach(log)
           res.json({ records: records, total: total, page: page, rows: contratos });

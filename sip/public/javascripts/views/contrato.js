@@ -2,11 +2,14 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
+    idproveedor = 0;
+
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Contrato<span style='color:red'>*</span>{nombre}</div>";
     template += "<div class='column-full'>Proveedor<span style='color:red'>*</span>{idproveedor}</div>";
+    template += "<div class='column-full'>Contacto Facturación<span style='color:red'>*</span>{idcontactofacturacion}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -52,6 +55,7 @@ $(document).ready(function () {
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idproveedor;
+                    
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Proveedor--</option>';
@@ -62,11 +66,73 @@ $(document).ready(function () {
                             s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
                         }
                     });
+                        if (isNaN(thissid)) {
+                           idproveedor = 0;
+                        }  
+                        else                      
+                        {
+                           idproveedor = thissid;
+                        };
+
+                        if (idproveedor != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/contactos/' + idproveedor,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#grid");
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idcontactofacturacion;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Contacto Facturación--</option>';
+                                     $.each(data, function (i, item) {
+                                    if (data[i].id == thissid) {
+                                      s += '<option value="' + data[i].id + '" selected>' + data[i].contacto + '</option>';
+                                  } else {
+                                      s += '<option value="' + data[i].id + '">' + data[i].contacto + '</option>';
+                                     }
+                                    });
+                                    s += "</select>";
+                                    $("select#idcontactofacturacion").html(s);
+                                }
+                            });
+                        } 
                     return s + "</select>";
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#razonsocial").val($('option:selected', this).text());
+                        
+                        if ($('option:selected', this).val() != 0) {
+                            $("input#razonsocial").val($('option:selected', this).text());
+                        } else {
+                            $("input#razonsocial").val("");
+                        }
+                        var idproveedor = $('option:selected', this).val()
+                        if (idproveedor != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/contactos/' + idproveedor,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#grid");
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idcontactofacturacion;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Contacto Facturación--</option>';
+                                     $.each(data, function (i, item) {
+                                    if (data[i].id == thissid) {
+                                      s += '<option value="' + data[i].id + '" selected>' + data[i].contacto + '</option>';
+                                  } else {
+                                      s += '<option value="' + data[i].id + '">' + data[i].contacto + '</option>';
+                                     }
+                                    });
+                                    s += "</select>";
+                                    $("select#idcontactofacturacion").html(s);
+                                }
+                            });
+                        } 
                     }
                 }],
             }
@@ -89,6 +155,30 @@ $(document).ready(function () {
                 }
             },
         },
+        {
+                label: 'idcontactofacturacion', name: 'idcontactofacturacion', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/contactos/' + idproveedor,
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.idcontactofacturacion;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Contacto Facturación--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].contacto + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].contacto + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }
+            },
         {
             label: 'Estado Solicitud', name: 'idestadosol', hidden: true, search: true, editable: true,
             edittype: "select",
@@ -363,6 +453,10 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
+                var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                idproveedor = rowData.idproveedor;
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
         },
@@ -401,6 +495,10 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                idproveedor = rowData.idproveedor;
                 $(form).find("input:radio[value='1']").attr('checked', true);
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
