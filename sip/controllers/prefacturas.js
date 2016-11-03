@@ -203,7 +203,7 @@ exports.solicitudesaprobadas = function (req, res) {
 
     var sql = `
             SELECT 
-                    a.*, d.glosamoneda, e.cui, f.razonsocial, g.nombre
+                    a.*, d.glosamoneda, e.cui, f.razonsocial, g.nombre, h.nombre AS calificacion
                     FROM sip.solicitudaprobacion a 
                     join sip.detallecompromiso b on  a.iddetallecompromiso=b.id
 		            join sip.detalleserviciocto c on b.iddetalleserviciocto=c.id
@@ -211,6 +211,7 @@ exports.solicitudesaprobadas = function (req, res) {
 					join sip.estructuracui e on a.idcui=e.id
 					join sip.proveedor f on a.idproveedor=f.id
 					join sip.servicio g on a.idservicio= g.id 
+                    LEFT JOIN sip.parametro h ON a.idcalificacion = h.id
             where a.periodo= :periodo and a.idprefactura is null 
             and a.aprobado=1 ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
@@ -373,3 +374,10 @@ exports.actiondesglose = function (req, res) {
   }
 
 }
+exports.porcentajedesglose = function (req, res) {
+  var sql = "select sum(porcentaje) as total from sip.desglosecontable where idsolicitud="+req.params.parentRowKey;
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};

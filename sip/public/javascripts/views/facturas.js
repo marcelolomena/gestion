@@ -252,13 +252,18 @@ function showItemsFacturas(parentRowID, parentRowKey) {
 
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Monto Neto Prefactura {montonetopf}</div>";
-    tmpl += "<div class='column-half'>Monto Pesos Prefactura {montopesospf}</div>";
+    tmpl += "<div class='column-half'>Factor Conversión {factorconversionpf}</div>";
+    
     tmpl += "</div>";
     
-    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>Cantidad Prefactura {cantidadpf}</div>";
     tmpl += "<div class='column-half'>Total Prefactura {totalpf}</div>";
     tmpl += "</div>";
+    
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Monto Pesos Prefactura {montopesospf}</div>";
+    tmpl += "</div>";    
     
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'><span style='color:red'>*</span>Glosa Servicio {glosaservicio}</div>";
@@ -266,14 +271,18 @@ function showItemsFacturas(parentRowID, parentRowKey) {
 
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto a Pagar {montoneto}</div>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Pesos {montopesos}</div>";
+    tmpl += "<div class='column-half'>Factor Conversión {factorconversion}</div>";
     tmpl += "</div>";
     
-    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='form-row' style='display: none;' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Cantidad {cantidad}</div>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {total}</div>";
-    tmpl += "</div>";    
-
+    tmpl += "</div>";  
+      
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Pesos {montopesos}</div>";
+    tmpl += "</div>";
+      
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div align='left'> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -329,12 +338,14 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                                         $("input#montopesospf").val(data[0].montoapagarpesos);
                                         $("input#cantidadpf").val(1);
                                         $("input#totalpf").val(data[0].montoapagarpesos);
+                                        $("input#factorconversionpf").val(data[0].factorconversion);
                                         $("input#idprefactura").val(data[0].idprefactura);
                                         $("textarea#glosaservicio").val(data[0].glosaservicio);
                                         $("input#montoneto").val(data[0].montoneto);
                                         $("input#montopesos").val(data[0].montoapagarpesos);
                                         $("input#cantidad").val(1);
-                                        $("input#total").val(data[0].montoapagarpesos);                                      
+                                        $("input#total").val(data[0].montoapagarpesos);    
+                                        $("input#factorconversion").val(data[0].factorconversion);                                  
                                     } else {
                                         alert("No existe id de prefactura para el proveedor");
                                     }
@@ -365,7 +376,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: true,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 },
+                formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 5 , readonly: 'readonly' }
             },            
             {
@@ -403,6 +414,18 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 , readonly: 'readonly' }
             },
+            {
+                label: 'Factor Conversión',
+                name: 'factorconversionpf',
+                width: 100,
+                align: 'left',
+                search: false,
+                hidden: true,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 , readonly: 'readonly' }
+            },            
             {
                 label: 'Glosa Servicio',
                 name: 'glosaservicio',
@@ -451,7 +474,41 @@ function showItemsFacturas(parentRowID, parentRowKey) {
             {
                 label: 'Total',
                 name: 'total',
-                width: 200,
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },   
+            {
+                label: 'Factor Conversión',
+                name: 'factorconversion',
+                width: 100,
+                align: 'left',
+                search: false,
+                hidden: true,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },                      
+            {
+                label: 'IVA Credito',
+                name: 'ivacredito',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },            
+            {
+                label: 'Total a Pagar',
+                name: 'totalapagar',
+                width: 100,
                 align: 'left',
                 search: false,
                 editable: true,
@@ -579,8 +636,8 @@ function showItemsFacturas(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code == 10)
-                     return [false, "Error, no se pudo ingresar detalle, ", ""];                
+                if (result.error_code == 100)
+                     return [false, "Error, el codigo de facturación ya existe, ", ""];                
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
@@ -662,9 +719,18 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: false
-            },                               
+            },     
             {
-                label: 'Monto',
+                label: 'Porcentaje',
+                name: 'porcentaje',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false
+            },                                      
+            {
+                label: 'Neto',
                 name: 'monto',
                 width: 100,
                 align: 'left',
@@ -675,7 +741,18 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 formatoptions: { decimalPlaces: 0 }                
             },   
             {
-                label: 'Costo',
+                label: 'Proporcional',
+                name: 'proporcional',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                
+            },         
+            {
+                label: 'Total Gasto',
                 name: 'costo',
                 width: 100,
                 align: 'left',
@@ -684,16 +761,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 hidden: false,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 }                
-            },                        
-            {
-                label: 'Porcentaje',
-                name: 'porcentaje',
-                width: 100,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false
-            }
+            }                       
+
         ],
         height: 'auto',
         styleUI: "Bootstrap",

@@ -2,13 +2,15 @@ function gridDesglose(parentRowID, parentRowKey) {
     var tmplP = "<div id='responsive-form' class='clearfix'>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Cui{idcui}</div>";
-    tmplP += "<div class='column-half'>Cuenta Contable{idcuentacontable}</div>";
+    tmplP += "<div class='column-full'>Cui{idcui}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Porcentaje{porcentaje}</div>";
-    tmplP += "<div class='column-half'>Monto{monto}</div>";
+    tmplP += "<div class='column-full'>Cuenta Contable{idcuentacontable}</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-full'>Porcentaje{porcentaje}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row' style='display: none;'>";
@@ -25,18 +27,20 @@ function gridDesglose(parentRowID, parentRowKey) {
     var childGridURL = "/desgloseporsolicitud/" + parentRowKey;
 
     var modelDesglose = [
-        { label: 'id', name: 'id', key: true, hidden: true },  
-        { label: 'Cui',
+        { label: 'id', name: 'id', key: true, hidden: true },
+        {
+            label: 'Cui',
             name: 'cui',
             width: 100,
             align: 'left',
             search: false,
             editable: true,
-            editoptions: { size: 10, readonly: 'readonly'}                       
+            editoptions: { size: 10, readonly: 'readonly' }
         },
         {
             label: 'idcui', name: 'idcui', search: false, hidden: true, editable: true,
             edittype: "select",
+            editrules: { required: true },
             editoptions: {
                 dataUrl: '/CUIs',
                 buildSelect: function (response) {
@@ -57,22 +61,24 @@ function gridDesglose(parentRowID, parentRowKey) {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    
+
                 }],
             }
-        },         
-        { label: 'Cuenta Contable',
-            name: 'cuentacontable',  
+        },
+        {
+            label: 'Cuenta Contable',
+            name: 'cuentacontable',
             search: false,
-            align: 'left',                 
+            align: 'left',
             width: 100,
             editable: true,
-            editoptions: { size: 10, readonly: 'readonly'}                                    
-        },  
-         {
-            label: 'Cuenta Contable', name: 'idcuentacontable', search: false, editable: true,editrules: { required: true },
+            editoptions: { size: 10, readonly: 'readonly' }
+        },
+        {
+            label: 'Cuenta Contable', name: 'idcuentacontable', search: false, editable: true, editrules: { required: true },
             hidden: true,
             edittype: "select",
+            editrules: { required: true },
             editoptions: {
                 dataUrl: '/serviciosext/cuentas',
                 buildSelect: function (response) {
@@ -93,36 +99,35 @@ function gridDesglose(parentRowID, parentRowKey) {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    
+
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre Cuenta',
+        {
+            label: 'Nombre Cuenta',
             name: 'nombrecuenta',
             width: 100,
             search: false,
             align: 'left',
             editable: true,
-            
+
         },
-        { label: 'Porcentaje',
+        {
+            label: 'Porcentaje',
             name: 'porcentaje',
             width: 200,
+            editrules: { required: true },
             search: false,
             align: 'left',
             editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
-        },
-        { label: 'Monto',
-            name: 'monto',
-            hidden: true,
-            width: 200,
-            search: false,
-            align: 'left',
-            editable: true,
-            editoptions: { readonly: 'readonly' },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
+            formatter: 'number',
+            formatoptions: { decimalPlaces: 2 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.00', { reverse: true, placeholder: "_____%" });
+                },
+            }
+        }
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -172,6 +177,25 @@ function gridDesglose(parentRowID, parentRowKey) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idcui == 0) {
+                    return [false, "Cui: Campo obligatorio", ""];
+                } if (postdata.idcuentacontable == 0) {
+                    return [false, "Cuenta Contable: Campo obligatorio", ""];
+                }
+                var elporcentaje = parseFloat(postdata.porcentaje);
+                console.log('porcentaje: ' + elporcentaje);
+
+
+
+
+                if (elporcentaje > 100) {
+                    return [false, "Porcentaje no puede ser mayor a 100", ""];
+                }
+                else {
+                    return [true, "", ""]
+                }
+            },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -196,6 +220,37 @@ function gridDesglose(parentRowID, parentRowKey) {
             template: tmplP,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idcui == 0) {
+                    return [false, "Cui: Campo obligatorio", ""];
+                } if (postdata.idcuentacontable == 0) {
+                    return [false, "Cuenta Contable: Campo obligatorio", ""];
+                }
+                var elporcentaje = parseFloat(postdata.porcentaje);
+                console.log('porcentaje: ' + elporcentaje);
+                var suma = 0;
+
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    url: '/porcentajedesglose/' + parentRowKey,
+                    success: function (data) {
+                        console.log('porcentajequeviene: ' + data[0].total);
+                        suma = data[0].total + elporcentaje;
+                        console.log('total: ' + suma);
+                    }
+                });
+                if (suma > 100) {
+                    return [false, "Porcentaje total del desglose no puede ser mayor a 100", ""];
+                }
+
+                if (elporcentaje > 100) {
+                    return [false, "Porcentaje no puede ser mayor a 100", ""];
+                }
+                else {
+                    return [true, "", ""]
+                }
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
