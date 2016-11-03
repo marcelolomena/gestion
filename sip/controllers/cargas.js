@@ -318,6 +318,19 @@ exports.archivo = function (req, res) {
 
             var type = carga[0].dataValues.logcarga.dataValues.archivo
 
+            models.detallecargas.update({
+              fechaproceso: new Date(),
+              nroregistros: carrusel.length
+            }, {
+                where: {
+                  id: idDetail
+                }
+              }).then(function (detallecargas) {
+                logger.debug("ingresando numero de registros")
+              }).catch(function (err) {
+                logger.error(err)
+              });
+
             if (maxbuf > tbuf) {
 
               for (var i = 0; i < maxbuf; i++) {
@@ -366,7 +379,7 @@ exports.archivo = function (req, res) {
                 fs.unlink(saveTo);
               }
 
-            }else{
+            } else {
               // termino de otro tipo de carga
             }
 
