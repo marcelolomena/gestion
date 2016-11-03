@@ -365,7 +365,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: true,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 },
+                formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 5 , readonly: 'readonly' }
             },            
             {
@@ -449,9 +449,20 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 editoptions: { size: 5 }
             },
             {
+                label: 'IVA Credito',
+                name: 'ivacredito',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },            
+            {
                 label: 'Total',
                 name: 'total',
-                width: 200,
+                width: 100,
                 align: 'left',
                 search: false,
                 editable: true,
@@ -579,8 +590,8 @@ function showItemsFacturas(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code == 10)
-                     return [false, "Error, no se pudo ingresar detalle, ", ""];                
+                if (result.error_code == 100)
+                     return [false, "Error, el codigo de facturación ya existe, ", ""];                
                 if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
@@ -662,9 +673,18 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: false
-            },                               
+            },     
             {
-                label: 'Monto',
+                label: 'Porcentaje',
+                name: 'porcentaje',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false
+            },                                      
+            {
+                label: 'Neto',
                 name: 'monto',
                 width: 100,
                 align: 'left',
@@ -675,7 +695,18 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 formatoptions: { decimalPlaces: 0 }                
             },   
             {
-                label: 'Costo',
+                label: 'Proporcional',
+                name: 'proporcional',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                
+            },         
+            {
+                label: 'Total Gasto',
                 name: 'costo',
                 width: 100,
                 align: 'left',
@@ -684,16 +715,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 hidden: false,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 }                
-            },                        
-            {
-                label: 'Porcentaje',
-                name: 'porcentaje',
-                width: 100,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false
-            }
+            }                       
+
         ],
         height: 'auto',
         styleUI: "Bootstrap",

@@ -42,10 +42,10 @@ exports.getFacturas = function (req, res) {
     "SELECT @PageNumber=" + page + "; " +
     "SELECT a.*, b.razonsocial " +
     "FROM sip.factura a JOIN sip.proveedor b ON b.id = a.idproveedor ";
-      if (filters && condition != ""){
-        sql += "WHERE "+ condition+ " ";
-        logger.debug("**"+sql+"**");        
-      }     
+  if (filters && condition != "") {
+    sql += "WHERE " + condition + " ";
+    logger.debug("**" + sql + "**");
+  }
   var sql2 = sql + "ORDER BY a.numero OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
   logger.debug("query:" + sql2);
@@ -59,8 +59,8 @@ exports.getFacturas = function (req, res) {
       res.json({ error_code: 1 });
     });
   }).catch(function (err) {
-      logger.error(err)
-      res.json({ error_code: 1 });
+    logger.error(err)
+    res.json({ error_code: 1 });
   });
 }
 
@@ -189,37 +189,53 @@ exports.actionDetalle = function (req, res) {
 
   switch (action) {
     case "add":
-      var sql = "INSERT INTO sip.detallefactura (idfactura, idprefactura, idfacturacion, montoneto, montopesos, cantidad, total, borrado, glosaservicio) " +
-        "VALUES (" + idPre + ", " + idprefact + ", '" + req.body.idfacturacion + "', " +
-        req.body.montoneto + ", " + req.body.montopesos + ", " + req.body.cantidad + ", " + req.body.total + ", 1,'" + req.body.glosaservicio + "');" +
-        "DECLARE @id INT;" +
-        "select @id = @@IDENTITY; " +
-        "select @id as id;";
-      console.log("query:" + sql);
-      sequelize.query(sql)
-        .spread(function (rows) {
-          var id = rows[0].id;
-          sql2 = "DECLARE @monto float;" +
-            "DECLARE @periodo INT;" +
-            "DECLARE @factorrecupera FLOAT;" +
-            "SELECT @monto=a.montopesos, @periodo=b.periodo FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
-            "WHERE a.idfacturacion=" + req.body.idfacturacion + ";" +
-            "SELECT @factorrecupera=factorrecuperacion FROM sip.factoriva WHERE periodo=@periodo;" +
-            "INSERT sip.desgloseitemfactura " +
-            "SELECT " + id + ", idcui, idcuentacontable, porcentaje*@monto/100, porcentaje, 1, (porcentaje*@monto/100)*(1 + @factorrecupera*0.19) " +
-            "FROM sip.desglosecontable WHERE idsolicitud=" + req.body.idfacturacion;
-          console.log("query:" + sql2);
-          sequelize.query(sql2)
-            .spread(function (rows) {
-              res.json({ error_code: 0 });
+      var sql0 = "select * from sip.detallefactura where idfacturacion=" + req.body.idfacturacion;
+      console.log("query0:" + sql0);
+      sequelize.query(sql0).spread(function (rows) {
+        if (rows.length > 0) {
+          res.json({ error_code: 100 });
+        } else {
+          var sql = "INSERT INTO sip.detallefactura (idfactura, idprefactura, idfacturacion, montoneto, montopesos, cantidad, total, borrado, glosaservicio) " +
+            "VALUES (" + idPre + ", " + idprefact + ", '" + req.body.idfacturacion + "', " +
+            req.body.montoneto + ", " + req.body.montopesos + ", " + req.body.cantidad + ", " + req.body.total + ", 1,'" + req.body.glosaservicio + "');" +
+            "DECLARE @id INT;" +
+            "select @id = @@IDENTITY; " +
+            "select @id as id;";
+          console.log("query:" + sql);
+          sequelize.query(sql).spread(function (rows) {
+            var id = rows[0].id;
+            sql2 = "DECLARE @monto float;" +
+              "DECLARE @periodo INT;" +
+              "DECLARE @factorrecupera FLOAT;" +
+              "SELECT @monto=a.montopesos, @periodo=b.periodo FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
+              "WHERE a.idfacturacion=" + req.body.idfacturacion + ";" +
+              "SELECT @factorrecupera=factorrecuperacion FROM sip.factoriva WHERE periodo=@periodo;" +
+              "INSERT sip.desgloseitemfactura " +
+              "SELECT " + id + ", idcui, idcuentacontable, porcentaje*@monto/100, porcentaje, 1, (porcentaje*@monto/100)*(1 + @factorrecupera*0.19), (porcentaje*@monto/100)*@factorrecupera*0.19 " +
+              "FROM sip.desglosecontable WHERE idsolicitud=" + req.body.idfacturacion;
+            console.log("query2:" + sql2);
+            sequelize.query(sql2).spread(function (rows) {
+              //update campo ivacredito en factura
+              var sql3 = "DECLARE @monto FLOAT;" +
+                "SELECT @monto=sum(proporcional) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
+                "UPDATE sip.detallefactura SET ivacredito=@monto WHERE id=" + id;
+                console.log("query3:" + sql3);
+              sequelize.query(sql3).spread(function (rows) {
+                res.json({ error_code: 0 });
+              }).catch(function (err) {
+                logger.error(err);
+                res.json({ error_code: 1 });
+              });
             }).catch(function (err) {
               logger.error(err);
               res.json({ error_code: 1 });
             });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
+          }).catch(function (err) {
+            logger.error(err);
+            res.json({ error_code: 1 });
+          });
+        }
+      });
       break;
     case "edit":
       var sql = "UPDATE sip.detallefactura  SET " +
@@ -284,9 +300,9 @@ exports.getProveedores = function (req, res) {
 exports.getSolicitudAprob = function (req, res) {
   var idfacturacion = req.params.id
   var periodo = req.params.periodo
-  var sql = "SELECT idprefactura,glosaservicio, round(montoneto, 0) AS montoneto, round(montoapagarpesos,0) AS montoapagarpesos " +
-    "from sip.solicitudaprobacion a JOIN sip.factura b ON a.idproveedor=b.idproveedor "+
-    "where idfacturacion=" + idfacturacion+" and  b.id ="+req.params.idproveedor;
+  var sql = "SELECT idprefactura,glosaservicio, round(montoaprobado, 0) AS montoneto, round(montoaprobadopesos,0) AS montoapagarpesos " +
+    "from sip.solicitudaprobacion a JOIN sip.factura b ON a.idproveedor=b.idproveedor " +
+    "where idfacturacion=" + idfacturacion + " and  b.id =" + req.params.idproveedor;
   console.log("query:" + sql)
   sequelize.query(sql)
     .spread(function (rows) {
