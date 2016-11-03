@@ -208,11 +208,11 @@ exports.actionDetalle = function (req, res) {
               "DECLARE @periodo INT;" +
               "DECLARE @factorrecupera FLOAT;" +
               "DECLARE @montoimpuesto float;"+
-              "SELECT @monto=a.montopesos, @periodo=b.periodo, @montoimpuesto=montoimpuesto*factorconversion FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
+              "SELECT @monto=a.montopesos, @periodo=b.periodo, @montoimpuesto=(b.montoimpuesto-(b.montomulta*0.19))*factorconversion FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
               "WHERE a.idfacturacion=" + req.body.idfacturacion + ";" +
               "SELECT @factorrecupera=factorrecuperacion FROM sip.factoriva WHERE periodo=@periodo;" +
               "INSERT sip.desgloseitemfactura " +
-              "SELECT " + id + ", idcui, idcuentacontable, porcentaje*@monto/100, porcentaje, 1, (porcentaje*@montoimpuesto/100)*(1 + @factorrecupera*0.19), (porcentaje*@montoimpuesto/100)*@factorrecupera*0.19 " +
+              "SELECT " + id + ", idcui, idcuentacontable, porcentaje*@monto/100, porcentaje, 1, (porcentaje*@monto/100) + (porcentaje*@montoimpuesto/100)*@factorrecupera, (porcentaje*@montoimpuesto/100)*@factorrecupera " +
               "FROM sip.desglosecontable WHERE idsolicitud=" + req.body.idfacturacion;
             console.log("query2:" + sql2);
             sequelize.query(sql2).spread(function (rows) {

@@ -446,7 +446,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 },
+                formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 5 }
             },            
             {
@@ -466,6 +466,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 width: 100,
                 align: 'left',
                 search: false,
+                hidden: true,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editable: true,
@@ -478,6 +479,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 align: 'left',
                 search: false,
                 editable: true,
+                hidden: true,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
