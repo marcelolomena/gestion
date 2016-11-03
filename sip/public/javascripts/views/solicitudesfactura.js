@@ -24,23 +24,14 @@ function gridSolicitudes(parentRowID, parentRowKey) {
     var childGridURL = "/solicitudesporfactura/" + parentRowKey;
 
     var modelSolicitudes = [
-        { label: 'Id', name: 'id', key: true, hidden: false, search: false },  
+        { label: 'Id', name: 'id', width: 50, key: true, hidden: false, search: false },  
         { label: 'Glosa Servicio',
             name: 'glosaservicio',
-            width: 450,
+            width: 400,
             align: 'left',
             search: false,
             editable: true,
             editoptions: { size: 10, readonly: 'readonly'}                       
-        },         
-        { label: 'Monto a Pagar',
-            name: 'montoapagar',  
-            search: false,
-            align: 'left',                 
-            width: 100,
-            editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editoptions: { size: 10, readonly: 'readonly'}                                    
         },  
         { label: 'Monto Aprobado',
                      name: 'montoaprobado',
@@ -48,9 +39,9 @@ function gridSolicitudes(parentRowID, parentRowKey) {
                      search: false,
                      align: 'left',
                      editable: true,
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                     formatter: 'number', formatoptions: { decimalPlaces: 2 }
                    },
-        { label: 'Glosa Aprobación',
+                   { label: 'Glosa Aprobación',
             name: 'glosaaprobacion',
             width: 200,
             search: false,
@@ -58,6 +49,24 @@ function gridSolicitudes(parentRowID, parentRowKey) {
             editable: true,
             edittype: "textarea"
         },
+        { label: 'Descuento',
+                     name: 'montomulta',
+                     width: 80,
+                     search: false,
+                     align: 'left',
+                     editable: true,
+                     formatter: 'number', formatoptions: { decimalPlaces: 2 }
+                   },  
+                   { label: 'Glosa Multa',
+            name: 'glosamulta',
+            width: 200,
+            search: false,
+            align: 'left',
+            editable: true,
+            edittype: "textarea"
+        },     
+        
+        
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
