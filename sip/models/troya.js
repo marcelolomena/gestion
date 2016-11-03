@@ -2,13 +2,13 @@
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('troya', {
-/*    
+    
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true      
     },
-*/    
     cuentacontable: {
       type: DataTypes.STRING,
       allowNull: true

@@ -16,7 +16,7 @@ exports.list = function (req, res) {
     //var idiniciativaprograma = req.params.id;
 
     var superCui = function (uid, callback) {
-    var rol = req.usreq.session.passport.sidebar[0].rid;
+    var rol = req.session.passport.sidebar[0].rid;
     if (rol != constants.ROLADMDIVOT) {
       var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
 

@@ -60,6 +60,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },    
+    idcontactofacturacion: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'contactoproveedor',
+        key: 'id'
+      }
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

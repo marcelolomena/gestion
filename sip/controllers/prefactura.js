@@ -19,7 +19,7 @@ exports.test = function (req, res) {
                 SELECT 
 				a.id,
                 REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))-1) ,',','.')  subtotalsinmulta,
-				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))+1,len(CONVERT(varchar, CONVERT(money, a.subtotal), 1))) subtotal,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.')  subtotal,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalmulta), 1))) totalmulta,
 				a.impuesto,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))-1) ,',','.')  totalimpuesto,
@@ -95,8 +95,8 @@ exports.test = function (req, res) {
                             recipe: 'phantom-pdf',
                             phantom: {
                                 orientation: 'portrait',
-                                format: 'A4',
-                                margin: '1.5cm'
+                                format: 'Letter',
+                                margin: '1cm'
                             }
                         },
                         data: datum
@@ -294,7 +294,7 @@ exports.generar = function (req, res) {
                 models.sequelize.transaction({ autocommit: true }, function (t) {
                     for (var i = 0; i < result.length; i++) {
                         var myPromise = models.solicitudaprobacion.update({
-                            idfacturacion: result[i].periodo.toString() + result[i].id.toString()
+                            idfacturacion: result[i].id.toString()
                         }, {
                                 where: { id: result[i].id }
                             }, { transaction: t });
