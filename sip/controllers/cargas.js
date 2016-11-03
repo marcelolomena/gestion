@@ -8,6 +8,7 @@ var path = require('path');
 var fs = require('fs');
 var async = require('async');
 var csv = require('csv');
+var co = require('co');
 
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -229,16 +230,35 @@ exports.guardar = function (req, res) {
 exports.archivo = function (req, res) {
 
   if (req.method === 'POST') {
+
     var busboy = new Busboy({ headers: req.headers });
+
+    var awaitId = new Promise(function (resolve, reject) {
+
+      busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+        if (fieldname === 'id') {
+          try {
+            resolve(val)
+          } catch (err) {
+            return reject(err);
+          }
+        } else {
+          return;
+        }
+      });
+    });
+
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
       var saveTo = path.join(__dirname, '..', 'temp', filename);
       var tbuf = 1000;
 
       file.pipe(fs.createWriteStream(saveTo));
-      var inserter = async.cargo(function (tasks, inserterCallback) {
+
+
+      var inserterTroya = async.cargo(function (tasks, inserterCallback) {
         models.troya.bulkCreate(tasks).then(function (troya) {
-          inserterCallback();
+          return inserterCallback();
         }).catch(function (err) {
           logger.error(err)
         });
@@ -246,100 +266,133 @@ exports.archivo = function (req, res) {
         tbuf
       );
 
-      var input = fs.createReadStream(saveTo, { encoding: 'utf8' });
+      var input = fs.createReadStream(saveTo);
+
       var parser = csv.parse({
         columns: true,
         relax: true,
         delimiter: ';'
       });
 
-      var carrusel = [];
+      awaitId.then(function (idDetail) {
 
-      parser.on('readable', function () {
-        while (line = parser.read()) {
-          //inserter.push(line);
-          carrusel.push(line);
-        }
-      });
+        var carrusel = [];
 
-      parser.on('error', function (err) {
-        logger.error(err.message);
-      });
-
-      parser.on('end', function (count) {
-        var j = 0;
-        var t = 0;
-        var minbuf = 0
-        var turro = [];
-        var cola = [];
-
-        //logger.debug("resto : " + carrusel.length % tbuf)
-        //logger.debug("parte entera : " + Math.floor(carrusel.length / tbuf))
-
-        var maxbuf = Math.floor(carrusel.length / tbuf)
-
-        for (var i = 0; i < carrusel.length; i++) {
-          
-
-          if (j % tbuf == 0 && j > 0) {
-
-            for (var k = 0; k < tbuf; k++) {
-              inserter.push(turro[k]);
-            }
-            turro.length = 0;
-            j = 0;
-            minbuf = minbuf + 1;
-
-          } else {
-
-            if (minbuf < maxbuf) {
-              turro[j] = carrusel[i];
-              j = j + 1;
-            } else {
-              cola[t] = carrusel[i];
-              t = t + 1;
-            }
-
+        parser.on('readable', function () {
+          while (line = parser.read()) {
+            carrusel.push(line);
           }
+        });
 
-        }
-        //logger.debug("tam cola : " + cola.length)
-        for (var k = 0; k < cola.length; k++) {
-          inserter.push(cola[k]);
-        }
+        parser.on('error', function (err) {
+          logger.error(err.message);
+        });/*error*/
 
-        inserter.drain = function () {
-          logger.debug("listo en db")
-        }
+        /*
+        Este algoritmo inserta en la BD pedazos de 1000 registros.
+        Si la cantidad de registros leidos desde el CSV supera las 1000 filas
+        el arreglo que se inserta en la BD se divide en pedazos de 1000
+        esta limitacion es propia de MSSQL 2012
+        */
+        parser.on('end', function (count) {
+          var j = 0;
+          var chunk = [];
+          var maxbuf = tbuf * Math.floor(carrusel.length / tbuf)
+          //logger.debug("aca esta el id detalle ---->> " + idDetail)
 
+          co(function* () {
+
+            models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
+
+            var carga = yield models.detallecargas.findAll({
+              limit: 1,
+              where: { id: idDetail },
+              include: [{
+                model: models.logcargas
+              }]
+            }).catch(function (err) {
+              logger.error(err);
+            });
+
+            //logger.debug(carga[0].dataValues.logcarga.dataValues.archivo)
+
+            var type = carga[0].dataValues.logcarga.dataValues.archivo
+
+            if (maxbuf > tbuf) {
+
+              for (var i = 0; i < maxbuf; i++) {
+                chunk[j] = carrusel[i];
+                if (type === 'Troya')
+                  inserterTroya.push(chunk[j]);
+                j = j + 1;
+                if ((i + 1) % tbuf == 0) {
+                  chunk.length = 0;
+                  j = 0;
+                }
+              }
+
+              chunk.length = 0;
+
+              for (var i = maxbuf; i < carrusel.length; i++) {
+                if (type === 'Troya')
+                  inserterTroya.push(chunk[i]);
+              }
+
+            } else {
+
+              for (var i = 0; i < carrusel.length; i++) {
+                if (type === 'Troya')
+                  inserterTroya.push(carrusel[i]);
+              }
+
+            }
+
+            if (type === 'Troya') {
+
+              inserterTroya.drain = function () {
+                logger.debug("listo en db y borrado archivo temporal")
+                models.detallecargas.update({
+                  fechaproceso: new Date(),
+                  control2: 'Fin de la carga'
+                }, {
+                    where: {
+                      id: idDetail
+                    }
+                  }).then(function (detallecargas) {
+                    logger.debug("cambiando estado de carga")
+                  }).catch(function (err) {
+                    logger.error(err)
+                  });
+                fs.unlink(saveTo);
+              }
+
+            }else{
+              // termino de otro tipo de carga
+            }
+
+          }).catch(function (err) {//co(*)
+            logger.error(err)
+          });
+
+        });/*end*/
+
+      }).catch(function (err) {
+        logger.error(err)
       });
+
 
       input.pipe(parser);
 
     });
-    busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
-      logger.debug('Campo [' + fieldname + ']: valor: ' + val);
 
-      models.detallecargas.update({
-        fechaproceso: new Date(),
-        control2: 'archivo recibido'
-      }, {
-          where: {
-            id: val
-          }
-        }).then(function (detallecargas) {
-          logger.debug("cambiando estado de carga")
-        }).catch(function (err) {
-          logger.error(err)
-        });
 
-    });
     busboy.on('finish', function () {
       res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
     });
 
     return req.pipe(busboy);
   }
+
   res.writeHead(404);
   res.end();
 
