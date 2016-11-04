@@ -9,6 +9,7 @@ var fs = require('fs');
 var async = require('async');
 var csv = require('csv');
 var co = require('co');
+var bulk = require("../utils/bulk");
 
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -214,7 +215,7 @@ exports.guardar = function (req, res) {
     usuario: req.session.passport.user,
     nroregistros: 0,
     nombre1: '',
-    control1: 'inicio',
+    control1: 'inicio de carga',
     nombre2: '',
     control2: '',
     borrado: 1
@@ -248,31 +249,19 @@ exports.archivo = function (req, res) {
       });
     });
 
-    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
-      var saveTo = path.join(__dirname, '..', 'temp', filename);
-      var tbuf = 1000;
+      var saveTo = path.join(__dirname, '..', 'temp', filename);//path al archivo
 
-      file.pipe(fs.createWriteStream(saveTo));
+      file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
 
-
-      var inserterTroya = async.cargo(function (tasks, inserterCallback) {
-        models.troya.bulkCreate(tasks).then(function (troya) {
-          return inserterCallback();
-        }).catch(function (err) {
-          logger.error(err)
-        });
-      },
-        tbuf
-      );
-
-      var input = fs.createReadStream(saveTo);
+      var input = fs.createReadStream(saveTo); //ahora lo lee
 
       var parser = csv.parse({
         columns: true,
         relax: true,
         delimiter: ';'
-      });
+      }); //parser CSV
 
       awaitId.then(function (idDetail) {
 
@@ -280,7 +269,7 @@ exports.archivo = function (req, res) {
 
         parser.on('readable', function () {
           while (line = parser.read()) {
-            carrusel.push(line);
+            carrusel.push(line);//lee todo el archivo
           }
         });
 
@@ -288,17 +277,7 @@ exports.archivo = function (req, res) {
           logger.error(err.message);
         });/*error*/
 
-        /*
-        Este algoritmo inserta en la BD pedazos de 1000 registros.
-        Si la cantidad de registros leidos desde el CSV supera las 1000 filas
-        el arreglo que se inserta en la BD se divide en pedazos de 1000
-        esta limitacion es propia de MSSQL 2012
-        */
         parser.on('end', function (count) {
-          var j = 0;
-          var chunk = [];
-          var maxbuf = tbuf * Math.floor(carrusel.length / tbuf)
-          //logger.debug("aca esta el id detalle ---->> " + idDetail)
 
           co(function* () {
 
@@ -316,76 +295,20 @@ exports.archivo = function (req, res) {
 
             //logger.debug(carga[0].dataValues.logcarga.dataValues.archivo)
 
-            var type = carga[0].dataValues.logcarga.dataValues.archivo
+            var table = carga[0].dataValues.logcarga.dataValues.archivo//Troya
+            var deleted = carga[0].dataValues.logcarga.dataValues.tipocarga//Reemplaza o Incremental
 
-            models.detallecargas.update({
-              fechaproceso: new Date(),
-              nroregistros: carrusel.length
-            }, {
-                where: {
-                  id: idDetail
-                }
-              }).then(function (detallecargas) {
-                logger.debug("ingresando numero de registros")
-              }).catch(function (err) {
-                logger.error(err)
-              });
-
-            if (maxbuf > tbuf) {
-
-              for (var i = 0; i < maxbuf; i++) {
-                chunk[j] = carrusel[i];
-                if (type === 'Troya')
-                  inserterTroya.push(chunk[j]);
-                j = j + 1;
-                if ((i + 1) % tbuf == 0) {
-                  chunk.length = 0;
-                  j = 0;
-                }
+            bulk.bulkLoad(table, carrusel, idDetail, saveTo, deleted, function (err, data) {
+              if (err) {
+                logger.debug("->>> " + err)
+              } else {
+                logger.debug("->>> " + data)
               }
-
-              chunk.length = 0;
-
-              for (var i = maxbuf; i < carrusel.length; i++) {
-                if (type === 'Troya')
-                  inserterTroya.push(chunk[i]);
-              }
-
-            } else {
-
-              for (var i = 0; i < carrusel.length; i++) {
-                if (type === 'Troya')
-                  inserterTroya.push(carrusel[i]);
-              }
-
-            }
-
-            if (type === 'Troya') {
-
-              inserterTroya.drain = function () {
-                logger.debug("listo en db y borrado archivo temporal")
-                models.detallecargas.update({
-                  fechaproceso: new Date(),
-                  control2: 'Fin de la carga'
-                }, {
-                    where: {
-                      id: idDetail
-                    }
-                  }).then(function (detallecargas) {
-                    logger.debug("cambiando estado de carga")
-                  }).catch(function (err) {
-                    logger.error(err)
-                  });
-                fs.unlink(saveTo);
-              }
-
-            } else {
-              // termino de otro tipo de carga
-            }
+            })
 
           }).catch(function (err) {//co(*)
             logger.error(err)
-          });
+          })
 
         });/*end*/
 
