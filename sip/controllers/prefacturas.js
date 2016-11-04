@@ -381,3 +381,11 @@ exports.porcentajedesglose = function (req, res) {
       res.json(rows);
     });
 };
+
+exports.getallcuis = function (req, res) {
+  var sql = "select id, cui, nombre from sip.estructuracui order by cui";
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+};

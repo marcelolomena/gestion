@@ -57,6 +57,9 @@ module.exports = function (passport) {
     router.route('/porcentajedesglose/:parentRowKey')
         .get(isAuthenticated, prefacturasController.porcentajedesglose);
 
+    router.route('/allcuis')
+        .get(isAuthenticated, prefacturasController.getallcuis);
+
     return router;
 
 }
