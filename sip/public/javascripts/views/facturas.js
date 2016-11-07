@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
-            //numero, idproveedor, fecha, subtotal, impuesto, total
+            //numero, idproveedor, fecha, montoneto, impuesto, montototal
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'><span style='color:red'>*</span>Numero {numero}</div>";
     tmpl += "</div>";
@@ -14,7 +14,7 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Monto Neto {subtotal}</div>";
+    tmpl += "<div class='column-half'>Monto Neto {montoneto}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
@@ -22,7 +22,7 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Total {total}</div>";
+    tmpl += "<div class='column-half'>Total {montototal}</div>";
     tmpl += "</div>";
         
     tmpl += "<hr style='width:100%;'/>";
@@ -70,12 +70,18 @@ $(document).ready(function () {
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             }        
-        },
-        { label: 'Monto Neto', name: 'subtotal', width: 200, align: 'right', search: false, sortable: false, editable: true,
+        }, //ivanorecuperable, montocosto, ivacredito
+        { label: 'Monto Neto', name: 'montoneto', width: 150, align: 'right', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 } },
-        {label: 'Impuesto', name: 'impuesto', width: 80, align: 'right', sortable: false, search: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } },      
-        { label: 'Total', name: 'total', width: 200, align: 'right', search: false, sortable: false, editable: true,
+        {label: 'Impuesto', name: 'impuesto', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 } },   
+        {label: 'Proporcional', name: 'ivanorecuperable', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 } },    
+        {label: 'Costo', name: 'montocosto', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 } },    
+        {label: 'IVA Credito', name: 'ivacredito', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 } },                                           
+        { label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: true,
             formatter: 'number', formatoptions: { decimalPlaces: 0 } }
         
     ];
@@ -176,11 +182,11 @@ $(document).ready(function () {
                     return [false, "Ingrese proveedor", ""];
                 } else if (postdata.fecha == "") { 
                     return [false, "Ingrese fecha", ""];
-                } else if (postdata.subtotal == "") { 
+                } else if (postdata.montoneto == "") { 
                     return [false, "Ingrese subtotal", ""];
                 } else if (postdata.impuesto == "") { 
                     return [false, "Ingrese impuesto", ""];
-                } else if (postdata.total == "") { 
+                } else if (postdata.montototal == "") { 
                     return [false, "Ingrese total", ""];
                 } else {
                     return [true, "", ""];
@@ -270,17 +276,18 @@ function showItemsFacturas(parentRowID, parentRowKey) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto a Pagar {montoneto}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto en Pesos {montoneto}</div>";
     tmpl += "<div class='column-half'>Factor Conversión {factorconversion}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' style='display: none;' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Cantidad {cantidad}</div>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {total}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {montototal}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {montonetoorigen}</div>";
     tmpl += "</div>";  
       
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Pesos {montopesos}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Total {montototal}</div>";
     tmpl += "</div>";
       
     tmpl += "<hr style='width:100%;'/>";
@@ -341,10 +348,10 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                                         $("input#factorconversionpf").val(data[0].factorconversion);
                                         $("input#idprefactura").val(data[0].idprefactura);
                                         $("textarea#glosaservicio").val(data[0].glosaservicio);
-                                        $("input#montoneto").val(data[0].montoneto);
-                                        $("input#montopesos").val(data[0].montoapagarpesos);
+                                        $("input#montonetoorigen").val(data[0].montoneto);
+                                        $("input#montoneto").val(data[0].montoapagarpesos);
                                         $("input#cantidad").val(1);
-                                        $("input#total").val(data[0].montoapagarpesos);    
+                                        $("input#montototal").val(data[0].montoapagarpesos);    
                                         $("input#factorconversion").val(data[0].factorconversion);                                  
                                     } else {
                                         alert("No existe id de prefactura para el proveedor");
@@ -429,7 +436,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
             {
                 label: 'Glosa Servicio',
                 name: 'glosaservicio',
-                width: 250,
+                width: 350,
                 align: 'left',
                 search: false,
                 editable: true,
@@ -446,12 +453,12 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 2 },
+                formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            },            
+            },       
             {
-                label: 'Monto Pesos',
-                name: 'montopesos',
+                label: 'Impuesto',
+                name: 'impuesto',
                 width: 100,
                 align: 'left',
                 search: false,
@@ -460,6 +467,39 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
             },
+            {
+                label: 'Proporcional',
+                name: 'ivanorecuperable',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },         
+            {
+                label: 'Costo',
+                name: 'montocosto',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },           
+            {
+                label: 'IVA Credito',
+                name: 'ivacredito',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 },
+                editoptions: { size: 5 }
+            },                                 
             {
                 label: 'Cantidad',
                 name: 'cantidad',
@@ -474,12 +514,12 @@ function showItemsFacturas(parentRowID, parentRowKey) {
             },
             {
                 label: 'Total',
-                name: 'total',
+                name: 'montototal',
                 width: 100,
                 align: 'left',
                 search: false,
                 editable: true,
-                hidden: true,
+                hidden: false,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
@@ -495,29 +535,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            },                      
-            {
-                label: 'IVA Credito',
-                name: 'ivacredito',
-                width: 100,
-                align: 'left',
-                search: false,
-                editable: true,
-                formatter: 'number',
-                formatoptions: { decimalPlaces: 0 },
-                editoptions: { size: 5 }
-            },            
-            {
-                label: 'Total a Pagar',
-                name: 'totalapagar',
-                width: 100,
-                align: 'left',
-                search: false,
-                editable: true,
-                formatter: 'number',
-                formatoptions: { decimalPlaces: 0 },
-                editoptions: { size: 5 }
-            }                 
+            }                                 
 
         ],
         height: 'auto',
@@ -687,6 +705,15 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 hidden: true,
             },
             {
+                label: 'Porcentaje',
+                name: 'porcentaje',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false
+            },                
+            {
                 label: 'CUI',
                 name: 'cui',
                 width: 50,
@@ -721,19 +748,10 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: false
-            },     
-            {
-                label: 'Porcentaje',
-                name: 'porcentaje',
-                width: 100,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false
-            },                                      
+            },                                       
             {
                 label: 'Neto',
-                name: 'monto',
+                name: 'montoneto',
                 width: 100,
                 align: 'left',
                 search: false,
@@ -743,8 +761,19 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 formatoptions: { decimalPlaces: 0 }                
             },   
             {
+                label: 'Impuesto',
+                name: 'impuesto',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                
+            },               
+            {
                 label: 'Proporcional',
-                name: 'proporcional',
+                name: 'ivanorecuperable',
                 width: 100,
                 align: 'left',
                 search: false,
@@ -754,8 +783,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 formatoptions: { decimalPlaces: 0 }                
             },         
             {
-                label: 'Total Gasto',
-                name: 'costo',
+                label: 'Costo',
+                name: 'montocosto',
                 width: 100,
                 align: 'left',
                 search: false,
@@ -763,7 +792,29 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 hidden: false,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 }                
-            }                       
+            },   
+            {
+                label: 'IVA Credito',
+                name: 'ivacredito',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                
+            },
+            {
+                label: 'Total a Pagar',
+                name: 'montototal',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                
+            }                                     
 
         ],
         height: 'auto',
