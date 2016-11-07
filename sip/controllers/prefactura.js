@@ -231,7 +231,9 @@ exports.generar = function (req, res) {
                 0,
                 NULL,
                 0,
-                1
+                1,
+				b.impuesto,
+				b.factorimpuesto                
                 FROM sip.contrato A 
                 JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
@@ -275,6 +277,8 @@ exports.generar = function (req, res) {
                         'glosaaprobacion': null,
                         'idcalificacion': 0,
                         'borrado': 1,
+                        'impuesto': rows[i].impuesto,
+                        'factorimpuesto': rows[i].factorimpuesto,
                         'montoapagarpesos': rows[i].montoapagarpesos,
                         'montomultapesos': 0,
                         'montoimpuesto': rows[i].montoimpuesto,
@@ -305,38 +309,62 @@ exports.generar = function (req, res) {
                     return Promise.all(s_promises);
                 }).then(function (result) {
                     logger.debug("EXITO AL GENERAR IDITEM");
+
+
+                    models.sequelize.transaction({ autocommit: true }, function (t) {
+                        for (var i = 0; i < rows.length; i++) {
+                            var otherPromise = models.detallecompromiso.update({
+                                estadopago: 'GENERADO'
+                            }, {
+                                    where: { id: rows[i].id }
+                                }, { transaction: t });
+                            o_promises.push(otherPromise);
+
+                        };
+
+                        return Promise.all(o_promises);
+                    }).then(function (result) {
+                        logger.debug("EXITO UPDATE DET");
+                        res.json({ error_code: 0, message: "Exito!!" });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({ error_code: 1, message: err });
+                    });
+
                 }).catch(function (err) {
                     logger.error(err)
+                    res.json({ error_code: 1, message: err });
                 });
 
 
             }).catch(function (err) {
                 logger.error(err)
+                res.json({ error_code: 1, message: err });
             });
-
-            models.sequelize.transaction({ autocommit: true }, function (t) {
-                for (var i = 0; i < rows.length; i++) {
-                    var otherPromise = models.detallecompromiso.update({
-                        estadopago: 'GENERADO'
-                    }, {
-                            where: { id: rows[i].id }
-                        }, { transaction: t });
-                    o_promises.push(otherPromise);
-
-                };
-
-                return Promise.all(o_promises);
-            }).then(function (result) {
-                logger.debug("EXITO UPDATE DET");
-            }).catch(function (err) {
-                logger.error(err)
-            });
-
+            /*
+                        models.sequelize.transaction({ autocommit: true }, function (t) {
+                            for (var i = 0; i < rows.length; i++) {
+                                var otherPromise = models.detallecompromiso.update({
+                                    estadopago: 'GENERADO'
+                                }, {
+                                        where: { id: rows[i].id }
+                                    }, { transaction: t });
+                                o_promises.push(otherPromise);
+            
+                            };
+            
+                            return Promise.all(o_promises);
+                        }).then(function (result) {
+                            logger.debug("EXITO UPDATE DET");
+                        }).catch(function (err) {
+                            logger.error(err)
+                        });
+            */
         }).catch(function (e) {
             logger.error(e)
-            res.json({ error_code: 1 });
+            res.json({ error_code: 1, message: err });
         })
 
-    res.json({ error_code: 0 });
+    //res.json({ error_code: 0, message: "Exito!!" });
 
 }

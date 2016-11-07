@@ -2,8 +2,6 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-    var template = "<div id='responsive-form' class='clearfix'>";
-
     var modelSolicitudAprobacion = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Periodo', name: 'periodo', width: 70, align: 'left', search: true, editable: false },
@@ -32,15 +30,14 @@ $(document).ready(function () {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
-        loadError: sipLibrary.jqGrid_loadErrorHandler
-    })/*.jqGrid('filterToolbar', {
-        stringResult: true,
-        searchOnEnter: true,
-        defaultSearch: "cn",
-        searchOperators: true,
-        beforeSearch: function () { },
-        afterSearch: function () { }
-    }); */
+        gridComplete: function () {
+            var recs = $("#grid").getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                bootbox.alert("Ya fue ejecutado el proceso!!", function () { /* your callback code */ })
+            }
+        }
+    });
 
     $grid.jqGrid('navGrid', '#pager', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pager', {
@@ -51,19 +48,29 @@ $(document).ready(function () {
         onClickButton: function () {
             bootbox.confirm("¿Esta seguro de confirmar la generación de solicitudes?", function (confirmed) {
                 if (confirmed == true) {
-                    $.ajax({
-                        url: '/solicitud/generar'
-                    }).done(function () {
-                        bootbox.alert("Generado!!…", function(){ /* your callback code */ })
-                         $grid.trigger("reloadGrid");
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        bootbox.alert("Error!!…", function(){ /* your callback code */ })
-                    }).always(function () {
-                        bootbox.alert("Comenzó la generación", function(){ /* your callback code */ })
+                    var dialog = bootbox.dialog({
+                        title: 'Carga de solicitudes',
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> Cargando...</p>'
+                    });
+                    dialog.init(function () {
+                        $.ajax({
+                            url: '/solicitud/generar'
+                        }).done(function (data) {
+                            if (data.error_code === 0) {
+                                dialog.find('.bootbox-body').html(data.message);
+                            } else {
+                                dialog.find('.bootbox-body').html(data.message);
+                            }
+
+                        }).fail(function () {
+                            dialog.find('.bootbox-body').html("Error");
+                        }).always(function () {
+                            dialog.modal('hide');
+                            $("#grid").trigger("reloadGrid");
+                        });
                     });
                 }
             });
         }
     });
-      
 });

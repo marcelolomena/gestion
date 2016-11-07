@@ -42,7 +42,7 @@ function gridDesglose(parentRowID, parentRowKey) {
             edittype: "select",
             editrules: { required: true },
             editoptions: {
-                dataUrl: '/CUIs',
+                dataUrl: '/allcuis',
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -53,9 +53,9 @@ function gridDesglose(parentRowID, parentRowKey) {
                     s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].id + '" selected>'+ data[i].cui +' - ' + data[i].nombre + '</option>';
                         } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].id + '">'+ data[i].cui +' - ' + data[i].nombre + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -138,7 +138,7 @@ function gridDesglose(parentRowID, parentRowKey) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        caption: 'Items',
+        caption: 'Desglose contable',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
