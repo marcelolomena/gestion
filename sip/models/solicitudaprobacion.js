@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true      
     },
     periodo: {
       type: DataTypes.INTEGER,
@@ -20,11 +20,15 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idfacturacion: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     idprefactura: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'prefactura',
+        key: 'id'
+      }
+    },
+    idfactura: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -64,7 +68,12 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    montoapagar: {
+    idfacturacion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true
+    },
+    montoneto: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
@@ -73,6 +82,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     montomulta: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoimpuesto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoapagar: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
@@ -96,11 +113,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    borrado: {
+    idcalificacion2: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    montoapagarpesos: {
+    montoaprobadopesos: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
@@ -108,7 +125,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    montoimpuesto: {
+    montoapagarpesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montototalpesos: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
@@ -116,19 +137,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    montoaprobadopesos: {
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    impuesto: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    montoneto: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    montototalpesos: {
+    factorimpuesto: {
       type: DataTypes.FLOAT,
       allowNull: true
     }
   }, {
-    schema: 'sip', timestamps: false, tableName: 'solicitudaprobacion'
+    schema: 'sip',timestamps: false,tableName: 'solicitudaprobacion'
   });
 };
