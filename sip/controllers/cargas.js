@@ -269,7 +269,10 @@ exports.archivo = function (req, res) {
 
         parser.on('readable', function () {
           while (line = parser.read()) {
-            carrusel.push(line);//lee todo el archivo
+            var length = carrusel.push(line);
+            if (length % 1000 == 0) {
+              logger.debug(length);
+            }
           }
         });
 

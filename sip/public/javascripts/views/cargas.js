@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
-
+    //var $grid = $("#gridMaster");
     var modelcargas = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Archivo', name: 'archivo', width: 50, align: 'left', search: true, editable: false, hidden: false },
@@ -73,12 +73,11 @@ $(document).ready(function () {
         },
     });
 
-
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    //$("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: false, del: false, search: false,
-        refresh: true, view: true, position: "left", cloneToTop: false
+        refresh: false, view: false, position: "left", cloneToTop: false
     },
 
         {
@@ -121,11 +120,8 @@ $(document).ready(function () {
                 success: function (data, status) {
                     if (typeof (data.success) != 'undefined') {
                         if (data.success == true) {
-                            //bootbox.alert(data.message, function () { /* your callback code */ });
                             dialog.find('.bootbox-body').html(data.message);
-                            //alert(data.message);
                         } else {
-                            //bootbox.alert(data.message, function () { /* your callback code */ });
                             dialog.find('.bootbox-body').html(data.message);
                         }
                     }
@@ -139,20 +135,20 @@ $(document).ready(function () {
             })
         });
     }
-
-    $("#grid").jqGrid('navButtonAdd', "#pager", {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-upload",
-        title: "Upload",
-        position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/cargas/excel';
-            $('#grid').jqGrid('excelExport', { "url": url });
-        }
-    });
-
+    /*
+        $("#grid").jqGrid('navButtonAdd', "#pager", {
+            caption: "",
+            buttonicon: "glyphicon glyphicon-upload",
+            title: "Upload",
+            position: "last",
+            onClickButton: function () {
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                var url = '/cargas/excel';
+                $('#grid').jqGrid('excelExport', { "url": url });
+            }
+        });
+    */
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {
