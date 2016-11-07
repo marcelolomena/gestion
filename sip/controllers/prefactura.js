@@ -246,6 +246,44 @@ exports.generar = function(req, res) {
 				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
 				E.numrut != 1
+UNION                
+ SELECT
+                C.id, 
+                C.periodo,
+                C.id iddetallecompromiso,
+                NULL idprefactura,
+                D.id idcui,
+                A.idproveedor,
+                B.idservicio, 
+                B.glosaservicio,
+                A.id idcontrato,
+                C.valorcuota montoneto,
+				IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoimpuesto,
+				C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
+				F.valorconversion,
+				F.valorconversion * (C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0)) montoapagarpesos,
+                0,
+                0,
+                NULL,
+                NULL,
+                0,
+                NULL,
+                0,
+                1,
+				b.impuesto,
+				b.factorimpuesto                
+                FROM sip.contrato A 
+                JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
+                JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
+                JOIN sip.estructuracui D ON B.idcui = D.id
+				JOIN sip.proveedor E ON A.idproveedor = E.id
+				JOIN sip.monedasconversion F ON F.idmoneda = B.idmoneda 
+                WHERE
+				 C.periodo < :periodo AND
+				 F.periodo < :periodo AND
+				C.montoorigen != 0 AND
+				E.numrut != 1 AND
+				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO')                
         `
     var promises = []
     var o_promises = []

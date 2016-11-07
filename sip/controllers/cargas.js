@@ -306,6 +306,7 @@ exports.archivo = function (req, res) {
                 logger.debug("->>> " + err)
               } else {
                 logger.debug("->>> " + data)
+                res.json({ error_code: 0, message: 'termino la carga de troya', success: true });                
               }
             })
 
@@ -326,14 +327,12 @@ exports.archivo = function (req, res) {
 
 
     busboy.on('finish', function () {
-      res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
+      logger.debug("Finalizo la transferencia del archivo")
+      //res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
     });
 
     return req.pipe(busboy);
   }
-
-  res.writeHead(404);
-  res.end();
 
 }
 
