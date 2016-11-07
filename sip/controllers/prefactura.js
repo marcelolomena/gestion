@@ -5,7 +5,7 @@ var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 
-exports.test = function (req, res) {
+exports.test = function(req, res) {
 
     try {
         var jsreport = require('jsreport-core')()
@@ -80,13 +80,13 @@ exports.test = function (req, res) {
             {
                 replacements: { id: req.params.id },
                 type: sequelize.QueryTypes.SELECT
-            }).then(function (rows) {
+            }).then(function(rows) {
                 logger.debug(rows)
                 var datum = {
                     "prefactura": rows
                 }
 
-                jsreport.init().then(function () {
+                jsreport.init().then(function() {
                     return jsreport.render({
                         template: {
                             content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'prefactura.html'), 'utf8'),
@@ -100,19 +100,19 @@ exports.test = function (req, res) {
                             }
                         },
                         data: datum
-                    }).then(function (resp) {
+                    }).then(function(resp) {
                         res.header('Content-type', 'application/pdf');
                         resp.stream.pipe(res);
                         //console.info("es nuevo")
-                    }).catch(function (e) {
+                    }).catch(function(e) {
                         logger.error(e)
                     })
 
-                }).catch(function (e) {
+                }).catch(function(e) {
                     logger.error(e)
                 })
 
-            }).catch(function (err) {
+            }).catch(function(err) {
                 logger.error(e)
             });
 
@@ -125,7 +125,7 @@ exports.test = function (req, res) {
 /*
 # Cambio en paginación
 */
-exports.lista = function (req, res) {
+exports.lista = function(req, res) {
     var page = req.body.page;
     var rows = req.body.rows;
     var sidx = req.body.sidx;
@@ -147,7 +147,7 @@ exports.lista = function (req, res) {
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
-        jsonObj.rules.forEach(function (item) {
+        jsonObj.rules.forEach(function(item) {
             if (item.op === 'cn')
                 condition += " AND " + item.field + " like '%" + item.data + "%'"
         });
@@ -185,24 +185,24 @@ exports.lista = function (req, res) {
         {
             replacements: { periodo: periodo, condition: condition },
             type: sequelize.QueryTypes.SELECT
-        }).then(function (records) {
+        }).then(function(records) {
             var total = Math.ceil(parseInt(records[0].cantidad) / rows);
             sequelize.query(sql,
                 {
                     replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
                     type: sequelize.QueryTypes.SELECT
-                }).then(function (data) {
+                }).then(function(data) {
                     res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
-                }).catch(function (e) {
+                }).catch(function(e) {
                     logger.error(e)
                 })
 
-        }).catch(function (e) {
+        }).catch(function(e) {
             logger.error(e)
         })
 }
 
-exports.generar = function (req, res) {
+exports.generar = function(req, res) {
     var iniDate = new Date();
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
@@ -254,10 +254,11 @@ exports.generar = function (req, res) {
         {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
-        }).then(function (rows) {
+        }).then(function(rows) {
             //logger.debug(rows)
-            models.sequelize.transaction({ autocommit: true }, function (t) {
+            models.sequelize.transaction({ autocommit: true }, function(t) {
                 for (var i = 0; i < rows.length; i++) {
+                    logger.debug(rows[i].impuesto)
                     var newPromise = models.solicitudaprobacion.create({
                         'periodo': rows[i].periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
@@ -293,9 +294,9 @@ exports.generar = function (req, res) {
                 };
 
                 return Promise.all(promises);
-            }).then(function (result) {
+            }).then(function(result) {
 
-                models.sequelize.transaction({ autocommit: true }, function (t) {
+                models.sequelize.transaction({ autocommit: true }, function(t) {
                     for (var i = 0; i < result.length; i++) {
                         var myPromise = models.solicitudaprobacion.update({
                             idfacturacion: result[i].id.toString()
@@ -307,11 +308,11 @@ exports.generar = function (req, res) {
                     };
 
                     return Promise.all(s_promises);
-                }).then(function (result) {
+                }).then(function(result) {
                     logger.debug("EXITO AL GENERAR IDITEM");
 
 
-                    models.sequelize.transaction({ autocommit: true }, function (t) {
+                    models.sequelize.transaction({ autocommit: true }, function(t) {
                         for (var i = 0; i < rows.length; i++) {
                             var otherPromise = models.detallecompromiso.update({
                                 estadopago: 'GENERADO'
@@ -323,48 +324,28 @@ exports.generar = function (req, res) {
                         };
 
                         return Promise.all(o_promises);
-                    }).then(function (result) {
+                    }).then(function(result) {
                         logger.debug("EXITO UPDATE DET");
                         res.json({ error_code: 0, message: "Exito!!" });
-                    }).catch(function (err) {
+                    }).catch(function(err) {
                         logger.error(err)
                         res.json({ error_code: 1, message: err });
                     });
 
-                }).catch(function (err) {
+                }).catch(function(err) {
                     logger.error(err)
                     res.json({ error_code: 1, message: err });
                 });
 
 
-            }).catch(function (err) {
+            }).catch(function(err) {
                 logger.error(err)
                 res.json({ error_code: 1, message: err });
             });
-            /*
-                        models.sequelize.transaction({ autocommit: true }, function (t) {
-                            for (var i = 0; i < rows.length; i++) {
-                                var otherPromise = models.detallecompromiso.update({
-                                    estadopago: 'GENERADO'
-                                }, {
-                                        where: { id: rows[i].id }
-                                    }, { transaction: t });
-                                o_promises.push(otherPromise);
-            
-                            };
-            
-                            return Promise.all(o_promises);
-                        }).then(function (result) {
-                            logger.debug("EXITO UPDATE DET");
-                        }).catch(function (err) {
-                            logger.error(err)
-                        });
-            */
-        }).catch(function (e) {
+
+        }).catch(function(e) {
             logger.error(e)
             res.json({ error_code: 1, message: err });
         })
-
-    //res.json({ error_code: 0, message: "Exito!!" });
 
 }
