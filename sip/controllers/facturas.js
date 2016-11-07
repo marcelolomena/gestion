@@ -281,9 +281,10 @@ exports.actionDetalle = function (req, res) {
 
       break;
     case "del":
-      var sql = "delete from sip.detallefactura " +
-        "WHERE id=" + req.body.id + ";" +
-        "delete from sip.desgloseitemfactura where iddetallefactura=" + req.body.id;
+      var sql = "delete from sip.desgloseitemfactura where iddetallefactura=" + req.body.id+";"+
+      "delete from sip.detallefactura " +
+        "WHERE id=" + req.body.id + ";";
+
       logger.debug("sql:" + sql);
       sequelize.query(sql).then(function (factura) {
         res.json({ error_code: 0 });
