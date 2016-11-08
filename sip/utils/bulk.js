@@ -27,12 +27,14 @@ module.exports = (function () {
                             inserterCallback();
                         }).catch(function (err) {
                             logger.error(err)
+                            throw new Error(err)
                         });
                     } else if (table === 'RecursosHumanos') {
                         models.recursoshumanos$.bulkCreate(tasks).then(function (events) {
                             inserterCallback();
                         }).catch(function (err) {
                             logger.error(err)
+                            throw new Error(err)
                         });
                     }
                 },
@@ -106,8 +108,6 @@ module.exports = (function () {
             } else {
                 throw new Error("CSV null");
             }
-
-
 
         } catch (err) {
             logger.error(err)
