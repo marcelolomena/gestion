@@ -285,7 +285,7 @@ exports.archivo = function (req, res) {
         parser.on('end', function (count) {
 
           co(function* () {
-            
+            models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
             var carga = yield models.detallecargas.findAll({
               limit: 1,
               where: { id: idDetail },
