@@ -104,7 +104,7 @@ $(document).ready(function () {
         styleUI: "Bootstrap",
         editurl: '/facturas/action',
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
-        subGridRowExpanded: showItemsFacturas, // javascript function that will take care of showing the child grid        
+        subGridRowExpanded: showSubGrids, // javascript function that will take care of showing the child grid        
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
@@ -233,11 +233,20 @@ $(document).ready(function () {
     $("#pager_left").css("width", "");
 });
 
+function showSubGrids(subgrid_id, row_id) {
+    console.log("en showSubGrids");
+    showItemsFacturas(subgrid_id, row_id, 'detallefact');
+    showResumenContable(subgrid_id, row_id, 'resumenconta');
+}
 
-function showItemsFacturas(parentRowID, parentRowKey) {
+function showItemsFacturas(parentRowID, parentRowKey, suffix) {
     console.log("en shoitem");
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
+    if (suffix) {
+        childGridID += suffix;
+        childGridPagerID += suffix;
+    }    
     var childGridURL = "/presupuestoservicios/" + parentRowKey;
     var urlServicios = '/serviciospre/' + parentRowKey;
     var urlProveedores = '/proveedorespre/' + parentRowKey;
@@ -277,7 +286,6 @@ function showItemsFacturas(parentRowID, parentRowKey) {
 
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto en Pesos {montoneto}</div>";
-    tmpl += "<div class='column-half'>Factor Conversión {factorconversion}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' style='display: none;' >";
@@ -285,10 +293,6 @@ function showItemsFacturas(parentRowID, parentRowKey) {
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {montototal}</div>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {montonetoorigen}</div>";
     tmpl += "</div>";  
-      
-    tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Total {montototal}</div>";
-    tmpl += "</div>";
       
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div align='left'> {sData} {cData}  </div>";
@@ -539,6 +543,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
 
         ],
         height: 'auto',
+        caption: 'Detalle de Factura',
         styleUI: "Bootstrap",
         sortable: "true",
         pager: "#" + childGridPagerID,
@@ -564,7 +569,7 @@ function showItemsFacturas(parentRowID, parentRowKey) {
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
+        edit: false,
         add: true,
         del: true,
         search: false,
@@ -658,15 +663,169 @@ function showItemsFacturas(parentRowID, parentRowKey) {
                 var result = JSON.parse(json);
                 if (result.error_code == 100)
                      return [false, "Error, el codigo de facturación ya existe, ", ""];                
-                if (result.error_code != 0)
+                if (result.error_code != 0){
                     return [false, result.error_text, ""];
-                else
+                }else {
+                    jQuery("#grid").trigger("reloadGrid");
                     return [true, "", ""]
+                }
             }            
-        }, {}
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Elimina Detalle Fctura",
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0){
+                    return [false, result.error_text, ""];
+                }else{
+                    jQuery("#grid").trigger("reloadGrid");
+                    return [true, "", ""]
+                }
+                    
+            }
+        },        
+         {}
+
+);
+    $("#pager_left").css("width", "");
+}
+
+function showResumenContable(parentRowID, parentRowKey, suffix) {
+    console.log("en resumen");
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+    if (suffix) {
+        childGridID += suffix;
+        childGridPagerID += suffix;
+    }     
+    var childGridURL = "/getresumencontable/"  + parentRowKey;
+    
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+    
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        colModel: [
+            {
+                label: 'CUI',
+                name: 'cui',
+                width: 80,
+                hidden: false,
+                search: false,
+                editable: true
+            },
+            {
+                label: 'Nombre Cuenta',
+                name: 'nombrecuenta',
+                width: 250,
+                align: 'left',
+                search: false,
+                editable: false,
+                hidden: false,
+            },
+            {
+                label: 'Cuenta',
+                name: 'cuentacontable',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false
+            },                
+            {
+                label: 'Monto',
+                name: 'montoneto',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: false,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                      
+            },            
+            {
+                label: 'Proporcional',
+                name: 'ivanorecuperable',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                      
+            },      
+            {
+                label: 'Debe',
+                name: 'montocosto',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                      
+            },    
+            {
+                label: 'Haber',
+                name: 'haber',
+                width: 100,
+                align: 'left',
+                search: false,
+                editable: true,
+                hidden: false,
+                formatter: 'number',
+                formatoptions: { decimalPlaces: 0 }                      
+            }      
+
+        ],
+        caption: 'Resumen Contable Factura',
+        height: 'auto',
+        styleUI: "Bootstrap",
+        sortable: "true",
+        pager: "#" + childGridPagerID,
+        page: 1,
+        shrinkToFit: false,
+        rowNum: 10,
+        rowList: [5, 10, 20, 50],
+        sortname: 'id',
+        sortorder: 'asc',
+        viewrecords: true,
+        editurl: '/facturas/actionDetalle/' + parentRowKey,
+        regional: "es",
+        subGrid: false,
+        loadComplete: function () {
+            var $grid = $("#" + childGridID);
+            var colSum = $grid.jqGrid('getCol', 'montocosto', false, 'sum');
+            var colSum2 = $grid.jqGrid('getCol', 'haber', false, 'sum');
+            $grid.jqGrid('footerData', 'set', { montocosto: colSum, haber: colSum2 });
+        },   
+        footerrow: true,
+        userDataOnFooter: true                 
+
+    });
+
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: false,
+        add: false,
+        del: false,
+        search: false,
+        refresh: true
+    },
+     {}
 
     );
 }
+
 
 function showDesgloseContable(parentRowID, parentRowKey) {
     console.log("en desglose");

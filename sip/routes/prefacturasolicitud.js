@@ -56,6 +56,9 @@ module.exports = function (passport) {
 
     router.route('/getdesglosecontable/:id')
         .get(isAuthenticated, facturasController.getDesglose); 
+
+    router.route('/getresumencontable/:id')
+        .get(isAuthenticated, facturasController.getResumenContable); 
         
     return router;
 

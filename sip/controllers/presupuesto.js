@@ -81,27 +81,27 @@ exports.getPresupuestoPaginados = function (req, res) {
     if (JSON.stringify(jsonObj.rules) != '[]') {
       jsonObj.rules.forEach(function (item) {
         if (item.op === 'cn')
-          if (item.field == 'CUI' || item.field == 'nombre' || item.field == 'nombreresponsable'){
-            condition += 'b.'+item.field + " like '%" + item.data + "%' AND ";
+          if (item.field == 'CUI' || item.field == 'nombre' || item.field == 'nombreresponsable') {
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
           } else if (item.field == 'estado') {
             condition += "a.estado like '%" + item.data + "%' AND ";
           } else {
-            condition += 'c.'+item.field +"="+ item.data + " AND ";
-          } 
+            condition += 'c.' + item.field + "=" + item.data + " AND ";
+          }
       });
       condition = condition.substring(0, condition.length - 5);
-      logger.debug("***CONDICION:"+condition);
+      logger.debug("***CONDICION:" + condition);
     }
   }
   sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id JOIN sip.ejercicios c ON c.id=a.idejercicio ";
   if (filters && condition != "") {
-    sqlcount += "WHERE "+condition+ " ";  
-  }      
+    sqlcount += "WHERE " + condition + " ";
+  }
 
-  sequelize.query(sqlcount).spread(function (recs) { 
-    var records =  recs[0].count;
-    var total = Math.ceil(parseInt(recs[0].count) / rowspp);  
-    logger.debug("####COUNT:"+recs[0].count+" Total:"+total); 
+  sequelize.query(sqlcount).spread(function (recs) {
+    var records = recs[0].count;
+    var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+    logger.debug("####COUNT:" + recs[0].count + " Total:" + total);
     logger.debug("EL SUPER ID : " + req.session.passport.user)
     logger.debug("ROL : " + req.session.passport.sidebar[0].rid)
     superCui(req.session.passport.user, function (elcui) {//req.user[0].uid
@@ -110,41 +110,41 @@ exports.getPresupuestoPaginados = function (req, res) {
       var sqlok;
       if (rol == constants.ROLADMDIVOT) {
         sqlok = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rowspp + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
-        "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable, c.ejercicio " +
-        "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
-        "JOIN sip.ejercicios c ON c.id=a.idejercicio " ;
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rowspp + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
+          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable, c.ejercicio " +
+          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
+          "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
         if (filters && condition != "") {
-          logger.debug("**"+condition+"**");
-          sqlok += "WHERE "+condition+ " ";  
-        }           
+          logger.debug("**" + condition + "**");
+          sqlok += "WHERE " + condition + " ";
+        }
         sqlok += "ORDER BY id desc) " +
-        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
       } else {
         sqlok = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rowspp + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
-        "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
-        "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
-        "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
-        "WHERE a.idcui IN (" + elcui + ") " ;
-        if (filters && condition != ""){
-          logger.debug("**"+condition+"**");
-          sqlok += "AND "+ condition+ " ";
-        } 
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rowspp + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
+          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
+          "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
+          "WHERE a.idcui IN (" + elcui + ") ";
+        if (filters && condition != "") {
+          logger.debug("**" + condition + "**");
+          sqlok += "AND " + condition + " ";
+        }
         sqlok += "ORDER BY id desc) " +
-        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";          
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
       }
       sequelize.query(sqlok).spread(function (rows) {
-        res.json({ records: records, total: total, page: page, rows: rows }); 
-      });             
+        res.json({ records: records, total: total, page: page, rows: rows });
+      });
     });
   })
 };
@@ -249,7 +249,7 @@ exports.getExcel = function (req, res) {
       caption: 'Monto Anual',
       type: 'number',
       width: 15
-    },            
+    },
     {
       caption: 'Descripción',
       type: 'string',
@@ -273,7 +273,7 @@ exports.getExcel = function (req, res) {
           proyecto[i].version,
           proyecto[i].estado,
           proyecto[i].montoforecast,
-          proyecto[i].montoanual,                              
+          proyecto[i].montoanual,
           proyecto[i].descripcion
         ];
         arr.push(a);
@@ -414,12 +414,12 @@ exports.action = function (req, res) {
   var ejercicio = req.body.idejercicio;
   logger.debug("Id Prep:" + idpre);
   logger.debug("Ejercicio:" + ejercicio);
-  logger.debug("montos:"+req.body.montoforecast+", "+req.body.montoanual)
+  logger.debug("montos:" + req.body.montoforecast + ", " + req.body.montoanual)
   switch (action) {
     case "add":
       var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
         "WHERE b.idcui=" + id_cui + " AND b.idejercicio=" + ejercicio + " AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
-        logger.debug("coriiendo:" + sql);
+      logger.debug("coriiendo:" + sql);
       sequelize.query(sql)
         .spread(function (rows) {
           if (rows.length > 0) {
@@ -430,44 +430,44 @@ exports.action = function (req, res) {
               idejercicio: req.body.idejercicio,
               idcui: req.body.idcui,
               descripcion: req.body.descripcion,
-              montoforecast:req.body.montoforecast,
+              montoforecast: req.body.montoforecast,
               montoanual: req.body.montoanual,
               estado: 'Creado',
               version: version,
               borrado: 1
             }).then(function (presupuesto) {
-              logger.debug("Creo presup:" + presupuesto.id+" idprebase:"+idpre);
-              if (idpre != null){
-                logger.debug("llamando a sip.CopiaPresupuesto:" + idpre+", "+id_cui+","+ejercicio+","+presupuesto.id);
+              logger.debug("Creo presup:" + presupuesto.id + " idprebase:" + idpre);
+              if (idpre != null) {
+                logger.debug("llamando a sip.CopiaPresupuesto:" + idpre + ", " + id_cui + "," + ejercicio + "," + presupuesto.id);
                 sequelize.query("EXECUTE sip.CopiaPresupuesto " + idpre
-                +","+ id_cui
-                +","+ejercicio
-                +","+presupuesto.id
+                  + "," + id_cui
+                  + "," + ejercicio
+                  + "," + presupuesto.id
                 ).then(function (response) {
-                    logger.debug("****LLamo CopiaPresupuesto");
-                    res.json({ error_code: 0 }); 
+                  logger.debug("****LLamo CopiaPresupuesto");
+                  res.json({ error_code: 0 });
                 }).error(function (err) {
-                        res.json(err);
-                });                    
+                  res.json(err);
+                });
               } else {
-                    logger.debug("****LLamo InsertaServiciosPresupuesto"); 
-                    sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
-                      + "," + id_cui
-                      + "," + presupuesto.id
-                      ).then(function (response) {
-                      //+ ';').then(function (response) {
-                        logger.debug("****LLamo InsertaServiciosPresupuesto"); 
-                        res.json({ error_code: 0 });                   
-                      }).error(function (err) {
-                        res.json(err);
-                      });                  
-               }
+                logger.debug("****LLamo InsertaServiciosPresupuesto");
+                sequelize.query('EXECUTE sip.InsertaServiciosPresupuesto ' + ejercicio
+                  + "," + id_cui
+                  + "," + presupuesto.id
+                ).then(function (response) {
+                  //+ ';').then(function (response) {
+                  logger.debug("****LLamo InsertaServiciosPresupuesto");
+                  res.json({ error_code: 0 });
+                }).error(function (err) {
+                  res.json(err);
+                });
+              }
             }).catch(function (err) {
               logger.error(err)
               res.json({ error_code: 1 });
-            }); 
+            });
           }
-          }); 
+        });
       break;
     case "edit":
       models.presupuesto.update({
@@ -490,33 +490,33 @@ exports.action = function (req, res) {
         + ';').then(function (response) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-              logger.error(err)
-              res.json(err);
-            }); 
+          logger.error(err)
+          res.json(err);
+        });
       break;
 
   }
 }
 
 exports.updateTotales = function (req, res) {
-  logger.debug("****id:"+req.params.id);
+  logger.debug("****id:" + req.params.id);
   sequelize.query('EXECUTE sip.actualizadetallepre ' + req.params.id
     + ';').then(function (response) {
       res.json({ error_code: 0 });
     }).catch(function (err) {
-              logger.error(err)
-              res.json(err);
-            }); 
+      logger.error(err)
+      res.json(err);
+    });
 
 };
 
 exports.confirma = function (req, res) {
-  logger.debug("****id:"+req.params.id+" estado:"+req.params.estado);
+  logger.debug("****id:" + req.params.id + " estado:" + req.params.estado);
   var id = req.params.id;
   var estado = req.params.estado;
   var idcui = req.params.idcui;
   var ideje = req.params.ideje;
-  if (estado === 'Confirmado'){
+  if (estado === 'Confirmado') {
     var sql = "SELECT * FROM sip.presupuesto b JOIN sip.ejercicios c ON b.idejercicio=c.id " +
       "WHERE b.idcui=" + idcui + " AND b.idejercicio=" + ideje + " AND (b.estado = 'Aprobado' OR b.estado = 'Confirmado') ";
     sequelize.query(sql)
@@ -524,26 +524,26 @@ exports.confirma = function (req, res) {
         if (rows.length > 0) {
           res.json({ error_code: 10 });
         } else {
-          sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
+          sql = "UPDATE sip.presupuesto SET estado='" + estado + "' WHERE id=" + id;
           sequelize.query(sql).then(function (response) {
-              res.json({ error_code: 0 });
-            }).catch(function (err) {
-              logger.error(err)
-              res.json(err);
-            }); 
-        }     
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            logger.error(err)
+            res.json(err);
+          });
+        }
+      }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+      });
+  } else {
+    sql = "UPDATE sip.presupuesto SET estado='" + estado + "' WHERE id=" + id;
+    sequelize.query(sql).then(function (response) {
+      res.json({ error_code: 0 });
     }).catch(function (err) {
       logger.error(err)
-      res.json({ error_code: 1 });
+      res.json(err);
     });
-  } else {
-      sql = "UPDATE sip.presupuesto SET estado='"+estado+"' WHERE id="+id;
-      sequelize.query(sql).then(function (response) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-              logger.error(err)
-              res.json(err);
-            });    
   }
 
 };

@@ -198,10 +198,10 @@ exports.actionDetalle = function (req, res) {
           var sql = "DECLARE @impuesto FLOAT;DECLARE @montoimpuesto FLOAT;"+
             "SELECT @impuesto=isnull(b.impuesto,0) FROM sip.solicitudaprobacion a JOIN sip.prefactura b ON a.idprefactura=b.id where a.idfacturacion="+req.body.idfacturacion+";"+
             "select @montoimpuesto=0;"+
-            "IF (@impuesto <> 0) SELECT @montoimpuesto ="+req.body.montototal+"*0.19;"+
+            "IF (@impuesto <> 0) SELECT @montoimpuesto ="+req.body.montoneto+"*0.19;"+
             "INSERT INTO sip.detallefactura (idfactura, idprefactura, idfacturacion, montonetoorigen, montoneto, cantidad, montototal, borrado, glosaservicio, impuesto) " +
             "VALUES (" + idPre + ", " + idprefact + ", '" + req.body.idfacturacion + "', " +
-            req.body.montonetopf + ", " + req.body.montototal + ", " + req.body.cantidad + ", " + req.body.montototal + "+@montoimpuesto, 1,'" + req.body.glosaservicio + "', @montoimpuesto);" +
+            req.body.montonetopf + ", " + req.body.montoneto + ", " + req.body.cantidad + ", " + req.body.montoneto + "+@montoimpuesto, 1,'" + req.body.glosaservicio + "', @montoimpuesto);" +
             "DECLARE @id INT;" +
             "select @id = @@IDENTITY; " +
             "select @id as id;";
@@ -228,7 +228,11 @@ exports.actionDetalle = function (req, res) {
                 "SELECT @monto2=sum(ivanorecuperable) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
                 "SELECT @monto3=sum(montocosto) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
                 "SELECT @monto4=sum(ivacredito) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
-                "UPDATE sip.detallefactura SET ivanorecuperable=@monto2, impuesto=@monto1, montocosto=@monto3, ivacredito=@monto4 WHERE id=" + id;
+                "UPDATE sip.detallefactura SET ivanorecuperable=@monto2, impuesto=@monto1, montocosto=@monto3, ivacredito=@monto4 WHERE id=" + id+";"+
+                "DECLARE @idfactura INT;"+
+                "SELECT @idfactura = idfactura FROM sip.detallefactura WHERE id="+id+";"+
+                "UPDATE sip.factura SET ivanorecuperable=isnull(ivanorecuperable,0)+@monto2, montocosto=isnull(montocosto,0)+@monto3, ivacredito=isnull(ivacredito,0)+@monto4 "+
+                "where id=@idfactura";                
                 console.log("query3:" + sql3);
               sequelize.query(sql3).spread(function (rows) {
                 res.json({ error_code: 0 });
@@ -282,8 +286,13 @@ exports.actionDetalle = function (req, res) {
       break;
     case "del":
       var sql = "delete from sip.desgloseitemfactura where iddetallefactura=" + req.body.id+";"+
-      "delete from sip.detallefactura " +
-        "WHERE id=" + req.body.id + ";";
+        "DECLARE @monto1 FLOAT;DECLARE @monto2 FLOAT;DECLARE @monto3 FLOAT;DECLARE @idfactura INT; "+
+        "SELECT @monto1=ivanorecuperable,@monto2=montocosto,@monto3=ivacredito FROM sip.detallefactura WHERE id="+req.body.id+"; "+
+        "SELECT @idfactura=idfactura FROM sip.detallefactura WHERE id="+req.body.id+";"+
+        "UPDATE sip.factura SET ivanorecuperable=isnull(ivanorecuperable,0)-@monto1, "+
+        "montocosto=isnull(montocosto,0)-@monto2, ivacredito=isnull(ivacredito,0)-@monto3 "+
+        "WHERE id=@idfactura;"+
+        "delete from sip.detallefactura WHERE id=" + req.body.id + ";";
 
       logger.debug("sql:" + sql);
       sequelize.query(sql).then(function (factura) {
@@ -333,4 +342,32 @@ exports.getDesglose = function (req, res) {
     .spread(function (rows) {
       res.json(rows);
     });
+};
+
+exports.getResumenContable = function (req, res) {
+  logger.debug("****idfactura:" + req.params.id);
+  var total=0;
+  var page=1;
+  sql = "DECLARE @vacio VARCHAR(10);" +
+    "SELECT @vacio=' ';" +
+    "WITH query AS (" +
+    "SELECT d.cui,e.nombrecuenta, e.cuentacontable, a.montoneto, a.ivanorecuperable, a.montocosto,@vacio AS haber FROM sip.desgloseitemfactura a JOIN sip.detallefactura b ON a.iddetallefactura=b.id " +
+    "JOIN sip.factura c ON b.idfactura=c.id JOIN sip.estructuracui d ON a.idcui=d.id " +
+    "JOIN sip.cuentascontables e ON e.id=a.idcuentacontable " +
+    "WHERE c.id=" + req.params.id + " " +
+    "UNION " +
+    "SELECT @vacio,'IVA Credito', @vacio, @vacio, @vacio, ivacredito, @vacio AS haber FROM sip.factura WHERE id=" + req.params.id + " " +
+    "UNION " +
+    "SELECT @vacio,'Proveedores por Pagar', @vacio, @vacio, @vacio, @vacio, montototal AS haber FROM sip.factura WHERE id=" + req.params.id + " " +
+    ") SELECT * FROM query ORDER BY cui desc";
+  console.log(sql);
+  sequelize.query(sql).spread(function (rows) {
+      var records=rows.length;
+      var total=rows.length;
+      res.json({ records: records, total: total, page: page, rows: rows });
+  }).catch(function (err) {
+    logger.error(err)
+    res.json(err);
+  });
+
 };
