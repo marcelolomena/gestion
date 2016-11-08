@@ -161,7 +161,7 @@ exports.lista = function(req, res) {
             JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
             JOIN sip.estructuracui D ON B.idcui = D.id
             JOIN sip.proveedor E ON A.idproveedor = E.id
-            WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition
+            WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition
 
     var sql = `
             SELECT  C.periodo,
@@ -171,14 +171,15 @@ exports.lista = function(req, res) {
                     A.nombre contrato,
                     B.glosaservicio servicio,
                     M.moneda,
-                    C.montoorigen costo
+                    C.montoorigen costo,
+                    E.razonsocial
                     FROM sip.contrato A 
                     JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                     JOIN sip.detallecompromiso C ON B.id  = C.iddetalleserviciocto
                     JOIN sip.estructuracui D ON B.idcui   = D.id
                     JOIN sip.proveedor E ON A.idproveedor = E.id
                     JOIN sip.moneda M ON B.idmoneda = M.id
-                    WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND E.numrut != 1 AND C.periodo = :periodo` + condition + order +
+                    WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
     sequelize.query(count,
@@ -223,7 +224,7 @@ exports.generar = function(req, res) {
 				IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoimpuesto,
 				C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
 				F.valorconversion,
-				F.valorconversion * (C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0)) montoapagarpesos,
+				0 montoapagarpesos,
                 0,
                 0,
                 NULL,
@@ -261,7 +262,7 @@ UNION
 				IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoimpuesto,
 				C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
 				F.valorconversion,
-				F.valorconversion * (C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0)) montoapagarpesos,
+				0 montoapagarpesos,
                 0,
                 0,
                 NULL,

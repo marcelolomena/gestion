@@ -9,9 +9,10 @@ $(document).ready(function () {
         { label: 'Nombre Cui', name: 'nomcui', width: 250, align: 'left', search: true, editable: false },
         { label: 'Responsable', name: 'nombreresponsable', width: 250, align: 'left', search: true, editable: false },
         { label: 'Contrato', name: 'contrato', width: 250, align: 'left', search: true, editable: false },
+        { label: 'Proveedor', name: 'razonsocial', width: 250, align: 'left', search: true, editable: false },
         { label: 'Servicio', name: 'servicio', width: 250, align: 'left', search: true, editable: false },
         { label: 'Moneda', name: 'moneda', width: 70, align: 'left', search: true, editable: false },
-        { label: 'Monto', name: 'costo', width: 150, align: 'right', search: true, editable: false }
+        { label: 'Monto', name: 'costo', width: 150, align: 'right', formatter: 'number', search: true, editable: false }
     ], $grid = $("#grid");
 
     $grid.jqGrid({
@@ -20,7 +21,7 @@ $(document).ready(function () {
         datatype: "json",
         page: 1,
         colModel: modelSolicitudAprobacion,
-        rowNum: 10,
+        rowNum: 20,
         regional: 'es',
         height: 'auto',
         autowidth: true,
