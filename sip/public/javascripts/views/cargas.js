@@ -120,15 +120,18 @@ $(document).ready(function () {
                         if (data.success == true) {
                             dialog.find('.bootbox-body').html(data.message);
                         } else {
+                            dialog.find('.bootbox-title').html("Error");
                             dialog.find('.bootbox-body').html(data.message);
                         }
                     }
                     else {
-                        return alert('Failed to upload csv!');
+                        dialog.find('.bootbox-title').html("Error");
+                        dialog.find('.bootbox-body').html(data.message);
                     }
                 },
                 error: function (data, status, e) {
-                    return alert('Failed to upload csv!');
+                    dialog.find('.bootbox-title').html("Error");
+                    dialog.find('.bootbox-body').html(e);
                 }
             })
         });

@@ -48,7 +48,8 @@ module.exports = (function () {
                     }
                 }
 
-
+                logger.debug("maxbuf : " + maxbuf)
+                logger.debug("tbuf : " + tbuf)
 
                 if (maxbuf > tbuf) {
                     logger.debug("iterando hasta : " + maxbuf)

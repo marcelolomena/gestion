@@ -255,19 +255,30 @@ exports.archivo = function (req, res) {
 
       file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
 
-      var input = fs.createReadStream(saveTo); //ahora lo lee
-
-      var parser = csv.parse({
-        columns: true,
-        relax: true,
-        delimiter: ';'
-      }); //parser CSV
-
       awaitId.then(function (idDetail) {
 
         var carrusel = [];
 
+        var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
+
+        input.on('error', function (err) {
+          logger.error(err);
+          res.json({ error_code: 1, message: err, success: false });
+        });
+
+        var parser = csv.parse({
+          delimiter: ';',
+          columns: true,
+          relax: true,
+          relax_column_count: true,
+          skip_empty_lines: true,
+          trim: true
+        }); //parser CSV       
+
+        input.pipe(parser);
+
         parser.on('readable', function () {
+          var line
           while (line = parser.read()) {
             carrusel.push(line);
             /*
@@ -279,11 +290,12 @@ exports.archivo = function (req, res) {
         });
 
         parser.on('error', function (err) {
-          logger.error(err.message);
+          logger.error(err);
+          res.json({ error_code: 1, message: err, success: false });
         });/*error*/
 
-        parser.on('end', function (count) {
-
+        //parser.on('end', function (count) {
+        parser.on('finish', function () {
           co(function* () {
             models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
             var carga = yield models.detallecargas.findAll({
@@ -303,7 +315,8 @@ exports.archivo = function (req, res) {
 
             bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, function (err, data) {
               if (err) {
-                logger.debug("->>> " + err)
+                logger.error("->>> " + err)
+                res.json({ error_code: 1, message: err, success: false });
               } else {
                 logger.debug("->>> " + data)
                 res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
@@ -311,24 +324,24 @@ exports.archivo = function (req, res) {
             })
 
           }).catch(function (err) {//co(*)
+            res.json({ error_code: 1, message: err, success: false });
             logger.error(err)
           })
 
         });/*end*/
 
+        //parser.end();
+
       }).catch(function (err) {
+        res.json({ error_code: 1, message: err, success: false });
         logger.error(err)
       });
-
-
-      input.pipe(parser);
 
     });
 
 
     busboy.on('finish', function () {
       logger.debug("Finalizo la transferencia del archivo")
-      //res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
     });
 
     return req.pipe(busboy);
