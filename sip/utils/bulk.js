@@ -28,6 +28,12 @@ module.exports = (function () {
                         }).catch(function (err) {
                             logger.error(err)
                         });
+                    } else if (table === 'RecursosHumanos') {
+                        models.recursoshumanos$.bulkCreate(tasks).then(function (events) {
+                            inserterCallback();
+                        }).catch(function (err) {
+                            logger.error(err)
+                        });
                     }
                 },
                     tbuf
@@ -37,11 +43,15 @@ module.exports = (function () {
                     logger.debug("borrando tabla : " + table);
                     if (table === 'Troya') {
                         models.troya.truncate();
+                    } else if (table === 'RecursosHumanos') {
+                        models.recursoshumanos$.truncate();
                     }
                 }
 
-                if (maxbuf > tbuf) {
 
+
+                if (maxbuf > tbuf) {
+                    logger.debug("iterando hasta : " + maxbuf)
                     for (var i = 0; i < maxbuf; i++) {
                         chunk[j] = csv[i];
                         inserter.push(chunk[j]);
@@ -53,20 +63,21 @@ module.exports = (function () {
                     }
 
                     chunk.length = 0;
-
+                    logger.debug("tam cola : " + csv.length)
                     for (var i = maxbuf; i < csv.length; i++) {
-                        inserter.push(chunk[j]);
+                        inserter.push(csv[i]);
                     }
 
                 } else {
 
                     for (var i = 0; i < csv.length; i++) {
-                        inserter.push(chunk[j]);
+                        inserter.push(csv[i]);
                     }
 
                 }
 
                 inserter.drain = function () {
+
                     models.detallecargas.update({
                         fechaproceso: new Date(),
                         control2: 'Fin de la carga',
@@ -74,11 +85,20 @@ module.exports = (function () {
                     }, {
                             where: { id: id }
                         }).then(function (detallecargas) {
+
+
                             logger.debug("lista la carga de " + table)
+
+                            if (table === 'RecursosHumanos') {
+                                logger.debug("ejecuta proc")
+                            }
+
                             callback(undefined, 'LISTO!!')
                         }).catch(function (err) {
                             throw new Error(err)
                         });
+
+
                     fs.unlink(temp);
                 }
 
@@ -86,7 +106,7 @@ module.exports = (function () {
                 throw new Error("CSV null");
             }
 
-            
+
 
         } catch (err) {
             logger.error(err)
