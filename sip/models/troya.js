@@ -11,7 +11,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     cuentacontable: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isInt: true
+      }
     },
     nombrecuenta: {
       type: DataTypes.STRING,
@@ -59,7 +62,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     fecha: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        isDate: true 
+      }      
     },
     matriz: {
       type: DataTypes.STRING,

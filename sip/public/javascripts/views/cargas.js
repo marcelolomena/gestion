@@ -73,8 +73,6 @@ $(document).ready(function () {
         },
     });
 
-    //$("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: false, del: false, search: false,
         refresh: false, view: false, position: "left", cloneToTop: false
@@ -108,7 +106,7 @@ $(document).ready(function () {
     function ajaxFileUpload(id) {
         var dialog = bootbox.dialog({
             title: 'Se inicia la carga en la base de datos',
-            message: '<p><i class="fa fa-spin fa-spinner"></i> Cargando...</p>'
+            message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
         });
         dialog.init(function () {
             $.ajaxFileUpload({
@@ -135,20 +133,7 @@ $(document).ready(function () {
             })
         });
     }
-    /*
-        $("#grid").jqGrid('navButtonAdd', "#pager", {
-            caption: "",
-            buttonicon: "glyphicon glyphicon-upload",
-            title: "Upload",
-            position: "last",
-            onClickButton: function () {
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var url = '/cargas/excel';
-                $('#grid').jqGrid('excelExport', { "url": url });
-            }
-        });
-    */
+
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {

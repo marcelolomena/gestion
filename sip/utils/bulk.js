@@ -75,6 +75,7 @@ module.exports = (function () {
                             where: { id: id }
                         }).then(function (detallecargas) {
                             logger.debug("lista la carga de " + table)
+                            callback(undefined, 'LISTO!!')
                         }).catch(function (err) {
                             throw new Error(err)
                         });
@@ -85,7 +86,7 @@ module.exports = (function () {
                 throw new Error("CSV null");
             }
 
-            callback(undefined, 'LISTO!!')
+            
 
         } catch (err) {
             logger.error(err)
