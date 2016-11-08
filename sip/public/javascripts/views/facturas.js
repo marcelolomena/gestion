@@ -353,7 +353,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                                         $("input#idprefactura").val(data[0].idprefactura);
                                         $("textarea#glosaservicio").val(data[0].glosaservicio);
                                         $("input#montonetoorigen").val(data[0].montoneto);
-                                        $("input#montoneto").val(data[0].montoapagarpesos);
+                                        //$("input#montoneto").val(data[0].montoapagarpesos);
                                         $("input#cantidad").val(1);
                                         $("input#montototal").val(data[0].montoapagarpesos);    
                                         $("input#factorconversion").val(data[0].factorconversion);                                  
