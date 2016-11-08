@@ -269,10 +269,12 @@ exports.archivo = function (req, res) {
 
         parser.on('readable', function () {
           while (line = parser.read()) {
+            carrusel.push(line);
+            /*
             var length = carrusel.push(line);
             if (length % 1000 == 0) {
               logger.debug(length);
-            }
+            }*/
           }
         });
 
@@ -283,9 +285,7 @@ exports.archivo = function (req, res) {
         parser.on('end', function (count) {
 
           co(function* () {
-
-            models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
-
+            
             var carga = yield models.detallecargas.findAll({
               limit: 1,
               where: { id: idDetail },
@@ -301,12 +301,12 @@ exports.archivo = function (req, res) {
             var table = carga[0].dataValues.logcarga.dataValues.archivo//Troya
             var deleted = carga[0].dataValues.logcarga.dataValues.tipocarga//Reemplaza o Incremental
 
-            bulk.bulkLoad(table, carrusel, idDetail, saveTo, deleted, function (err, data) {
+            bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, function (err, data) {
               if (err) {
                 logger.debug("->>> " + err)
               } else {
                 logger.debug("->>> " + data)
-                res.json({ error_code: 0, message: 'termino la carga de troya', success: true });                
+                res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
               }
             })
 
