@@ -203,10 +203,10 @@ function showDocumentos(cui, periodo, proveedor) {
                 label: 'Monto a Pagar',
                 name: 'montoneto',
                 search: false,
-                align: 'left',
+                align: 'right',
                 width: 120,
                 editable: true,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 5, readonly: 'readonly' }
             },
             {
@@ -286,9 +286,9 @@ function showDocumentos(cui, periodo, proveedor) {
                 name: 'montoaprobado',
                 width: 100,
                 search: false,
-                align: 'left',
+                align: 'right',
                 editable: true,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             {
                 label: 'Glosa Aprobación',
@@ -348,9 +348,9 @@ function showDocumentos(cui, periodo, proveedor) {
                 name: 'montomulta',
                 width: 100,
                 search: false,
-                align: 'left',
+                align: 'right',
                 editable: true,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             {
                 label: 'Causal Multa',

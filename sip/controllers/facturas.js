@@ -351,7 +351,7 @@ exports.getResumenContable = function (req, res) {
   sql = "DECLARE @vacio VARCHAR(10);" +
     "SELECT @vacio=' ';" +
     "WITH query AS (" +
-    "SELECT d.cui,e.nombrecuenta, e.cuentacontable, a.montoneto, a.ivanorecuperable, a.montocosto,@vacio AS haber FROM sip.desgloseitemfactura a JOIN sip.detallefactura b ON a.iddetallefactura=b.id " +
+    "SELECT convert(varchar,d.cui) AS cui,e.nombrecuenta, e.cuentacontable, a.montoneto, a.ivanorecuperable, a.montocosto,@vacio AS haber FROM sip.desgloseitemfactura a JOIN sip.detallefactura b ON a.iddetallefactura=b.id " +
     "JOIN sip.factura c ON b.idfactura=c.id JOIN sip.estructuracui d ON a.idcui=d.id " +
     "JOIN sip.cuentascontables e ON e.id=a.idcuentacontable " +
     "WHERE c.id=" + req.params.id + " " +
