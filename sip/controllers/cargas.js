@@ -207,17 +207,17 @@ exports.detallecarga = function (req, res) {
 };
 
 exports.guardar = function (req, res) {
-  //logger.debug(req.body.fechaarchivo)
+  logger.debug(req.body.fechaarchivo)
 
   models.logcargas.update({
-    fechaarchivo: req.body.fechaarchivo,
+    fechaarchivo: req.body.fechaarchivo.split("-").reverse().join("-"),
   }, {
       where: { id: req.body.id }
     }).then(function (logcargas) {
 
       models.detallecargas.create({
         idlogcargas: req.body.id,
-        fechaarchivo: req.body.fechaarchivo,
+        fechaarchivo: req.body.fechaarchivo.split("-").reverse().join("-"),
         fechaproceso: new Date(),
         usuario: req.session.passport.user,
         nroregistros: 0,
