@@ -82,14 +82,14 @@ function gridDetail(parentRowID, parentRowKey) {
                 var rowData = grid.getRowData(rowKey);
                 postdata.idx = idxsel;
                 var cuota = new Number(postdata.valorcuota);
-                console.log("cuota:"+cuota);
+
                 if (isNaN(cuota) || cuota < 0) {
                     return [false, "Debe ingresar un numero y con valor  mayor o igual a 0", ""];
                 } else {
-                    console.log("actuaalizando:");
+
                     postdata.montoorigen=cuota*1.19;
                     rowData.montoorigen=cuota*1.19;
-                    console.log("actuaalizando:"+postdata.montoorigen);
+
                     postdata.costoorigen=cuota + (cuota*0.19*0.77);
                     rowData.costoorigen=cuota + (cuota*0.19*0.77);                   
                 }
@@ -166,58 +166,6 @@ function gridDetail(parentRowID, parentRowKey) {
             recreateFilter: true
         }
     );
-
-/*
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-pencil",
-        title: "Editar",
-        position: "last",
-        onClickButton: function () {
-            var subgrid = $("#" + childGridID);
-            var ids = subgrid.jqGrid('getDataIDs');
-            for (var i = 0; i < ids.length; i++) {
-                subgrid.jqGrid('editRow', ids[i]);
-            }
-        }
-    });
-    
-    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-        caption: "",
-        buttonicon: 'glyphicon glyphicon-save-file',
-        title: "Grabar",
-        iconsOverText: true,
-        position: "last",
-        onClickButton: function () {
-            var subgrid = $("#" + childGridID);
-            var ids = subgrid.jqGrid('getDataIDs');
-            var parentTable = "grid_" + parentRowID.split("_")[1] + "_t";
-            var parentGrid = $('#' + parentTable);
-            var parentRowData = parentGrid.getRowData(parentRowKey);
-            var extraparam = {
-                pk: parentRowKey,
-                valorcuota: parentRowData.valorcuota,
-                idmoneda: parentRowData.idmoneda,
-                impuesto: parentRowData.impuesto,
-                factorimpuesto: parentRowData.factorimpuesto
-            }
-
-            saveparameters = {
-                "successfunc": null,
-                "url": null,
-                "extraparam": extraparam,
-                "aftersavefunc": null,
-                "errorfunc": null,
-                "afterrestorefunc": null,
-                "restoreAfterError": true,
-                "mtype": "POST"
-            }
-            for (var i = 0; i < ids.length; i++) {
-                subgrid.jqGrid('saveRow', ids[i], saveparameters);
-            }
-            subgrid.trigger('reloadGrid');
-        }
-    });*/
 
     $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#0431B4");
 

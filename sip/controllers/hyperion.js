@@ -436,7 +436,7 @@ exports.list2 = function (req, res) {
                         if (i < range.length - 1)
                             acum += ','
                     }
-                    console.dir(acum)
+                    
                     var sql_head_0 = `SELECT cuentacontable,gerencia,departamento,seccion `
 
                     var sql_body_1 = `

@@ -12,7 +12,7 @@ esta limitacion es propia de MSSQL 2012
 */
 
 module.exports = (function () {
-    var bulkLoad = function (table, csv, id, temp, deleted, callback) {
+    var bulkLoad = function (table, csv, id, temp, deleted, dateLoad, callback) {
         try {
 
             if (csv) {
@@ -83,20 +83,36 @@ module.exports = (function () {
 
                     models.detallecargas.update({
                         fechaproceso: new Date(),
-                        control2: 'Fin de la carga',
+                        control2: 'Fin de la carga de paso',
                         nroregistros: csv.length
                     }, {
                             where: { id: id }
                         }).then(function (detallecargas) {
-
-
                             logger.debug("lista la carga de " + table)
 
                             if (table === 'RecursosHumanos') {
-                                logger.debug("ejecuta proc")
+                                var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
+                                var period = parseDate[0] + parseDate[2];
+                                logger.debug("period : " + period);
+                                var query = "EXECUTE sip.cargarrhh :periodo;";
+                                sequelize.query(query,
+                                    {
+                                        replacements: { periodo: period },
+                                        type: sequelize.QueryTypes.SELECT
+                                    }).then(function (rows) {
+                                        logger.debug("error : " + rows[0].ErrorNumber);
+                                        if (rows[0].ErrorNumber === 0)
+                                            callback(undefined, "lista la carga de " + table);
+                                        else if (rows[0].ErrorNumber === 2627)
+                                            callback("Ya existe este periodo cargado", undefined);
+                                        else
+                                            callback("Error al ejecutar Proceso", undefined);
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        throw new Error(err)
+                                    });
                             }
 
-                            callback(undefined, 'LISTO!!')
                         }).catch(function (err) {
                             throw new Error(err)
                         });

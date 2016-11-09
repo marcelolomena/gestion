@@ -207,24 +207,38 @@ exports.detallecarga = function (req, res) {
 };
 
 exports.guardar = function (req, res) {
+  //logger.debug(req.body.fechaarchivo)
 
-  models.detallecargas.create({
-    idlogcargas: req.body.id,
-    fechaarchivo: new Date(),
-    fechaproceso: new Date(),
-    usuario: req.session.passport.user,
-    nroregistros: 0,
-    nombre1: '',
-    control1: 'inicio de carga',
-    nombre2: '',
-    control2: '',
-    borrado: 1
-  }).then(function (detallecargas) {
-    res.json({ error_code: 0, id: detallecargas.id, message: 'inicio carga', success: true });
-  }).catch(function (err) {
-    logger.error(err)
-    res.json({ error_code: 1, id: 0, message: err, success: false });
-  });
+  models.logcargas.update({
+    fechaarchivo: req.body.fechaarchivo,
+  }, {
+      where: { id: req.body.id }
+    }).then(function (logcargas) {
+
+      models.detallecargas.create({
+        idlogcargas: req.body.id,
+        fechaarchivo: req.body.fechaarchivo,
+        fechaproceso: new Date(),
+        usuario: req.session.passport.user,
+        nroregistros: 0,
+        nombre1: '',
+        control1: 'inicio de carga',
+        nombre2: '',
+        control2: '',
+        borrado: 1
+      }).then(function (detallecargas) {
+        res.json({ error_code: 0, id: detallecargas.id, message: 'inicio carga', success: true });
+      }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1, id: 0, message: err, success: false });
+      });
+
+    }).catch(function (err) {
+      logger.error(err);
+      res.json({ error_code: 1, id: 0, message: err, success: false });
+    });
+
+
 
 }
 
@@ -312,14 +326,15 @@ exports.archivo = function (req, res) {
 
             var table = carga[0].dataValues.logcarga.dataValues.archivo//Troya
             var deleted = carga[0].dataValues.logcarga.dataValues.tipocarga//Reemplaza o Incremental
+            var dateLoad = carga[0].dataValues.logcarga.dataValues.fechaarchivo//Reemplaza o Incremental
 
-            bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, function (err, data) {
+            bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, dateLoad, function (err, data) {
               if (err) {
                 logger.error("->>> " + err)
                 res.json({ error_code: 1, message: err, success: false });
               } else {
                 logger.debug("->>> " + data)
-                res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
+                res.json({ error_code: 0, message: data, success: true });
               }
             })
 
