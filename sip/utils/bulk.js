@@ -12,7 +12,7 @@ esta limitacion es propia de MSSQL 2012
 */
 
 module.exports = (function () {
-    var bulkLoad = function (table, csv, id, temp, deleted, callback) {
+    var bulkLoad = function (table, csv, id, temp, deleted, dateLoad, callback) {
         try {
 
             if (csv) {
@@ -27,12 +27,14 @@ module.exports = (function () {
                             inserterCallback();
                         }).catch(function (err) {
                             logger.error(err)
+                            throw new Error(err)
                         });
                     } else if (table === 'RecursosHumanos') {
                         models.recursoshumanos$.bulkCreate(tasks).then(function (events) {
                             inserterCallback();
                         }).catch(function (err) {
                             logger.error(err)
+                            throw new Error(err)
                         });
                     }
                 },
@@ -48,7 +50,8 @@ module.exports = (function () {
                     }
                 }
 
-
+                logger.debug("maxbuf : " + maxbuf)
+                logger.debug("tbuf : " + tbuf)
 
                 if (maxbuf > tbuf) {
                     logger.debug("iterando hasta : " + maxbuf)
@@ -80,20 +83,41 @@ module.exports = (function () {
 
                     models.detallecargas.update({
                         fechaproceso: new Date(),
-                        control2: 'Fin de la carga',
+                        control2: 'Fin de la carga de paso',
                         nroregistros: csv.length
                     }, {
                             where: { id: id }
                         }).then(function (detallecargas) {
-
-
                             logger.debug("lista la carga de " + table)
 
                             if (table === 'RecursosHumanos') {
-                                logger.debug("ejecuta proc")
+                                
+                                var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
+                                logger.debug("period  0 : " + parseDate[0]);
+                                logger.debug("period  1 : " + parseDate[1]);
+                                logger.debug("period  2 : " + parseDate[2]);
+
+                                var period = parseDate[0] + parseDate[1];
+                                logger.debug("period : " + period);
+                                var query = "EXECUTE sip.cargarrhh :periodo;";
+                                sequelize.query(query,
+                                    {
+                                        replacements: { periodo: period },
+                                        type: sequelize.QueryTypes.SELECT
+                                    }).then(function (rows) {
+                                        logger.debug("error : " + rows[0].ErrorNumber);
+                                        if (rows[0].ErrorNumber === 0)
+                                            callback(undefined, "lista la carga de " + table);
+                                        else if (rows[0].ErrorNumber === 2627)
+                                            callback("Ya existe este periodo cargado", undefined);
+                                        else
+                                            callback("Error al ejecutar Proceso", undefined);
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        throw new Error(err)
+                                    });
                             }
 
-                            callback(undefined, 'LISTO!!')
                         }).catch(function (err) {
                             throw new Error(err)
                         });
@@ -105,8 +129,6 @@ module.exports = (function () {
             } else {
                 throw new Error("CSV null");
             }
-
-
 
         } catch (err) {
             logger.error(err)

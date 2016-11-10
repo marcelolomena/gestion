@@ -5,32 +5,23 @@ $(document).ready(function () {
     var modelcargas = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Archivo', name: 'archivo', width: 50, align: 'left', search: true, editable: false, hidden: false },
+        { label: 'Frecuencia', name: 'frecuencia', width: 100, align: 'left', search: true, editable: true },
         {
             label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 50, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: { required: true },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                }
             },
         },
-        { label: 'Frecuencia', name: 'frecuencia', width: 100, align: 'left', search: true, editable: true },
         { label: 'Tipo de Carga', name: 'tipocarga', width: 100, align: 'left', search: true, editable: true },
         {
             label: 'Archivo',
             name: 'fileToUpload',
-            align: 'left',
             hidden: true,
             editable: true,
             edittype: 'file',
@@ -74,8 +65,7 @@ $(document).ready(function () {
     });
 
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: true, add: false, del: false, search: false,
-        refresh: false, view: false, position: "left", cloneToTop: false
+        edit: true, add: false, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false
     },
 
         {
@@ -84,7 +74,11 @@ $(document).ready(function () {
             recreateForm: true,
             mtype: 'POST',
             url: '/cargas/guardar',
-            afterSubmit: UploadFile
+            afterSubmit: UploadFile,
+            beforeShowForm: function (form) {
+                $('input#frecuencia', form).attr('readonly', 'readonly');
+                $('input#tipocarga', form).attr('readonly', 'readonly');
+            }
         }, {}, {}
 
     );
@@ -124,11 +118,11 @@ $(document).ready(function () {
                         }
                     }
                     else {
-                        return alert('Failed to upload csv!');
+                        dialog.find('.bootbox-body').html(data.message);
                     }
                 },
                 error: function (data, status, e) {
-                    return alert('Failed to upload csv!');
+                    dialog.find('.bootbox-body').html(e);
                 }
             })
         });

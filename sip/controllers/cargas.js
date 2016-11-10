@@ -207,24 +207,38 @@ exports.detallecarga = function (req, res) {
 };
 
 exports.guardar = function (req, res) {
+  logger.debug(req.body.fechaarchivo)
 
-  models.detallecargas.create({
-    idlogcargas: req.body.id,
-    fechaarchivo: new Date(),
-    fechaproceso: new Date(),
-    usuario: req.session.passport.user,
-    nroregistros: 0,
-    nombre1: '',
-    control1: 'inicio de carga',
-    nombre2: '',
-    control2: '',
-    borrado: 1
-  }).then(function (detallecargas) {
-    res.json({ error_code: 0, id: detallecargas.id, message: 'inicio carga', success: true });
-  }).catch(function (err) {
-    logger.error(err)
-    res.json({ error_code: 1, id: 0, message: err, success: false });
-  });
+  models.logcargas.update({
+    fechaarchivo: req.body.fechaarchivo.split("-").reverse().join("-"),
+  }, {
+      where: { id: req.body.id }
+    }).then(function (logcargas) {
+
+      models.detallecargas.create({
+        idlogcargas: req.body.id,
+        fechaarchivo: req.body.fechaarchivo.split("-").reverse().join("-"),
+        fechaproceso: new Date(),
+        usuario: req.session.passport.user,
+        nroregistros: 0,
+        nombre1: '',
+        control1: 'inicio de carga',
+        nombre2: '',
+        control2: '',
+        borrado: 1
+      }).then(function (detallecargas) {
+        res.json({ error_code: 0, id: detallecargas.id, message: 'inicio carga', success: true });
+      }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1, id: 0, message: err, success: false });
+      });
+
+    }).catch(function (err) {
+      logger.error(err);
+      res.json({ error_code: 1, id: 0, message: err, success: false });
+    });
+
+
 
 }
 
@@ -255,19 +269,30 @@ exports.archivo = function (req, res) {
 
       file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
 
-      var input = fs.createReadStream(saveTo); //ahora lo lee
-
-      var parser = csv.parse({
-        columns: true,
-        relax: true,
-        delimiter: ';'
-      }); //parser CSV
-
       awaitId.then(function (idDetail) {
 
         var carrusel = [];
 
+        var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
+
+        input.on('error', function (err) {
+          logger.error(err);
+          res.json({ error_code: 1, message: err, success: false });
+        });
+
+        var parser = csv.parse({
+          delimiter: ';',
+          columns: true,
+          relax: true,
+          relax_column_count: true,
+          skip_empty_lines: true,
+          trim: true
+        }); //parser CSV       
+
+        input.pipe(parser);
+
         parser.on('readable', function () {
+          var line
           while (line = parser.read()) {
             carrusel.push(line);
             /*
@@ -279,13 +304,14 @@ exports.archivo = function (req, res) {
         });
 
         parser.on('error', function (err) {
-          logger.error(err.message);
+          logger.error(err);
+          res.json({ error_code: 1, message: err, success: false });
         });/*error*/
 
-        parser.on('end', function (count) {
-
+        //parser.on('end', function (count) {
+        parser.on('finish', function () {
           co(function* () {
-            
+            models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
             var carga = yield models.detallecargas.findAll({
               limit: 1,
               where: { id: idDetail },
@@ -300,35 +326,37 @@ exports.archivo = function (req, res) {
 
             var table = carga[0].dataValues.logcarga.dataValues.archivo//Troya
             var deleted = carga[0].dataValues.logcarga.dataValues.tipocarga//Reemplaza o Incremental
+            var dateLoad = carga[0].dataValues.logcarga.dataValues.fechaarchivo//Reemplaza o Incremental
 
-            bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, function (err, data) {
+            bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, dateLoad, function (err, data) {
               if (err) {
-                logger.debug("->>> " + err)
+                logger.error("->>> " + err)
+                res.json({ error_code: 1, message: err, success: false });
               } else {
                 logger.debug("->>> " + data)
-                res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
+                res.json({ error_code: 0, message: data, success: true });
               }
             })
 
           }).catch(function (err) {//co(*)
+            res.json({ error_code: 1, message: err, success: false });
             logger.error(err)
           })
 
         });/*end*/
 
+        //parser.end();
+
       }).catch(function (err) {
+        res.json({ error_code: 1, message: err, success: false });
         logger.error(err)
       });
-
-
-      input.pipe(parser);
 
     });
 
 
     busboy.on('finish', function () {
       logger.debug("Finalizo la transferencia del archivo")
-      //res.json({ error_code: 0, message: 'termino la carga de troya', success: true });
     });
 
     return req.pipe(busboy);
