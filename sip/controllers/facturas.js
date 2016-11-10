@@ -128,12 +128,15 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   logger.debug("Action:" + action);
   logger.debug("Id:" + req.body.id);
-
+  var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
+  var impuesto = req.body.impuesto.split(".").join("").replace(",", ".");
+  var montototal = req.body.montototal.split(".").join("").replace(",", ".");
+  
   switch (action) {
     case "add":
       var sql = "INSERT INTO sip.factura (numero, idproveedor, fecha, montoneto, impuesto, montototal, borrado) " +
         "VALUES (" + req.body.numero + ", " + req.body.idproveedor + ", '" + req.body.fecha + "', " +
-        req.body.montoneto + ", " + req.body.impuesto + ", " + req.body.montototal + ", 1)";
+        montoneto + ", " + impuesto + ", " + montototal + ", 1)";
       console.log("query:" + sql);
       sequelize.query(sql)
         .spread(function (rows) {
@@ -149,9 +152,9 @@ exports.action = function (req, res) {
         "idproveedor = " + req.body.idproveedor + ", " +
         //"idcui = "+req.body.idcui+", "+
         "fecha = '" + req.body.fecha + "', " +
-        "montoneto = " + req.body.montoneto + ", " +
-        "impuesto = " + req.body.impuesto + ", " +
-        "montototal = " + req.body.montototal + " " +
+        "montoneto = " + montoneto + ", " +
+        "impuesto = " + impuesto + ", " +
+        "montototal = " + montototal + " " +
         "WHERE id=" + req.body.id;
       logger.debug("sql:" + sql);
       sequelize.query(sql).then(function (factura) {
@@ -186,6 +189,9 @@ exports.actionDetalle = function (req, res) {
   logger.debug("Id:" + req.params.id);
   console.log("req.body.idprefactura:" + req.body.idprefactura);
   var idprefact = (req.body.idprefactura > 0) ? req.body.idprefactura : 'NULL';
+  if (req.body.montoneto != ""){
+    var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
+  }
 
   switch (action) {
     case "add":
@@ -198,10 +204,10 @@ exports.actionDetalle = function (req, res) {
           var sql = "DECLARE @impuesto FLOAT;DECLARE @montoimpuesto FLOAT;"+
             "SELECT @impuesto=isnull(b.impuesto,0) FROM sip.solicitudaprobacion a JOIN sip.prefactura b ON a.idprefactura=b.id where a.idfacturacion="+req.body.idfacturacion+";"+
             "select @montoimpuesto=0;"+
-            "IF (@impuesto <> 0) SELECT @montoimpuesto ="+req.body.montoneto+"*0.19;"+
+            "IF (@impuesto <> 0) SELECT @montoimpuesto ="+montoneto+"*0.19;"+
             "INSERT INTO sip.detallefactura (idfactura, idprefactura, idfacturacion, montonetoorigen, montoneto, cantidad, montototal, borrado, glosaservicio, impuesto) " +
             "VALUES (" + idPre + ", " + idprefact + ", '" + req.body.idfacturacion + "', " +
-            req.body.montonetopf + ", " + req.body.montoneto + ", " + req.body.cantidad + ", " + req.body.montoneto + "+@montoimpuesto, 1,'" + req.body.glosaservicio + "', @montoimpuesto);" +
+            req.body.montonetopf + ", " + montoneto + ", " + req.body.cantidad + ", " + montoneto + "+@montoimpuesto, 1,'" + req.body.glosaservicio + "', @montoimpuesto);" +
             "DECLARE @id INT;" +
             "select @id = @@IDENTITY; " +
             "select @id as id;";

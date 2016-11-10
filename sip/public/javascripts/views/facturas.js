@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
-            //numero, idproveedor, fecha, montoneto, impuesto, montototal
+    //numero, idproveedor, fecha, montoneto, impuesto, montototal
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'><span style='color:red'>*</span>Numero {numero}</div>";
     tmpl += "</div>";
@@ -24,7 +24,7 @@ $(document).ready(function () {
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Total {montototal}</div>";
     tmpl += "</div>";
-        
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -33,11 +33,11 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Numero', name: 'numero', width: 100, align: 'left', search: true, sortable: false, editable: true },
         {
-            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'left', search: true,sortable: false, editable: true,
+            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'left', search: true, sortable: false, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Proveedor', name: 'idproveedor', width: 80, align: 'left', search: false,sortable: false, editable: true, hidden: true,
+            label: 'Proveedor', name: 'idproveedor', width: 80, align: 'left', search: false, sortable: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/facturas/proveedores',
@@ -60,7 +60,8 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Fecha', name: 'fecha', width: 100, align: 'left', search: false, sortable: false, editable: true, 
+        {
+            label: 'Fecha', name: 'fecha', width: 100, align: 'left', search: false, sortable: false, editable: true,
             formatter: 'date',
             formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editoptions: {
@@ -69,21 +70,49 @@ $(document).ready(function () {
                     $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
-            }        
+            }
         }, //ivanorecuperable, montocosto, ivacredito
-        { label: 'Monto Neto', name: 'montoneto', width: 150, align: 'right', search: false, sortable: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } },
-        {label: 'Impuesto', name: 'impuesto', width: 100, align: 'right', sortable: false, search: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } },   
-        {label: 'Proporcional', name: 'ivanorecuperable', width: 100, align: 'right', sortable: false, search: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } },    
-        {label: 'Costo', name: 'montocosto', width: 100, align: 'right', sortable: false, search: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } },    
-        {label: 'IVA Credito', name: 'ivacredito', width: 100, align: 'right', sortable: false, search: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } },                                           
-        { label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 } }
-        
+        {
+            label: 'Monto Neto', name: 'montoneto', width: 150, align: 'right', search: false, sortable: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        },
+        {
+            label: 'Impuesto', name: 'impuesto', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        },
+
+        {
+            label: 'Proporcional', name: 'ivanorecuperable', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Costo', name: 'montocosto', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'IVA Credito', name: 'ivacredito', width: 100, align: 'right', sortable: false, search: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: true,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000', { reverse: true });
+                }
+            }
+        }
+
     ];
     $("#grid").jqGrid({
         url: '/facturaslist',
@@ -139,7 +168,7 @@ $(document).ready(function () {
                 var rowData = grid.getRowData(rowKey);
                 if (rowData.estado == 'Aprobado') {
                     return [false, "No puede editar presupuestos en estado Aprobado", ""];
-                } else { 
+                } else {
                     if (rowData.idcui != postdata.idcui) {
                         return [false, "NO puede cambiar el CUI base", ""];
                     } if (rowData.idejercicio != postdata.idejercicio) {
@@ -178,38 +207,38 @@ $(document).ready(function () {
             beforeSubmit: function (postdata, formid) {
                 if (postdata.numero == "") {
                     return [false, "Ingrese número de factura", ""];
-                } else if (postdata.idproveedor == "0") { 
+                } else if (postdata.idproveedor == "0") {
                     return [false, "Ingrese proveedor", ""];
-                } else if (postdata.fecha == "") { 
+                } else if (postdata.fecha == "") {
                     return [false, "Ingrese fecha", ""];
-                } else if (postdata.montoneto == "") { 
+                } else if (postdata.montoneto == "") {
                     return [false, "Ingrese subtotal", ""];
-                } else if (postdata.impuesto == "") { 
+                } else if (postdata.impuesto == "") {
                     return [false, "Ingrese impuesto", ""];
-                } else if (postdata.montototal == "") { 
+                } else if (postdata.montototal == "") {
                     return [false, "Ingrese total", ""];
                 } else {
                     return [true, "", ""];
-                }                               
+                }
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                console.log(result)  
+                console.log(result)
                 if (result.error_code == 10) {
                     return [false, "Ya existe una Factura con ese mismo numero", ""];
                 } else if (result.error_code == 0) {
-                    console.log("exitoso");  
+                    console.log("exitoso");
                     //alert("Presupuesto creado en forma exitosa");                 
                     return [true, "listo", ""];
                 }
 
-            }, 
+            },
             beforeShowForm: function (postdata, formid) {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);               
+                var rowData = grid.getRowData(rowKey);
 
-            }            
+            }
         },
         {
             closeAfterDelete: true,
@@ -246,7 +275,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
     if (suffix) {
         childGridID += suffix;
         childGridPagerID += suffix;
-    }    
+    }
     var childGridURL = "/presupuestoservicios/" + parentRowKey;
     var urlServicios = '/serviciospre/' + parentRowKey;
     var urlProveedores = '/proveedorespre/' + parentRowKey;
@@ -268,18 +297,18 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Monto Neto Prefactura {montonetopf}</div>";
     tmpl += "<div class='column-half'>Factor Conversión {factorconversionpf}</div>";
-    
+
     tmpl += "</div>";
-    
+
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>Cantidad Prefactura {cantidadpf}</div>";
     tmpl += "<div class='column-half'>Total Prefactura {totalpf}</div>";
     tmpl += "</div>";
-    
+
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Monto Pesos Prefactura {montopesospf}</div>";
-    tmpl += "</div>";    
-    
+    tmpl += "</div>";
+
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'><span style='color:red'>*</span>Glosa Servicio {glosaservicio}</div>";
     tmpl += "</div>";
@@ -287,20 +316,20 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto en Pesos {montoneto}</div>";
     tmpl += "</div>";
-    
+
     tmpl += "<div class='form-row' style='display: none;' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Cantidad {cantidad}</div>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {montototal}</div>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Total {montonetoorigen}</div>";
-    tmpl += "</div>";  
-      
+    tmpl += "</div>";
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div align='left'> {sData} {cData}  </div>";
     tmpl += "</div>";
-    
-    var childGridURL = "/facturasdetalle/"  + parentRowKey;
+
+    var childGridURL = "/facturasdetalle/" + parentRowKey;
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-    
+
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -334,16 +363,16 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                         type: 'change', fn: function (e) {
                             var grid = $("#grid");
                             var rowKey = grid.getGridParam("selrow");
-                            var rowData = grid.getRowData(rowKey);  
-                            console.log("rowData:"+rowData);                            
+                            var rowData = grid.getRowData(rowKey);
+                            console.log("rowData:" + rowData);
                             var thissid = $(this).val();
                             $.ajax({
                                 type: "GET",
-                                url: '/getsolicitud/' + thissid+'/'+parentRowKey,
+                                url: '/getsolicitud/' + thissid + '/' + parentRowKey,
                                 async: false,
-                                success: function (data) {                                 
-                                    if (data.length > 0){
-                                        console.log("glosa:"+data[0].glosaservicio);
+                                success: function (data) {
+                                    if (data.length > 0) {
+                                        console.log("glosa:" + data[0].glosaservicio);
                                         $("textarea#glosaserviciopf").val(data[0].glosaservicio);
                                         $("input#montonetopf").val(data[0].montoneto);
                                         $("input#montopesospf").val(data[0].montoapagarpesos);
@@ -355,17 +384,17 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                                         $("input#montonetoorigen").val(data[0].montoneto);
                                         //$("input#montoneto").val(data[0].montoapagarpesos);
                                         $("input#cantidad").val(1);
-                                        $("input#montototal").val(data[0].montoapagarpesos);    
-                                        $("input#factorconversion").val(data[0].factorconversion);                                  
+                                        $("input#montototal").val(data[0].montoapagarpesos);
+                                        $("input#factorconversion").val(data[0].factorconversion);
                                     } else {
                                         alert("No existe id de prefactura para el proveedor");
                                     }
                                 }
                             });
-                            
+
                         }
-                    }],                    
-                }                
+                    }],
+                }
             },
             {
                 label: 'Glosa Servicio',
@@ -377,7 +406,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 hidden: true,
                 edittype: "textarea",
                 editoptions: { size: 5, readonly: 'readonly' }
-            },            
+            },
             {
                 label: 'Monto Neto',
                 name: 'montonetopf',
@@ -388,8 +417,8 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 hidden: true,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 2 },
-                editoptions: { size: 5 , readonly: 'readonly' }
-            },            
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
             {
                 label: 'Monto Pesos',
                 name: 'montopesospf',
@@ -400,7 +429,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 hidden: true,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
-                editoptions: { size: 5 , readonly: 'readonly' }
+                editoptions: { size: 5, readonly: 'readonly' }
             },
             {
                 label: 'Cantidad',
@@ -411,7 +440,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 hidden: true,
                 formatter: 'number',
                 editable: true,
-                editoptions: { size: 5 , readonly: 'readonly' }
+                editoptions: { size: 5, readonly: 'readonly' }
             },
             {
                 label: 'Total',
@@ -423,7 +452,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 editable: true,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
-                editoptions: { size: 5 , readonly: 'readonly' }
+                editoptions: { size: 5, readonly: 'readonly' }
             },
             {
                 label: 'Factor Conversión',
@@ -435,8 +464,8 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 editable: true,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
-                editoptions: { size: 5 , readonly: 'readonly' }
-            },            
+                editoptions: { size: 5, readonly: 'readonly' }
+            },
             {
                 label: 'Glosa Servicio',
                 name: 'glosaservicio',
@@ -446,8 +475,8 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 editable: true,
                 hidden: false,
                 edittype: "textarea",
-                editoptions: { size: 5}
-            },            
+                editoptions: { size: 5 }
+            },
             {
                 label: 'Monto Neto',
                 name: 'montoneto',
@@ -458,8 +487,12 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 hidden: false,
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
-                editoptions: { size: 5 }
-            },       
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000', { reverse: true });
+                    }
+                },
+            },
             {
                 label: 'Impuesto',
                 name: 'impuesto',
@@ -481,7 +514,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            },         
+            },
             {
                 label: 'Costo',
                 name: 'montocosto',
@@ -492,7 +525,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            },           
+            },
             {
                 label: 'IVA Credito',
                 name: 'ivacredito',
@@ -503,7 +536,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            },                                 
+            },
             {
                 label: 'Cantidad',
                 name: 'cantidad',
@@ -527,7 +560,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            },   
+            },
             {
                 label: 'Factor Conversión',
                 name: 'factorconversion',
@@ -539,7 +572,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 formatter: 'number',
                 formatoptions: { decimalPlaces: 0 },
                 editoptions: { size: 5 }
-            }                                 
+            }
 
         ],
         height: 'auto',
@@ -598,26 +631,26 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                     url: '/getsolicitud/' + rowData.idfacturacion,
                     async: false,
                     success: function (data) {
-                        if (data.length > 0){
-                            console.log("glosa:"+data[0].glosaservicio);
+                        if (data.length > 0) {
+                            console.log("glosa:" + data[0].glosaservicio);
                             $("textarea#glosaserviciopf").val(data[0].glosaservicio);
                             $("input#montonetopf").val(data[0].montoneto);
                             $("input#montopesospf").val(data[0].montoapagarpesos);
                             $("input#cantidadpf").val(1);
-                            $("input#totalpf").val(data[0].montoapagarpesos);                                     
+                            $("input#totalpf").val(data[0].montoapagarpesos);
                         } else {
                             //nada
                         }
-                    }                
+                    }
                 });
-                
+
                 //$("#glosaserviciopf").val(rowData.glosaservicio);
                 //$("#montonetopf").val(rowData.montoneto);
                 //$("#montopesospf").val(rowData.montopesos);
                 //$("#cantidadpf").val(rowData.cantidad);
                 //$("#totalpf").val(rowData.total);
 
-            },            
+            },
             beforeSubmit: function (postdata, formid) {
                 var monto = new Number(postdata.montoaprobado);
                 console.log("num:" + monto);
@@ -644,7 +677,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
             beforeSubmit: function (postdata, formid) {
                 //alert("postdata:"+postdata.idproveedor);
                 var num = new Number(postdata.cuota);
-                console.log("num:"+num);
+                console.log("num:" + num);
                 if (postdata.glosaservicio == "") {
                     return [false, "Glosa: Debe ingresar una glosa de servicio", ""];
                 } if (postdata.montoneto == "") {
@@ -662,14 +695,14 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error_code == 100)
-                     return [false, "Error, el codigo de facturación ya existe, ", ""];                
-                if (result.error_code != 0){
+                    return [false, "Error, el codigo de facturación ya existe, ", ""];
+                if (result.error_code != 0) {
                     return [false, result.error_text, ""];
-                }else {
+                } else {
                     jQuery("#grid").trigger("reloadGrid");
                     return [true, "", ""]
                 }
-            }            
+            }
         },
         {
             closeAfterDelete: true,
@@ -682,18 +715,18 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0){
+                if (result.error_code != 0) {
                     return [false, result.error_text, ""];
-                }else{
+                } else {
                     jQuery("#grid").trigger("reloadGrid");
                     return [true, "", ""]
                 }
-                    
-            }
-        },        
-         {}
 
-);
+            }
+        },
+        {}
+
+    );
     $("#pager_left").css("width", "");
 }
 
@@ -704,11 +737,11 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
     if (suffix) {
         childGridID += suffix;
         childGridPagerID += suffix;
-    }     
-    var childGridURL = "/getresumencontable/"  + parentRowKey;
-    
+    }
+    var childGridURL = "/getresumencontable/" + parentRowKey;
+
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-    
+
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -739,7 +772,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
                 search: false,
                 editable: true,
                 hidden: false
-            },                
+            },
             {
                 label: 'Monto',
                 name: 'montoneto',
@@ -749,8 +782,8 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
                 editable: false,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                      
-            },            
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'Proporcional',
                 name: 'ivanorecuperable',
@@ -760,8 +793,8 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                      
-            },      
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'Debe',
                 name: 'montocosto',
@@ -771,8 +804,8 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                      
-            },    
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'Haber',
                 name: 'haber',
@@ -782,8 +815,8 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                      
-            }      
+                formatoptions: { decimalPlaces: 0 }
+            }
 
         ],
         caption: 'Resumen Contable Factura',
@@ -806,9 +839,9 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
             var colSum = $grid.jqGrid('getCol', 'montocosto', false, 'sum');
             var colSum2 = $grid.jqGrid('getCol', 'haber', false, 'sum');
             $grid.jqGrid('footerData', 'set', { montocosto: colSum, haber: colSum2 });
-        },   
+        },
         footerrow: true,
-        userDataOnFooter: true                 
+        userDataOnFooter: true
 
     });
 
@@ -821,7 +854,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
         search: false,
         refresh: true
     },
-     {}
+        {}
 
     );
 }
@@ -831,10 +864,10 @@ function showDesgloseContable(parentRowID, parentRowKey) {
     console.log("en desglose");
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
-    var childGridURL = "/getdesglosecontable/"  + parentRowKey;
-    
+    var childGridURL = "/getdesglosecontable/" + parentRowKey;
+
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-    
+
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -871,7 +904,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: false
-            },                
+            },
             {
                 label: 'CUI',
                 name: 'cui',
@@ -880,7 +913,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: false,
                 hidden: false,
-            },            
+            },
             {
                 label: 'idcuenta',
                 name: 'idcuentacontable',
@@ -889,7 +922,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: true
-            },      
+            },
             {
                 label: 'Cuenta',
                 name: 'cuentacontable',
@@ -898,7 +931,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: false
-            },    
+            },
             {
                 label: 'Nombre Cuenta',
                 name: 'nombrecuenta',
@@ -907,7 +940,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 search: false,
                 editable: true,
                 hidden: false
-            },                                       
+            },
             {
                 label: 'Neto',
                 name: 'montoneto',
@@ -917,8 +950,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                
-            },   
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'Impuesto',
                 name: 'impuesto',
@@ -928,8 +961,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                
-            },               
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'Proporcional',
                 name: 'ivanorecuperable',
@@ -939,8 +972,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                
-            },         
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'Costo',
                 name: 'montocosto',
@@ -950,8 +983,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                
-            },   
+                formatoptions: { decimalPlaces: 0 }
+            },
             {
                 label: 'IVA Credito',
                 name: 'ivacredito',
@@ -961,7 +994,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                
+                formatoptions: { decimalPlaces: 0 }
             },
             {
                 label: 'Total a Pagar',
@@ -972,8 +1005,8 @@ function showDesgloseContable(parentRowID, parentRowKey) {
                 editable: true,
                 hidden: false,
                 formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }                
-            }                                     
+                formatoptions: { decimalPlaces: 0 }
+            }
 
         ],
         height: 'auto',
@@ -1002,7 +1035,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
         search: false,
         refresh: true
     },
-     {}
+        {}
 
     );
 }

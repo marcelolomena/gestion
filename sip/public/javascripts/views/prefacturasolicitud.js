@@ -432,10 +432,17 @@ function showDocumentos(cui, periodo, proveedor) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
+                postdata.montoneto = postdata.montoneto.replace(",", ".");
+                postdata.montoaprobado = postdata.montoaprobado.replace(",", ".");
+                postdata.montomulta = postdata.montomulta.replace(",", ".");
                 var monto = new Number(postdata.montoaprobado);
+                var apagar = new Number(postdata.montoneto);
+                
                 console.log("num:" + monto);
                 if (monto < 0) {
                     return [false, "Monto: El monto no puede ser menor a cero", ""];
+                } else if (monto > apagar){
+                    return [false, "Monto: El monto aprobado no puede ser mayor al monto a pagar", ""];
                 } else if (postdata.aprobado == 0) {
                     return [false, "Estado: El estado deber ser Aprobado o Rechazado", ""];
                 } else {

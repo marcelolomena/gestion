@@ -124,9 +124,9 @@ exports.action = function (req, res) {
     case "edit":
       var sql="UPDATE sip.solicitudaprobacion SET "+
       "aprobado="+req.body.aprobado+", montoaprobado="+req.body.montoaprobado+
-      ", glosaaprobacion='"+req.body.glosaaprobacion+"', montoaprobadopesos="+parseInt(req.body.montoaprobado)+"*factorconversion"+
-      ", montomulta="+req.body.montomulta+", montomultapesos="+parseInt(req.body.montomulta)+"*factorconversion"+
-      ", montototalpesos=("+parseInt(req.body.montoaprobado)+"*factorconversion)-("+parseInt(req.body.montomulta)+"*factorconversion)"+
+      ", glosaaprobacion='"+req.body.glosaaprobacion+"', montoaprobadopesos="+parseFloat(req.body.montoaprobado)+"*factorconversion"+
+      ", montomulta="+req.body.montomulta+", montomultapesos="+parseFloat(req.body.montomulta)+"*factorconversion"+
+      ", montototalpesos=("+parseFloat(req.body.montoaprobado)+"*factorconversion)-("+parseFloat(req.body.montomulta)+"*factorconversion)"+
       ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+
       ", idcausalmulta="+req.body.idcausalmulta+" "+
       "WHERE id="+req.body.id;
