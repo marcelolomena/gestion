@@ -93,10 +93,6 @@ module.exports = (function () {
                             if (table === 'RecursosHumanos') {
                                 
                                 var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
-                                logger.debug("period  0 : " + parseDate[0]);
-                                logger.debug("period  1 : " + parseDate[1]);
-                                logger.debug("period  2 : " + parseDate[2]);
-
                                 var period = parseDate[0] + parseDate[1];
                                 logger.debug("period : " + period);
                                 var query = "EXECUTE sip.cargarrhh :periodo;";

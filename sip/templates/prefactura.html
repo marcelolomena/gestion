@@ -4,7 +4,8 @@
 <script src="http://localhost:3000/javascripts/jquery-1.12.3.js" />
 <script>
     $(function () {
-        var data = {{{toJSON prefactura}}}
+        var prefactura = {{{toJSON prefactura}}}
+
         var prefactura = data.map(function(b) { return [ b.id,
 		 b.servicio,
 		 b.glosaservicio, 
@@ -24,9 +25,13 @@
          b.idfacturacion,
 		 b.montomultapesos,
 		 b.montototalpesos,
-		 b.subtotal
+		 b.subtotal,
+		 b.tipocontrato,
+		 b.codigoart,
+		 b.sap
 		]});
     });
+	
 </script>
 <div class="container">
 	<div class="row">
@@ -100,23 +105,26 @@
 					<td>
 						{{servicio}}<br>
 						{{glosaservicio}}<br>
-						Monto Aprobado: {{montoaprobado}} {{glosamoneda}}, {{montoaprobadopesos}} <br>
+						Monto Aprobado: {{montoaprobado}} {{glosamoneda}}, descuento {{montomulta}} {{glosamoneda}}, Total: {{montoapagar}} {{glosamoneda}}<br>
 						Tipo de Cambio: {{factorconversion}}<br>
 						Cuenta Contable: {{cuentacontable}}, {{nombrecuenta}}<br>
 						Cui: {{numcui}}<br>
-						At: {{nombreresponsable}}<br>
+						{{#if tipocontrato}}
+   							Sap {{sap}}, Codigo ART {{codigoart}}, {{tipocontrato}}
+						{{/if}}
+
 					</td>
 					<td class="text-right">1</td>
-					<td class="text-right">{{montoaprobadopesos}}</td>
-					<td class="text-right">{{montomultapesos}}</td>					
-					<td class="text-right">{{montototalpesos}}</td>
+					<td class="text-right">$ {{montoaprobadopesos}}</td>
+					<td class="text-right">$ {{montomultapesos}}</td>					
+					<td class="text-right">$ {{montototalpesos}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table> 
 		<div class="row text-right">
 			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>(IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>{{subtotal prefactura}}<br>{{totalimpuesto prefactura}}<br>{{totalprefactura prefactura}}<br></strong></div>
+			<div class="col-xs-2"><strong>$ {{subtotal prefactura}}<br>$ {{totalimpuesto prefactura}}<br>$ {{totalprefactura prefactura}}<br></strong></div>
 		</div>
 	</div>
 </div>

@@ -5,7 +5,7 @@ var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 
-exports.test = function(req, res) {
+exports.test = function (req, res) {
 
     try {
         var jsreport = require('jsreport-core')()
@@ -13,9 +13,21 @@ exports.test = function(req, res) {
 
         var helpers = fs.readFileSync(path.join(__dirname, '..', 'helpers', 'prefactura.js'), 'utf8');
 
-        logger.info("generando prefactura")
-        var sql_1 =
-            `
+        var sql = `
+            SELECT tipocontrato FROM sip.contrato a JOIN sip.prefactura b ON a.id = b.idcontrato AND b.id = :id
+        `
+
+        sequelize.query(sql,
+            {
+                replacements: { id: req.params.id },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (rows) {
+                logger.debug("tipco contrato : " + rows[0].tipocontrato)
+
+                if (rows[0].tipocontrato === 1) {// 1 es continuidad
+
+                    var sql_1 =
+                        `
                 SELECT 
 				a.id,
                 REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))-1) ,',','.')  subtotalsinmulta,
@@ -32,7 +44,7 @@ exports.test = function(req, res) {
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))+1,len(CONVERT(varchar, CONVERT(money, b.factorconversion), 1))) factorconversion,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.')  montoaprobadopesos,
                 REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomultapesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomultapesos), 1))-1) ,',','.')  montomultapesos,
-				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoneto-b.montomulta), 1))) montoapagar,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1))) montoapagar,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoapagarpesos), 1))) montoapagarpesos,
                 REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montototalpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montototalpesos), 1))-1) ,',','.')  montototalpesos,                                
                 c.razonsocial,
@@ -52,7 +64,11 @@ exports.test = function(req, res) {
 				k.id idcontrato,
 				k.numero,
 				m.glosaCargoAct,
-                l.email
+                l.email,
+				h.sap,
+				h.tarea,
+				h.codigoart,
+				k.tipocontrato                
                 FROM sip.prefactura a
                 JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
                 JOIN sip.proveedor c ON a.idproveedor = c.id
@@ -76,43 +92,67 @@ exports.test = function(req, res) {
                 WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)       
             `
 
-        sequelize.query(sql_1,
-            {
-                replacements: { id: req.params.id },
-                type: sequelize.QueryTypes.SELECT
-            }).then(function(rows) {
-                logger.debug(rows)
-                var datum = {
-                    "prefactura": rows
+                    sequelize.query(sql_1,
+                        {
+                            replacements: { id: req.params.id },
+                            type: sequelize.QueryTypes.SELECT
+                        }).then(function (rows) {
+
+                            var datum = {
+                                "prefactura": rows
+                            }
+                            //console.dir(datum)
+
+                            var datita = JSON.parse(JSON.stringify(datum, function (key, value) {
+                                if (key === 'tipocontrato') {
+                                    if (value == 0) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                   }
+                                }
+                                else{
+                                    return value;
+                                }
+                            }));
+
+                            //logger.debug("ke : " + datita)
+
+                            jsreport.init().then(function () {
+                                return jsreport.render({
+                                    template: {
+                                        content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'prefactura.html'), 'utf8'),
+                                        helpers: helpers,
+                                        engine: 'handlebars',
+                                        recipe: 'phantom-pdf',
+                                        phantom: {
+                                            orientation: 'portrait',
+                                            format: 'Letter',
+                                            margin: '1cm'
+                                        }
+                                    },
+                                    data: datita
+                                }).then(function (resp) {
+                                    res.header('Content-type', 'application/pdf');
+                                    resp.stream.pipe(res);
+                                    //console.info("es nuevo")
+                                }).catch(function (e) {
+                                    logger.error(e)
+                                })
+
+                            }).catch(function (e) {
+                                logger.error(e)
+                            })
+
+                        }).catch(function (err) {
+                            logger.error(e)
+                        });
+
+                } else { // contrato de proyecto
+
                 }
 
-                jsreport.init().then(function() {
-                    return jsreport.render({
-                        template: {
-                            content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'prefactura.html'), 'utf8'),
-                            helpers: helpers,
-                            engine: 'handlebars',
-                            recipe: 'phantom-pdf',
-                            phantom: {
-                                orientation: 'portrait',
-                                format: 'Letter',
-                                margin: '1cm'
-                            }
-                        },
-                        data: datum
-                    }).then(function(resp) {
-                        res.header('Content-type', 'application/pdf');
-                        resp.stream.pipe(res);
-                        //console.info("es nuevo")
-                    }).catch(function(e) {
-                        logger.error(e)
-                    })
-
-                }).catch(function(e) {
-                    logger.error(e)
-                })
-
-            }).catch(function(err) {
+            }).catch(function (err) {
                 logger.error(e)
             });
 
@@ -125,7 +165,7 @@ exports.test = function(req, res) {
 /*
 # Cambio en paginación
 */
-exports.lista = function(req, res) {
+exports.lista = function (req, res) {
     var page = req.body.page;
     var rows = req.body.rows;
     var sidx = req.body.sidx;
@@ -147,7 +187,7 @@ exports.lista = function(req, res) {
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
-        jsonObj.rules.forEach(function(item) {
+        jsonObj.rules.forEach(function (item) {
             if (item.op === 'cn')
                 condition += " AND " + item.field + " like '%" + item.data + "%'"
         });
@@ -186,24 +226,24 @@ exports.lista = function(req, res) {
         {
             replacements: { periodo: periodo, condition: condition },
             type: sequelize.QueryTypes.SELECT
-        }).then(function(records) {
+        }).then(function (records) {
             var total = Math.ceil(parseInt(records[0].cantidad) / rows);
             sequelize.query(sql,
                 {
                     replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
                     type: sequelize.QueryTypes.SELECT
-                }).then(function(data) {
+                }).then(function (data) {
                     res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
-                }).catch(function(e) {
+                }).catch(function (e) {
                     logger.error(e)
                 })
 
-        }).catch(function(e) {
+        }).catch(function (e) {
             logger.error(e)
         })
 }
 
-exports.generar = function(req, res) {
+exports.generar = function (req, res) {
     var iniDate = new Date();
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
@@ -293,9 +333,9 @@ UNION
         {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
-        }).then(function(rows) {
+        }).then(function (rows) {
             //logger.debug(rows)
-            models.sequelize.transaction({ autocommit: true }, function(t) {
+            models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     logger.debug(rows[i].impuesto)
                     var newPromise = models.solicitudaprobacion.create({
@@ -333,9 +373,9 @@ UNION
                 };
 
                 return Promise.all(promises);
-            }).then(function(result) {
+            }).then(function (result) {
 
-                models.sequelize.transaction({ autocommit: true }, function(t) {
+                models.sequelize.transaction({ autocommit: true }, function (t) {
                     for (var i = 0; i < result.length; i++) {
                         var myPromise = models.solicitudaprobacion.update({
                             idfacturacion: result[i].id.toString()
@@ -347,11 +387,8 @@ UNION
                     };
 
                     return Promise.all(s_promises);
-                }).then(function(result) {
-                    logger.debug("EXITO AL GENERAR IDITEM");
-
-
-                    models.sequelize.transaction({ autocommit: true }, function(t) {
+                }).then(function (result) {
+                    models.sequelize.transaction({ autocommit: true }, function (t) {
                         for (var i = 0; i < rows.length; i++) {
                             var otherPromise = models.detallecompromiso.update({
                                 estadopago: 'GENERADO'
@@ -363,26 +400,26 @@ UNION
                         };
 
                         return Promise.all(o_promises);
-                    }).then(function(result) {
+                    }).then(function (result) {
                         logger.debug("EXITO UPDATE DET");
                         res.json({ error_code: 0, message: "Exito!!" });
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         logger.error(err)
                         res.json({ error_code: 1, message: err });
                     });
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     logger.error(err)
                     res.json({ error_code: 1, message: err });
                 });
 
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 logger.error(err)
                 res.json({ error_code: 1, message: err });
             });
 
-        }).catch(function(e) {
+        }).catch(function (e) {
             logger.error(e)
             res.json({ error_code: 1, message: err });
         })
