@@ -36,6 +36,13 @@ module.exports = (function () {
                             logger.error(err)
                             throw new Error(err)
                         });
+                    } else if (table === 'Proyecto') {
+                        models.proyectobase.bulkCreate(tasks).then(function (events) {
+                            inserterCallback();
+                        }).catch(function (err) {
+                            logger.error(err)
+                            throw new Error(err)
+                        });
                     }
                 },
                     tbuf
@@ -47,6 +54,8 @@ module.exports = (function () {
                         models.troya.truncate();
                     } else if (table === 'RecursosHumanos') {
                         models.recursoshumanos$.truncate();
+                    } else if (table === 'Proyecto') {
+                        models.proyectobase.truncate();
                     }
                 }
 
@@ -117,6 +126,25 @@ module.exports = (function () {
                                         throw new Error(err)
                                     });
                             }
+                            else if (table === 'Proyecto') {
+                                
+                                var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
+
+                                var query = "EXECUTE sip.CargaProyecto;";
+                                sequelize.query(query,
+                                    {
+                                        type: sequelize.QueryTypes.SELECT
+                                    }).then(function (rows) {
+                                        logger.debug("error : " + rows[0].ErrorNumber);
+                                        if (rows[0].ErrorNumber === 0)
+                                            callback(undefined, "lista la carga de " + table);                                      
+                                        else  if (rows[0].ErrorNumber === 60000)
+                                            callback(rows[0].ErrorMessage,undefined);      
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        throw new Error(err)
+                                    });
+                            }                            
 
                         }).catch(function (err) {
                             throw new Error(err)
