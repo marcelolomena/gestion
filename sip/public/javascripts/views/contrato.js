@@ -23,12 +23,12 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo<span style='color:red'>*</span>{tipocontrato}</div>";
     template += "<div class='column-half'>Documento<span style='color:red'>*</span>{idtipodocumento}</div>";
+    template += "<div class='column-half'>Negociador<span style='color:red'>*</span>{uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Negociador<span style='color:red'>*</span>{uidpmo}</div>";
+    template += "<div class='column-half'>Tipo<span style='color:red'>*</span>{tipocontrato}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -37,6 +37,11 @@ $(document).ready(function () {
     template += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
     template += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
     template += "</div>";
+    
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
+    template += "<div class='column-full'>Nombre Art{nombreart}</div>";
+    template += "</div>";    
 
     template += "<hr style='width:100%;'/>";
     template += "<div> {sData} {cData}  </div>";
@@ -137,7 +142,25 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true },
+        {
+            label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemContrato, 
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var actual = $("input#codigoart").attr("readonly"); 
+                        if (actual == 'readonly') {               
+                            $("input#codigoart").attr("readonly", false);
+                        } else {
+                            $("input#codigoart").attr("readonly", true);
+                        } 
+                    }
+                }],                
+            }
+        },        
+        { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true, hidden:true },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left', search: true,
             editable: true, jsonmap: "proveedor.razonsocial",
@@ -219,14 +242,7 @@ $(document).ready(function () {
                 sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
         },
-        {
-            label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: true,
-            edittype: "custom",
-            editoptions: {
-                custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.radioElemContrato, 
-            }
-        },
+
         /*{
             label: 'TipoDocumento', name: 'tipodocumento', search: false, editable: true, hidden: true,
             edittype: "custom",
@@ -362,6 +378,46 @@ $(document).ready(function () {
             label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
+        {
+            label: 'Codigo ART', name: 'codigoart', width: 200, align: 'left', search: true, editable: true,hidden:true,
+            editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10, readonly: 'readonly',
+        
+            dataEvents: [{
+                type: 'change', fn: function (e) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    console.log("rowData:" + rowData);
+                    var thissid = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: '/getcodigoart/' + thissid,
+                        async: false,
+                        success: function (data) {
+                            if (data.length > 0) {
+                                console.log("glosa:" + data[0].nombreart);
+                                $("input#nombreart").val(data[0].nombreart);
+                                $("input#program_id").val(data[0].program_id);
+                            } else {
+                                alert("No existe el codigo art ingresado");
+                                $("input#nombreart").val("");
+                                $("input#program_id").val("0");                                
+                            }
+                        }
+                    });
+                    }
+            }],
+
+        } 
+        },
+        {
+            label: 'Nombre', name: 'nombreart', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10, readonly: 'readonly'} 
+        },   
+        {
+            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
+            hidden: true, editoptions: {defaultValue: "0"}
+        }                     
     ];
     $("#grid").jqGrid({
         url: '/contratos/list',
@@ -442,6 +498,8 @@ $(document).ready(function () {
                     return [false, "Nombre: Debe ingresar un texto", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "PMO: Debe escoger un valor", ""];
+                } if (parseInt(postdata.nombreart) == "") {
+                    return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
                 } else {
                     return [true, "", ""]
                 }
@@ -456,6 +514,11 @@ $(document).ready(function () {
                 var grid = $("#grid");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
+                var tipoContrato = rowData.tipoContrato
+                if (tipoContrato == 0) {
+                    //$("input#codigoart").attr("readonly", false);
+                    $('#codigoart', form).attr("readonly", false);
+                }
                 idproveedor = rowData.idproveedor;
                 sipLibrary.centerDialog($('#grid').attr('id'));
             }
@@ -481,6 +544,8 @@ $(document).ready(function () {
                     return [false, "Nombre: Debe ingresar un texto", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "PMO: Debe escoger un valor", ""];
+                } if (parseInt(postdata.nombreart) == "") {
+                    return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
                 } else {
                     return [true, "", ""]
                 }

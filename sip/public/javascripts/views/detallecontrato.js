@@ -2,15 +2,19 @@ function showSubGrids(subgrid_id, row_id) {
     var rowData = $("#grid").getRowData(row_id);
     var tipocontrato = rowData.tipocontrato;
 
-    if (tipocontrato == 1) {
+    //if (tipocontrato == 1) {
         showSubGrid_JQGrid2(subgrid_id, row_id, "JQGrid2");
-    }
+    /*}
     else {
         showSubGrid_JQGrid3(subgrid_id, row_id, "JQGrid3");
-    }
+    }*/
 }
 
 function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
+    var rowData = $("#grid").getRowData(row_id);
+    var tipocontrato = rowData.tipocontrato;
+    var codigoart = rowData.codigoart;
+    var proveedor = rowData.idproveedor;
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
     pager_id = 'p_' + subgrid_table_id;
@@ -21,12 +25,25 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     }
 
     var templateServicio = "<div id='responsive-form' class='clearfix'>";
-
+    if (tipocontrato == 0) {
+        templateServicio += "<div class='form-row'>";
+        templateServicio += "<div class='column-full'>Codigo ART<span style='color:red'>*</span>{codigoart}</div>";
+        templateServicio += "</div>";
+        templateServicio += "<div class='form-row'>";
+        templateServicio += "<div class='column-full'>SAP<span style='color:red'>*</span>{sap}</div>";    
+        templateServicio += "</div>";        
+    }
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>CUI<span style='color:red'>*</span>{idcui}</div>";    
-    templateServicio += "<div class='column-half'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
     templateServicio += "</div>";
 
+    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
+    if (tipocontrato == 0) {    
+        templateServicio += "<div class='column-half'>Tarea<span style='color:red'>*</span>{tarea}</div>";
+    }        
+    templateServicio += "</div>";
+    
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Fecha Inicio<span style='color:red'>*</span>{fechainicio}</div>";
     templateServicio += "<div class='column-half'>Fecha Término<span style='color:red'>*</span>{fechatermino}</div>";
@@ -100,6 +117,33 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         page: 1,
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
+            { label: 'SAP', name: 'sap', width: 100, align: 'left', search: true, editable: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/getlistasap/' + proveedor,
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.sap;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Sin SAP--</option>';
+                        $.each(data, function (i, item) {
+                            console.log("nombre:"+data[i].id+" = this:"+thissid);
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' +  data[i].id+'-'+data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].id+'-'+data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                }             
+            },
+            { label: 'Codigo ART', name: 'codigoart', width: 100, align: 'left', search: true, editable: true,
+                editoptions: { size: 10, readonly: 'readonly', defaultValue: codigoart}  
+            },                        
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },          
             {
                 label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
@@ -162,11 +206,28 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $.ajax({
                                 type: "GET",
                                 url: '/contratoservicio/saldopresup/' + cui + '/' + thissid,
-                                async: false,
+                                async: true,
                                 success: function (data) {
-                                    $("input#saldopresupuesto").val(data[0].montopresupuestocaja);
+                                    if (data.length > 0) {
+                                        $("input#saldopresupuesto").val(data[0].montopresupuestocaja);
+                                    }
                                 }
                             });
+                            $.ajax({
+                                type: "GET",
+                                url: '/getlistatareas/'+ thissid,
+                                async: false,
+                                success: function (data) {
+                                    var r = "<select>";
+                                    r += '<option value="0">--Escoger Tarea--</option>';
+                                    $.each(data, function (i, item) {
+                                        r += '<option value="' + data[i].id + '">' + data[i].nombre+ '</option>';
+                                    });
+                                    r += "</select>";
+                                    $("#tarea").html(r);
+                                }
+                            });
+                            //$("input#tarea").val($('option:selected', this).text());
                             
                         }
                     }],                    
@@ -175,7 +236,29 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Servicio', name: 'servicio.nombre', width: 300, align: 'left', search: true, editable: true,
                 editrules: { edithidden: false }, hidedlg: true
-            },              
+            },  
+            {            
+                label: 'Tarea', name: 'tarea', search: false, editable: true, hidden: false,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/getlistatareas/'+0,
+                    buildSelect: function (response) {
+                        var grid = $('#' + subgrid_table_id);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.tarea;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        if (thissid != null){
+                            s += '<option value="'+thissid+'">'+thissid+'</option>';
+                        } else {
+                            s += '<option value="0">--Escoger Tarea--</option>';
+                        }
+
+                        return s + "</select>";
+                    },
+                }                
+            },                           
             {
                 label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true,
             },

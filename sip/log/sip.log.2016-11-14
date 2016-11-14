@@ -1,0 +1,51 @@
+18:08:52 - error:  SequelizeDatabaseError: Invalid column name 'undefined'.
+    at Query.formatError (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:250:10)
+    at Request.userCallback (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:82:25)
+    at Request.callback (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\lib\request.js:33:27)
+    at Connection.message (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\lib\connection.js:1179:27)
+    at Connection.dispatchEvent (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\lib\connection.js:519:45)
+    at MessageIO.<anonymous> (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\lib\connection.js:439:23)
+    at emitNone (events.js:67:13)
+    at MessageIO.emit (events.js:166:7)
+    at ReadablePacketStream.<anonymous> (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\lib\message-io.js:92:15)
+    at emitOne (events.js:77:13)
+    at ReadablePacketStream.emit (events.js:169:7)
+    at readableAddChunk (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_readable.js:198:18)
+    at ReadablePacketStream.Readable.push (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_readable.js:157:10)
+    at ReadablePacketStream.Transform.push (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_transform.js:123:32)
+    at ReadablePacketStream._transform (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\lib\message-io.js:57:16)
+    at ReadablePacketStream.Transform._read (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_transform.js:159:10)
+    at ReadablePacketStream.Transform._write (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_transform.js:147:83)
+    at doWrite (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_writable.js:313:64)
+    at writeOrBuffer (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\tedious\node_modules\readable-stream\lib\_stream_writable.js:302:5)
+From previous event:
+    at Query._run (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:44:17)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:115:17
+From previous event:
+    at Query.run (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\dialects\mssql\query.js:114:18)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\sequelize.js:849:20
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\retry-as-promised\index.js:40:21
+From previous event:
+    at retryAsPromised (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\retry-as-promised\index.js:30:10)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\sequelize.js:848:12
+    at processImmediate [as _immediateCallback] (timers.js:383:17)
+From previous event:
+    at Promise.then (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Sequelize.query (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\lib\sequelize.js:845:5)
+    at exports.action (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\controllers\contratoservicio.js:33:23)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\express\lib\router\index.js:312:13)

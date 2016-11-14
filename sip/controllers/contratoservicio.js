@@ -9,6 +9,14 @@ exports.action = function (req, res) {
     var factorimpuesto = req.body.factorimpuesto
     var anexo = req.body.anexo == "" ? "ND" : req.body.anexo;
     var saldopresupuesto = req.body.saldopresupuesto == "" ? "0" : req.body.saldopresupuesto;
+    var sap = req.body.sap;
+    var sapcampos = "";
+    var sapdatos = "";
+    if (sap != null) {
+        sapcampos = ", sap, tarea, codigoart";
+        sapdatos =  ", "+req.body.sap+ ", "+req.body.tarea+","+req.body.codigoart;
+    } 
+        
 
 
     switch (action) {
@@ -19,14 +27,14 @@ exports.action = function (req, res) {
                 "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
                 "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, " +
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
-                "diferido, saldopresupuesto, tipogeneracion, comentario) " +
+                "diferido, saldopresupuesto, tipogeneracion, comentario "+sapcampos+") "+
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
                 req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
                 req.body.idplazocontrato + "," + req.body.idcondicion + "," +
                 req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",'" +
                 req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
                 req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
-                req.body.tipogeneracion + ",'" + req.body.comentario + "'); " +
+                req.body.tipogeneracion + ",'" + req.body.comentario + "'"+sapdatos+"); " +
                 "DECLARE @id INT;" +
                 "select @id = @@IDENTITY; " +
                 "select @id as id;";
@@ -491,17 +499,30 @@ exports.cuiforservice = function (req, res) {
         logger.debug(err);
         res.json({ error_code: 1 });
     });*/
-
-    var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
-        "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND b.tiposervicio='Continuidad' " +
-        "GROUP BY a.idservicio, b.nombre";
-    sequelize.query(sql).spread(function (cuis) {
-        logger.debug("Rescato servicios");
-        res.json(cuis);
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-    });
+    var sap = req.params.sap;
+    if (sap == "0"){
+        var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
+            "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND b.tiposervicio='Continuidad' " +
+            "GROUP BY a.idservicio, b.nombre";
+        sequelize.query(sql).spread(function (cuis) {
+            logger.debug("Rescato servicios");
+            res.json(cuis);
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({ error_code: 1 });
+        });
+    } else {
+        var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
+            "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND  b.tarea IS NOT NULL " +
+            "GROUP BY a.idservicio, b.nombre, b.tarea";
+        sequelize.query(sql).spread(function (cuis) {
+            logger.debug("Rescato servicios");
+            res.json(cuis);
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({ error_code: 1 });
+        });        
+    }
 }
 
 exports.tarea = function (req, res) {
@@ -622,7 +643,9 @@ exports.getSaldoPresup = function (req, res) {
         " idcui=" + cui + " and idservicio=" + serv + " and idejercicio=@ejer";
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (saldo) {
-        logger.debug("En getSaldoPresup 2:" + saldo[0].montopresupuestocaja);
+        if (saldo.length > 0){
+            logger.debug("En getSaldoPresup 2:" + saldo[0].montopresupuestocaja);
+        }
         res.json(saldo);
     }).catch(function (err) {
         logger.debug(err);
@@ -630,4 +653,37 @@ exports.getSaldoPresup = function (req, res) {
     });
 
 
+};
+
+exports.getListaSAP = function (req, res) {
+    logger.debug("En getSaldoPresup");
+    var proveedor = req.params.id;
+
+    var sql = "SELECT b.sap as id, b.nombreproyecto as nombre FROM sip.tareaenvuelo a JOIN sip.presupuestoenvuelo b ON a.idpresupuestoenvuelo=b.id "+
+        "WHERE a.idproveedor = " +proveedor+" "+
+        "GROUP BY b.sap, b.nombreproyecto ";
+    logger.debug("query:" + sql);
+    sequelize.query(sql).spread(function (saps) {
+        logger.debug("En getSAP2:" + saps);
+        res.json(saps);
+    }).catch(function (err) {
+        logger.debug(err);
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.getListaTareas = function (req, res) {
+    logger.debug("En getSaldoPresup");
+    var servicio = req.params.id;
+
+    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio="+servicio+" "+  
+        "GROUP BY tarea ";
+    logger.debug("query:" + sql);
+    sequelize.query(sql).spread(function (tareas) {
+        logger.debug("En getSAP2:" + tareas);
+        res.json(tareas);
+    }).catch(function (err) {
+        logger.debug(err);
+        res.json({ error_code: 1 });
+    });
 };
