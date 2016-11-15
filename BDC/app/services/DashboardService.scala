@@ -101,12 +101,12 @@ object DashboardService {
     }
   }
 
-  def reportDepartamentExcel(): Seq[PanelDepartamento] = {
+  def reportDepartamentExcel(Json: String): Seq[PanelDepartamento] = {
     //println(Json)
-    var sqlString = "EXEC art.programas_por_departamento_excel"
+    var sqlString = "EXEC art.programas_por_departamento_excel {Json}"
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on().executeQuery() as (PanelDepartamento.panelDepa *)
+      SQL(sqlString).on('Json -> Json).executeQuery() as (PanelDepartamento.panelDepa *)
     }
   }
 
