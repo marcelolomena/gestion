@@ -158,7 +158,18 @@ $(document).ready(function () {
                         } 
                     }
                 }],                
-            }
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.tipocontrato;
+                if (val == 1) {
+                    dato = 'Continuidad';
+
+                } else if (val == 0) {
+                    dato = 'Proyectos';
+                }
+                return dato;
+            }            
         },        
         { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true, hidden:true },
         {
