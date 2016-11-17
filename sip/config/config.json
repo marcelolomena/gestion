@@ -7,7 +7,7 @@
         "dialect": "mssql",
         "port": "1433",
         "dialectOptions": {
-            "requestTimeout": 60000 
+            "requestTimeout": 1200000 
         },
         "pool": {
             "min": 5,
