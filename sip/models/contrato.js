@@ -68,6 +68,14 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    program_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    codigoart: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },    
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

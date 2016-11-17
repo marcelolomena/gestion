@@ -404,3 +404,14 @@ exports.getTipoDocumentos = function (req, res) {
 
   res.json(promises);
 };
+
+exports.getCodigoart = function (req, res) {
+  console.log("codigo:"+req.params.id);
+  var sql = "SELECT program_name AS nombreart, program_id FROM art_program WHERE program_code="+req.params.id;
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};

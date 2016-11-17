@@ -46,13 +46,22 @@ import models.DBFilter;
 import java.io.File
 import java.io.FileOutputStream
 import org.apache.poi.xssf.usermodel._
-//import net.liftweb.json.DefaultFormats
+import utils.FormattedOutPuts
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
 import models.ATM
 import models.StateSubTarea
 object Dashboard extends Controller {
 
+  def fromDashboardName(choice: String, value: String): String = choice match {
+  
+    case "programa" => " '%" + value + "%' "
+    case "fecini"   => " '" + value + "' "
+    case "feccom"   => " '" + value + "' "
+    case "gasto"    => value
+    case _                    => "error"
+  }
+  
   /**
    * dashboard page
    */
@@ -193,10 +202,62 @@ object Dashboard extends Controller {
         val fileOut = new FileOutputStream(file);
         val wb = new XSSFWorkbook
         val sheet = wb.createSheet("Departament")
+        val filters = request.getQueryString("filters").getOrElse("").toString()
         var j = 0
         var rNum = 1
         var cNum = 0
         var a = 0
+        var tieneJson = true
+        var qrystr = ""
+        var panel: Seq[models.PanelDepartamento] = null
+        if (!StringUtils.isEmpty(filters)) {
+
+          val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+          if (!jObject.\\("rules").isEmpty) {
+
+            val jList = jObject.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (jElement.equals("[]")) {
+                tieneJson = false
+              } else {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filters)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+                  /*
+                  if (!m.data.trim().equals("")){
+                    println(m.field + " - " + m.data.trim())
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                  * 
+                  */
+                  println(m.field + " - " + m.data.trim())
+                 if (m.field.equals("programa")) {
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromDashboardName(m.field, m.data) + " AND "
+                 }
+
+                }
+
+              }
+            }
+
+          }
+          println(qrystr)
+          if (tieneJson) {
+            panel = DashboardService.reportDepartamentExcel(qrystr)
+          } else {
+            panel = DashboardService.reportDepartamentExcel("")
+          }
+
+        } else {
+          panel = DashboardService.reportDepartamentExcel("")
+
+        }
 
         var rowhead = sheet.createRow(0);
         val style = wb.createCellStyle();
@@ -221,7 +282,7 @@ object Dashboard extends Controller {
         for (j <- 0 to 11)
           rowhead.getCell(j).setCellStyle(style);
 
-        val panel = DashboardService.reportDepartamentExcel
+        //val panel = DashboardService.reportDepartamentExcel
         
         for (s <- panel) {
           var row = sheet.createRow(rNum)
