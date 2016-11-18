@@ -7,9 +7,10 @@ var logger = require("../utils/logger");
 module.exports = function (passport) {
 
 	passport.use('local', new LocalStrategy({
-		passReqToCallback: true
+		/*usernameField: 'email',*/ passReqToCallback: true
 	},
 		function (req, username, password, done) {
+			//logger.debug('Sistema. ' +req.body.sistema);
 			models.user.find({
 				where: { 'uname': username }
 			}).then(function (user) {
@@ -24,6 +25,7 @@ module.exports = function (passport) {
 							attributes: ['id'],
 							where: { 'uid': user.uid },
 						});
+						//logger.debug('Sistema: '+ sistema);
 						if (!rol) {
 							logger.debug('No tiene rol');
 							return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page

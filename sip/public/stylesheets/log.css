@@ -30,7 +30,7 @@ body {
 	width: 309px;
 	margin-right: auto;
 	margin-left: auto;
-	background-image: url(../images/caja1.jpg);
+	/*background-image: url(../images/caja1.jpg);*/
 	background-repeat: no-repeat;
 	background-position: center center;
 }
@@ -102,6 +102,35 @@ body {
 	color: #036;
 	padding-left: 5px;
 }
+
+
+.contenido .cajaLog .caja1 .sistema {
+	height: 45px;
+	width: 224px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: 'robotolight';
+	font-size: 14px;
+	font-weight: 300;
+	color: #036;
+	line-height:45px;
+}
+.contenido .cajaLog .caja1 .sistema select {
+	height: 45px;
+	width: 160px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	background-color:transparent;
+	font-family: 'robotolight';
+	font-size: 14px;
+	font-weight: 300;
+	color: #036;
+	padding-left: 5px;
+}
+
+
 .contenido .cajaLog .caja1 .clave input:focus {
 	outline:0px;
 

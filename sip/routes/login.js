@@ -30,15 +30,21 @@ module.exports = function (passport) {
 
     router.post('/login', passport.authenticate('local', redirectsTwo),
         function (req, res) {
-            menu.builUserdMenu(req.user, function (err, data) {
+            menu.builUserdMenu(req, function (err, data) {
                 if (data) {
                     // Explícitamente guardar la sesión antes de redirigir!
                     //req.flash('message', 'Please check your email to confirm it.');
                     //req.session.passport.sidebar.rid
                     req.session.save(() => {
                         req.session.passport.sidebar = data
-                        res.render('home', { data: data });
+                        if (req.body.sistema === 1) {
+                            res.render('home', { data: data });
+                        } else {
+                            res.render('home2', { data: data });
+                        }
                     })
+                } else {
+                    res.render('index', { message: err });
                 }
             });
         });
