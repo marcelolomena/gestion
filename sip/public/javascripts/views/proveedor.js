@@ -21,7 +21,7 @@ $(document).ready(function () {
     
     var result;
     
-	if ( campo.length == 0 ){ result = [ false, colname + ": rut invalido"] }
+	if ( campo.length == 0 ){ result = [ true, colname + ""]; return result }
 	//if ( campo.length < 8 ){ result = [ false, colname + ": rut invalido"] }
 
 	campo = campo.replace('-','')
@@ -77,6 +77,39 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>Negociador {negociadordivot}</div>";
     tmpl += "</div>";
     
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Rut Representante Legal {rutrepresentante}</div>";
+    tmpl += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Nombre Representante Legal {nombrerepresentante}</div>";
+    tmpl += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Telefono Representante Legal {fonorepresentante}</div>";
+    tmpl += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Correo Representante Legal {correorepresentante}</div>";
+    tmpl += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Razon Social Contractual {razonsocialcontractual}</div>";
+    tmpl += "</div>";       
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Fecha Escritura Publica {fechaescritura}</div>";
+    tmpl += "</div>";          
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Notaria Escritura Publica {notariaescritura}</div>";
+    tmpl += "</div>";            
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Rut Apoderado 1 {rutapoderado1}</div>";
+    tmpl += "</div>";   
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Nombre Primer Apoderado {nombreapoderado1}</div>";
+    tmpl += "</div>";   
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Rut Apoderado 2 {rutapoderado2}</div>";
+    tmpl += "</div>";   
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Nombre Segundo Apoderado {nombreapoderado2}</div>";
+    tmpl += "</div>";             
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -122,7 +155,62 @@ $(document).ready(function () {
         {
             label: 'Negociador Divot', name: 'negociadordivot', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
-        }
+        },
+        { label: 'Rut Representante Legal', name: 'rutrepresentante', width: 150, align: 'right', search: true, editable: true,
+            editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
+            editrules: { custom: true, custom_func: validaRut }                                   
+        },
+        {
+            label: 'Nombre Representante Legal', name: 'nombrerepresentante', width: 223, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Telefono Representante Legal', name: 'fonorepresentante', width: 220, align: 'center', search: false, editable: true,
+                editoptions: {
+                         dataInit: function (element) {
+                        $(element).mask("00000000000", { placeholder: "___________" });
+                    }
+                }
+        },
+        { label: 'Correo Representante Legal', name: 'correorepresentante',index: "email", width: 200, align: 'left', search: false, editable: true,                   
+                 editoptions: { maxlength: 80, size: 32 }, 
+                 editrules: { email: true, required: false} 
+        },
+        {
+            label: 'Razon Social Contractual', name: 'razonsocialcontractual', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        {
+            label: 'Fecha Escritura Publica', name: 'fechaescritura', width: 130, align: 'right', search: false, sortable: false, 
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            editable: true, formoptions: { rowpos: 2, colpos: 1 },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).datepicker({ dateFormat: 'dd-mm-yy' })
+                }
+            }
+        },      
+        {
+            label: 'Notaria Escritura Publica', name: 'notariaescritura', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        }, 
+        { label: 'Rut Apoderado 1', name: 'rutapoderado1', width: 150, align: 'right', search: true, editable: true,
+            editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
+            editrules: { custom: true, custom_func: validaRut }                                   
+        },
+        {
+            label: 'Nombre Primer Apoderado', name: 'nombreapoderado1', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        },
+        { label: 'Rut Apoderado 2', name: 'rutapoderado2', width: 150, align: 'right', search: true, editable: true,
+            editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
+            editrules: { custom: true, custom_func: validaRut }                                   
+        },
+        {
+            label: 'Nombre Segundo Apoderado', name: 'nombreapoderado2', width: 210, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true
+        }        
     ];
 
     var tmpc = "<div id='responsive-form' class='clearfix'>";
@@ -152,7 +240,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: 950,
+        width: 1300,
         shrinkToFit: false,
         caption: 'Lista de proveedores',
         pager: "#pager_proveedor",
