@@ -40,7 +40,7 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
             edittype: "select",
             editrules: {required: true},
             editoptions: {
-                dataUrl: '/parameters/tipofecha',
+                dataUrl: '/iniciativagetfechas',
                 buildSelect: function (response) {
                     var grid = $("#" + childGridID);
                     var rowKey = grid.getGridParam("selrow");

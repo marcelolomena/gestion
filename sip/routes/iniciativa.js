@@ -145,6 +145,9 @@ module.exports = function (passport) {
     router.route('/getjefe/:id')
         .get(isAuthenticated, presupuestoiniciativaController.getJefe);
 
+    router.route('/iniciativagetfechas')
+        .get(isAuthenticated, iniciativafechaController.getFechas);
+        
     return router;
 
 }

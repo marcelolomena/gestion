@@ -248,7 +248,9 @@ exports.listSAP = function (req, res) {
 
   var order = sidx + " " + sord;
 
-  var sql0 = "declare @rowsPerPage as bigint; " +
+  var sql0 = "DECLARE @idfechafinal int;"+
+    "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC; "+
+    "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
@@ -257,7 +259,8 @@ exports.listSAP = function (req, res) {
     "as resultNum, a.*, iniciativaprograma.codigoart as codigoart, iniciativafecha.fecha as fechafinal " +
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
-    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] and iniciativafecha.tipofecha = 'Fecha Final Aprobación'" +
+    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] "+
+    "and iniciativafecha.idtipofecha = @idfechafinal " +
     "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -302,6 +305,7 @@ exports.listSAP = function (req, res) {
 
       }).then(function (records) {
         var total = Math.ceil(records / rows);
+        console.log("sql:"+sql0);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
@@ -315,6 +319,7 @@ exports.listSAP = function (req, res) {
 
     }).then(function (records) {
       var total = Math.ceil(records / rows);
+      console.log("sql:"+sql0);
       sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });

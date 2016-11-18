@@ -31,7 +31,11 @@ module.exports = function(sequelize, DataTypes) {
     comentario: {
       type: DataTypes.STRING,
       allowNull: true
-    }
+    },
+    idtipofecha: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'iniciativafecha'
   });

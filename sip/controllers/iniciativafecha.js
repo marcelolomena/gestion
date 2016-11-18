@@ -18,6 +18,7 @@ exports.action = function (req, res) {
         tipofecha: req.body.tipofecha,
         fecha: fecha,
         comentario: req.body.comentario,
+        idtipofecha:req.body.idtipofecha,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -31,6 +32,7 @@ exports.action = function (req, res) {
       models.iniciativafecha.update({
         idiniciativaprograma: req.body.parent_id,
         idtipofecha: req.body.idtipofecha,
+        tipofecha: req.body.tipofecha,
         fecha: fecha,
         comentario: req.body.comentario
       }, {
@@ -153,4 +155,15 @@ exports.actualizaDuracion = function (req, res) {
           res.json({ error_code: 1 });
         });
 })
+};
+
+exports.getFechas = function (req, res) {
+
+  var sql = "SELECT * FROM sip.parametro where tipo='tipofecha' ORDER BY valor";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
 };
