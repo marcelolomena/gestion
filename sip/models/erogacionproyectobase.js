@@ -1,82 +1,72 @@
 /* jshint indent: 2 */
 
-module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('proveedor', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    numrut: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    dvrut: {
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('erogacionproyectobase', {
+    sap: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    razonsocial: {
+    proyecto: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    uid: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    negociadordivot: {
+    nombreproveedor: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    borrado: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    rutrepresentante: {
+    rutproveedor: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombrerepresentante: {
+    factura: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    fonorepresentante: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    correorepresentante: {
+    fechagl: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    razonsocialcontractual: {
+    fechapa: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    fechaescritura: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    notariaescritura: {
+    fechafactura: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    rutapoderado1: {
+    glosafactura: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombreapoderado1: {
+    tareaajustada: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    rutapoderado2: {
+    tareaoriginal: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombreapoderado2: {
+    cuentacontable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombrecuenta: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },       
+    total: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    totalmonedaorigen: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    estado: {
       type: DataTypes.STRING,
       allowNull: true
     }
   }, {
-      schema: 'sip', timestamps: false, tableName: 'proveedor'
-    });
+    schema: 'sip',timestamps: false,tableName: 'erogacionproyectobase'
+  });
 };

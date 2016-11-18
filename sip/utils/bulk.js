@@ -23,7 +23,7 @@ module.exports = (function () {
                 var inserter = async.cargo(function (tasks, inserterCallback) {
 
                     if (table === 'Troya') {
-                        models.troya.bulkCreate(tasks).then(function (events) {
+                        models.troyabase.bulkCreate(tasks).then(function (events) {
                             inserterCallback();
                         }).catch(function (err) {
                             logger.error(err)
@@ -43,7 +43,21 @@ module.exports = (function () {
                             logger.error(err)
                             throw new Error(err)
                         });
-                    }
+                    } else if (table === 'DetalleProyecto') {
+                        models.detalleproyectobase.bulkCreate(tasks).then(function (events) {
+                            inserterCallback();
+                        }).catch(function (err) {
+                            logger.error(err)
+                            throw new Error(err)
+                        });
+                    } else if (table === 'ErogacionProyecto') {
+                        models.erogacionproyectobase.bulkCreate(tasks).then(function (events) {
+                            inserterCallback();
+                        }).catch(function (err) {
+                            logger.error(err)
+                            throw new Error(err)
+                        });
+                    } 
                 },
                     tbuf
                 );
@@ -51,11 +65,15 @@ module.exports = (function () {
                 if (deleted === 'Reemplaza') {
                     logger.debug("borrando tabla : " + table);
                     if (table === 'Troya') {
-                        models.troya.truncate();
+                        models.troyabase.truncate();
                     } else if (table === 'RecursosHumanos') {
                         models.recursoshumanos$.truncate();
                     } else if (table === 'Proyecto') {
                         models.proyectobase.truncate();
+                    } else if (table === 'DetalleProyecto') {
+                        models.detalleproyectobase.truncate();
+                    } else if (table === 'ErogacionProyecto') {
+                        models.erogacionproyectobase.truncate();
                     }
                 }
 
@@ -140,7 +158,43 @@ module.exports = (function () {
                                         logger.error(err)
                                         throw new Error(err)
                                     });
-                            }                            
+                            } else if (table === 'DetalleProyecto') {
+                                
+                                var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
+
+                                var query = "EXECUTE sip.GuardaDetalleProyecto;";
+                                sequelize.query(query,
+                                    {
+                                        type: sequelize.QueryTypes.SELECT
+                                    }).then(function (rows) {
+                                        logger.debug("error : " + rows[0].ErrorNumber);
+                                        if (rows[0].ErrorNumber === 0)
+                                            callback(undefined, "lista la carga de " + table);                                      
+                                        else  if (rows[0].ErrorNumber === 60000)
+                                            callback(rows[0].ErrorMessage,undefined);      
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        throw new Error(err)
+                                    });
+                            } else if (table === 'ErogacionProyecto') {
+                                
+                                var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
+
+                                var query = "EXECUTE sip.GuardaErogacionProyecto;";
+                                sequelize.query(query,
+                                    {
+                                        type: sequelize.QueryTypes.SELECT
+                                    }).then(function (rows) {
+                                        logger.debug("error : " + rows[0].ErrorNumber);
+                                        if (rows[0].ErrorNumber === 0)
+                                            callback(undefined, "lista la carga de " + table);                                      
+                                        else  if (rows[0].ErrorNumber === 60000)
+                                            callback(rows[0].ErrorMessage,undefined);      
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        throw new Error(err)
+                                    });
+                            }                                 
 
                         }).catch(function (err) {
                             throw new Error(err)

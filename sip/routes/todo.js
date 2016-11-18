@@ -26,6 +26,10 @@ module.exports = function (passport) {
         res.render('proveedores', { user: req.user, data: req.session.passport.sidebar });
     });
 
+    router.get('/acordeon', isAuthenticated, function (req, res) {
+        res.render('acordeon', { user: req.user, data: req.session.passport.sidebar });
+    });
+
     router.route('/proveedores/combobox')
         .get(isAuthenticated, proveedorController.combobox);
 

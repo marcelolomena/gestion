@@ -4,8 +4,9 @@ var models = require('../models');
 var co = require('co');
 
 module.exports = (function () {
-    var builUserdMenu = function (user, callback) {
-
+    var builUserdMenu = function (req, callback) {
+        var user = req.user;
+        logger.debug('Sistema ------>> ' + req.body.sistema);
         try {
             if (user) {
 
@@ -97,6 +98,10 @@ module.exports = (function () {
 
                 models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
                 models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
+
+                models.user.belongsToMany(models.sistema, { foreignKey: 'uid', through: models.usrrol });
+                models.sistema.belongsToMany(models.user, { foreignKey: 'idsistema', through: models.usrrol });
+
                 models.rol.belongsToMany(models.menu, { foreignKey: 'rid', through: models.rolfunc });
                 models.menu.belongsToMany(models.rol, { foreignKey: 'mid', through: models.rolfunc });
 
@@ -113,31 +118,35 @@ module.exports = (function () {
                             {
                                 model: models.rol,
                                 include: [{ model: models.menu, where: { 'pid': { $eq: null } }, required: false }]
-                            }
+                            }, { model: models.sistema, where: { 'id':  req.body.sistema } }
                         ]
                     }).then(function (usr) {
-                        //console.log(_rolnegocio.rolnegocio);
-                        var usuario = []
-                        var nombre = {}
-                        nombre["nombre"] = usr.first_name + " " + usr.last_name
-                        nombre["uid"] = usr.uid
-                        //nombre["rid"] = usr.rols[0].id
-                        nombre["rid"] = _rolnegocio.rolnegocio
-                        usuario.push(nombre)
-                        return NeoMenu(usr, function (menu) {
-                            var supermenu = [];
-                            menu.forEach(function (opt) {
-                                if (opt.submenu.length != 0) {
-                                    supermenu.push(opt)
-                                }
+                        //console.dir(usr);
+                        if (usr) {
+                            var usuario = []
+                            var nombre = {}
+                            nombre["nombre"] = usr.first_name + " " + usr.last_name
+                            nombre["uid"] = usr.uid
+                            nombre["sistema"] = req.body.sistema;
+                            //nombre["rid"] = usr.rols[0].id
+                            nombre["rid"] = _rolnegocio.rolnegocio
+                            usuario.push(nombre)
+                            return NeoMenu(usr, function (menu) {
+                                var supermenu = [];
+                                menu.forEach(function (opt) {
+                                    if (opt.submenu.length != 0) {
+                                        supermenu.push(opt)
+                                    }
+                                });
+
+                                var menus = {}
+                                menus["menus"] = supermenu
+                                var user = usuario.concat(menus);
+                                callback(undefined, user);
                             });
-
-                            var menus = {}
-                            menus["menus"] = supermenu
-                            var user = usuario.concat(menus);
-                            callback(undefined, user);
-                        });
-
+                        } else {
+                            throw new Error('Sin datos');
+                        }
 
                     }).catch(function (err) {
                         logger.error(err)

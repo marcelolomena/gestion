@@ -12,6 +12,18 @@ exports.action = function (req, res) {
     case "add":
       var rut = req.body.numrut.substring(0, req.body.numrut.length - 2);
       var digito = req.body.numrut.substring(req.body.numrut.length - 1, req.body.numrut.length);
+      var fechaescritura
+      var fonorepresentante
+
+      if (req.body.fechaescritura == '') 
+         {fechaescritura = null}
+      else
+         {fechaescritura = req.body.fechaescritura}
+
+      if (req.body.fonorepresentante == '')
+         {fonorepresentante=null}
+      else
+         {fonorepresentante=req.body.fonorepresentante}
 
       models.proveedor.create({
         numrut: rut.split(".").join("").replace(",", "."),
@@ -19,6 +31,17 @@ exports.action = function (req, res) {
         razonsocial: req.body.razonsocial,
         uid:req.body.uid,
         negociadordivot: req.body.negociadordivot,
+        rutrepresentante:req.body.rutrepresentante,
+        nombrerepresentante:req.body.nombrerepresentante,
+        razonsocialcontractual:req.body.razonsocialcontractual,
+        fechaescritura:fechaescritura,
+        notariaescritura:req.body.notariaescritura,
+        fonorepresentante:fonorepresentante,      
+        correorepresentante:req.body.correorepresentante,
+        rutapoderado1:req.body.rutapoderado1,
+        nombreapoderado1:req.body.nombreapoderado1,
+        rutapoderado2:req.body.rutapoderado2,
+        nombreapoderado2:req.body.nombreapoderado2,
         borrado: 1
       }).then(function (proveedor) {
         res.json({ error_code: 0 });
@@ -30,12 +53,38 @@ exports.action = function (req, res) {
     case "edit":
       var rut = req.body.numrut.substring(0, req.body.numrut.length - 2);
       var digito = req.body.numrut.substring(req.body.numrut.length - 1, req.body.numrut.length);
+      var fechaescritura
+      var fonorepresentante
+
+      if (req.body.fechaescritura == '') 
+         {fechaescritura = null}
+      else
+         {fechaescritura = req.body.fechaescritura}
+
+      if (req.body.fonorepresentante == '')
+         {fonorepresentante=null}
+      else
+         {fonorepresentante=req.body.fonorepresentante}
+
+      console.info('fechaescritura:'+fechaescritura)
+      console.info('fonorepresentante:'+fonorepresentante)        
       models.proveedor.update({
         numrut: rut.split(".").join("").replace(",", "."),
         dvrut: digito,
         razonsocial: req.body.razonsocial,
         uid:req.body.uid,
         negociadordivot: req.body.negociadordivot,
+        rutrepresentante:req.body.rutrepresentante,
+        nombrerepresentante:req.body.nombrerepresentante,
+        razonsocialcontractual:req.body.razonsocialcontractual,
+        fechaescritura:fechaescritura,
+        notariaescritura:req.body.notariaescritura,
+        fonorepresentante:fonorepresentante,      
+        correorepresentante:req.body.correorepresentante,
+        rutapoderado1:req.body.rutapoderado1,
+        nombreapoderado1:req.body.nombreapoderado1,
+        rutapoderado2:req.body.rutapoderado2,
+        nombreapoderado2:req.body.nombreapoderado2,
         borrado: 1
       }, {
           where: {
@@ -102,8 +151,10 @@ exports.list = function (req, res) {
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + orden + ") " +
-    "as resultNum, id, numrut, dvrut, razonsocial, uid, negociadordivot, borrado "+ 
-    "from sip.proveedor where proveedor.borrado = 1 ORDER BY razonsocial asc )" +
+    "as resultNum, a.id, a.numrut, a.dvrut, a.razonsocial, a.uid, b.first_name + ' ' + b.last_name as negociadordivot, "+
+    "isnull(a.rutrepresentante,'') as rutrepresentante, a.nombrerepresentante,a.razonsocialcontractual,a.fechaescritura,a.notariaescritura,a.fonorepresentante, "+
+    "a.correorepresentante,isnull(a.rutapoderado1,'') as rutapoderado1,a.nombreapoderado1,isnull(a.rutapoderado2,'') as rutapoderado2,a.nombreapoderado2, a.borrado "+ 
+    "from sip.proveedor a Left outer JOIN art_user b ON a.uid=b.uid where a.borrado = 1 ORDER BY a.razonsocial asc )" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       logger.debug(sql0);
@@ -131,8 +182,10 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + orden + ") " +
-        "as resultNum,id, numrut, dvrut, razonsocial, uid, negociadordivot, borrado "+ 
-        "from sip.proveedor where proveedor.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY razonsocial asc) " +
+        "as resultNum, a.id, a.numrut, a.dvrut, a.razonsocial, a.uid, b.first_name + ' ' + b.last_name as negociadordivot, "+
+        "isnull(a.rutrepresentante,'') as rutrepresentante, a.nombrerepresentante,a.razonsocialcontractual,a.fechaescritura,a.notariaescritura,a.fonorepresentante, "+
+        "a.correorepresentante,isnull(a.rutapoderado1,'') as rutapoderado1,a.nombreapoderado1,isnull(a.rutapoderado2,'') as rutapoderado2,a.nombreapoderado2, a.borrado "+ 
+        "from sip.proveedor a Left outer JOIN art_user b ON a.uid=b.uid where a.borrado = 1 and " + condition.substring(0, condition.length - 4) + " ORDER BY a.razonsocial asc) " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
       logger.debug(sql);

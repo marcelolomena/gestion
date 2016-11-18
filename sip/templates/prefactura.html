@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link href="http://localhost:3000/stylesheets/bootstrap.min.css" rel="stylesheet" />
+<style>
+body {
+	transform-origin: 0 0; 
+	-webkit-transform-origin: 0 0; 
+	transform: scale(0.95); 
+	-webkit-transform: scale(0.95);
+	font-size: 100%;
+	/*white-space: nowrap;*/
+}
+</style>
 <script src="http://localhost:3000/javascripts/jquery-1.12.3.js" />
 <script>
     $(function () {
@@ -79,22 +89,22 @@
 			<thead>
 				<tr>
 					<th>
-						<h4>Código</h4>
+						<h4 align="center">Código</h4>
 					</th>					
 					<th>
-						<h4>Servicio</h4>
+						<h4 align="left">Servicio</h4>
 					</th>
 					<th>
-						<h4>Cantidad</h4>
+						<h4 align="center">Cantidad</h4>
 					</th>
 					<th>
-						<h4>Precio</h4>
+						<h4 align="center">Precio  </h4>
 					</th>
 					<th>
-						<h4>Descuento</h4>
+						<h4 align="center">Descuento</h4>
 					</th>
 					<th>
-						<h4 align=center>Total</h4>
+						<h4 align="center">Total  </h4>
 					</th>
 				</tr>
 			</thead>
@@ -110,14 +120,14 @@
 						Cuenta Contable: {{cuentacontable}}, {{nombrecuenta}}<br>
 						Cui: {{numcui}}<br>
 						{{#if tipocontrato}}
-   							Sap {{sap}}, Codigo ART {{codigoart}}, {{tipocontrato}}
+   							Sap: {{sap}}, Codigo ART: {{codigoart}}
 						{{/if}}
 
 					</td>
 					<td class="text-right">1</td>
-					<td class="text-right">$ {{montoaprobadopesos}}</td>
-					<td class="text-right">$ {{montomultapesos}}</td>					
-					<td class="text-right">$ {{montototalpesos}}</td>
+					<td class="text-right" style="white-space: nowrap;">$ {{montoaprobadopesos}}</td>
+					<td class="text-right" style="white-space: nowrap;">$ {{montomultapesos}}</td>					
+					<td class="text-right" style="white-space: nowrap;">$ {{montototalpesos}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
