@@ -334,9 +334,6 @@ $(document).ready(function () {
 function clearSelection() {
     var wsParams = { idcui: 0 }
     var gridDetailParam = { postData: wsParams };
-    $("#gridDetail").jqGrid('setGridParam', gridDetailParam);
-    $("#gridDetail").jqGrid('setCaption', 'CUI :: none');
-    $("#gridDetail").trigger("reloadGrid");
 }
 
 function listColumnModels(data) {
