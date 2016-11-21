@@ -18,11 +18,11 @@ module.exports = (function () {
 											join sip.rol c on b.rid = c.id
 											join sip.rol_func d on d.rid = c.id
 											join sip.menu e on e.id = d.mid
-											where a.uid=:uid and pid=:pid
+											where a.uid=:uid and pid=:pid and e.idsistema =:idsys 
 										  `
                     sequelize.query(sql_submenu,
                         {
-                            replacements: { uid: uid, pid: menu.id },
+                            replacements: { uid: uid, pid: menu.id, idsys: parseInt(req.body.sistema) },
                             type: sequelize.QueryTypes.SELECT
                         }
                     ).then(function (submenu) {
@@ -51,13 +51,13 @@ module.exports = (function () {
 											join sip.rol c on b.rid = c.id
 											join sip.rol_func d on d.rid = c.id
 											join sip.menu e on e.id = d.mid
-											where a.uid=:uid and pid is null
+											where a.uid=:uid and pid is null and e.idsistema =:idsys
 										  `
                     co(function* () {
 
                         var menu = yield sequelize.query(sql_menu,
                             {
-                                replacements: { uid: uid },
+                                replacements: { uid: uid, idsys: parseInt(req.body.sistema) },
                                 type: sequelize.QueryTypes.SELECT
                             }
                         ).catch(function (err) {
@@ -116,11 +116,11 @@ module.exports = (function () {
 
                     sequelize.query(sql,
                         {
-                            replacements: { uid: user.uid, idsys: req.body.sistema },
+                            replacements: { uid: user.uid, idsys: parseInt(req.body.sistema) },
                             type: sequelize.QueryTypes.SELECT
                         }
                     ).then(function (usr) {
-                        console.log(usr.length);
+                        console.dir(usr);
                         if (usr.length > 0) {
                             var usuario = []
                             var nombre = {}
