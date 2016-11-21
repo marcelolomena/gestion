@@ -40,7 +40,7 @@ module.exports = function(passport) {
                         if (parseInt(req.body.sistema) === 1) {
                             res.render('home', { data: data });
                         } else {
-                            res.render('home2', { data: data });
+                            res.render('sic/home2', { data: data });
                         }
                     })
                 } else {
@@ -60,6 +60,19 @@ module.exports = function(passport) {
 
     /* Handle Logout */
     router.get('/signout', function(req, res) {
+        req.session.destroy(function(err) {
+            if (err) {
+                logger.error(err);
+            } else {
+                req.logout();
+                res.redirect('/');
+            }
+        });
+
+    });
+
+    /* Handle Logout */
+    router.get('/sic/signout', function(req, res) {
         req.session.destroy(function(err) {
             if (err) {
                 logger.error(err);

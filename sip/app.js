@@ -32,6 +32,7 @@ app.use(flash());
 app.use(session({
   secret: 'keyboard cat',
   cookie: { secure: false, maxAge: (24 * 60 * 60 * 1000) },
+  name:'DIVOT',
   resave: false,
   saveUninitialized: false,
   store: new SequelizeStore({

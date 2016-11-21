@@ -1,5 +1,9 @@
 $(document).ready(function () {
 
+    $.get('/sic/getsession', function (data) {
+       console.log('ROL : ' + data);
+    });
+
     var newColModel = [
         { label: 'ID', name: 'idcui', key: true, hidden: true },
         { label: 'CUI Gerencia', name: 'gerencia', width: 150 },
