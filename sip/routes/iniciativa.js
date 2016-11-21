@@ -40,8 +40,8 @@ module.exports = function (passport) {
     router.route('/iniciativas/list')
         .post(isAuthenticated, iniciativaController.list);
 
-    router.route('/troyacompleto/list')
-        .get(isAuthenticated, iniciativaController.listpivot);
+    //router.route('/troyacompleto/list')
+    //    .get(isAuthenticated, iniciativaController.listpivot);
 
     router.route('/iniciativas/:id')
         .get(isAuthenticated, iniciativaController.get)
