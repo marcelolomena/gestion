@@ -65,9 +65,7 @@ exports.action = function (req, res) {
          {fonorepresentante=null}
       else
          {fonorepresentante=req.body.fonorepresentante}
-
-      console.info('fechaescritura:'+fechaescritura)
-      console.info('fonorepresentante:'+fonorepresentante)        
+    
       models.proveedor.update({
         numrut: rut.split(".").join("").replace(",", "."),
         dvrut: digito,
@@ -307,6 +305,61 @@ exports.getExcel = function (req, res) {
       width: 50
     },
     {
+      caption: 'Rut Representante',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Nombre Representante',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Telefono Representante',
+      type: 'number',
+      width: 10
+    },
+    {
+      caption: 'Correo Representante',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Razon Social Contractual',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Fecha Escritura',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Notaria Escritura',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Rut Apoderado 1',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Nombre Apoderado 1',
+      type: 'string',
+      width: 50
+    },
+     {
+      caption: 'Rut Apoderado 2',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Nombre Apoderado 2',
+      type: 'string',
+      width: 50
+    },
+    {
       caption: 'Contacto',
       type: 'string',
       width: 50
@@ -323,8 +376,10 @@ exports.getExcel = function (req, res) {
     }
   ];
   
- var sql = "SELECT CAST(numrut AS VARCHAR) +'-'+a.dvrut as numrut, a.razonsocial as razonsocial, b.first_name+' '+b.last_name as negociadordivot "+
-    ",isnull(c.contacto,' ') as contacto,c.fono as fono,isnull(c.correo,' ') as correo "+
+ var sql = "SELECT CAST(numrut AS VARCHAR) +'-'+a.dvrut as numrut, a.razonsocial as razonsocial, b.first_name+' '+b.last_name as negociadordivot, "+
+    "rutrepresentante,nombrerepresentante,fonorepresentante,correorepresentante,razonsocialcontractual,fechaescritura,notariaescritura, "
+    "rutapoderado1,nombreapoderado1,rutapoderado2,nombreapoderado2, "+
+    "isnull(c.contacto,' ') as contacto,c.fono as fono,isnull(c.correo,' ') as correo "+
     "FROM sip.proveedor a left join dbo.art_user b on a.uid = b.uid left join sip.contactoproveedor c on a.id = c.idproveedor order by a.numrut"
     
     sequelize.query(sql)
@@ -335,6 +390,17 @@ exports.getExcel = function (req, res) {
         a = [i + 1, proyecto[i].numrut,
           proyecto[i].razonsocial,
           proyecto[i].negociadordivot,
+          proyecto[i].rutrepresentante,
+          proyecto[i].nombrerepresentante,
+          proyecto[i].fonorepresentante,
+          proyecto[i].correorepresentante,
+          proyecto[i].razonsocialcontractual,
+          proyecto[i].fechaescritura,
+          proyecto[i].notariaescritura, 
+          proyecto[i].rutapoderado1,
+          proyecto[i].nombreapoderado1,
+          proyecto[i].rutapoderado2,
+          proyecto[i].nombreapoderado2,
           proyecto[i].contacto,
           proyecto[i].fono,
           proyecto[i].correo
