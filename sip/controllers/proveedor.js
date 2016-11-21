@@ -377,7 +377,7 @@ exports.getExcel = function (req, res) {
   ];
   
  var sql = "SELECT CAST(numrut AS VARCHAR) +'-'+a.dvrut as numrut, a.razonsocial as razonsocial, b.first_name+' '+b.last_name as negociadordivot, "+
-    "rutrepresentante,nombrerepresentante,fonorepresentante,correorepresentante,razonsocialcontractual,fechaescritura,notariaescritura, "
+    "rutrepresentante,nombrerepresentante,fonorepresentante,correorepresentante,razonsocialcontractual,fechaescritura,notariaescritura, "+
     "rutapoderado1,nombreapoderado1,rutapoderado2,nombreapoderado2, "+
     "isnull(c.contacto,' ') as contacto,c.fono as fono,isnull(c.correo,' ') as correo "+
     "FROM sip.proveedor a left join dbo.art_user b on a.uid = b.uid left join sip.contactoproveedor c on a.id = c.idproveedor order by a.numrut"
