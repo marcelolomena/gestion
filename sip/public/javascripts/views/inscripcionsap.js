@@ -108,7 +108,7 @@ $(document).ready(function () {
                     $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
             hidedlg: true
         },
@@ -132,7 +132,7 @@ $(document).ready(function () {
                     $(el).mask('0,00', { reverse: true, placeholder: "_,__" });
                 }
             },
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
             hidedlg: true
         },
@@ -140,7 +140,7 @@ $(document).ready(function () {
         {
             label: 'Fecha Final', name: 'fechafinal', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            editable: true, editrules: {required: true},
+            editable: true, editrules: {required: true}, sortable: false,
             searchoptions: {
                 dataInit: function (el) {
                     $(el).datepicker({
