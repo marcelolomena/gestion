@@ -1,7 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
-var logger = require("../utils/logger");
+//var logger = require("../utils/logger");
 exports.action = function (req, res) {
   var action = req.body.oper;
   var porcentaje1, porcentaje2, dolar, uf = 0
@@ -54,7 +54,7 @@ exports.action = function (req, res) {
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        logger.error(err);
+        //logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -82,7 +82,7 @@ exports.action = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          logger.error(err);
+          //logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -93,11 +93,11 @@ exports.action = function (req, res) {
         }
       }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
+          //logger.debug('Deleted successfully');
         }
         res.json({ error_code: 0 });
       }).catch(function (err) {
-        logger.error(err);
+        //logger.error(err);
         res.json({ error_code: 1 });
       });
 
@@ -122,7 +122,7 @@ exports.actualiSAP = function (req, res) {
         }).then(function (iniciativa) {
           res.json({ error_code: 0, sap: req.body.sap });
         }).catch(function (err) {
-          logger.error(err);
+          //logger.error(err);
           res.json({ error_code: 1 });
         });
       break;
@@ -187,7 +187,7 @@ exports.list = function (req, res) {
         "WHERE (a.[idiniciativaprograma] = " + idiniciativaprograma + " AND a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      logger.debug(sql);
+      //logger.debug(sql);
 
       models.presupuestoiniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -248,7 +248,9 @@ exports.listSAP = function (req, res) {
 
   var order = sidx + " " + sord;
 
-  var sql0 = "declare @rowsPerPage as bigint; " +
+  var sql0 = "DECLARE @idfechafinal int;"+
+    "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC; "+
+    "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
     "set @pageNum=" + page + ";   " +
@@ -257,7 +259,8 @@ exports.listSAP = function (req, res) {
     "as resultNum, a.*, iniciativaprograma.codigoart as codigoart, iniciativafecha.fecha as fechafinal " +
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
-    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] and iniciativafecha.tipofecha = 'Fecha Final Aprobación'" +
+    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] "+
+    "and iniciativafecha.idtipofecha = @idfechafinal " +
     "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +
     ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -286,7 +289,7 @@ exports.listSAP = function (req, res) {
         ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-      logger.debug(sql);
+      //logger.debug(sql);
 
       models.presupuestoiniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -302,6 +305,7 @@ exports.listSAP = function (req, res) {
 
       }).then(function (records) {
         var total = Math.ceil(records / rows);
+        console.log("sql:"+sql0);
         sequelize.query(sql0)
           .spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
@@ -315,6 +319,7 @@ exports.listSAP = function (req, res) {
 
     }).then(function (records) {
       var total = Math.ceil(records / rows);
+      console.log("sql:"+sql0);
       sequelize.query(sql0)
         .spread(function (rows) {
           res.json({ records: records, total: total, page: page, rows: rows });
@@ -326,7 +331,7 @@ exports.listSAP = function (req, res) {
 exports.getJefe = function (req, res) {
 
   var user = req.params.id;
-  logger.debug("el usuario: "+user);
+  //logger.debug("el usuario: "+user);
 
   var sql = "select jefe.uid idjefe, jefe.first_name+' '+jefe.last_name as nombrejefe from art_user jefe "+
 "where uname = ( "+
@@ -336,7 +341,7 @@ exports.getJefe = function (req, res) {
 "and LEN(a.emailJefe) != 1 "+
 "and LEN(a.emailTrab) != 1 "+
 "and LEFT(a.emailTrab, CHARINDEX('@', a.emailTrab) - 1 ) = (select uname from art_user where uid="+user+")) "
-logger.debug(sql);
+//logger.debug(sql);
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);

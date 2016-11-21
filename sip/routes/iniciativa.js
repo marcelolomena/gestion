@@ -40,8 +40,8 @@ module.exports = function (passport) {
     router.route('/iniciativas/list')
         .post(isAuthenticated, iniciativaController.list);
 
-    router.route('/troyacompleto/list')
-        .get(isAuthenticated, iniciativaController.listpivot);
+    //router.route('/troyacompleto/list')
+    //    .get(isAuthenticated, iniciativaController.listpivot);
 
     router.route('/iniciativas/:id')
         .get(isAuthenticated, iniciativaController.get)
@@ -145,6 +145,9 @@ module.exports = function (passport) {
     router.route('/getjefe/:id')
         .get(isAuthenticated, presupuestoiniciativaController.getJefe);
 
+    router.route('/iniciativagetfechas')
+        .get(isAuthenticated, iniciativafechaController.getFechas);
+        
     return router;
 
 }
