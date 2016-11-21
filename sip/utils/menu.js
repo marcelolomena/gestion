@@ -6,22 +6,23 @@ var co = require('co');
 module.exports = (function () {
     var builUserdMenu = function (req, callback) {
         var user = req.user;
-        logger.debug('Sistema ------>> ' + req.body.sistema);
+        //logger.debug('Sistema ------>> ' + req.body.sistema);
+
         try {
             if (user) {
 
-                var NeoSubMenu = function (op, user, menu, callback) {
+                var NeoSubMenu = function (op, uid, menu, callback) {
                     var sql_submenu = `
 											select distinct e.id,e.descripcion,e.url from art_user a
 											join sip.usr_rol b on a.uid = b.uid
 											join sip.rol c on b.rid = c.id
 											join sip.rol_func d on d.rid = c.id
 											join sip.menu e on e.id = d.mid
-											where a.uid=:uid and pid=:pid
+											where a.uid=:uid and pid=:pid and e.idsistema =:idsys 
 										  `
                     sequelize.query(sql_submenu,
                         {
-                            replacements: { uid: user.uid, pid: menu.id },
+                            replacements: { uid: uid, pid: menu.id, idsys: parseInt(req.body.sistema) },
                             type: sequelize.QueryTypes.SELECT
                         }
                     ).then(function (submenu) {
@@ -42,7 +43,7 @@ module.exports = (function () {
 
                 }
 
-                var NeoMenu = function (user, callback) {
+                var NeoMenu = function (uid, callback) {
                     var promises = []
                     var sql_menu = `
 											select distinct e.id,e.descripcion from art_user a
@@ -50,13 +51,13 @@ module.exports = (function () {
 											join sip.rol c on b.rid = c.id
 											join sip.rol_func d on d.rid = c.id
 											join sip.menu e on e.id = d.mid
-											where a.uid=:uid and pid is null
+											where a.uid=:uid and pid is null and e.idsistema =:idsys
 										  `
                     co(function* () {
 
                         var menu = yield sequelize.query(sql_menu,
                             {
-                                replacements: { uid: user.uid },
+                                replacements: { uid: uid, idsys: parseInt(req.body.sistema) },
                                 type: sequelize.QueryTypes.SELECT
                             }
                         ).catch(function (err) {
@@ -70,7 +71,7 @@ module.exports = (function () {
                             item["menu"] = menu.descripcion
 
                             var promise = new Promise(function (resolve, reject) {
-                                return NeoSubMenu(item, user, menu, function (err, submenu) {
+                                return NeoSubMenu(item, uid, menu, function (err, submenu) {
                                     if (submenu)
                                         resolve(submenu);
                                     else
@@ -96,42 +97,42 @@ module.exports = (function () {
 
                 }
 
-                models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
-                models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
-
-                models.user.belongsToMany(models.sistema, { foreignKey: 'uid', through: models.usrrol });
-                models.sistema.belongsToMany(models.user, { foreignKey: 'idsistema', through: models.usrrol });
-
-                models.rol.belongsToMany(models.menu, { foreignKey: 'rid', through: models.rolfunc });
-                models.menu.belongsToMany(models.rol, { foreignKey: 'mid', through: models.rolfunc });
-
                 co(function* () {
                     var _rolnegocio = yield models.rol_negocio.find({
                         where: { 'uid': user.uid }
                     }).catch(function (err) {
                         logger.error(err)
                     });
+                    logger.debug('Usuario ------>> ' + user.uid);
+                    var sql = `
+                        select * from art_user a 
+                        join sip.usr_rol b on a.uid = b.uid
+                        join sip.rol c on b.rid = c.id
+                        join sip.sistema d on b.idsistema = d.id
+                        join sip.rol_func e on c.id = e.rid
+                        join sip.menu f on e.mid=f.id
+                        where a.uid =:uid and f.pid is null and f.idsistema =:idsys
+	                `
 
-                    models.user.find({
-                        where: { 'uid': user.uid },
-                        include: [
-                            {
-                                model: models.rol,
-                                include: [{ model: models.menu, where: { 'pid': { $eq: null } }, required: false }]
-                            }, { model: models.sistema, where: { 'id':  req.body.sistema } }
-                        ]
-                    }).then(function (usr) {
-                        //console.dir(usr);
-                        if (usr) {
+                    sequelize.query(sql,
+                        {
+                            replacements: { uid: user.uid, idsys: parseInt(req.body.sistema) },
+                            type: sequelize.QueryTypes.SELECT
+                        }
+                    ).then(function (usr) {
+                        console.dir(usr);
+                        if (usr.length > 0) {
                             var usuario = []
                             var nombre = {}
-                            nombre["nombre"] = usr.first_name + " " + usr.last_name
-                            nombre["uid"] = usr.uid
+                            nombre["nombre"] = usr[0].first_name + " " + usr[0].last_name
+                            nombre["uid"] = user.uid
                             nombre["sistema"] = req.body.sistema;
+                            logger.debug('Usuario ------>> ' + user.uid);
                             //nombre["rid"] = usr.rols[0].id
                             nombre["rid"] = _rolnegocio.rolnegocio
                             usuario.push(nombre)
-                            return NeoMenu(usr, function (menu) {
+
+                            return NeoMenu(user.uid, function (menu) {
                                 var supermenu = [];
                                 menu.forEach(function (opt) {
                                     if (opt.submenu.length != 0) {
@@ -144,15 +145,14 @@ module.exports = (function () {
                                 var user = usuario.concat(menus);
                                 callback(undefined, user);
                             });
+
                         } else {
                             throw new Error('Sin datos');
                         }
-
                     }).catch(function (err) {
                         logger.error(err)
-                        callback(err, undefined);
+                        callback(err, undefined)
                     });
-
 
                 }).catch(function (err) {
                     logger.error(err)
