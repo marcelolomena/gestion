@@ -25,21 +25,22 @@ exports.list = function (req, res) {
     if (err) {
       logger.debug("->>> " + err)
     } else {
-      models.contrato.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-      models.contrato.belongsTo(models.contactoproveedor, { foreignKey: 'idcontactofacturacion' });
-      models.contrato.count({
+      models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+      models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
+      models.solicitudcotizacion.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.contrato.findAll({
+        models.solicitudcotizacion.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
           where: data,
+          
           include: [{
-                      model: models.proveedor
+                      model: models.estructuracui
                     },{
-                      model: models.contactoproveedor
+                      model: models.programa
                     }
           ]
         }).then(function (contratos) {

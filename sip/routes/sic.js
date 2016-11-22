@@ -3,8 +3,8 @@ var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 
 module.exports = function(passport) {
-    router.get('/sic/acordeon', isAuthenticated, function(req, res) {
-        res.render('sic/acordeon', { user: req.user, data: req.session.passport.sidebar });
+    router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
+        res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/sic/getsession', function(req, res) {
