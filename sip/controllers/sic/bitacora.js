@@ -6,7 +6,6 @@ var path = require('path');
 var fs = require('fs');
 
 exports.agregarBitacora = function (req, res) {
-    var action = req.body.oper;
 
     models.bitacora.create({
         idsolicitudcotizacion: req.body.idsolicitudcotizacion,
@@ -25,3 +24,27 @@ exports.agregarBitacora = function (req, res) {
     });
 
 }
+module.exports = (function () {
+    var bitacora = function (idsolicitudcotizacion, tabla, idregistro, accion, dataold, idusuario, fecha) {
+
+        models.bitacora.create({
+            idsolicitudcotizacion: idsolicitudcotizacion,
+            tabla: tabla,
+            idregistro: idregistro,
+            accion: accion,
+            dataold: dataold,
+            idusuario: idusuario,
+            fecha: fecha,
+            borrado: 1
+        }).then(function (bitacora) {
+            res.json({ error_code: 0 });
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({ error_code: 1 });
+        });
+
+    }
+    return {
+        bitacora: bitacora
+    };
+})();
