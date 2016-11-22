@@ -233,7 +233,7 @@ exports.list = function (req, res) {
 
 exports.listSAP = function (req, res) {
   var page = req.body.page;
-  var rows = req.body.rows;
+  var rowspp = req.body.rows;
   var sidx = req.body.sidx;
   var sord = req.body.sord;
   var filters = req.body.filters;
@@ -247,12 +247,35 @@ exports.listSAP = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
+  
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+      jsonObj.rules.forEach(function (item) {
+        if (item.op === 'cn')
+          condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+      });
+      condition = condition.substring(0, condition.length - 5);
+      console.log("***CONDICION:" + condition);
+    }
+  }
+  var sqlcount = "DECLARE @idfechafinal int;"+
+    "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC; "+
+    "Select count(*) AS count "+
+    "FROM [sip].[presupuestoiniciativa] a " +
+	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
+    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] "+
+    "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +  
+    "and iniciativafecha.idtipofecha = @idfechafinal "; 
+  if (filters && condition != "") {
+    sqlcount += "AND " + condition + " ";
+  }
 
-  var sql0 = "DECLARE @idfechafinal int;"+
+  var sqlok = "DECLARE @idfechafinal int;"+
     "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC; "+
     "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
-    "set @rowsPerPage=" + rows + "; " +
+    "set @rowsPerPage=" + rowspp + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
@@ -260,74 +283,26 @@ exports.listSAP = function (req, res) {
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
     "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] "+
-    "and iniciativafecha.idtipofecha = @idfechafinal " +
     "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +
-    ") " +
+    "and iniciativafecha.idtipofecha = @idfechafinal ";
+    if (filters && condition != "") {
+      console.log("**" + condition + "**");
+      sqlok += "AND " + condition + " ";
+    }    
+    sqlok += ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
-
-    if (JSON.stringify(jsonObj.rules) != '[]') {
-
-      jsonObj.rules.forEach(function (item) {
-
-        if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
+    console.log("SQL:"+sqlcount);
+    sequelize.query(sqlcount).spread(function (recs) {
+      var records = recs[0].count;
+      var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+      console.log("SQL:"+sqlok);
+      sequelize.query(sqlok).spread(function (rows) {
+        res.json({ records: records, total: total, page: page, rows: rows });
       });
-
-      var sql = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rows + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.*, iniciativaprograma.codigoart as codigoart " +
-        "FROM [sip].[presupuestoiniciativa] a " +
-        "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
-        "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1) " +
-        ") " +
-        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-      //logger.debug(sql);
-
-      models.presupuestoiniciativa.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        sequelize.query(sql)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-
-    } else {
-
-      models.presupuestoiniciativa.count({
-
-      }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        console.log("sql:"+sql0);
-        sequelize.query(sql0)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-    }
-
-  } else {
-
-    models.presupuestoiniciativa.count({
-
-    }).then(function (records) {
-      var total = Math.ceil(records / rows);
-      console.log("sql:"+sql0);
-      sequelize.query(sql0)
-        .spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
-    })
-
-  }
+    });
 };
+
+
 exports.getJefe = function (req, res) {
 
   var user = req.params.id;
