@@ -14,12 +14,12 @@ exports.list = function (req, res) {
   var sord = req.body.sord;
 
   if (!sidx)
-    sidx = "nombre";
+    sidx = "descripcion";
 
   if (!sord)
     sord = "asc";
 
-  var orden = "[Contrato]." + sidx + " " + sord;
+  var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
@@ -36,16 +36,15 @@ exports.list = function (req, res) {
           limit: parseInt(rows),
           order: orden,
           where: data,
-          
           include: [{
                       model: models.estructuracui
                     },{
                       model: models.programa
                     }
           ]
-        }).then(function (contratos) {
+        }).then(function (solicitudcotizacion) {
           //Contrato.forEach(log)
-          res.json({ records: records, total: total, page: page, rows: contratos });
+          res.json({ records: records, total: total, page: page, rows: solicitudcotizacion });
         }).catch(function (err) {
           logger.error(err);
           res.json({ error_code: 1 });

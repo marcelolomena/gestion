@@ -103,7 +103,7 @@ module.exports = (function() {
                     }).catch(function(err) {
                         logger.error(err)
                     });
-                    logger.debug('Usuario ------>> ' + user.uid);
+                    //logger.debug('Usuario ------>> ' + user.uid);
                     var sql = `
                         select a.*,c.* from art_user a 
                         join sip.usr_rol b on a.uid = b.uid

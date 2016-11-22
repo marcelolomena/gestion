@@ -4,32 +4,15 @@ $(document).ready(function () {
        console.log('ROL : ' + data);
     });
 
-    var newColModel = [
-        { label: 'ID', name: 'idcui', key: true, hidden: true },
-        { label: 'CUI Gerencia', name: 'gerencia', width: 150 },
-        { label: 'CUI Departamento', name: 'departamento', width: 150 },
-        { label: 'CUI Sección', name: 'seccion', width: 150 },
-        { label: 'cui', name: 'cui', hidden: true },
-        {
-            label: 'Estado',
-            name: 'diferencia',
-            width: 60,
-            cellattr: function (rowId, val, rawObject, cm, rdata) {
-                var val = rawObject.idcui;
-                if (val > 0) {
-                    color = 'green';
-                } else {
-                    color = 'red';
-                }
-                return "style='background-color:" + color + "'";
-            },
-        }
+    var solicitudcotizacionModel = [
+        { label: 'ID', name: 'id', key: true, hidden: true },
+        { label: 'Descripción', name: 'descripcion', width: 150 },
     ], $grid = $("#gridMaster");
 
     $grid.jqGrid({
-        url: '/hyperion/presupuesto',
+        url: '/sic/solicitudcotizacion/list',
         datatype: "json",
-        colModel: newColModel,
+        colModel: solicitudcotizacionModel,
         page: 1,
         rowNum: 20,
         regional: 'es',
@@ -37,7 +20,7 @@ $(document).ready(function () {
         width: 600,
         shrinkToFit: true,
         viewrecords: true,
-        caption: 'Presupuestos para Hyperion',
+        caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
