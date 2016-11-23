@@ -54,8 +54,8 @@ module.exports = function(passport) {
         res.render('home', { user: req.user, data: req.session.passport.sidebar });
     });
 
-    router.get('/home2', isAuthenticated, function(req, res) {
-        res.render('home2', { user: req.user, data: req.session.passport.sidebar });
+    router.get('sic/home2', isAuthenticated, function(req, res) {
+        res.render('sic/home2', { user: req.user, data: req.session.passport.sidebar });
     });
 
     /* Handle Logout */
