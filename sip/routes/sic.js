@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var solicitudcotizacionController = require('../controllers/sic/solicitudcotizacion');
-
+var documentosController = require('../controllers/sic/documentos');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -14,7 +14,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, solicitudcotizacionController.list);
 
     router.route('/sic/documentos/:id')
-        .get(isAuthenticated, solicitudcotizacionController.documentos);
+        .get(isAuthenticated, documentosController.list);
     
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, solicitudcotizacionController.servicios);
