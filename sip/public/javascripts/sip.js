@@ -10,7 +10,7 @@ var sipLibrary = {
     UploadDoc: function(response, postdata) {
 
         var data = $.parseJSON(response.responseText);
-        if (data.error_code == 0) {
+        if (data.success) {
             if ($("#fileToUpload").val() != "") {
                 ajaxDocUpload(data.id);
             }
@@ -27,7 +27,7 @@ var sipLibrary = {
         });
         dialog.init(function () {
             $.ajaxFileUpload({
-                url: '/cargas/archivo',
+                url: '/sic/documentos/upload',
                 secureuri: false,
                 fileElementId: 'fileToUpload',
                 dataType: 'json',
