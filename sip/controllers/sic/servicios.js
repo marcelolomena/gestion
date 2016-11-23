@@ -130,14 +130,18 @@ exports.list = function (req, res) {
             models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
             models.serviciosrequeridos.belongsTo(models.documentoscotizacion, { foreignKey: 'iddoctotecnico' });
             models.serviciosrequeridos.count({
-                where: data
+                where: {
+                    idsolicitudcotizacion: id
+                }
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.serviciosrequeridos.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     //order: orden,
-                    where: data,
+                    where: {
+                        idsolicitudcotizacion: id
+                    },
                     include: [{
                         model: models.solicitudcotizacion
                     },
