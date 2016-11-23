@@ -7,6 +7,50 @@ var sipLibrary = {
         dataType: "json"
     },
 
+    UploadDoc: function(response, postdata) {
+
+        var data = $.parseJSON(response.responseText);
+        if (data.success) {
+            if ($("#fileToUpload").val() != "") {
+                ajaxDocUpload(data.id);
+            }
+        }
+
+        return [data.success, data.message, data.id];
+
+    },
+
+    ajaxDocUpload: function (id) {
+        var dialog = bootbox.dialog({
+            title: 'Se inicia la carga en la base de datos',
+            message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
+        });
+        dialog.init(function () {
+            $.ajaxFileUpload({
+                url: '/sic/documentos/upload',
+                secureuri: false,
+                fileElementId: 'fileToUpload',
+                dataType: 'json',
+                data: { id: id },
+                success: function (data, status) {
+                    if (typeof (data.success) != 'undefined') {
+                        if (data.success == true) {
+                            dialog.find('.bootbox-body').html(data.message);
+                        } else {
+                            dialog.find('.bootbox-body').html(data.message);
+                        }
+                    }
+                    else {
+                        dialog.find('.bootbox-body').html(data.message);
+                    }
+                },
+                error: function (data, status, e) {
+                    dialog.find('.bootbox-body').html(e);
+                }
+            })
+        });
+    },
+
     createJSON: function (postdata) {
         if (postdata.id === '_empty')
             postdata.id = null;

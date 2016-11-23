@@ -1,38 +1,12 @@
 extends base.pug
 block titulo
-  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Contratos
+  title SIP Banco de Chile - Sistema Integrado de Contratos - Solicitud Cotización
 block jsgrilla
+  script(type='text/javascript', src='/javascripts/ajaxfileupload.js')  
   script(type='text/javascript', src='/javascripts/views/sic/solicitudcotizacion.js')
+  script(type='text/javascript', src='/javascripts/views/sic/doc.js')  
+  script(type='text/javascript', src='/javascripts/views/sic/serv.js')  
 block titulogrilla
 block grilla
  table#gridMaster
  #pagerMaster
- ul#myTab.nav.nav-tabs.tabs-up
-  li
-    a#documentos_tab.media_node.active.span(href='/contratos/documentos', data-target='#documentos', data-toggle='ctm') Documentos
-  li
-    a#servicios_tab.media_node.active.span(href='/contratos/servicios', data-target='#servicios', data-toggle='ctm') Servicios
-  li
-    a#foro_tab.media_node.active.span(href='/contratos/foro', data-target='#foro', data-toggle='ctm') Foro
-  li
-    a#calendario_tab.media_node.active.span(href='/contratos/calendario', data-target='#calendario', data-toggle='ctm') Calendario
-  li
-    a#responsables_tab.media_node.active.span(href='/contratos/responsables', data-target='#responsables', data-toggle='ctm') Responsables
-  li
-    a#clausulas_tab.media_node.active.span(href='/contratos/clausulas', data-target='#clausulas', data-toggle='ctm') Cláusulas
-  li
-    a#criterios_tab.media_node.active.span(href='/contratos/criterios', data-target='#criterios', data-toggle='ctm') Criterios
-  li
-    a#anexos_tab.media_node.active.span(href='/contratos/anexos', data-target='#anexos', data-toggle='ctm') Anexos
-  li
-    a#bitacora_tab.media_node.active.span(href='/contratos/bitacorar', data-target='#bitacora', data-toggle='ctm') Bitácora
- .tab-content
-  #documentos.tab-pane
-  #servicios.tab-pane
-  #foro.tab-pane
-  #calendario.tab-pane
-  #responsables.tab-pane
-  #clausulas.tab-pane
-  #criterios.tab-pane
-  #anexos.tab-pane
-  #bitacora.tab-pane

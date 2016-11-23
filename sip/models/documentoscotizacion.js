@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('bitacora', {
+  return sequelize.define('documentoscotizacion', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -10,34 +10,30 @@ module.exports = function(sequelize, DataTypes) {
     },
     idsolicitudcotizacion: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    tabla: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idregistro: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    accion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    dataold: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idusuario: {
-      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'art_user',
-        key: 'uid'
+        model: 'solicitudcotizacion',
+        key: 'id'
       }
     },
-    fecha: {
-      type: DataTypes.DATE,
+    idtipodocumento: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    nombrecorto: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    descripcionlarga: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombreresponsable: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    nombrearchivo: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {
@@ -45,6 +41,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'bitacora'
+    schema: 'sic',timestamps: false,tableName: 'documentoscotizacion'
   });
 };

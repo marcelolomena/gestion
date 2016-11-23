@@ -120,7 +120,7 @@ module.exports = (function() {
                             type: sequelize.QueryTypes.SELECT
                         }
                     ).then(function(usr) {
-                        console.log(usr.length);
+                        //console.log(usr.length);
                         if (usr.length > 0) {
                             var usuario = []
                             var nombre = {}
