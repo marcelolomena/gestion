@@ -126,23 +126,31 @@ exports.list = function (req, res) {
         } else {
             //logger.debug(data)
 
-            models.documentoscotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-            models.documentoscotizacion.count({
+            models.serviciosrequeridos.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
+            models.serviciosrequeridos.belongsTo(models.documentoscotizacion, { foreignKey: 'iddoctotecnico' });
+            models.serviciosrequeridos.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.documentoscotizacion.findAll({
+                models.serviciosrequeridos.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     //order: orden,
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
+                    },
+                    {
+                        model: models.servicio
+                    },
+                    {
+                        model: models.documentoscotizacion
                     }
                     ]
-                }).then(function (documentoscotizacion) {
+                }).then(function (serviciosrequeridos) {
                     //logger.debug(solicitudcotizacion)
-                    res.json({ records: records, total: total, page: page, rows: documentoscotizacion });
+                    res.json({ records: records, total: total, page: page, rows: serviciosrequeridos });
                 }).catch(function (err) {
                     logger.error(err);
                     res.json({ error_code: 1 });

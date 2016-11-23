@@ -30,7 +30,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     iddoctotecnico: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'documentoscotizacion',
+        key: 'id'
+      }
     },
     glosareferencia: {
       type: DataTypes.STRING,

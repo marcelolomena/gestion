@@ -216,7 +216,7 @@ $(document).ready(function () {
                 }
                 if (targ === '#servicios') {
 
-                    gridServ.renderGrid(targ, data)
+                    gridServ.renderGrid(targ, data,parentRowKey)
                 } 
 
             });
@@ -237,8 +237,9 @@ $(document).ready(function () {
                     gridDoc.renderGrid(targ, data)
                 } 
                 if (targ === '#servicios') {
+                    //console.log(data);
 
-                    gridServ.renderGrid(targ, data)
+                    gridServ.renderGrid(targ, data,parentRowKey)
                 }
                 //$(targ).html(data);
             });

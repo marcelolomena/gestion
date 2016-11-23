@@ -1,25 +1,28 @@
 //doc.js
 var gridServ = {
 
-    renderGrid: function (targ, data) {
+    renderGrid: function (targ, data,parentRowKey) {
         var $gridTab = $(targ + "_t")
+        console.log('le parent: '+parentRowKey);
 
         $gridTab.jqGrid({
             datatype: "local",
-            data: data,
-            colNames: ['id', 'Solicitud', 'Servicio', 'Glosa Servicio', 'Documento', 'Glosa Referencial', 'Nota Criticidad', 'Color Nota', 'Clase Proveedor'],
+            data: data.rows,
+            colNames: ['id', 'Solicitud', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento','Documento', 'Glosa Referencia', 'Nota Criticidad', 'Color Nota', 'Clase Proveedor'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
-                { name: 'idsolicitud', index: 'idsolicitud', width: 100, editable: true },
-                { name: 'idservicio', index: 'idservicio', width: 100, editable: true, editoptions: { size: 10 } },
-                { name: 'glosaservicio', index: 'glosaservicio', hidden: true, width: 100, editable: true, editoptions: { size: 25 } },
-                { name: 'iddocumento', index: 'iddocumento', width: 100, align: "center", editable: true, editoptions: { size: 10 } },
-                { name: 'glosareferencia', index: 'glosareferencia', width: 200, align: "center", editable: true, editoptions: { size: 10 } },
-                { name: 'notacriticidad', index: 'notacriticidad', width: 100, align: "center", editable: true, editoptions: { size: 10 } },
-                { name: 'colornota', index: 'colornota', width: 50, align: "center", editable: true, editoptions: { size: 10 } },
-                { name: 'claseproveedor', index: 'claseproveedor', width: 100, align: "center", editable: true, editoptions: { size: 10 } }
+                { name: 'idsolicitud', index: 'idsolicitud', width: 100, hidden: true, editable: true },
+                { name: 'idservicio', index: 'idservicio', width: 100, hidden: true, editable: true, editoptions: { size: 10 } },
+                { name: 'servicio.nombre', index: 'servicio', width: 150, editable: true, editoptions: { size: 10 } },
+                { name: 'glosaservicio', index: 'glosaservicio', width: 200, editable: true, editoptions: { size: 25 } },
+                { name: 'iddoctotecnico', index: 'iddoctotecnico', width: 100, hidden: true,  editable: true, editoptions: { size: 10 } },
+                { name: 'documentoscotizacion.nombrecorto', index: 'documento', width: 150, editable: true, editoptions: { size: 10 } },
+                { name: 'glosareferencia', index: 'glosareferencia', width: 200, align: "left", editable: true, editoptions: { size: 10 } },
+                { name: 'notacriticidad', index: 'notacriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
+                { name: 'colornota', index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 } },
+                { name: 'claseproveedor', index: 'claseproveedor', width: 150, align: "left", editable: true, editoptions: { size: 10 } }
             ],
-            rowNum: 10,
+            rowNum: 5,
             rowList: [3, 6],
             loadonce: true,
             pager: '#navGridServ',
