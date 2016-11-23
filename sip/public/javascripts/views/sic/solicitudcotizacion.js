@@ -179,7 +179,7 @@ $(document).ready(function () {
         //console.log("parentRowKey " + parentRowKey)
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab' class='media_node active span' data-toggle='tab'>Documentos</a></li>"
-        tabs += "<li><a data-target='#servicios' class='media_node active span' data-toggle='tab'>Servicios</a></li>"
+        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab' class='media_node active span' data-toggle='tab'>Servicios</a></li>"
         tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
         tabs += "<li><a data-target='#calendario' data-toggle='tab'>Calendario</a></li>"
         tabs += "<li><a data-target='#responsables' data-toggle='tab'>Responsables</a></li>"
@@ -191,7 +191,7 @@ $(document).ready(function () {
 
         tabs += "<div class='tab-content'>"
         tabs += "<div class='tab-pane active' id='documentos'><table id='documentos_t'></table><div id='navGrid'></div></div>"
-        tabs += "<div class='tab-pane' id='servicios'></div>"
+        tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t'></table><div id='navGridServ'></div></div>"
         tabs += "<div class='tab-pane' id='foro'></div>"
         tabs += "<div class='tab-pane' id='calendario'></div>"
         tabs += "<div class='tab-pane' id='responsables'></div>"
@@ -213,8 +213,11 @@ $(document).ready(function () {
                 if (targ === '#documentos') {
 
                     gridDoc.renderGrid(targ, data)
-                } else {
                 }
+                if (targ === '#servicios') {
+
+                    gridServ.renderGrid(targ, data)
+                } 
 
             });
 
@@ -232,7 +235,10 @@ $(document).ready(function () {
                 if (targ === '#documentos') {
 
                     gridDoc.renderGrid(targ, data)
-                } else {
+                } 
+                if (targ === '#servicios') {
+
+                    gridServ.renderGrid(targ, data)
                 }
                 //$(targ).html(data);
             });

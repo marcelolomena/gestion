@@ -15,6 +15,9 @@ module.exports = function (passport) {
 
     router.route('/sic/documentos/:id')
         .get(isAuthenticated, solicitudcotizacionController.documentos);
+    
+    router.route('/sic/servicios/:id')
+        .get(isAuthenticated, solicitudcotizacionController.servicios);
 
     router.get('/sic/getsession', function (req, res) {
         //console.log(req.session.passport.sidebar[0].rol)
