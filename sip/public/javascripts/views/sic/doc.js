@@ -9,7 +9,8 @@ var gridDoc = {
             data: data,
             colNames: ['id', 'Tipo', 'Nombre', 'Descripción', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
-                { name: 'id', index: 'id', key: true, hidden: true, editable: true, hidedlg: true, editrules: { edithidden: true } },
+                { name: 'id', index: 'id', key: true, hidden: true, editable: true, hidedlg: true, editrules: { edithidden: false } },
+                { name: 'idsolicitudcotizacion', index: 'idsolicitudcotizacion', hidden: true, editable: true, hidedlg: true, editrules: { edithidden: false } },                
                 { name: 'idtipodocumento', index: 'idtipodocumento', width: 100, editable: true },
                 { name: 'nombrecorto', index: 'nombrecorto', width: 100, editable: true, editoptions: { size: 10 } },
                 { name: 'descripcionlarga', index: 'descripcionlarga', hidden: true, width: 100, editable: true, editoptions: { size: 25 } },
@@ -46,8 +47,11 @@ var gridDoc = {
                 editCaption: "Modifica Documento",
                 closeAfterEdit: true,
                 recreateForm: true,
+                mtype: 'POST',
+                url: '/sic/documentos/save',
                 ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON
+                serializeEditData: sipLibrary.createJSON,
+                afterSubmit: sipLibrary.UploadDoc
             }, {
                 addCaption: "Agrega Documento",
                 closeAfterAdd: true,
