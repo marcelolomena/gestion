@@ -7,16 +7,15 @@ var gridDoc = {
         $gridTab.jqGrid({
             datatype: "local",
             data: data,
-            colNames: ['id', 'Tipo', 'Nombre', 'Descripción', 'Responsable', 'Archivo'],
+            colNames: ['id', 'Tipo', 'Nombre', 'Descripción', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
-                { name: 'id', index: 'id', key: true, hidden: true },
+                { name: 'id', index: 'id', key: true, hidden: true, editable: true, hidedlg: true, editrules: { edithidden: true } },
                 { name: 'idtipodocumento', index: 'idtipodocumento', width: 100, editable: true },
                 { name: 'nombrecorto', index: 'nombrecorto', width: 100, editable: true, editoptions: { size: 10 } },
                 { name: 'descripcionlarga', index: 'descripcionlarga', hidden: true, width: 100, editable: true, editoptions: { size: 25 } },
                 { name: 'nombreresponsable', index: 'nombreresponsable', width: 100, align: "center", editable: true, editoptions: { size: 10 } },
-                { name: 'nombrearchivo', index: 'nombrearchivo', width: 200, align: "center", editable: true, editoptions: { size: 10 } },
+                { name: 'nombrearchivo', index: 'nombrearchivo', hidden: true, editable: false },
                 {
-                    label: 'Archivo',
                     name: 'fileToUpload',
                     hidden: true,
                     editable: true,
@@ -54,7 +53,7 @@ var gridDoc = {
                 closeAfterAdd: true,
                 recreateForm: true,
                 mtype: 'POST',
-                url: '/sic/upload',
+                url: '/sic/documentos/save',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 afterSubmit: sipLibrary.UploadDoc
