@@ -14,7 +14,19 @@ var gridDoc = {
                 { name: 'nombrecorto', index: 'nombrecorto', width: 100, editable: true, editoptions: { size: 10 } },
                 { name: 'descripcionlarga', index: 'descripcionlarga', hidden: true, width: 100, editable: true, editoptions: { size: 25 } },
                 { name: 'nombreresponsable', index: 'nombreresponsable', width: 100, align: "center", editable: true, editoptions: { size: 10 } },
-                { name: 'nombrearchivo', index: 'nombrearchivo', width: 200, align: "center", editable: true, editoptions: { size: 10 } }
+                { name: 'nombrearchivo', index: 'nombrearchivo', width: 200, align: "center", editable: true, editoptions: { size: 10 } },
+                {
+                    label: 'Archivo',
+                    name: 'fileToUpload',
+                    hidden: true,
+                    editable: true,
+                    edittype: 'file',
+                    editrules: { edithidden: true },
+                    editoptions: {
+                        enctype: "multipart/form-data"
+                    },
+                    search: false
+                }
             ],
             rowNum: 10,
             rowList: [3, 6],
@@ -42,8 +54,10 @@ var gridDoc = {
                 closeAfterAdd: true,
                 recreateForm: true,
                 mtype: 'POST',
+                url: '/sic/upload',
                 ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON
+                serializeEditData: sipLibrary.createJSON,
+                afterSubmit: sipLibrary.UploadDoc
             }, {
 
             }, {
