@@ -40,7 +40,7 @@ module.exports = function(passport) {
                         if (parseInt(req.body.sistema) === 1) {
                             res.render('home', { data: data });
                         } else {
-                            res.render('home2', { data: data });
+                            res.render('sic/home2', { data: data });
                         }
                     })
                 } else {
@@ -54,12 +54,25 @@ module.exports = function(passport) {
         res.render('home', { user: req.user, data: req.session.passport.sidebar });
     });
 
-    router.get('/home2', isAuthenticated, function(req, res) {
-        res.render('home2', { user: req.user, data: req.session.passport.sidebar });
+    router.get('sic/home2', isAuthenticated, function(req, res) {
+        res.render('sic/home2', { user: req.user, data: req.session.passport.sidebar });
     });
 
     /* Handle Logout */
     router.get('/signout', function(req, res) {
+        req.session.destroy(function(err) {
+            if (err) {
+                logger.error(err);
+            } else {
+                req.logout();
+                res.redirect('/');
+            }
+        });
+
+    });
+
+    /* Handle Logout */
+    router.get('/sic/signout', function(req, res) {
         req.session.destroy(function(err) {
             if (err) {
                 logger.error(err);
