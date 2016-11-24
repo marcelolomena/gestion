@@ -1,13 +1,14 @@
 //doc.js
 var gridServ = {
 
-    renderGrid: function (targ, data,parentRowKey) {
+    renderGrid: function (loadurl, parentRowKey, targ) {
         var $gridTab = $(targ + "_t")
         console.log('le parent: '+parentRowKey);
 
         $gridTab.jqGrid({
-            datatype: "local",
-            data: data.rows,
+            url: loadurl,
+            datatype: "json",
+            mtype: "GET",
             colNames: ['id', 'Solicitud', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento','Documento', 'Glosa Referencia', 'Nota Criticidad', 'Color Nota', 'Clase Proveedor'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
@@ -29,6 +30,7 @@ var gridServ = {
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
+            shrinkToFit: false,
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');

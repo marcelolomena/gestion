@@ -214,7 +214,7 @@ $(document).ready(function() {
             }
             if (targ === '#servicios') {
 
-                gridServ.renderGrid(parentRowKey, targ, data)
+                gridServ.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
@@ -232,7 +232,7 @@ $(document).ready(function() {
             }
             if (targ === '#servicios') {
 
-                gridServ.renderGrid(parentRowKey, targ, data)
+                gridServ.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
