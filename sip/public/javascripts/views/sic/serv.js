@@ -3,7 +3,29 @@ var gridServ = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
         var $gridTab = $(targ + "_t")
-        console.log('le parent: '+parentRowKey);
+
+        var tmplServ = "<div id='responsive-form' class='clearfix'>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-full'>Tipo<span style='color:red'>*</span>{idtipodocumento}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
+        tmplServ += "<div class='column-half'>Responsable<span style='color:red'>*</span>{nombreresponsable}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-full'>Descripción<span style='color:red'>*</span>{descripcionlarga}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-full'>Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<hr style='width:100%;'/>";
+        tmplServ += "<div> {sData} {cData}  </div>";
+        tmplServ += "</div>";
 
         $gridTab.jqGrid({
             url: loadurl,
@@ -43,12 +65,14 @@ var gridServ = {
                 editCaption: "Modifica Servicio",
                 closeAfterEdit: true,
                 recreateForm: true,
+                template: tmplServ,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON
             }, {
                 addCaption: "Agrega Servicio",
                 closeAfterAdd: true,
                 recreateForm: true,
+                template: tmplServ,
                 mtype: 'POST',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON
