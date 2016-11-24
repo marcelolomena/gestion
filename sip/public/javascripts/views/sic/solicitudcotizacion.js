@@ -1,6 +1,6 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-    $.get('/sic/getsession', function(data) {
+    $.get('/sic/getsession', function (data) {
         console.log('ROL : ' + data);
     });
 
@@ -12,11 +12,17 @@ $(document).ready(function() {
     template += "</div>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo Contrato<span style='color:red'>*</span>{tipocontrato}</div>";
     template += "<div class='column-half'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>SAP<span style='color:red'>*</span>{sap}</div>";
+    template += "<div class='column-half'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
+    template += "</div>";
+
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
+    template += "<div class='column-half'>tecnico{tecnico}</div>";
     template += "</div>";
 
 
@@ -32,7 +38,7 @@ $(document).ready(function() {
             edittype: "select",
             editoptions: {
                 dataUrl: '/CUIs',
-                buildSelect: function(response) {
+                buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
@@ -40,7 +46,7 @@ $(document).ready(function() {
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger CUI--</option>';
-                    $.each(data, function(i, item) {
+                    $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                         } else {
@@ -49,23 +55,23 @@ $(document).ready(function() {
                     });
                     return s + "</select>";
                 }
-            }, dataInit: function(elem) { $(elem).width(200); }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, sortable: false, editable: true },
+        { label: 'Nombre CUI', name: 'estructuracui.nombre', width: 250, align: 'left', search: false, sortable: false, editable: true },
         {
             label: 'Técnico', name: 'idtecnico', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function(response) {
-                    var grid = $("#gridMaster");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
+                buildSelect: function (response) {
+                    //var grid = $("#gridMaster");
+                    var rowKey = $grid.getGridParam("selrow");
+                    var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Técnico--</option>';
-                    $.each(data, function(i, item) {
+                    $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
@@ -75,20 +81,78 @@ $(document).ready(function() {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function(e) {
-                        $("input#pmoresponsable").val($('option:selected', this).text());
+                    type: 'change', fn: function (e) {
+                        $("input#tecnico").val($('option:selected', this).text());
                     }
                 }],
             }
         },
-        { label: 'Tipo', name: 'tipocontrato', width: 150 },
-        { label: 'Código ART', name: 'codigoart', width: 150, editable: true, },
+        { label: 'Técnico', name: 'tecnico', width: 150, search: false, },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemContrato,
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var actual = $("input#codigoart").attr("readonly");
+                        if (actual == 'readonly') {
+                            $("input#codigoart").attr("readonly", false);
+                        } else {
+                            $("input#codigoart").attr("readonly", true);
+                        }
+                    }
+                }],
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.tipocontrato;
+                if (val == 1) {
+                    dato = 'Continuidad';
+
+                } else if (val == 0) {
+                    dato = 'Proyectos';
+                }
+                return dato;
+            }
         },
-        { label: 'SAP', name: 'sap', width: 150 },
-        { label: 'Descripción', name: 'descripcion', width: 150 },
+        {
+            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
+            hidden: true, editoptions: { defaultValue: "0" }
+        },
+        {
+            label: 'Codigo ART', name: 'codigoart', width: 200, align: 'left', search: false, editable: true, hidden: true,
+            editrules: { edithidden: false }, hidedlg: true, editoptions: {
+                size: 10, readonly: 'readonly',
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        //var grid = $("#grid");
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        console.log("rowData:" + rowData);
+                        var thissid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/getcodigoart/' + thissid,
+                            async: false,
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    console.log("glosa:" + data[0].nombreart);
+                                    $("input#program_id").val(data[0].program_id);
+                                } else {
+                                    alert("No existe el codigo art ingresado");
+                                    $("input#program_id").val("0");
+                                }
+                            }
+                        });
+                    }
+                }],
+
+            }
+        },
+        { label: 'SAP', name: 'sap', width: 200, align: 'left', search: false, editable: true },
+        { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false, editable: true },
     ];
 
     $grid.jqGrid({
@@ -106,7 +170,7 @@ $(document).ready(function() {
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
-        onSelectRow: function(rowid, selected) {
+        onSelectRow: function (rowid, selected) {
             if (rowid != null) {
                 console.log("rowid : " + rowid)
                 var wsParams = { idcui: rowid }
@@ -121,7 +185,7 @@ $(document).ready(function() {
         subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
     });
 
-    $grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: true, add: true, del: true, search: false },
         {
@@ -131,7 +195,7 @@ $(document).ready(function() {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: template,
-            errorTextFormat: function(data) {
+            errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
 
@@ -143,9 +207,9 @@ $(document).ready(function() {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: template,
-            errorTextFormat: function(data) {
+            errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function(postdata, formid) {
+            }, beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtecnico) == 0) {
@@ -153,7 +217,7 @@ $(document).ready(function() {
                 } else {
                     return [true, "", ""]
                 }
-            }, afterSubmit: function(response, postdata) {
+            }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error != 0) {
@@ -163,7 +227,7 @@ $(document).ready(function() {
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            }, beforeShowForm: function(form) {
+            }, beforeShowForm: function (form) {
                 var rowKey = $grid.getGridParam("selrow");
                 var rowData = $grid.getRowData(rowKey);
             }
@@ -203,7 +267,7 @@ $(document).ready(function() {
 
         $("#" + parentRowID).append(tabs);
 
-        $('.active[data-toggle="tab"]').each(function(e) {
+        $('.active[data-toggle="tab"]').each(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
@@ -221,7 +285,7 @@ $(document).ready(function() {
             return false;
         });
 
-        $('[data-toggle="tab"]').click(function(e) {
+        $('[data-toggle="tab"]').click(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
