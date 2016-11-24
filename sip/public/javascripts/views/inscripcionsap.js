@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Código ART{codigoart}</div>";
-    template += "<div class='column-half'>Fecha Final Aprobación{fechafinal}</div>";
+    template += "<div class='column-half'>Fecha Entrega Control Financiero{fechafinal}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -138,7 +138,7 @@ $(document).ready(function () {
         },
 
         {
-            label: 'Fecha Final', name: 'fechafinal', width: 150, align: 'left', search: false,
+            label: 'Fecha Entrega Control Financiero', name: 'fechafinal', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             editable: true, editrules: {required: true}, sortable: false,
             searchoptions: {
@@ -155,13 +155,6 @@ $(document).ready(function () {
                     });
                 },
                 sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
-                }
             }
         },
 
