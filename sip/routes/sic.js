@@ -20,8 +20,8 @@ module.exports = function(passport) {
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
 
-    router.route('/sic/documentos/save')
-        .post(isAuthenticated, documentosController.save);
+    router.route('/sic/documentos/action')
+        .post(isAuthenticated, documentosController.action);
 
     router.route('/sic/documentos/upload')
         .post(isAuthenticated, documentosController.upload);

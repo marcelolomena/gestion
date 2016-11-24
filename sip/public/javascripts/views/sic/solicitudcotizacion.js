@@ -1,6 +1,6 @@
-$(document).ready(function () {
+$(document).ready(function() {
 
-    $.get('/sic/getsession', function (data) {
+    $.get('/sic/getsession', function(data) {
         console.log('ROL : ' + data);
     });
 
@@ -32,7 +32,7 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 dataUrl: '/CUIs',
-                buildSelect: function (response) {
+                buildSelect: function(response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
@@ -40,7 +40,7 @@ $(document).ready(function () {
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger CUI--</option>';
-                    $.each(data, function (i, item) {
+                    $.each(data, function(i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                         } else {
@@ -49,7 +49,7 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 }
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, dataInit: function(elem) { $(elem).width(200); }
         },
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, sortable: false, editable: true },
         {
@@ -57,7 +57,7 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function (response) {
+                buildSelect: function(response) {
                     var grid = $("#gridMaster");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
@@ -65,7 +65,7 @@ $(document).ready(function () {
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Técnico--</option>';
-                    $.each(data, function (i, item) {
+                    $.each(data, function(i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
@@ -75,7 +75,7 @@ $(document).ready(function () {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function (e) {
+                    type: 'change', fn: function(e) {
                         $("input#pmoresponsable").val($('option:selected', this).text());
                     }
                 }],
@@ -106,7 +106,7 @@ $(document).ready(function () {
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
-        onSelectRow: function (rowid, selected) {
+        onSelectRow: function(rowid, selected) {
             if (rowid != null) {
                 console.log("rowid : " + rowid)
                 var wsParams = { idcui: rowid }
@@ -131,7 +131,7 @@ $(document).ready(function () {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: template,
-            errorTextFormat: function (data) {
+            errorTextFormat: function(data) {
                 return 'Error: ' + data.responseText
             }
 
@@ -143,9 +143,9 @@ $(document).ready(function () {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: template,
-            errorTextFormat: function (data) {
+            errorTextFormat: function(data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
+            }, beforeSubmit: function(postdata, formid) {
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtecnico) == 0) {
@@ -153,7 +153,7 @@ $(document).ready(function () {
                 } else {
                     return [true, "", ""]
                 }
-            }, afterSubmit: function (response, postdata) {
+            }, afterSubmit: function(response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error != 0) {
@@ -163,7 +163,7 @@ $(document).ready(function () {
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            }, beforeShowForm: function (form) {
+            }, beforeShowForm: function(form) {
                 var rowKey = $grid.getGridParam("selrow");
                 var rowData = $grid.getRowData(rowKey);
             }
@@ -203,46 +203,37 @@ $(document).ready(function () {
 
         $("#" + parentRowID).append(tabs);
 
-        $('.active[data-toggle="tab"]').each(function (e) {
+        $('.active[data-toggle="tab"]').each(function(e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
-            $.get(loadurl, function (data) {
+            if (targ === '#documentos') {
 
-                if (targ === '#documentos') {
+                gridDoc.renderGrid(loadurl, parentRowKey, targ)
+            }
+            if (targ === '#servicios') {
 
-                    gridDoc.renderGrid(targ, data)
-                }
-                if (targ === '#servicios') {
-
-                    gridServ.renderGrid(targ, data,parentRowKey)
-                } 
-
-            });
+                gridServ.renderGrid(parentRowKey, targ, data)
+            }
 
             $this.tab('show');
             return false;
         });
 
-        $('[data-toggle="tab"]').click(function (e) {
+        $('[data-toggle="tab"]').click(function(e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            //console.log("click loadurl: " + loadurl)
-            $.get(loadurl, function (data) {
 
-                if (targ === '#documentos') {
+            if (targ === '#documentos') {
 
-                    gridDoc.renderGrid(targ, data)
-                } 
-                if (targ === '#servicios') {
-                    //console.log(data);
+                gridDoc.renderGrid(loadurl, parentRowKey, targ)
+            }
+            if (targ === '#servicios') {
 
-                    gridServ.renderGrid(targ, data,parentRowKey)
-                }
-                //$(targ).html(data);
-            });
+                gridServ.renderGrid(parentRowKey, targ, data)
+            }
 
             $this.tab('show');
             return false;
@@ -254,7 +245,4 @@ $(document).ready(function () {
         var wsParams = { idcui: 0 }
         var gridDetailParam = { postData: wsParams };
     }
-
-
-
 })

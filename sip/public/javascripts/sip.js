@@ -6,57 +6,12 @@ var sipLibrary = {
         contentType: "application/json; charset=utf-8",
         dataType: "json"
     },
-
-    UploadDoc: function(response, postdata) {
-
-        var data = $.parseJSON(response.responseText);
-        if (data.success) {
-            if ($("#fileToUpload").val() != "") {
-                ajaxDocUpload(data.id);
-            }
-        }
-
-        return [data.success, data.message, data.id];
-
-    },
-
-    ajaxDocUpload: function (id) {
-        var dialog = bootbox.dialog({
-            title: 'Se inicia la carga en la base de datos',
-            message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
-        });
-        dialog.init(function () {
-            $.ajaxFileUpload({
-                url: '/sic/documentos/upload',
-                secureuri: false,
-                fileElementId: 'fileToUpload',
-                dataType: 'json',
-                data: { id: id },
-                success: function (data, status) {
-                    if (typeof (data.success) != 'undefined') {
-                        if (data.success == true) {
-                            dialog.find('.bootbox-body').html(data.message);
-                        } else {
-                            dialog.find('.bootbox-body').html(data.message);
-                        }
-                    }
-                    else {
-                        dialog.find('.bootbox-body').html(data.message);
-                    }
-                },
-                error: function (data, status, e) {
-                    dialog.find('.bootbox-body').html(e);
-                }
-            })
-        });
-    },
-
-    createJSON: function (postdata) {
+    createJSON: function(postdata) {
         if (postdata.id === '_empty')
             postdata.id = null;
         return JSON.stringify(postdata)
     },
-    centerDialog: function (id) {
+    centerDialog: function(id) {
         var dlgDiv = $("#editmod" + id);
         var parentDiv = dlgDiv.parent(); // div#gbox_list
         var dlgWidth = dlgDiv.width();
@@ -73,7 +28,7 @@ var sipLibrary = {
         dlgDiv[0].style.top = Math.round(height) + "px";
         dlgDiv[0].style.left = Math.round(parentLeft + (parentWidth - dlgWidth) / 2) + "px";
 
-    }, getRadioElementValue: function (elem, oper, value) {
+    }, getRadioElementValue: function(elem, oper, value) {
         if (oper === "set") {
             var radioButton = $(elem).find("input:radio[value='" + value + "']");
             if (radioButton.length > 0) {
@@ -84,10 +39,10 @@ var sipLibrary = {
         if (oper === "get") {
             return $(elem).find("input:radio:checked").val();
         }
-    }, jqGrid_loadErrorHandler: function (xht, st, handler) {
+    }, jqGrid_loadErrorHandler: function(xht, st, handler) {
         jQuery(document.body).css('font-size', '100%');
         jQuery(document.body).html(xht.responseText);
-    }, radioElemContrato: function (value, options) {
+    }, radioElemContrato: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="1"',
             breakline = '/>Continuidad</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="0"',
@@ -100,7 +55,7 @@ var sipLibrary = {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
-    }, radioElemDocumento: function (value, options) {
+    }, radioElemDocumento: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="tipodocumento" value="1"',
             breakline = '/>Contrato</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="tipodocumento" value="0"',
@@ -113,7 +68,7 @@ var sipLibrary = {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
-    }, radioElemReqcontrato: function (value, options) {
+    }, radioElemReqcontrato: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="reqcontrato" value="1"',
             breakline = '/>Sí</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="reqcontrato" value="0"',
@@ -127,7 +82,7 @@ var sipLibrary = {
         }
         //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
-    }, radioElemConIva: function (value, options) {
+    }, radioElemConIva: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="coniva" value="1"',
             breakline = '/>Sí</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="coniva" value="0"',
@@ -141,7 +96,7 @@ var sipLibrary = {
         }
         //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
-    }, radioElemEstadoPre: function (value, options) {
+    }, radioElemEstadoPre: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio"  name="estado" value="1"',
             breakline = '/>Creado</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="estado" value="0"',
@@ -154,7 +109,7 @@ var sipLibrary = {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
-    }, radioElemInvgasto: function (value, options) {
+    }, radioElemInvgasto: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio"  name="estado" value="1"',
             breakline = '/>Inversión</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="estado" value="2"',
@@ -166,9 +121,9 @@ var sipLibrary = {
         if (value === '2') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
-        return "<div style='margin-top:5px'>" + receivedradio  + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
     },
-    radioElemInscripcion: function (value, options) {
+    radioElemInscripcion: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="parainscripcion" value="1"',
             breakline = '/>Sí</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="parainscripcion" value="0"',
@@ -183,7 +138,7 @@ var sipLibrary = {
         //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
     }
-    , currencyFormatter: function (cellvalue, options, rowObject) {
+    , currencyFormatter: function(cellvalue, options, rowObject) {
         var formatoptions = options.colModel.formatoptions || {};
 
         formatoptions.defaulValue = formatoptions.defaulValue || 0;
@@ -193,7 +148,7 @@ var sipLibrary = {
         formatoptions.prefix = formatoptions.prefix || "";
         formatoptions.thousandsSeparator = formatoptions.thousandsSeparator || ".";
 
-        var format = function (value) {
+        var format = function(value) {
             value = Math.ceil(value).toString();
 
             var reg = /(\d+)(\d{3})/g;
@@ -219,7 +174,7 @@ var sipLibrary = {
         else {
             return format(cellvalue);
         }
-    }, currentPeriod: function (currentYear) {
+    }, currentPeriod: function(currentYear) {
         //var currentYear = (new Date).getFullYear();
         var period = [];
         var periodIni = currentYear + '09';
@@ -241,7 +196,7 @@ var sipLibrary = {
         }
         //console.dir(period);
         return period;
-    }, JSON2CSV: function (objArray) {
+    }, JSON2CSV: function(objArray) {
         var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
 
         var str = '';
