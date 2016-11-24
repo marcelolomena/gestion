@@ -134,7 +134,7 @@ exports.tipos = function (req, res) {
 
     models.valores.findAll({
         //order: orden,
-        atributes: ['id', 'tipo'],
+        atributes: ['id', 'tipo'],//Es Nombre
         //where: data,
     }).then(function (valores) {
         //logger.debug(valores)

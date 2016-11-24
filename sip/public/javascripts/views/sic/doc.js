@@ -199,7 +199,7 @@ var gridDoc = {
 
 function returnDocLink(cellValue, options, rowdata, action) {
     //return "<a href='hola.html' class='btn btn-lg btn-primary' data-toggle='modal' data-target='#docModal'>K</a>";
-    return "<a href='/project-task-details/" + rowdata.id + "' >" + cellValue + "</a>";
+    return "<a href='/sic/documentos/" + rowdata.id + "' >" + cellValue + "</a>";
 }
 
 function UploadDoc(response, postdata) {
