@@ -43,6 +43,7 @@ exports.getGraficoProveedor = function (req, res) {
 "WHERE idproveedor = "+id+" "+
 "GROUP BY nombrecentrocosto, cuiseccion";
 
+console.log("sql:"+sql)
     sequelize.query(sql)
       .spread(function (proyecto) {
       var data = '{"titulo":"Línea de Gasto","data":[';

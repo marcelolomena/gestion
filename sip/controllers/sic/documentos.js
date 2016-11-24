@@ -14,9 +14,9 @@ exports.action = function (req, res) {
             models.documentoscotizacion.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idtipodocumento: req.body.idtipodocumento,
-                nombrecorto: req.body.idtipodocumento,
-                descripcionlarga: req.session.passport.user,
-                nombreresponsable: 0,
+                nombrecorto: req.body.nombrecorto,
+                descripcionlarga: req.body.descripcionlarga,
+                nombreresponsable: req.body.nombreresponsable,
                 nombrearchivo: '',
                 borrado: 1
             }).then(function (documentoscotizacion) {
@@ -29,16 +29,16 @@ exports.action = function (req, res) {
         case "edit":
             models.documentoscotizacion.update({
                 idtipodocumento: req.body.idtipodocumento,
-                nombrecorto: req.body.idtipodocumento,
-                descripcionlarga: req.session.passport.user,
-                nombreresponsable: 0,
+                nombrecorto: req.body.nombrecorto,
+                descripcionlarga: req.body.descripcionlarga,
+                nombreresponsable: req.body.nombreresponsable,
                 nombrearchivo: ''
             }, {
                     where: {
                         id: req.body.id
                     }
                 }).then(function (documentoscotizacion) {
-                    res.json({ id: documentoscotizacion.id, message: 'Exito', success: true });
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                 }).catch(function (err) {
                     logger.error(err)
                     res.json({ id: 0, message: err.message, success: false });
@@ -100,10 +100,9 @@ exports.list = function (req, res) {
     }];
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
+        if (data) {
             models.documentoscotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.documentoscotizacion.belongsTo(models.valores, { foreignKey: 'idtipodocumento' });
             models.documentoscotizacion.count({
                 where: data
             }).then(function (records) {
@@ -116,7 +115,7 @@ exports.list = function (req, res) {
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
-                    }
+                    }, { model: models.valores }
                     ]
                 }).then(function (documentoscotizacion) {
                     //logger.debug(solicitudcotizacion)
@@ -131,6 +130,20 @@ exports.list = function (req, res) {
 
 };
 
+exports.tipos = function (req, res) {
+
+    models.valores.findAll({
+        //order: orden,
+        atributes: ['id', 'tipo'],
+        //where: data,
+    }).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
 
 exports.upload = function (req, res) {
 

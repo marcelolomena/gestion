@@ -16,7 +16,7 @@ module.exports = function(passport) {
 
     router.route('/sic/documentos/:id')
         .get(isAuthenticated, documentosController.list);
-    
+
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
 
@@ -25,7 +25,7 @@ module.exports = function(passport) {
 
     router.route('/sic/documentos/upload')
         .post(isAuthenticated, documentosController.upload);
-        
+
     router.get('/sic/getsession', function(req, res) {
         //console.log(req.session.passport.sidebar[0].rol)
         if (req.session.passport.sidebar[0].rol)
@@ -33,6 +33,9 @@ module.exports = function(passport) {
         else
             res.send("no session value stored in DB ");
     });
+
+    router.route('/sic/documentos/:id/tipos')
+        .get(isAuthenticated, documentosController.tipos);
 
     return router;
 }
