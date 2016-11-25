@@ -56,6 +56,7 @@ exports.action = function (req, res) {
       models.clasecriticidad.create({
         factor: req.body.factor.replace(",", "."),
         glosaclase: req.body.glosaclase,
+        calculado:req.body.calculado,
         borrado: 1
       }).then(function (plantilla) {
         res.json({ error_code: 0 });
@@ -89,6 +90,7 @@ exports.action = function (req, res) {
 
       models.clasecriticidad.update({
         factor:req.body.factor.replace(",", "."),
+        calculado:req.body.calculado,
       }, {
           where: {
             id: req.body.id

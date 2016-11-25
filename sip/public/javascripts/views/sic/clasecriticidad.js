@@ -6,6 +6,9 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'><span style='color:red'>* </span>Clase de Criticidad{glosaclase}</div>";
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo Clase<span style='color:red'>*</span>{calculado}</div>";
+    template += "</div>";
     template += "<div class='column-full'><span style='color:red'>* </span>Factor{factor}</div>";
     template += "</div>";
 
@@ -31,7 +34,36 @@ $(document).ready(function () {
         //            $(el).mask('0.0', { reverse: true, placeholder: "_____" });
         //        },
         //    }
-        }
+        },
+        {
+            label: 'Calculado', name: 'calculado', search: false, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sicLibrary.radioElemCalculado, 
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var actual = $("input#factor").attr("readonly"); 
+                        if (actual == 'readonly') {               
+                            $("input#factor").attr("readonly", false);
+                        } else {
+                            $("input#factor").attr("readonly", true);
+                        } 
+                    }
+                }],                
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.calculado;
+                if (val == 1) {
+                    dato = 'Calculado';
+
+                } else if (val == 0) {
+                    dato = 'Constante';
+                }
+                return dato;
+            }            
+        },      
        
     ];
     $("#grid").jqGrid({
@@ -89,6 +121,14 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 $('input#glosaclase', form).attr('readonly', 'readonly');
+                var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                var calculado = rowData.calculado
+                if (calculado == 0) {
+                    //$("input#codigoart").attr("readonly", false);
+                    $('#factor', form).attr("readonly", false);
+                }
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));
@@ -122,7 +162,12 @@ $(document).ready(function () {
                     return [true, "", ""]
 
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                 var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);                
+                $(form).find("input:radio[value='1']").attr('checked', true);
+                
+                sipLibrary.centerDialog($("#grid").attr('id'));                
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }
@@ -402,11 +447,11 @@ function gridDesgloseNotas(parentRowID, parentRowKey) {
     var tmplPnotas = "<div id='responsive-form' class='clearfix'>";
 
     tmplPnotas += "<div class='form-row'>";
-    tmplPnotas += "<div class='column-full'>Nombre Nota{nombrenota}</div>";
+    tmplPnotas += "<div class='column-full'>Nota{nota}</div>";
     tmplPnotas += "</div>";
 
     tmplPnotas += "<div class='form-row'>";
-    tmplPnotas += "<div class='column-full'>Nota{nota}</div>";
+    tmplPnotas += "<div class='column-full'>Nombre Nota{nombrenota}</div>";
     tmplPnotas += "</div>";
 
     tmplPnotas += "<div class='form-row' style='display: none;'>";
@@ -424,22 +469,18 @@ function gridDesgloseNotas(parentRowID, parentRowKey) {
     var modelDesgloseNotas = [
         { label: 'id', name: 'id', key: true, hidden: true },      
         {
-            label: 'Nombre Nota',
-            name: 'nombrenota',
-            search: false,
-            align: 'left',
-            width: 100,
-            editable: true
-        },
-        {
             label: 'Nota',
             name: 'nota',
-            width: 200,
+            width: 50,
             editrules: { required: true },
             search: false,
             align: 'left',
             editable: true,
             formatter: 'number',
+        },
+        {
+                label: 'Descripción Nota', name: 'nombrenota', search: false, editable: true, hidden: false,
+                edittype: "textarea"
         }
     ];
 
