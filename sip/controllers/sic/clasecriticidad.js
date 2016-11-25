@@ -48,6 +48,7 @@ exports.list = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var id = req.body.id;
 
   switch (action) {
     case "add":
@@ -65,6 +66,27 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
+
+      if (req.body.factor != 0){
+          var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
+	              "where n.iddesglosefactores = f.id and f.idclasecriticidad  ="+ id 
+      
+          sequelize.query(sql).then(function (plantilla) {
+                  res.json({ error_code: 0 });
+                }).catch(function (err) {
+                  res.json({ error_code: 1 });
+          });
+
+          var sql = "delete sic.desglosefactores "+ 
+	                  "where  idclasecriticidad   ="+ id 
+      
+          sequelize.query(sql).then(function (plantilla) {
+                  res.json({ error_code: 0 });
+                }).catch(function (err) {
+                  res.json({ error_code: 1 });
+          }); 
+      }  
+
       models.clasecriticidad.update({
         factor:req.body.factor.replace(",", "."),
       }, {
@@ -76,7 +98,8 @@ exports.action = function (req, res) {
         }).catch(function (err) {
           logger.error(err);
           res.json({ error_code: 1 });
-        });
+      });
+ 
       break;
     case "del":
       models.clasecriticidad.destroy({
