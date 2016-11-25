@@ -24,6 +24,14 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    idclasecriticidad: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'clasecriticidad',
+        key: 'id'
+      }
+    },
     glosaservicio: {
       type: DataTypes.STRING,
       allowNull: true
