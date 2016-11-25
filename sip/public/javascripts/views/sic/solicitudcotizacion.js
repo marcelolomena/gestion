@@ -64,7 +64,7 @@ $(document).ready(function () {
             label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, sortable: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/CUIs',
+                dataUrl: '/allcuis',
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
@@ -75,9 +75,9 @@ $(document).ready(function () {
                     s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
                         } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].id + '">' + data[i].cui + ' - ' + data[i].nombre + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -236,13 +236,13 @@ $(document).ready(function () {
             }
         },
         { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador },
-        { label: 'Correo Negociador', name: 'correonegociador', width: 150, search: false, editable: true },
-        { label: 'Fono Negociador', name: 'fononegociador', width: 150, search: false, editable: true },
-        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, search: false, editable: true },
-        { label: 'Número RFP', name: 'numerorfp', width: 150, search: false, editable: true },
+        { label: 'Correo Negociador', name: 'correonegociador', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Fono Negociador', name: 'fononegociador', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Número RFP', name: 'numerorfp', width: 150, hidden: true, search: false, editable: true },
         {
             label: 'Fecha RFP', name: 'fechaenviorfp',
-            width: 150, align: 'center', search: true, editable: true, hidden: false,
+            width: 150, align: 'center', search: true, editable: true, hidden: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -262,12 +262,12 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, editable: true },
-        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, editable: true },
-        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, editable: true },
-        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, editable: true },
-        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, editable: true },
-        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, editable: true },
+        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: true, editable: true },
     ];
 
     $grid.jqGrid({
@@ -299,8 +299,10 @@ $(document).ready(function () {
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
         loadComplete: function (data) {
+
             $.get('/sic/getsession', function (data) {
                 if (data === 'Técnico SIC') {
+                    /*
                     $grid.jqGrid("hideCol", "codigosolicitud")
                     $grid.jqGrid("hideCol", "negociador")
                     $grid.jqGrid("hideCol", "correonegociador")
@@ -314,15 +316,21 @@ $(document).ready(function () {
                     $grid.jqGrid("hideCol", "nombreinterlocutor2")
                     $grid.jqGrid("hideCol", "correointerlocutor2")
                     $grid.jqGrid("hideCol", "fonointerlocutor2")
+                    */
+                    //add_gridMaster
                 } else if (data === 'Negociador SIC') {
+                    $("#add_gridMaster").hide()
+                    /*
                     $grid.jqGrid("hideCol", "nombrecui")
                     $grid.jqGrid("hideCol", "tecnico")
                     $grid.jqGrid("hideCol", "tipocontrato")
                     $grid.jqGrid("hideCol", "sap")
                     $grid.jqGrid("hideCol", "descripcion")
                     $grid.jqGrid("hideCol", "clasificacion")
+                    */
                 }
             });
+            
         }
     });
 
