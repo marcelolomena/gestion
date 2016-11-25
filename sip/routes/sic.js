@@ -4,6 +4,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var solicitudcotizacionController = require('../controllers/sic/solicitudcotizacion');
 var documentosController = require('../controllers/sic/documentos');
 var serviciosController = require('../controllers/sic/servicios');
+var parametrosController = require('../controllers/sic/parametros');
 
 module.exports = function(passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
@@ -34,8 +35,8 @@ module.exports = function(passport) {
             res.send("no session value stored in DB ");
     });
 
-    router.route('/sic/documentos/:id/tipos')
-        .get(isAuthenticated, documentosController.tipos);
+    router.route('/sic/parametros/:val')
+        .get(isAuthenticated, parametrosController.listall);
 
     return router;
 }

@@ -130,6 +130,7 @@ exports.list = function (req, res) {
 
 };
 
+/*
 exports.tipos = function (req, res) {
 
     models.valores.findAll({
@@ -144,6 +145,7 @@ exports.tipos = function (req, res) {
         res.json({ error: 1 });
     });
 }
+*/
 
 exports.upload = function (req, res) {
 

@@ -4,31 +4,31 @@ $(document).ready(function () {
         console.log('ROL : ' + data);
     });
 
-    var template = "<div id='responsive-form' class='clearfix'>";
+    var t1 = "<div id='responsive-form' class='clearfix'>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>CUI<span style='color:red'>*</span>{idcui}</div>";
-    template += "<div class='column-half'>Técnico<span style='color:red'>*</span>{idtecnico}</div>";
-    template += "</div>";
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half'>CUI<span style='color:red'>*</span>{idcui}</div>";
+    t1 += "<div class='column-half'>Técnico<span style='color:red'>*</span>{idtecnico}</div>";
+    t1 += "</div>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Contrato<span style='color:red'>*</span>{tipocontrato}</div>";
-    template += "<div class='column-half'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
-    template += "</div>";
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half'>Tipo Contrato<span style='color:red'>*</span>{tipocontrato}</div>";
+    t1 += "<div class='column-half'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
+    t1 += "</div>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>SAP<span style='color:red'>*</span>{sap}</div>";
-    template += "<div class='column-half'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
-    template += "</div>";
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half'>SAP<span style='color:red'>*</span>{sap}</div>";
+    t1 += "<div class='column-half'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
+    t1 += "</div>";
 
-    template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>tecnico{tecnico}</div>";
-    template += "</div>";
+    t1 += "<div class='form-row' style='display: none;'>";
+    t1 += "<div class='column-half'>tecnico{tecnico}</div>";
+    t1 += "</div>";
 
 
-    template += "<hr style='width:100%;'/>";
-    template += "<div> {sData} {cData}  </div>";
-    template += "</div>";
+    t1 += "<hr style='width:100%;'/>";
+    t1 += "<div> {sData} {cData}  </div>";
+    t1 += "</div>";
 
 
     var $grid = $("#gridMaster"), solicitudcotizacionModel = [
@@ -87,7 +87,7 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'Técnico', name: 'tecnico', width: 150, search: false, },
+        { label: 'Técnico', name: 'tecnico', width: 150, search: false, editable: false, formatter: returnTecnico },
         {
             label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
             edittype: "custom",
@@ -153,6 +153,63 @@ $(document).ready(function () {
         },
         { label: 'SAP', name: 'sap', width: 200, align: 'left', search: false, editable: true },
         { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false, editable: true },
+        { label: 'Código', name: 'codigosolicitud', width: 60, align: 'left', search: false, editable: true },
+        {
+            name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/parametros/clasificacionsolicitud',
+                buildSelect: function (response) {
+                    var rowKey = $gridTab.getGridParam("selrow");
+                    var rowData = $gridTab.getRowData(rowKey);
+                    var thissid = rowData.idclasificacionsolicitud;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger una Clasificación--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        { label: 'Clasificación', name: 'valores.nombre', width: 150, align: 'left', search: false, editable: true },
+        {
+            label: 'Negociador', name: 'idnegociador', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/usuarios_por_rol/Negociador',
+                buildSelect: function (response) {
+                    //var grid = $("#gridMaster");
+                    var rowKey = $grid.getGridParam("selrow");
+                    var rowData = $grid.getRowData(rowKey);
+                    var thissid = rowData.uidpmo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Negociador--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#negociador").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },
+        { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador },
+
     ];
 
     $grid.jqGrid({
@@ -185,7 +242,7 @@ $(document).ready(function () {
         subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
     });
 
-    $grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
+    //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: true, add: true, del: true, search: false },
         {
@@ -194,7 +251,7 @@ $(document).ready(function () {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            template: template,
+            template: t1,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
@@ -206,7 +263,7 @@ $(document).ready(function () {
             mtype: 'POST',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            template: template,
+            template: t1,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
@@ -236,6 +293,21 @@ $(document).ready(function () {
         }, {
 
         });
+
+    function returnTecnico(cellValue, options, rowdata, action) {
+        if (rowdata.tecnico != null)
+            return rowdata.tecnico.first_name + ' ' + rowdata.tecnico.last_name;
+        else
+            return '';
+    }
+
+    function returnNegociador(cellValue, options, rowdata, action) {
+        if (rowdata.negociador != null)
+            return rowdata.negociador.first_name + ' ' + rowdata.negociador.last_name;
+        else
+            return '';
+
+    }
 
     function showChildGrid(parentRowID, parentRowKey) {
 
