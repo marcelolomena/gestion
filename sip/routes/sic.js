@@ -44,5 +44,8 @@ module.exports = function(passport) {
     router.route('/sic/servicios/:id/doctoasociado')
         .get(isAuthenticated, serviciosController.doctoasociado);
 
+    router.route('/sic/clasecriticidadserv')
+        .get(isAuthenticated, serviciosController.clasecriticidad);
+
     return router;
 }

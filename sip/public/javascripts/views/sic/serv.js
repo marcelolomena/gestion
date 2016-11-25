@@ -23,6 +23,10 @@ var gridServ = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-full'>Clase Criticidad<span style='color:red'>*</span>{idclasecriticidad}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
         tmplServ += "<div class='column-half'>Nota Criticidad<span style='color:red'>*</span>{notacriticidad}</div>";
         tmplServ += "<div class='column-half'>Color Nota<span style='color:red'>*</span>{colornota}</div>";
         tmplServ += "</div>";
@@ -39,7 +43,7 @@ var gridServ = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Solicitud', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento','Documento', 'Glosa Referencia', 'Nota Criticidad', 'Color Nota', 'Clase Proveedor'],
+            colNames: ['id', 'Solicitud', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento','Documento', 'Glosa Referencia', 'ID Clase Criticidad','Clase Criticidad','Nota Criticidad', 'Color Nota', 'Clase Proveedor'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'idsolicitud', index: 'idsolicitud', width: 100, hidden: true, editable: true },
@@ -97,6 +101,31 @@ var gridServ = {
                 },
                 { name: 'documentoscotizacion.nombrecorto', index: 'documento', width: 150, editable: true, editoptions: { size: 10 } },
                 { name: 'glosareferencia', index: 'glosareferencia', width: 200, align: "left", editable: true, editoptions: { size: 10 } },
+                {
+                    name: 'idclasecriticidad', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/sic/clasecriticidadserv',
+                        buildSelect: function (response) {
+                            var rowKey = $gridTab.getGridParam("selrow");
+                            var rowData = $gridTab.getRowData(rowKey);
+                            var thissid = rowData.idclasecriticidad;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Seleccione Clase Criticidad--</option>';
+                            $.each(data, function (i, item) {
+
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].glosaclase + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].glosaclase + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        }
+                    }
+                },
+                { name: 'clasecriticidad.glosaclase', index: 'clasecriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
                 { name: 'notacriticidad', index: 'notacriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
                 { name: 'colornota', index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 } },
                 { name: 'claseproveedor', index: 'claseproveedor', width: 150, align: "left", editable: true, editoptions: { size: 10 } }
