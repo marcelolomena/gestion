@@ -37,5 +37,11 @@ module.exports = function(passport) {
     router.route('/sic/documentos/:id/tipos')
         .get(isAuthenticated, documentosController.tipos);
 
+    router.route('/sic/servicios/:id/list')
+        .get(isAuthenticated, serviciosController.listaservicios);
+
+    router.route('/sic/servicios/:id/doctoasociado')
+        .get(isAuthenticated, serviciosController.doctoasociado);
+
     return router;
 }

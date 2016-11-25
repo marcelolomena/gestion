@@ -7,20 +7,28 @@ var gridServ = {
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Tipo<span style='color:red'>*</span>{idtipodocumento}</div>";
+        tmplServ += "<div class='column-full'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
-        tmplServ += "<div class='column-half'>Responsable<span style='color:red'>*</span>{nombreresponsable}</div>";
+        tmplServ += "<div class='column-full'>Glosa Servicio<span style='color:red'>*</span>{glosaservicio}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Descripción<span style='color:red'>*</span>{descripcionlarga}</div>";
+        tmplServ += "<div class='column-full'>Documento Técnico Asociado<span style='color:red'>*</span>{iddoctotecnico}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
+        tmplServ += "<div class='column-full'>Glosa Referencia Dcto<span style='color:red'>*</span>{glosareferencia}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-half'>Nota Criticidad<span style='color:red'>*</span>{notacriticidad}</div>";
+        tmplServ += "<div class='column-half'>Color Nota<span style='color:red'>*</span>{colornota}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-full'>Clase Proveedor<span style='color:red'>*</span>{claseproveedor}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<hr style='width:100%;'/>";
@@ -35,10 +43,58 @@ var gridServ = {
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'idsolicitud', index: 'idsolicitud', width: 100, hidden: true, editable: true },
-                { name: 'idservicio', index: 'idservicio', width: 100, hidden: true, editable: true, editoptions: { size: 10 } },
+                //{ name: 'idservicio', index: 'idservicio', width: 100, hidden: true, editable: true, editoptions: { size: 10 } },
+                {
+                    name: 'idservicio', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/sic/servicios/' + parentRowKey + '/list',
+                        buildSelect: function (response) {
+                            var rowKey = $gridTab.getGridParam("selrow");
+                            var rowData = $gridTab.getRowData(rowKey);
+                            var thissid = rowData.idservicio;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Seleccione un Servicio--</option>';
+                            $.each(data, function (i, item) {
+
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        }
+                    }
+                },
                 { name: 'servicio.nombre', index: 'servicio', width: 150, editable: true, editoptions: { size: 10 } },
                 { name: 'glosaservicio', index: 'glosaservicio', width: 200, editable: true, editoptions: { size: 25 } },
-                { name: 'iddoctotecnico', index: 'iddoctotecnico', width: 100, hidden: true,  editable: true, editoptions: { size: 10 } },
+                //{ name: 'iddoctotecnico', index: 'iddoctotecnico', width: 100, hidden: true,  editable: true, editoptions: { size: 10 } },
+                {
+                    name: 'iddoctotecnico', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/sic/servicios/' + parentRowKey + '/doctoasociado',
+                        buildSelect: function (response) {
+                            var rowKey = $gridTab.getGridParam("selrow");
+                            var rowData = $gridTab.getRowData(rowKey);
+                            var thissid = rowData.iddoctotecnico;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Seleccione un Documento--</option>';
+                            $.each(data, function (i, item) {
+
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombrecorto + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombrecorto + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        }
+                    }
+                },
                 { name: 'documentoscotizacion.nombrecorto', index: 'documento', width: 150, editable: true, editoptions: { size: 10 } },
                 { name: 'glosareferencia', index: 'glosareferencia', width: 200, align: "left", editable: true, editoptions: { size: 10 } },
                 { name: 'notacriticidad', index: 'notacriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
