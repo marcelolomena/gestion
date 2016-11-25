@@ -28,7 +28,7 @@ module.exports = function(passport) {
         .post(isAuthenticated, documentosController.upload);
 
     router.get('/sic/getsession', function(req, res) {
-        //console.log(req.session.passport.sidebar[0].rol)
+        console.dir(req.session.passport.sidebar[0])
         if (req.session.passport.sidebar[0].rol)
             res.json(req.session.passport.sidebar[0].rol);
         else
