@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
     var t1 = "<div id='responsive-form' class='clearfix'>";
+
+
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_idcui'>CUI<span style='color:red'>*</span>{idcui}</div>";
     t1 += "<div class='column-half' id='d_idtecnico'>Técnico<span style='color:red'>*</span>{idtecnico}</div>";
@@ -49,13 +51,13 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
     t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
     t1 += "</div>";
-
     //t1 += "<div class='form-row' style='display: none;'>";
     //t1 += "<div class='column-half'>tecnico{tecnico}</div>";
     //t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
+
     t1 += "</div>";
 
     var $grid = $("#gridMaster"), solicitudcotizacionModel = [
@@ -320,6 +322,19 @@ $(document).ready(function () {
                     //add_gridMaster
                 } else if (data === 'Negociador SIC') {
                     $("#add_gridMaster").hide()
+                    $grid.jqGrid("showCol", "codigosolicitud")
+                    $grid.jqGrid("showCol", "negociador")
+                    $grid.jqGrid("showCol", "correonegociador")
+                    $grid.jqGrid("showCol", "fononegociador")
+                    $grid.jqGrid("showCol", "direccionnegociador")
+                    $grid.jqGrid("showCol", "numerorfp")
+                    $grid.jqGrid("showCol", "fechaenviorfp")
+                    $grid.jqGrid("showCol", "nombreinterlocutor1")
+                    $grid.jqGrid("showCol", "correointerlocutor1")
+                    $grid.jqGrid("showCol", "fonointerlocutor1")
+                    $grid.jqGrid("showCol", "nombreinterlocutor2")
+                    $grid.jqGrid("showCol", "correointerlocutor2")
+                    $grid.jqGrid("showCol", "fonointerlocutor2")
                     /*
                     $grid.jqGrid("hideCol", "nombrecui")
                     $grid.jqGrid("hideCol", "tecnico")
@@ -330,7 +345,7 @@ $(document).ready(function () {
                     */
                 }
             });
-            
+
         }
     });
 
@@ -381,13 +396,13 @@ $(document).ready(function () {
                             $("#d_correointerlocutor2", form).hide();
                             $("#d_fonointerlocutor2", form).hide();
                         } else if (data === 'Negociador SIC') {
-                            $("#d_idcui", form).hide();
-                            $("#d_idtecnico", form).hide();
-                            $("#d_tipocontrato", form).hide();
-                            $("#d_codigoart", form).hide();
-                            $("#d_sap", form).hide();
-                            $("#d_descripcion", form).hide();
-                            $("#d_idclasificacionsolicitud", form).hide();
+                            $("#idcui", form).attr("disabled", true);
+                            $("#idtecnico", form).attr('readonly', 'readonly');
+                            $("#tipocontrato", form).attr('readonly', 'readonly');
+                            $("#codigoart", form).attr('readonly', 'readonly');
+                            $("#sap", form).attr('readonly', 'readonly');
+                            $("#descripcion", form).attr('readonly', 'readonly');
+                            $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
                         }
                     });
 
@@ -410,8 +425,23 @@ $(document).ready(function () {
                 } if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
+
+                    postdata.idnegociador = null;
+                    postdata.correonegociador = null;
+                    postdata.fononegociador = null;
+                    postdata.direccionnegociador = null;
+                    postdata.numerorfp = null;
+                    postdata.fechaenviorfp = null;
+                    postdata.nombreinterlocutor1 = null;
+                    postdata.correointerlocutor1 = null;
+                    postdata.fonointerlocutor1 = null;
+                    postdata.nombreinterlocutor2 = null;
+                    postdata.correointerlocutor2 = null;
+                    postdata.fonointerlocutor2 = null;
+
                     return [true, "", ""]
                 }
+
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
