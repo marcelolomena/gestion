@@ -110,12 +110,13 @@ exports.list = function (req, res) {
   var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
-    if (err) {
-      logger.debug("->>> " + err)
-    } else {
+    if (data) {
       //logger.debug(data)
       models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
       models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
+      models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
+      models.solicitudcotizacion.belongsTo(models.valores, { foreignKey: 'idclasificacionsolicitud' });
+      models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
       models.solicitudcotizacion.count({
         where: data
       }).then(function (records) {
@@ -129,13 +130,19 @@ exports.list = function (req, res) {
             model: models.estructuracui
           }, {
             model: models.programa
+          }, {
+            model: models.user, as: 'tecnico'
+          }, {
+            model: models.valores
+          }, {
+            model: models.user, as: 'negociador'
           }
           ]
         }).then(function (solicitudcotizacion) {
           //logger.debug(solicitudcotizacion)
           res.json({ records: records, total: total, page: page, rows: solicitudcotizacion });
         }).catch(function (err) {
-          logger.error(err);
+          logger.error(err.message);
           res.json({ error_code: 1 });
         });
       })

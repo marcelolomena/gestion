@@ -171,6 +171,7 @@ $(document).ready(function () {
 });
 
 function gridDesgloseFactores(parentRowID, parentRowKey) {
+
     var tmplP = "<div id='responsive-form' class='clearfix'>";
 
     tmplP += "<div class='form-row'>";
@@ -192,6 +193,15 @@ function gridDesgloseFactores(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
     var childGridURL = "/sic/desglosefactores/" + parentRowKey;
+
+    var grid = $("#grid");
+    var rowData = grid.getRowData(parentRowKey);
+    var factorrow = rowData.factor;
+  
+     console.log('rowdata: ' + rowData);
+     console.log('factorrow: ' + factorrow);
+
+    if (factorrow != 0){ return }
 
     var modelDesglose = [
         { label: 'id', name: 'id', key: true, hidden: true },      
