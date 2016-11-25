@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
     var t1 = "<div id='responsive-form' class='clearfix'>";
+
+
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_idcui'>CUI<span style='color:red'>*</span>{idcui}</div>";
     t1 += "<div class='column-half' id='d_idtecnico'>Técnico<span style='color:red'>*</span>{idtecnico}</div>";
@@ -49,13 +51,13 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
     t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
     t1 += "</div>";
-
     //t1 += "<div class='form-row' style='display: none;'>";
     //t1 += "<div class='column-half'>tecnico{tecnico}</div>";
     //t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
+
     t1 += "</div>";
 
     var $grid = $("#gridMaster"), solicitudcotizacionModel = [
@@ -64,7 +66,7 @@ $(document).ready(function () {
             label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, sortable: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/CUIs',
+                dataUrl: '/allcuis',
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
@@ -75,9 +77,9 @@ $(document).ready(function () {
                     s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
                         } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            s += '<option value="' + data[i].id + '">' + data[i].cui + ' - ' + data[i].nombre + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -236,13 +238,13 @@ $(document).ready(function () {
             }
         },
         { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador },
-        { label: 'Correo Negociador', name: 'correonegociador', width: 150, search: false, editable: true },
-        { label: 'Fono Negociador', name: 'fononegociador', width: 150, search: false, editable: true },
-        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, search: false, editable: true },
-        { label: 'Número RFP', name: 'numerorfp', width: 150, search: false, editable: true },
+        { label: 'Correo Negociador', name: 'correonegociador', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Fono Negociador', name: 'fononegociador', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Número RFP', name: 'numerorfp', width: 150, hidden: true, search: false, editable: true },
         {
             label: 'Fecha RFP', name: 'fechaenviorfp',
-            width: 150, align: 'center', search: true, editable: true, hidden: false,
+            width: 150, align: 'center', search: true, editable: true, hidden: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -262,12 +264,12 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, editable: true },
-        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, editable: true },
-        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, editable: true },
-        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, editable: true },
-        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, editable: true },
-        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, editable: true },
+        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: true, editable: true },
     ];
 
     $grid.jqGrid({
@@ -299,8 +301,10 @@ $(document).ready(function () {
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
         loadComplete: function (data) {
+
             $.get('/sic/getsession', function (data) {
                 if (data === 'Técnico SIC') {
+                    /*
                     $grid.jqGrid("hideCol", "codigosolicitud")
                     $grid.jqGrid("hideCol", "negociador")
                     $grid.jqGrid("hideCol", "correonegociador")
@@ -314,15 +318,34 @@ $(document).ready(function () {
                     $grid.jqGrid("hideCol", "nombreinterlocutor2")
                     $grid.jqGrid("hideCol", "correointerlocutor2")
                     $grid.jqGrid("hideCol", "fonointerlocutor2")
+                    */
+                    //add_gridMaster
                 } else if (data === 'Negociador SIC') {
+                    $("#add_gridMaster").hide()
+                    $grid.jqGrid("showCol", "codigosolicitud")
+                    $grid.jqGrid("showCol", "negociador")
+                    $grid.jqGrid("showCol", "correonegociador")
+                    $grid.jqGrid("showCol", "fononegociador")
+                    $grid.jqGrid("showCol", "direccionnegociador")
+                    $grid.jqGrid("showCol", "numerorfp")
+                    $grid.jqGrid("showCol", "fechaenviorfp")
+                    $grid.jqGrid("showCol", "nombreinterlocutor1")
+                    $grid.jqGrid("showCol", "correointerlocutor1")
+                    $grid.jqGrid("showCol", "fonointerlocutor1")
+                    $grid.jqGrid("showCol", "nombreinterlocutor2")
+                    $grid.jqGrid("showCol", "correointerlocutor2")
+                    $grid.jqGrid("showCol", "fonointerlocutor2")
+                    /*
                     $grid.jqGrid("hideCol", "nombrecui")
                     $grid.jqGrid("hideCol", "tecnico")
                     $grid.jqGrid("hideCol", "tipocontrato")
                     $grid.jqGrid("hideCol", "sap")
                     $grid.jqGrid("hideCol", "descripcion")
                     $grid.jqGrid("hideCol", "clasificacion")
+                    */
                 }
             });
+
         }
     });
 
@@ -373,13 +396,13 @@ $(document).ready(function () {
                             $("#d_correointerlocutor2", form).hide();
                             $("#d_fonointerlocutor2", form).hide();
                         } else if (data === 'Negociador SIC') {
-                            $("#d_idcui", form).hide();
-                            $("#d_idtecnico", form).hide();
-                            $("#d_tipocontrato", form).hide();
-                            $("#d_codigoart", form).hide();
-                            $("#d_sap", form).hide();
-                            $("#d_descripcion", form).hide();
-                            $("#d_idclasificacionsolicitud", form).hide();
+                            $("#idcui", form).attr("disabled", true);
+                            $("#idtecnico", form).attr('readonly', 'readonly');
+                            $("#tipocontrato", form).attr('readonly', 'readonly');
+                            $("#codigoart", form).attr('readonly', 'readonly');
+                            $("#sap", form).attr('readonly', 'readonly');
+                            $("#descripcion", form).attr('readonly', 'readonly');
+                            $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
                         }
                     });
 
@@ -402,8 +425,23 @@ $(document).ready(function () {
                 } if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
+
+                    postdata.idnegociador = null;
+                    postdata.correonegociador = null;
+                    postdata.fononegociador = null;
+                    postdata.direccionnegociador = null;
+                    postdata.numerorfp = null;
+                    postdata.fechaenviorfp = null;
+                    postdata.nombreinterlocutor1 = null;
+                    postdata.correointerlocutor1 = null;
+                    postdata.fonointerlocutor1 = null;
+                    postdata.nombreinterlocutor2 = null;
+                    postdata.correointerlocutor2 = null;
+                    postdata.fonointerlocutor2 = null;
+
                     return [true, "", ""]
                 }
+
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
