@@ -12,11 +12,17 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo Contrato<span style='color:red'>*</span>{tipocontrato}</div>";
     template += "<div class='column-half'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>SAP<span style='color:red'>*</span>{sap}</div>";
+    template += "<div class='column-half'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
+    template += "</div>";
+
     template += "<div class='form-row' style='display: none;'>";
-    template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
+    template += "<div class='column-half'>tecnico{tecnico}</div>";
     template += "</div>";
 
 
@@ -51,16 +57,16 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, sortable: false, editable: true },
+        { label: 'Nombre CUI', name: 'estructuracui.nombre', width: 250, align: 'left', search: false, sortable: false, editable: true },
         {
             label: 'Técnico', name: 'idtecnico', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
                 buildSelect: function (response) {
-                    var grid = $("#gridMaster");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
+                    //var grid = $("#gridMaster");
+                    var rowKey = $grid.getGridParam("selrow");
+                    var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
@@ -76,19 +82,77 @@ $(document).ready(function () {
                 },
                 dataEvents: [{
                     type: 'change', fn: function (e) {
-                        $("input#pmoresponsable").val($('option:selected', this).text());
+                        $("input#tecnico").val($('option:selected', this).text());
                     }
                 }],
             }
         },
-        { label: 'Tipo', name: 'tipocontrato', width: 150 },
-        { label: 'Código ART', name: 'codigoart', width: 150, editable: true, },
+        { label: 'Técnico', name: 'tecnico', width: 150, search: false, },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true
+            label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemContrato,
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var actual = $("input#codigoart").attr("readonly");
+                        if (actual == 'readonly') {
+                            $("input#codigoart").attr("readonly", false);
+                        } else {
+                            $("input#codigoart").attr("readonly", true);
+                        }
+                    }
+                }],
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.tipocontrato;
+                if (val == 1) {
+                    dato = 'Continuidad';
+
+                } else if (val == 0) {
+                    dato = 'Proyectos';
+                }
+                return dato;
+            }
         },
-        { label: 'SAP', name: 'sap', width: 150 },
-        { label: 'Descripción', name: 'descripcion', width: 150 },
+        {
+            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
+            hidden: true, editoptions: { defaultValue: "0" }
+        },
+        {
+            label: 'Codigo ART', name: 'codigoart', width: 200, align: 'left', search: false, editable: true, hidden: true,
+            editrules: { edithidden: false }, hidedlg: true, editoptions: {
+                size: 10, readonly: 'readonly',
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        //var grid = $("#grid");
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        console.log("rowData:" + rowData);
+                        var thissid = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/getcodigoart/' + thissid,
+                            async: false,
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    console.log("glosa:" + data[0].nombreart);
+                                    $("input#program_id").val(data[0].program_id);
+                                } else {
+                                    alert("No existe el codigo art ingresado");
+                                    $("input#program_id").val("0");
+                                }
+                            }
+                        });
+                    }
+                }],
+
+            }
+        },
+        { label: 'SAP', name: 'sap', width: 200, align: 'left', search: false, editable: true },
+        { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false, editable: true },
     ];
 
     $grid.jqGrid({
@@ -121,7 +185,7 @@ $(document).ready(function () {
         subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
     });
 
-    $grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: true, add: true, del: true, search: false },
         {
@@ -208,18 +272,14 @@ $(document).ready(function () {
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
-            $.get(loadurl, function (data) {
+            if (targ === '#documentos') {
 
-                if (targ === '#documentos') {
+                gridDoc.renderGrid(loadurl, parentRowKey, targ)
+            }
+            if (targ === '#servicios') {
 
-                    gridDoc.renderGrid(targ, data)
-                }
-                if (targ === '#servicios') {
-
-                    gridServ.renderGrid(targ, data,parentRowKey)
-                } 
-
-            });
+                gridServ.renderGrid(loadurl, parentRowKey, targ)
+            }
 
             $this.tab('show');
             return false;
@@ -229,20 +289,15 @@ $(document).ready(function () {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            //console.log("click loadurl: " + loadurl)
-            $.get(loadurl, function (data) {
 
-                if (targ === '#documentos') {
+            if (targ === '#documentos') {
 
-                    gridDoc.renderGrid(targ, data)
-                } 
-                if (targ === '#servicios') {
-                    //console.log(data);
+                gridDoc.renderGrid(loadurl, parentRowKey, targ)
+            }
+            if (targ === '#servicios') {
 
-                    gridServ.renderGrid(targ, data,parentRowKey)
-                }
-                //$(targ).html(data);
-            });
+                gridServ.renderGrid(loadurl, parentRowKey, targ)
+            }
 
             $this.tab('show');
             return false;
@@ -254,7 +309,4 @@ $(document).ready(function () {
         var wsParams = { idcui: 0 }
         var gridDetailParam = { postData: wsParams };
     }
-
-
-
 })

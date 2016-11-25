@@ -18,7 +18,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idtipodocumento: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'valores',
+        key: 'id'
+      }
     },
     nombrecorto: {
       type: DataTypes.STRING,

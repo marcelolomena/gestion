@@ -18,7 +18,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idtecnico: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'uid'
+      }
     },
     tipocontrato: {
       type: DataTypes.INTEGER,
@@ -48,13 +52,21 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    clasificacionsolicitud: {
+    idclasificacionsolicitud: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'valores',
+        key: 'id'
+      }
     },
     idnegociador: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'uid'
+      }
     },
     correonegociador: {
       type: DataTypes.STRING,
