@@ -232,6 +232,7 @@ function ajaxDocUpload(id, parent) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
                         dialog.find('.bootbox-body').html(data.message);
+                        $("#documentos_t").trigger('reloadGrid');
                     } else {
                         dialog.find('.bootbox-body').html(data.message);
                     }
