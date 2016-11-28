@@ -130,23 +130,6 @@ exports.list = function (req, res) {
 
 };
 
-/*
-exports.tipos = function (req, res) {
-
-    models.valores.findAll({
-        //order: orden,
-        atributes: ['id', 'tipo'],//Es Nombre
-        //where: data,
-    }).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
-    }).catch(function (err) {
-        logger.error(err);
-        res.json({ error: 1 });
-    });
-}
-*/
-
 exports.upload = function (req, res) {
 
     if (req.method === 'POST') {
@@ -183,27 +166,64 @@ exports.upload = function (req, res) {
             });
         });
 
+        function copyFile(source, target) {
+            return new Promise(function (resolve, reject) {
+                var rd = fs.createReadStream(source);
+                rd.on('error', rejectCleanup);
+                var wr = fs.createWriteStream(target);
+                wr.on('error', rejectCleanup);
+                function rejectCleanup(err) {
+                    rd.destroy();
+                    wr.end();
+                    reject(err);
+                }
+                wr.on('finish', resolve);
+                rd.pipe(wr);
+            });
+        }
+
+        function checkDirectorySync(directory) {
+            try {
+                fs.statSync(directory);
+            } catch (e) {
+                fs.mkdirSync(directory);
+            }
+        }
 
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
-            var saveTo = path.join(__dirname, '../../', 'docs', filename);//path al archivo
+            var saveTo = path.join(__dirname, '../../', 'docs', filename);
+            logger.debug("actual : " + saveTo)
+            file.pipe(fs.createWriteStream(saveTo));
 
-            file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
+            awaitParent.then(function (idParent) {
 
-            awaitId.then(function (idDetail) {
-                logger.debug("idDetail : " + idDetail)
-                models.documentoscotizacion.update({
-                    nombrearchivo: filename
-                }, {
-                        where: {
-                            id: idDetail
-                        }
-                    }).then(function (documentoscotizacion) {
-                        //res.json({ id: documentoscotizacion.id, message: 'Exito', success: true });
-                    }).catch(function (err) {
-                        logger.error(err)
-                        res.json({ id: 0, message: err.message, success: false });
-                    });
+                logger.debug("idParent : " + idParent)
+
+                var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);//path al archivo
+                checkDirectorySync(dir);
+                var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
+                copyFile(saveTo, dest)
+
+                awaitId.then(function (idDetail) {
+                    logger.debug("idDetail : " + idDetail)
+                    models.documentoscotizacion.update({
+                        nombrearchivo: filename
+                    }, {
+                            where: {
+                                id: idDetail
+                            }
+                        }).then(function (documentoscotizacion) {
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+
+                }).catch(function (err) {
+                    res.json({ error_code: 1, message: err.message, success: false });
+                    logger.error(err)
+                });
+
 
             }).catch(function (err) {
                 res.json({ error_code: 1, message: err.message, success: false });
@@ -212,7 +232,6 @@ exports.upload = function (req, res) {
 
 
         });
-
 
         busboy.on('finish', function () {
             logger.debug("Finalizo la transferencia del archivo")
