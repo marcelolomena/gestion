@@ -102,47 +102,77 @@ exports.list = function (req, res) {
   var sord = req.body.sord;
 
   if (!sidx)
-    sidx = "descripcion";
+    sidx = "nombre";
 
   if (!sord)
     sord = "asc";
 
-  var orden = "[solicitudcotizacion]." + sidx + " " + sord;
+  var orden = "[clase]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (data) {
       //logger.debug(data)
-      models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-      models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
-      models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
-      models.solicitudcotizacion.belongsTo(models.valores, { foreignKey: 'idclasificacionsolicitud' });
-      models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
-      models.solicitudcotizacion.count({
+      models.clase.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.solicitudcotizacion.findAll({
+        models.clase.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data,
-          include: [{
-            model: models.estructuracui
-          }, {
-            model: models.programa
-          }, {
-            model: models.user, as: 'tecnico'
-          }, {
-            model: models.valores
-          }, {
-            model: models.user, as: 'negociador'
-          }
-          ]
-        }).then(function (solicitudcotizacion) {
+          where: data
+        }).then(function (clase) {
           //logger.debug(solicitudcotizacion)
-          res.json({ records: records, total: total, page: page, rows: solicitudcotizacion });
+          res.json({ records: records, total: total, page: page, rows: clase });
         }).catch(function (err) {
           logger.error(err.message);
+          res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
+
+};
+
+exports.list2 = function (req, res) {
+  var page = req.body.page;
+  var rows = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+
+  if (!sidx)
+    sidx = "codigo";
+
+  if (!sord)
+    sord = "asc";
+
+  var orden = sidx + " " + sord;
+
+  var additional = [{
+    "field": "cid",
+    "op": "eq",
+    "data": req.params.id
+  }];
+
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      //logger.debug("->>> " + err)
+    } else {
+      models.plantillaclausula.count({
+        where: data
+      }).then(function (records) {
+          //logger.debug("campos: "+records);
+        var total = Math.ceil(records / rows);
+        models.plantillaclausula.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data
+        }).then(function (plantillaclausula) {
+          res.json({ records: records, total: total, page: page, rows: plantillaclausula });
+        }).catch(function (err) {
+          //logger.error(err);
           res.json({ error_code: 1 });
         });
       })

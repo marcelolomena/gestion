@@ -66,5 +66,8 @@ module.exports = function(passport) {
         .post(isAuthenticated, catalogoclausulasController.action)
         .get(isAuthenticated, catalogoclausulasController.list);
 
+    router.route('/sic/catalogoclausulas2/:id/list')
+        .get(isAuthenticated, catalogoclausulasController.list2);
+
     return router;
 }
