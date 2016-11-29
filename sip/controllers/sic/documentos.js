@@ -14,6 +14,7 @@ exports.action = function (req, res) {
             models.documentoscotizacion.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idtipodocumento: req.body.idtipodocumento,
+                uid: req.session.passport.user,
                 nombrecorto: req.body.nombrecorto,
                 descripcionlarga: req.body.descripcionlarga,
                 nombreresponsable: req.body.nombreresponsable,
@@ -29,6 +30,7 @@ exports.action = function (req, res) {
         case "edit":
             models.documentoscotizacion.update({
                 idtipodocumento: req.body.idtipodocumento,
+                uid: req.session.passport.user,
                 nombrecorto: req.body.nombrecorto,
                 descripcionlarga: req.body.descripcionlarga,
                 nombreresponsable: req.body.nombreresponsable,
@@ -103,6 +105,7 @@ exports.list = function (req, res) {
         if (data) {
             models.documentoscotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.documentoscotizacion.belongsTo(models.valores, { foreignKey: 'idtipodocumento' });
+            models.documentoscotizacion.belongsTo(models.user, { foreignKey: 'uid' });
             models.documentoscotizacion.count({
                 where: data
             }).then(function (records) {
@@ -115,7 +118,7 @@ exports.list = function (req, res) {
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
-                    }, { model: models.valores }
+                    }, { model: models.valores }, { model: models.user }
                     ]
                 }).then(function (documentoscotizacion) {
                     //logger.debug(solicitudcotizacion)
