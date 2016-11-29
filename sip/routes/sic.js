@@ -6,6 +6,7 @@ var documentosController = require('../controllers/sic/documentos');
 var serviciosController = require('../controllers/sic/servicios');
 var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
+var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 
 module.exports = function(passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
@@ -56,6 +57,14 @@ module.exports = function(passport) {
 
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
+
+    router.get('/sic/catalogoclausulas', isAuthenticated, function(req, res) {
+        res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/grid_catalogoclausulas')
+        .post(isAuthenticated, catalogoclausulasController.action)
+        .get(isAuthenticated, catalogoclausulasController.list);
 
     return router;
 }
