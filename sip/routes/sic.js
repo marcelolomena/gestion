@@ -51,5 +51,11 @@ module.exports = function(passport) {
     router.route('/sic/clausulas/:id')
         .get(isAuthenticated, clausulasController.list);        
 
+    router.route('/sic/segmentoproveedorserv')
+        .get(isAuthenticated, serviciosController.segmentoproveedor);
+
+    router.route('/sic/servicios/action')
+        .post(isAuthenticated, serviciosController.action);
+
     return router;
 }

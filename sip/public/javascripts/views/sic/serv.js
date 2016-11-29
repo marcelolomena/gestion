@@ -27,12 +27,11 @@ var gridServ = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-half'>Nota Criticidad<span style='color:red'>*</span>{notacriticidad}</div>";
-        tmplServ += "<div class='column-half'>Color Nota<span style='color:red'>*</span>{colornota}</div>";
+        tmplServ += "<div class='column-full'>Nota Criticidad<span style='color:red'>*</span>{notacriticidad}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Clase Proveedor<span style='color:red'>*</span>{claseproveedor}</div>";
+        tmplServ += "<div class='column-full'>Segmento Proveedor<span style='color:red'>*</span>{idsegmento}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<hr style='width:100%;'/>";
@@ -43,11 +42,9 @@ var gridServ = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Solicitud', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento','Documento', 'Glosa Referencia', 'ID Clase Criticidad','Clase Criticidad','Nota Criticidad', 'Color Nota', 'Clase Proveedor'],
+            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota', 'ID Segmento', 'Segmento Proveedor'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
-                { name: 'idsolicitud', index: 'idsolicitud', width: 100, hidden: true, editable: true },
-                //{ name: 'idservicio', index: 'idservicio', width: 100, hidden: true, editable: true, editoptions: { size: 10 } },
                 {
                     name: 'idservicio', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -126,13 +123,36 @@ var gridServ = {
                     }
                 },
                 { name: 'clasecriticidad.glosaclase', index: 'clasecriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
-                { name: 'notacriticidad', index: 'notacriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
+                { name: 'notacriticidad', index: 'notacriticidad', width: 150, align: "right", editable: true, editoptions: { size: 10 } },
                 { name: 'colornota', index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 } },
-                { name: 'claseproveedor', index: 'claseproveedor', width: 150, align: "left", editable: true, editoptions: { size: 10 } }
+                {
+                    name: 'idsegmento', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/sic/segmentoproveedorserv',
+                        buildSelect: function (response) {
+                            var rowKey = $gridTab.getGridParam("selrow");
+                            var rowData = $gridTab.getRowData(rowKey);
+                            var thissid = rowData.idclasecriticidad;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Seleccione Segmento Proveedor--</option>';
+                            $.each(data, function (i, item) {
+
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].sigla + ' - ' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].sigla + ' - ' + data[i].nombre + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        }
+                    }
+                },
+                { name: 'segmentoproveedor.sigla', index: 'segmentoproveedor', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
             ],
-            rowNum: 5,
+            rowNum: 10,
             rowList: [3, 6],
-            loadonce: true,
             pager: '#navGridServ',
             styleUI: "Bootstrap",
             sortname: 'id',
@@ -148,6 +168,8 @@ var gridServ = {
         $gridTab.jqGrid('navGrid', '#navGridServ', { edit: true, add: true, del: true, search: false },
             {
                 editCaption: "Modifica Servicio",
+                mtype: 'POST',
+                url: '/sic/servicios/action',
                 closeAfterEdit: true,
                 recreateForm: true,
                 template: tmplServ,
@@ -155,17 +177,21 @@ var gridServ = {
                 serializeEditData: sipLibrary.createJSON
             }, {
                 addCaption: "Agrega Servicio",
+                mtype: 'POST',
+                url: '/sic/servicios/action',
                 closeAfterAdd: true,
                 recreateForm: true,
                 template: tmplServ,
                 mtype: 'POST',
                 ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON
-            }, {
+                serializeEditData: sipLibrary.createJSON,
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentRowKey };
+                }
 
-            }, {
+            }
 
-            });
+        );
 
 
     }

@@ -6,47 +6,51 @@ var Busboy = require('busboy');
 var path = require('path');
 var fs = require('fs');
 
-/*
+
 exports.action = function (req, res) {
     var action = req.body.oper;
 
     switch (action) {
         case "add":
-            models.documentoscotizacion.create({
+            models.serviciosrequeridos.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-                idtipodocumento: req.body.idtipodocumento,
-                nombrecorto: req.body.nombrecorto,
-                descripcionlarga: req.body.descripcionlarga,
-                nombreresponsable: req.body.nombreresponsable,
-                nombrearchivo: '',
+                idservicio: req.body.idservicio,
+                glosaservicio: req.body.glosaservicio,
+                iddoctotecnico: req.body.iddoctotecnico,
+                glosareferencia: req.body.glosareferencia,
+                idclasecriticidad: req.body.idclasecriticidad,
+                notacriticidad: req.body.notacriticidad,
+                idsegmento: req.body.idsegmento,
                 borrado: 1
-            }).then(function (documentoscotizacion) {
-                res.json({ id: documentoscotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+            }).then(function (serviciosrequeridos) {
+                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
                 res.json({ id: 0, message: err.message, success: false });
             });
             break;
         case "edit":
-            models.documentoscotizacion.update({
-                idtipodocumento: req.body.idtipodocumento,
-                nombrecorto: req.body.nombrecorto,
-                descripcionlarga: req.body.descripcionlarga,
-                nombreresponsable: req.body.nombreresponsable,
-                nombrearchivo: ''
+            models.serviciosrequeridos.update({
+                idservicio: req.body.idservicio,
+                glosaservicio: req.body.glosaservicio,
+                iddoctotecnico: req.body.iddoctotecnico,
+                glosareferencia: req.body.glosareferencia,
+                idclasecriticidad: req.body.idclasecriticidad,
+                notacriticidad: req.body.notacriticidad,
+                idsegmento: req.body.idsegmento
             }, {
                     where: {
                         id: req.body.id
                     }
-                }).then(function (documentoscotizacion) {
-                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                }).then(function (serviciosrequeridos) {
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
                 }).catch(function (err) {
                     logger.error(err)
                     res.json({ id: 0, message: err.message, success: false });
                 });
             break;
         case "del":
-            models.documentoscotizacion.destroy({
+            models.serviciosrequeridos.destroy({
                 where: {
                     id: req.body.id
                 }
@@ -63,7 +67,7 @@ exports.action = function (req, res) {
             break;
     }
 }
-*/
+
 
 exports.list = function (req, res) {
 
@@ -98,6 +102,7 @@ exports.list = function (req, res) {
             models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
             models.serviciosrequeridos.belongsTo(models.documentoscotizacion, { foreignKey: 'iddoctotecnico' });
             models.serviciosrequeridos.belongsTo(models.clasecriticidad, { foreignKey: 'idclasecriticidad' });
+            models.serviciosrequeridos.belongsTo(models.segmentoproveedor, { foreignKey: 'idsegmento' });
             models.serviciosrequeridos.count({
                 where: {
                     idsolicitudcotizacion: id
@@ -122,6 +127,9 @@ exports.list = function (req, res) {
                     },
                     {
                         model: models.clasecriticidad
+                    },
+                    {
+                        model: models.segmentoproveedor
                     }
                     ]
                 }).then(function (serviciosrequeridos) {
@@ -179,6 +187,19 @@ exports.doctoasociado = function (req, res) {
 exports.clasecriticidad = function (req, res) {
 
     models.clasecriticidad.findAll({
+
+    }).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.segmentoproveedor = function (req, res) {
+
+    models.segmentoproveedor.findAll({
 
     }).then(function (valores) {
         //logger.debug(valores)
