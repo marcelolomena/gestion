@@ -5,6 +5,7 @@ var solicitudcotizacionController = require('../controllers/sic/solicitudcotizac
 var documentosController = require('../controllers/sic/documentos');
 var serviciosController = require('../controllers/sic/servicios');
 var parametrosController = require('../controllers/sic/parametros');
+var clausulasController = require('../controllers/sic/clausulas');
 
 module.exports = function(passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
@@ -46,6 +47,9 @@ module.exports = function(passport) {
 
     router.route('/sic/clasecriticidadserv')
         .get(isAuthenticated, serviciosController.clasecriticidad);
+
+    router.route('/sic/clausulas/:id')
+        .get(isAuthenticated, clausulasController.list);        
 
     return router;
 }

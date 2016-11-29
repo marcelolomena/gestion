@@ -484,16 +484,16 @@ $(document).ready(function () {
     }
 
     function showChildGrid(parentRowID, parentRowKey) {
+        //console.log("parentRowID [" + parentRowID + "]")
+        //console.log("parentRowKey [" + parentRowKey + "]")
 
-        //console.log("parentRowID: " + parentRowID)
-        //console.log("parentRowKey " + parentRowKey)
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab' class='media_node active span' data-toggle='tab'>Documentos</a></li>"
-        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab' class='media_node active span' data-toggle='tab'>Servicios</a></li>"
+        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab' data-toggle='tab'>Servicios</a></li>"
         tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
         tabs += "<li><a data-target='#calendario' data-toggle='tab'>Calendario</a></li>"
         tabs += "<li><a data-target='#responsables' data-toggle='tab'>Responsables</a></li>"
-        tabs += "<li><a data-target='#clausulas' data-toggle='tab'>Cláusulas</a></li>"
+        tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab' data-toggle='tab'>Cláusulas</a></li>"
         tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
         tabs += "<li><a data-target='#anexos' data-toggle='tab'>Anexos</a></li>"
         tabs += "<li><a data-target='#bitacora' data-toggle='tab'>Bitácora</a></li>"
@@ -505,7 +505,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='foro'></div>"
         tabs += "<div class='tab-pane' id='calendario'></div>"
         tabs += "<div class='tab-pane' id='responsables'></div>"
-        tabs += "<div class='tab-pane' id='clausulas'></div>"
+        tabs += "<div class='tab-pane' id='clausulas'><table id='clausulas_t'></table><div id='navGridClau'></div>"
         tabs += "<div class='tab-pane' id='criterios'></div>"
         tabs += "<div class='tab-pane' id='anexos'></div>"
         tabs += "<div class='tab-pane' id='bitacora'></div>"
@@ -519,12 +519,11 @@ $(document).ready(function () {
                 targ = $this.attr('data-target');
 
             if (targ === '#documentos') {
-
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
-            }
-            if (targ === '#servicios') {
-
+            } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#clausulas') {
+                gridClausula.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
@@ -537,22 +536,16 @@ $(document).ready(function () {
                 targ = $this.attr('data-target');
 
             if (targ === '#documentos') {
-
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
-            }
-            if (targ === '#servicios') {
-
+            } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#clausulas') {
+                gridClausula.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
             return false;
         });
 
-    }
-
-    function clearSelection() {
-        var wsParams = { idcui: 0 }
-        var gridDetailParam = { postData: wsParams };
     }
 })

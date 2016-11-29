@@ -66,7 +66,7 @@ exports.action = function (req, res) {
           where: {
             id: req.body.id
           }
-        }).then(function (contrato) {
+        }).then(function (solicitudcotizacion) {
           res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
           logger.error(err)
