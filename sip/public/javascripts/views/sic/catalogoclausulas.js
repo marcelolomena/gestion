@@ -4,56 +4,12 @@ $(document).ready(function () {
 
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_idcui'>CUI<span style='color:red'>*</span>{idcui}</div>";
-    t1 += "<div class='column-half' id='d_idtecnico'>Técnico<span style='color:red'>*</span>{idtecnico}</div>";
+    t1 += "<div class='column-full' id='d_nombre'>Nombre<span style='color:red'>*</span>{nombre}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_tipocontrato'>Tipo Contrato<span style='color:red'>*</span>{tipocontrato}</div>";
-    t1 += "<div class='column-half' id='d_codigoart'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
+    t1 += "<div class='column-full' id='d_secuencia'>Secuencia<span style='color:red'>*</span>{secuencia}</div>";
     t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_sap'>SAP<span style='color:red'>*</span>{sap}</div>";
-    t1 += "<div class='column-half' id='d_descripcion'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
-    t1 += "<div class='column-half' id='d_idnegociador'>Negociador<span style='color:red'>*</span>{idnegociador}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_correonegociador'>Correo Negociador<span style='color:red'>*</span>{correonegociador}</div>";
-    t1 += "<div class='column-half' id='d_fononegociador'>Fono Negociador<span style='color:red'>*</span>{fononegociador}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full' id='d_direccionnegociador'>Dirección Negociador<span style='color:red'>*</span>{direccionnegociador}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_nombreinterlocutor1'>Nombre Interlocutor 1<span style='color:red'>*</span>{nombreinterlocutor1}</div>";
-    t1 += "<div class='column-half' id='d_correointerlocutor1'>Correo Interlocutor 1<span style='color:red'>*</span>{correointerlocutor1}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_fonointerlocutor1'>Fono Interlocutor 1<span style='color:red'>*</span>{fonointerlocutor1}</div>";
-    t1 += "<div class='column-half' id='d_nombreinterlocutor2'>Nombre Interlocutor 2<span style='color:red'>*</span>{nombreinterlocutor2}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
-    t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
-    t1 += "</div>";
-    //t1 += "<div class='form-row' style='display: none;'>";
-    //t1 += "<div class='column-half'>tecnico{tecnico}</div>";
-    //t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
