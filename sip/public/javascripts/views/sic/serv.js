@@ -2,7 +2,8 @@
 var gridServ = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
-        var $gridTab = $(targ + "_t")
+        //var $gridTab = $(targ + "_t")
+                var $gridTab = $(targ + "_t_"+ parentRowKey)
 
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
