@@ -12,15 +12,27 @@ module.exports = function(passport) {
     router.route('/sic/clasecriticidad/list')
         .get(isAuthenticated, criticidadController.list);
 
+    router.route('/sic/clasecriticidad/color')
+        .get(isAuthenticated, criticidadController.getColor);
+
+    router.route('/sic/clasecriticidad/notas')
+        .get(isAuthenticated, criticidadController.getNotas);
+
     router.route('/sic/clasecriticidad/action')
         .post(isAuthenticated, criticidadController.action);
 
     router.route('/sic/desglosefactores/:id')
         .post(isAuthenticated, criticidadController.desglosefactores);
 
+    router.route('/sic/desglosecolores/:id')
+        .post(isAuthenticated, criticidadController.desglosecolores);
+
     router.route('/sic/actiondesglosefactores/action')
         .post(isAuthenticated, criticidadController.actiondesglosefactores);
     
+    router.route('/sic/actiondesglosecolores/action')
+        .post(isAuthenticated, criticidadController.actiondesglosecolores);
+
     router.route('/sic/porcentajedesglosefactores/:parentRowKey')
         .get(isAuthenticated, criticidadController.porcentajedesglosefactores);
 

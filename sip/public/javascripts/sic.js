@@ -1,9 +1,9 @@
 var sicLibrary = {
     radioElemCalculado: function(value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="calculado" value="1"',
-            breakline = '/>Factor Variable</label>',
+            breakline = '/>Variable</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="calculado" value="0"',
-            endnaradio = '/>Factor Constante</label>';
+            endnaradio = '/>Constante</label>';
 
         if (value === '1') {
             return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
