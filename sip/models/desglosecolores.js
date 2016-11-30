@@ -1,32 +1,40 @@
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('desglosenotas', {
+  return sequelize.define('desglosecolores', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    iddesglosefactores: {
+    idclasecriticidad: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'desglosefactores',
+        model: 'clasecriticidad',
         key: 'id'
       }
     },
-    nombrenota: {
-      type: DataTypes.STRING,
+    notainicial: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },    
-    idnota: {
-      type: DataTypes.INTEGER,
+    notafinal: {
+      type: DataTypes.FLOAT,
       allowNull: true
+    },
+    idcolor: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'valores',
+        key: 'id'
+      }
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'desglosenotas'
+    schema: 'sic',timestamps: false,tableName: 'desglosecolores'
   });
 };

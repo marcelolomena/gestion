@@ -2,6 +2,16 @@ extends base.pug
 block titulo
   title SIC Banco de Chile - Sistema Integrado de Contratos - Solicitud Cotización
 block jsgrilla
+  style.
+    .ui-th-column>div, .ui-jqgrid-btable .jqgrow>td {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    overflow: hidden;
+    vertical-align: middle;
+    }
   script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
   script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
   script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           

@@ -18,6 +18,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    idcolor: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },    
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
