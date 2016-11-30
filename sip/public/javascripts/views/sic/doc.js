@@ -2,7 +2,7 @@
 var gridDoc = {
 
     renderGrid: function(loadurl, parentRowKey, targ) {
-        var $gridTab = $(targ + "_t_"+ parentRowKey)
+        var $gridTab = $(targ + "_t_" + parentRowKey)
 
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
@@ -134,15 +134,20 @@ var gridDoc = {
             sortname: 'id',
             sortorder: "asc",
             height: "auto",
-            shrinkToFit: true,
+            //shrinkToFit: true,
             autowidth: true,
+            rownumbers: true,
             onSelectRow: function(id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
             caption: "Documentos"
         });
-
+/*
+        $(window).bind("resize", function() {
+            $gridTab.jqGrid("setGridWidth", $gridTab.closest(".container-fluid").width());
+        }).triggerHandler("resize");
+*/
         $gridTab.jqGrid('navGrid', '#navGrid', { edit: true, add: true, del: true, search: false },
             {
                 editCaption: "Modifica Documento",

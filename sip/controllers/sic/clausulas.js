@@ -68,14 +68,11 @@ exports.list = function (req, res) {
     var sidx = req.query.sidx;
     var sord = req.query.sord;
 
-
     if (!sidx)
         sidx = "id";
 
     if (!sord)
         sord = "asc";
-
-    //var orden = "[clausulas]." + sidx + " " + sord;
 
     var additional = [{
         "field": "idsolicitudcotizacion",
@@ -85,10 +82,12 @@ exports.list = function (req, res) {
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            //logger.debug(data)
+
             models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idsolicitudcotizacion' });
             models.clausulas.belongsTo(models.user, { foreignKey: 'uid' });
+            models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'cid' })
+
             models.clausulas.count({
                 where: data
             }).then(function (records) {
@@ -101,7 +100,9 @@ exports.list = function (req, res) {
                     include: [{
                         model: models.solicitudcotizacion
                     }, {
-                        model: models.plantillaclausula
+                        model: models.plantillaclausula, include: [
+                            models.clase
+                        ]
                     }, {
                         model: models.user
                     }
@@ -112,8 +113,66 @@ exports.list = function (req, res) {
                     logger.error(err.message);
                     res.json({ error_code: 1 });
                 });
-            })
+            }).catch(function (err) {
+                logger.error(err.message);
+                res.json({ error_code: 1 });
+            });
+
         }
     });
 
-};
+}
+
+exports.clases = function (req, res) {
+    var sql = `
+                select e.id, e.nombre from art_user a
+                join sip.usr_rol b on a.uid=b.uid
+                join sip.rol c on b.rid = c.id 
+                join sic.rol_clase d on d.rid= b.rid
+                join sic.clase e on d.cid=e.id
+                where a.uid = :uid
+	                `
+    sequelize.query(sql,
+        {
+            replacements: { uid: req.session.passport.user },
+            type: sequelize.QueryTypes.SELECT
+        }
+    ).then(function (clases) {
+        logger.debug(clases);
+        res.json(clases);
+    }).catch(function (err) {
+        logger.error(err.message);
+        res.json({ error_code: 1 });
+    });
+
+}
+
+exports.plantillas = function (req, res) {
+
+    models.plantillaclausula.findAll({
+        order: 'id ASC',
+        atributes: ['id', 'codigo'],
+        where: { cid: req.params.id }
+    }).then(function (plantillas) {
+        res.json(plantillas);
+    }).catch(function (err) {
+        logger.error(err.message);
+        res.json({ error_code: 1 });
+    });
+
+}
+
+exports.texto = function (req, res) {
+
+    models.plantillaclausula.findAll({
+        order: 'id ASC',
+        atributes: ['glosaclausula'],
+        where: { cid: req.params.id }
+    }).then(function (plantillas) {
+        res.json(plantillas);
+    }).catch(function (err) {
+        logger.error(err.message);
+        res.json({ error_code: 1 });
+    });
+
+}
