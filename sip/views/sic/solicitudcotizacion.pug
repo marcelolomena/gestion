@@ -1,13 +1,14 @@
 extends base.pug
 block titulo
-  title SIP Banco de Chile - Sistema Integrado de Contratos - Solicitud Cotización
+  title SIC Banco de Chile - Sistema Integrado de Contratos - Solicitud Cotización
 block jsgrilla
   script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
   script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
   script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           
   script(type='text/javascript', src='/javascripts/views/sic/solicitudcotizacion.js')
   script(type='text/javascript', src='/javascripts/views/sic/doc.js')  
-  script(type='text/javascript', src='/javascripts/views/sic/serv.js')  
+  script(type='text/javascript', src='/javascripts/views/sic/serv.js')
+  script(type='text/javascript', src='/javascripts/views/sic/clausula.js')    
 block titulogrilla
 block grilla
  table#gridMaster

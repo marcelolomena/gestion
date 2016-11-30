@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('documentoscotizacion', {
+  return sequelize.define('clausulas', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -16,11 +16,11 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idtipodocumento: {
+    idclausula: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'valores',
+        model: 'plantillaclausula',
         key: 'id'
       }
     },
@@ -28,24 +28,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'user',
+        model: 'art_user',
         key: 'uid'
       }
     },
-    nombrecorto: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    descripcionlarga: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nombreresponsable: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nombrearchivo: {
-      type: DataTypes.STRING,
+    texto: {
+      type: DataTypes.TEXT,
       allowNull: true
     },
     borrado: {
@@ -53,6 +41,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'documentoscotizacion'
+    schema: 'sic',timestamps: false,tableName: 'clausulas'
   });
 };

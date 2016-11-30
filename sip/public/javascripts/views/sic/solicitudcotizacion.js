@@ -271,7 +271,7 @@ $(document).ready(function () {
         { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: true, editable: true },
         { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: true, editable: true },
     ];
-
+    var previousRowId = 0;
     $grid.jqGrid({
         url: '/sic/grid_solicitudcotizacion',
         datatype: "json",
@@ -287,7 +287,8 @@ $(document).ready(function () {
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
-        onSelectRow: function (rowid, selected) {
+        onSelectRow: function (pRowId, selected) {
+            /*
             if (rowid != null) {
                 console.log("rowid : " + rowid)
                 var wsParams = { idcui: rowid }
@@ -296,56 +297,42 @@ $(document).ready(function () {
                 var gridDetailParam = { postData: wsParams };
                 console.dir(gridDetailParam)
             }
+            */
         },
         pager: "#pagerMaster",
-        subGrid: true, // set the subGrid property to true to show expand buttons for each row
-        subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+        subGrid: true,
+        subGridRowExpanded: showChildGrid,
+        subGridBeforeExpand: function (divid, rowid) {
+            var expanded = jQuery("td.sgexpanded", "#gridMaster")[0];
+            //console.log(expanded)
+            if (expanded) {
+                setTimeout(function () {
+                    $(expanded).trigger("click");
+                }, 100);
+            }
+        },
         loadComplete: function (data) {
-
             $.get('/sic/getsession', function (data) {
-                if (data === 'Técnico SIC') {
-                    /*
-                    $grid.jqGrid("hideCol", "codigosolicitud")
-                    $grid.jqGrid("hideCol", "negociador")
-                    $grid.jqGrid("hideCol", "correonegociador")
-                    $grid.jqGrid("hideCol", "fononegociador")
-                    $grid.jqGrid("hideCol", "direccionnegociador")
-                    $grid.jqGrid("hideCol", "numerorfp")
-                    $grid.jqGrid("hideCol", "fechaenviorfp")
-                    $grid.jqGrid("hideCol", "nombreinterlocutor1")
-                    $grid.jqGrid("hideCol", "correointerlocutor1")
-                    $grid.jqGrid("hideCol", "fonointerlocutor1")
-                    $grid.jqGrid("hideCol", "nombreinterlocutor2")
-                    $grid.jqGrid("hideCol", "correointerlocutor2")
-                    $grid.jqGrid("hideCol", "fonointerlocutor2")
-                    */
-                    //add_gridMaster
-                } else if (data === 'Negociador SIC') {
-                    $("#add_gridMaster").hide()
-                    $grid.jqGrid("showCol", "codigosolicitud")
-                    $grid.jqGrid("showCol", "negociador")
-                    $grid.jqGrid("showCol", "correonegociador")
-                    $grid.jqGrid("showCol", "fononegociador")
-                    $grid.jqGrid("showCol", "direccionnegociador")
-                    $grid.jqGrid("showCol", "numerorfp")
-                    $grid.jqGrid("showCol", "fechaenviorfp")
-                    $grid.jqGrid("showCol", "nombreinterlocutor1")
-                    $grid.jqGrid("showCol", "correointerlocutor1")
-                    $grid.jqGrid("showCol", "fonointerlocutor1")
-                    $grid.jqGrid("showCol", "nombreinterlocutor2")
-                    $grid.jqGrid("showCol", "correointerlocutor2")
-                    $grid.jqGrid("showCol", "fonointerlocutor2")
-                    /*
-                    $grid.jqGrid("hideCol", "nombrecui")
-                    $grid.jqGrid("hideCol", "tecnico")
-                    $grid.jqGrid("hideCol", "tipocontrato")
-                    $grid.jqGrid("hideCol", "sap")
-                    $grid.jqGrid("hideCol", "descripcion")
-                    $grid.jqGrid("hideCol", "clasificacion")
-                    */
-                }
+                $.each(data, function (i, item) {
+                    console.log('EL SUPER ROL : ' + item.glosarol)
+                    if (item.glosarol === 'Negociador SIC') {
+                        $("#add_gridMaster").hide()
+                        $grid.jqGrid("showCol", "codigosolicitud")
+                        $grid.jqGrid("showCol", "negociador")
+                        $grid.jqGrid("showCol", "correonegociador")
+                        $grid.jqGrid("showCol", "fononegociador")
+                        $grid.jqGrid("showCol", "direccionnegociador")
+                        $grid.jqGrid("showCol", "numerorfp")
+                        $grid.jqGrid("showCol", "fechaenviorfp")
+                        $grid.jqGrid("showCol", "nombreinterlocutor1")
+                        $grid.jqGrid("showCol", "correointerlocutor1")
+                        $grid.jqGrid("showCol", "fonointerlocutor1")
+                        $grid.jqGrid("showCol", "nombreinterlocutor2")
+                        $grid.jqGrid("showCol", "correointerlocutor2")
+                        $grid.jqGrid("showCol", "fonointerlocutor2")
+                    }
+                });
             });
-
         }
     });
 
@@ -382,30 +369,32 @@ $(document).ready(function () {
             }, beforeShowForm: function (form) {
                 setTimeout(function () {
                     $.get('/sic/getsession', function (data) {
-                        if (data === 'Técnico SIC') {
-                            $("#d_idnegociador", form).hide();
-                            $("#d_correonegociador", form).hide();
-                            $("#d_direccionnegociador", form).hide();
-                            $("#d_fononegociador", form).hide();
-                            $("#d_numerorfp", form).hide();
-                            $("#d_fechaenviorfp", form).hide();
-                            $("#d_nombreinterlocutor1", form).hide();
-                            $("#d_correointerlocutor1", form).hide();
-                            $("#d_fonointerlocutor1", form).hide();
-                            $("#d_nombreinterlocutor2", form).hide();
-                            $("#d_correointerlocutor2", form).hide();
-                            $("#d_fonointerlocutor2", form).hide();
-                        } else if (data === 'Negociador SIC') {
-                            $("#idcui", form).attr("disabled", true);
-                            $("#idtecnico", form).attr('readonly', 'readonly');
-                            $("#tipocontrato", form).attr('readonly', 'readonly');
-                            $("#codigoart", form).attr('readonly', 'readonly');
-                            $("#sap", form).attr('readonly', 'readonly');
-                            $("#descripcion", form).attr('readonly', 'readonly');
-                            $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
-                        }
+                        $.each(data, function (i, item) {
+                            console.log('EL SUPER ROL : ' + item.glosarol)
+                            if (item.glosarol === 'Negociador SIC') {
+                                $("#idcui", form).attr("disabled", true);
+                                $("#idtecnico", form).attr('readonly', 'readonly');
+                                $("#tipocontrato", form).attr('readonly', 'readonly');
+                                $("#codigoart", form).attr('readonly', 'readonly');
+                                $("#sap", form).attr('readonly', 'readonly');
+                                $("#descripcion", form).attr('readonly', 'readonly');
+                                $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
+                            } else if (item.glosarol === 'Técnico SIC') {
+                                $("#d_idnegociador", form).hide();
+                                $("#d_correonegociador", form).hide();
+                                $("#d_direccionnegociador", form).hide();
+                                $("#d_fononegociador", form).hide();
+                                $("#d_numerorfp", form).hide();
+                                $("#d_fechaenviorfp", form).hide();
+                                $("#d_nombreinterlocutor1", form).hide();
+                                $("#d_correointerlocutor1", form).hide();
+                                $("#d_fonointerlocutor1", form).hide();
+                                $("#d_nombreinterlocutor2", form).hide();
+                                $("#d_correointerlocutor2", form).hide();
+                                $("#d_fonointerlocutor2", form).hide();
+                            }
+                        });
                     });
-
                 }, 100);
             }
 
@@ -456,30 +445,32 @@ $(document).ready(function () {
 
                 setTimeout(function () {
                     $.get('/sic/getsession', function (data) {
-                        if (data === 'Técnico SIC') {
-                            $("#d_idnegociador", form).hide();
-                            $("#d_correonegociador", form).hide();
-                            $("#d_direccionnegociador", form).hide();
-                            $("#d_fononegociador", form).hide();
-                            $("#d_numerorfp", form).hide();
-                            $("#d_fechaenviorfp", form).hide();
-                            $("#d_nombreinterlocutor1", form).hide();
-                            $("#d_correointerlocutor1", form).hide();
-                            $("#d_fonointerlocutor1", form).hide();
-                            $("#d_nombreinterlocutor2", form).hide();
-                            $("#d_correointerlocutor2", form).hide();
-                            $("#d_fonointerlocutor2", form).hide();
-                        } else if (data === 'Negociador SIC') {
-                            $("#d_idcui", form).hide();
-                            $("#d_idtecnico", form).hide();
-                            $("#d_tipocontrato", form).hide();
-                            $("#d_codigoart", form).hide();
-                            $("#d_sap", form).hide();
-                            $("#d_descripcion", form).hide();
-                            $("#d_idclasificacionsolicitud", form).hide();
-                        }
+                        $.each(data, function (i, item) {
+                            //console.log('EL SUPER ROL : ' + item.glosarol)
+                            if (item.glosarol === 'Negociador SIC') {
+                                $("#d_idcui", form).hide();
+                                $("#d_idtecnico", form).hide();
+                                $("#d_tipocontrato", form).hide();
+                                $("#d_codigoart", form).hide();
+                                $("#d_sap", form).hide();
+                                $("#d_descripcion", form).hide();
+                                $("#d_idclasificacionsolicitud", form).hide();
+                            } else if (item.glosarol === 'Técnico SIC') {
+                                $("#d_idnegociador", form).hide();
+                                $("#d_correonegociador", form).hide();
+                                $("#d_direccionnegociador", form).hide();
+                                $("#d_fononegociador", form).hide();
+                                $("#d_numerorfp", form).hide();
+                                $("#d_fechaenviorfp", form).hide();
+                                $("#d_nombreinterlocutor1", form).hide();
+                                $("#d_correointerlocutor1", form).hide();
+                                $("#d_fonointerlocutor1", form).hide();
+                                $("#d_nombreinterlocutor2", form).hide();
+                                $("#d_correointerlocutor2", form).hide();
+                                $("#d_fonointerlocutor2", form).hide();
+                            }
+                        });
                     });
-
                 }, 100);
             }
         }, {
@@ -504,75 +495,77 @@ $(document).ready(function () {
     }
 
     function showChildGrid(parentRowID, parentRowKey) {
+        //console.log("parentRowID [" + parentRowID + "]")
+        //console.log("parentRowKey [" + parentRowKey + "]")
 
-        //console.log("parentRowID: " + parentRowID)
-        //console.log("parentRowKey " + parentRowKey)
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab' class='media_node active span' data-toggle='tab'>Documentos</a></li>"
-        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab' class='media_node active span' data-toggle='tab'>Servicios</a></li>"
+        //tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab' class='media_node active span' data-toggle='tab'>Documentos</a></li>"
+        tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
+        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
         tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
         tabs += "<li><a data-target='#calendario' data-toggle='tab'>Calendario</a></li>"
         tabs += "<li><a data-target='#responsables' data-toggle='tab'>Responsables</a></li>"
-        tabs += "<li><a data-target='#clausulas' data-toggle='tab'>Cláusulas</a></li>"
+        tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
         tabs += "<li><a data-target='#anexos' data-toggle='tab'>Anexos</a></li>"
         tabs += "<li><a data-target='#bitacora' data-toggle='tab'>Bitácora</a></li>"
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"
-        tabs += "<div class='tab-pane active' id='documentos'><table id='documentos_t'></table><div id='navGrid'></div></div>"
-        tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t'></table><div id='navGridServ'></div></div>"
+        tabs += "<div class='tab-pane active' id='documentos'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div>"
+        tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridServ'></div></div>"
         tabs += "<div class='tab-pane' id='foro'></div>"
         tabs += "<div class='tab-pane' id='calendario'></div>"
         tabs += "<div class='tab-pane' id='responsables'></div>"
-        tabs += "<div class='tab-pane' id='clausulas'></div>"
+        tabs += "<div class='tab-pane' id='clausulas'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div>"
         tabs += "<div class='tab-pane' id='criterios'></div>"
         tabs += "<div class='tab-pane' id='anexos'></div>"
         tabs += "<div class='tab-pane' id='bitacora'></div>"
         tabs += "</div>"
 
+        //console.log(tabs)
+
         $("#" + parentRowID).append(tabs);
+        $('#documentos_tab_' + parentRowKey).addClass('media_node active span')
 
-        $('.active[data-toggle="tab"]').each(function (e) {
+        //var toggle='.active[data-toggle="tab_' + parentRowKey + '"]';
+        //$('.active[data-toggle="tab"]').each(function (e) {
+        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
             if (targ === '#documentos') {
-
+                console.log(loadurl)
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
-            }
-            if (targ === '#servicios') {
-
+            } else if (targ === '#servicios') {
+                console.log(loadurl)
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#clausulas') {
+                console.log(loadurl)
+                gridClausula.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
             return false;
         });
 
-        $('[data-toggle="tab"]').click(function (e) {
+        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-
+            console.log(loadurl)
             if (targ === '#documentos') {
-
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
-            }
-            if (targ === '#servicios') {
-
+            } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#clausulas') {
+                gridClausula.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
             return false;
         });
 
-    }
-
-    function clearSelection() {
-        var wsParams = { idcui: 0 }
-        var gridDetailParam = { postData: wsParams };
     }
 })

@@ -5,6 +5,8 @@ var solicitudcotizacionController = require('../controllers/sic/solicitudcotizac
 var documentosController = require('../controllers/sic/documentos');
 var serviciosController = require('../controllers/sic/servicios');
 var parametrosController = require('../controllers/sic/parametros');
+var clausulasController = require('../controllers/sic/clausulas');
+var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 
 module.exports = function(passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
@@ -30,7 +32,7 @@ module.exports = function(passport) {
     router.get('/sic/getsession', function(req, res) {
         console.dir(req.session.passport.sidebar[0])
         if (req.session.passport.sidebar[0].rol)
-            res.json(req.session.passport.sidebar[0].rol);
+            res.json(req.session.passport.sidebar[0].rol);//JSON
         else
             res.send("no session value stored in DB ");
     });
@@ -43,6 +45,29 @@ module.exports = function(passport) {
 
     router.route('/sic/servicios/:id/doctoasociado')
         .get(isAuthenticated, serviciosController.doctoasociado);
+
+    router.route('/sic/clasecriticidadserv')
+        .get(isAuthenticated, serviciosController.clasecriticidad);
+
+    router.route('/sic/clausulas/:id')
+        .get(isAuthenticated, clausulasController.list);        
+
+    router.route('/sic/segmentoproveedorserv')
+        .get(isAuthenticated, serviciosController.segmentoproveedor);
+
+    router.route('/sic/servicios/action')
+        .post(isAuthenticated, serviciosController.action);
+
+    router.get('/sic/catalogoclausulas', isAuthenticated, function(req, res) {
+        res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/grid_catalogoclausulas')
+        .post(isAuthenticated, catalogoclausulasController.action)
+        .get(isAuthenticated, catalogoclausulasController.list);
+
+    router.route('/sic/catalogoclausulas2/:id/list')
+        .get(isAuthenticated, catalogoclausulasController.list2);
 
     return router;
 }

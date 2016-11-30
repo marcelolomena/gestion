@@ -2,7 +2,7 @@
 var gridDoc = {
 
     renderGrid: function(loadurl, parentRowKey, targ) {
-        var $gridTab = $(targ + "_t")
+        var $gridTab = $(targ + "_t_"+ parentRowKey)
 
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
@@ -31,11 +31,12 @@ var gridDoc = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Tipo', 'Tipo', 'Nombre', 'Descripción', 'Responsable', 'Archivo', 'Archivo'],
+            colNames: ['Doc', 'Tipo', 'Tipo', 'Nombre', 'Descripción', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: false, width: 10,
-                    editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }, formatter: returnDocLink
+                    editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
+                    formatter: function(cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
                 },
                 { name: 'valore.tipo', width: 50, editable: false, align: "left", hidden: false },
                 {
@@ -197,13 +198,11 @@ var gridDoc = {
 }
 
 
-function returnDocLink(cellValue, options, rowdata, action) {
-    return "<a href='/sic/documentos/" + rowdata.id + "' >" + cellValue + "</a>";
+function returnDocLink(cellValue, options, rowdata, parentRowKey) {
+    return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/word.jpg' width='16' height='16'></a>";
 }
 
 function UploadDoc(response, postdata) {
-
-    //console.dir(response)
 
     var data = $.parseJSON(response.responseText);
     if (data.success) {
@@ -232,6 +231,7 @@ function ajaxDocUpload(id, parent) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
                         dialog.find('.bootbox-body').html(data.message);
+                        $("#documentos_t").trigger('reloadGrid');
                     } else {
                         dialog.find('.bootbox-body').html(data.message);
                     }
