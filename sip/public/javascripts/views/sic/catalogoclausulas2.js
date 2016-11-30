@@ -13,12 +13,11 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Tipo Fecha {idtipofecha}</div>";
-    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Fecha {fecha}</div>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Código {codigo}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Comentario {comentario}</div>";
+    tmplPF += "<div class='column-full'>Glosa Cláusula {glosaclausula}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -32,12 +31,59 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     var childGridPagerID = pager_id;
     var childGridURL = "/sic/catalogoclausulas2/" + parentRowKey + "/list";
 
-    var modelIniciativaFecha = [
+    var modelCatClausulas = [
         { label: 'id', name: 'id', key: true, hidden: true },
 
         { label: 'Código', name: 'codigo', width: 150, align: 'left', search: false, editable: true },
-        { label: 'Glosa Cláusula', name: 'glosaclausula', width: 500, align: 'left', search: false, editable: true },
-            
+        {
+            label: 'Glosa Cláusula', name: 'glosaclausula', width: 500, align: 'left', search: false, editable: true,
+            edittype: 'custom',
+            editoptions: {
+                custom_element: function (value, options) {
+                    var elm = $("<textarea></textarea>");
+                    elm.val(value);
+                    setTimeout(function () {
+                        //tinymce.remove();
+                        //var ctr = $("#" + options.id).tinymce();
+                        //if (ctr !== null) {
+                        //    ctr.remove();
+                        //}
+                        try {
+                            tinymce.remove("#" + options.id);
+                        } catch (ex) { }
+                        tinymce.init({
+                            menubar: false,
+                            statusbar: false,
+                            selector: "#" + options.id,
+                            plugins: "link"
+                        });
+                    }, 50);
+                    return elm;
+                },
+                custom_value: function (element, oper, gridval) {
+                    var id;
+                    if (element.length > 0) {
+                        id = element.attr("id");
+                    } else if (typeof element.selector === "string") {
+                        var sels = element.selector.split(" "),
+                            idSel = sels[sels.length - 1];
+                        if (idSel.charAt(0) === "#") {
+                            id = idSel.substring(1);
+                        } else {
+                            return "";
+                        }
+                    }
+                    if (oper === "get") {
+                        return tinymce.get(id).getContent({ format: "row" });
+                    } else if (oper === "set") {
+                        if (tinymce.get(id)) {
+                            tinymce.get(id).setContent(gridval);
+                        }
+                    }
+                }
+            },
+        },
+
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -53,18 +99,18 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelIniciativaFecha,
+        colModel: modelCatClausulas,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/iniciativafecha/action',
+        editurl: '/sic/catalogoclausulas2/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "glosaclausula": "No hay datos" });
             }
         }
     });
@@ -81,36 +127,6 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    $.ajax({
-                        type: "GET",
-                        url: '/actualizaduracion/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
-                return [true, "", ""]
-            },
-            beforeShowForm: function (form) {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.id;
-                if (thissid == 0) {
-                    alert("Debe seleccionar una fila");
-                    return [false, result.error_text, ""];
-                }
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                //$('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
@@ -125,26 +141,6 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    $.ajax({
-                        type: "GET",
-                        url: '/actualizaduracion/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
-                return [true, "", ""]
-            }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
@@ -155,13 +151,6 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             addCaption: "Eliminar Fecha Crítica",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
             }
         },
         {
