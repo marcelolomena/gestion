@@ -33,10 +33,14 @@ $(document).ready(function () {
                         console.log("change actual:" + actual); 
                         if (actual == "readonly") {               
                             $("input#factor").attr("readonly", false);
-                            $("input#idcolor").attr("readonly", false);
+                             window.setTimeout(function () {
+                                  $("#idcolor").attr('disabled', false);                  
+                             }, 1000);
                       } else {
                             $("input#factor").attr("readonly", true);
-                            $("input#idcolor").attr("readonly", true);
+                            window.setTimeout(function () {
+                                  $("#idcolor").attr('disabled', true);                  
+                             }, 1000);
                         } 
                     }
                 }],                
@@ -153,7 +157,22 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }, beforeShowForm: function (form) {
+            },beforeSubmit: function (postdata, formid) {
+
+                 if (postdata.factor == '') {
+                     if (postdata.calculado == 0) {
+                        return [false, "Factor: Debe escoger un valor", ""]; }
+                    else {
+                    return [true, "", ""]
+                }}else if (postdata.idcolor == 0) {
+                     if (postdata.calculado == 0) {
+                        return [false, "Color: Debe escoger un valor", ""]; }
+                    else {
+                    return [true, "", ""]
+                }                
+                } else
+                     return [true, "", ""]
+            },beforeShowForm: function (form) {
                 $('input#glosaclase', form).attr('readonly', 'readonly');
                 var grid = $("#grid");
                 var rowKey = grid.getGridParam("selrow");
@@ -164,14 +183,19 @@ $(document).ready(function () {
                 if (calculado == "Variable") {
                     $(form).find("input:radio[value='1']").attr('checked', true);
                     $("input#factor").attr("readonly", true);
-                    $("input#idcolor").attr("readonly", true);
+                    window.setTimeout(function () {
+                           $("#idcolor").attr('disabled', true);                  
+                    }, 1000);
                     $("#factor", form).val(0);
+                    $("#idcolor", form).val(0);
                     console.log("calculado Variable:" + calculado);
                 }
                 else {
                     $(form).find("input:radio[value='0']").attr('checked', true);
                     $("input#factor").attr("readonly", false);
-                    $("input#idcolor").attr("readonly", false);
+                    window.setTimeout(function () {
+                       $("#idcolor").attr('disabled', false);                  
+                             }, 1000);
                     console.log("calculado Constante:" + calculado);
                 }
 
@@ -300,12 +324,9 @@ function gridDesgloseFactores(parentRowID, parentRowKey,suffix) {
 
     var grid = $("#grid");
     var rowData = grid.getRowData(parentRowKey);
-    var factorrow = rowData.factor;
-  
-     console.log('rowdata: ' + rowData);
-     console.log('factorrow: ' + factorrow);
+    var calculado = rowData.calculado;
 
-    if (factorrow != 0){ return }
+    if (calculado == 'Constante'){ return }
 
     var modelDesglose = [
         { label: 'id', name: 'id', key: true, hidden: true },      
@@ -540,13 +561,9 @@ function gridDesgloseColores(parentRowID, parentRowKey,suffix) {
 
     var grid = $("#grid");
     var rowData = grid.getRowData(parentRowKey);
-    var factorrow = rowData.factor;
-  
-     console.log('rowdata: ' + rowData);
-     console.log('factorrow: ' + factorrow);
+    var calculado = rowData.calculado;
 
-    if (factorrow != 0){ return }
-
+    if (calculado == 'Constante'){ return }
 
     var modelDesgloseNotas = [
         { label: 'id', name: 'id', key: true, hidden: true },    

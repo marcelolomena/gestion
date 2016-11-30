@@ -53,15 +53,20 @@ exports.list = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var id = req.body.id;
+  var color =  req.body.idcolor
 
   switch (action) {
     case "add":
-               
+      if (color == 0)       
+          { color = null}
+
+      if (req.body.calculado == 1)
+          { color = null}
       models.clasecriticidad.create({
         factor: req.body.factor.replace(",", "."),
         glosaclase: req.body.glosaclase,
         calculado:req.body.calculado,
-        idcolor:req.body.idcolor,
+        idcolor:color,
         borrado: 1
       }).then(function (plantilla) {
         res.json({ error_code: 0 });
@@ -72,6 +77,12 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
+
+      if (color == 0)
+          { color = null}
+
+      if (req.body.calculado == 1)
+          { color = null}
 
       if (req.body.factor != 0){
           var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
@@ -104,7 +115,7 @@ exports.action = function (req, res) {
       models.clasecriticidad.update({
         factor:req.body.factor.replace(",", "."),
         calculado:req.body.calculado,
-        idcolor:req.body.idcolor
+        idcolor:color
       }, {
           where: {
             id: req.body.id
