@@ -19,7 +19,7 @@ exports.action = function (req, res) {
                 texto: req.body.texto,
                 borrado: 1
             }).then(function (clausulas) {
-                bitacora.registrar(req.body.idsolicitudcotizacion, 'clausulas', clausulas.id, 'insert', req.session.passport.user, new Date(), models.clausulas)
+                //bitacora.registrar(req.body.idsolicitudcotizacion, 'clausulas', clausulas.id, 'insert', req.session.passport.user, new Date(), models.clausulas)
                 res.json({ error: 0, glosa: '' });
             }).catch(function (err) {
                 logger.error(err)
