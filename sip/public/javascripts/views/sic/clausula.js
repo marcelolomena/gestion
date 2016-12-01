@@ -18,7 +18,7 @@ var gridClausula = {
 
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{texto}</div>";
-        tmpl += "</div>";        
+        tmpl += "</div>";
 
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
@@ -28,12 +28,14 @@ var gridClausula = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'idclase', 'idclausulaplantilla', 'Texto'],
+            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Texto'],
             colModel: [
                 {
-                    name: 'id', index: 'id', key: true, hidden: false,
+                    name: 'id', index: 'id', key: true, hidden: true,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }
                 },
+                { name: 'Clase', index: 'clase', width: 100, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
+                { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -42,7 +44,7 @@ var gridClausula = {
                         buildSelect: function(response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
-                            var thissid = rowData.idclase;
+                            var thissid = rowData.codclase;
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Escoger Clase--</option>';
@@ -68,7 +70,7 @@ var gridClausula = {
                                         success: function(data) {
                                             var rowKey = $gridTab.getGridParam("selrow");
                                             var rowData = $gridTab.getRowData(rowKey);
-                                            var thissid = $gridTab.idclausulaplantilla;
+                                            var thissid = rowData.idclausulaplantilla;
                                             var s = "<select>";//el default
                                             s += '<option value="0">--Escoger Código--</option>';
                                             $.each(data, function(i, item) {
@@ -89,6 +91,8 @@ var gridClausula = {
                         }],
                     }
                 },
+                { name: 'codplantilla', index: 'codplantilla', hidden: true, editable: false, jsonmap: "plantillaclausula.id", },
+                { name: 'Código', index: 'Código', width: 100, align: "left", editable: false, jsonmap: "plantillaclausula.codigo", },
                 {
                     name: 'idclausulaplantilla', search: false, editable: true, hidden: true, edittype: "select",
                     editoptions: {
@@ -112,8 +116,8 @@ var gridClausula = {
                     },
                 },
                 {
-                    name: 'texto', index: 'texto',editable: true,
-                    width: 500, hidden: true,
+                    name: 'texto', index: 'texto', editable: true,
+                    width: 800, hidden: false,
                     //edittype: "textarea",
                     edittype: 'custom',
                     editoptions: {
@@ -169,8 +173,9 @@ var gridClausula = {
             sortorder: "asc",
             height: "auto",
             rownumbers: true,
-            //shrinkToFit: true,
-            autowidth: true,
+            width: 1000,
+            shrinkToFit: true,
+            //autowidth: true,
             onSelectRow: function(id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
@@ -178,9 +183,9 @@ var gridClausula = {
             caption: "Clausulas"
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, view: true, search: false },
             {
-                editCaption: "Modifica Clausula",
+                editCaption: "Modifica Cláusula",
                 closeAfterEdit: true,
                 recreateForm: true,
                 template: tmpl,
@@ -196,9 +201,29 @@ var gridClausula = {
                     } else {
                         return [true, "", ""]
                     }
-                }, afterSubmit: UploadDoc
+                }, beforeShowForm: function(form) {
+                    setTimeout(function() {
+                        $.ajax({
+                            type: "GET",
+                            url: '/sic/plantillas/' + $gridTab.getRowData($gridTab.getGridParam("selrow")).codclase,
+                            success: function(data) {
+                                var s = "<select>";//el default
+                                s += '<option value="0">--Escoger Código--</option>';
+                                $.each(data, function(i, item) {
+                                    if (data[i].id == $gridTab.getRowData($gridTab.getGridParam("selrow")).codplantilla) {
+                                        s += '<option value="' + data[i].id + '" selected>' + data[i].codigo + '</option>';
+                                    } else {
+                                        s += '<option value="' + data[i].id + '">' + data[i].codigo + '</option>';
+                                    }
+                                });
+                                s += "</select>";
+                                $("#idclausulaplantilla").html(s);
+                            }
+                        });
+                    }, 100);
+                }
             }, {
-                addCaption: "Agrega Documento",
+                addCaption: "Agrega Cláusula",
                 closeAfterAdd: true,
                 recreateForm: true,
                 template: tmpl,
@@ -209,13 +234,30 @@ var gridClausula = {
                 onclickSubmit: function(rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function(postdata, formid) {
-                    if (parseInt(postdata.idclausula) == 0) {
+                    if (parseInt(postdata.idclausulaplantilla) == 0) {
                         return [false, "Cláusula: Debe escoger un valor", ""];
                     } else {
                         return [true, "", ""]
                     }
-                }, afterSubmit: UploadDoc
+                }
             }, {
+                mtype: 'POST',
+                url: '/sic/clausulas/action',
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                beforeShowForm: function(form) {
+                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
+                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.texto);
+
+                },
+                afterSubmit: function(response, postdata) {
+                    var json = response.responseText;
+                    var result = JSON.parse(json);
+                    if (!result.success)
+                        return [false, result.message, ""];
+                    else
+                        return [true, "", ""]
+                }
 
             }, {
 

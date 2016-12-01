@@ -143,11 +143,11 @@ var gridDoc = {
             viewrecords: true,
             caption: "Documentos"
         });
-/*
-        $(window).bind("resize", function() {
-            $gridTab.jqGrid("setGridWidth", $gridTab.closest(".container-fluid").width());
-        }).triggerHandler("resize");
-*/
+        /*
+                $(window).bind("resize", function() {
+                    $gridTab.jqGrid("setGridWidth", $gridTab.closest(".container-fluid").width());
+                }).triggerHandler("resize");
+        */
         $gridTab.jqGrid('navGrid', '#navGrid', { edit: true, add: true, del: true, search: false },
             {
                 editCaption: "Modifica Documento",
@@ -194,8 +194,23 @@ var gridDoc = {
                     }
                 }, afterSubmit: UploadDoc
             }, {
+                mtype: 'POST',
+                url: '/sic/documentos/action',
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                beforeShowForm: function(form) {
+                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
+                    $("td.delmsg", form).html("<b>Usted borrará el documento:</b><br><b>" + ret.nombrearchivo + "</b> ?");
 
-            }, {
+                },
+                afterSubmit: function(response, postdata) {
+                    var json = response.responseText;
+                    var result = JSON.parse(json);
+                    if (!result.success)
+                        return [false, result.message, ""];
+                    else
+                        return [true, "", ""]
+                }
 
             });
 

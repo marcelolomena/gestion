@@ -8,8 +8,8 @@ var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 
-module.exports = function (passport) {
-    router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
+module.exports = function(passport) {
+    router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
         res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
@@ -29,7 +29,7 @@ module.exports = function (passport) {
     router.route('/sic/documentos/upload')
         .post(isAuthenticated, documentosController.upload);
 
-    router.get('/sic/getsession', function (req, res) {
+    router.get('/sic/getsession', function(req, res) {
         console.dir(req.session.passport.sidebar[0])
         if (req.session.passport.sidebar[0].rol)
             res.json(req.session.passport.sidebar[0].rol);//JSON
@@ -50,7 +50,9 @@ module.exports = function (passport) {
         .get(isAuthenticated, serviciosController.clasecriticidad);
 
     router.route('/sic/clausulas/:id')
-        .get(isAuthenticated, clausulasController.list);
+        .get(isAuthenticated, clausulasController.list)
+    router.route('/sic/clausulas/action')
+        .post(isAuthenticated, clausulasController.action);
 
     router.route('/sic/segmentoproveedorserv')
         .get(isAuthenticated, serviciosController.segmentoproveedor);
@@ -58,7 +60,7 @@ module.exports = function (passport) {
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
 
-    router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
+    router.get('/sic/catalogoclausulas', isAuthenticated, function(req, res) {
         res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
     });
 
@@ -79,7 +81,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, clausulasController.plantillas);
 
     router.route('/sic/texto/:id')
-        .get(isAuthenticated, clausulasController.texto);        
+        .get(isAuthenticated, clausulasController.texto);
 
     return router;
 }

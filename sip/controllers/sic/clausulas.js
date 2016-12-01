@@ -2,21 +2,24 @@ var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var utilSeq = require('../../utils/seq');
 var logger = require("../../utils/logger");
+var bitacora = require("../../utils/bitacora");
 var path = require('path');
 var fs = require('fs');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-
+    logger.debug("idclausulaplantilla: "  +  req.body.idclausulaplantilla)
     switch (action) {
         case "add":
+        
             models.clausulas.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-                idclausula: req.body.idclausula,
+                idclausula: req.body.idclausulaplantilla,
                 uid: req.session.passport.user,
                 texto: req.body.texto,
                 borrado: 1
             }).then(function (clausulas) {
+                bitacora.registrar(req.body.idsolicitudcotizacion,'clausulas',clausulas.id,'insert',null,req.session.passport.user,new Date())
                 res.json({ error: 0, glosa: '' });
             }).catch(function (err) {
                 logger.error(err)
@@ -26,7 +29,7 @@ exports.action = function (req, res) {
             break;
         case "edit":
             models.clausulas.update({
-                idclausula: req.body.idclausula,
+                idclausula: req.body.idclausulaplantilla,
                 uid: req.session.passport.user,
                 texto: req.body.texto
             }, {
@@ -167,7 +170,7 @@ exports.texto = function (req, res) {
     models.plantillaclausula.findAll({
         order: 'id ASC',
         atributes: ['glosaclausula'],
-        where: { cid: req.params.id }
+        where: { id: req.params.id }
     }).then(function (plantillas) {
         res.json(plantillas);
     }).catch(function (err) {
