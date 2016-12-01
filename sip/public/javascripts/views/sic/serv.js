@@ -190,7 +190,19 @@ var gridServ = {
                     return { idsolicitudcotizacion: parentRowKey };
                 }
 
+            },
+            {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Eliminar Plantilla Cláusula",
+            mtype: 'POST',
+                url: '/sic/servicios/action',
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
             }
+        }
 
         );
 

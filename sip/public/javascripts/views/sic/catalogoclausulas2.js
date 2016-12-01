@@ -123,7 +123,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Fecha Crítica",
+            editCaption: "Modificar Plantilla Cláusula",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -134,7 +134,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Fecha Crítica",
+            addCaption: "Agregar Plantilla Cláusula",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -148,7 +148,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Fecha Crítica",
+            addCaption: "Eliminar Plantilla Cláusula",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
