@@ -6,30 +6,32 @@ var path = require('path');
 var fs = require('fs');
 
 module.exports = (function () {
-    var registrar = function (idsolicitudcotizacion, tabla, idregistro, accion, idusuario, fecha, model) {
+    var registrar = function (idsolicitudcotizacion, tabla, idregistro, accion, idusuario, fecha, model, callback) {
 
         if (accion == 'update' || accion == 'delete') {
             model.findAll({
                 where: { id: idregistro },
             }).then(function (res) {
-                models.bitacora.create({
-                    idsolicitudcotizacion: idsolicitudcotizacion,
+                //console.dir(res);
+                var reg=models.bitacora.create({
+                    idsolicitudcotizacion: res[0].idsolicitudcotizacion,
                     tabla: tabla,
                     idregistro: idregistro,
                     accion: accion,
-                    dataold: res,
+                    dataold: JSON.stringify(res),
                     idusuario: idusuario,
                     fecha: fecha,
                     borrado: 1
                 });
-
+                callback(undefined, reg);
 
             }).catch(function (err) {
                 logger.error(err.message);
+                return callback(e);
             });
         } else {
 
-            models.bitacora.create({
+            var reg=models.bitacora.create({
                 idsolicitudcotizacion: idsolicitudcotizacion,
                 tabla: tabla,
                 idregistro: idregistro,
@@ -38,6 +40,8 @@ module.exports = (function () {
                 fecha: fecha,
                 borrado: 1
             });
+             callback(undefined, reg);
+
         }
     }
     return {
