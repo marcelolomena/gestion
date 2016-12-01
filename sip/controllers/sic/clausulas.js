@@ -8,7 +8,7 @@ var fs = require('fs');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    logger.debug("idclausulaplantilla: " + req.body.idclausulaplantilla)
+    //logger.debug("idclausulaplantilla: " + req.body.idclausulaplantilla)
     switch (action) {
         case "add":
 
@@ -52,10 +52,10 @@ exports.action = function (req, res) {
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
-                res.json({ error: 0, glosa: '' });
+                res.json({ result: true, glosa: 'Deleted successfully' });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ error: 1, glosa: err.message });
+                res.json({ result: false, glosa: err.message });
             });
 
             break;
@@ -87,7 +87,7 @@ exports.list = function (req, res) {
         if (data) {
 
             models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-            models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idsolicitudcotizacion' });
+            models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idclausula' });
             models.clausulas.belongsTo(models.user, { foreignKey: 'uid' });
             models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'cid' })
 
