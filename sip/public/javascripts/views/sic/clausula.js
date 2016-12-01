@@ -117,8 +117,7 @@ var gridClausula = {
                 },
                 {
                     name: 'texto', index: 'texto', editable: true,
-                    width: 800, hidden: false,
-                    //edittype: "textarea",
+                    width: 1280, hidden: false,
                     edittype: 'custom',
                     editoptions: {
                         custom_element: function(value, options) {
@@ -137,7 +136,8 @@ var gridClausula = {
                                     menubar: false,
                                     statusbar: false,
                                     selector: "#" + options.id,
-                                    plugins: "link"
+                                    plugins: "link",
+                                    height: 300
                                 });
                             }, 50);
                             return elm;
@@ -180,7 +180,7 @@ var gridClausula = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Clausulas"
+            caption: "Cláusulas"
         });
 
         $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, view: true, search: false },
@@ -190,6 +190,7 @@ var gridClausula = {
                 recreateForm: true,
                 template: tmpl,
                 mtype: 'POST',
+                width: 800,
                 url: '/sic/clausulas/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
@@ -221,12 +222,16 @@ var gridClausula = {
                             }
                         });
                     }, 100);
+                    sipLibrary.centerDialog($gridTab.attr('id'));
+                }, afterShowForm: function(form) {
+
                 }
             }, {
                 addCaption: "Agrega Cláusula",
                 closeAfterAdd: true,
                 recreateForm: true,
                 template: tmpl,
+                width: 800,
                 mtype: 'POST',
                 url: '/sic/clausulas/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
@@ -239,6 +244,8 @@ var gridClausula = {
                     } else {
                         return [true, "", ""]
                     }
+                }, beforeShowForm: function(form) {
+                    sipLibrary.centerDialog($gridTab.attr('id'));
                 }
             }, {
                 mtype: 'POST',
