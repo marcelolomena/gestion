@@ -24,6 +24,51 @@ exports.action = function (req, res) {
                 idsegmento: req.body.idsegmento,
                 borrado: 1
             }).then(function (serviciosrequeridos) {
+
+                sequelize.query(
+                    'select b.calculado ' +
+                    'from sic.serviciosrequeridos a ' +
+                    'join sic.clasecriticidad b on a.idclasecriticidad=b.id ' +
+                    'where a.id=:id',
+                    { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
+                ).then(function (valores) {
+                    //logger.debug(valores)
+                    if (valores[0].calculado != 0) {
+
+                        sequelize.query(
+                            'select a.* ' +
+                            'from sic.desglosefactores a ' +
+                            'where a.idclasecriticidad=:id',
+                            { replacements: { id: req.body.idclasecriticidad }, type: sequelize.QueryTypes.SELECT }
+                        ).then(function (factores) {
+                            //logger.debug(valores)
+                            //console.dir(factores)
+
+                            for (var f in factores) {
+                                //console.log(factores[f].nombrefactor);
+                                models.factorescriticidad.create({
+                                    idserviciorequerido: serviciosrequeridos.id,
+                                    iddesglosefactores: factores[f].id,
+                                    porcentaje: factores[f].porcentaje,
+                                    nota: 0,
+                                    valor: 0,
+                                    observacion: "",
+                                    borrado: 1
+                                })
+
+                            }
+
+
+                        }).catch(function (err) {
+                            logger.error(err);
+                            res.json({ error: 1 });
+                        });
+                    }
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error: 1 });
+                });
+
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
                     'serviciosrequeridos',
@@ -211,6 +256,95 @@ exports.list = function (req, res) {
     });
 
 };
+exports.desglosefactoreslist = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.factorescriticidad.belongsTo(models.desglosefactores, { foreignKey: 'iddesglosefactores' });
+
+            models.factorescriticidad.count({
+                where: {
+                    idserviciorequerido: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.factorescriticidad.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        idserviciorequerido: id
+                    },
+                    include: [{
+                        model: models.desglosefactores
+                    }
+                    ]
+                }).then(function (factorescriticidad) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: factorescriticidad });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
+exports.proveedoressugeridoslist = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.proveedorsugerido.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+
+            models.proveedorsugerido.count({
+                where: {
+                    idserviciorequerido: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.proveedorsugerido.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        idserviciorequerido: id
+                    },
+                    include: [{
+                        model: models.proveedor
+                    }
+                    ]
+                }).then(function (proveedorsugerido) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: proveedorsugerido });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
+
 
 exports.listaservicios = function (req, res) {
 
@@ -222,6 +356,43 @@ exports.listaservicios = function (req, res) {
         'join sip.plantillapresupuesto b on b.idservicio=a.id ' +
         'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
         'where c.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.getcalculado = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'select b.calculado ' +
+        'from sic.serviciosrequeridos a ' +
+        'join sic.clasecriticidad b on a.idclasecriticidad=b.id ' +
+        'where a.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.getcalculadoconclase = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'select a.* ' +
+        'from sic.clasecriticidad a  ' +
+        'where a.id=:id',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -277,3 +448,74 @@ exports.segmentoproveedor = function (req, res) {
     });
 }
 
+exports.desgloseaction = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+
+            break;
+        case "edit":
+
+            models.factorescriticidad.update({
+                nota: req.body.nota,
+                valor: req.body.valor,
+                observacion: req.body.observacion
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (factorescriticidad) {
+
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ id: 0, message: err.message, success: false });
+                });
+
+
+
+            break;
+        case "del":
+
+
+            break;
+    }
+}
+
+exports.actualizanotafactor = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT a.* ' +
+        'FROM sic.factorescriticidad a ' +
+        'join sic.serviciosrequeridos b on a.idserviciorequerido=b.id ' +
+        'where b.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (factores) {
+        //logger.debug(valores)
+        var notafinal = 0.0;
+        for (var f in factores) {
+            //console.log(factores[f].nombrefactor);
+            notafinal = notafinal + ((factores[f].porcentaje/100)*factores[f].valor);
+        }
+        models.serviciosrequeridos.update({
+            notacriticidad: notafinal,
+
+        }, {
+                where: {
+                    id: id
+                }
+            }).then(function (factorescriticidad) {
+                res.json({ message: 'Actualizada la nota', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}

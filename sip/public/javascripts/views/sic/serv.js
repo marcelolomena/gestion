@@ -1,9 +1,9 @@
 //doc.js
 var gridServ = {
 
-    renderGrid: function (loadurl, parentRowKey, targ) {
+    renderGrid: function(loadurl, parentRowKey, targ) {
         //var $gridTab = $(targ + "_t")
-                var $gridTab = $(targ + "_t_"+ parentRowKey)
+        var $gridTab = $(targ + "_t_" + parentRowKey)
 
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -51,14 +51,14 @@ var gridServ = {
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/servicios/' + parentRowKey + '/list',
-                        buildSelect: function (response) {
+                        buildSelect: function(response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idservicio;
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Seleccione un Servicio--</option>';
-                            $.each(data, function (i, item) {
+                            $.each(data, function(i, item) {
 
                                 if (data[i].id == thissid) {
                                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
@@ -78,14 +78,14 @@ var gridServ = {
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/servicios/' + parentRowKey + '/doctoasociado',
-                        buildSelect: function (response) {
+                        buildSelect: function(response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.iddoctotecnico;
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Seleccione un Documento--</option>';
-                            $.each(data, function (i, item) {
+                            $.each(data, function(i, item) {
 
                                 if (data[i].id == thissid) {
                                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombrecorto + '</option>';
@@ -104,14 +104,14 @@ var gridServ = {
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/clasecriticidadserv',
-                        buildSelect: function (response) {
+                        buildSelect: function(response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idclasecriticidad;
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Seleccione Clase Criticidad--</option>';
-                            $.each(data, function (i, item) {
+                            $.each(data, function(i, item) {
 
                                 if (data[i].id == thissid) {
                                     s += '<option value="' + data[i].id + '" selected>' + data[i].glosaclase + '</option>';
@@ -120,7 +120,29 @@ var gridServ = {
                                 }
                             });
                             return s + "</select>";
-                        }
+                        },
+                        dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        
+                        var idclasecriticidad = $('option:selected', this).val()
+                        
+                            $.ajax({
+                                type: "GET",
+                                url: '/sic/getcalculadoconclase/' + idclasecriticidad,
+                                async: false,
+                                success: function (data) {
+                                    console.log("el val: "+parseInt(data[0].calculado));
+                                    //if(parseInt(data[0].calculado)!=0){
+
+                                        $("input#notacriticidad").val(data[0].factor);
+
+                                   //}
+                                }
+                            });
+                        
+                    }
+                }],
+
                     }
                 },
                 { name: 'clasecriticidad.glosaclase', index: 'clasecriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
@@ -131,14 +153,14 @@ var gridServ = {
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/segmentoproveedorserv',
-                        buildSelect: function (response) {
+                        buildSelect: function(response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idclasecriticidad;
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Seleccione Segmento Proveedor--</option>';
-                            $.each(data, function (i, item) {
+                            $.each(data, function(i, item) {
 
                                 if (data[i].id == thissid) {
                                     s += '<option value="' + data[i].id + '" selected>' + data[i].sigla + ' - ' + data[i].nombre + '</option>';
@@ -155,12 +177,18 @@ var gridServ = {
             rowNum: 10,
             rowList: [3, 6],
             pager: '#navGridServ',
+            subGrid: true,
+            subGridRowExpanded: showSubGridsServ,
+            subGridOptions: {
+                plusicon: "glyphicon-hand-right",
+                minusicon: "glyphicon-hand-down"
+            },
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
             shrinkToFit: false,
             height: "auto",
-            onSelectRow: function (id) {
+            onSelectRow: function(id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
@@ -175,7 +203,10 @@ var gridServ = {
                 recreateForm: true,
                 template: tmplServ,
                 ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON
+                serializeEditData: sipLibrary.createJSON,
+                beforeShowForm: function (form) {
+                    $('input#notacriticidad', form).attr('readonly', 'readonly');
+                }
             }, {
                 addCaption: "Agrega Servicio",
                 mtype: 'POST',
@@ -186,23 +217,23 @@ var gridServ = {
                 mtype: 'POST',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function (rowid) {
+                onclickSubmit: function(rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }
 
             },
             {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Plantilla Cláusula",
-            mtype: 'POST',
+                closeAfterDelete: true,
+                recreateForm: true,
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                addCaption: "Eliminar Plantilla Cláusula",
+                mtype: 'POST',
                 url: '/sic/servicios/action',
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
+                errorTextFormat: function(data) {
+                    return 'Error: ' + data.responseText
+                }
             }
-        }
 
         );
 
@@ -210,3 +241,365 @@ var gridServ = {
     }
 }
 
+function showSubGridsServ(subgrid_id, row_id) {
+    gridProveedores(subgrid_id, row_id, 'proveedores');
+    
+
+    $.ajax({
+        type: "GET",
+        url: '/sic/getcalculado/' + row_id,
+        async: false,
+        success: function(data) {
+            //console.dir("calc: "+data[0].calculado);
+
+            if (parseInt(data[0].calculado) != 0) {
+                gridCriticidad(subgrid_id, row_id, 'criticidad');
+            }
+
+        }
+    });
+
+}
+
+function gridCriticidad(parentRowID, parentRowKey, suffix) {
+    var subgrid_id = parentRowID;
+    var row_id = parentRowKey;
+    var subgrid_table_id, pager_id, toppager_id;
+    subgrid_table_id = subgrid_id + '_t';
+    pager_id = 'p_' + subgrid_table_id;
+    toppager_id = subgrid_table_id + '_toppager';
+    if (suffix) {
+        subgrid_table_id += suffix;
+        pager_id += suffix;
+    }
+
+    var tmplPF = "<div id='responsive-form' class='clearfix'>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nota {nota}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Valor {valor}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Observación {observacion}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' style='display: none;'>";
+    tmplPF += "</div>";
+
+    tmplPF += "<hr style='width:100%;'/>";
+    tmplPF += "<div> {sData} {cData}  </div>";
+    tmplPF += "</div>";
+    var childGridID = subgrid_table_id;
+    var childGridPagerID = pager_id;
+    var childGridURL = "/sic/desglosefactoresserv/" + parentRowKey + "/list";
+
+    var modelIniciativaFecha = [
+        { label: 'id', name: 'id', key: true, hidden: true },
+
+        {
+            label: 'Nombre Factor', name: 'desglosefactore.nombrefactor', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false, required: true }, hidedlg: true
+        },
+        {
+            label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'right',
+            search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+        },
+        {
+            label: 'Nota', name: 'nota', width: 50, align: 'right',
+            search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Valor', name: 'valor', width: 50, align: 'right',
+            search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Observación', name: 'observacion', width: 200,
+            align: 'left', edittype: "textarea",
+            search: true, editable: true, hidden: false,
+            editoptions: { placeholder: "Ingresar comentario sobre la fecha" }
+        },
+    ];
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        caption: 'Desglose Factores Criticidad',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
+        page: 1,
+        colModel: modelIniciativaFecha,
+        viewrecords: true,
+        styleUI: "Bootstrap",
+        regional: 'es',
+        height: 'auto',
+        pager: "#" + childGridPagerID,
+        editurl: '/sic/desglosefactoresserv/action',
+        gridComplete: function() {
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
+            }
+        }
+    });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+    },
+        {
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            editCaption: "Modificar Nota Factor",
+            template: tmplPF,
+            errorTextFormat: function(data) {
+                return 'Error: ' + data.responseText
+            },
+            
+            afterSubmit: function(response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.success!=true)
+                    return [false, result.message, ""];
+                else
+                    $.ajax({
+                        type: "GET",
+                        url: '/sic/actualizanotafactor/' + parentRowKey,
+                        async: false,
+                        success: function(data) {
+                            return [true, "", ""]
+                        }
+                    });
+                return [true, "", ""]
+            },
+            
+            beforeShowForm: function(form) {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                var thissid = rowData.id;
+                if (thissid == 0) {
+                    alert("Debe seleccionar una fila");
+                    return [false, result.error_text, ""];
+                }
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                //$('input#codigoart', form).attr('readonly', 'readonly');
+            }, afterShowForm: function(form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            }
+        },
+        {
+            closeAfterAdd: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Agregar Factor",
+            template: tmplPF,
+            errorTextFormat: function(data) {
+                return 'Error: ' + data.responseText
+            },
+            onclickSubmit: function(rowid) {
+                return { parent_id: parentRowKey };
+            },
+            
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Eliminar Factor",
+            errorTextFormat: function(data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function(response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }
+        },
+        {
+            recreateFilter: true
+        }
+    );
+}
+function gridProveedores(parentRowID, parentRowKey, suffix) {
+    var subgrid_id = parentRowID;
+    var row_id = parentRowKey;
+    var subgrid_table_id, pager_id, toppager_id;
+    subgrid_table_id = subgrid_id + '_t';
+    pager_id = 'p_' + subgrid_table_id;
+    toppager_id = subgrid_table_id + '_toppager';
+    if (suffix) {
+        subgrid_table_id += suffix;
+        pager_id += suffix;
+    }
+
+    var tmplPF = "<div id='responsive-form' class='clearfix'>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nota {nota}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Valor {valor}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Observación {observacion}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' style='display: none;'>";
+    tmplPF += "</div>";
+
+    tmplPF += "<hr style='width:100%;'/>";
+    tmplPF += "<div> {sData} {cData}  </div>";
+    tmplPF += "</div>";
+    var childGridID = subgrid_table_id;
+    var childGridPagerID = pager_id;
+    var childGridURL = "/sic/proveedoressugeridoslist/" + parentRowKey + "/list";
+
+    var modelIniciativaFecha = [
+        { label: 'id', name: 'id', key: true, hidden: true },
+
+        {
+            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 200, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false, required: true }, hidedlg: true
+        },
+        {
+            label: 'Indicador Único', name: 'indicadorunico', width: 50, align: 'right',
+            search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'ID Motivo Único', name: 'idmotivounico', width: 50, align: 'right',
+            search: true, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+        },
+    ];
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        caption: 'Proveedores Sugeridos',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
+        page: 1,
+        colModel: modelIniciativaFecha,
+        viewrecords: true,
+        styleUI: "Bootstrap",
+        regional: 'es',
+        height: 'auto',
+        pager: "#" + childGridPagerID,
+        editurl: '/iniciativafecha/action',
+        gridComplete: function() {
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
+            }
+        }
+    });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+    },
+        {
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            editCaption: "Modificar Nota Factor",
+            template: tmplPF,
+            errorTextFormat: function(data) {
+                return 'Error: ' + data.responseText
+            },
+            afterSubmit: function(response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    $.ajax({
+                        type: "GET",
+                        url: '/sic/actualizanotafactor/' + parentRowKey,
+                        async: false,
+                        success: function(data) {
+                            return [true, "", ""]
+                        }
+                    });
+                return [true, "", ""]
+            },
+            beforeShowForm: function(form) {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                var thissid = rowData.id;
+                if (thissid == 0) {
+                    alert("Debe seleccionar una fila");
+                    return [false, result.error_text, ""];
+                }
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                //$('input#codigoart', form).attr('readonly', 'readonly');
+            }, afterShowForm: function(form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            }
+        },
+        {
+            closeAfterAdd: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Agregar Factor",
+            template: tmplPF,
+            errorTextFormat: function(data) {
+                return 'Error: ' + data.responseText
+            },
+            onclickSubmit: function(rowid) {
+                return { parent_id: parentRowKey };
+            }
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Eliminar Factor",
+            errorTextFormat: function(data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function(response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }
+        },
+        {
+            recreateFilter: true
+        }
+    );
+}

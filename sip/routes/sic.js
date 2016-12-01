@@ -83,5 +83,24 @@ module.exports = function(passport) {
     router.route('/sic/texto/:id')
         .get(isAuthenticated, clausulasController.texto);
 
+    router.route('/sic/desglosefactoresserv/:id/list')
+        .get(isAuthenticated, serviciosController.desglosefactoreslist);
+
+    router.route('/sic/proveedoressugeridoslist/:id/list')
+        .get(isAuthenticated, serviciosController.proveedoressugeridoslist);
+
+    router.route('/sic/getcalculado/:id')
+        .get(isAuthenticated, serviciosController.getcalculado);
+
+    router.route('/sic/desglosefactoresserv/action')
+        .post(isAuthenticated, serviciosController.desgloseaction);
+
+    router.route('/sic/actualizanotafactor/:id')
+        .get(isAuthenticated, serviciosController.actualizanotafactor);
+
+    router.route('/sic/getcalculadoconclase/:id')
+        .get(isAuthenticated, serviciosController.getcalculadoconclase);
+
+
     return router;
 }
