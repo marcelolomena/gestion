@@ -8,10 +8,10 @@ var fs = require('fs');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    logger.debug("idclausulaplantilla: "  +  req.body.idclausulaplantilla)
+    logger.debug("idclausulaplantilla: " + req.body.idclausulaplantilla)
     switch (action) {
         case "add":
-        
+
             models.clausulas.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idclausula: req.body.idclausulaplantilla,
@@ -19,7 +19,7 @@ exports.action = function (req, res) {
                 texto: req.body.texto,
                 borrado: 1
             }).then(function (clausulas) {
-                bitacora.registrar(req.body.idsolicitudcotizacion,'clausulas',clausulas.id,'insert',null,req.session.passport.user,new Date())
+                bitacora.registrar(req.body.idsolicitudcotizacion, 'clausulas', clausulas.id, 'insert', req.session.passport.user, new Date(), models.clausulas)
                 res.json({ error: 0, glosa: '' });
             }).catch(function (err) {
                 logger.error(err)
