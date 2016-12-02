@@ -136,8 +136,14 @@ var gridClausula = {
                                     menubar: false,
                                     statusbar: false,
                                     selector: "#" + options.id,
-                                    plugins: "link",
-                                    height: 300
+                                    //plugins: "link",
+                                    plugins: [
+                                        'link print'
+                                    ],
+                                    toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                                    toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+                                    image_advtab: true,
+                                    height: 300,
                                 });
                             }, 50);
                             return elm;
