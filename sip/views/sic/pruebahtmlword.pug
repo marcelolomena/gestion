@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    title HTML a WORD
+    link(rel='stylesheet', href='/stylesheets/jquerysctipttop.css', type='text/css', media='screen', charset='utf-8')
+  body
+    #jquery-script-menu
+      .jquery-script-center
+    h1(style='margin-top:150px;') Todo lo que haya aca abajo se convierte en word
+    #page-content
+      h1 PAGO DE LAS RENTAS GARANTIZADAS
+      p
+      | En caso que el asegurado fallezca antes o durante el período garantizado de pago, las rentas garantizadas mediante esta cláusula adicional y no percibidas por el asegurado, se pagarán a contar del día primero del mes siguiente a dicho fallecimiento y hasta el término del periodo garantizado de pago. Sin perjuicio de lo anterior y en concordancia con el artículo N°4 de esta Cláusula Adicional, en caso que la renta fuese diferida y el asegurado hubiese fallecido antes del inicio de pago de la renta, las rentas garantizadas no percibidas iniciarán su pago de acuerdo a la fecha inicial pactada y no se adelantará su pago.
+      p
+      | Durante el periodo garantizado de pago, y habiendo fallecido el asegurado, la compañía aseguradora pagará el mayor monto entre la renta garantizada no percibida y la suma de las rentas de sobrevivencia que correspondan a los beneficiarios.
+      p
+      | Las rentas garantizadas no percibidas, a solicitud del beneficiario, siempre que exista acuerdo unánime entre ellos, el cual deberá constar por escrito, se podrán pagar en cuotas, que mantendrán las mismas fechas de pago de las rentas, según fueron inicialmente acordadas con el contratante o de una sola vez y al contado, una vez acreditado el fallecimiento del asegurado por los medios legales correspondientes, de acuerdo a la tabla de valores garantizados especificadas en las Condiciones Particulares.
+      p
+      | Queda establecido que el monto correspondiente a las rentas garantizadas se pagarán a prorrata según los porcentajes de pensión de sobrevivencia pactados en las Condiciones Particulares o según los porcentajes fijados por el asegurado si corresponden a beneficiarios designados.
+      p
+      | En caso de fallecimiento de un beneficiario dentro del período garantizado y siempre que la suma de las rentas de sobrevivencia resultare menor a la renta garantizada, el resto de los beneficiarios garantizados tendrá derecho a acrecer sus rentas, a prorrata de sus porcentajes de rentas de sobrevivencia pactados o según los porcentajes fijados por el asegurado si corresponden a beneficiarios designados, en ambos casos hasta alcanzar el monto de la renta garantizada.
+      p
+      | Una vez pagada la totalidad de las rentas garantizadas no percibidas por el asegurado, esta cláusula adicional terminará y cesará toda obligación por parte de la compañía aseguradora.
+
+    a.word-export(href='javascript:void(0)')  Bajar a .doc 
+    script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+    script(src='/javascripts/word/FileSaver.js')
+    script(src='/javascripts/word/jquery.wordexport.js')
+    script(type='text/javascript').
+      jQuery(document).ready(function($) {
+      $("a.word-export").click(function(event) {
+      $("#page-content").wordExport();
+      });
+      });
+  
