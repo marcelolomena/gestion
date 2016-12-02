@@ -1,7 +1,6 @@
-$(document).ready(function () {
+$(document).ready(function() {
 
     var t1 = "<div id='responsive-form' class='clearfix'>";
-
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_idcui'>CUI<span style='color:red'>*</span>{idcui}</div>";
@@ -67,7 +66,7 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 dataUrl: '/allcuis',
-                buildSelect: function (response) {
+                buildSelect: function(response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
@@ -75,7 +74,7 @@ $(document).ready(function () {
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger CUI--</option>';
-                    $.each(data, function (i, item) {
+                    $.each(data, function(i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
                         } else {
@@ -84,7 +83,7 @@ $(document).ready(function () {
                     });
                     return s + "</select>";
                 }
-            }, dataInit: function (elem) { $(elem).width(200); }
+            }, dataInit: function(elem) { $(elem).width(200); }
         },
         { label: 'Nombre CUI', name: 'nombrecui', jsonmap: "estructuracui.nombre", width: 250, align: 'left', search: false, sortable: false, editable: true },
         {
@@ -92,7 +91,7 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function (response) {
+                buildSelect: function(response) {
                     //var grid = $("#gridMaster");
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
@@ -100,7 +99,7 @@ $(document).ready(function () {
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Técnico--</option>';
-                    $.each(data, function (i, item) {
+                    $.each(data, function(i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
@@ -110,7 +109,7 @@ $(document).ready(function () {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function (e) {
+                    type: 'change', fn: function(e) {
                         $("input#tecnico").val($('option:selected', this).text());
                     }
                 }],
@@ -124,7 +123,7 @@ $(document).ready(function () {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemContrato,
                 dataEvents: [{
-                    type: 'change', fn: function (e) {
+                    type: 'change', fn: function(e) {
                         var actual = $("input#codigoart").attr("readonly");
                         if (actual == 'readonly') {
                             $("input#codigoart").attr("readonly", false);
@@ -134,7 +133,7 @@ $(document).ready(function () {
                     }
                 }],
             },
-            formatter: function (cellvalue, options, rowObject) {
+            formatter: function(cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.tipocontrato;
                 if (val == 1) {
@@ -155,19 +154,19 @@ $(document).ready(function () {
             editrules: { edithidden: false }, hidedlg: true, editoptions: {
                 size: 10, readonly: 'readonly',
                 dataEvents: [{
-                    type: 'change', fn: function (e) {
+                    type: 'change', fn: function(e) {
                         //var grid = $("#grid");
                         var rowKey = $grid.getGridParam("selrow");
                         var rowData = $grid.getRowData(rowKey);
-                        console.log("rowData:" + rowData);
+                        //console.log("rowData:" + rowData);
                         var thissid = $(this).val();
                         $.ajax({
                             type: "GET",
                             url: '/getcodigoart/' + thissid,
                             async: false,
-                            success: function (data) {
+                            success: function(data) {
                                 if (data.length > 0) {
-                                    console.log("glosa:" + data[0].nombreart);
+                                    //console.log("glosa:" + data[0].nombreart);
                                     $("input#program_id").val(data[0].program_id);
                                 } else {
                                     alert("No existe el codigo art ingresado");
@@ -188,14 +187,14 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/parametros/clasificacionsolicitud',
-                buildSelect: function (response) {
+                buildSelect: function(response) {
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.idclasificacionsolicitud;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger una Clasificación--</option>';
-                    $.each(data, function (i, item) {
+                    $.each(data, function(i, item) {
 
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
@@ -213,7 +212,7 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function (response) {
+                buildSelect: function(response) {
                     //var grid = $("#gridMaster");
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
@@ -221,7 +220,7 @@ $(document).ready(function () {
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Negociador--</option>';
-                    $.each(data, function (i, item) {
+                    $.each(data, function(i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
@@ -231,7 +230,7 @@ $(document).ready(function () {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function (e) {
+                    type: 'change', fn: function(e) {
                         $("input#negociador").val($('option:selected', this).text());
                     }
                 }],
@@ -247,7 +246,7 @@ $(document).ready(function () {
             width: 150, align: 'center', search: true, editable: true, hidden: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
-                dataInit: function (el) {
+                dataInit: function(el) {
                     $(el).datepicker({
                         language: 'es',
                         format: 'yyyy-mm-dd',
@@ -258,7 +257,7 @@ $(document).ready(function () {
             },
             editoptions: {
                 size: 10, maxlengh: 10,
-                dataInit: function (element) {
+                dataInit: function(element) {
                     $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
@@ -287,7 +286,7 @@ $(document).ready(function () {
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
-        onSelectRow: function (pRowId, selected) {
+        onSelectRow: function(pRowId, selected) {
             /*
             if (rowid != null) {
                 console.log("rowid : " + rowid)
@@ -302,19 +301,19 @@ $(document).ready(function () {
         pager: "#pagerMaster",
         subGrid: true,
         subGridRowExpanded: showChildGrid,
-        subGridBeforeExpand: function (divid, rowid) {
+        subGridBeforeExpand: function(divid, rowid) {
             var expanded = jQuery("td.sgexpanded", "#gridMaster")[0];
             //console.log(expanded)
             if (expanded) {
-                setTimeout(function () {
+                setTimeout(function() {
                     $(expanded).trigger("click");
                 }, 100);
             }
         },
-        loadComplete: function (data) {
-            $.get('/sic/getsession', function (data) {
-                $.each(data, function (i, item) {
-                    console.log('EL SUPER ROL : ' + item.glosarol)
+        loadComplete: function(data) {
+            $.get('/sic/getsession', function(data) {
+                $.each(data, function(i, item) {
+                    //console.log('EL SUPER ROL : ' + item.glosarol)
                     if (item.glosarol === 'Negociador SIC') {
                         $("#add_gridMaster").hide()
                         $grid.jqGrid("showCol", "codigosolicitud")
@@ -346,9 +345,9 @@ $(document).ready(function () {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: t1,
-            errorTextFormat: function (data) {
+            errorTextFormat: function(data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
+            }, beforeSubmit: function(postdata, formid) {
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtecnico) == 0) {
@@ -356,7 +355,7 @@ $(document).ready(function () {
                 } else {
                     return [true, "", ""]
                 }
-            }, afterSubmit: function (response, postdata) {
+            }, afterSubmit: function(response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error != 0) {
@@ -366,11 +365,11 @@ $(document).ready(function () {
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            }, beforeShowForm: function (form) {
-                setTimeout(function () {
-                    $.get('/sic/getsession', function (data) {
-                        $.each(data, function (i, item) {
-                            console.log('EL SUPER ROL : ' + item.glosarol)
+            }, beforeShowForm: function(form) {
+                setTimeout(function() {
+                    $.get('/sic/getsession', function(data) {
+                        $.each(data, function(i, item) {
+                            //console.log('EL SUPER ROL : ' + item.glosarol)
                             if (item.glosarol === 'Negociador SIC') {
                                 $("#idcui", form).attr("disabled", true);
                                 $("#idtecnico", form).attr('readonly', 'readonly');
@@ -406,9 +405,9 @@ $(document).ready(function () {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: t1,
-            errorTextFormat: function (data) {
+            errorTextFormat: function(data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
+            }, beforeSubmit: function(postdata, formid) {
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtecnico) == 0) {
@@ -431,7 +430,7 @@ $(document).ready(function () {
                     return [true, "", ""]
                 }
 
-            }, afterSubmit: function (response, postdata) {
+            }, afterSubmit: function(response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error != 0) {
@@ -441,11 +440,11 @@ $(document).ready(function () {
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            }, beforeShowForm: function (form) {
+            }, beforeShowForm: function(form) {
 
-                setTimeout(function () {
-                    $.get('/sic/getsession', function (data) {
-                        $.each(data, function (i, item) {
+                setTimeout(function() {
+                    $.get('/sic/getsession', function(data) {
+                        $.each(data, function(i, item) {
                             //console.log('EL SUPER ROL : ' + item.glosarol)
                             if (item.glosarol === 'Negociador SIC') {
                                 $("#d_idcui", form).hide();
@@ -530,19 +529,19 @@ $(document).ready(function () {
 
         //var toggle='.active[data-toggle="tab_' + parentRowKey + '"]';
         //$('.active[data-toggle="tab"]').each(function (e) {
-        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
+        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function(e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
             if (targ === '#documentos') {
-                console.log(loadurl)
+                //console.log(loadurl)
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
-                console.log(loadurl)
+                //console.log(loadurl)
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#clausulas') {
-                console.log(loadurl)
+                //console.log(loadurl)
                 gridClausula.renderGrid(loadurl, parentRowKey, targ)
             }
 
@@ -550,11 +549,11 @@ $(document).ready(function () {
             return false;
         });
 
-        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
+        $('[data-toggle="tab_' + parentRowKey + '"]').click(function(e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            console.log(loadurl)
+            //console.log(loadurl)
             if (targ === '#documentos') {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
