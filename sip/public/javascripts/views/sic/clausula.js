@@ -189,7 +189,7 @@ var gridClausula = {
             caption: "Cláusulas"
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, view: true, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, view: false, search: false },
             {
                 editCaption: "Modifica Cláusula",
                 closeAfterEdit: true,
@@ -275,6 +275,19 @@ var gridClausula = {
             }, {
 
             });
+
+        $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
+            caption: "",
+            buttonicon: "glyphicon glyphicon-paperclip",
+            title: "Generar Doc",
+            position: "last",
+            onClickButton: function() {
+                var rowKey = $gridTab.getGridParam("selrow");
+                var url = '/sic/pruebahtmlword/' + parentRowKey;
+                $gridTab.jqGrid('excelExport', { "url": url });
+
+            }
+        });
 
     }
 }

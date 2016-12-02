@@ -426,7 +426,7 @@ exports.list2 = function (req, res) {
     if (idcui > 0) {
         yearExercise(idcui, function (err, year) {
             if (year) {
-                logger.debug(year)
+                //logger.debug(year)
                 utilSeq.getPeriodRange(year - 1, function (err, range) {
                     var acum = ''
                     var min = range[0]

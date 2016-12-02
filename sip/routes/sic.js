@@ -101,8 +101,9 @@ module.exports = function(passport) {
     router.route('/sic/getcalculadoconclase/:id')
         .get(isAuthenticated, serviciosController.getcalculadoconclase);
 
-    router.get('/sic/pruebahtmlword', isAuthenticated, function(req, res) {
-        res.render('sic/pruebahtmlword', { user: req.user, data: req.session.passport.sidebar });
-    });
+
+    router.route('/sic/pruebahtmlword/:id')
+        .get(isAuthenticated, clausulasController.download);
+
     return router;
 }

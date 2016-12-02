@@ -179,3 +179,30 @@ exports.texto = function (req, res) {
     });
 
 }
+
+exports.download = function (req, res) {
+    models.clausulas.findAll({
+        order: 'id ASC',
+        atributes: ['texto'],
+        where: { idsolicitudcotizacion: req.params.id }
+    }).then(function (clausulas) {
+
+        var result = '<html><body>'
+
+        for (var f in clausulas) {
+            result +=clausulas[f].texto
+        }
+
+        result +='</html></body>'
+
+        var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
+        res.setHeader('Content-disposition', hdr);
+        res.set('Content-Type', 'application/msword;charset=utf-8');
+        res.status(200).send(result);
+
+    }).catch(function (err) {
+        logger.error(err.message);
+        res.json({ error_code: 1 });
+    });
+
+}
