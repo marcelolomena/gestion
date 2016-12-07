@@ -23,7 +23,7 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Documento<span style='color:red'>*</span>{idtipodocumento}</div>";
+    template += "<div class='column-half'>Documento<span style='color:red'>*</span>{tipodocumento}</div>";
     template += "<div class='column-half'>Negociador<span style='color:red'>*</span>{uidpmo}</div>";
     template += "</div>";
 
@@ -164,7 +164,6 @@ $(document).ready(function () {
                 var val = rowObject.tipocontrato;
                 if (val == 1) {
                     dato = 'Continuidad';
-
                 } else if (val == 0) {
                     dato = 'Proyectos';
                 }
@@ -262,25 +261,9 @@ $(document).ready(function () {
                 custom_element: sipLibrary.radioElemDocumento
             }
         },*/
+
         {
-            label: 'Tipo Documento', name: 'tipodocumento', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true,
-            stype: 'select',
-            searchoptions: {
-                dataUrl: '/contrato/tipodocumento',
-                buildSelect: function (response) {
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger Tipo Documento--</option>';
-                    $.each(data, function (i, item) {
-                        s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                    });
-                    return s + "</select>";
-                }
-            },
-        },
-        {
-            label: 'Tipo Documento', name: 'idtipodocumento', editable: true, hidden: true,
+            label: 'Tipo Documento 2', name: 'tipodocumento', editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/contrato/tipodocumento',
@@ -288,7 +271,7 @@ $(document).ready(function () {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.plazocontrato;
+                    var thissid = rowData.tipodocumento;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Tipo Documento--</option>';
@@ -376,6 +359,12 @@ $(document).ready(function () {
                             s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         }
                     });
+                    var tipocontrato = rowData.tipocontrato;
+                    console.log('tipocontrato:'+tipocontrato);
+                    if (tipocontrato != 'Proyectos') {
+                        console.log('cellvalue:');
+                        $("input#codigoart").attr("readonly", true);
+                    }                    
                     return s + "</select>";
                 },
                 dataEvents: [{
@@ -391,13 +380,12 @@ $(document).ready(function () {
         },
         {
             label: 'Codigo ART', name: 'codigoart', width: 200, align: 'left', search: true, editable: true,hidden:true,
-            editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10, readonly: 'readonly',
-        
+            editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10,                
             dataEvents: [{
                 type: 'change', fn: function (e) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
+                    var rowData = grid.getRowData(rowKey);                 
                     console.log("rowData:" + rowData);
                     var thissid = $(this).val();
                     $.ajax({
@@ -418,6 +406,7 @@ $(document).ready(function () {
                     });
                     }
             }],
+           
 
         } 
         },
@@ -499,18 +488,22 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                if (parseInt(postdata.idproveedor) == 0) {
+                if (postdata.nombre.trim().length == 0) {
+                    return [false, "Contrato: Debe ingresar un texto", ""];                
+                } if (parseInt(postdata.idproveedor) == 0) {
                     return [false, "Proveedor: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idcontactofacturacion) == 0) {
+                    return [false, "Contacto: Debe escoger un valor", ""];                    
                 } if (parseInt(postdata.idtiposolicitud) == 0) {
                     return [false, "Tipo Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idestadosol) == 0) {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
-                } if (postdata.nombre.trim().length == 0) {
-                    return [false, "Nombre: Debe ingresar un texto", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "PMO: Debe escoger un valor", ""];
                 } if (parseInt(postdata.nombreart) == "") {
                     return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
+                } if (parseInt(postdata.tipodocumento) == 0) {
+                    return [false, "Tipo Documento: Debe escoger un valor", ""];                    
                 } else {
                     return [true, "", ""]
                 }
@@ -544,19 +537,22 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-
-                if (parseInt(postdata.idproveedor) == 0) {
+                if (postdata.nombre.trim().length == 0) {
+                    return [false, "Contrato: Debe ingresar un texto", ""];
+                } if (parseInt(postdata.idproveedor) == 0) {
                     return [false, "Proveedor: Debe escoger un valor", ""];
+                } if (parseInt(postdata.idcontactofacturacion) == 0) {
+                    return [false, "Contacto: Debe escoger un valor", ""];                     
                 } if (parseInt(postdata.idtiposolicitud) == 0) {
                     return [false, "Tipo Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idestadosol) == 0) {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
-                } if (postdata.nombre.trim().length == 0) {
-                    return [false, "Nombre: Debe ingresar un texto", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "PMO: Debe escoger un valor", ""];
                 } if (parseInt(postdata.nombreart) == "") {
                     return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
+                } if (parseInt(postdata.tipodocumento) == 0) {
+                    return [false, "Tipo Documento: Debe escoger un valor", ""];                    
                 } else {
                     return [true, "", ""]
                 }

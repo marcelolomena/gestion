@@ -48,10 +48,10 @@ var sipLibrary = {
             naradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="0"',
             endnaradio = '/>Proyecto</label>';
 
-        if (value === '1') {
+        if (value === 'Continuidad') {
             return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
         }
-        if (value === '0') {
+        if (value === 'Proyectos') {
             return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";

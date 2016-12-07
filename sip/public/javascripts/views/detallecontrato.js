@@ -15,6 +15,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     var tipocontrato = rowData.tipocontrato;
     var codigoart = rowData.codigoart;
     var proveedor = rowData.idproveedor;
+    console.log("tipocontrato:"+tipocontrato+", codigoart:"+codigoart+", proveedor:"+proveedor);
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
     pager_id = 'p_' + subgrid_table_id;
@@ -25,7 +26,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     }
 
     var templateServicio = "<div id='responsive-form' class='clearfix'>";
-    if (tipocontrato == 0) {
+    if (tipocontrato == 'Proyectos') {
         templateServicio += "<div class='form-row'>";
         templateServicio += "<div class='column-full'>Codigo ART<span style='color:red'>*</span>{codigoart}</div>";
         templateServicio += "</div>";
@@ -39,7 +40,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
-    if (tipocontrato == 0) {    
+    if (tipocontrato == 'Proyectos') {    
         templateServicio += "<div class='column-half'>Tarea<span style='color:red'>*</span>{tarea}</div>";
     }        
     templateServicio += "</div>";
