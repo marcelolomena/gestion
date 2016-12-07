@@ -198,6 +198,11 @@ module.exports = function (passport) {
 
     router.route('/registro/list')
         .post(isAuthenticated, registroController.list);
+        
+    router.get('/resetpwd', isAuthenticated, function (req, res) {
+        res.render('resetpwd', { user: req.user, data: req.session.passport.sidebar });
+    });
+    
 
     return router;
 

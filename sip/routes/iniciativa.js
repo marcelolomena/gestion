@@ -10,6 +10,7 @@ var tareasnuevosproyectosController = require('../controllers/tareasnuevosproyec
 var flujonuevatareaController = require('../controllers/flujonuevatarea');
 var compromisosporcuiController = require('../controllers/compromisosporcui');
 var planiniciativasController = require('../controllers/planiniciativas');
+var iniciativaconsultaController = require('../controllers/iniciativaconsulta');
 
 module.exports = function (passport) {
 
@@ -147,7 +148,20 @@ module.exports = function (passport) {
 
     router.route('/iniciativagetfechas')
         .get(isAuthenticated, iniciativafechaController.getFechas);
-        
+
+    router.get('/iniciativasconsulta', isAuthenticated, function (req, res) {
+        res.render('iniciativasconsulta', { user: req.user, data: req.session.passport.sidebar });
+    });
+    
+    router.route('/iniciativasconsultalist')
+        .get(isAuthenticated, iniciativaconsultaController.getInciativaConsulta);        
+
+    router.route('/iniciativasconsultaexcel')
+        .get(isAuthenticated, iniciativaconsultaController.getExcel);
+
+    router.route('/iniciativasconsultaword')
+        .get(isAuthenticated, iniciativaconsultaController.getWord);
+                
     return router;
 
 }
