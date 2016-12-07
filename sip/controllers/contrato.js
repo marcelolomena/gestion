@@ -234,6 +234,7 @@ exports.action = function (req, res) {
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
         idcontactofacturacion: req.body.idcontactofacturacion,
+        codigoart: req.body.codigoart,
         borrado: 1
       }).then(function (contrato) {
         res.json({ error_code: 0 });
@@ -257,7 +258,8 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
-        idcontactofacturacion:req.body.idcontactofacturacion
+        idcontactofacturacion:req.body.idcontactofacturacion,
+        codigoart: req.body.codigoart
       }, {
           where: {
             id: req.body.id
