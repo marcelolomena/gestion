@@ -52,6 +52,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    colornota: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     idsegmento: {
       type: DataTypes.INTEGER,
       allowNull: true,

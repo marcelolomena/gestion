@@ -8,8 +8,8 @@ var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 
-module.exports = function(passport) {
-    router.get('/sic/solicitudcotizacion', isAuthenticated, function(req, res) {
+module.exports = function (passport) {
+    router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
         res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
@@ -29,7 +29,7 @@ module.exports = function(passport) {
     router.route('/sic/documentos/upload')
         .post(isAuthenticated, documentosController.upload);
 
-    router.get('/sic/getsession', function(req, res) {
+    router.get('/sic/getsession', function (req, res) {
         //console.dir(req.session.passport.sidebar[0])
         if (req.session.passport.sidebar[0].rol)
             res.json(req.session.passport.sidebar[0].rol);//JSON
@@ -60,7 +60,7 @@ module.exports = function(passport) {
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
 
-    router.get('/sic/catalogoclausulas', isAuthenticated, function(req, res) {
+    router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
         res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
     });
 
@@ -104,6 +104,12 @@ module.exports = function(passport) {
 
     router.route('/sic/pruebahtmlword/:id')
         .get(isAuthenticated, clausulasController.download);
+
+    router.route('/sic/notas/:id')
+        .get(isAuthenticated, serviciosController.getnotasdefactor);
+
+    router.route('/sic/actualizacolorfactor/:id')
+        .get(isAuthenticated, serviciosController.actualizacolorfactor);
 
     return router;
 }

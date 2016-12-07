@@ -63,6 +63,42 @@ exports.action = function (req, res) {
                             logger.error(err);
                             res.json({ error: 1 });
                         });
+                    } else {
+
+                        sequelize.query(
+                            'select b.*, a.nombre, d.notacriticidad ' +
+                            'from sic.valores a ' +
+                            'join sic.desglosecolores b on a.id=b.idcolor ' +
+                            'join sic.serviciosrequeridos d on d.idclasecriticidad=b.idclasecriticidad ' +
+                            'where d.id=:id ' +
+                            'order by b.notainicial asc',
+                            { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
+                        ).then(function (colores) {
+                            //logger.debug(valores)
+                            //console.dir(factores)
+
+                            var color = 'indefinido'
+                            for (var f in colores) {
+                                //console.log(factores[f].nombrefactor);
+                                if (colores[f].notacriticidad >= colores[f].notainicial && colores[f].notacriticidad < colores[f].notafinal) {
+                                    color = colores[f].nombre;
+                                }
+                            }
+
+                            models.serviciosrequeridos.update({
+                                colornota: color,
+
+                            }, {
+                                    where: {
+                                        id: serviciosrequeridos.id
+                                    }
+                                })
+
+                        }).catch(function (err) {
+                            logger.error(err);
+                            res.json({ error: 1 });
+                        });
+
                     }
                 }).catch(function (err) {
                     logger.error(err);
@@ -498,7 +534,7 @@ exports.actualizanotafactor = function (req, res) {
         var notafinal = 0.0;
         for (var f in factores) {
             //console.log(factores[f].nombrefactor);
-            notafinal = notafinal + ((factores[f].porcentaje/100)*factores[f].valor);
+            notafinal = notafinal + (factores[f].valor);
         }
         models.serviciosrequeridos.update({
             notacriticidad: notafinal,
@@ -519,3 +555,62 @@ exports.actualizanotafactor = function (req, res) {
         res.json({ error: 1 });
     });
 }
+exports.getnotasdefactor = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'select a.* ' +
+        'from sic.valores a ' +
+        'join sic.desglosenotas b on a.id=b.idnota ' +
+        'join sic.factorescriticidad c on b.iddesglosefactores=c.iddesglosefactores ' +
+        'where c.id=:id ',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+exports.actualizacolorfactor = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'select b.*, a.nombre, d.notacriticidad ' +
+        'from sic.valores a ' +
+        'join sic.desglosecolores b on a.id=b.idcolor ' +
+        'join sic.serviciosrequeridos d on d.idclasecriticidad=b.idclasecriticidad ' +
+        'where d.id=:id ' +
+        'order by b.notainicial asc',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (colores) {
+        var color = 'indefinido'
+        for (var f in colores) {
+            //console.log(factores[f].nombrefactor);
+            if (colores[f].notacriticidad >= colores[f].notainicial && colores[f].notacriticidad < colores[f].notafinal) {
+                color = colores[f].nombre;
+            }
+        }
+        //logger.debug(valores)
+        models.serviciosrequeridos.update({
+            colornota: color,
+
+        }, {
+                where: {
+                    id: id
+                }
+            }).then(function (factorescriticidad) {
+                res.json({ message: 'Actualizado el color', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
