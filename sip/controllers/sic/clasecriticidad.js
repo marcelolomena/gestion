@@ -54,17 +54,21 @@ exports.list = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var id = req.body.id;
-  var color =  req.body.idcolor
+  var color =  req.body.idcolor;
+
 
   switch (action) {
     case "add":
+      var factor =  req.body.factor.replace(",", ".");
       if (color == 0)       
           { color = null}
 
       if (req.body.calculado == 1)
-          { color = null}
+          { color = null,
+            factor = 0}
+
       models.clasecriticidad.create({
-        factor: req.body.factor.replace(",", "."),
+        factor: factor,
         glosaclase: req.body.glosaclase,
         calculado:req.body.calculado,
         idcolor:color,
@@ -94,40 +98,14 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-
+      var factor =  req.body.factor.replace(",", ".");
       if (color == 0)
           { color = null}
 
       if (req.body.calculado == 1)
-          { color = null}
+          { color = null,
+            factor = 0}
 
-      if (req.body.factor != 0){
-          var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
-	                "where n.iddesglosefactores = f.id and f.idclasecriticidad  ="+ id 
-      
-          sequelize.query(sql).then(function (plantilla) {
-                  res.json({ error_code: 0 });
-                }).catch(function (err) {
-                  res.json({ error_code: 1 });
-          });
-
-          var sql = "delete sic.desglosefactores "+ 
-	                "where  idclasecriticidad   ="+ id 
-      
-          sequelize.query(sql).then(function (plantilla) {
-                  res.json({ error_code: 0 });
-                }).catch(function (err) {
-                  res.json({ error_code: 1 });
-          }); 
-           var sql = "delete sic.desglosecolores "+ 
-	                 "where  idclasecriticidad   ="+ id 
-      
-          sequelize.query(sql).then(function (plantilla) {
-                  res.json({ error_code: 0 });
-                }).catch(function (err) {
-                  res.json({ error_code: 1 });
-          }); 
-      }  
              bitacora.registrar(
                 null,
                 'clasecriticidad',
@@ -140,7 +118,7 @@ exports.action = function (req, res) {
                         logger.debug("->>> " + data)
 
                         models.clasecriticidad.update({
-                         factor:req.body.factor.replace(",", "."),
+                         factor:factor,
                          calculado:req.body.calculado,
                          idcolor:color
                          }, {
@@ -148,11 +126,39 @@ exports.action = function (req, res) {
                                  id: req.body.id
                                 }
                          }).then(function (clasecriticidad) {
+                        
+                        if (req.body.calculado == 0){
+                                var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
+	                                      "where n.iddesglosefactores = f.id and f.idclasecriticidad  ="+ id 
+      
+                                sequelize.query(sql).then(function (plantilla) {
+                                           res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                          res.json({ error_code: 1 });
+                                });
+
+                                var sql = "delete sic.desglosefactores "+ 
+	                                      "where  idclasecriticidad   ="+ id 
+      
+                                sequelize.query(sql).then(function (plantilla) {
+                                           res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                          res.json({ error_code: 1 });
+                                }); 
+                                var sql = "delete sic.desglosecolores "+ 
+	                                      "where  idclasecriticidad   ="+ id 
+      
+                                sequelize.query(sql).then(function (plantilla) {
+                                           res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                           res.json({ error_code: 1 });
+                                }); 
+                        }  
                                 res.json({ id: req.body.id, parent: req.body.id, message: 'Actualizando', success: true });
-                            }).catch(function (err) {
+                         }).catch(function (err) {
                                 logger.error(err)
                                 res.json({ id: 0, message: err.message, success: false });
-                            });
+                         });
                     } else {
                         logger.error("->>> " + err)
                     }
