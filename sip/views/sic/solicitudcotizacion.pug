@@ -1,12 +1,37 @@
 extends base.pug
 block titulo
-  title SIP Banco de Chile - Sistema Integrado de Contratos - Solicitud Cotización
+  title SIC Banco de Chile - Sistema Integrado de Contratos - Solicitud Cotización
 block jsgrilla
-  script(type='text/javascript', src='/javascripts/ajaxfileupload.js')  
+  style.
+    .ui-th-column>div, .ui-jqgrid-btable .jqgrow>td {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    overflow: hidden;
+    vertical-align: middle;
+    }
+    .ui-jqgrid tr.jqgrow td {
+    white-space: normal !important;
+    height:auto;
+    vertical-align:text-top;
+    padding-top:2px;
+    }    
+  script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
+  script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
+  script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           
   script(type='text/javascript', src='/javascripts/views/sic/solicitudcotizacion.js')
   script(type='text/javascript', src='/javascripts/views/sic/doc.js')  
-  script(type='text/javascript', src='/javascripts/views/sic/serv.js')  
+  script(type='text/javascript', src='/javascripts/views/sic/serv.js')
+  script(type='text/javascript', src='/javascripts/views/sic/clausula.js')  
+  script(src='/javascripts/word/FileSaver.js')
+  script(src='/javascripts/word/jquery.wordexport.js')  
 block titulogrilla
 block grilla
  table#gridMaster
  #pagerMaster
+ #docModal.modal.fade
+  .modal-dialog
+    .modal-content
+      // Content will be loaded here from file

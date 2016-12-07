@@ -18,12 +18,13 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
-  var orden = sidx + " " + sord;
+    var orden = sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
-      logger.error(err)
+      logger.debug("->>> " + err)
     } else {
+      models.clasecriticidad.belongsTo(models.valores, { foreignKey: 'idcolor' });
       models.clasecriticidad.count({
         where: data
       }).then(function (records) {
@@ -32,12 +33,15 @@ exports.list = function (req, res) {
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data
+          where: data,
+          include: [{
+            model: models.valores
+          }]
         }).then(function (criticidades) {
-          //Contrato.forEach(log)
+          //iniciativas.forEach(log)
           res.json({ records: records, total: total, page: page, rows: criticidades });
         }).catch(function (err) {
-                        logger.error(e)  
+          logger.error(err);
           res.json({ error_code: 1 });
         });
       })
@@ -48,13 +52,21 @@ exports.list = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var id = req.body.id;
+  var color =  req.body.idcolor
 
   switch (action) {
     case "add":
-               
+      if (color == 0)       
+          { color = null}
+
+      if (req.body.calculado == 1)
+          { color = null}
       models.clasecriticidad.create({
         factor: req.body.factor.replace(",", "."),
         glosaclase: req.body.glosaclase,
+        calculado:req.body.calculado,
+        idcolor:color,
         borrado: 1
       }).then(function (plantilla) {
         res.json({ error_code: 0 });
@@ -65,8 +77,45 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
+
+      if (color == 0)
+          { color = null}
+
+      if (req.body.calculado == 1)
+          { color = null}
+
+      if (req.body.factor != 0){
+          var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
+	                  "where n.iddesglosefactores = f.id and f.idclasecriticidad  ="+ id 
+      
+          sequelize.query(sql).then(function (plantilla) {
+                  res.json({ error_code: 0 });
+                }).catch(function (err) {
+                  res.json({ error_code: 1 });
+          });
+
+          var sql = "delete sic.desglosefactores "+ 
+	                  "where  idclasecriticidad   ="+ id 
+      
+          sequelize.query(sql).then(function (plantilla) {
+                  res.json({ error_code: 0 });
+                }).catch(function (err) {
+                  res.json({ error_code: 1 });
+          }); 
+           var sql = "delete sic.desglosecolores "+ 
+	                   "where  idclasecriticidad   ="+ id 
+      
+          sequelize.query(sql).then(function (plantilla) {
+                  res.json({ error_code: 0 });
+                }).catch(function (err) {
+                  res.json({ error_code: 1 });
+          }); 
+      }  
+
       models.clasecriticidad.update({
         factor:req.body.factor.replace(",", "."),
+        calculado:req.body.calculado,
+        idcolor:color
       }, {
           where: {
             id: req.body.id
@@ -76,7 +125,8 @@ exports.action = function (req, res) {
         }).catch(function (err) {
           logger.error(err);
           res.json({ error_code: 1 });
-        });
+      });
+ 
       break;
     case "del":
       models.clasecriticidad.destroy({
@@ -310,9 +360,10 @@ exports.desglosenotas = function (req, res) {
 
     var sql = `
             SELECT 
-                    id,nombrenota,nota
-                    FROM sic.desglosenotas 
-            where iddesglosefactores = `+ iddesglosefactores+
+                    n.id,n.nombrenota,n.idnota,v.nombre
+                    FROM sic.desglosenotas n,sic.valores v
+            where n.idnota =+ v.id
+              And n.iddesglosefactores = `+ iddesglosefactores+
             `  ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
@@ -353,7 +404,7 @@ exports.actiondesglosenotas = function (req, res) {
       models.desglosenotas.create({
         iddesglosefactores: req.body.parent_id,
         nombrenota: req.body.nombrenota,
-        nota: req.body.nota,
+        idnota: req.body.idnota,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -364,7 +415,8 @@ exports.actiondesglosenotas = function (req, res) {
       break;
     case "edit":
       models.desglosenotas.update({
-        nota: req.body.nota
+        idnota: req.body.idnota,
+        nombrenota: req.body.nombrenota,
       }, {
           where: {
             id: req.body.id
@@ -395,4 +447,147 @@ exports.actiondesglosenotas = function (req, res) {
 
   }
 
+};
+
+exports.getColor = function (req, res) {
+
+  var sql = "select id,nombre from sic.valores " +
+    "where borrado=1 and tipo = 'Color' order by nombre ";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+exports.getNotas = function (req, res) {
+
+  var sql = "select id,nombre from sic.valores " +
+    "where borrado=1 and tipo = 'Nota' order by nombre ";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.desglosecolores = function (req, res) {
+    var page = req.body.page;
+    var rows = req.body.rows;
+    var sidx = req.body.sidx;
+    var sord = req.body.sord;
+    var idclasecriticidad = req.params.id;
+    var filters = req.body.filters;
+    var condition = "";
+
+    if (!sidx)
+        sidx = "id";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sic.desglosecolores
+            where idclasecriticidad =  `+ idclasecriticidad +
+            `  ` + condition
+
+    var sql = `
+            SELECT 
+                    n.id,n.notainicial,n.notafinal,n.idcolor,v.nombre
+                    FROM sic.desglosecolores n,sic.valores v
+            where n.idcolor =+ v.id
+              And n.idclasecriticidad = `+ idclasecriticidad+
+            `  ` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+
+    sequelize.query(count,
+        {
+            replacements: { idclasecriticidad: idclasecriticidad, condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
+            sequelize.query(sql,
+                {
+                    replacements: { page: parseInt(page), rows: parseInt(rows), idclasecriticidad: idclasecriticidad, condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    logger.error(e)
+                })
+
+        }).catch(function (e) {
+            logger.error(e)
+        })
 }
+
+exports.actiondesglosecolores= function (req, res) {
+  var action = req.body.oper;
+
+        logger.debug("parent_id : " + req.body.parent_id);
+
+  switch (action) {
+ 
+    case "add":
+      models.desglosecolores.create({
+        idclasecriticidad: req.body.parent_id,
+        idcolor: req.body.idcolor,
+        notainicial: req.body.notainicial.replace(",", "."),  
+        notafinal: req.body.notafinal.replace(",", "."),  
+        borrado: 1
+      }).then(function (iniciativa) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
+      break;
+    case "edit":
+      models.desglosecolores.update({
+        idcolor: req.body.idcolor,
+        notainicial: req.body.notainicial.replace(",", "."),  
+        notafinal: req.body.notafinal.replace(",", "."),  
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (contrato) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          logger.error(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      models.desglosecolores.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          logger.debug('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+
+  }
+
+};

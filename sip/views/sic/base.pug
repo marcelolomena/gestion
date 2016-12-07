@@ -4,7 +4,7 @@ html(xmlns='http://www.w3.org/1999/xhtml')
     meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
     block titulo
-        title SIP Banco de Chile - Sistema Integrado de Presupuesto
+        title SIP Banco de Chile - Sistema Integrado de Contratos
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')            
     link(rel='stylesheet', href='/stylesheets/ui.jqgrid-bootstrap.css', type='text/css', media='screen', charset='utf-8')
     link(rel='stylesheet', href='/stylesheets/bootstrap-datepicker.css', type='text/css', media='screen', charset='utf-8')        
@@ -22,6 +22,7 @@ html(xmlns='http://www.w3.org/1999/xhtml')
     script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
     script(type='text/javascript', src='/javascripts/jsplug.js')      
     script(type='text/javascript', src='/javascripts/sip.js')
+    script(type='text/javascript', src='/javascripts/sic.js')    
     script(type='text/javascript', src='/resources/socket.io/socket.io.js')  
     script(type='text/javascript', src='/javascripts/bootstrap.min.js')       
     script(type='text/javascript', src='/javascripts/bootbox.min.js')   
@@ -42,7 +43,7 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                 a(href='/home2')
                   img(src='../../../images/header.png', width='384', height='95') 
                 img(src='../../images/vacio.png', width='300', height='4', border='0')
-                img(src='../../images/header_titulo.png', width='384', height='95', border='0')
+                pug(style="font-family:'robotolight', sans-serif; font-size: 22px; color: #FFFFFF; font-weight:300; text-align:right;") SISTEMA DE CONTRATOS DIVOT
           .zerogrid_b
             block titulogrilla              
           .zerogrid_b

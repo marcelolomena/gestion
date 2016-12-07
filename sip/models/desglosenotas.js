@@ -18,8 +18,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },    
-    nota: {
-      type: DataTypes.FLOAT,
+    idnota: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     borrado: {

@@ -14,9 +14,10 @@ exports.action = function (req, res) {
             models.documentoscotizacion.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idtipodocumento: req.body.idtipodocumento,
-                nombrecorto: req.body.idtipodocumento,
-                descripcionlarga: req.session.passport.user,
-                nombreresponsable: 0,
+                uid: req.session.passport.user,
+                nombrecorto: req.body.nombrecorto,
+                descripcionlarga: req.body.descripcionlarga,
+                nombreresponsable: req.body.nombreresponsable,
                 nombrearchivo: '',
                 borrado: 1
             }).then(function (documentoscotizacion) {
@@ -29,16 +30,17 @@ exports.action = function (req, res) {
         case "edit":
             models.documentoscotizacion.update({
                 idtipodocumento: req.body.idtipodocumento,
-                nombrecorto: req.body.idtipodocumento,
-                descripcionlarga: req.session.passport.user,
-                nombreresponsable: 0,
+                uid: req.session.passport.user,
+                nombrecorto: req.body.nombrecorto,
+                descripcionlarga: req.body.descripcionlarga,
+                nombreresponsable: req.body.nombreresponsable,
                 nombrearchivo: ''
             }, {
                     where: {
                         id: req.body.id
                     }
                 }).then(function (documentoscotizacion) {
-                    res.json({ id: documentoscotizacion.id, message: 'Exito', success: true });
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                 }).catch(function (err) {
                     logger.error(err)
                     res.json({ id: 0, message: err.message, success: false });
@@ -100,10 +102,10 @@ exports.list = function (req, res) {
     }];
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
+        if (data) {
             models.documentoscotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.documentoscotizacion.belongsTo(models.valores, { foreignKey: 'idtipodocumento' });
+            models.documentoscotizacion.belongsTo(models.user, { foreignKey: 'uid' });
             models.documentoscotizacion.count({
                 where: data
             }).then(function (records) {
@@ -116,7 +118,7 @@ exports.list = function (req, res) {
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
-                    }
+                    }, { model: models.valores }, { model: models.user }
                     ]
                 }).then(function (documentoscotizacion) {
                     //logger.debug(solicitudcotizacion)
@@ -130,7 +132,6 @@ exports.list = function (req, res) {
     });
 
 };
-
 
 exports.upload = function (req, res) {
 
@@ -168,27 +169,64 @@ exports.upload = function (req, res) {
             });
         });
 
+        function copyFile(source, target) {
+            return new Promise(function (resolve, reject) {
+                var rd = fs.createReadStream(source);
+                rd.on('error', rejectCleanup);
+                var wr = fs.createWriteStream(target);
+                wr.on('error', rejectCleanup);
+                function rejectCleanup(err) {
+                    rd.destroy();
+                    wr.end();
+                    reject(err);
+                }
+                wr.on('finish', resolve);
+                rd.pipe(wr);
+            });
+        }
+
+        function checkDirectorySync(directory) {
+            try {
+                fs.statSync(directory);
+            } catch (e) {
+                fs.mkdirSync(directory);
+            }
+        }
 
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
-            var saveTo = path.join(__dirname, '../../', 'docs', filename);//path al archivo
+            var saveTo = path.join(__dirname, '../../', 'docs', filename);
+            logger.debug("actual : " + saveTo)
+            file.pipe(fs.createWriteStream(saveTo));
 
-            file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
+            awaitParent.then(function (idParent) {
 
-            awaitId.then(function (idDetail) {
-                logger.debug("idDetail : " + idDetail)
-                models.documentoscotizacion.update({
-                    nombrearchivo: filename
-                }, {
-                        where: {
-                            id: idDetail
-                        }
-                    }).then(function (documentoscotizacion) {
-                        //res.json({ id: documentoscotizacion.id, message: 'Exito', success: true });
-                    }).catch(function (err) {
-                        logger.error(err)
-                        res.json({ id: 0, message: err.message, success: false });
-                    });
+                logger.debug("idParent : " + idParent)
+
+                var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);//path al archivo
+                checkDirectorySync(dir);
+                var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
+                copyFile(saveTo, dest)
+
+                awaitId.then(function (idDetail) {
+                    logger.debug("idDetail : " + idDetail)
+                    models.documentoscotizacion.update({
+                        nombrearchivo: filename
+                    }, {
+                            where: {
+                                id: idDetail
+                            }
+                        }).then(function (documentoscotizacion) {
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+
+                }).catch(function (err) {
+                    res.json({ error_code: 1, message: err.message, success: false });
+                    logger.error(err)
+                });
+
 
             }).catch(function (err) {
                 res.json({ error_code: 1, message: err.message, success: false });
@@ -197,7 +235,6 @@ exports.upload = function (req, res) {
 
 
         });
-
 
         busboy.on('finish', function () {
             logger.debug("Finalizo la transferencia del archivo")

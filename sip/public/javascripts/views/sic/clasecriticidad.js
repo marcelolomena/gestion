@@ -6,7 +6,10 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'><span style='color:red'>* </span>Clase de Criticidad{glosaclase}</div>";
-    template += "<div class='column-full'><span style='color:red'>* </span>Factor{factor}</div>";
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'><span style='color:red'>*</span>Tipo de Factor{calculado}</div>";
+    template += "<div class='column-full'>Factor{factor}</div>";
+    template += "<div class='column-half'>Color{idcolor}</div>";
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -15,24 +18,91 @@ $(document).ready(function () {
 
     var modelCriticidad = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Clase de Criticidad', name: 'glosaclase', width: 50, align: 'left', search: true, editable: true, hidden: false },
-         {
+        { label: 'Clase de Criticidad', name: 'glosaclase', width: 200, align: 'left', search: true, editable: true, hidden: false },
+        {
+            label: 'Tipo de Factor', name: 'calculado', search: false, editable: true, hidden: false,width: 100,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sicLibrary.radioElemCalculado, 
+                dataEvents: [{
+
+                    type: 'change', fn: function (e) {
+     
+                        var actual = $("input#factor").attr("readonly");
+                        console.log("change actual:" + actual); 
+                        if (actual == "readonly") {               
+                            $("input#factor").attr("readonly", false);
+                             window.setTimeout(function () {
+                                  $("#idcolor").attr('disabled', false);                  
+                             }, 1000);
+                      } else {
+                            $("input#factor").attr("readonly", true);
+                            window.setTimeout(function () {
+                                  $("#idcolor").attr('disabled', true);                  
+                             }, 1000);
+                        } 
+                    }
+                }],                
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.calculado;
+                if (val == 1) {
+                    dato = 'Variable';
+
+                } else if (val == 0) {
+                    dato = 'Constante';
+                }
+                return dato;
+            }            
+        },      
+        {
             label: 'Factor',
             name: 'factor',
-            width: 200,
-            editrules: { required: true },
+            width: 100,
+            editrules: { required: false },
             search: false,
             align: 'left',
             editable: true,
             formatter: 'number',
-        //    formatoptions: { decimalPlaces: 1 },
-        //    editoptions: {
-        //        dataInit: function (el) {
-        //            $(el).mask('0.0', { reverse: true, placeholder: "_____" });
-        //        },
-        //    }
-        }
-       
+        },
+        
+        {
+            label: 'Color', name: 'idcolor', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/clasecriticidad/color',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idcolor;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Color--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#idcolor").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },
+        {
+            label: 'Color', name: 'valore.nombre', width: 100, align: 'left',
+            search: false, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
+        }, 
     ];
     $("#grid").jqGrid({
         url: '/sic/clasecriticidad/list',
@@ -60,7 +130,7 @@ $(document).ready(function () {
             }
         },
         subGrid: true,
-        subGridRowExpanded: gridDesgloseFactores,
+        subGridRowExpanded: showSubGrids,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
@@ -87,8 +157,48 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
-            }, beforeShowForm: function (form) {
+            },beforeSubmit: function (postdata, formid) {
+
+                 if (postdata.factor == '') {
+                     if (postdata.calculado == 0) {
+                        return [false, "Factor: Debe escoger un valor", ""]; }
+                    else {
+                    return [true, "", ""]
+                }}else if (postdata.idcolor == 0) {
+                     if (postdata.calculado == 0) {
+                        return [false, "Color: Debe escoger un valor", ""]; }
+                    else {
+                    return [true, "", ""]
+                }                
+                } else
+                     return [true, "", ""]
+            },beforeShowForm: function (form) {
                 $('input#glosaclase', form).attr('readonly', 'readonly');
+                var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);                
+                var calculado = rowData.calculado
+                 console.log("Modifica beforeShowForm calculado" + calculado);
+                
+                if (calculado == "Variable") {
+                    $(form).find("input:radio[value='1']").attr('checked', true);
+                    $("input#factor").attr("readonly", true);
+                    window.setTimeout(function () {
+                           $("#idcolor").attr('disabled', true);                  
+                    }, 1000);
+                    $("#factor", form).val(0);
+                    $("#idcolor", form).val(0);
+                    console.log("calculado Variable:" + calculado);
+                }
+                else {
+                    $(form).find("input:radio[value='0']").attr('checked', true);
+                    $("input#factor").attr("readonly", false);
+                    window.setTimeout(function () {
+                       $("#idcolor").attr('disabled', false);                  
+                             }, 1000);
+                    console.log("calculado Constante:" + calculado);
+                }
+
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));
@@ -107,11 +217,19 @@ $(document).ready(function () {
 
                 if (postdata.glosaclase == 0) {
                     return [false, "Glosa Clase: Debe escoger un valor", ""];
-                } if (postdata.factor == 0) {
-                    return [false, "Factor: Debe escoger un valor", ""];
-                } else {
+                } else if (postdata.factor == '') {
+                     if (postdata.calculado == 0) {
+                        return [false, "Factor: Debe escoger un valor", ""]; }
+                    else {
                     return [true, "", ""]
-                }
+                }}else if (postdata.idcolor == 0) {
+                     if (postdata.calculado == 0) {
+                        return [false, "Color: Debe escoger un valor", ""]; }
+                    else {
+                    return [true, "", ""]
+                }                
+                } else
+                     return [true, "", ""]
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -122,7 +240,13 @@ $(document).ready(function () {
                     return [true, "", ""]
 
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                 var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);                
+                $(form).find("input:radio[value='0']").attr('checked', true);
+                $("#calculado", form).val(0);
+               // $("#factor", form).val(0);
+                sipLibrary.centerDialog($("#grid").attr('id'));                
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#grid").attr('id'));
             }
@@ -170,7 +294,8 @@ $(document).ready(function () {
     });
 });
 
-function gridDesgloseFactores(parentRowID, parentRowKey) {
+function gridDesgloseFactores(parentRowID, parentRowKey,suffix) {
+
     var tmplP = "<div id='responsive-form' class='clearfix'>";
 
     tmplP += "<div class='form-row'>";
@@ -191,7 +316,17 @@ function gridDesgloseFactores(parentRowID, parentRowKey) {
 
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
+    if (suffix) {
+        childGridID += suffix;
+        childGridPagerID += suffix;
+    }
     var childGridURL = "/sic/desglosefactores/" + parentRowKey;
+
+    var grid = $("#grid");
+    var rowData = grid.getRowData(parentRowKey);
+    var calculado = rowData.calculado;
+
+    if (calculado == 'Constante'){ return }
 
     var modelDesglose = [
         { label: 'id', name: 'id', key: true, hidden: true },      
@@ -388,15 +523,232 @@ function gridDesgloseFactores(parentRowID, parentRowKey) {
 
 };
 
+function showSubGrids(subgrid_id, row_id) {
+    gridDesgloseFactores(subgrid_id, row_id, 'factores');
+    gridDesgloseColores(subgrid_id, row_id, 'colores');
+}
+
+function gridDesgloseColores(parentRowID, parentRowKey,suffix) {
+    var tmplPnotas = "<div id='responsive-form' class='clearfix'>";
+
+    tmplPnotas += "<div class='form-row'>";
+    tmplPnotas += "<div class='column-full'>Nota{idcolor}</div>";
+    tmplPnotas += "</div>";
+
+    tmplPnotas += "<div class='form-row'>";
+    tmplPnotas += "<div class='column-full'>Nota inicial{notainicial}</div>";
+    tmplPnotas += "</div>";
+
+    tmplPnotas += "<div class='form-row'>";
+    tmplPnotas += "<div class='column-full'>Nota Final{notafinal}</div>";
+    tmplPnotas += "</div>";
+
+    tmplPnotas += "<div class='form-row' style='display: none;'>";
+    tmplPnotas += "<div class='column-half'>idclasecriticidad{idclasecriticidad}</div>";
+    tmplPnotas += "</div>";
+
+    tmplPnotas += "<hr style='width:100%;'/>";
+    tmplPnotas += "<div> {sData} {cData}  </div>";
+    tmplPnotas += "</div>";
+
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+    if (suffix) {
+        childGridID += suffix;
+        childGridPagerID += suffix;
+    }
+    var childGridURL = "/sic/desglosecolores/" + parentRowKey;
+
+    var grid = $("#grid");
+    var rowData = grid.getRowData(parentRowKey);
+    var calculado = rowData.calculado;
+
+    if (calculado == 'Constante'){ return }
+
+    var modelDesgloseNotas = [
+        { label: 'id', name: 'id', key: true, hidden: true },    
+        {
+            label: 'Color', name: 'idcolor', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/clasecriticidad/color',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idnota;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Color--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#idcolor").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },          
+        {
+            label: 'Color', name: 'nombre', width: 50, editrules: { required: true }, search: false,
+            align: 'left', editable: true, 
+        },
+        {
+                label: 'Nota Inicial', name: 'notainicial', search: false, editable: true, hidden: false,formatter: 'number'
+        },
+        {
+                label: 'Nota Final', name: 'notafinal', search: false, editable: true, hidden: false,formatter: 'number'
+        }
+    ];
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "POST",
+        datatype: "json",
+        page: 1,
+        caption: 'Desglose Colores',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
+        colModel: modelDesgloseNotas,
+        viewrecords: true,
+        styleUI: "Bootstrap",
+        regional: 'es',
+        height: 'auto',
+        pager: "#" + childGridPagerID,
+        editurl: '/sic/actiondesglosecolores/action',
+        gridComplete: function () {
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                $("#" + childGridID).addRowData("blankRow", { "nombrenota": "No hay datos" },{"nota":""});
+            }
+        }
+    });
+
+    $("#" + childGridID).jqGrid('filterToolbar', {
+        stringResult: true, searchOperators: true,
+        searchOnEnter: false, defaultSearch: 'cn'
+    });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+    },
+        {
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            editCaption: "Modificar Desglose Colores",
+            template: tmplPnotas,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.nota == 0) {
+                    return [false, "Nota: Campo obligatorio", ""];
+                }  
+                else    
+                    {return [true, "", ""]}              
+            },
+            afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    {return [false, result.error_text, ""];}
+                else    
+                    {return [true, "", ""]}
+
+             }, beforeShowForm: function (form) {                          
+                $('input#nombrenota', form).attr('readonly', 'readonly');
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+          
+            },
+            afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            }
+        },
+        {
+            closeAfterAdd: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Agregar Desglose Colores",
+            template: tmplPnotas,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.nombrenota == '') {
+                    return [false, "Nombre Nota: Campo obligatorio", ""];
+                } else if (postdata.nota == 0) {
+                    return [false, "Nota: Campo obligatorio", ""];
+                }  else {
+                    return [true, "", ""]
+                }           
+            },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentRowKey };
+            },
+            afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    {return [false, result.error_text, ""];}
+                else    
+                    {return [true, "", ""]}
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            }
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Elimina Color",
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.error_text, ""];
+                else
+                    return [true, "", ""]
+            }
+        },
+        {
+            recreateFilter: true
+        }
+    );
+
+};
 function gridDesgloseNotas(parentRowID, parentRowKey) {
     var tmplPnotas = "<div id='responsive-form' class='clearfix'>";
 
     tmplPnotas += "<div class='form-row'>";
-    tmplPnotas += "<div class='column-full'>Nombre Nota{nombrenota}</div>";
+    tmplPnotas += "<div class='column-full'>Nota{idnota}</div>";
     tmplPnotas += "</div>";
 
     tmplPnotas += "<div class='form-row'>";
-    tmplPnotas += "<div class='column-full'>Nota{nota}</div>";
+    tmplPnotas += "<div class='column-full'>Nombre Nota{nombrenota}</div>";
     tmplPnotas += "</div>";
 
     tmplPnotas += "<div class='form-row' style='display: none;'>";
@@ -412,24 +764,44 @@ function gridDesgloseNotas(parentRowID, parentRowKey) {
     var childGridURL = "/sic/desglosenotas/" + parentRowKey;
 
     var modelDesgloseNotas = [
-        { label: 'id', name: 'id', key: true, hidden: true },      
+        { label: 'id', name: 'id', key: true, hidden: true },    
         {
-            label: 'Nombre Nota',
-            name: 'nombrenota',
-            search: false,
-            align: 'left',
-            width: 100,
-            editable: true
+            label: 'Nota', name: 'idnota', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/clasecriticidad/notas',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idnota;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Nota--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#idnota").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },          
+        {
+            label: 'Nota', name: 'nombre', width: 50, editrules: { required: true }, search: false,
+            align: 'left', editable: true, formatter: 'number',
         },
         {
-            label: 'Nota',
-            name: 'nota',
-            width: 200,
-            editrules: { required: true },
-            search: false,
-            align: 'left',
-            editable: true,
-            formatter: 'number',
+                label: 'Nombre Nota', name: 'nombrenota', search: false, editable: true, hidden: false,
+                edittype: "textarea"
         }
     ];
 

@@ -103,6 +103,23 @@ module.exports = (function() {
                     }).catch(function(err) {
                         logger.error(err)
                     });
+
+                    var sqlrol = `
+                        select c.id, c.glosarol from art_user a 
+                        join sip.usr_rol b on a.uid = b.uid
+                        join sip.rol c on b.rid = c.id
+                        join sip.sistema d on b.idsistema = d.id
+                        where a.uid =:uid and d.id =:idsys
+	                `
+
+                    var _roles = yield sequelize.query(sqlrol,
+                        {
+                            replacements: { uid: user.uid, idsys: parseInt(req.body.sistema) },
+                            type: sequelize.QueryTypes.SELECT
+                        }
+                    );
+                    console.dir(_roles)
+
                     //logger.debug('Usuario ------>> ' + user.uid);
                     var sql = `
                         select a.*,c.* from art_user a 
@@ -127,8 +144,8 @@ module.exports = (function() {
                             nombre["nombre"] = usr[0].first_name + " " + usr[0].last_name
                             nombre["uid"] = user.uid
                             nombre["sistema"] = req.body.sistema;
-                            //logger.debug('Usuario ------>> ' + user.uid);
-                            nombre["rol"] = usr[0].id//esta malo
+                            logger.debug('ROL ------>> ' + usr[0].glosarol);
+                            nombre["rol"] = _roles//[ { id: 12, glosarol: 'Técnico SIC' } ]
                             nombre["rid"] = _rolnegocio.rolnegocio
                             usuario.push(nombre)
 

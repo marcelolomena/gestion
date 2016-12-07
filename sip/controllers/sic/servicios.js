@@ -5,97 +5,181 @@ var logger = require("../../utils/logger");
 var Busboy = require('busboy');
 var path = require('path');
 var fs = require('fs');
+var bitacora = require("../../utils/bitacora");
+var co = require('co');
 
-
-/*
 exports.action = function (req, res) {
-  var action = req.body.oper;
+    var action = req.body.oper;
 
-  switch (action) {
-    case "add":
-      models.solicitudcotizacion.create({
-        idcui: req.body.idcui,
-        idtecnico: req.body.idtecnico,
-        tipocontrato: req.body.tipocontrato,
-        program_id: req.body.program_id,
-        codigoart: req.body.codigoart,
-        sap: req.body.sap,
-        descripcion: req.body.descripcion,
-        codigosolicitud: req.body.codigosolicitud,
-        clasificacionsolicitud: req.body.clasificacionsolicitud,
-        idnegociador: req.body.idnegociador,
-        correonegociador: req.body.correonegociador,
-        fononegociador: req.body.fononegociador,
-        numerorfp: req.body.numerorfp,
-        fechaenviorfp: req.body.fechaenviorfp,
-        nombreinterlocutor1: req.body.nombreinterlocutor1,
-        correointerlocutor1: req.body.correointerlocutor1,
-        fonointerlocutor1: req.body.fonointerlocutor1,
-        nombreinterlocutor2: req.body.nombreinterlocutor2,
-        correointerlocutor2: req.body.correointerlocutor2,
-        fonointerlocutor2: req.body.fonointerlocutor2,
-        borrado: 1
-      }).then(function (solicitudcotizacion) {
-        res.json({ error: 0, glosa: '' });
-      }).catch(function (err) {
-        logger.error(err)
-        res.json({ error: 1, glosa: err.message });
-      });
+    switch (action) {
+        case "add":
+            models.serviciosrequeridos.create({
+                idsolicitudcotizacion: req.body.idsolicitudcotizacion,
+                idservicio: req.body.idservicio,
+                glosaservicio: req.body.glosaservicio,
+                iddoctotecnico: req.body.iddoctotecnico,
+                glosareferencia: req.body.glosareferencia,
+                idclasecriticidad: req.body.idclasecriticidad,
+                notacriticidad: req.body.notacriticidad,
+                idsegmento: req.body.idsegmento,
+                borrado: 1
+            }).then(function (serviciosrequeridos) {
 
-      break;
-    case "edit":
-      models.solicitudcotizacion.update({
-        idcui: req.body.idcui,
-        idtecnico: req.body.idtecnico,
-        tipocontrato: req.body.tipocontrato,
-        program_id: req.body.program_id,
-        codigoart: req.body.codigoart,
-        sap: req.body.sap,
-        descripcion: req.body.descripcion,
-        codigosolicitud: req.body.codigosolicitud,
-        clasificacionsolicitud: req.body.clasificacionsolicitud,
-        idnegociador: req.body.idnegociador,
-        correonegociador: req.body.correonegociador,
-        fononegociador: req.body.fononegociador,
-        numerorfp: req.body.numerorfp,
-        fechaenviorfp: req.body.fechaenviorfp,
-        nombreinterlocutor1: req.body.nombreinterlocutor1,
-        correointerlocutor1: req.body.correointerlocutor1,
-        fonointerlocutor1: req.body.fonointerlocutor1,
-        nombreinterlocutor2: req.body.nombreinterlocutor2,
-        correointerlocutor2: req.body.correointerlocutor2,
-        fonointerlocutor2: req.body.fonointerlocutor2
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          res.json({ error: 0, glosa: '' });
-        }).catch(function (err) {
-          logger.error(err)
-          res.json({ error: 1, glosa: err.message });
-        });
-      break;
-    case "del":
-      models.solicitudcotizacion.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error: 0, glosa: '' });
-      }).catch(function (err) {
-        logger.error(err)
-        res.json({ error: 1, glosa: err.message });
-      });
+                sequelize.query(
+                    'select b.calculado ' +
+                    'from sic.serviciosrequeridos a ' +
+                    'join sic.clasecriticidad b on a.idclasecriticidad=b.id ' +
+                    'where a.id=:id',
+                    { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
+                ).then(function (valores) {
+                    //logger.debug(valores)
+                    if (valores[0].calculado != 0) {
 
-      break;
+                        sequelize.query(
+                            'select a.* ' +
+                            'from sic.desglosefactores a ' +
+                            'where a.idclasecriticidad=:id',
+                            { replacements: { id: req.body.idclasecriticidad }, type: sequelize.QueryTypes.SELECT }
+                        ).then(function (factores) {
+                            //logger.debug(valores)
+                            //console.dir(factores)
 
-  }
+                            for (var f in factores) {
+                                //console.log(factores[f].nombrefactor);
+                                models.factorescriticidad.create({
+                                    idserviciorequerido: serviciosrequeridos.id,
+                                    iddesglosefactores: factores[f].id,
+                                    porcentaje: factores[f].porcentaje,
+                                    nota: 0,
+                                    valor: 0,
+                                    observacion: "",
+                                    borrado: 1
+                                })
+
+                            }
+
+
+                        }).catch(function (err) {
+                            logger.error(err);
+                            res.json({ error: 1 });
+                        });
+                    }
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error: 1 });
+                });
+
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'serviciosrequeridos',
+                    serviciosrequeridos.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.serviciosrequeridos,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+            break;
+        case "edit":
+
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'serviciosrequeridos',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.serviciosrequeridos, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.serviciosrequeridos.update({
+                            idservicio: req.body.idservicio,
+                            glosaservicio: req.body.glosaservicio,
+                            iddoctotecnico: req.body.iddoctotecnico,
+                            glosareferencia: req.body.glosareferencia,
+                            idclasecriticidad: req.body.idclasecriticidad,
+                            notacriticidad: req.body.notacriticidad,
+                            idsegmento: req.body.idsegmento
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (serviciosrequeridos) {
+
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+
+                });
+
+
+            break;
+        case "del":
+
+
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'serviciosrequeridos',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.serviciosrequeridos, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.serviciosrequeridos.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+
+                            if (rowDeleted === 1) {
+
+
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+
+                });
+
+
+
+
+
+
+
+
+
+
+            break;
+    }
 }
-*/
+
 
 exports.list = function (req, res) {
 
@@ -129,6 +213,8 @@ exports.list = function (req, res) {
             models.serviciosrequeridos.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
             models.serviciosrequeridos.belongsTo(models.documentoscotizacion, { foreignKey: 'iddoctotecnico' });
+            models.serviciosrequeridos.belongsTo(models.clasecriticidad, { foreignKey: 'idclasecriticidad' });
+            models.serviciosrequeridos.belongsTo(models.segmentoproveedor, { foreignKey: 'idsegmento' });
             models.serviciosrequeridos.count({
                 where: {
                     idsolicitudcotizacion: id
@@ -150,6 +236,12 @@ exports.list = function (req, res) {
                     },
                     {
                         model: models.documentoscotizacion
+                    },
+                    {
+                        model: models.clasecriticidad
+                    },
+                    {
+                        model: models.segmentoproveedor
                     }
                     ]
                 }).then(function (serviciosrequeridos) {
@@ -164,150 +256,266 @@ exports.list = function (req, res) {
     });
 
 };
+exports.desglosefactoreslist = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.factorescriticidad.belongsTo(models.desglosefactores, { foreignKey: 'iddesglosefactores' });
+
+            models.factorescriticidad.count({
+                where: {
+                    idserviciorequerido: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.factorescriticidad.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        idserviciorequerido: id
+                    },
+                    include: [{
+                        model: models.desglosefactores
+                    }
+                    ]
+                }).then(function (factorescriticidad) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: factorescriticidad });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
+exports.proveedoressugeridoslist = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.proveedorsugerido.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+
+            models.proveedorsugerido.count({
+                where: {
+                    idserviciorequerido: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.proveedorsugerido.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        idserviciorequerido: id
+                    },
+                    include: [{
+                        model: models.proveedor
+                    }
+                    ]
+                }).then(function (proveedorsugerido) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: proveedorsugerido });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
 
 
-exports.guardar = function (req, res) {
+exports.listaservicios = function (req, res) {
 
-    models.documentoscotizacion.create({
-        idlogcargas: req.body.id,
-        fechaarchivo: req.body.fechaarchivo.split("-").reverse().join("-"),
-        fechaproceso: new Date(),
-        usuario: req.session.passport.user,
-        nroregistros: 0,
-        nombre1: '',
-        control1: 'inicio de carga',
-        nombre2: '',
-        control2: '',
-        borrado: 1
-    }).then(function (documentoscotizacion) {
-        res.json({ error_code: 0, id: documentoscotizacion.id, message: 'inicio carga', success: true });
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT a.id, a.nombre ' +
+        'FROM sip.servicio a ' +
+        'join sip.plantillapresupuesto b on b.idservicio=a.id ' +
+        'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
+        'where c.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
     }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1, id: 0, message: err, success: false });
+        logger.error(err);
+        res.json({ error: 1 });
     });
 }
 
-exports.archivo = function (req, res) {
+exports.getcalculado = function (req, res) {
 
-    if (req.method === 'POST') {
+    var id = req.params.id;
 
-        var busboy = new Busboy({ headers: req.headers });
-
-        var awaitId = new Promise(function (resolve, reject) {
-
-            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
-                if (fieldname === 'id') {
-                    try {
-                        resolve(val)
-                    } catch (err) {
-                        return reject(err);
-                    }
-                } else {
-                    return;
-                }
-            });
-        });
-
-        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
-
-            var saveTo = path.join(__dirname, '..', 'temp', filename);//path al archivo
-
-            file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
-
-            awaitId.then(function (idDetail) {
-
-                var carrusel = [];
-
-                var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
-
-                input.on('error', function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1, message: err, success: false });
-                });
-
-                var parser = csv.parse({
-                    delimiter: ';',
-                    columns: true,
-                    relax: true,
-                    relax_column_count: true,
-                    skip_empty_lines: true,
-                    trim: true
-                }); //parser CSV       
-
-                input.pipe(parser);
-
-                parser.on('readable', function () {
-                    var line
-                    while (line = parser.read()) {
-                        carrusel.push(line);
-                        /*
-                        var length = carrusel.push(line);
-                        if (length % 1000 == 0) {
-                          logger.debug(length);
-                        }*/
-                    }
-                });
-
-                parser.on('error', function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1, message: err, success: false });
-                });/*error*/
-
-                //parser.on('end', function (count) {
-                parser.on('finish', function () {
-                    co(function* () {
-                        models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
-                        var carga = yield models.detallecargas.findAll({
-                            limit: 1,
-                            where: { id: idDetail },
-                            include: [{
-                                model: models.logcargas
-                            }]
-                        }).catch(function (err) {
-                            logger.error(err);
-                        });
-
-                        //logger.debug(carga[0].dataValues.logcarga.dataValues.archivo)
-
-                        var table = carga[0].dataValues.logcarga.dataValues.archivo//Troya
-                        var deleted = carga[0].dataValues.logcarga.dataValues.tipocarga//Reemplaza o Incremental
-                        var dateLoad = carga[0].dataValues.logcarga.dataValues.fechaarchivo//Reemplaza o Incremental
-
-                        bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, dateLoad, function (err, data) {
-                            if (err) {
-                                logger.error("->>> " + err)
-                                res.json({ error_code: 1, message: err, success: false });
-                            } else {
-                                logger.debug("->>> " + data)
-                                res.json({ error_code: 0, message: data, success: true });
-                            }
-                        })
-
-                    }).catch(function (err) {//co(*)
-                        res.json({ error_code: 1, message: err, success: false });
-                        logger.error(err)
-                    })
-
-                });/*end*/
-
-                //parser.end();
-
-            }).catch(function (err) {
-                res.json({ error_code: 1, message: err, success: false });
-                logger.error(err)
-            });
-
-        });
-
-
-        busboy.on('finish', function () {
-            logger.debug("Finalizo la transferencia del archivo")
-        });
-
-        return req.pipe(busboy);
-    }
-
+    sequelize.query(
+        'select b.calculado ' +
+        'from sic.serviciosrequeridos a ' +
+        'join sic.clasecriticidad b on a.idclasecriticidad=b.id ' +
+        'where a.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 }
 
+exports.getcalculadoconclase = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'select a.* ' +
+        'from sic.clasecriticidad a  ' +
+        'where a.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.doctoasociado = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT a.id, a.nombrecorto ' +
+        'FROM sic.documentoscotizacion a ' +
+        'join sic.solicitudcotizacion b on a.idsolicitudcotizacion=b.id ' +
+        'where b.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.clasecriticidad = function (req, res) {
+
+    models.clasecriticidad.findAll({
+
+    }).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.segmentoproveedor = function (req, res) {
+
+    models.segmentoproveedor.findAll({
+
+    }).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.desgloseaction = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+
+            break;
+        case "edit":
+
+            models.factorescriticidad.update({
+                nota: req.body.nota,
+                valor: req.body.valor,
+                observacion: req.body.observacion
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (factorescriticidad) {
+
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ id: 0, message: err.message, success: false });
+                });
 
 
+
+            break;
+        case "del":
+
+
+            break;
+    }
+}
+
+exports.actualizanotafactor = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT a.* ' +
+        'FROM sic.factorescriticidad a ' +
+        'join sic.serviciosrequeridos b on a.idserviciorequerido=b.id ' +
+        'where b.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (factores) {
+        //logger.debug(valores)
+        var notafinal = 0.0;
+        for (var f in factores) {
+            //console.log(factores[f].nombrefactor);
+            notafinal = notafinal + ((factores[f].porcentaje/100)*factores[f].valor);
+        }
+        models.serviciosrequeridos.update({
+            notacriticidad: notafinal,
+
+        }, {
+                where: {
+                    id: id
+                }
+            }).then(function (factorescriticidad) {
+                res.json({ message: 'Actualizada la nota', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
