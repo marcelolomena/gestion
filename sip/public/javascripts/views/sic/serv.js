@@ -122,32 +122,49 @@ var gridServ = {
                             return s + "</select>";
                         },
                         dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        
-                        var idclasecriticidad = $('option:selected', this).val()
-                        
-                            $.ajax({
-                                type: "GET",
-                                url: '/sic/getcalculadoconclase/' + idclasecriticidad,
-                                async: false,
-                                success: function (data) {
-                                    console.log("el val: "+parseInt(data[0].calculado));
-                                    //if(parseInt(data[0].calculado)!=0){
+                            type: 'change', fn: function(e) {
+
+                                var idclasecriticidad = $('option:selected', this).val()
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/sic/getcalculadoconclase/' + idclasecriticidad,
+                                    async: false,
+                                    success: function(data) {
+                                        console.log("el val: " + parseInt(data[0].calculado));
+                                        //if(parseInt(data[0].calculado)!=0){
 
                                         $("input#notacriticidad").val(data[0].factor);
 
-                                   //}
-                                }
-                            });
-                        
-                    }
-                }],
+                                        //}
+                                    }
+                                });
+
+                            }
+                        }],
 
                     }
                 },
                 { name: 'clasecriticidad.glosaclase', index: 'clasecriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
-                { name: 'notacriticidad', index: 'notacriticidad', width: 150, align: "right", editable: true, editoptions: { size: 10 } },
-                { name: 'colornota', index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 } },
+                { name: 'notacriticidad', index: 'notacriticidad', width: 100, align: "right", editable: true, editoptions: { size: 10 }, formatter: 'number', formatoptions: { decimalPlaces: 2 } },
+                {
+                    name: 'colornota',
+                    index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
+                    formatter: function(cellvalue, options, rowObject) {
+                        var color = rowObject.colornota;
+                        
+                        if (color == 'Rojo') {
+                            color = 'red';
+                        } else if (color == 'Verde') {
+                            color = 'green';
+                        } else if (color == 'Amarillo') {
+                            color = 'yellow';
+                        } else if (color == 'Azul') {
+                            color = 'blue';
+                        }
+                        return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
+                    }
+                },
                 {
                     name: 'idsegmento', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -204,7 +221,7 @@ var gridServ = {
                 template: tmplServ,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function (form) {
+                beforeShowForm: function(form) {
                     $('input#notacriticidad', form).attr('readonly', 'readonly');
                 }
             }, {
@@ -217,6 +234,9 @@ var gridServ = {
                 mtype: 'POST',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
+                beforeShowForm: function(form) {
+                    $('input#notacriticidad', form).attr('readonly', 'readonly');
+                },
                 onclickSubmit: function(rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }
@@ -243,7 +263,7 @@ var gridServ = {
 
 function showSubGridsServ(subgrid_id, row_id) {
     gridProveedores(subgrid_id, row_id, 'proveedores');
-    
+
 
     $.ajax({
         type: "GET",
@@ -310,14 +330,47 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
         {
-            label: 'Nota', name: 'nota', width: 50, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            label: 'Nota', name: 'nota', search: false, editable: true, hidden: false, width: 50,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/notas/' + 1,
+                buildSelect: function(response) {
+                    console.log("fsfs:" + $("#" + childGridID).getRowData($("#" + childGridID).getGridParam("selrow")).id)
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.nota;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Seleccione Nota--</option>';
+                    $.each(data, function(i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].valor + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].valor + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function(e) {
+
+                        var lanota = $('option:selected', this).val();
+                        var rowKey = $("#" + childGridID).getGridParam("selrow");
+                        var rowData = $("#" + childGridID).getRowData(rowKey);
+                        var porcentaje = rowData.porcentaje;
+                        //console.log("la nota: "+lanota+" porcentaje: "+porcentaje);
+                        $("input#valor").val((parseFloat(porcentaje) / 100) * parseFloat(lanota));
+
+                    }
+                }],
+
+            }
         },
         {
             label: 'Valor', name: 'valor', width: 50, align: 'right',
             search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
         {
             label: 'Observación', name: 'observacion', width: 200,
@@ -347,6 +400,14 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         height: 'auto',
         pager: "#" + childGridPagerID,
         editurl: '/sic/desglosefactoresserv/action',
+        onSelectRow: function(rowid, selected) {
+            if (rowid != null) {
+                var grid = $("#" + childGridID);
+                var rowData = grid.getRowData(rowid);
+                var idnecesario = rowData.id;
+                jQuery("#" + childGridID).setColProp('nota', { editoptions: { dataUrl: '/sic/notas/' + idnecesario } });
+            }
+        },
         gridComplete: function() {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -369,11 +430,11 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             errorTextFormat: function(data) {
                 return 'Error: ' + data.responseText
             },
-            
+
             afterSubmit: function(response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.success!=true)
+                if (result.success != true)
                     return [false, result.message, ""];
                 else
                     $.ajax({
@@ -384,9 +445,17 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                             return [true, "", ""]
                         }
                     });
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/actualizacolorfactor/' + parentRowKey,
+                    async: false,
+                    success: function(data) {
+                        return [true, "", ""]
+                    }
+                });
                 return [true, "", ""]
             },
-            
+
             beforeShowForm: function(form) {
                 var grid = $("#" + childGridID);
                 var rowKey = grid.getGridParam("selrow");
@@ -415,7 +484,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             onclickSubmit: function(rowid) {
                 return { parent_id: parentRowKey };
             },
-            
+
         },
         {
             closeAfterDelete: true,
