@@ -15,6 +15,9 @@ var gridClausula = {
         tmpl += "<div class='column-full'>Código<span style='color:red'>*</span>{idclausulaplantilla}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-full'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
+        tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{texto}</div>";
@@ -28,13 +31,13 @@ var gridClausula = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Texto'],
+            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }
                 },
-                { name: 'Clase', index: 'clase', width: 100, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
+                { name: 'clase', index: 'clase', width: 100, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
                 { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
@@ -92,7 +95,9 @@ var gridClausula = {
                     }
                 },
                 { name: 'codplantilla', index: 'codplantilla', hidden: true, editable: false, jsonmap: "plantillaclausula.id", },
-                { name: 'Código', index: 'Código', width: 100, align: "left", editable: false, jsonmap: "plantillaclausula.codigo", },
+                {
+                    name: 'Código', index: 'Código', width: 200, align: "left", editable: false, jsonmap: "plantillaclausula.codigo",
+                },
                 {
                     name: 'idclausulaplantilla', search: false, editable: true, hidden: true, edittype: "select",
                     editoptions: {
@@ -106,7 +111,7 @@ var gridClausula = {
                                         url: '/sic/texto/' + thisval,
                                         success: function(data) {
                                             //console.dir(data[0].glosaclausula)
-                                            //$("input#texto").val(data[0].glosaclausula);
+                                            $("input#nombrecorto").val(data[0].nombrecorto);
                                             tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
                                         }
                                     });
@@ -115,6 +120,7 @@ var gridClausula = {
                         }]
                     },
                 },
+                { name: 'nombrecorto', index: 'nombrecorto', width: 300, align: "left", editable: true, jsonmap: "plantillaclausula.nombrecorto", },
                 {
                     name: 'texto', index: 'texto', editable: true,
                     width: 1280, hidden: false,
@@ -203,12 +209,19 @@ var gridClausula = {
                 onclickSubmit: function(rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function(postdata, formid) {
-                    if (parseInt(postdata.idclausula) == 0) {
-                        return [false, "Cláusula: Debe escoger un valor", ""];
+                    if (parseInt(postdata.codclase) == 0) {
+                        return [false, "Clase: Debe escoger un valor", ""];
+                    } else if (parseInt(postdata.idclausulaplantilla) == 0) {
+                        return [false, "Código: Debe escoger un valor", ""];
+                    } if (postdata.nombrecorto.trim().length == 0) {
+                        return [false, "Nombre: Debe ingresar un nombre", ""];
+                    } if (postdata.texto.trim().length == 0) {
+                        return [false, "Texto: Debe ingresar un texto", ""];
                     } else {
                         return [true, "", ""]
                     }
-                }, beforeShowForm: function(form) {
+                },
+                beforeShowForm: function(form) {
                     setTimeout(function() {
                         $.ajax({
                             type: "GET",
@@ -245,8 +258,14 @@ var gridClausula = {
                 onclickSubmit: function(rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function(postdata, formid) {
-                    if (parseInt(postdata.idclausulaplantilla) == 0) {
-                        return [false, "Cláusula: Debe escoger un valor", ""];
+                    if (parseInt(postdata.codclase) == 0) {
+                        return [false, "Clase: Debe escoger un valor", ""];
+                    } else if (parseInt(postdata.idclausulaplantilla) == 0) {
+                        return [false, "Código: Debe escoger un valor", ""];
+                    } if (postdata.nombrecorto.trim().length == 0) {
+                        return [false, "Nombre: Debe ingresar un nombre", ""];
+                    } if (postdata.texto.trim().length == 0) {
+                        return [false, "Texto: Debe ingresar un texto", ""];
                     } else {
                         return [true, "", ""]
                     }
@@ -278,7 +297,7 @@ var gridClausula = {
 
         $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
             caption: "",
-            buttonicon: "glyphicon glyphicon-paperclip",
+            buttonicon: "glyphicon glyphicon-download-alt",
             title: "Generar Documento",
             position: "last",
             onClickButton: function() {
@@ -288,7 +307,7 @@ var gridClausula = {
 
             }
         });
-
+/*
         $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
             caption: "",
             buttonicon: "glyphicon glyphicon-pushpin",
@@ -316,5 +335,6 @@ var gridClausula = {
 
             }
         })
-    } 
+*/        
+    }
 }

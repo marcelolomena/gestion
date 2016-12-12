@@ -10,6 +10,8 @@ var logger = require("../utils/logger");
 //console.log("la config: "+config);
 config.logging = function(sql){
 
+  //logger.debug(sql)
+
   var sqlchico = sql.toLowerCase();
 
   if(sqlchico.indexOf('[sip].[registro]') == -1 && sqlchico.indexOf('[sessions]') == -1 && 

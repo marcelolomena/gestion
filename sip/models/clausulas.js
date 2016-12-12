@@ -43,6 +43,10 @@ module.exports = function(sequelize, DataTypes) {
     obligatorio: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    nombrecorto: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'sic',timestamps: false,tableName: 'clausulas'
