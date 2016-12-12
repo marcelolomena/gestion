@@ -6,7 +6,7 @@ var Busboy = require('busboy');
 var path = require('path');
 var fs = require('fs');
 
-exports.action = function (req, res) {
+exports.action = function(req, res) {
     var action = req.body.oper;
 
     switch (action) {
@@ -20,9 +20,27 @@ exports.action = function (req, res) {
                 nombreresponsable: req.body.nombreresponsable,
                 nombrearchivo: '',
                 borrado: 1
-            }).then(function (documentoscotizacion) {
-                res.json({ id: documentoscotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-            }).catch(function (err) {
+            }).then(function(documentoscotizacion) {
+
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'documentoscotizacion',
+                    documentoscotizacion.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.documentoscotizacion,
+                    function(err, data) {
+                        if (!err) {
+                            res.json({ id: documentoscotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+
+                        } else {
+                            logger.error("->>> " + err)
+                            res.json({ id: documentoscotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    });
+
+            }).catch(function(err) {
                 logger.error(err)
                 res.json({ id: 0, message: err.message, success: false });
             });
@@ -39,9 +57,9 @@ exports.action = function (req, res) {
                     where: {
                         id: req.body.id
                     }
-                }).then(function (documentoscotizacion) {
+                }).then(function(documentoscotizacion) {
                     res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-                }).catch(function (err) {
+                }).catch(function(err) {
                     logger.error(err)
                     res.json({ id: 0, message: err.message, success: false });
                 });
@@ -51,12 +69,12 @@ exports.action = function (req, res) {
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+            }).then(function(rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
                 res.json({ error: 0, glosa: '' });
-            }).catch(function (err) {
+            }).catch(function(err) {
                 logger.error(err)
                 res.json({ id: 0, message: err.message, success: false });
             });
@@ -66,7 +84,7 @@ exports.action = function (req, res) {
 }
 
 
-exports.list = function (req, res) {
+exports.list = function(req, res) {
 
     //var id = req.params.id;
     logger.debug("ID DOC : " + req.params.id)
@@ -79,36 +97,20 @@ exports.list = function (req, res) {
     var sidx = req.query.sidx;
     var sord = req.query.sord;
 
-
-    /*
-    var filters = req.body.filters;
-    var sidx = req.body.sidx;
-    var sord = req.body.sord;
-  
-    if (!sidx)
-      sidx = "descripcion";
-  
-    if (!sord)
-      sord = "asc";
-  
-    var orden = "[solicitudcotizacion]." + sidx + " " + sord;
-    */
-
-
     var additional = [{
         "field": "idsolicitudcotizacion",
         "op": "eq",
         "data": req.params.id
     }];
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    utilSeq.buildAdditionalCondition(filters, additional, function(err, data) {
         if (data) {
             models.documentoscotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.documentoscotizacion.belongsTo(models.valores, { foreignKey: 'idtipodocumento' });
             models.documentoscotizacion.belongsTo(models.user, { foreignKey: 'uid' });
             models.documentoscotizacion.count({
                 where: data
-            }).then(function (records) {
+            }).then(function(records) {
                 var total = Math.ceil(records / rows);
                 models.documentoscotizacion.findAll({
                     offset: parseInt(rows * (page - 1)),
@@ -120,10 +122,10 @@ exports.list = function (req, res) {
                         model: models.solicitudcotizacion
                     }, { model: models.valores }, { model: models.user }
                     ]
-                }).then(function (documentoscotizacion) {
+                }).then(function(documentoscotizacion) {
                     //logger.debug(solicitudcotizacion)
                     res.json({ records: records, total: total, page: page, rows: documentoscotizacion });
-                }).catch(function (err) {
+                }).catch(function(err) {
                     logger.error(err);
                     res.json({ error_code: 1 });
                 });
@@ -133,15 +135,15 @@ exports.list = function (req, res) {
 
 };
 
-exports.upload = function (req, res) {
+exports.upload = function(req, res) {
 
     if (req.method === 'POST') {
 
         var busboy = new Busboy({ headers: req.headers });
 
-        var awaitId = new Promise(function (resolve, reject) {
+        var awaitId = new Promise(function(resolve, reject) {
 
-            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+            busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
                 if (fieldname === 'id') {
                     try {
                         resolve(val)
@@ -154,9 +156,9 @@ exports.upload = function (req, res) {
             });
         });
 
-        var awaitParent = new Promise(function (resolve, reject) {
+        var awaitParent = new Promise(function(resolve, reject) {
 
-            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+            busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
                 if (fieldname === 'parent') {
                     try {
                         resolve(val)
@@ -170,7 +172,7 @@ exports.upload = function (req, res) {
         });
 
         function copyFile(source, target) {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 var rd = fs.createReadStream(source);
                 rd.on('error', rejectCleanup);
                 var wr = fs.createWriteStream(target);
@@ -193,13 +195,13 @@ exports.upload = function (req, res) {
             }
         }
 
-        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
+        busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
             var saveTo = path.join(__dirname, '../../', 'docs', filename);
             logger.debug("actual : " + saveTo)
             file.pipe(fs.createWriteStream(saveTo));
 
-            awaitParent.then(function (idParent) {
+            awaitParent.then(function(idParent) {
 
                 logger.debug("idParent : " + idParent)
 
@@ -208,7 +210,7 @@ exports.upload = function (req, res) {
                 var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
                 copyFile(saveTo, dest)
 
-                awaitId.then(function (idDetail) {
+                awaitId.then(function(idDetail) {
                     logger.debug("idDetail : " + idDetail)
                     models.documentoscotizacion.update({
                         nombrearchivo: filename
@@ -216,19 +218,19 @@ exports.upload = function (req, res) {
                             where: {
                                 id: idDetail
                             }
-                        }).then(function (documentoscotizacion) {
-                        }).catch(function (err) {
+                        }).then(function(documentoscotizacion) {
+                        }).catch(function(err) {
                             logger.error(err)
                             res.json({ id: 0, message: err.message, success: false });
                         });
 
-                }).catch(function (err) {
+                }).catch(function(err) {
                     res.json({ error_code: 1, message: err.message, success: false });
                     logger.error(err)
                 });
 
 
-            }).catch(function (err) {
+            }).catch(function(err) {
                 res.json({ error_code: 1, message: err.message, success: false });
                 logger.error(err)
             });
@@ -236,7 +238,7 @@ exports.upload = function (req, res) {
 
         });
 
-        busboy.on('finish', function () {
+        busboy.on('finish', function() {
             logger.debug("Finalizo la transferencia del archivo")
 
             res.json({ error_code: 0, message: 'Archivo guardado', success: true });

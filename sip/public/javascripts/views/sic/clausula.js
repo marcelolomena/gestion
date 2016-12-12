@@ -279,7 +279,7 @@ var gridClausula = {
         $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
             caption: "",
             buttonicon: "glyphicon glyphicon-paperclip",
-            title: "Generar Doc",
+            title: "Generar Documento",
             position: "last",
             onClickButton: function() {
                 var rowKey = $gridTab.getGridParam("selrow");
@@ -289,5 +289,32 @@ var gridClausula = {
             }
         });
 
-    }
+        $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
+            caption: "",
+            buttonicon: "glyphicon glyphicon-pushpin",
+            title: "Agrega Cláusulas Predefinidas",
+            position: "last",
+            onClickButton: function() {
+                var rowKey = $gridTab.getGridParam("selrow");
+
+                var dialog = bootbox.dialog({
+                    title: 'Cláusulas',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i>Cláusulas Predefinidas...</p>'
+                });
+                dialog.init(function() {
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/sic/plantillas/' + parentRowKey,
+                        async: false,
+                        success: function(data) {
+                            dialog.find('.bootbox-body').html(data.message);
+                        }
+                    });
+
+                });
+
+            }
+        })
+    } 
 }

@@ -59,7 +59,6 @@ exports.action = function (req, res) {
             });
 
             break;
-
     }
 }
 
@@ -82,6 +81,7 @@ exports.list = function (req, res) {
         "op": "eq",
         "data": req.params.id
     }];
+
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
