@@ -126,13 +126,21 @@ exports.list2 = function (req, res) {
       models.plantillaclausula.count({
         where: data
       }).then(function (records) {
-          //logger.debug("campos: "+records);
+        //logger.debug("campos: "+records);
         var total = Math.ceil(records / rows);
+        models.plantillaclausula.belongsTo(models.valores, { as: 'grupo',foreignKey: 'idgrupo' });
+        models.plantillaclausula.belongsTo(models.valores, { as: 'tipo',foreignKey: 'idtipoclausula' });
         models.plantillaclausula.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data
+          where: data,
+          include: [{
+            model: models.valores, as: 'grupo'
+          },
+          {
+            model: models.valores, as: 'tipo'
+          }]
         }).then(function (plantillaclausula) {
           res.json({ records: records, total: total, page: page, rows: plantillaclausula });
         }).catch(function (err) {
@@ -152,8 +160,12 @@ exports.action2 = function (req, res) {
     case "add":
       models.plantillaclausula.create({
         cid: req.body.parent_id,
+        nombrecorto: req.body.nombrecorto,
         codigo: req.body.codigo,
         glosaclausula: req.body.glosaclausula,
+        idgrupo: req.body.idgrupo,
+        obligatorio: req.body.obligatorio,
+        idtipoclausula: req.body.idtipoclausula,
         borrado: 1
       }).then(function (plantillaclausula) {
         res.json({ error: 0, glosa: '' });
@@ -165,7 +177,11 @@ exports.action2 = function (req, res) {
       break;
     case "edit":
       models.plantillaclausula.update({
+        nombrecorto: req.body.nombrecorto,
         codigo: req.body.codigo,
+        idgrupo: req.body.idgrupo,
+        obligatorio: req.body.obligatorio,
+        idtipoclausula: req.body.idtipoclausula,
         glosaclausula: req.body.glosaclausula
       }, {
           where: {
@@ -196,4 +212,35 @@ exports.action2 = function (req, res) {
       break;
 
   }
+}
+exports.getgrupoclausula = function (req, res) {
+
+  sequelize.query(
+    'select a.* ' +
+    'from sic.valores a ' +
+    "where a.tipo='grupoclausula' ",
+    { type: sequelize.QueryTypes.SELECT }
+  ).then(function (valores) {
+    //logger.debug(valores)
+    res.json(valores);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error: 1 });
+  });
+}
+
+exports.gettipoclausula = function (req, res) {
+
+  sequelize.query(
+    'select a.* ' +
+    'from sic.valores a ' +
+    "where a.tipo='tipoclausula' ",
+    { type: sequelize.QueryTypes.SELECT }
+  ).then(function (valores) {
+    //logger.debug(valores)
+    res.json(valores);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error: 1 });
+  });
 }

@@ -43,6 +43,14 @@ module.exports = function(sequelize, DataTypes) {
     obligatorio: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    idtipoclausula: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'valores',
+        key: 'id'
+      }
     }
   }, {
     schema: 'sic',timestamps: false,tableName: 'plantillaclausula'

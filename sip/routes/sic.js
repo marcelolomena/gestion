@@ -111,5 +111,12 @@ module.exports = function (passport) {
     router.route('/sic/actualizacolorfactor/:id')
         .get(isAuthenticated, serviciosController.actualizacolorfactor);
 
+    router.route('/sic/grupoclausula')
+        .get(isAuthenticated, catalogoclausulasController.getgrupoclausula);
+
+    router.route('/sic/tipoclausula')
+        .get(isAuthenticated, catalogoclausulasController.gettipoclausula);
+
+
     return router;
 }
