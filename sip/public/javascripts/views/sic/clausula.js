@@ -279,7 +279,7 @@ var gridClausula = {
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function(form) {
                     ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.texto);
+                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.nombrecorto);
 
                 },
                 afterSubmit: function(response, postdata) {

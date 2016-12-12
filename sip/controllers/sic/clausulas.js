@@ -84,7 +84,6 @@ exports.list = function(req, res) {
         "data": req.params.id
     }];
 
-
     utilSeq.buildAdditionalCondition(filters, additional, function(err, data) {
         if (data) {
 
