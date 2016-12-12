@@ -87,8 +87,8 @@ exports.action = function(req, res) {
 exports.list = function(req, res) {
 
     //var id = req.params.id;
-    logger.debug("ID DOC : " + req.params.id)
-    logger.debug("PAGE : " + req.query.page)
+    //logger.debug("ID DOC : " + req.params.id)
+    //logger.debug("PAGE : " + req.query.page)
     //documentoscotizacion
 
     var page = req.query.page;
@@ -203,7 +203,7 @@ exports.upload = function(req, res) {
 
             awaitParent.then(function(idParent) {
 
-                logger.debug("idParent : " + idParent)
+                //logger.debug("idParent : " + idParent)
 
                 var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);//path al archivo
                 checkDirectorySync(dir);
@@ -211,7 +211,7 @@ exports.upload = function(req, res) {
                 copyFile(saveTo, dest)
 
                 awaitId.then(function(idDetail) {
-                    logger.debug("idDetail : " + idDetail)
+                    //logger.debug("idDetail : " + idDetail)
                     models.documentoscotizacion.update({
                         nombrearchivo: filename
                     }, {
