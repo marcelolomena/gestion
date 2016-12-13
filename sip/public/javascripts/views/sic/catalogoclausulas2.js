@@ -13,31 +13,24 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Código {codigo}</div>";
+    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Código {codigo}</div>";
+    tmplPF += "<div class='column-five'>Título {nombrecorto}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Título {nombrecorto}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Grupo {idgrupo}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Tipo {idtipoclausula}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Glosa Cláusula {glosaclausula}</div>";
+    tmplPF += "<div class='column-half'>Grupo {idgrupo}</div>";
+    tmplPF += "<div class='column-half'>Tipo {idtipoclausula}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-full'>Obligatorio {obligatorio}</div>";
     tmplPF += "</div>";
 
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Glosa Cláusula {glosaclausula}</div>";
+    tmplPF += "</div>";
+
     tmplPF += "<div class='form-row' style='display: none;'>";
-    tmplPF += "<div class='column-half'>tipofecha {tipofecha}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<hr style='width:100%;'/>";
@@ -110,7 +103,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         },
         { label: 'Tipo', name: 'tipo.nombre', width: 150, editable: true, editoptions: { size: 10 } },
         {
-            label: 'Glosa Cláusula', name: 'glosaclausula', width: 500, align: 'left', search: false, editable: true,
+            label: 'Glosa Cláusula', name: 'glosaclausula', width: 600, align: 'left', search: false, editable: true,
             edittype: 'custom',
             editoptions: {
                 custom_element: function (value, options) {
@@ -129,7 +122,8 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
                             menubar: false,
                             statusbar: false,
                             selector: "#" + options.id,
-                            plugins: "link"
+                            plugins: "link",
+                            height: 300,
                         });
                     }, 50);
                     return elm;
@@ -224,6 +218,9 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
@@ -239,6 +236,9 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {

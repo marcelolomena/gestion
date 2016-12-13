@@ -66,7 +66,7 @@ exports.list = function (req, res) {
   var sord = req.query.sord;
 
   if (!sidx)
-    sidx = "nombre";
+    sidx = "secuencia";
 
   if (!sord)
     sord = "asc";
