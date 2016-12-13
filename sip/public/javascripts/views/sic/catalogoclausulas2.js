@@ -187,6 +187,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
+        rowNum: 20,
         datatype: "json",
         caption: 'Catálogo de Cláusulas',
         //width: null,
@@ -218,6 +219,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
+            width: 800,
             editCaption: "Modificar Plantilla Cláusula",
             template: tmplPF,
             errorTextFormat: function (data) {
@@ -228,6 +230,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
+            width: 800,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Plantilla Cláusula",
             template: tmplPF,

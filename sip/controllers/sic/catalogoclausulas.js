@@ -59,11 +59,11 @@ exports.action = function (req, res) {
 
 exports.list = function (req, res) {
 
-  var page = req.body.page;
-  var rows = req.body.rows;
-  var filters = req.body.filters;
-  var sidx = req.body.sidx;
-  var sord = req.body.sord;
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
 
   if (!sidx)
     sidx = "nombre";
@@ -99,11 +99,13 @@ exports.list = function (req, res) {
 };
 
 exports.list2 = function (req, res) {
-  var page = req.body.page;
-  var rows = req.body.rows;
-  var filters = req.body.filters;
-  var sidx = req.body.sidx;
-  var sord = req.body.sord;
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  logger.debug('rows: '+rows)
+  logger.debug('page: '+page)
 
   if (!sidx)
     sidx = "codigo";
@@ -126,10 +128,11 @@ exports.list2 = function (req, res) {
       models.plantillaclausula.count({
         where: data
       }).then(function (records) {
-        //logger.debug("campos: "+records);
+        logger.debug("records: "+records);
         var total = Math.ceil(records / rows);
-        models.plantillaclausula.belongsTo(models.valores, { as: 'grupo',foreignKey: 'idgrupo' });
-        models.plantillaclausula.belongsTo(models.valores, { as: 'tipo',foreignKey: 'idtipoclausula' });
+        logger.debug("total: "+total);
+        models.plantillaclausula.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
+        models.plantillaclausula.belongsTo(models.valores, { as: 'tipo', foreignKey: 'idtipoclausula' });
         models.plantillaclausula.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
