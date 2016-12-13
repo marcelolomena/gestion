@@ -11,10 +11,23 @@ exports.listall = function (req, res) {
 
     models.valores.findAll({
         order: 'id ASC',
-        atributes: ['id', 'nombre'],//Es Nombre
+        attributes: ['id', 'nombre'],
         where: { tipo: req.params.val },
     }).then(function (valores) {
-        console.dir(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.listall2 = function (req, res) {
+
+    models.valores.findAll({
+        order: 'id ASC',
+        attributes: [['id', 'value'], ['nombre', 'text']],
+        where: { tipo: req.params.val },
+    }).then(function (valores) {
         res.json(valores);
     }).catch(function (err) {
         logger.error(err);

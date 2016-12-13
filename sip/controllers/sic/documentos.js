@@ -116,7 +116,7 @@ exports.list = function(req, res) {
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     //order: orden,
-                    //atributes: ['id', 'idsolicitudcotizacion'],
+                    //attributes: ['id', 'idsolicitudcotizacion'],
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
@@ -198,7 +198,7 @@ exports.upload = function(req, res) {
         busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
             var saveTo = path.join(__dirname, '../../', 'docs', filename);
-            logger.debug("actual : " + saveTo)
+            //logger.debug("actual : " + saveTo)
             file.pipe(fs.createWriteStream(saveTo));
 
             awaitParent.then(function(idParent) {
