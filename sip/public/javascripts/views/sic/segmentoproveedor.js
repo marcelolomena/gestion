@@ -75,7 +75,7 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                if (result.success != true)
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
@@ -108,7 +108,7 @@ $(document).ready(function () {
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                if (result.success != true)
                     return [false, "Error en llamada a Servidor", ""];
                 else
                     return [true, "", ""]
@@ -130,7 +130,7 @@ $(document).ready(function () {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                if (result.success != true)
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]

@@ -6,7 +6,7 @@ var bitacora = require("../../utils/bitacora");
 var path = require('path');
 var fs = require('fs');
 
-exports.action = function (req, res) {
+exports.action = function(req, res) {
     var action = req.body.oper;
     //logger.debug("idclausulaplantilla: " + req.body.idclausulaplantilla)
     switch (action) {
@@ -16,12 +16,13 @@ exports.action = function (req, res) {
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idclausula: req.body.idclausulaplantilla,
                 uid: req.session.passport.user,
+                nombrecorto: req.body.nombrecorto,
                 texto: req.body.texto,
                 borrado: 1
-            }).then(function (clausulas) {
+            }).then(function(clausulas) {
                 //bitacora.registrar(req.body.idsolicitudcotizacion, 'clausulas', clausulas.id, 'insert', req.session.passport.user, new Date(), models.clausulas)
                 res.json({ error: 0, glosa: '' });
-            }).catch(function (err) {
+            }).catch(function(err) {
                 logger.error(err)
                 res.json({ error: 1, glosa: err.message });
             });
@@ -31,14 +32,15 @@ exports.action = function (req, res) {
             models.clausulas.update({
                 idclausula: req.body.idclausulaplantilla,
                 uid: req.session.passport.user,
+                nombrecorto: req.body.nombrecorto,
                 texto: req.body.texto
             }, {
                     where: {
                         id: req.body.id
                     }
-                }).then(function (clausulas) {
+                }).then(function(clausulas) {
                     res.json({ error: 0, glosa: '' });
-                }).catch(function (err) {
+                }).catch(function(err) {
                     logger.error(err)
                     res.json({ error: 1, glosa: err.message });
                 });
@@ -48,22 +50,21 @@ exports.action = function (req, res) {
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+            }).then(function(rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
                 res.json({ result: true, glosa: 'Deleted successfully' });
-            }).catch(function (err) {
+            }).catch(function(err) {
                 logger.error(err)
                 res.json({ result: false, glosa: err.message });
             });
 
             break;
-
     }
 }
 
-exports.list = function (req, res) {
+exports.list = function(req, res) {
 
     var page = req.query.page;
     var rows = req.query.rows;
@@ -83,7 +84,7 @@ exports.list = function (req, res) {
         "data": req.params.id
     }];
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    utilSeq.buildAdditionalCondition(filters, additional, function(err, data) {
         if (data) {
 
             models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
@@ -93,12 +94,12 @@ exports.list = function (req, res) {
 
             models.clausulas.count({
                 where: data
-            }).then(function (records) {
+            }).then(function(records) {
                 var total = Math.ceil(records / rows);
                 models.clausulas.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    //order: orden,
+                    order: 'codigo ASC',
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
@@ -110,13 +111,13 @@ exports.list = function (req, res) {
                         model: models.user
                     }
                     ]
-                }).then(function (clausulas) {
+                }).then(function(clausulas) {
                     res.json({ records: records, total: total, page: page, rows: clausulas });
-                }).catch(function (err) {
+                }).catch(function(err) {
                     logger.error(err.message);
                     res.json({ error_code: 1 });
                 });
-            }).catch(function (err) {
+            }).catch(function(err) {
                 logger.error(err.message);
                 res.json({ error_code: 1 });
             });
@@ -126,7 +127,7 @@ exports.list = function (req, res) {
 
 }
 
-exports.clases = function (req, res) {
+exports.clases = function(req, res) {
     var sql = `
                 select e.id, e.nombre from art_user a
                 join sip.usr_rol b on a.uid=b.uid
@@ -140,67 +141,88 @@ exports.clases = function (req, res) {
             replacements: { uid: req.session.passport.user },
             type: sequelize.QueryTypes.SELECT
         }
-    ).then(function (clases) {
+    ).then(function(clases) {
         logger.debug(clases);
         res.json(clases);
-    }).catch(function (err) {
+    }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
     });
 
 }
 
-exports.plantillas = function (req, res) {
+exports.plantillas = function(req, res) {
 
     models.plantillaclausula.findAll({
         order: 'id ASC',
         atributes: ['id', 'codigo'],
         where: { cid: req.params.id }
-    }).then(function (plantillas) {
+    }).then(function(plantillas) {
         res.json(plantillas);
-    }).catch(function (err) {
+    }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
     });
 
 }
 
-exports.texto = function (req, res) {
+exports.texto = function(req, res) {
 
     models.plantillaclausula.findAll({
         order: 'id ASC',
-        atributes: ['glosaclausula'],
+        atributes: ['glosaclausula', 'nombrecorto'],
         where: { id: req.params.id }
-    }).then(function (plantillas) {
+    }).then(function(plantillas) {
         res.json(plantillas);
-    }).catch(function (err) {
+    }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
     });
 
 }
 
-exports.download = function (req, res) {
+
+exports.download = function(req, res) {
+    models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idclausula' });
     models.clausulas.findAll({
-        order: 'id ASC',
+        order: 'codigo ASC',
         atributes: ['texto'],
-        where: { idsolicitudcotizacion: req.params.id }
-    }).then(function (clausulas) {
+        where: { idsolicitudcotizacion: req.params.id },
+        include: [{
+            model: models.plantillaclausula
+        }]
+    }).then(function(clausulas) {
+
+        //logger.debug(clausulas.plantillaclausula)
 
         var result = '<html><body>'
 
         for (var f in clausulas) {
-            result +=clausulas[f].texto
+            //logger.debug(clausulas[f].plantillaclausula.codigo)
+
+            var level = clausulas[f].plantillaclausula.codigo.split(".");
+            var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
+            //logger.debug(level[0] + '-' + level[1] + '-' + level[2] + '-' + level[3])
+            if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0 && parseInt(level[2]) == 0 && parseInt(level[3]) == 0)
+                result += '<h1>' + clausulas[f].plantillaclausula.codigo + ' ' + nombrecorto + '</h1>'
+            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 && parseInt(level[2]) == 0 && parseInt(level[3]) == 0)
+                result += '<h2>' + clausulas[f].plantillaclausula.codigo + ' ' + nombrecorto + '</h2>'
+            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 && parseInt(level[2]) > 0 && parseInt(level[3]) == 0)
+                result += '<h3>' + clausulas[f].plantillaclausula.codigo + ' ' + nombrecorto + '</h3>'
+            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 && parseInt(level[2]) > 0 && parseInt(level[3]) > 0)
+                result += '<h4>' + clausulas[f].plantillaclausula.codigo + ' ' + nombrecorto + '</h4>'
+
+            result += clausulas[f].texto
         }
 
-        result +='</html></body>'
+        result += '</html></body>'
 
         var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
         res.setHeader('Content-disposition', hdr);
         res.set('Content-Type', 'application/msword;charset=utf-8');
         res.status(200).send(result);
 
-    }).catch(function (err) {
+    }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
     });

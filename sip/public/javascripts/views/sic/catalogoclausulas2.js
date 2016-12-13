@@ -17,7 +17,23 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Título {nombrecorto}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Grupo {idgrupo}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Tipo {idtipoclausula}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-full'>Glosa Cláusula {glosaclausula}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Obligatorio {obligatorio}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -34,7 +50,65 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     var modelCatClausulas = [
         { label: 'id', name: 'id', key: true, hidden: true },
 
-        { label: 'Código', name: 'codigo', width: 150, align: 'left', search: false, editable: true },
+        {
+            label: 'Código', name: 'codigo', width: 150, align: 'left', search: false, editable: true,
+            editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("0.0.0.0", { placeholder: "_._._._" });
+                }
+            }
+        },
+        { label: 'Título', name: 'nombrecorto', width: 150, align: 'left', search: false, editable: true },
+        {
+            label: 'Grupo', name: 'idgrupo', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/grupoclausula',
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.idgrupo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Seleccione un Grupo--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        { label: 'Grupo', name: 'grupo.nombre', width: 150, editable: true, editoptions: { size: 10 } },
+        {
+            label: 'Tipo', name: 'idtipoclausula', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/tipoclausula',
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.idgrupo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Seleccione un Tipo--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        { label: 'Tipo', name: 'tipo.nombre', width: 150, editable: true, editoptions: { size: 10 } },
         {
             label: 'Glosa Cláusula', name: 'glosaclausula', width: 500, align: 'left', search: false, editable: true,
             edittype: 'custom',
@@ -83,6 +157,27 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
+        {
+            label: 'Obligatorio', name: 'obligatorio',
+            search: false, editable: true, hidden: false,
+            //editrules: { required: true },
+            edittype: "custom",
+            editoptions: {
+                custom_value: sicLibrary.getRadioElementValue,
+                custom_element: sicLibrary.radioElemObligatorio
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.obligatorio;
+                if (val == 1) {
+                    dato = 'Sí';
+
+                } else if (val == 0) {
+                    dato = 'No';
+                }
+                return dato;
+            }
+        },
 
     ];
 
@@ -92,6 +187,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
+        rowNum: 20,
         datatype: "json",
         caption: 'Catálogo de Cláusulas',
         //width: null,
@@ -123,6 +219,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
+            width: 800,
             editCaption: "Modificar Plantilla Cláusula",
             template: tmplPF,
             errorTextFormat: function (data) {
@@ -133,6 +230,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
+            width: 800,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Plantilla Cláusula",
             template: tmplPF,

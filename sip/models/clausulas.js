@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'art_user',
+        model: 'user',
         key: 'uid'
       }
     },
@@ -38,6 +38,14 @@ module.exports = function(sequelize, DataTypes) {
     },
     borrado: {
       type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    obligatorio: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    nombrecorto: {
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {

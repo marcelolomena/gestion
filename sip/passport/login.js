@@ -6,6 +6,35 @@ var co = require('co');
 var logger = require("../utils/logger");
 module.exports = function (passport) {
 
+	// add other strategies for more authentication flexibility
+/*	
+	passport.use('daniel', new LocalStrategy({
+		usernameField: 'usuario',
+		passwordField: 'clave' // this is the virtual field on the model
+	},
+		function (usuario, clave, done) {
+			logger.debug("clave : " + clave)
+			models.user.find({
+				where: { 'uname': usuario }
+			}, function (err, user) {
+				if (err) return done(err);
+
+				if (!user) {
+					return done(null, false, {
+						message: 'Este usuario no existe.'
+					});
+				}
+				if (!user.authenticate(clave)) {
+					return done(null, false, {
+						message: 'La clave no es correcta.'
+					});
+				}
+				return done(null, user);
+			});
+		}
+	));
+*/
+
 	passport.use('local', new LocalStrategy({
 		/*usernameField: 'email',*/ passReqToCallback: true
 	},

@@ -2,6 +2,7 @@ var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var utilSeq = require('../../utils/seq');
 var logger = require("../../utils/logger");
+var bitacora = require("../../utils/bitacora");
 
 exports.list = function (req, res) {
 
@@ -58,7 +59,23 @@ exports.action = function (req, res) {
         valor: valor,
         borrado: 1
       }).then(function (valores) {
-        res.json({ error_code: 0 });
+           bitacora.registrar(
+                    null,
+                    'valores',
+                    valores.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.valores,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+        res.json({ id: valores.id, parent: null, message: 'Insertando', success: true });
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
@@ -66,35 +83,70 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.valores.update({
-        tipo: req.body.tipo,
-        nombre: req.body.nombre,
-        valor: valor
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (valores) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
-      break;
+             bitacora.registrar(
+                null,
+                'valores',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.valores, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                         models.valores.update({
+                            tipo: req.body.tipo,
+                            nombre: req.body.nombre,
+                            valor: valor
+                         }, {
+                         where: {
+                                 id: req.body.id
+                                }
+                          }).then(function (valores) {
+
+                                res.json({ id: req.body.id, parent: req.body.id, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+
+                });
+     
+                break;
     case "del":
-      models.valores.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+              bitacora.registrar(
+                null,
+                'valores',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.valores, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.valores.destroy({
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+
+                            if (rowDeleted === 1) {
+
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' ,success: true});
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
 
       break;
 

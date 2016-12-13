@@ -3,6 +3,7 @@ var sequelize = require('../../models/index').sequelize;
 var utilSeq = require('../../utils/seq');
 var logger = require("../../utils/logger");
 var nodeExcel = require('excel-export');
+var bitacora = require("../../utils/bitacora");
 
 
 exports.list = function (req, res) {
@@ -58,8 +59,25 @@ exports.action = function (req, res) {
         sigla: req.body.sigla,
         nombre: req.body.nombre,
         borrado: 1
-      }).then(function (plantilla) {
-        res.json({ error_code: 0 });
+      }).then(function (segmentoproveedor) {
+                  
+                    bitacora.registrar(
+                    null,
+                    'segmentoproveedor',
+                    segmentoproveedor.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.segmentoproveedor,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+        res.json({ id: segmentoproveedor.id, parent: null, message: 'Insertando', success: true });
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
@@ -67,33 +85,67 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.segmentoproveedor.update({
-        nombre: req.body.nombre,
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (plantilla) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
+                bitacora.registrar(
+                null,
+                'segmentoproveedor',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.segmentoproveedor, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                         models.segmentoproveedor.update({
+                         nombre: req.body.nombre,
+                         }, {
+                         where: {
+                            id: req.body.id
+                                }
+                         }).then(function (segmentoproveedor) {
+
+                                res.json({ id: req.body.id, parent: req.body.id, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
+
     case "del":
-      models.segmentoproveedor.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+            bitacora.registrar(
+                null,
+                'segmentoproveedor',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.segmentoproveedor, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                       models.segmentoproveedor.destroy({
+                       where: {
+                               id: req.body.id
+                              }
+                       }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+
+                            if (rowDeleted === 1) {
+
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' ,success: true});
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
 
       break;
 

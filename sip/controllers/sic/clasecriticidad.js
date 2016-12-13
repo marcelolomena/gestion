@@ -3,6 +3,7 @@ var sequelize = require('../../models/index').sequelize;
 var utilSeq = require('../../utils/seq');
 var logger = require("../../utils/logger");
 var nodeExcel = require('excel-export');
+var bitacora = require("../../utils/bitacora");
 
 exports.list = function (req, res) {
 
@@ -53,23 +54,43 @@ exports.list = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var id = req.body.id;
-  var color =  req.body.idcolor
+  var color =  req.body.idcolor;
+
 
   switch (action) {
     case "add":
+      var factor =  req.body.factor.replace(",", ".");
       if (color == 0)       
           { color = null}
 
       if (req.body.calculado == 1)
-          { color = null}
+          { color = null,
+            factor = 0}
+
       models.clasecriticidad.create({
-        factor: req.body.factor.replace(",", "."),
+        factor: factor,
         glosaclase: req.body.glosaclase,
         calculado:req.body.calculado,
         idcolor:color,
         borrado: 1
-      }).then(function (plantilla) {
-        res.json({ error_code: 0 });
+      }).then(function (clasecriticidad) {
+         bitacora.registrar(
+                    null,
+                    'clasecriticidad',
+                    clasecriticidad.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.clasecriticidad,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+        res.json({ id: clasecriticidad.id, parent: null, message: 'Insertando', success: true });       
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
@@ -77,76 +98,105 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-
+      var factor =  req.body.factor.replace(",", ".");
       if (color == 0)
           { color = null}
 
       if (req.body.calculado == 1)
-          { color = null}
+          { color = null,
+            factor = 0}
 
-      if (req.body.factor != 0){
-          var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
-	                  "where n.iddesglosefactores = f.id and f.idclasecriticidad  ="+ id 
-      
-          sequelize.query(sql).then(function (plantilla) {
-                  res.json({ error_code: 0 });
-                }).catch(function (err) {
-                  res.json({ error_code: 1 });
-          });
+             bitacora.registrar(
+                null,
+                'clasecriticidad',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.clasecriticidad, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
 
-          var sql = "delete sic.desglosefactores "+ 
-	                  "where  idclasecriticidad   ="+ id 
+                        models.clasecriticidad.update({
+                         factor:factor,
+                         calculado:req.body.calculado,
+                         idcolor:color
+                         }, {
+                         where: {
+                                 id: req.body.id
+                                }
+                         }).then(function (clasecriticidad) {
+                        
+                        if (req.body.calculado == 0){
+                                var sql = "delete sic.desglosenotas from sic.desglosenotas n,sic.desglosefactores f "+ 
+	                                      "where n.iddesglosefactores = f.id and f.idclasecriticidad  ="+ id 
       
-          sequelize.query(sql).then(function (plantilla) {
-                  res.json({ error_code: 0 });
-                }).catch(function (err) {
-                  res.json({ error_code: 1 });
-          }); 
-           var sql = "delete sic.desglosecolores "+ 
-	                   "where  idclasecriticidad   ="+ id 
-      
-          sequelize.query(sql).then(function (plantilla) {
-                  res.json({ error_code: 0 });
-                }).catch(function (err) {
-                  res.json({ error_code: 1 });
-          }); 
-      }  
+                                sequelize.query(sql).then(function (plantilla) {
+                                           res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                          res.json({ error_code: 1 });
+                                });
 
-      models.clasecriticidad.update({
-        factor:req.body.factor.replace(",", "."),
-        calculado:req.body.calculado,
-        idcolor:color
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (plantilla) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-      });
- 
+                                var sql = "delete sic.desglosefactores "+ 
+	                                      "where  idclasecriticidad   ="+ id 
+      
+                                sequelize.query(sql).then(function (plantilla) {
+                                           res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                          res.json({ error_code: 1 });
+                                }); 
+                                var sql = "delete sic.desglosecolores "+ 
+	                                      "where  idclasecriticidad   ="+ id 
+      
+                                sequelize.query(sql).then(function (plantilla) {
+                                           res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                           res.json({ error_code: 1 });
+                                }); 
+                        }  
+                                res.json({ id: req.body.id, parent: req.body.id, message: 'Actualizando', success: true });
+                         }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                         });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
     case "del":
-      models.clasecriticidad.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+              bitacora.registrar(
+                null,
+                'clasecriticidad',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.clasecriticidad, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
 
+                       models.clasecriticidad.destroy({
+                       where: {
+                               id: req.body.id
+                              }
+                       }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+
+                            if (rowDeleted === 1) {
+
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' ,success: true});
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
-
   }
-
 }
 
 exports.desglosefactores = function (req, res) {
@@ -225,46 +275,90 @@ exports.actiondesglosefactores = function (req, res) {
         nombrefactor: req.body.nombrefactor,
         porcentaje: req.body.porcentaje,
         borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+      }).then(function (desglosefactores) {
+         bitacora.registrar(
+                    req.body.parent_id,
+                    'desglosefactores',
+                    desglosefactores.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.desglosefactores,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+        res.json({ id: desglosefactores.id, parent: req.body.parent_id, message: 'Insertando', success: true });       
+
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
     case "edit":
-      models.desglosefactores.update({
-        porcentaje: req.body.porcentaje
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
+             bitacora.registrar(
+                req.body.parent_id,
+                'desglosefactores',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.desglosefactores, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.desglosefactores.update({
+                               porcentaje: req.body.porcentaje
+                                       }, {
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (desglosefactores) {
+                                res.json({ id: req.body.id, parent: req.body.parent_id, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
     case "del":
-      models.desglosefactores.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+              bitacora.registrar(
+                req.body.parent_id,
+                'desglosefactores',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.desglosefactores, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
 
+                        models.desglosefactores.destroy({
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+                            if (rowDeleted === 1) {
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' ,success: true});
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
-
   }
-
 }
 exports.porcentajedesglosefactores = function (req, res) {
   var sql = "select sum(porcentaje) as total from sic.desglosefactores where idclasecriticidad="+req.params.parentRowKey;
@@ -406,47 +500,90 @@ exports.actiondesglosenotas = function (req, res) {
         nombrenota: req.body.nombrenota,
         idnota: req.body.idnota,
         borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+      }).then(function (desglosenotas) {
+        bitacora.registrar(
+                    req.body.parent_id,
+                    'desglosenotas',
+                    desglosenotas.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.desglosenotas,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+        res.json({ id: desglosenotas.id, parent: req.body.parent_id, message: 'Insertando', success: true });       
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
     case "edit":
-      models.desglosenotas.update({
-        idnota: req.body.idnota,
-        nombrenota: req.body.nombrenota,
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
+              bitacora.registrar(
+                req.body.parent_id,
+                'desglosenotas',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.desglosenotas, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.desglosenotas.update({
+                                   idnota: req.body.idnota,
+                                   nombrenota: req.body.nombrenota,
+                                  }, {
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (desglosenotas) {
+                                res.json({ id: req.body.id, parent: req.body.parent_id, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
     case "del":
-      models.desglosenotas.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+              bitacora.registrar(
+                req.body.parent_id,
+                'desglosenotas',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.desglosenotas, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
 
+                        models.desglosenotas.destroy({
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+                            if (rowDeleted === 1) {
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' ,success: true});
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
-
   }
-
 };
 
 exports.getColor = function (req, res) {
@@ -548,46 +685,89 @@ exports.actiondesglosecolores= function (req, res) {
         notainicial: req.body.notainicial.replace(",", "."),  
         notafinal: req.body.notafinal.replace(",", "."),  
         borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+      }).then(function (desglosecolores) {
+                bitacora.registrar(
+                    req.body.parent_id,
+                    'desglosecolores',
+                    desglosecolores.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.desglosecolores,
+                    function (err, data) {
+                        if (data) {
+                            logger.debug("->>> " + data)
+
+                        } else {
+                            logger.error("->>> " + err)
+                        }
+                    });
+        res.json({ id: desglosecolores.id, parent: req.body.parent_id, message: 'Insertando', success: true });       
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
     case "edit":
-      models.desglosecolores.update({
-        idcolor: req.body.idcolor,
-        notainicial: req.body.notainicial.replace(",", "."),  
-        notafinal: req.body.notafinal.replace(",", "."),  
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
+              bitacora.registrar(
+                req.body.parent_id,
+                'desglosecolores',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.desglosecolores, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.desglosecolores.update({
+                               idcolor: req.body.idcolor,
+                               notainicial: req.body.notainicial.replace(",", "."),  
+                               notafinal: req.body.notafinal.replace(",", "."),  
+                        }, {
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (desglosecolores) {
+                                res.json({ id: req.body.id, parent: req.body.parent_id, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
     case "del":
-      models.desglosecolores.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+                bitacora.registrar(
+                req.body.parent_id,
+                'desglosecolores',
+                req.body.id, 'delete',
+                req.session.passport.user,
+                new Date(),
+                models.desglosecolores, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
 
+                        models.desglosecolores.destroy({
+                        where: {
+                                id: req.body.id
+                               }
+                        }).then(function (rowDeleted) {
+                            // rowDeleted will return number of rows deleted
+                            if (rowDeleted === 1) {
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error: 0, glosa: '' ,success: true});
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+                });
       break;
-
   }
-
 };
