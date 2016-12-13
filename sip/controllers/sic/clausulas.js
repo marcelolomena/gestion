@@ -155,7 +155,7 @@ exports.plantillas = function(req, res) {
 
     models.plantillaclausula.findAll({
         order: 'id ASC',
-        atributes: ['id', 'codigo'],
+        attributes: ['id', 'codigo'],
         where: { cid: req.params.id }
     }).then(function(plantillas) {
         res.json(plantillas);
@@ -170,7 +170,7 @@ exports.texto = function(req, res) {
 
     models.plantillaclausula.findAll({
         order: 'id ASC',
-        atributes: ['glosaclausula', 'nombrecorto'],
+        attributes: ['glosaclausula', 'nombrecorto'],
         where: { id: req.params.id }
     }).then(function(plantillas) {
         res.json(plantillas);
@@ -181,12 +181,11 @@ exports.texto = function(req, res) {
 
 }
 
-
 exports.download = function(req, res) {
     models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idclausula' });
     models.clausulas.findAll({
         order: 'codigo ASC',
-        atributes: ['texto'],
+        attributes: ['texto'],
         where: { idsolicitudcotizacion: req.params.id },
         include: [{
             model: models.plantillaclausula
@@ -225,6 +224,39 @@ exports.download = function(req, res) {
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
+    });
+
+}
+
+exports.default = function(req, res) {
+    //logger.debug(req.params.id)
+    //logger.debug(req.params.gid)
+
+    models.plantillaclausula.findAll({
+        attributes: [['id', 'idclausula'], ['glosaclausula', 'texto'], 'nombrecorto'],
+        where: {
+            idgrupo: req.params.gid,
+            obligatorio: 1
+        },
+    }).then(function(plantillas) {
+        var clausulas = plantillas.map(function(plantilla) {
+            var clausula = plantilla.toJSON();
+            clausula['idsolicitudcotizacion'] = req.params.id;
+            clausula['uid'] = req.session.passport.user;
+            clausula['borrado'] = 1;
+            return clausula;
+        });
+
+        models.clausulas.bulkCreate(clausulas).then(function(events) {
+            res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
+        }).catch(function(err) {
+            logger.error(err)
+            res.json({ message: err.message, success: false });
+        });
+
+    }).catch(function(err) {
+        logger.error(err.message);
+        res.json({ message: err.message, success: false });
     });
 
 }

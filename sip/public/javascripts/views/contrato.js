@@ -411,7 +411,7 @@ $(document).ready(function () {
         } 
         },
         {
-            label: 'Nombre', name: 'nombreart', width: 200, align: 'left', search: true, editable: true,
+            label: 'Nombre', name: 'nombreart', width: 200, align: 'left', search: true, editable: true, hidden: true,
             editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10, readonly: 'readonly'} 
         },   
         {

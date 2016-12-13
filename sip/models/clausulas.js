@@ -32,20 +32,16 @@ module.exports = function(sequelize, DataTypes) {
         key: 'uid'
       }
     },
+    nombrecorto: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },    
     texto: {
       type: DataTypes.TEXT,
       allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    obligatorio: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    nombrecorto: {
-      type: DataTypes.STRING,
       allowNull: true
     }
   }, {

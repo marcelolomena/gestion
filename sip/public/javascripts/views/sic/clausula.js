@@ -2,9 +2,7 @@
 var gridClausula = {
 
     renderGrid: function(loadurl, parentRowKey, targ) {
-        //var $gridTab = $(targ + "_t")
         var $gridTab = $(targ + "_t_" + parentRowKey)
-
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
         tmpl += "<div class='form-row'>";
@@ -37,7 +35,7 @@ var gridClausula = {
                     name: 'id', index: 'id', key: true, hidden: true,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }
                 },
-                { name: 'clase', index: 'clase', width: 100, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
+                { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
                 { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
@@ -192,7 +190,53 @@ var gridClausula = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Cláusulas"
+            caption: "Cláusulas",
+            gridComplete: function() {
+                var recs = $gridTab.getGridParam("reccount"),
+                    thisId = $.jgrid.jqID(this.id);
+
+                if (isNaN(recs) || recs == 0) {
+                    $("#add_" + thisId).addClass('ui-disabled');
+                    $("#edit_" + thisId).addClass('ui-disabled');
+                    $("#del_" + thisId).addClass('ui-disabled');
+                    $("#refresh_" + thisId).addClass('ui-disabled');
+                    $("#download_" + thisId).addClass('ui-disabled');
+
+                    $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
+                        caption: "",
+                        id: "pushpin_" + $(targ + "_t_" + parentRowKey).attr('id'),
+                        buttonicon: "glyphicon glyphicon-pushpin",
+                        title: "Agrega Cláusulas Predefinidas",
+                        position: "last",
+                        onClickButton: function() {
+                            $.getJSON('/sic/parametros2/grupoclausula', function(data) {
+                                bootbox.prompt({
+                                    title: "Generando Cláusulas Predefinidas...",
+                                    inputType: 'select',
+                                    inputOptions: data,
+                                    callback: function(result) {
+                                        if (result) {
+                                            $.getJSON('/sic/default/' + parentRowKey + '/' + result, function(res) {
+                                                $gridTab.trigger("reloadGrid");
+                                                bootbox.alert(res.message);
+                                            });
+                                        } else {
+                                            bootbox.alert("Debe seleccionar un grupo de cláusulas");
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    })
+                } else {
+                    $("#add_" + thisId).removeClass('ui-disabled');
+                    $("#edit_" + thisId).removeClass('ui-disabled');
+                    $("#del_" + thisId).removeClass('ui-disabled');
+                    $("#refresh_" + thisId).removeClass('ui-disabled');
+                    $("#download_" + thisId).removeClass('ui-disabled');
+                    $("#pushpin_" + thisId).addClass('ui-disabled');
+                }
+            }
         });
 
         $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, view: false, search: false },
@@ -297,6 +341,7 @@ var gridClausula = {
 
         $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
             caption: "",
+            id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
             title: "Generar Documento",
             position: "last",
@@ -307,34 +352,5 @@ var gridClausula = {
 
             }
         });
-/*
-        $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
-            caption: "",
-            buttonicon: "glyphicon glyphicon-pushpin",
-            title: "Agrega Cláusulas Predefinidas",
-            position: "last",
-            onClickButton: function() {
-                var rowKey = $gridTab.getGridParam("selrow");
-
-                var dialog = bootbox.dialog({
-                    title: 'Cláusulas',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i>Cláusulas Predefinidas...</p>'
-                });
-                dialog.init(function() {
-
-                    $.ajax({
-                        type: "GET",
-                        url: '/sic/plantillas/' + parentRowKey,
-                        async: false,
-                        success: function(data) {
-                            dialog.find('.bootbox-body').html(data.message);
-                        }
-                    });
-
-                });
-
-            }
-        })
-*/        
     }
 }

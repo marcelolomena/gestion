@@ -293,7 +293,7 @@ exports.action = function (req, res) {
 
 exports.listall = function (req, res) {
   models.contrato.findAll({
-    atributes: ['id', 'nombre'],
+    attributes: ['id', 'nombre'],
     where: { 'nombre': { $ne: null } },
     order: 'nombre'
   }).then(function (contratos) {
@@ -306,7 +306,7 @@ exports.listall = function (req, res) {
 
 exports.listaporproveedor = function (req, res) {
   models.contrato.findAll({
-    atributes: ['id', 'nombre'],
+    attributes: ['id', 'nombre'],
     where: [{ 'nombre': { $ne: null } }, { idproveedor: req.params.id }],
     order: 'nombre'
   }).then(function (contratos) {
@@ -369,9 +369,84 @@ exports.list = function (req, res) {
 
 };
 
+exports.listNew = function (req, res) {
+  var page = req.body.page;
+  var rowspp = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+  var condition = "";
+
+  if (!sidx)
+    sidx = "a.id";
+
+  if (!sord)
+    sord = "asc";
+    
+  var order = sidx + " " + sord;
+  
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+      jsonObj.rules.forEach(function (item) {
+        if (item.op === 'cn') {
+          if (item.field=='Iniciativa') {
+            condition += "a.nombre like '%" + item.data + "%' AND ";
+          } else if (item.field=='nombre' || item.field=='estado' || item.field=='pmoresponsable') {
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
+          }  else if (item.field=='glosa' ) {
+            condition += 'c.' + item.field + " like '%" + item.data + "%' AND ";
+          }
+          
+        }
+      });
+      condition = condition.substring(0, condition.length - 5);
+      console.log("***CONDICION:" + condition);
+    }
+  }          
+  var sqlcount = "DECLARE @idfechafinal int;"+
+  "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC;"+ 
+  "SELECT count(*) AS count FROM  sip.iniciativa a "+
+  "LEFT JOIN sip.iniciativaprograma b ON a.id=b.idiniciativa LEFT JOIN sip.presupuestoiniciativa c "+ 
+  "ON b.id=c.idiniciativaprograma LEFT JOIN sip.iniciativafecha d ON b.id=d.idiniciativaprograma "+
+  "AND d.idtipofecha=@idfechafinal "; 
+  if (filters && condition != "") {
+    sqlcount += "WHERE " + condition + " ";
+  }  
+  var sqlok = "DECLARE @idfechafinal int;"+
+    "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC; "+
+    "declare @rowsPerPage as bigint; " +
+    "declare @pageNum as bigint;" +
+    "set @rowsPerPage=" + rowspp + "; " +
+    "set @pageNum=" + page + ";   " +
+    "With SQLPaging As   ( " +
+    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+    "as resultNum, a.nombre Iniciativa, b.nombre, b.estado, c.glosa, "+
+    "c.parainscripcion Inscrita, d.fecha FechaEntrega, b.pmoresponsable FROM  sip.iniciativa a "+
+    "LEFT JOIN sip.iniciativaprograma b ON a.id=b.idiniciativa LEFT JOIN sip.presupuestoiniciativa c "+ 
+    "ON b.id=c.idiniciativaprograma LEFT JOIN sip.iniciativafecha d ON b.id=d.idiniciativaprograma "+
+    "AND d.idtipofecha=@idfechafinal ";
+    if (filters && condition != "") {
+      console.log("**" + condition + "**");
+      sqlok += "WHERE " + condition + " ";
+    }    
+    sqlok += ") " +
+    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+    console.log("SQL:"+sqlcount);
+    sequelize.query(sqlcount).spread(function (recs) {
+      var records = recs[0].count;
+      var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+      console.log("Total:"+total+ "recs[0].count:"+recs[0].count);
+      console.log("SQL:"+sqlok);
+      sequelize.query(sqlok).spread(function (rows) {
+        res.json({ records: records, total: total, page: page, rows: rows });
+      });
+    });  
+};    
+
 exports.listaporproveedor = function (req, res) {
   models.contrato.findAll({
-    atributes: ['id', 'nombre'],
+    attributes: ['id', 'nombre'],
     where: [{ 'nombre': { $ne: null } }, { idproveedor: req.params.id }],
     order: 'nombre'
   }).then(function (contratos) {
