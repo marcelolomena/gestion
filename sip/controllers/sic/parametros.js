@@ -14,7 +14,7 @@ exports.listall = function (req, res) {
         attributes: ['id', 'nombre'],
         where: { tipo: req.params.val },
     }).then(function (valores) {
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });
@@ -28,7 +28,7 @@ exports.listall2 = function (req, res) {
         attributes: [['id', 'value'], ['nombre', 'text']],
         where: { tipo: req.params.val },
     }).then(function (valores) {
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });

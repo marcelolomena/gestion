@@ -83,13 +83,7 @@ exports.action = function(req, res) {
     }
 }
 
-
 exports.list = function(req, res) {
-
-    //var id = req.params.id;
-    //logger.debug("ID DOC : " + req.params.id)
-    //logger.debug("PAGE : " + req.query.page)
-    //documentoscotizacion
 
     var page = req.query.page;
     var rows = req.query.rows;
@@ -115,16 +109,13 @@ exports.list = function(req, res) {
                 models.documentoscotizacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    //order: orden,
-                    //attributes: ['id', 'idsolicitudcotizacion'],
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
                     }, { model: models.valores }, { model: models.user }
                     ]
                 }).then(function(documentoscotizacion) {
-                    //logger.debug(solicitudcotizacion)
-                    res.json({ records: records, total: total, page: page, rows: documentoscotizacion });
+                    return res.json({ records: records, total: total, page: page, rows: documentoscotizacion });
                 }).catch(function(err) {
                     logger.error(err);
                     res.json({ error_code: 1 });
@@ -132,7 +123,6 @@ exports.list = function(req, res) {
             })
         }
     });
-
 };
 
 exports.upload = function(req, res) {
@@ -203,8 +193,6 @@ exports.upload = function(req, res) {
 
             awaitParent.then(function(idParent) {
 
-                //logger.debug("idParent : " + idParent)
-
                 var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);//path al archivo
                 checkDirectorySync(dir);
                 var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
@@ -229,12 +217,10 @@ exports.upload = function(req, res) {
                     logger.error(err)
                 });
 
-
             }).catch(function(err) {
                 res.json({ error_code: 1, message: err.message, success: false });
                 logger.error(err)
             });
-
 
         });
 
