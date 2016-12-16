@@ -167,7 +167,7 @@ exports.action2 = function (req, res) {
         codigo: req.body.codigo,
         glosaclausula: req.body.glosaclausula,
         idgrupo: req.body.idgrupo,
-        obligatorio: req.body.obligatorio,
+        critica: req.body.critica,
         idtipoclausula: req.body.idtipoclausula,
         borrado: 1
       }).then(function (plantillaclausula) {
@@ -183,7 +183,7 @@ exports.action2 = function (req, res) {
         nombrecorto: req.body.nombrecorto,
         codigo: req.body.codigo,
         idgrupo: req.body.idgrupo,
-        obligatorio: req.body.obligatorio,
+        critica: req.body.critica,
         idtipoclausula: req.body.idtipoclausula,
         glosaclausula: req.body.glosaclausula
       }, {

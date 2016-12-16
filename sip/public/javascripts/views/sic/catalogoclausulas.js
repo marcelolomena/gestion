@@ -20,8 +20,8 @@ $(document).ready(function () {
         catalogoclausulasModel = [
             { label: 'ID', name: 'id', key: true, hidden: true },
           
-            { label: 'Nombre', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-            { label: 'Secuencia', name: 'secuencia', width: 100, align: 'left', search: false, editable: true },
+            { label: 'Nombre', name: 'nombre', width: 250, align: 'left', search: false, editable: true, editrules: { required: true } },
+            { label: 'Secuencia', name: 'secuencia', width: 100, align: 'left', search: false, editable: true, editrules: { required: true } },
             
             
         ];
