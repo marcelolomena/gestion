@@ -49,7 +49,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             label: 'Código', name: 'codigo', width: 150, align: 'left', search: false, editable: true,
             editoptions: {
                 dataInit: function (element) {
-                    $(element).mask("00.00.00", { placeholder: "__.__.__" });
+                    $(element).mask("00.00", { placeholder: "__.__" });
                 }
             },
             editrules: { required: true }
