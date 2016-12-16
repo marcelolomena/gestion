@@ -141,7 +141,7 @@ exports.clases = function(req, res) {
         }
     ).then(function(clases) {
         logger.debug(clases);
-        res.json(clases);
+        return res.json(clases);
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
@@ -156,7 +156,7 @@ exports.plantillas = function(req, res) {
         attributes: ['id', 'codigo'],
         where: { cid: req.params.id }
     }).then(function(plantillas) {
-        res.json(plantillas);
+        return res.json(plantillas);
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
@@ -171,7 +171,7 @@ exports.texto = function(req, res) {
         attributes: ['glosaclausula', 'nombrecorto'],
         where: { id: req.params.id }
     }).then(function(plantillas) {
-        res.json(plantillas);
+        return res.json(plantillas);
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });

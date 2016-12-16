@@ -242,6 +242,7 @@ var gridClausula = {
                 editCaption: "Modifica Cláusula",
                 closeAfterEdit: true,
                 recreateForm: true,
+                checkOnUpdate: true,
                 template: tmpl,
                 mtype: 'POST',
                 width: 800,
@@ -269,7 +270,7 @@ var gridClausula = {
                             type: "GET",
                             url: '/sic/plantillas/' + $gridTab.getRowData($gridTab.getGridParam("selrow")).codclase,
                             success: function(data) {
-                                var s = "<select>";//el default
+                                var s = "<select>";
                                 s += '<option value="0">--Escoger Código--</option>';
                                 $.each(data, function(i, item) {
                                     if (data[i].id == $gridTab.getRowData($gridTab.getGridParam("selrow")).codplantilla) {
@@ -291,6 +292,7 @@ var gridClausula = {
                 addCaption: "Agrega Cláusula",
                 closeAfterAdd: true,
                 recreateForm: true,
+                checkOnUpdate: true,
                 template: tmpl,
                 width: 800,
                 mtype: 'POST',
