@@ -1,8 +1,8 @@
-//doc.js
 var gridDoc = {
 
-    renderGrid: function(loadurl, parentRowKey, targ) {
+    renderGrid: function (loadurl, parentRowKey, targ) {
         var $gridTab = $(targ + "_t_" + parentRowKey)
+        //console.log(targ + "_t_" + parentRowKey)
 
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
@@ -36,7 +36,7 @@ var gridDoc = {
                 {
                     name: 'id', index: 'id', key: true, hidden: false, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
-                    formatter: function(cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
+                    formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
                 },
                 { name: 'valore.tipo', width: 50, editable: false, align: "left", hidden: false },
                 {
@@ -44,14 +44,14 @@ var gridDoc = {
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/parametros/tipodocumento',
-                        buildSelect: function(response) {
+                        buildSelect: function (response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idtipodocumento;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>";
                             s += '<option value="0">--Escoger un Tipo--</option>';
-                            $.each(data, function(i, item) {
+                            $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
                                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
@@ -66,13 +66,12 @@ var gridDoc = {
                 { name: 'nombrecorto', index: 'nombrecorto', width: 50, align: "left", editable: true },
                 {
                     name: 'descripcionlarga', index: 'descripcionlarga', width: 500, hidden: true,
-                    //edittype: "textarea",
                     edittype: 'custom',
                     editoptions: {
-                        custom_element: function(value, options) {
+                        custom_element: function (value, options) {
                             var elm = $("<textarea></textarea>");
                             elm.val(value);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 //tinymce.remove();
                                 //var ctr = $("#" + options.id).tinymce();
                                 //if (ctr !== null) {
@@ -90,7 +89,7 @@ var gridDoc = {
                             }, 50);
                             return elm;
                         },
-                        custom_value: function(element, oper, gridval) {
+                        custom_value: function (element, oper, gridval) {
                             var id;
                             if (element.length > 0) {
                                 id = element.attr("id");
@@ -137,17 +136,13 @@ var gridDoc = {
             //shrinkToFit: true,
             autowidth: true,
             rownumbers: true,
-            onSelectRow: function(id) {
+            onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
             caption: "Documentos"
         });
-        /*
-                $(window).bind("resize", function() {
-                    $gridTab.jqGrid("setGridWidth", $gridTab.closest(".container-fluid").width());
-                }).triggerHandler("resize");
-        */
+
         $gridTab.jqGrid('navGrid', '#navGrid', { edit: true, add: true, del: true, search: false },
             {
                 editCaption: "Modifica Documento",
@@ -158,9 +153,9 @@ var gridDoc = {
                 url: '/sic/documentos/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function(rowid) {
+                onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
-                }, beforeSubmit: function(postdata, formid) {
+                }, beforeSubmit: function (postdata, formid) {
                     if (parseInt(postdata.idtipodocumento) == 0) {
                         return [false, "Tipo Documento: Debe escoger un valor", ""];
                     } if (postdata.nombrecorto.trim().length == 0) {
@@ -180,9 +175,9 @@ var gridDoc = {
                 url: '/sic/documentos/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function(rowid) {
+                onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
-                }, beforeSubmit: function(postdata, formid) {
+                }, beforeSubmit: function (postdata, formid) {
                     if (parseInt(postdata.idtipodocumento) == 0) {
                         return [false, "Tipo Documento: Debe escoger un valor", ""];
                     } if (postdata.nombrecorto.trim().length == 0) {
@@ -198,12 +193,15 @@ var gridDoc = {
                 url: '/sic/documentos/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function(form) {
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentRowKey };
+                },
+                beforeShowForm: function (form) {
                     ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
                     $("td.delmsg", form).html("<b>Usted borrará el documento:</b><br><b>" + ret.nombrearchivo + "</b> ?");
 
                 },
-                afterSubmit: function(response, postdata) {
+                afterSubmit: function (response, postdata) {
                     var json = response.responseText;
                     var result = JSON.parse(json);
                     if (!result.success)
@@ -211,9 +209,7 @@ var gridDoc = {
                     else
                         return [true, "", ""]
                 }
-
             });
-
     }
 }
 
@@ -223,7 +219,7 @@ function returnDocLink(cellValue, options, rowdata, parentRowKey) {
 }
 
 function UploadDoc(response, postdata) {
-
+    //console.log(postdata)
     var data = $.parseJSON(response.responseText);
     if (data.success) {
         if ($("#fileToUpload").val() != "") {
@@ -232,7 +228,6 @@ function UploadDoc(response, postdata) {
     }
 
     return [data.success, data.message, data.id];
-
 }
 
 function ajaxDocUpload(id, parent) {
@@ -240,18 +235,18 @@ function ajaxDocUpload(id, parent) {
         title: 'Se inicia la transferencia',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
     });
-    dialog.init(function() {
+    dialog.init(function () {
         $.ajaxFileUpload({
             url: '/sic/documentos/upload',
             secureuri: false,
             fileElementId: 'fileToUpload',
             dataType: 'json',
             data: { id: id, parent: parent },
-            success: function(data, status) {
+            success: function (data, status) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
                         dialog.find('.bootbox-body').html(data.message);
-                        $("#documentos_t").trigger('reloadGrid');
+                        $("#documentos_t_" + parent).trigger('reloadGrid');
                     } else {
                         dialog.find('.bootbox-body').html(data.message);
                     }
@@ -260,7 +255,7 @@ function ajaxDocUpload(id, parent) {
                     dialog.find('.bootbox-body').html(data.message);
                 }
             },
-            error: function(data, status, e) {
+            error: function (data, status, e) {
                 dialog.find('.bootbox-body').html(e);
             }
         })

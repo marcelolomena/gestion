@@ -5,7 +5,7 @@ var logger = require("../../utils/logger");
 var path = require('path');
 var fs = require('fs');
 
-exports.action = function(req, res) {
+exports.action = function (req, res) {
     var action = req.body.oper;
 
     switch (action) {
@@ -32,9 +32,9 @@ exports.action = function(req, res) {
                 correointerlocutor2: req.body.correointerlocutor2,
                 fonointerlocutor2: req.body.fonointerlocutor2,
                 borrado: 1
-            }).then(function(solicitudcotizacion) {
+            }).then(function (solicitudcotizacion) {
                 res.json({ error: 0, glosa: '' });
-            }).catch(function(err) {
+            }).catch(function (err) {
                 logger.error(err)
                 res.json({ error: 1, glosa: err.message });
             });
@@ -66,9 +66,9 @@ exports.action = function(req, res) {
                     where: {
                         id: req.body.id
                     }
-                }).then(function(solicitudcotizacion) {
+                }).then(function (solicitudcotizacion) {
                     res.json({ error: 0, glosa: '' });
-                }).catch(function(err) {
+                }).catch(function (err) {
                     logger.error(err)
                     res.json({ error: 1, glosa: err.message });
                 });
@@ -78,14 +78,14 @@ exports.action = function(req, res) {
                 where: {
                     id: req.body.id
                 }
-            }).then(function(rowDeleted) { // rowDeleted will return number of rows deleted
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
-                res.json({ error: 0, glosa: '' });
-            }).catch(function(err) {
+                res.json({ success: true, glosa: '' });
+            }).catch(function (err) {
                 logger.error(err)
-                res.json({ error: 1, glosa: err.message });
+                res.json({ success: false, glosa: err.message });
             });
 
             break;
@@ -93,7 +93,7 @@ exports.action = function(req, res) {
     }
 }
 
-exports.list = function(req, res) {
+exports.list = function (req, res) {
 
     var page = req.body.page;
     var rows = req.body.rows;
@@ -109,9 +109,8 @@ exports.list = function(req, res) {
 
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
-    utilSeq.buildCondition(filters, function(err, data) {
+    utilSeq.buildCondition(filters, function (err, data) {
         if (data) {
-            //logger.debug(data)
             models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
             models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
             models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
@@ -119,7 +118,7 @@ exports.list = function(req, res) {
             models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
             models.solicitudcotizacion.count({
                 where: data
-            }).then(function(records) {
+            }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.solicitudcotizacion.findAll({
                     offset: parseInt(rows * (page - 1)),
@@ -138,10 +137,9 @@ exports.list = function(req, res) {
                         model: models.user, as: 'negociador'
                     }
                     ]
-                }).then(function(solicitudcotizacion) {
-                    //logger.debug(solicitudcotizacion)
-                    res.json({ records: records, total: total, page: page, rows: solicitudcotizacion });
-                }).catch(function(err) {
+                }).then(function (solicitudcotizacion) {
+                    return res.json({ records: records, total: total, page: page, rows: solicitudcotizacion });
+                }).catch(function (err) {
                     logger.error(err.message);
                     res.json({ error_code: 1 });
                 });

@@ -82,7 +82,6 @@ var gridClausula = {
                                                 }
                                             });
                                             s += "</select>";
-                                            //console.log(s)
                                             $("select#idclausulaplantilla").html(s);
                                         }
                                     });
@@ -108,7 +107,6 @@ var gridClausula = {
                                         type: "GET",
                                         url: '/sic/texto/' + thisval,
                                         success: function(data) {
-                                            //console.dir(data[0].glosaclausula)
                                             $("input#nombrecorto").val(data[0].nombrecorto);
                                             tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
                                         }
@@ -244,6 +242,7 @@ var gridClausula = {
                 editCaption: "Modifica Cláusula",
                 closeAfterEdit: true,
                 recreateForm: true,
+                checkOnUpdate: true,
                 template: tmpl,
                 mtype: 'POST',
                 width: 800,
@@ -271,7 +270,7 @@ var gridClausula = {
                             type: "GET",
                             url: '/sic/plantillas/' + $gridTab.getRowData($gridTab.getGridParam("selrow")).codclase,
                             success: function(data) {
-                                var s = "<select>";//el default
+                                var s = "<select>";
                                 s += '<option value="0">--Escoger Código--</option>';
                                 $.each(data, function(i, item) {
                                     if (data[i].id == $gridTab.getRowData($gridTab.getGridParam("selrow")).codplantilla) {
@@ -293,6 +292,7 @@ var gridClausula = {
                 addCaption: "Agrega Cláusula",
                 closeAfterAdd: true,
                 recreateForm: true,
+                checkOnUpdate: true,
                 template: tmpl,
                 width: 800,
                 mtype: 'POST',
@@ -324,7 +324,6 @@ var gridClausula = {
                 beforeShowForm: function(form) {
                     ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
                     $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.nombrecorto);
-
                 },
                 afterSubmit: function(response, postdata) {
                     var json = response.responseText;
@@ -346,9 +345,13 @@ var gridClausula = {
             title: "Generar Documento",
             position: "last",
             onClickButton: function() {
-                var rowKey = $gridTab.getGridParam("selrow");
-                var url = '/sic/pruebahtmlword/' + parentRowKey;
-                $gridTab.jqGrid('excelExport', { "url": url });
+                //var rowKey = $gridTab.getGridParam("selrow");
+                try {
+                    var url = '/sic/pruebahtmlword/' + parentRowKey;
+                    $gridTab.jqGrid('excelExport', { "url": url });
+                } catch (e) {
+                    
+                }
 
             }
         });

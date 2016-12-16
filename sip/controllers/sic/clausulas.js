@@ -8,7 +8,6 @@ var fs = require('fs');
 
 exports.action = function(req, res) {
     var action = req.body.oper;
-    //logger.debug("idclausulaplantilla: " + req.body.idclausulaplantilla)
     switch (action) {
         case "add":
 
@@ -20,7 +19,6 @@ exports.action = function(req, res) {
                 texto: req.body.texto,
                 borrado: 1
             }).then(function(clausulas) {
-                //bitacora.registrar(req.body.idsolicitudcotizacion, 'clausulas', clausulas.id, 'insert', req.session.passport.user, new Date(), models.clausulas)
                 res.json({ error: 0, glosa: '' });
             }).catch(function(err) {
                 logger.error(err)
@@ -54,10 +52,10 @@ exports.action = function(req, res) {
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
-                res.json({ result: true, glosa: 'Deleted successfully' });
+                res.json({ success: true, glosa: 'Deleted successfully' });
             }).catch(function(err) {
                 logger.error(err)
-                res.json({ result: false, glosa: err.message });
+                res.json({ success: false, glosa: err.message });
             });
 
             break;
@@ -112,7 +110,7 @@ exports.list = function(req, res) {
                     }
                     ]
                 }).then(function(clausulas) {
-                    res.json({ records: records, total: total, page: page, rows: clausulas });
+                    return res.json({ records: records, total: total, page: page, rows: clausulas });
                 }).catch(function(err) {
                     logger.error(err.message);
                     res.json({ error_code: 1 });
@@ -143,7 +141,7 @@ exports.clases = function(req, res) {
         }
     ).then(function(clases) {
         logger.debug(clases);
-        res.json(clases);
+        return res.json(clases);
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
@@ -158,7 +156,7 @@ exports.plantillas = function(req, res) {
         attributes: ['id', 'codigo'],
         where: { cid: req.params.id }
     }).then(function(plantillas) {
-        res.json(plantillas);
+        return res.json(plantillas);
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
@@ -173,7 +171,7 @@ exports.texto = function(req, res) {
         attributes: ['glosaclausula', 'nombrecorto'],
         where: { id: req.params.id }
     }).then(function(plantillas) {
-        res.json(plantillas);
+        return res.json(plantillas);
     }).catch(function(err) {
         logger.error(err.message);
         res.json({ error_code: 1 });
@@ -192,16 +190,18 @@ exports.download = function(req, res) {
         }]
     }).then(function(clausulas) {
 
-        //logger.debug(clausulas.plantillaclausula)
-
         var result = '<html><body>'
 
         for (var f in clausulas) {
-            //logger.debug(clausulas[f].plantillaclausula.codigo)
 
-            var level = clausulas[f].plantillaclausula.codigo.split(".");
+            var code = clausulas[f].plantillaclausula.codigo
+            if (!code) {
+                throw new Error("No es posible generar el documento.")
+            }
+
+            var level = code.split(".");
             var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
-            //logger.debug(level[0] + '-' + level[1] + '-' + level[2] + '-' + level[3])
+
             if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0 && parseInt(level[2]) == 0 && parseInt(level[3]) == 0)
                 result += '<h1>' + clausulas[f].plantillaclausula.codigo + ' ' + nombrecorto + '</h1>'
             else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 && parseInt(level[2]) == 0 && parseInt(level[3]) == 0)
@@ -223,7 +223,7 @@ exports.download = function(req, res) {
 
     }).catch(function(err) {
         logger.error(err.message);
-        res.json({ error_code: 1 });
+        res.status(500).send(err.message);
     });
 
 }
@@ -232,31 +232,43 @@ exports.default = function(req, res) {
     //logger.debug(req.params.id)
     //logger.debug(req.params.gid)
 
-    models.plantillaclausula.findAll({
-        attributes: [['id', 'idclausula'], ['glosaclausula', 'texto'], 'nombrecorto'],
-        where: {
-            idgrupo: req.params.gid,
-            obligatorio: 1
-        },
-    }).then(function(plantillas) {
-        var clausulas = plantillas.map(function(plantilla) {
-            var clausula = plantilla.toJSON();
-            clausula['idsolicitudcotizacion'] = req.params.id;
-            clausula['uid'] = req.session.passport.user;
-            clausula['borrado'] = 1;
-            return clausula;
-        });
+    models.serviciosrequeridos.max('notacriticidad', {
+        where: { idsolicitudcotizacion: req.params.id }
+    }).then(function(notacriticidad) {
+        logger.debug("notacriticidad :" + notacriticidad)
+        var criticidad = notacriticidad === 3 ? 1 : 0;
 
-        models.clausulas.bulkCreate(clausulas).then(function(events) {
-            res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
+        models.plantillaclausula.findAll({
+            attributes: [['id', 'idclausula'], ['glosaclausula', 'texto'], 'nombrecorto'],
+            where: {
+                idgrupo: req.params.gid,
+                critica: criticidad
+            },
+        }).then(function(plantillas) {
+            var clausulas = plantillas.map(function(plantilla) {
+                var clausula = plantilla.toJSON();
+                clausula['idsolicitudcotizacion'] = req.params.id;
+                clausula['uid'] = req.session.passport.user;
+                clausula['borrado'] = 1;
+                return clausula;
+            });
+
+            models.clausulas.bulkCreate(clausulas).then(function(events) {
+                res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
+            }).catch(function(err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false });
+            });
+
         }).catch(function(err) {
-            logger.error(err)
+            logger.error(err.message);
             res.json({ message: err.message, success: false });
         });
 
+
     }).catch(function(err) {
         logger.error(err.message);
-        res.json({ message: err.message, success: false });
     });
+
 
 }

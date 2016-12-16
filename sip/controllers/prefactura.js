@@ -315,7 +315,7 @@ UNION
                 for (var i = 0; i < rows.length; i++) {
                     logger.debug(rows[i].impuesto)
                     var newPromise = models.solicitudaprobacion.create({
-                        'periodo': rows[i].periodo,
+                        'periodo': periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
                         'idprefactura': rows[i].idprefactura,
                         'idfacturacion': rows[i].iddetallecompromiso,
