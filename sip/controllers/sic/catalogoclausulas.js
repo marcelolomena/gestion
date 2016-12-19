@@ -247,3 +247,58 @@ exports.gettipoclausula = function (req, res) {
     res.json({ error: 1 });
   });
 }
+
+exports.download = function(req, res) {
+    
+    models.plantillaclausula.findAll({
+        order: 'codigo ASC',
+        //attributes: ['texto'],
+        where: { idgrupo: req.params.id },
+        /*
+        include: [{
+            model: models.plantillaclausula
+        }]
+        */
+    }).then(function(clausulas) {
+
+      //console.dir(clausulas);
+
+        var result = '<html><body>'
+
+        for (var f in clausulas) {
+
+            var code = clausulas[f].codigo
+            if (!code) {
+                throw new Error("No es posible generar el documento.")
+            }
+
+            var level = code.split(".");
+            var nombrecorto = clausulas[f].nombrecorto;
+
+            //console.dir("los niveles oe: "+level)
+
+            if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0 )
+                result += '<h1>' + nombrecorto + '</h1>'
+            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 )
+                result += '<h2>' + nombrecorto + '</h2>'
+            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 )
+                result += '<h3>' + nombrecorto + '</h3>'
+
+
+
+            result += clausulas[f].glosaclausula
+        }
+
+        result += '</html></body>'
+
+        var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
+        res.setHeader('Content-disposition', hdr);
+        res.set('Content-Type', 'application/msword;charset=utf-8');
+        res.status(200).send(result);
+
+    }).catch(function(err) {
+        logger.error(err.message);
+        res.status(500).send(err.message);
+    });
+
+}

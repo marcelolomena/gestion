@@ -350,6 +350,7 @@ var gridClausula = {
                     var url = '/sic/pruebahtmlword/' + parentRowKey;
                     $gridTab.jqGrid('excelExport', { "url": url });
                 } catch (e) {
+                    console.log("error: "+e)
                     
                 }
 

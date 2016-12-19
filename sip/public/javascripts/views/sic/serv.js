@@ -381,7 +381,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             label: 'Observación', name: 'observacion', width: 200,
             align: 'left', edittype: "textarea",
             search: true, editable: true, hidden: false,
-            editoptions: { placeholder: "Ingresar comentario sobre la fecha" }
+            editoptions: { placeholder: "Ingresar comentario sobre la nota" }
         },
     ];
 
@@ -458,13 +458,15 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                         return [true, "", ""]
                     }
                 });
-                
+
 
 
                 return [true, "", ""]
             },
 
             beforeShowForm: function (form) {
+                $('input#valor', form).attr('readonly', 'readonly');
+
                 var grid = $("#" + childGridID);
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
@@ -515,7 +517,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
-   $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
+    $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: "glyphicon glyphicon-retweet",
         title: "Actualizar Nota Servicio",
