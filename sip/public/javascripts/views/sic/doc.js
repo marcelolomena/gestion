@@ -38,7 +38,7 @@ var gridDoc = {
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                     formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
                 },
-                { name: 'valore.tipo', width: 50, editable: false, align: "left", hidden: false },
+                { name: 'valore.nombre', width: 50, editable: false, align: "left", hidden: false },
                 {
                     name: 'idtipodocumento', search: false, editable: true, hidden: true,
                     edittype: "select",

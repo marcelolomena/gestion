@@ -245,7 +245,7 @@ exports.upload = function (req, res) {
             }
         }
 
-        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
+        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
             var saveTo = path.join(__dirname, '../../', 'docs', filename);
             //logger.debug("actual : " + saveTo)
@@ -253,7 +253,7 @@ exports.upload = function (req, res) {
 
             awaitParent.then(function (idParent) {
 
-                var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);//path al archivo
+                var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);
                 checkDirectorySync(dir);
                 var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
                 copyFile(saveTo, dest)
