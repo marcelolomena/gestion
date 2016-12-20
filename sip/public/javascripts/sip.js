@@ -43,6 +43,7 @@ var sipLibrary = {
         jQuery(document.body).css('font-size', '100%');
         jQuery(document.body).html(xht.responseText);
     }, radioElemContrato: function(value, options) {
+        console.log("value : " + value)
         var receivedradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="1"',
             breakline = '/>Continuidad</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="tipocontrato" value="0"',
