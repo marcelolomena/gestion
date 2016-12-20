@@ -37,6 +37,7 @@
         "dicer": "latest",
         "busboy": "latest",
         "async": "latest",
-        "csv": "latest"
+        "csv": "latest",
+        "elementtree": "latest"
     }
 }

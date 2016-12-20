@@ -281,8 +281,6 @@ exports.download = function(req, res) {
                 result += '<h1>' + nombrecorto + '</h1>'
             else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 )
                 result += '<h2>' + nombrecorto + '</h2>'
-            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 )
-                result += '<h3>' + nombrecorto + '</h3>'
 
 
 
