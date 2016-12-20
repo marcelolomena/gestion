@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
@@ -13,21 +13,22 @@ $(document).ready(function() {
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_sap'>SAP<span style='color:red'>*</span>{sap}</div>";
-    t1 += "<div class='column-half' id='d_descripcion'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
+    t1 += "<div class='column-half'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
     t1 += "<div class='column-half' id='d_idnegociador'>Negociador<span style='color:red'>*</span>{idnegociador}</div>";
+    t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud<span style='color:red'>*</span>{codigosolicitud}</div>";
     t1 += "<div class='column-half' id='d_correonegociador'>Correo Negociador<span style='color:red'>*</span>{correonegociador}</div>";
-    t1 += "<div class='column-half' id='d_fononegociador'>Fono Negociador<span style='color:red'>*</span>{fononegociador}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full' id='d_direccionnegociador'>Dirección Negociador<span style='color:red'>*</span>{direccionnegociador}</div>";
+    t1 += "<div class='column-half' id='d_fononegociador'>Fono Negociador<span style='color:red'>*</span>{fononegociador}</div>";
+    t1 += "<div class='column-half' id='d_direccionnegociador'>Dirección Negociador<span style='color:red'>*</span>{direccionnegociador}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
@@ -62,15 +63,15 @@ $(document).ready(function() {
             edittype: "select",
             editoptions: {
                 dataUrl: '/allcuis',
-                buildSelect: function(response) {
+                buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idcui;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger CUI--</option>';
-                    $.each(data, function(i, item) {
+                    $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
                         } else {
@@ -79,7 +80,7 @@ $(document).ready(function() {
                     });
                     return s + "</select>";
                 }
-            }, dataInit: function(elem) { $(elem).width(200); }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         { label: 'Nombre CUI', name: 'nombrecui', jsonmap: "estructuracui.nombre", width: 250, align: 'left', search: false, sortable: false, editable: true },
         {
@@ -87,14 +88,14 @@ $(document).ready(function() {
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function(response) {
+                buildSelect: function (response) {
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Técnico--</option>';
-                    $.each(data, function(i, item) {
+                    $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
@@ -104,7 +105,7 @@ $(document).ready(function() {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function(e) {
+                    type: 'change', fn: function (e) {
                         $("input#tecnico").val($('option:selected', this).text());
                     }
                 }],
@@ -117,8 +118,9 @@ $(document).ready(function() {
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemContrato,
+                defaultValue: "Continuidad",
                 dataEvents: [{
-                    type: 'change', fn: function(e) {
+                    type: 'change', fn: function (e) {
                         var actual = $("input#codigoart").attr("readonly");
                         if (actual == 'readonly') {
                             $("input#codigoart").attr("readonly", false);
@@ -128,7 +130,7 @@ $(document).ready(function() {
                     }
                 }],
             },
-            formatter: function(cellvalue, options, rowObject) {
+            formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.tipocontrato;
                 if (val == 1) {
@@ -141,15 +143,15 @@ $(document).ready(function() {
             }
         },
         {
-            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
+            label: 'Código Programa', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
             hidden: true, editoptions: { defaultValue: "0" }
         },
         {
-            label: 'Codigo ART', name: 'codigoart', width: 200, align: 'left', search: false, editable: true, hidden: true,
+            label: 'Código ART', name: 'codigoart', width: 100, align: 'left', search: false, editable: true, hidden: false,
             editrules: { edithidden: false }, hidedlg: true, editoptions: {
                 size: 10, readonly: 'readonly',
                 dataEvents: [{
-                    type: 'change', fn: function(e) {
+                    type: 'change', fn: function (e) {
                         var rowKey = $grid.getGridParam("selrow");
                         var rowData = $grid.getRowData(rowKey);
                         var thissid = $(this).val();
@@ -157,7 +159,7 @@ $(document).ready(function() {
                             type: "GET",
                             url: '/getcodigoart/' + thissid,
                             async: false,
-                            success: function(data) {
+                            success: function (data) {
                                 if (data.length > 0) {
                                     $("input#program_id").val(data[0].program_id);
                                 } else {
@@ -170,22 +172,26 @@ $(document).ready(function() {
                 }],
             }
         },
-        { label: 'SAP', name: 'sap', width: 200, align: 'left', search: false, editable: true },
-        { label: 'Descripción', name: 'descripcion', width: 150, align: 'left', search: false, editable: true },
-        { label: 'Código', name: 'codigosolicitud', width: 60, align: 'left', search: false, editable: true },
+        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: false, editable: true },
+        {
+            label: 'Descripción', name: 'descripcion', width: 250, align: 'left',
+            search: false, editable: true, editoptions: { rows: "2", cols: "50" },
+            editrules: { required: true }, edittype: "textarea",
+        },
+        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: false, editable: true },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/parametros/clasificacionsolicitud',
-                buildSelect: function(response) {
+                buildSelect: function (response) {
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.idclasificacionsolicitud;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger una Clasificación--</option>';
-                    $.each(data, function(i, item) {
+                    $.each(data, function (i, item) {
 
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
@@ -203,14 +209,14 @@ $(document).ready(function() {
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function(response) {
+                buildSelect: function (response) {
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>";
                     s += '<option value="0">--Escoger Negociador--</option>';
-                    $.each(data, function(i, item) {
+                    $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
                             s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
                         } else {
@@ -220,7 +226,7 @@ $(document).ready(function() {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function(e) {
+                    type: 'change', fn: function (e) {
                         $("input#negociador").val($('option:selected', this).text());
                     }
                 }],
@@ -236,7 +242,7 @@ $(document).ready(function() {
             width: 150, align: 'center', search: true, editable: true, hidden: true,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
-                dataInit: function(el) {
+                dataInit: function (el) {
                     $(el).datepicker({
                         language: 'es',
                         format: 'yyyy-mm-dd',
@@ -247,7 +253,7 @@ $(document).ready(function() {
             },
             editoptions: {
                 size: 10, maxlengh: 10,
-                dataInit: function(element) {
+                dataInit: function (element) {
                     $(element).mask("0000-00-00", { placeholder: "____-__-__" });
                     $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
@@ -279,17 +285,17 @@ $(document).ready(function() {
         pager: "#pagerMaster",
         subGrid: true,
         subGridRowExpanded: showChildGrid,
-        subGridBeforeExpand: function(divid, rowid) {
+        subGridBeforeExpand: function (divid, rowid) {
             var expanded = jQuery("td.sgexpanded", "#gridMaster")[0];
             if (expanded) {
-                setTimeout(function() {
+                setTimeout(function () {
                     $(expanded).trigger("click");
                 }, 100);
             }
         },
-        loadComplete: function(data) {
-            $.get('/sic/getsession', function(data) {
-                $.each(data, function(i, item) {
+        loadComplete: function (data) {
+            $.get('/sic/getsession', function (data) {
+                $.each(data, function (i, item) {
                     if (item.glosarol === 'Negociador SIC') {
                         $("#add_gridMaster").hide()
                         $grid.jqGrid("showCol", "codigosolicitud")
@@ -319,17 +325,29 @@ $(document).ready(function() {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: t1,
-            errorTextFormat: function(data) {
+            errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function(postdata, formid) {
+            }, beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
+                    if (postdata.fechaenviorfp.trim().length == 0) {
+                        postdata.fechaenviorfp = null;
+                    }
+                    if (postdata.fononegociador.trim().length == 0) {
+                        postdata.fononegociador = null;
+                    }
+                    if (postdata.fonointerlocutor1.trim().length == 0) {
+                        postdata.fonointerlocutor1 = null;
+                    }
+                    if (postdata.fonointerlocutor2.trim().length == 0) {
+                        postdata.fonointerlocutor2 = null;
+                    }
                     return [true, "", ""]
                 }
-            }, afterSubmit: function(response, postdata) {
+            }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error != 0) {
@@ -339,10 +357,10 @@ $(document).ready(function() {
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            }, beforeShowForm: function(form) {
-                setTimeout(function() {
-                    $.get('/sic/getsession', function(data) {
-                        $.each(data, function(i, item) {
+            }, beforeShowForm: function (form) {
+                setTimeout(function () {
+                    $.get('/sic/getsession', function (data) {
+                        $.each(data, function (i, item) {
                             if (item.glosarol === 'Negociador SIC') {
                                 $("#idcui", form).attr("disabled", true);
                                 $("#idtecnico", form).attr('readonly', 'readonly');
@@ -352,18 +370,20 @@ $(document).ready(function() {
                                 $("#descripcion", form).attr('readonly', 'readonly');
                                 $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
                             } else if (item.glosarol === 'Técnico SIC') {
-                                $("#d_idnegociador", form).hide();
-                                $("#d_correonegociador", form).hide();
-                                $("#d_direccionnegociador", form).hide();
-                                $("#d_fononegociador", form).hide();
-                                $("#d_numerorfp", form).hide();
-                                $("#d_fechaenviorfp", form).hide();
-                                $("#d_nombreinterlocutor1", form).hide();
-                                $("#d_correointerlocutor1", form).hide();
-                                $("#d_fonointerlocutor1", form).hide();
-                                $("#d_nombreinterlocutor2", form).hide();
-                                $("#d_correointerlocutor2", form).hide();
-                                $("#d_fonointerlocutor2", form).hide();
+                                $("#codigosolicitud", form).attr('readonly', 'readonly');
+                                $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
+                                $("#idnegociador", form).attr('readonly', 'readonly');
+                                $("#correonegociador", form).attr('readonly', 'readonly');
+                                $("#direccionnegociador", form).attr('readonly', 'readonly');
+                                $("#fononegociador", form).attr('readonly', 'readonly');
+                                $("#numerorfp", form).attr('readonly', 'readonly');
+                                $("#fechaenviorfp", form).attr('readonly', 'readonly');
+                                $("#nombreinterlocutor1", form).attr('readonly', 'readonly');
+                                $("#correointerlocutor1", form).attr('readonly', 'readonly');
+                                $("#fonointerlocutor1", form).attr('readonly', 'readonly');
+                                $("#nombreinterlocutor2", form).attr('readonly', 'readonly');
+                                $("#correointerlocutor2", form).attr('readonly', 'readonly');
+                                $("#fonointerlocutor2", form).attr('readonly', 'readonly');
                             }
                         });
                     });
@@ -378,15 +398,16 @@ $(document).ready(function() {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: t1,
-            errorTextFormat: function(data) {
+            errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, beforeSubmit: function(postdata, formid) {
+            }, beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
 
+                    postdata.codigosolicitud = null;
                     postdata.idnegociador = null;
                     postdata.correonegociador = null;
                     postdata.fononegociador = null;
@@ -403,7 +424,7 @@ $(document).ready(function() {
                     return [true, "", ""]
                 }
 
-            }, afterSubmit: function(response, postdata) {
+            }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (result.error != 0) {
@@ -413,11 +434,11 @@ $(document).ready(function() {
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            }, beforeShowForm: function(form) {
+            }, beforeShowForm: function (form) {
 
-                setTimeout(function() {
-                    $.get('/sic/getsession', function(data) {
-                        $.each(data, function(i, item) {
+                setTimeout(function () {
+                    $.get('/sic/getsession', function (data) {
+                        $.each(data, function (i, item) {
                             if (item.glosarol === 'Negociador SIC') {
                                 $("#d_idcui", form).hide();
                                 $("#d_idtecnico", form).hide();
@@ -427,6 +448,8 @@ $(document).ready(function() {
                                 $("#d_descripcion", form).hide();
                                 $("#d_idclasificacionsolicitud", form).hide();
                             } else if (item.glosarol === 'Técnico SIC') {
+                                $("#d_codigosolicitud", form).hide();
+                                $("#d_idclasificacionsolicitud", form).hide();
                                 $("#d_idnegociador", form).hide();
                                 $("#d_correonegociador", form).hide();
                                 $("#d_direccionnegociador", form).hide();
@@ -448,7 +471,7 @@ $(document).ready(function() {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             mtype: 'POST',
-            afterSubmit: function(response, postdata) {
+            afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
                 if (!result.success)
@@ -502,7 +525,7 @@ $(document).ready(function() {
 
         $("#" + parentRowID).append(tabs);
         $('#documentos_tab_' + parentRowKey).addClass('media_node active span')
-        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function(e) {
+        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
@@ -519,7 +542,7 @@ $(document).ready(function() {
             return false;
         });
 
-        $('[data-toggle="tab_' + parentRowKey + '"]').click(function(e) {
+        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');

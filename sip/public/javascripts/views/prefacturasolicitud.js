@@ -104,7 +104,7 @@ function showDocumentos(cui, periodo, proveedor) {
 
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Monto Neto a Pagar {montoneto}</div>";
-    tmpl += "<div class='column-half'>Moneda {moneda}</div>";
+    tmpl += "<div class='column-half'>Moneda Origen {moneda}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
@@ -123,7 +123,7 @@ function showDocumentos(cui, periodo, proveedor) {
 
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";
-    tmpl += "<div class='column-half'>Calificación {idcalificacion}</div>";
+    tmpl += "<div class='column-half'>Calificación de Servicio {idcalificacion}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
