@@ -707,7 +707,7 @@ object UserService extends CustomColumns {
   }
 
   def findProjectListForUserAndProgram(uId: Integer, program: String): Seq[Project] = {
-    val sqlSting = "select * from art_project_master where is_active = 1 AND (program='" + program + "' and pId IN (select pId from  art_user_project_mapping where uId=" + uId + " and show_project=1 )) OR (program='" + program + "' and project_mode <>'8' AND is_active = 1 ) order by pId desc"
+    val sqlSting = "select * from art_project_master where is_active = 1 AND (program='" + program + "' and pId IN (select pId from  art_user_project_mapping where uId=" + uId + " and show_project=1 )) OR (program='" + program + "' and project_mode <>'8' AND is_active = 1 ) order by start_date "
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(Project.project *)
     }
