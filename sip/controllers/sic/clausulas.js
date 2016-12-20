@@ -190,52 +190,97 @@ exports.download = function (req, res) {
         }]
     }).then(function (clausulas) {
 
+        /*
+                var result = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        
+        <head><title>Mon document</title>
+        
+        <meta charset=\"UTF-8\" />
+        
+        <!--[if gte mso 9]>
+        
+        <xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml>
+        
+        <![endif]-->
+        
+        <link rel=File-List href=\"mydocument_files/filelist.xml\">
+        
+        <style><!-- 
+        
+        @page
+        
+        {
+        
+            size:21cm 29.7cmt;  
+        
+            margin:1cm 1cm 1cm 1cm; 
+        
+            mso-page-orientation: portrait;  
+        
+            mso-header: url(\"mydocument_files/headerfooter.htm\") h1;
+        
+            mso-footer: url(\"mydocument_files/headerfooter.htm\") f1;  
+        
+        }
+        
+        @page Section1 { }
+        
+        div.Section1 { page:Section1; }
+        
+        p.MsoHeader, p.MsoFooter { border: none; }
+        
+        --></style>
+        
+        </head>
+        
+        <body>
+        <div class=Section1>
+                `
+        */
+
         var result = `
-<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <apex:page sidebar="false" contentType="application/msword" cache="true">
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='<a target="_blank" href="http://www.w3.org/TR/REC-html40'" rel="nofollow">http://www.w3.org/TR/REC-html40'</a>>
+            <meta charset='utf-8'>
+                <head>
+                    <style>
+                        p.MsoHeader, li.MsoHeader, div.MsoHeader{
+                            margin:0in;
+                            margin-top:.0001pt;
+                            mso-pagination:widow-orphan;
+                            tab-stops:center 3.0in right 6.0in;
+                        }
+                        p.MsoFooter, li.MsoFooter, div.MsoFooter{
+                            margin:0in;
+                            margin-bottom:.0001pt;
+                            mso-pagination:widow-orphan;
+                            tab-stops:center 3.0in right 6.0in;
+                        }
+                        @page Section1{
+                            size:8.5in 11.0in; 
+                            margin:0.5in 0.5in 0.5in 0.5in;
+                            mso-header-margin:0.5in;
+                            mso-header:h1;
+                            mso-footer:f1; 
+                            mso-footer-margin:0.5in;
+                            mso-paper-source:0;
+                        }
+                        div.Section1{
+                            page:Section1;
+                        }
 
-<head><title>Mon document</title>
+                        table#hrdftrtbl{
+                            margin:0in 0in 0in 9in;
+                        }        
+                    </style>
+                </head>
 
-<meta charset=\"UTF-8\" />
-
-<!--[if gte mso 9]>
-
-<xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml>
-
-<![endif]-->
-
-<link rel=File-List href=\"mydocument_files/filelist.xml\">
-
-<style><!-- 
-
-@page
-
-{
-
-    size:21cm 29.7cmt;  /* A4 */
-
-    margin:1cm 1cm 1cm 1cm; /* Margins: 2.5 cm on each side */
-
-    mso-page-orientation: portrait;  
-
-    mso-header: url(\"mydocument_files/headerfooter.htm\") h1;
-
-    mso-footer: url(\"mydocument_files/headerfooter.htm\") f1;  
-
-}
-
-@page Section1 { }
-
-div.Section1 { page:Section1; }
-
-p.MsoHeader, p.MsoFooter { border: none; }
-
---></style>
-
-</head>
-
-<body>
-<div class=Section1>
-        `
+                <body>
+                    <!-- Content -->
+                    <div class="Section1"><!--Section1 div starts-->
+                        <!-- Page 1 starts -->
+                `
 
         for (var f in clausulas) {
 
@@ -247,6 +292,8 @@ p.MsoHeader, p.MsoFooter { border: none; }
             var level = code.split(".");
             var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
 
+            result += "<br/>"
+
             if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0)
                 result += '<h1>' + nombrecorto + '</h1>'
             else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0)
@@ -257,13 +304,52 @@ p.MsoHeader, p.MsoFooter { border: none; }
             //    result += '<h4>' + clausulas[f].plantillaclausula.codigo + ' ' + nombrecorto + '</h4>'
 
             result += clausulas[f].texto
+            result += '<br clear="all" style="page-break-before:always" />'
         }
 
-        result += `
-        </div>
-               </body>
-            </html>
-        `
+        result +=
+            `
+                <!--Header and Footer Starts-->
+                <table id='hrdftrtbl' border='1' cellspacing='0' cellpadding='0'>
+                    <tr>
+                        <td>
+                            <!--Header-->
+                            <div style='mso-element:header' id="h1" >
+                                <p class="MsoHeader"><img src="http://localhost:3000/images/header_doc.jpg" style="height:960px" width="40px"/>
+                                </p>
+                            </div>
+                        </td>
+
+                        <td>
+                            <!--Footer-->
+                            <div style='mso-element:footer' id="f1">
+                                <p class="MsoFooter">
+                                    <table width="100%" border="1" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td width="30%">
+ `
+
+        result += req.session.passport.sidebar[0].nombre
+        result += `                                                
+                                            </td>
+                                            <td align="center" width="40%">
+                                                <span style='mso-field-code: DATE '></span>
+                                            </td>
+                                            <td align="right" width="30%">
+                                                Página <span style='mso-field-code: PAGE '></span> de <span style='mso-field-code: NUMPAGES '></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div><!--Section1 div ends-->
+        </body>
+    </html>
+</apex:page>
+              `
 
         var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
         res.setHeader('Content-disposition', hdr);

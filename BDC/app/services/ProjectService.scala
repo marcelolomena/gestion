@@ -127,7 +127,7 @@ object ProjectService extends CustomColumns {
   }
 
   def findProjectListForProgram(program_id: String): Seq[Project] = {
-    val sqlSting = "SELECT * FROM art_project_master WHERE program ='" + program_id + "' AND is_active=1"
+    val sqlSting = "SELECT * FROM art_project_master WHERE program ='" + program_id + "' AND is_active=1 order by start_date"
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(Project.project *)
     }
