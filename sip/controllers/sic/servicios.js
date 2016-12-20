@@ -63,24 +63,23 @@ exports.action = function (req, res) {
                     } else {
 
                         sequelize.query(
-                            'select b.*, a.nombre, d.notacriticidad ' +
-                            'from sic.valores a ' +
-                            'join sic.desglosecolores b on a.id=b.idcolor ' +
-                            'join sic.serviciosrequeridos d on d.idclasecriticidad=b.idclasecriticidad ' +
-                            'where d.id=:id ' +
-                            'order by b.notainicial asc',
+                            'select a.nombre ' +
+                            'from sic.valores a  ' +
+                            'join sic.clasecriticidad b on a.id=b.idcolor ' +
+                            'join sic.serviciosrequeridos d on d.idclasecriticidad=b.id ' +
+                            'where d.id=:id ',
                             { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
                         ).then(function (colores) {
                             //logger.debug(valores)
                             //console.dir(factores)
 
+                            console.dir (colores[0]);
+
                             var color = 'indefinido'
-                            for (var f in colores) {
-                                //console.log(factores[f].nombrefactor);
-                                if (colores[f].notacriticidad >= colores[f].notainicial && colores[f].notacriticidad < colores[f].notafinal) {
-                                    color = colores[f].nombre;
-                                }
-                            }
+                            color = colores[0].nombre;
+
+                            console.log("le ponis color: "+color);
+                           
 
                             models.serviciosrequeridos.update({
                                 colornota: color,
@@ -384,11 +383,12 @@ exports.listaservicios = function (req, res) {
     var id = req.params.id;
 
     sequelize.query(
-        'SELECT a.id, a.nombre ' +
+        'SELECT distinct a.id, a.nombre ' +
         'FROM sip.servicio a ' +
         'join sip.plantillapresupuesto b on b.idservicio=a.id ' +
         'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
-        'where c.id=:id',
+        'where c.id=:id '+
+        'group by a.id, a.nombre ',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
