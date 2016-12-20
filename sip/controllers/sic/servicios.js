@@ -55,10 +55,7 @@ exports.action = function (req, res) {
                                     observacion: "",
                                     borrado: 1
                                 })
-
                             }
-
-
                         }).catch(function (err) {
                             logger.error(err);
                             res.json({ error: 1 });

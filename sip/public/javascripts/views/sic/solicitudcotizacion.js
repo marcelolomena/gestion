@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
@@ -50,9 +49,6 @@ $(document).ready(function() {
     t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
     t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
     t1 += "</div>";
-    //t1 += "<div class='form-row' style='display: none;'>";
-    //t1 += "<div class='column-half'>tecnico{tecnico}</div>";
-    //t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
@@ -92,7 +88,6 @@ $(document).ready(function() {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
                 buildSelect: function(response) {
-                    //var grid = $("#gridMaster");
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
@@ -155,10 +150,8 @@ $(document).ready(function() {
                 size: 10, readonly: 'readonly',
                 dataEvents: [{
                     type: 'change', fn: function(e) {
-                        //var grid = $("#grid");
                         var rowKey = $grid.getGridParam("selrow");
                         var rowData = $grid.getRowData(rowKey);
-                        //console.log("rowData:" + rowData);
                         var thissid = $(this).val();
                         $.ajax({
                             type: "GET",
@@ -166,7 +159,6 @@ $(document).ready(function() {
                             async: false,
                             success: function(data) {
                                 if (data.length > 0) {
-                                    //console.log("glosa:" + data[0].nombreart);
                                     $("input#program_id").val(data[0].program_id);
                                 } else {
                                     alert("No existe el codigo art ingresado");
@@ -176,7 +168,6 @@ $(document).ready(function() {
                         });
                     }
                 }],
-
             }
         },
         { label: 'SAP', name: 'sap', width: 200, align: 'left', search: false, editable: true },
@@ -213,7 +204,6 @@ $(document).ready(function() {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
                 buildSelect: function(response) {
-                    //var grid = $("#gridMaster");
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
@@ -286,24 +276,11 @@ $(document).ready(function() {
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
-        onSelectRow: function(pRowId, selected) {
-            /*
-            if (rowid != null) {
-                console.log("rowid : " + rowid)
-                var wsParams = { idcui: rowid }
-                var rowData = $("#gridMaster").getRowData(rowid);
-                var cui = rowData.cui;
-                var gridDetailParam = { postData: wsParams };
-                console.dir(gridDetailParam)
-            }
-            */
-        },
         pager: "#pagerMaster",
         subGrid: true,
         subGridRowExpanded: showChildGrid,
         subGridBeforeExpand: function(divid, rowid) {
             var expanded = jQuery("td.sgexpanded", "#gridMaster")[0];
-            //console.log(expanded)
             if (expanded) {
                 setTimeout(function() {
                     $(expanded).trigger("click");
@@ -313,7 +290,6 @@ $(document).ready(function() {
         loadComplete: function(data) {
             $.get('/sic/getsession', function(data) {
                 $.each(data, function(i, item) {
-                    //console.log('EL SUPER ROL : ' + item.glosarol)
                     if (item.glosarol === 'Negociador SIC') {
                         $("#add_gridMaster").hide()
                         $grid.jqGrid("showCol", "codigosolicitud")
@@ -334,8 +310,6 @@ $(document).ready(function() {
             });
         }
     });
-
-    //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: true, add: true, del: true, search: false },
         {
@@ -369,7 +343,6 @@ $(document).ready(function() {
                 setTimeout(function() {
                     $.get('/sic/getsession', function(data) {
                         $.each(data, function(i, item) {
-                            //console.log('EL SUPER ROL : ' + item.glosarol)
                             if (item.glosarol === 'Negociador SIC') {
                                 $("#idcui", form).attr("disabled", true);
                                 $("#idtecnico", form).attr('readonly', 'readonly');
@@ -445,7 +418,6 @@ $(document).ready(function() {
                 setTimeout(function() {
                     $.get('/sic/getsession', function(data) {
                         $.each(data, function(i, item) {
-                            //console.log('EL SUPER ROL : ' + item.glosarol)
                             if (item.glosarol === 'Negociador SIC') {
                                 $("#d_idcui", form).hide();
                                 $("#d_idtecnico", form).hide();
@@ -473,6 +445,17 @@ $(document).ready(function() {
                 }, 100);
             }
         }, {
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            mtype: 'POST',
+            afterSubmit: function(response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (!result.success)
+                    return [false, result.message, ""];
+                else
+                    return [true, "", ""]
+            }
 
         }, {
 
@@ -490,15 +473,10 @@ $(document).ready(function() {
             return rowdata.negociador.first_name + ' ' + rowdata.negociador.last_name;
         else
             return '';
-
     }
 
     function showChildGrid(parentRowID, parentRowKey) {
-        //console.log("parentRowID [" + parentRowID + "]")
-        //console.log("parentRowKey [" + parentRowKey + "]")
-
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        //tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab' class='media_node active span' data-toggle='tab'>Documentos</a></li>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
         tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
         tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
@@ -522,26 +500,18 @@ $(document).ready(function() {
         tabs += "<div class='tab-pane' id='bitacora'></div>"
         tabs += "</div>"
 
-        //console.log(tabs)
-
         $("#" + parentRowID).append(tabs);
         $('#documentos_tab_' + parentRowKey).addClass('media_node active span')
-
-        //var toggle='.active[data-toggle="tab_' + parentRowKey + '"]';
-        //$('.active[data-toggle="tab"]').each(function (e) {
         $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function(e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
             if (targ === '#documentos') {
-                //console.log(loadurl)
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
-                //console.log(loadurl)
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#clausulas') {
-                //console.log(loadurl)
                 gridClausula.renderGrid(loadurl, parentRowKey, targ)
             }
 
@@ -553,7 +523,6 @@ $(document).ready(function() {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            //console.log(loadurl)
             if (targ === '#documentos') {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {

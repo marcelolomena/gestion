@@ -33,6 +33,15 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box
 }
+.column-five, .column-full{
+	float: left;
+	position: relative;
+	padding: 0.20rem 0.65rem;
+	width:100%;
+	-webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box
+}
 .clearfix:after {
 	content: "";
 	display: table;
@@ -49,5 +58,8 @@
 	}
 	.column-four{
 		width: 25%;
+	}
+	.column-five{
+		width: 75%;
 	}
 }

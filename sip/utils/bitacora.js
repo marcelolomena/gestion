@@ -27,7 +27,7 @@ module.exports = (function () {
 
             }).catch(function (err) {
                 logger.error(err.message);
-                return callback(e);
+                return callback(err);
             });
         } else {
 

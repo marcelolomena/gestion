@@ -13,10 +13,10 @@ var sicLibrary = {
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
     },
-    radioElemObligatorio: function(value, options) {
-        var receivedradio = '<label class="radio-inline"><input type="radio" name="obligatorio" value="1"',
+    radioElemCritica: function(value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="critica" value="1"',
             breakline = '/>Sí</label>',
-            naradio = '<label class="radio-inline"><input type="radio" name="obligatorio" value="0"',
+            naradio = '<label class="radio-inline"><input type="radio" name="critica" value="0"',
             endnaradio = '/>No</label>';
 
         if (value === 'Sí') {

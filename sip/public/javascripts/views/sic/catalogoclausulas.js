@@ -19,11 +19,11 @@ $(document).ready(function () {
     var $grid = $("#table_catclausulas"),
         catalogoclausulasModel = [
             { label: 'ID', name: 'id', key: true, hidden: true },
-          
-            { label: 'Nombre', name: 'nombre', width: 250, align: 'left', search: false, editable: true },
-            { label: 'Secuencia', name: 'secuencia', width: 100, align: 'left', search: false, editable: true },
-            
-            
+
+            { label: 'Nombre', name: 'nombre', width: 250, align: 'left', search: false, editable: true, editrules: { required: true } },
+            { label: 'Secuencia', name: 'secuencia', width: 100, align: 'left', search: false, editable: true, editrules: { required: true } },
+
+
         ];
 
     $grid.jqGrid({
@@ -56,7 +56,7 @@ $(document).ready(function () {
                 $.each(data, function (i, item) {
                     console.log('EL SUPER ROL : ' + item.glosarol)
                     if (item.glosarol === 'Negociador SIC') {
-                        
+
                     }
                 });
             });
@@ -183,6 +183,38 @@ $(document).ready(function () {
         }, {
 
         });
+
+    $grid.jqGrid('navButtonAdd', '#pager_catclausulas', {
+        caption: "",
+        id: "download",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Generar Documento",
+        position: "last",
+        onClickButton: function () {
+            $.getJSON('/sic/parametros2/grupoclausula', function (data) {
+                bootbox.prompt({
+                    title: "Generando Documento...",
+                    inputType: 'select',
+                    inputOptions: data,
+                    callback: function (result) {
+                        if (result) {
+                            try {
+                                var url = '/sic/downloadclausulas/' + result;
+                                $grid.jqGrid('excelExport', { "url": url });
+                            } catch (e) {
+                                console.log("error: " + e)
+
+                            }
+
+                        } else {
+                            bootbox.alert("Debe seleccionar un grupo de cláusulas");
+                        }
+                    }
+                });
+            });
+        }
+    })
+
 
 
 })

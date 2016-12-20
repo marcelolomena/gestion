@@ -40,7 +40,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    obligatorio: {
+    critica: {
       type: DataTypes.INTEGER,
       allowNull: true
     },

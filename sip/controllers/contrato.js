@@ -293,7 +293,7 @@ exports.action = function (req, res) {
 
 exports.listall = function (req, res) {
   models.contrato.findAll({
-    atributes: ['id', 'nombre'],
+    attributes: ['id', 'nombre'],
     where: { 'nombre': { $ne: null } },
     order: 'nombre'
   }).then(function (contratos) {
@@ -306,7 +306,7 @@ exports.listall = function (req, res) {
 
 exports.listaporproveedor = function (req, res) {
   models.contrato.findAll({
-    atributes: ['id', 'nombre'],
+    attributes: ['id', 'nombre'],
     where: [{ 'nombre': { $ne: null } }, { idproveedor: req.params.id }],
     order: 'nombre'
   }).then(function (contratos) {
@@ -446,7 +446,7 @@ exports.listNew = function (req, res) {
 
 exports.listaporproveedor = function (req, res) {
   models.contrato.findAll({
-    atributes: ['id', 'nombre'],
+    attributes: ['id', 'nombre'],
     where: [{ 'nombre': { $ne: null } }, { idproveedor: req.params.id }],
     order: 'nombre'
   }).then(function (contratos) {

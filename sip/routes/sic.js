@@ -40,6 +40,9 @@ module.exports = function (passport) {
     router.route('/sic/parametros/:val')
         .get(isAuthenticated, parametrosController.listall);
 
+    router.route('/sic/parametros2/:val')
+        .get(isAuthenticated, parametrosController.listall2);        
+
     router.route('/sic/servicios/:id/list')
         .get(isAuthenticated, serviciosController.listaservicios);
 
@@ -101,9 +104,11 @@ module.exports = function (passport) {
     router.route('/sic/getcalculadoconclase/:id')
         .get(isAuthenticated, serviciosController.getcalculadoconclase);
 
-
     router.route('/sic/pruebahtmlword/:id')
         .get(isAuthenticated, clausulasController.download);
+
+    router.route('/sic/downloadclausulas/:id')
+        .get(isAuthenticated, catalogoclausulasController.download);
 
     router.route('/sic/notas/:id')
         .get(isAuthenticated, serviciosController.getnotasdefactor);
@@ -117,6 +122,8 @@ module.exports = function (passport) {
     router.route('/sic/tipoclausula')
         .get(isAuthenticated, catalogoclausulasController.gettipoclausula);
 
+    router.route('/sic/default/:id/:gid')
+        .get(isAuthenticated, clausulasController.default);
 
     return router;
 }

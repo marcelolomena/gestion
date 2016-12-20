@@ -10,34 +10,29 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         pager_id += suffix;
     }
 
+    var oldRadio = ""
+
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Código {codigo}</div>";
+    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Código {codigo}</div>";
+    tmplPF += "<div class='column-five'><span style='color: red'>*</span>Título {nombrecorto}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Título {nombrecorto}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Grupo {idgrupo}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Tipo {idtipoclausula}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' id='elradio'>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Crítica {critica}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Grupo {idgrupo}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Tipo {idtipoclausula}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Glosa Cláusula {glosaclausula}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Obligatorio {obligatorio}</div>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Glosa Cláusula {glosaclausula}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
-    tmplPF += "<div class='column-half'>tipofecha {tipofecha}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<hr style='width:100%;'/>";
@@ -54,11 +49,12 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             label: 'Código', name: 'codigo', width: 150, align: 'left', search: false, editable: true,
             editoptions: {
                 dataInit: function (element) {
-                    $(element).mask("0.0.0.0", { placeholder: "_._._._" });
+                    $(element).mask("00.00", { placeholder: "__.__" });
                 }
-            }
+            },
+            editrules: { required: true }
         },
-        { label: 'Título', name: 'nombrecorto', width: 150, align: 'left', search: false, editable: true },
+        { label: 'Título', name: 'nombrecorto', width: 150, align: 'left', search: false, editable: true, editrules: { required: true } },
         {
             label: 'Grupo', name: 'idgrupo', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -80,7 +76,26 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
                         }
                     });
                     return s + "</select>";
-                }
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+
+                        var elgrupo = $('option:selected', this).val();
+                        //var oldRadio = $("#elradio").html();
+                        console.log("radio despues: " + oldRadio);
+
+
+                        if (parseInt(elgrupo) != 15) {
+                            console.log("aqui estoy");
+
+                            $("#elradio").html("");
+                        } else {
+                            $("#elradio").html(oldRadio);
+                        }
+
+
+                    }
+                }]
             }
         },
         { label: 'Grupo', name: 'grupo.nombre', width: 150, editable: true, editoptions: { size: 10 } },
@@ -110,7 +125,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         },
         { label: 'Tipo', name: 'tipo.nombre', width: 150, editable: true, editoptions: { size: 10 } },
         {
-            label: 'Glosa Cláusula', name: 'glosaclausula', width: 500, align: 'left', search: false, editable: true,
+            label: 'Glosa Cláusula', name: 'glosaclausula', width: 600, align: 'left', search: false, editable: true,
             edittype: 'custom',
             editoptions: {
                 custom_element: function (value, options) {
@@ -129,7 +144,8 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
                             menubar: false,
                             statusbar: false,
                             selector: "#" + options.id,
-                            plugins: "link"
+                            plugins: "link",
+                            height: 300,
                         });
                     }, 50);
                     return elm;
@@ -158,17 +174,17 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
         },
         {
-            label: 'Obligatorio', name: 'obligatorio',
+            label: 'Crítica', name: 'critica',
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",
             editoptions: {
                 custom_value: sicLibrary.getRadioElementValue,
-                custom_element: sicLibrary.radioElemObligatorio
+                custom_element: sicLibrary.radioElemCritica
             },
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
-                var val = rowObject.obligatorio;
+                var val = rowObject.critica;
                 if (val == 1) {
                     dato = 'Sí';
 
@@ -200,6 +216,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
+        checkOnUpdate: true,
         pager: "#" + childGridPagerID,
         editurl: '/sic/catalogoclausulas2/action',
         gridComplete: function () {
@@ -222,8 +239,39 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             width: 800,
             editCaption: "Modificar Plantilla Cláusula",
             template: tmplPF,
+            checkOnUpdate: true,
+            saveData: "¿Desea guardar los cambios antes de salir?",
+            bYes: "Sí",
+            bNo: "",
+            bExit: "No",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            afterShowForm: function (form) {
+                oldRadio = $("#elradio").html();
+                console.log("radio antes: " + oldRadio);
+                var rowKey = $("#" + childGridID).getGridParam("selrow");
+                var rowData = $("#" + childGridID).getRowData(rowKey);
+                var thissid = rowData.idgrupo;
+                if (parseInt(thissid) != 15) {
+                    $("#elradio").html("");
+                } else {
+                    $("#elradio").html(oldRadio);
+                }
+
+
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idtipoclausula == 0) {
+                    return [false, "Tipo Clausula: Campo obligatorio", ""];
+                } if (postdata.idgrupo == 0) {
+                    return [false, "Grupo Clausula: Campo obligatorio", ""];
+                } else {
+                    return [true, "", ""]
+                }
             }
         },
         {
@@ -231,6 +279,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             width: 800,
+            checkOnUpdate: true,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Plantilla Cláusula",
             template: tmplPF,
@@ -239,6 +288,22 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            afterShowForm: function (form) {
+                oldRadio = $("#elradio").html();
+                console.log("radio antes: " + oldRadio);
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idtipoclausula == 0) {
+                    return [false, "Tipo Clausula: Campo obligatorio", ""];
+                } if (postdata.idgrupo == 0) {
+                    return [false, "Grupo Clausula: Campo obligatorio", ""];
+                } else {
+                    return [true, "", ""]
+                }
             }
         },
         {
