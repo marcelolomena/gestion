@@ -11,13 +11,22 @@ var co = require('co');
 exports.action = function (req, res) {
     var action = req.body.oper;
 
+    if (action == "add" || action == "edit") {
+        var iddocto = req.body.iddoctotecnico;
+        if (iddocto == 0) {
+            iddocto = null;
+        }
+    }
+
+
+
     switch (action) {
         case "add":
             models.serviciosrequeridos.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idservicio: req.body.idservicio,
                 glosaservicio: req.body.glosaservicio,
-                iddoctotecnico: req.body.iddoctotecnico,
+                iddoctotecnico: iddocto,
                 glosareferencia: req.body.glosareferencia,
                 idclasecriticidad: req.body.idclasecriticidad,
                 notacriticidad: req.body.notacriticidad,
@@ -73,13 +82,13 @@ exports.action = function (req, res) {
                             //logger.debug(valores)
                             //console.dir(factores)
 
-                            console.dir (colores[0]);
+                            console.dir(colores[0]);
 
                             var color = 'indefinido'
                             color = colores[0].nombre;
 
-                            console.log("le ponis color: "+color);
-                           
+                            console.log("le ponis color: " + color);
+
 
                             models.serviciosrequeridos.update({
                                 colornota: color,
@@ -139,7 +148,7 @@ exports.action = function (req, res) {
                         models.serviciosrequeridos.update({
                             idservicio: req.body.idservicio,
                             glosaservicio: req.body.glosaservicio,
-                            iddoctotecnico: req.body.iddoctotecnico,
+                            iddoctotecnico: iddocto,
                             glosareferencia: req.body.glosareferencia,
                             idclasecriticidad: req.body.idclasecriticidad,
                             notacriticidad: req.body.notacriticidad,
@@ -176,19 +185,29 @@ exports.action = function (req, res) {
                     if (data) {
                         logger.debug("->>> " + data)
 
-                        models.serviciosrequeridos.destroy({
+                        models.factorescriticidad.destroy({
                             where: {
-                                id: req.body.id
+                                idserviciorequerido: req.body.id
                             }
                         }).then(function (rowDeleted) {
-                            // rowDeleted will return number of rows deleted
 
-                            if (rowDeleted === 1) {
+                            models.serviciosrequeridos.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                // rowDeleted will return number of rows deleted
+
+                                if (rowDeleted === 1) {
 
 
-                                logger.debug('Deleted successfully');
-                            }
-                            res.json({ error: 0, glosa: '' });
+                                    logger.debug('Deleted successfully');
+                                }
+                                res.json({ error: 0, glosa: '' });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
                         }).catch(function (err) {
                             logger.error(err)
                             res.json({ id: 0, message: err.message, success: false });
@@ -387,7 +406,7 @@ exports.listaservicios = function (req, res) {
         'FROM sip.servicio a ' +
         'join sip.plantillapresupuesto b on b.idservicio=a.id ' +
         'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
-        'where c.id=:id '+
+        'where c.id=:id ' +
         'group by a.id, a.nombre ',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {

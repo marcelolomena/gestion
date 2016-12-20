@@ -71,7 +71,7 @@ var gridServ = {
                     }
                 },
                 { name: 'servicio.nombre', index: 'servicio', width: 150, editable: true, editoptions: { size: 10 } },
-                { name: 'glosaservicio', index: 'glosaservicio', width: 200, editable: true, editoptions: { size: 25 } },
+                { name: 'glosaservicio', index: 'glosaservicio', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 //{ name: 'iddoctotecnico', index: 'iddoctotecnico', width: 100, hidden: true,  editable: true, editoptions: { size: 10 } },
                 {
                     name: 'iddoctotecnico', search: false, editable: true, hidden: true,
@@ -227,6 +227,21 @@ var gridServ = {
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
                     $('input#notacriticidad', form).attr('readonly', 'readonly');
+                    setTimeout(function () {
+                        $("#idclasecriticidad", form).attr('disabled', 'disabled');
+                    }, 450);
+
+
+
+                },
+                beforeSubmit: function (postdata, formid) {
+                    if (postdata.idservicio == 0) {
+                        return [false, "Servicio: Campo obligatorio", ""];
+                    } if (postdata.idclasecriticidad == 0) {
+                        return [false, "Clase Criticidad : Campo obligatorio", ""];
+                    } else {
+                        return [true, "", ""]
+                    }
                 }
             }, {
                 addCaption: "Agrega Servicio",
@@ -241,6 +256,17 @@ var gridServ = {
                 beforeShowForm: function (form) {
                     $('input#notacriticidad', form).attr('readonly', 'readonly');
                 },
+                beforeSubmit: function (postdata, formid) {
+                    if (postdata.idservicio == 0) {
+                        return [false, "Servicio: Campo obligatorio", ""];
+                    } if (postdata.idclasecriticidad == 0) {
+                        return [false, "Clase Criticidad : Campo obligatorio", ""];
+                    } if (postdata.idsegmento == 0) {
+                        return [false, "Segmento Proveedor : Campo obligatorio", ""];
+                    } else {
+                        return [true, "", ""]
+                    }
+                },
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }
@@ -251,7 +277,7 @@ var gridServ = {
                 recreateForm: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                addCaption: "Eliminar Plantilla Cláusula",
+                addCaption: "Eliminar Servicio",
                 mtype: 'POST',
                 url: '/sic/servicios/action',
                 errorTextFormat: function (data) {
