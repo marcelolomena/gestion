@@ -1,0 +1,12 @@
+<entry xmlns="http://www.w3.org/2005/Atom">
+  <TenantId>12345</TenantId>
+  <ServiceName>MaaS</ServiceName>
+  <ResourceID>enAAAA</ResourceID>
+  <UsageID>550e8400-e29b-41d4-a716-446655440000</UsageID>
+  <EventType>create</EventType>
+  <category term="monitoring.entity.create"/>
+  <DataCenter>global</DataCenter>
+  <Region>global</Region>
+  <StartTime>Sun Apr 29 2012 16:37:32 GMT-0700 (PDT)</StartTime>
+  <ResourceName>entity</ResourceName>
+</entry>

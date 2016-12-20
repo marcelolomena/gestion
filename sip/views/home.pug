@@ -10,9 +10,10 @@ html
     script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
     script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')
     script(type='text/javascript', src='/javascripts/jsplug.js')
-    script(type='text/javascript', src='/javascripts/script.js')    
+    script(type='text/javascript', src='/javascripts/script.js')  
+    script(type='text/javascript', src='/javascripts/views/home.js')  
   body
-    .container
+    #contenedor.container
       include sidebar.pug
       .main-content
         .swipe-area
@@ -29,7 +30,7 @@ html
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           p(style='color: #f1563a')  
-          .zerogrid
+          #zerogrid1.zerogrid
             .header
               h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:center") • BIENVENIDOS •
             .row
@@ -38,7 +39,7 @@ html
                   .item.t-center
                     .item-container
                       a(href='#')
-                        img(src='../images/dashboard.jpg', alt='Dashboard', width='200', height='170', border='0', title='DASHBOARD')
+                        img(src='../images/dashboard.jpg', id='dashboard', alt='Dashboard', width='200', height='170', border='0', title='DASHBOARD')
                     .item-info
                       h3 DASHBOARD
                   .item.t-center
@@ -46,8 +47,8 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
-                        img(src='../images/proyectos.jpg', alt='', width='200', height='170', border='0', title='PROYECTOS')
+                      a(href='#')
+                        img(src='../images/proyectos.jpg',id='proyectos', alt='', width='200', height='170', border='0', title='PROYECTOS')
                     .item-info
                       h3 PROYECTOS
                   .item.t-center
@@ -55,8 +56,8 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
-                        img(src='../images/continuidad.jpg', alt='', width='200', height='170', border='0', title='CONTINUIDAD')
+                      a(href='#')
+                        img(src='../images/continuidad.jpg',id='continuidad', alt='', width='200', height='170', border='0', title='CONTINUIDAD')
                     .item-info
                       h3 CONTINUIDAD
                   .item.t-center
@@ -64,18 +65,18 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
-                        img(src='../images/contratos.jpg', alt='', width='200', height='170', border='0', title='CONTRATOS')
+                      a(href='#')
+                        img(src='../images/contratos.jpg', id='proyectos',  alt='', width='200', height='170', border='0', title='CONTRATOS')
                     .item-info
                       h3 CONTRATOS
                   .item.t-center
-          .zerogrid
+          #zerogrid2.zerogrid
             .row
               .col-1-3
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
+                      a(href='#')
                         img(src='../images/prefacturas.jpg', alt='', border='0', title='PRE FACTURAS')
                     .item-info
                       h3 PRE FACTURAS
@@ -84,7 +85,7 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
+                      a(href='#')
                         img(src='../images/facturas.jpg', alt='', border='0', title='FACTURAS')
                     .item-info
                       h3 FACTURAS
@@ -93,7 +94,7 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='/parametros')
+                      a(href='#')
                         img(src='../images/parametros.jpg', alt='', border='0', title='PARAMETROS')
                     .item-info
                       h3 PARAMETROS
@@ -102,7 +103,7 @@ html
                 .wrap-col
                   .item.t-center
                     .item-container
-                      a(href='#', target='_blank')
+                      a(href='#')
                         img(src='../images/reportes.jpg', alt='', border='0', title='REPORTES')
                     .item-info
                       h3 REPORTES

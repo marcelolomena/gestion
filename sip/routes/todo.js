@@ -19,6 +19,7 @@ var registroController = require('../controllers/registro')
 var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
+var testxmlController = require('../controllers/testxml')
 
 module.exports = function (passport) {
 
@@ -203,7 +204,9 @@ module.exports = function (passport) {
         res.render('resetpwd', { user: req.user, data: req.session.passport.sidebar });
     });
     
-
+    router.route('/testxml')
+        .get(isAuthenticated, testxmlController.xmltest);
+        
     return router;
 
 }

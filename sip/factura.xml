@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='ISO-8859-1'?><DATA><DTE version="1.0">
+	<Documento ID="R76227698-4T34F189">
+		<Encabezado>
+			<IdDoc>
+				<TipoDTE>34</TipoDTE>
+				<Folio>189</Folio>
+				<FchEmis>2016-11-24</FchEmis>
+				<FchVenc>2016-12-24</FchVenc>
+			</IdDoc>
+			<Emisor>
+				<RUTEmisor>76227698-4</RUTEmisor>
+				<RznSoc>BP Branding y Publicidad SpA</RznSoc>
+				<GiroEmis>Empresas De Publicidad, Asesorias En Gestion Publicitaria</GiroEmis>
+				<Acteco>743001</Acteco>
+				<DirOrigen>Av. Del Valle Norte 750 Of. 201</DirOrigen>
+				<CmnaOrigen>Huechuraba</CmnaOrigen>
+				<CiudadOrigen>Santiago</CiudadOrigen>
+			</Emisor>
+			<Receptor>
+				<RUTRecep>97004000-5</RUTRecep>
+				<RznSocRecep>Banco De Chile</RznSocRecep>
+				<GiroRecep>Banco</GiroRecep>
+				<DirRecep>Ahumada 251</DirRecep>
+				<CmnaRecep>Santiago Centro</CmnaRecep>
+				<CiudadRecep>Santaigo</CiudadRecep>
+			</Receptor>
+			<Totales>
+				<MntExe>5260602</MntExe>
+				<MntTotal>5260602</MntTotal>
+			</Totales>
+		</Encabezado>
+		<Detalle>
+			<NroLinDet>1</NroLinDet>
+			<CdgItem>
+				<TpoCodigo>INT1</TpoCodigo>
+				<VlrCodigo>4101012</VlrCodigo>
+			</CdgItem>
+			<IndExe>1</IndExe>
+			<NmbItem>Mes Diseño Noviembre 2016 Sap 6359</NmbItem>
+			<QtyItem>1.00</QtyItem>
+			<UnmdItem>Unid</UnmdItem>
+			<PrcItem>5260602.00</PrcItem>
+			<MontoItem>5260602</MontoItem>
+		</Detalle>
+		<Detalle>
+			<NroLinDet>2</NroLinDet>
+			<CdgItem>
+				<TpoCodigo>INT1</TpoCodigo>
+				<VlrCodigo>4101012</VlrCodigo>
+			</CdgItem>
+			<IndExe>1</IndExe>
+			<NmbItem>Tareas 2.53 Contrato Pdr-403</NmbItem>
+			<QtyItem>1.00</QtyItem>
+			<UnmdItem>Unid</UnmdItem>
+			<MontoItem>0</MontoItem>
+		</Detalle>
+		<Detalle>
+			<NroLinDet>3</NroLinDet>
+			<CdgItem>
+				<TpoCodigo>INT1</TpoCodigo>
+				<VlrCodigo>4101012</VlrCodigo>
+			</CdgItem>
+			<IndExe>1</IndExe>
+			<NmbItem>Contacto Raimundo Cobo</NmbItem>
+			<QtyItem>1.00</QtyItem>
+			<UnmdItem>Unid</UnmdItem>
+			<MontoItem>0</MontoItem>
+		</Detalle>
+		<Detalle>
+			<NroLinDet>4</NroLinDet>
+			<CdgItem>
+				<TpoCodigo>INT1</TpoCodigo>
+				<VlrCodigo>4101012</VlrCodigo>
+			</CdgItem>
+			<IndExe>1</IndExe>
+			<NmbItem>Cuenta Contable  625507040</NmbItem>
+			<QtyItem>1.00</QtyItem>
+			<UnmdItem>Unid</UnmdItem>
+			<MontoItem>0</MontoItem>
+		</Detalle>
+		<Detalle>
+			<NroLinDet>5</NroLinDet>
+			<CdgItem>
+				<TpoCodigo>INT1</TpoCodigo>
+				<VlrCodigo>4101012</VlrCodigo>
+			</CdgItem>
+			<IndExe>1</IndExe>
+			<NmbItem>Monto 200Uf</NmbItem>
+			<QtyItem>1.00</QtyItem>
+			<UnmdItem>Unid</UnmdItem>
+			<MontoItem>0</MontoItem>
+		</Detalle>
+		<Referencia>
+			<NroLinRef>1</NroLinRef>
+			<TpoDocRef>801</TpoDocRef>
+			<FolioRef>SAP 6359</FolioRef>
+			<FchRef>2016-11-24</FchRef>
+			<RazonRef>Tareas 2.53 Contrato Pdr-403</RazonRef>
+		</Referencia>
+		<TED version="1.0">
+			<DD>
+				<RE>76227698-4</RE>
+				<TD>34</TD>
+				<F>189</F>
+				<FE>2016-11-24</FE>
+				<RR>97004000-5</RR>
+				<RSR>Banco De Chile</RSR>
+				<MNT>5260602</MNT>
+				<IT1>Mes Diseño Noviembre 2016 Sap 6359</IT1>
+				<CAF version="1.0">
+					<DA>
+						<RE>76227698-4</RE>
+						<RS>BP BRANDING Y PUBLICIDAD SPA</RS>
+						<TD>34</TD>
+						<RNG>
+							<D>117</D>
+							<H>216</H>
+						</RNG>
+						<FA>2016-01-13</FA>
+						<RSAPK>
+							<M>3Aard60sJPCO5SOS6+WN9ZyGPcAA3fGtfIxbO9hA+YbX9bc4bdmdjSa+3eW3Sle3JTzq53dRWe0H9g6/MkjguQ==</M>
+							<E>Aw==</E>
+						</RSAPK>
+						<IDK>300</IDK>
+					</DA>
+					<FRMA algoritmo="SHA1withRSA">KZibsyFMyphpa6vatAHNEefHOqMvJEgK0h4838ZvZ2iH9gSVq5rFZNLKkDo0L5miMYOhjDevfJcdjb6m1bAvhw==</FRMA>
+				</CAF>
+				<TSTED>2016-11-24T18:08:07</TSTED>
+			</DD>
+			<FRMT algoritmo="SHA1withRSA">VXjRKjQkaXCv9hTB5fRPcgVLnA8GAlTqA4Euby2LjhRlMhQ42SBFxu2z/Kbx8FNcstF30WSxV1wJ7UB4DZQu0Q==</FRMT>
+		</TED>
+		<TmstFirma>2016-11-24T18:08:07</TmstFirma>
+	</Documento>
+	<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#R76227698-4T34F189"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>ycSc4LB2t6Z+l5XBwSABDxt6GWM=</DigestValue></Reference></SignedInfo><SignatureValue>Qt/GNxYe6KVpDSknNsH6o/4tXlgJC7DxMvMJm1QKbVOdnUc5jD0azxd3UfBAV+OA5BZLUxz44h7FCX0kNjfzeVXmQGbT5Zk8KicDqNIPPT231/6pylBdKUTSER9/epPPLH26lPsyVHPY+3DASu+1tNjKqTZQWisl9QtusuqUf4Y=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>kxYe7xc4MGYY/piWeqVMwm08h3fDvdde7tiSXpN/SCH6o+0P60qUbZPVsS0i+1MZ4TtFH9cGBo3KopQwAuuJG3DumQlhIJ8FW8nwiNVA6SMWHH6aFOUNPuJFNDa/3Baah/LFprtNis/bOiVbHJSsMZH5Wmeu9s/+Zbm4kIVOve0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIGSzCCBTOgAwIBAgIKd4MDhwAAAAMkRzANBgkqhkiG9w0BAQUFADCB0jELMAkG
+A1UEBhMCQ0wxHTAbBgNVBAgTFFJlZ2lvbiBNZXRyb3BvbGl0YW5hMREwDwYDVQQH
+EwhTYW50aWFnbzEUMBIGA1UEChMLRS1DRVJUQ0hJTEUxIDAeBgNVBAsTF0F1dG9y
+aWRhZCBDZXJ0aWZpY2Fkb3JhMTAwLgYDVQQDEydFLUNFUlRDSElMRSBDQSBGSVJN
+QSBFTEVDVFJPTklDQSBTSU1QTEUxJzAlBgkqhkiG9w0BCQEWGHNjbGllbnRlc0Bl
+LWNlcnRjaGlsZS5jbDAeFw0xNTEyMTYxNjI5NDBaFw0xODEyMTUxNjI5NDBaMIHO
+MQswCQYDVQQGEwJDTDEjMCEGA1UECBMaTUVUUk9QT0xJVEFOQSBERSBTQU5USUFH
+TyAxETAPBgNVBAcTCFNhbnRpYWdvMSUwIwYDVQQKExxCUCBCUkFORElORyBZIFBV
+QkxJQ0lEQUQgU1BBMQowCAYDVQQLDAEqMSkwJwYDVQQDEyBEaWVnbyAgQWNldmVk
+byBDYW5hbGEtRWNoZXZhcnJpYTEpMCcGCSqGSIb3DQEJARYaZW5yaXF1ZS5zYWxh
+c0BicmFuZGJvb2suY2wwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAJMWHu8X
+ODBmGP6YlnqlTMJtPId3w73XXu7Ykl6Tf0gh+qPtD+tKlG2T1bEtIvtTGeE7RR/X
+BgaNyqKUMALriRtw7pkJYSCfBVvJ8IjVQOkjFhx+mhTlDT7iRTQ2v9wWmofyxaa7
+TYrP2zolWxyUrDGR+VpnrvbP/mW5uJCFTr3tAgMBAAGjggKnMIICozA9BgkrBgEE
+AYI3FQcEMDAuBiYrBgEEAYI3FQiC3IMvhZOMZoXVnReC4twnge/sPGGBy54UhqiC
+WAIBZAIBBDAdBgNVHQ4EFgQUFdh8HznSkfUmpxmqPuZgpGlp/XswCwYDVR0PBAQD
+AgTwMB8GA1UdIwQYMBaAFHjhPp/SErN6PI3NMA5Ts0MpB7NVMD4GA1UdHwQ3MDUw
+M6AxoC+GLWh0dHA6Ly9jcmwuZS1jZXJ0Y2hpbGUuY2wvZWNlcnRjaGlsZWNhRkVT
+LmNybDA6BggrBgEFBQcBAQQuMCwwKgYIKwYBBQUHMAGGHmh0dHA6Ly9vY3NwLmVj
+ZXJ0Y2hpbGUuY2wvb2NzcDAjBgNVHREEHDAaoBgGCCsGAQQBwQEBoAwWCjEzMDM5
+ODc5LTAwIwYDVR0SBBwwGqAYBggrBgEEAcEBAqAMFgo5NjkyODE4MC01MIIBTQYD
+VR0gBIIBRDCCAUAwggE8BggrBgEEAcNSBTCCAS4wLQYIKwYBBQUHAgEWIWh0dHA6
+Ly93d3cuZS1jZXJ0Y2hpbGUuY2wvQ1BTLmh0bTCB/AYIKwYBBQUHAgIwge8egewA
+QwBlAHIAdABpAGYAaQBjAGEAZABvACAARgBpAHIAbQBhACAAUwBpAG0AcABsAGUA
+LgAgAEgAYQAgAHMAaQBkAG8AIAB2AGEAbABpAGQAYQBkAG8AIABlAG4AIABmAG8A
+cgBtAGEAIABwAHIAZQBzAGUAbgBjAGkAYQBsACwAIABxAHUAZQBkAGEAbgBkAG8A
+IABoAGEAYgBpAGwAaQB0AGEAZABvACAAZQBsACAAQwBlAHIAdABpAGYAaQBjAGEA
+ZABvACAAcABhAHIAYQAgAHUAcwBvACAAdAByAGkAYgB1AHQAYQByAGkAbzANBgkq
+hkiG9w0BAQUFAAOCAQEAVDyJnBkwbrczHi4YxztrHN0Djiz4JWbn89gW5sF3/+1a
+lNMwe/DzNTbON/7uLuSXMsapqp5Kp9kSTfvF5MEHwFgi7uBJvBAXr8IGrD669Z/w
+BQEiU8Min/Gdy42UU+Gh6KSTsgrWo1u2xfC17/7k9qRiYHh132hyo5CSawYe65s4
+ABShb+IpbKioldCZ0RIL1wgRPS65UfpuVtU6Um+w1oXflgiM/sau9QOQP8Glv3/9
+4ESl5jQ1YzbHJwMWRY35NGy+29B1Q1yP5eFqPPpdp7BDm+x67HQce/2ZMpp29OJo
+kAfu4MzOQULPZg7m6hwieqMbj75WAO2je0QN8XRHOQ==</X509Certificate></X509Data></KeyInfo></Signature></DTE><DatosAdicionales/></DATA>
