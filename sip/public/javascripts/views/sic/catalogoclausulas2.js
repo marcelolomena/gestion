@@ -46,7 +46,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         { label: 'id', name: 'id', key: true, hidden: true },
 
         {
-            label: 'Código', name: 'codigo', width: 150, align: 'left', search: false, editable: true,
+            label: 'Código', name: 'codigo', width: 60, align: 'left', search: false, editable: true,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("00.00", { placeholder: "__.__" });
@@ -54,7 +54,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
             editrules: { required: true }
         },
-        { label: 'Título', name: 'nombrecorto', width: 150, align: 'left', search: false, editable: true, editrules: { required: true } },
+        { label: 'Título', name: 'nombrecorto', width: 200, align: 'left', search: false, editable: true, editrules: { required: true } },
         {
             label: 'Grupo', name: 'idgrupo', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -123,7 +123,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
                 }
             }
         },
-        { label: 'Tipo', name: 'tipo.nombre', width: 150, editable: true, editoptions: { size: 10 } },
+        { label: 'Tipo', name: 'tipo.nombre', width: 70, editable: true, editoptions: { size: 10 } },
         {
             label: 'Glosa Cláusula', name: 'glosaclausula', width: 600, align: 'left', search: false, editable: true,
             edittype: 'custom',
@@ -174,7 +174,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
         },
         {
-            label: 'Crítica', name: 'critica',
+            label: 'Crítica', name: 'critica', width: 60,
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",

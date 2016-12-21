@@ -24,14 +24,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    indicadorunico: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idmotivounico: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

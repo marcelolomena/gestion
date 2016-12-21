@@ -327,6 +327,11 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nombre Factor {nombrefactor}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Porcentaje {porcentaje}</div>";
+    tmplPF += "</div>";
+    
+    tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nota {nota}</div>";
     tmplPF += "</div>";
 
@@ -352,7 +357,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         { label: 'id', name: 'id', key: true, hidden: true },
 
         {
-            label: 'Nombre Factor', name: 'desglosefactore.nombrefactor', width: 200, align: 'left', search: true, editable: true,
+            label: 'Nombre Factor', name: 'nombrefactor', jsonmap: 'desglosefactore.nombrefactor', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
         },
         {
@@ -429,6 +434,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
+        navkeys: true,
         pager: "#" + childGridPagerID,
         editurl: '/sic/desglosefactoresserv/action',
         onSelectRow: function (rowid, selected) {
@@ -457,7 +463,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             editCaption: "Modificar Nota Factor",
-            template: tmplPF,
+            //template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -491,6 +497,8 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             },
 
             beforeShowForm: function (form) {
+                $('input#nombrefactor', form).attr('readonly', 'readonly');
+                $('input#porcentaje', form).attr('readonly', 'readonly');
                 $('input#valor', form).attr('readonly', 'readonly');
 
                 var grid = $("#" + childGridID);

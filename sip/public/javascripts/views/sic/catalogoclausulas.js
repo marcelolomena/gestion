@@ -35,7 +35,7 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: 1000,
+        width: 1200,
         shrinkToFit: true,
         viewrecords: true,
         editurl: '/sic/grid_catalogoclausulas',
