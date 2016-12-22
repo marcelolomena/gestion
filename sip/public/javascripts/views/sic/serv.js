@@ -330,7 +330,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nombre Factor {nombrefactor}</div>";
     tmplPF += "<div class='column-half'><span style='color: red'>*</span>Porcentaje {porcentaje}</div>";
     tmplPF += "</div>";
-    
+
     tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nota {nota}</div>";
     tmplPF += "</div>";
@@ -577,15 +577,7 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nota {nota}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Valor {valor}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Observación {observacion}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Provedor {idproveedor}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -602,19 +594,34 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
         { label: 'id', name: 'id', key: true, hidden: true },
 
         {
-            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 200, align: 'left', search: true, editable: true,
+            name: 'idproveedor', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/proveedoressugeridostriada/'+parentRowKey,
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.idproveedor;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Seleccione Proveedor--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+
+        {
+            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 600, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
-        },
-        {
-            label: 'Indicador Único', name: 'indicadorunico', width: 50, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
-        {
-            label: 'ID Motivo Único', name: 'idmotivounico', width: 50, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },
+        }
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -636,7 +643,7 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/iniciativafecha/action',
+        editurl: '/sic/proveedoressugeridos/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -647,47 +654,17 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Nota Factor",
+            editCaption: "Modificar ",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
-                    $.ajax({
-                        type: "GET",
-                        url: '/sic/actualizanotafactor/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
-                return [true, "", ""]
-            },
-            beforeShowForm: function (form) {
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.id;
-                if (thissid == 0) {
-                    alert("Debe seleccionar una fila");
-                    return [false, result.error_text, ""];
-                }
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                //$('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
@@ -695,7 +672,7 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Factor",
+            addCaption: "Agregar Proveedor",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -709,7 +686,7 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Factor",
+            addCaption: "Eliminar Proveedor",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {

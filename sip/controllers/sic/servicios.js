@@ -418,6 +418,28 @@ exports.listaservicios = function (req, res) {
     });
 }
 
+exports.proveedoressugeridostriada = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT distinct a.id, a.razonsocial ' +
+        'FROM sip.proveedor a ' +
+        'join sip.plantillapresupuesto b on b.idproveedor=a.id ' +
+        'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
+        'join sic.serviciosrequeridos d on d.idsolicitudcotizacion=c.id ' +
+        'where d.id=:id ' +
+        'group by a.id, a.razonsocial ',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
 exports.getcalculado = function (req, res) {
 
     var id = req.params.id;
@@ -534,6 +556,52 @@ exports.desgloseaction = function (req, res) {
             break;
     }
 }
+
+exports.proveedoressugeridosaction = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+
+            models.proveedorsugerido.create({
+                idserviciorequerido: req.body.parent_id,
+                idproveedor: req.body.idproveedor,
+                borrado: 1
+            }).then(function (serviciosrequeridos) {
+
+                res.json({ id: serviciosrequeridos.id, message: 'Agregado', success: true });
+
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+
+            break;
+        case "edit":
+
+
+
+            break;
+        case "del":
+
+            models.proveedorsugerido.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+
+                res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code:0 });
+
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+
+
+            break;
+    }
+}
+
 
 exports.actualizanotafactor = function (req, res) {
 

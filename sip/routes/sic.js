@@ -77,6 +77,9 @@ module.exports = function (passport) {
     router.route('/sic/catalogoclausulas2/action')
         .post(isAuthenticated, catalogoclausulasController.action2);
 
+    router.route('/sic/proveedoressugeridos/action')
+        .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
+
     router.route('/sic/clases')
         .get(isAuthenticated, clausulasController.clases);
 
@@ -85,6 +88,9 @@ module.exports = function (passport) {
 
     router.route('/sic/texto/:id')
         .get(isAuthenticated, clausulasController.texto);
+
+    router.route('/sic/proveedoressugeridostriada/:id')
+        .get(isAuthenticated, serviciosController.proveedoressugeridostriada);
 
     router.route('/sic/desglosefactoresserv/:id/list')
         .get(isAuthenticated, serviciosController.desglosefactoreslist);
