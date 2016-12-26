@@ -428,7 +428,7 @@ exports.proveedoressugeridostriada = function (req, res) {
         'join sip.plantillapresupuesto b on b.idproveedor=a.id ' +
         'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
         'join sic.serviciosrequeridos d on d.idsolicitudcotizacion=c.id ' +
-        'where d.id=:id ' +
+        'where d.id=:id and b.idservicio=d.idservicio ' +
         'group by a.id, a.razonsocial ',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
