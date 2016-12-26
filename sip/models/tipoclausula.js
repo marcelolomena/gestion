@@ -1,14 +1,14 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('clase', {
+  return sequelize.define('tipoclausula', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    titulo: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -17,6 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'clase'
+    schema: 'sic',timestamps: false,tableName: 'tipoclausula'
   });
 };
