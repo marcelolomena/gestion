@@ -7,6 +7,7 @@ var serviciosController = require('../controllers/sic/servicios');
 var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
+var tocController = require('../controllers/sic/toc');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -77,6 +78,12 @@ module.exports = function (passport) {
     router.route('/sic/catalogoclausulas2/action')
         .post(isAuthenticated, catalogoclausulasController.action2);
 
+    router.route('/sic/catalogoclausulas3/:id/list')
+        .get(isAuthenticated, catalogoclausulasController.list3);
+
+    router.route('/sic/catalogoclausulas3/action')
+        .post(isAuthenticated, catalogoclausulasController.action3);
+
     router.route('/sic/proveedoressugeridos/action')
         .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
 
@@ -130,6 +137,20 @@ module.exports = function (passport) {
 
     router.route('/sic/default/:id/:gid')
         .get(isAuthenticated, clausulasController.default);
+
+    router.get('/sic/toc', isAuthenticated, function (req, res) {
+        res.render('sic/toc', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/grid_toctipo')
+        .post(isAuthenticated, tocController.action)
+        .get(isAuthenticated, tocController.list);
+
+    router.route('/sic/tocclases/:id/list')
+        .get(isAuthenticated, tocController.list2);
+
+    router.route('/sic/tocclases/action')
+        .post(isAuthenticated, tocController.action2);
 
     return router;
 }
