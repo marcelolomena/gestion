@@ -137,13 +137,16 @@ exports.list = function (req, res) {
 
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
+
     utilSeq.buildCondition(filters, function (err, data) {
         if (data) {
             models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
             models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
             models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
-            models.solicitudcotizacion.belongsTo(models.valores, { foreignKey: 'idclasificacionsolicitud' });
+            models.solicitudcotizacion.belongsTo(models.valores, { as: 'clasificacion', foreignKey: 'idclasificacionsolicitud' });
             models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
+            models.solicitudcotizacion.belongsTo(models.idtipo, { foreignKey: 'tipoclausula' });
+            models.solicitudcotizacion.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
             models.solicitudcotizacion.count({
                 where: data
             }).then(function (records) {
@@ -160,9 +163,11 @@ exports.list = function (req, res) {
                     }, {
                         model: models.user, as: 'tecnico'
                     }, {
-                        model: models.valores
+                        model: models.valores, as: 'clasificacion'
                     }, {
                         model: models.user, as: 'negociador'
+                    }, {
+                        model: models.valores, as: 'grupo'
                     }
                     ]
                 }).then(function (solicitudcotizacion) {

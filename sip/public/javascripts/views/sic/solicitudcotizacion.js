@@ -178,6 +178,7 @@ $(document).ready(function () {
             search: false, editable: true, editoptions: { rows: "2", cols: "50" },
             editrules: { required: true }, edittype: "textarea",
         },
+
         { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: false, editable: true },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
@@ -203,7 +204,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Clasificación', name: 'clasificacion', jsonmap: "valore.nombre", width: 150, align: 'left', search: false, editable: true },
+        { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 150, align: 'left', search: false, editable: true },
         {
             label: 'Negociador', name: 'idnegociador', search: false, editable: true, hidden: true,
             edittype: "select",
