@@ -115,6 +115,14 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    idtipo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    idgrupo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'sic',timestamps: false,tableName: 'solicitudcotizacion'

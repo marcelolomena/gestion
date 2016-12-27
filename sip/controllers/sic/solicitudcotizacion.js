@@ -41,37 +41,65 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            models.solicitudcotizacion.update({
-                idcui: req.body.idcui,
-                idtecnico: req.body.idtecnico,
-                tipocontrato: req.body.tipocontrato,
-                program_id: req.body.program_id,
-                codigoart: req.body.codigoart,
-                sap: req.body.sap,
-                descripcion: req.body.descripcion,
-                codigosolicitud: req.body.codigosolicitud,
-                clasificacionsolicitud: req.body.clasificacionsolicitud,
-                idnegociador: req.body.idnegociador,
-                correonegociador: req.body.correonegociador,
-                fononegociador: req.body.fononegociador,
-                numerorfp: req.body.numerorfp,
-                fechaenviorfp: req.body.fechaenviorfp,
-                nombreinterlocutor1: req.body.nombreinterlocutor1,
-                correointerlocutor1: req.body.correointerlocutor1,
-                fonointerlocutor1: req.body.fonointerlocutor1,
-                nombreinterlocutor2: req.body.nombreinterlocutor2,
-                correointerlocutor2: req.body.correointerlocutor2,
-                fonointerlocutor2: req.body.fonointerlocutor2
-            }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (solicitudcotizacion) {
-                    res.json({ error: 0, glosa: '' });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
-                });
+
+            var roles = req.session.passport.sidebar[0].rol
+            var isTec = false
+
+            for (var i in roles) {
+
+                if (roles[i].glosarol === 'Técnico SIC') {
+                    isTec = true
+                }
+
+            }
+
+            if (isTec) {
+                models.solicitudcotizacion.update({
+                    idcui: req.body.idcui,
+                    idtecnico: req.body.idtecnico,
+                    tipocontrato: req.body.tipocontrato,
+                    program_id: req.body.program_id,
+                    codigoart: req.body.codigoart,
+                    sap: req.body.sap,
+                    descripcion: req.body.descripcion
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (solicitudcotizacion) {
+                        res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({ error: 1, glosa: err.message });
+                    });
+            } else {
+                models.solicitudcotizacion.update({
+                    codigosolicitud: req.body.codigosolicitud,
+                    idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                    idnegociador: req.body.idnegociador,
+                    correonegociador: req.body.correonegociador,
+                    fononegociador: req.body.fononegociador,
+                    numerorfp: req.body.numerorfp,
+                    fechaenviorfp: req.body.fechaenviorfp,
+                    nombreinterlocutor1: req.body.nombreinterlocutor1,
+                    correointerlocutor1: req.body.correointerlocutor1,
+                    fonointerlocutor1: req.body.fonointerlocutor1,
+                    nombreinterlocutor2: req.body.nombreinterlocutor2,
+                    correointerlocutor2: req.body.correointerlocutor2,
+                    fonointerlocutor2: req.body.fonointerlocutor2
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (solicitudcotizacion) {
+                        res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({ error: 1, glosa: err.message });
+                    });
+
+            }
+
             break;
         case "del":
             models.solicitudcotizacion.destroy({

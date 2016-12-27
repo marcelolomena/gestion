@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    cid: {
+    idclase: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -20,37 +20,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    glosaclausula: {
-      type: DataTypes.TEXT,
+    criticidad: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    nombrecorto: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    idgrupo: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'valores',
-        key: 'id'
-      }
-    },
-    critica: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idtipoclausula: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'valores',
-        key: 'id'
-      }
     }
   }, {
     schema: 'sic',timestamps: false,tableName: 'plantillaclausula'

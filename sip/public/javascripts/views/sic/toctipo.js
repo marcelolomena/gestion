@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full' id='d_titulo'>Título<span style='color:red'>*</span>{titulo}</div>";
+    t1 += "<div class='column-full' id='d_titulo'>Nombre<span style='color:red'>*</span>{nombre}</div>";
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
@@ -12,20 +12,19 @@ $(document).ready(function () {
 
     t1 += "</div>";
 
-    var $grid = $("#table_catclausulas"),
-        catalogoclausulasModel = [
+    var $grid = $("#table_toc"),
+        tocModel = [
             { label: 'ID', name: 'id', key: true, hidden: true },
 
-            { label: 'Título', name: 'titulo', width: 250, align: 'left', search: false, editable: true, editrules: { required: true } },
-
-
+            
+        { label: 'Nombre', name: 'nombre', width: 150, editable: true, editoptions: { size: 10 } },
         ];
 
     $grid.jqGrid({
-        url: '/sic/grid_catalogoclausulas',
+        url: '/sic/grid_toctipo',
         datatype: "json",
         mtype: "GET",
-        colModel: catalogoclausulasModel,
+        colModel: tocModel,
         page: 1,
         rowNum: 20,
         regional: 'es',
@@ -33,13 +32,13 @@ $(document).ready(function () {
         width: 1200,
         shrinkToFit: true,
         viewrecords: true,
-        editurl: '/sic/grid_catalogoclausulas',
-        caption: 'Clases de Cláusulas',
+        editurl: '/sic/grid_toctipo',
+        caption: 'Tipos de Cláusulas',
         styleUI: "Bootstrap",
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
-        pager: "#pager_catclausulas",
+        pager: "#pager_toc",
         subGrid: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {
@@ -50,9 +49,9 @@ $(document).ready(function () {
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $grid.jqGrid('navGrid', '#pager_catclausulas', { edit: true, add: true, del: true, search: false },
+    $grid.jqGrid('navGrid', '#pager_toc', { edit: true, add: true, del: true, search: false },
         {
-            editCaption: "Modifica Clase",
+            editCaption: "Modifica Tipo",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -66,14 +65,14 @@ $(document).ready(function () {
                 if (result.error != 0) {
                     return [false, result.glosa, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"titulo\",\"op\":\"cn\",\"data\":\"" + postdata.titulo + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }
 
         }, {
-            addCaption: "Agrega Clase",
+            addCaption: "Agrega Tipo",
             closeAfterAdd: true,
             recreateForm: true,
             mtype: 'POST',
@@ -89,7 +88,7 @@ $(document).ready(function () {
                 if (result.error != 0) {
                     return [false, result.glosa, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"titulo\",\"op\":\"cn\",\"data\":\"" + postdata.titulo + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
@@ -99,41 +98,8 @@ $(document).ready(function () {
         }, {
 
         });
-/*
-    $grid.jqGrid('navButtonAdd', '#pager_catclausulas', {
-        caption: "",
-        id: "download",
-        buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Generar Documento",
-        position: "last",
-        onClickButton: function () {
-            $.getJSON('/sic/parametros2/grupoclausula', function (data) {
-                bootbox.prompt({
-                    title: "Generando Documento...",
-                    inputType: 'select',
-                    inputOptions: data,
-                    callback: function (result) {
-                        if (result) {
-                            try {
-                                var url = '/sic/downloadclausulas/' + result;
-                                $grid.jqGrid('excelExport', { "url": url });
-                            } catch (e) {
-                                console.log("error: " + e)
-
-                            }
-
-                        } else {
-                            bootbox.alert("Debe seleccionar un grupo de cláusulas");
-                        }
-                    }
-                });
-            });
-        }
-    })
-
-*/
 
 })
 function showSubGrids(subgrid_id, row_id) {
-    gridClausulas(subgrid_id, row_id, 'clausulas');
+    gridClases(subgrid_id, row_id, 'clases');
 }

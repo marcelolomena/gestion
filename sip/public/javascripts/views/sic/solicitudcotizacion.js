@@ -276,8 +276,9 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        //width: 600,
-        //shrinkToFit: true,
+        autowidth: true,
+        shrinkToFit: false,
+        forceFit: true,
         viewrecords: true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
@@ -294,9 +295,11 @@ $(document).ready(function () {
             }
         },
         loadComplete: function (data) {
+            var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
                 $.each(data, function (i, item) {
                     if (item.glosarol === 'Negociador SIC') {
+                        $("#add_" + thisId).addClass('ui-disabled');
                         $("#add_gridMaster").hide()
                         $grid.jqGrid("showCol", "codigosolicitud")
                         $grid.jqGrid("showCol", "negociador")
@@ -328,25 +331,24 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
+
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
-                } if (parseInt(postdata.idtecnico) == 0) {
+                } else if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
-                    if (postdata.fechaenviorfp.trim().length == 0) {
-                        postdata.fechaenviorfp = null;
-                    }
-                    if (postdata.fononegociador.trim().length == 0) {
-                        postdata.fononegociador = null;
-                    }
                     if (postdata.fonointerlocutor1.trim().length == 0) {
-                        postdata.fonointerlocutor1 = null;
+                        postdata.fonointerlocutor1 = null
                     }
                     if (postdata.fonointerlocutor2.trim().length == 0) {
-                        postdata.fonointerlocutor2 = null;
+                        postdata.fonointerlocutor2 = null
+                    }
+                    if (postdata.fechaenviorfp.trim().length == 0) {
+                        postdata.fechaenviorfp = null
                     }
                     return [true, "", ""]
                 }
+
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -368,16 +370,16 @@ $(document).ready(function () {
                                 $("#codigoart", form).attr('readonly', 'readonly');
                                 $("#sap", form).attr('readonly', 'readonly');
                                 $("#descripcion", form).attr('readonly', 'readonly');
-                                $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
+                                //$("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
                             } else if (item.glosarol === 'Técnico SIC') {
                                 $("#codigosolicitud", form).attr('readonly', 'readonly');
-                                $("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
-                                $("#idnegociador", form).attr('readonly', 'readonly');
+                                $("#idclasificacionsolicitud", form).attr('disabled', 'disabled');
+                                $("#idnegociador", form).attr('disabled', 'disabled');
                                 $("#correonegociador", form).attr('readonly', 'readonly');
                                 $("#direccionnegociador", form).attr('readonly', 'readonly');
                                 $("#fononegociador", form).attr('readonly', 'readonly');
                                 $("#numerorfp", form).attr('readonly', 'readonly');
-                                $("#fechaenviorfp", form).attr('readonly', 'readonly');
+                                $("#fechaenviorfp", form).attr('disabled', 'disabled');
                                 $("#nombreinterlocutor1", form).attr('readonly', 'readonly');
                                 $("#correointerlocutor1", form).attr('readonly', 'readonly');
                                 $("#fonointerlocutor1", form).attr('readonly', 'readonly');
@@ -401,12 +403,14 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
+
                 if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
-                } if (parseInt(postdata.idtecnico) == 0) {
+                } else if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
+                } else if (postdata.descripcion.trim().length == 0) {
+                    return [false, "Descripción: Debe ingresar una descripción", ""];
                 } else {
-
                     postdata.codigosolicitud = null;
                     postdata.idnegociador = null;
                     postdata.correonegociador = null;
@@ -435,7 +439,6 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
-
                 setTimeout(function () {
                     $.get('/sic/getsession', function (data) {
                         $.each(data, function (i, item) {
@@ -508,6 +511,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
         tabs += "<li><a data-target='#anexos' data-toggle='tab'>Anexos</a></li>"
+        tabs += "<li><a data-target='#fechascriticas' data-toggle='tab'>Fechas Críticas</a></li>"
         tabs += "<li><a data-target='#bitacora' data-toggle='tab'>Bitácora</a></li>"
         tabs += "</ul>"
 
@@ -520,6 +524,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
         tabs += "<div class='tab-pane' id='criterios'></div>"
         tabs += "<div class='tab-pane' id='anexos'></div>"
+        tabs += "<div class='tab-pane' id='fechascriticas'></div>"
         tabs += "<div class='tab-pane' id='bitacora'></div>"
         tabs += "</div>"
 

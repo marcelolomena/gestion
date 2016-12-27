@@ -11,13 +11,22 @@ var co = require('co');
 exports.action = function (req, res) {
     var action = req.body.oper;
 
+    if (action == "add" || action == "edit") {
+        var iddocto = req.body.iddoctotecnico;
+        if (iddocto == 0) {
+            iddocto = null;
+        }
+    }
+
+
+
     switch (action) {
         case "add":
             models.serviciosrequeridos.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idservicio: req.body.idservicio,
                 glosaservicio: req.body.glosaservicio,
-                iddoctotecnico: req.body.iddoctotecnico,
+                iddoctotecnico: iddocto,
                 glosareferencia: req.body.glosareferencia,
                 idclasecriticidad: req.body.idclasecriticidad,
                 notacriticidad: req.body.notacriticidad,
@@ -63,24 +72,23 @@ exports.action = function (req, res) {
                     } else {
 
                         sequelize.query(
-                            'select b.*, a.nombre, d.notacriticidad ' +
-                            'from sic.valores a ' +
-                            'join sic.desglosecolores b on a.id=b.idcolor ' +
-                            'join sic.serviciosrequeridos d on d.idclasecriticidad=b.idclasecriticidad ' +
-                            'where d.id=:id ' +
-                            'order by b.notainicial asc',
+                            'select a.nombre ' +
+                            'from sic.valores a  ' +
+                            'join sic.clasecriticidad b on a.id=b.idcolor ' +
+                            'join sic.serviciosrequeridos d on d.idclasecriticidad=b.id ' +
+                            'where d.id=:id ',
                             { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
                         ).then(function (colores) {
                             //logger.debug(valores)
                             //console.dir(factores)
 
+                            console.dir(colores[0]);
+
                             var color = 'indefinido'
-                            for (var f in colores) {
-                                //console.log(factores[f].nombrefactor);
-                                if (colores[f].notacriticidad >= colores[f].notainicial && colores[f].notacriticidad < colores[f].notafinal) {
-                                    color = colores[f].nombre;
-                                }
-                            }
+                            color = colores[0].nombre;
+
+                            console.log("le ponis color: " + color);
+
 
                             models.serviciosrequeridos.update({
                                 colornota: color,
@@ -140,7 +148,7 @@ exports.action = function (req, res) {
                         models.serviciosrequeridos.update({
                             idservicio: req.body.idservicio,
                             glosaservicio: req.body.glosaservicio,
-                            iddoctotecnico: req.body.iddoctotecnico,
+                            iddoctotecnico: iddocto,
                             glosareferencia: req.body.glosareferencia,
                             idclasecriticidad: req.body.idclasecriticidad,
                             notacriticidad: req.body.notacriticidad,
@@ -177,19 +185,29 @@ exports.action = function (req, res) {
                     if (data) {
                         logger.debug("->>> " + data)
 
-                        models.serviciosrequeridos.destroy({
+                        models.factorescriticidad.destroy({
                             where: {
-                                id: req.body.id
+                                idserviciorequerido: req.body.id
                             }
                         }).then(function (rowDeleted) {
-                            // rowDeleted will return number of rows deleted
 
-                            if (rowDeleted === 1) {
+                            models.serviciosrequeridos.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                // rowDeleted will return number of rows deleted
+
+                                if (rowDeleted === 1) {
 
 
-                                logger.debug('Deleted successfully');
-                            }
-                            res.json({ error: 0, glosa: '' });
+                                    logger.debug('Deleted successfully');
+                                }
+                                res.json({ error: 0, glosa: '' });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
                         }).catch(function (err) {
                             logger.error(err)
                             res.json({ id: 0, message: err.message, success: false });
@@ -384,11 +402,34 @@ exports.listaservicios = function (req, res) {
     var id = req.params.id;
 
     sequelize.query(
-        'SELECT a.id, a.nombre ' +
+        'SELECT distinct a.id, a.nombre ' +
         'FROM sip.servicio a ' +
         'join sip.plantillapresupuesto b on b.idservicio=a.id ' +
         'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
-        'where c.id=:id',
+        'where c.id=:id ' +
+        'group by a.id, a.nombre ',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.proveedoressugeridostriada = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT distinct a.id, a.razonsocial ' +
+        'FROM sip.proveedor a ' +
+        'join sip.plantillapresupuesto b on b.idproveedor=a.id ' +
+        'join sic.solicitudcotizacion c on c.idcui=b.idcui ' +
+        'join sic.serviciosrequeridos d on d.idsolicitudcotizacion=c.id ' +
+        'where d.id=:id and b.idservicio=d.idservicio ' +
+        'group by a.id, a.razonsocial ',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -515,6 +556,52 @@ exports.desgloseaction = function (req, res) {
             break;
     }
 }
+
+exports.proveedoressugeridosaction = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+
+            models.proveedorsugerido.create({
+                idserviciorequerido: req.body.parent_id,
+                idproveedor: req.body.idproveedor,
+                borrado: 1
+            }).then(function (serviciosrequeridos) {
+
+                res.json({ id: serviciosrequeridos.id, message: 'Agregado', success: true });
+
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+
+            break;
+        case "edit":
+
+
+
+            break;
+        case "del":
+
+            models.proveedorsugerido.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+
+                res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code:0 });
+
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ id: 0, message: err.message, success: false });
+            });
+
+
+            break;
+    }
+}
+
 
 exports.actualizanotafactor = function (req, res) {
 

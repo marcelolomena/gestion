@@ -1,22 +1,30 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('clausulas', {
+  return sequelize.define('toc', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    idsolicitudcotizacion: {
+    idtipoclausula: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'solicitudcotizacion',
+        model: 'tipoclausula',
         key: 'id'
       }
     },
-    idplantillaclausula: {
+    idclase: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'clase',
+        key: 'id'
+      }
+    },
+    idplanillaclausula: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -24,12 +32,8 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    titulo: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    glosa: {
-      type: DataTypes.TEXT,
+    secuencia: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     borrado: {
@@ -37,6 +41,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'clausulas'
+    schema: 'sic',timestamps: false,tableName: 'toc'
   });
 };

@@ -10,8 +10,8 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-      models.clase.create({
-        titulo: req.body.titulo,
+      models.tipoclausula.create({
+        nombre: req.body.nombre,
         borrado: 1
       }).then(function (clase) {
         res.json({ error: 0, glosa: '' });
@@ -22,13 +22,13 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.clase.update({
-        titulo: req.body.titulo
+      models.tipoclausula.update({
+        nombre: req.body.nombre
       }, {
           where: {
             id: req.body.id
           }
-        }).then(function (clase) {
+        }).then(function (tipoclausula) {
           res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
           logger.error(err)
@@ -36,7 +36,7 @@ exports.action = function (req, res) {
         });
       break;
     case "del":
-      models.clase.destroy({
+      models.tipoclausula.destroy({
         where: {
           id: req.body.id
         }
@@ -64,28 +64,28 @@ exports.list = function (req, res) {
   var sord = req.query.sord;
 
   if (!sidx)
-    sidx = "titulo";
+    sidx = "nombre";
 
   if (!sord)
     sord = "asc";
 
-  var orden = "[clase]." + sidx + " " + sord;
+  var orden = "[tipoclausula]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (data) {
       //logger.debug(data)
-      models.clase.count({
+      models.tipoclausula.count({
         where: data
       }).then(function (records) {
         var total = Math.ceil(records / rows);
-        models.clase.findAll({
+        models.tipoclausula.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
           where: data
-        }).then(function (clase) {
+        }).then(function (tipoclausula) {
           //logger.debug(solicitudcotizacion)
-          res.json({ records: records, total: total, page: page, rows: clase });
+          res.json({ records: records, total: total, page: page, rows: tipoclausula });
         }).catch(function (err) {
           logger.error(err.message);
           res.json({ error_code: 1 });
@@ -106,7 +106,7 @@ exports.list2 = function (req, res) {
   logger.debug('page: '+page)
 
   if (!sidx)
-    sidx = "codigo";
+    sidx = "secuencia";
 
   if (!sord)
     sord = "asc";
@@ -114,7 +114,7 @@ exports.list2 = function (req, res) {
   var orden = sidx + " " + sord;
 
   var additional = [{
-    "field": "idclase",
+    "field": "idtipoclausula",
     "op": "eq",
     "data": req.params.id
   }];
@@ -123,19 +123,19 @@ exports.list2 = function (req, res) {
     if (err) {
       //logger.debug("->>> " + err)
     } else {
-      models.plantillaclausula.count({
+      models.toc.count({
         where: data
       }).then(function (records) {
         logger.debug("records: "+records);
         var total = Math.ceil(records / rows);
         logger.debug("total: "+total);
-        models.plantillaclausula.findAll({
+        models.toc.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
           where: data
-        }).then(function (plantillaclausula) {
-          res.json({ records: records, total: total, page: page, rows: plantillaclausula });
+        }).then(function (toc) {
+          res.json({ records: records, total: total, page: page, rows: toc });
         }).catch(function (err) {
           //logger.error(err);
           res.json({ error_code: 1 });
@@ -151,12 +151,12 @@ exports.action2 = function (req, res) {
 
   switch (action) {
     case "add":
-      models.plantillaclausula.create({
+      models.toc.create({
         idclase: req.body.parent_id,
         codigo: req.body.codigo,
         criticidad: req.body.criticidad,
         borrado: 1
-      }).then(function (plantillaclausula) {
+      }).then(function (toc) {
         res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
@@ -165,14 +165,14 @@ exports.action2 = function (req, res) {
 
       break;
     case "edit":
-      models.plantillaclausula.update({
+      models.toc.update({
         codigo: req.body.codigo,
         criticidad: req.body.criticidad,
       }, {
           where: {
             id: req.body.id
           }
-        }).then(function (plantillaclausula) {
+        }).then(function (toc) {
           res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
           logger.error(err)
@@ -180,7 +180,7 @@ exports.action2 = function (req, res) {
         });
       break;
     case "del":
-      models.plantillaclausula.destroy({
+      models.toc.destroy({
         where: {
           id: req.body.id
         }
