@@ -51,6 +51,11 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
     t1 += "</div>";
 
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
+    t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
+    t1 += "</div>";
+
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
 
@@ -82,7 +87,7 @@ $(document).ready(function () {
                 }
             }, dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'Nombre CUI', name: 'nombrecui', jsonmap: "estructuracui.nombre", width: 250, align: 'left', search: false, sortable: false, editable: true },
+        { label: 'Nombre CUI', name: 'nombrecui', jsonmap: "estructuracui.nombre", width: 250, align: 'left', search: false, sortable: false, editable: true, hidden: false },
         {
             label: 'Técnico', name: 'idtecnico', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -111,7 +116,7 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'Técnico', name: 'tecnico', width: 150, search: false, editable: false, formatter: returnTecnico },
+        { label: 'Técnico', name: 'tecnico', width: 150, search: false, editable: false, formatter: returnTecnico, hidden: false },
         {
             label: 'Tipo Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
             edittype: "custom",
@@ -172,14 +177,14 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: false, editable: true },
+        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: false, editable: true, hidden: false },
         {
             label: 'Descripción', name: 'descripcion', width: 250, align: 'left',
             search: false, editable: true, editoptions: { rows: "2", cols: "50" },
-            editrules: { required: true }, edittype: "textarea",
+            editrules: { required: true }, edittype: "textarea", hidden: false
         },
 
-        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: false, editable: true },
+        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: false, editable: true, hidden: false },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -204,7 +209,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 150, align: 'left', search: false, editable: true },
+        { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 150, align: 'left', search: false, editable: true, hidden: false },
         {
             label: 'Negociador', name: 'idnegociador', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -233,14 +238,14 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador },
-        { label: 'Correo Negociador', name: 'correonegociador', width: 150, hidden: true, search: false, editable: true },
-        { label: 'Fono Negociador', name: 'fononegociador', width: 150, hidden: true, search: false, editable: true },
-        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, hidden: true, search: false, editable: true },
-        { label: 'Número RFP', name: 'numerorfp', width: 150, hidden: true, search: false, editable: true },
+        { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador, hidden: false },
+        { label: 'Correo Negociador', name: 'correonegociador', width: 150, hidden: false, search: false, editable: true },
+        { label: 'Fono Negociador', name: 'fononegociador', width: 150, hidden: false, search: false, editable: true },
+        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, hidden: false, search: false, editable: true },
+        { label: 'Número RFP', name: 'numerorfp', width: 150, hidden: false, search: false, editable: true },
         {
             label: 'Fecha RFP', name: 'fechaenviorfp',
-            width: 150, align: 'center', search: true, editable: true, hidden: true,
+            width: 150, align: 'center', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -260,12 +265,62 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, hidden: true, editable: true },
-        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, hidden: true, editable: true },
-        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, hidden: true, editable: true },
-        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, hidden: true, editable: true },
-        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: true, editable: true },
-        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: true, editable: true },
+        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, hidden: false, editable: true },
+        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, hidden: false, editable: true },
+        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, hidden: false, editable: true },
+        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, hidden: false, editable: true },
+        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: false, editable: true },
+        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: false, editable: true },
+        {
+            name: 'idtipo', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/tipos',
+                buildSelect: function (response) {
+                    var rowKey = $grid.getGridParam("selrow");
+                    var rowData = $grid.getRowData(rowKey);
+                    var thissid = rowData.idtipo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger un Tipo--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        { label: 'Tipo', name: 'tipo', jsonmap: "tipoclausula.nombre", width: 150, align: 'left', search: false, editable: false, hidden: false },
+        {
+            name: 'idgrupo', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/parametros/grupoclausula',
+                buildSelect: function (response) {
+                    var rowKey = $grid.getGridParam("selrow");
+                    var rowData = $grid.getRowData(rowKey);
+                    var thissid = rowData.idgrupo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger un Grupo--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        { label: 'Grupo', name: 'grupo', jsonmap: "grupo.nombre", width: 150, align: 'left', search: false, editable: false, hidden: false },
     ];
     var previousRowId = 0;
     $grid.jqGrid({
@@ -302,6 +357,7 @@ $(document).ready(function () {
                     if (item.glosarol === 'Negociador SIC') {
                         $("#add_" + thisId).addClass('ui-disabled');
                         $("#add_gridMaster").hide()
+                        /*
                         $grid.jqGrid("showCol", "codigosolicitud")
                         $grid.jqGrid("showCol", "negociador")
                         $grid.jqGrid("showCol", "correonegociador")
@@ -315,6 +371,9 @@ $(document).ready(function () {
                         $grid.jqGrid("showCol", "nombreinterlocutor2")
                         $grid.jqGrid("showCol", "correointerlocutor2")
                         $grid.jqGrid("showCol", "fonointerlocutor2")
+                        $grid.jqGrid("showCol", "grupo")
+                        $grid.jqGrid("showCol", "tipo")
+                        */
                     }
                 });
             });
@@ -347,6 +406,10 @@ $(document).ready(function () {
                     if (postdata.fechaenviorfp.trim().length == 0) {
                         postdata.fechaenviorfp = null
                     }
+                    if (postdata.fononegociador.trim().length == 0) {
+                        postdata.fononegociador = null
+                    }
+                    
                     return [true, "", ""]
                 }
 
@@ -387,6 +450,8 @@ $(document).ready(function () {
                                 $("#nombreinterlocutor2", form).attr('readonly', 'readonly');
                                 $("#correointerlocutor2", form).attr('readonly', 'readonly');
                                 $("#fonointerlocutor2", form).attr('readonly', 'readonly');
+                                $("#idgrupo", form).attr('disabled', 'disabled');
+                                $("#idtipo", form).attr('disabled', 'disabled');
                             }
                         });
                     });
@@ -425,6 +490,8 @@ $(document).ready(function () {
                     postdata.nombreinterlocutor2 = null;
                     postdata.correointerlocutor2 = null;
                     postdata.fonointerlocutor2 = null;
+                    postdata.idtipo = null;
+                    postdata.idgrupo = null;
 
                     return [true, "", ""]
                 }
@@ -466,6 +533,8 @@ $(document).ready(function () {
                                 $("#d_nombreinterlocutor2", form).hide();
                                 $("#d_correointerlocutor2", form).hide();
                                 $("#d_fonointerlocutor2", form).hide();
+                                $("#d_tipo", form).hide();
+                                $("#d_grupo", form).hide();
                             }
                         });
                     });

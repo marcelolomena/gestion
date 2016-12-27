@@ -152,5 +152,8 @@ module.exports = function (passport) {
     router.route('/sic/tocclases/action')
         .post(isAuthenticated, tocController.action2);
 
+    router.route('/sic/tipos')
+        .get(isAuthenticated, solicitudcotizacionController.tipoclausula);        
+
     return router;
 }
