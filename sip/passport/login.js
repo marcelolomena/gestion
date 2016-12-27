@@ -3,6 +3,7 @@ var User = require('../models/art_user');
 var models = require('../models');
 var bCrypt = require('bcryptjs');
 var co = require('co');
+var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 module.exports = function (passport) {
 
@@ -66,7 +67,7 @@ module.exports = function (passport) {
 								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 								//return done(null, false, {message: "Clave inválida."});
 							} else {
-
+								registraLogin(user, req);
 								return done(null, user);
 							}
 						}
@@ -89,5 +90,17 @@ module.exports = function (passport) {
 
 	}
 
+	var registraLogin= function (user, req) {
+		//console.log('Sistema. ' +req.body.sistema);
+		var sql = "INSERT INTO sip.usr_login (uid, hora, dia, idsistema, borrado) "+
+		"VALUES ("+user.uid+", getdate(),convert(VARCHAR(8), getdate(), 112),1, 1)";
+		console.log("query:" + sql);
+		sequelize.query(sql).spread(function (saps) {
+			console.log("Login registrado:" + saps);
+			//return saps;
+		}).catch(function (err) {
+			console.log(err);
+		});		
+	}
 
 }

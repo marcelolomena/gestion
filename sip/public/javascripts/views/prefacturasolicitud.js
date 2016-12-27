@@ -117,12 +117,12 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Causa Multa {idcausalmulta}</div>";
-    tmpl += "<div class='column-half'>Monto Neto Multa {montomulta}</div>";
+    tmpl += "<div class='column-half'>Causa Descuento {idcausalmulta}</div>";
+    tmpl += "<div class='column-half'>Monto Neto Descuento {montomulta}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Glosa Multa {glosamulta}</div>";
+    tmpl += "<div class='column-half'>Glosa Descuento {glosamulta}</div>";
     tmpl += "<div class='column-half'>Calificación de Servicio {idcalificacion}</div>";
     tmpl += "</div>";
 
@@ -370,7 +370,7 @@ function showDocumentos(cui, periodo, proveedor) {
                         var data = JSON.parse(response);
                         console.log(data);
                         var s = "<select>";//el default
-                        s += '<option value="0">--Escoger Causal Multa--</option>';
+                        s += '<option value="0">--Escoger Causal Descuento--</option>';
                         $.each(data, function (i, item) {
                             console.log("***proveedor:" + data[i].id + ", " + thissid);
                             if (data[i].id == thissid) {
