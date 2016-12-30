@@ -31,7 +31,9 @@ exports.action = function (req, res) {
                 nombreinterlocutor2: req.body.nombreinterlocutor2,
                 correointerlocutor2: req.body.correointerlocutor2,
                 fonointerlocutor2: req.body.fonointerlocutor2,
-                borrado: 1
+                borrado: 1,
+                idtipo: req.body.idtipo,
+                idgrupo: req.body.idgrupo
             }).then(function (solicitudcotizacion) {
                 res.json({ error: 0, glosa: '' });
             }).catch(function (err) {
@@ -86,7 +88,9 @@ exports.action = function (req, res) {
                     fonointerlocutor1: req.body.fonointerlocutor1,
                     nombreinterlocutor2: req.body.nombreinterlocutor2,
                     correointerlocutor2: req.body.correointerlocutor2,
-                    fonointerlocutor2: req.body.fonointerlocutor2
+                    fonointerlocutor2: req.body.fonointerlocutor2,
+                    idtipo: req.body.idtipo,
+                    idgrupo: req.body.idgrupo
                 }, {
                         where: {
                             id: req.body.id
@@ -142,8 +146,10 @@ exports.list = function (req, res) {
             models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
             models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
             models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
-            models.solicitudcotizacion.belongsTo(models.valores, { foreignKey: 'idclasificacionsolicitud' });
+            models.solicitudcotizacion.belongsTo(models.valores, { as: 'clasificacion', foreignKey: 'idclasificacionsolicitud' });
             models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
+            models.solicitudcotizacion.belongsTo(models.tipoclausula, { foreignKey: 'idtipo' });
+            models.solicitudcotizacion.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
             models.solicitudcotizacion.count({
                 where: data
             }).then(function (records) {
@@ -160,9 +166,13 @@ exports.list = function (req, res) {
                     }, {
                         model: models.user, as: 'tecnico'
                     }, {
-                        model: models.valores
+                        model: models.valores, as: 'clasificacion'
                     }, {
                         model: models.user, as: 'negociador'
+                    }, {
+                        model: models.tipoclausula
+                    }, {
+                        model: models.valores, as: 'grupo'
                     }
                     ]
                 }).then(function (solicitudcotizacion) {
@@ -175,4 +185,18 @@ exports.list = function (req, res) {
         }
     });
 
-};
+}
+
+exports.tipoclausula = function (req, res) {
+
+    models.tipoclausula.findAll({
+        order: 'id ASC',
+        attributes: ['id', 'nombre']
+    }).then(function (tipoclausula) {
+        return res.json(tipoclausula);
+    }).catch(function (err) {
+        logger.error(err.message);
+        res.json({ error_code: 1 });
+    });
+
+}

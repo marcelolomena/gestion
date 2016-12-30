@@ -931,6 +931,7 @@ color:#365F91'>&nbsp;</span></b></p>
 exports.default = function (req, res) {
     //logger.debug(req.params.id)
     //logger.debug(req.params.gid)
+	
 
     models.serviciosrequeridos.max('notacriticidad', {
         where: { idsolicitudcotizacion: req.params.id }

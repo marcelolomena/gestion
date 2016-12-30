@@ -163,6 +163,9 @@ module.exports = function (passport) {
 
     router.route('/sic/clausulastoc/:id')
         .get(isAuthenticated, tocController.getclausulastoc);
+        
+    router.route('/sic/tipos')
+        .get(isAuthenticated, solicitudcotizacionController.tipoclausula);
 
     return router;
 }
