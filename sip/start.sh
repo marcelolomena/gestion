@@ -4,7 +4,6 @@
 ###  script de partida App NODE  SIP ###
 ###  ------------------------------- ###
 echo "Starting SIP"
-export NODE_ENV=development
-export PORT=3000
+export NODE_ENV=testing
 echo $NODE_ENV
 nohup npm start > /dev/null & 
