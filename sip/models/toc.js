@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idplanillaclausula: {
+    idplantillaclausula: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {

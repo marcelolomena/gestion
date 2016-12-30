@@ -61,7 +61,7 @@ module.exports = function (passport) {
 							return done(null, false, req.flash('message', 'Sin rol asignado')); // redirect back to login page
 							//return done(null, false, {message: "Sin rol asignado."});
 						} else {
-							logger.debug("rol : " + rol.id);
+							//logger.debug("rol : " + rol.id);
 							if (!isValidPassword(user, password)) {
 								logger.debug('Clave inválida');
 								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
