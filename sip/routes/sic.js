@@ -152,5 +152,17 @@ module.exports = function (passport) {
     router.route('/sic/tocclases/action')
         .post(isAuthenticated, tocController.action2);
 
+    router.route('/sic/clasestoc/:id')
+        .get(isAuthenticated, tocController.getclasestoc);
+
+    router.route('/sic/tocclausulas/:idtipoclausula/list/:idclase')
+        .get(isAuthenticated, tocController.list3);
+
+    router.route('/sic/tocclausulas/action')
+        .post(isAuthenticated, tocController.action3);
+
+    router.route('/sic/clausulastoc/:id')
+        .get(isAuthenticated, tocController.getclausulastoc);
+
     return router;
 }
