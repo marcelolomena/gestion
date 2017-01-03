@@ -5,7 +5,6 @@ $(document).ready(function () {
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-full' id='d_titulo'>Nombre<span style='color:red'>*</span>{nombre}</div>";
-    
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
