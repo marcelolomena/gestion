@@ -42,7 +42,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, parametrosController.listall);
 
     router.route('/sic/parametros2/:val')
-        .get(isAuthenticated, parametrosController.listall2);        
+        .get(isAuthenticated, parametrosController.listall2);
 
     router.route('/sic/servicios/:id/list')
         .get(isAuthenticated, serviciosController.listaservicios);
@@ -135,7 +135,7 @@ module.exports = function (passport) {
     router.route('/sic/tipoclausula')
         .get(isAuthenticated, catalogoclausulasController.gettipoclausula);
 
-    router.route('/sic/default/:id/:gid')
+    router.route('/sic/default/:id/:gid/:tid')
         .get(isAuthenticated, clausulasController.default);
 
     router.get('/sic/toc', isAuthenticated, function (req, res) {
@@ -152,8 +152,20 @@ module.exports = function (passport) {
     router.route('/sic/tocclases/action')
         .post(isAuthenticated, tocController.action2);
 
+    router.route('/sic/clasestoc/:id')
+        .get(isAuthenticated, tocController.getclasestoc);
+
+    router.route('/sic/tocclausulas/:idtipoclausula/list/:idclase')
+        .get(isAuthenticated, tocController.list3);
+
+    router.route('/sic/tocclausulas/action')
+        .post(isAuthenticated, tocController.action3);
+
+    router.route('/sic/clausulastoc/:id')
+        .get(isAuthenticated, tocController.getclausulastoc);
+
     router.route('/sic/tipos')
-        .get(isAuthenticated, solicitudcotizacionController.tipoclausula);        
+        .get(isAuthenticated, solicitudcotizacionController.tipoclausula);
 
     return router;
 }

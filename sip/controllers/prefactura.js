@@ -209,7 +209,7 @@ exports.lista = function(req, res) {
                     replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
                     type: sequelize.QueryTypes.SELECT
                 }).then(function(data) {
-                    res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                    return res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
                 }).catch(function(e) {
                     logger.error(e)
                 })
@@ -263,7 +263,7 @@ exports.generar = function(req, res) {
 				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
 				E.numrut != 1
-UNION                
+UNION               
  SELECT
                 C.id, 
                 C.periodo,
@@ -297,7 +297,7 @@ UNION
 				JOIN sip.monedasconversion F ON F.idmoneda = B.idmoneda 
                 WHERE
 				 C.periodo < :periodo AND
-				 F.periodo < :periodo AND
+				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
 				E.numrut != 1 AND
 				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO')                
@@ -313,12 +313,14 @@ UNION
             //logger.debug(rows)
             models.sequelize.transaction({ autocommit: true }, function(t) {
                 for (var i = 0; i < rows.length; i++) {
-                    logger.debug(rows[i].impuesto)
+                    //logger.debug(rows[i])
+                    var numerointeligente = periodo.toString() + '' + rows[i].iddetallecompromiso
+                    //logger.debug(numerointeligente)
                     var newPromise = models.solicitudaprobacion.create({
                         'periodo': periodo,
                         'iddetallecompromiso': rows[i].iddetallecompromiso,
                         'idprefactura': rows[i].idprefactura,
-                        'idfacturacion': rows[i].iddetallecompromiso,
+                        'idfacturacion': numerointeligente,
                         'idcui': rows[i].idcui,
                         'idproveedor': rows[i].idproveedor,
                         'idservicio': rows[i].idservicio,
@@ -349,9 +351,9 @@ UNION
                 };
 
                 return Promise.all(promises);
-            }).then(function(result) {
+        }).then(function(result) {
 
-                models.sequelize.transaction({ autocommit: true }, function(t) {
+                return models.sequelize.transaction({ autocommit: true }, function(t) {
                     for (var i = 0; i < result.length; i++) {
                         var myPromise = models.solicitudaprobacion.update({
                             idfacturacion: result[i].id.toString()
@@ -364,7 +366,7 @@ UNION
 
                     return Promise.all(s_promises);
                 }).then(function(result) {
-                    models.sequelize.transaction({ autocommit: true }, function(t) {
+                    return models.sequelize.transaction({ autocommit: true }, function(t) {
                         for (var i = 0; i < rows.length; i++) {
                             var otherPromise = models.detallecompromiso.update({
                                 estadopago: 'GENERADO'

@@ -32,37 +32,58 @@ module.exports = function (passport) {
 
     router.post('/login', passport.authenticate('local', redirectsTwo),
         function (req, res) {
-            menu.builUserdMenu(req, function (err, data) {
-                if (data) {
-                    // Explícitamente guardar la sesión antes de redirigir!
-                    //req.flash('message', 'Please check your email to confirm it.');
-                    //req.session.passport.sidebar.rid
-                    req.session.save(() => {
-                        req.session.passport.sidebar = data
-                        if (parseInt(req.body.sistema) === 1) {
-                            res.render('home', { data: data });
-                        } else {
-                            res.render('sic/home2', { data: data });
-                        }
-                    })
-                } else {
-                    res.render('index', { message: err });
-                }
-            });
+            if (req.body.sistema) {
+                menu.builUserdMenu(req, function (err, data) {
+                    if (data) {
+                        // Explícitamente guardar la sesión antes de redirigir!
+                        //req.flash('message', 'Please check your email to confirm it.');
+                        //req.session.passport.sidebar.rid
+                        req.session.save(() => {
+                            req.session.passport.sidebar = data
+                            if (parseInt(req.body.sistema) === 1) {
+                                res.render('home', { data: data });
+                            } else {
+                                res.render('sic/home2', { data: data });
+                            }
+                        })
+                    } else {
+                        res.render('index', { message: err });
+                    }
+                });
+            } else {
+                req.body.sistema = 1
+                menu.builUserdMenu(req, function (err, data) {
+                    if (data) {
+                        // Explícitamente guardar la sesión antes de redirigir!
+                        //req.flash('message', 'Please check your email to confirm it.');
+                        //req.session.passport.sidebar.rid
+                        req.session.save(() => {
+                            req.session.passport.sidebar = data
+                            if (parseInt(req.body.sistema) === 1) {
+                                res.render('home', { data: data });
+                            } else {
+                                res.render('sic/home2', { data: data });
+                            }
+                        })
+                    } else {
+                        res.render('index', { message: err });
+                    }
+                });
+            }
         });
 
-/*
-    router.post('/logon', function (req, res, next) {
-        passport.authenticate('daniel', function (err, user, info) {
-            if (err) { return next(err); }
-            if (!user) { return res.json(401, {nada:'si'}); }
-            req.logIn(user, function (err) {
+    /*
+        router.post('/logon', function (req, res, next) {
+            passport.authenticate('daniel', function (err, user, info) {
                 if (err) { return next(err); }
-                return res.json(user);
-            });
-        })(req, res, next);
-    });
-*/
+                if (!user) { return res.json(401, {nada:'si'}); }
+                req.logIn(user, function (err) {
+                    if (err) { return next(err); }
+                    return res.json(user);
+                });
+            })(req, res, next);
+        });
+    */
 
     /* GET Home Page */
     router.get('/home', isAuthenticated, function (req, res) {

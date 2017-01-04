@@ -141,7 +141,26 @@ module.exports = (function () {
 
             if (additional) {
                 additional.forEach(function (item) {
-                    condition.push({ [item.field]: item.data });
+                        switch (item.op) {
+                            case "cn":
+                                condition.push({ [item.field]: { $like: '%' + item.data + '%' } });
+                                break;
+                            case "eq":
+                                if (item.data != 0)
+                                    condition.push({ [item.field]: item.data });
+                                break;
+                            case "ge":
+                                condition.push({ [item.field]: { $gte: item.data } });
+                                break;
+                            case "le":
+                                condition.push({ [item.field]: { $lte: item.data } });
+                                break;
+                            case "ne":
+                                condition.push({ [item.field]: { $ne: item.data } });
+                                break;
+                        }
+
+                    //condition.push({ [item.field]: item.data });
                 })
             }
 

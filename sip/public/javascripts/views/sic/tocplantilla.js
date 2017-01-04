@@ -1,6 +1,5 @@
-function gridClases(parentRowID, parentRowKey, suffix) {
+function gridPlantillas(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
-    console.log("aca viene solo: "+subgrid_id)
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
@@ -16,7 +15,7 @@ function gridClases(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Clase {idclase}</div>";
+    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Clausula {idplantillaclausula}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' id='elradio'>";
@@ -31,41 +30,51 @@ function gridClases(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/sic/tocclases/" + parentRowKey + "/list";
+    var grillapadre = subgrid_id.substring(0,subgrid_id.lastIndexOf("_"));
+    console.log("esto necesito: "+grillapadre);
+    console.log("esto tambien necesito: "+parentRowKey);
+    var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+    console.log("esyto no va a salir: "+rowData);
+    var parentClase = rowData.idclase;
+    var parentTipo = rowData.idtipoclausula;
 
-    var modelClases = [
+    var childGridURL = "/sic/tocclausulas/" + parentTipo + "/list/"+ parentClase;
+
+    var modelCatClausulas = [
         { label: 'id', name: 'id', key: true, hidden: true },
-    
+
         {
-            label: 'Clase', name: 'idclase', search: false, editable: true, hidden: true,
+            label: 'Clausula', name: 'idplantillaclausula', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/clasestoc/'+parentRowKey,
+                dataUrl: '/sic/clausulastoc/' + parentRowKey,
                 buildSelect: function (response) {
                     var rowKey = $("#" + childGridID).getGridParam("selrow");
                     var rowData = $("#" + childGridID).getRowData(rowKey);
-                    var thissid = rowData.idclase;
+                    var thissid = rowData.idplantillaclausula;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
-                    s += '<option value="0">--Seleccione una Clase--</option>';
+                    s += '<option value="0">--Seleccione una Clausula--</option>';
                     $.each(data, function (i, item) {
 
                         if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].titulo + '</option>';
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].codigo + '</option>';
                         } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].titulo + '</option>';
+                            s += '<option value="' + data[i].id + '">' + data[i].codigo + '</option>';
                         }
                     });
                     return s + "</select>";
                 }
             }
         },
-        { label: 'Clase', name: 'clase.titulo', width: 150, editable: true, editoptions: { size: 10 } },
+        { label: 'Codigo Clausula', name: 'plantillaclausula.codigo', width: 150, editable: true, editoptions: { size: 10 } },
 
-        { label: 'idtipoclausula', name: 'idtipoclausula',editable: false, editoptions: { size: 10 },hidden: true},
+        { label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
 
-         { label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
-        
+
+
+
+
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -76,31 +85,25 @@ function gridClases(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Clases',
+        caption: 'Plantilla Cláusulas',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelClases,
+        colModel: modelCatClausulas,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         checkOnUpdate: true,
         pager: "#" + childGridPagerID,
-        subGrid: true,
-        subGridRowExpanded: showSubGrids,
-        subGridOptions: {
-            plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
-        },
-        editurl: '/sic/tocclases/action',
+        editurl: '/sic/tocclausulas/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "clase.titulo": "No hay datos" });
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "codigo": "No hay datos" });
             }
         }
     });
@@ -127,15 +130,23 @@ function gridClases(parentRowID, parentRowKey, suffix) {
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 setTimeout(function () {
-                        $("#idclase", form).attr('disabled', 'disabled');
-                    }, 650);
+                    $("#idclase", form).attr('disabled', 'disabled');
+                }, 650);
             },
 
-           
 
-           
-          
-            
+
+            /*
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idtipoclausula == 0) {
+                    return [false, "Tipo Clausula: Campo obligatorio", ""];
+                } if (postdata.idgrupo == 0) {
+                    return [false, "Grupo Clausula: Campo obligatorio", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            }
+            */
         },
         {
             closeAfterAdd: true,
@@ -144,7 +155,7 @@ function gridClases(parentRowID, parentRowKey, suffix) {
             width: 800,
             checkOnUpdate: true,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Clase",
+            addCaption: "Agregar Cláusula",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -155,26 +166,23 @@ function gridClases(parentRowID, parentRowKey, suffix) {
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             },
-
-
-           
-
-           
             beforeSubmit: function (postdata, formid) {
-                if (postdata.idclase == 0) {
-                    return [false, "Clase: Campo obligatorio", ""];
+                if (postdata.idclausula == 0) {
+                    return [false, "Clausula: Campo obligatorio", ""];
                 } else {
                     return [true, "", ""]
                 }
             }
-            
+
+
+
         },
         {
             closeAfterDelete: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Clase",
+            addCaption: "Eliminar Cláusula",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
@@ -184,9 +192,6 @@ function gridClases(parentRowID, parentRowKey, suffix) {
         }
     );
 
-    function showSubGrids(subgrid_id, row_id) {
-        console.log("esto es antes: "+subgrid_id);
-        gridPlantillas(subgrid_id, row_id, 'plantilla');
-    }
+
 
 }

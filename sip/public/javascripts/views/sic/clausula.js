@@ -210,6 +210,7 @@ var gridClausula = {
                             var parentRowData = $("#gridMaster").getRowData(parentRowKey);
                             console.log(parentRowData.idtipo)
                             console.log(parentRowData.idgrupo)
+
                             /*
                             $.getJSON('/sic/parametros2/grupoclausula', function(data) {
                                 bootbox.prompt({
@@ -234,7 +235,10 @@ var gridClausula = {
                                 message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
                             });
                             dialog.init(function () {
-                                //dialog.find('.bootbox-body').html(data.message);
+                                $.getJSON('/sic/default/' + parentRowKey + '/' + parentRowData.idgrupo + '/' + parentRowData.idtipo, function (res) {
+                                    $gridTab.trigger("reloadGrid");
+                                    dialog.find('.bootbox-body').html(res.message);
+                                });
                             });
 
                         }
