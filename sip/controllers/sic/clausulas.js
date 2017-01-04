@@ -929,9 +929,9 @@ color:#365F91'>&nbsp;</span></b></p>
 }
 
 exports.default = function (req, res) {
-	logger.debug(req.params.id)
-	logger.debug(req.params.gid)
-	logger.debug(req.params.tid)
+	//logger.debug(req.params.id)
+	//logger.debug(req.params.gid)
+	//logger.debug(req.params.tid)
 
 
 	models.serviciosrequeridos.max('notacriticidad', {
@@ -939,37 +939,49 @@ exports.default = function (req, res) {
 	}).then(function (notacriticidad) {
 		models.toc.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
 		models.toc.belongsTo(models.clase, { foreignKey: 'idclase' });
-		models.cuerpoclausula.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula', through: models.plantillaclausula });
-		//models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' });
+		models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
+
+		//logger.debug("notacriticidad :" + notacriticidad)
+		var criticidad = notacriticidad === 3 ? 1 : 0;
 
 		models.toc.findAll({
-			//order: 'secuencia, codigo',
+			attributes: [['id', 'id']],
 			where: {
 				idplantillaclausula: {
 					$ne: null
 				}, idtipoclausula: req.params.tid
 			},
 			include: [
-				{model: models.plantillaclausula},
-				{model: models.clase},
 				{
-				model: models.plantillaclausula,
-				include: [
-					models.cuerpoclausula
-				]
-			}
+					attributes: [['id', 'id']],
+					model: models.plantillaclausula,
+					required: true,
+					include: [{
+						attributes: [['titulo', 'titulo'], ['glosa', 'glosa'], ['idgrupo', 'idgrupo']], model: models.cuerpoclausula, required: true,
+					}
+					]
+				},
+				{ attributes: [['titulo', 'titulo']], model: models.clase },
 			]
-		}).then(function (toc) {
-			console.dir(toc)
+		}).then(function (clausulas) {
+			console.dir(clausulas)
 
+			for (var c in clausulas) {
+				var cuerpoclausulas = clausulas[c].plantillaclausula.cuerpoclausulas
+				var idplantilla = clausulas[c].plantillaclausula.id
+				for (var p in cuerpoclausulas) {
+					logger.debug(idplantilla + '-' + cuerpoclausulas[p].titulo)
+				}
+			}
+
+			return res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
 		}).catch(function (err) {
-			logger.error("PICO : " + err.message);
-			res.json({ error_code: 1 });
+			logger.error(err.message);
+			return res.json({ message: '', success: false });
 		});
 
 		/*
-        logger.debug("notacriticidad :" + notacriticidad)
-        var criticidad = notacriticidad === 3 ? 1 : 0;
+
 
         models.plantillaclausula.findAll({
             attributes: [['id', 'idclausula'], ['glosaclausula', 'texto'], 'nombrecorto'],
@@ -1000,6 +1012,7 @@ exports.default = function (req, res) {
 		*/
 
 	}).catch(function (err) {
+		console.error("PICO")
 		logger.error(err.message);
 	});
 
