@@ -54,6 +54,9 @@ module.exports = function (passport) {
     router.route('/proyectosportareaenvuelo/:idtareaenvuelo')
         .get(isAuthenticated, flujopagoenvueloController.getProyectosPorTareaEnVuelo);
 
+    router.route('/subtareasportareaenvuelo/:idtareaenvuelo')
+        .get(isAuthenticated, flujopagoenvueloController.getsubtareasportareaenvuelo);
+
     return router;
 
 }

@@ -14,31 +14,34 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Periodo{periodo}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Porcentaje{porcentaje}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Pagos{costoorigen}</div>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Porcentaje{porcentaje}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'><span style='color: red'>*</span>Glosa Item{glosaitem}</div>";
     template += "</div>";
 
+    /*
+        template += "<div class='form-row'>";
+        template += "<div class='column-half'><span style='color: red'>*</span>Fecha Inicio{fechainicio}</div>";
+        template += "<div class='column-half'><span style='color: red'>*</span>Fecha Fin{fechafin}</div>";
+        template += "</div>";
+    
+        template += "<div class='form-row'>";
+        template += "<div class='column-half'><span style='color: red'>*</span>Cantidad{cantidad}</div>";
+        
+        template += "</div>";
+    */
     template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Fecha Inicio{fechainicio}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Fecha Fin{fechafin}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Cantidad{cantidad}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Pagos{costoorigen}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
     template += "<div class='column-half'>Proyecto{idproyecto}</div>";
+    template += "<div class='column-half'>Tarea{idtarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tarea{idtarea}</div>";
-    template += "<div class='column-half'>Subtarea{idsubtarea}</div>";
+
+    template += "<div class='column-full'>Subtarea{idsubtarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -68,6 +71,7 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 }
             }
         },
+        /*
         {
             label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
@@ -86,11 +90,13 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
+        */
         {
             label: 'Glosa Item', name: 'glosaitem', width: 200, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
         },
+        /*
         {
             label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
@@ -145,12 +151,13 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
+        
         {
             label: 'Cantidad', name: 'cantidad', width: 50, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: { required: true },
-        },
+        },*/
         {
             label: 'Pagos', name: 'costoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
@@ -162,6 +169,7 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 }
             }
         },
+        /*
         {
             label: 'Tipo Pago', name: 'parametro.nombre', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
@@ -193,11 +201,12 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 }
             }, dataInit: function (elem) { $(elem).width(100); }
 
-        },
+        },*/
         {
-            label: 'proyecto', name: 'idproyecto', search: false, editable: true, hidden: true,
+            label: 'Proyecto', name: 'idproyecto', search: false, editable: true, hidden: true,
             jsonmap: 'art_subtask.art_task.art_projectmaster.pId',
             edittype: "select",
+            editrules: { edithidden: true },
             editoptions: {
                 dataUrl: '/proyectosportareaenvuelo/' + parentRowKey,
                 buildSelect: function (response) {
@@ -252,9 +261,10 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
 
         },
         {
-            label: 'tarea', name: 'idtarea', search: false, editable: true, hidden: true,
+            label: 'Tarea', name: 'idtarea', search: false, editable: true, hidden: true,
             jsonmap: 'art_subtask.art_task.tId',
             edittype: "select",
+            editrules: { edithidden: true },
             editoptions: {
                 dataUrl: '/tareasporiniciativa/' + parentRowKey,
                 buildSelect: function (response) {
@@ -309,16 +319,17 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
 
         },
         {
-            label: 'Subtarea', name: 'subtarea', width: 200, align: 'left', 
+            label: 'Subtarea', name: 'subtarea', width: 200, align: 'left',
             jsonmap: 'art_sub_task.title',
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'idsubtarea', name: 'idsubtarea', search: false, editable: true, hidden: true,
+            label: 'Subtarea', name: 'idsubtarea', search: false, editable: true, hidden: true,
             jsonmap: 'art_sub_task.sub_task_id',
             edittype: "select",
+            editrules: { edithidden: true },
             editoptions: {
-                dataUrl: '/subtareasporiniciativa/' + parentRowKey,
+                dataUrl: '/subtareasportareaenvuelo/' + parentRowKey,
                 buildSelect: function (response) {
                     var grid = $('#' + childGridID);
                     var rowKey = grid.getGridParam("selrow");
@@ -385,20 +396,9 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             editCaption: "Modificar Flujo de pagos",
-            template: template,
+            //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.idtipopago == 0) {
-                    return [false, "Tipo Pago: Campo obligatorio", ""];
-                } if (postdata.fechainicio == 0) {
-                    return [false, "Fecha Inicio: Campo obligatorio", ""];
-                } if (postdata.fechafin == 0) {
-                    return [false, "Fecha Fin: Campo obligatorio", ""];
-                } else {
-                    return [true, "", ""]
-                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -437,23 +437,12 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Flujo de Pagos",
-            template: template,
+            //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.idtipopago == 0) {
-                    return [false, "Tipo Pago: Campo obligatorio", ""];
-                } if (postdata.fechainicio == 0) {
-                    return [false, "Fecha Inicio: Campo obligatorio", ""];
-                } if (postdata.fechafin == 0) {
-                    return [false, "Fecha Fin: Campo obligatorio", ""];
-                } else {
-                    return [true, "", ""]
-                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -489,4 +478,47 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+
+    $("#" + childGridID).jqGrid("navButtonAdd", "#" + childGridPagerID, {
+        caption: ""/*"My Edit"*/,
+        buttonicon: "glyphicon glyphicon-pushpin",
+        title: "Editar Montos",
+        beforeShowForm: function (form) {
+            var grid = $("#" + childGridID);
+            var rowKey = grid.getGridParam("selrow");
+            var rowData = grid.getRowData(rowKey);
+            var thissid = rowData.id;
+            if (thissid == 0) {
+                alert("Debe seleccionar una fila");
+                return [false, result.error_text, ""];
+            }
+            sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            //$('input#codigoart', form).attr('readonly', 'readonly');
+        },
+
+        onClickButton: function () {
+            var $self = $(this);
+            // make "myColumn" temporary editable
+            $self.jqGrid("setColProp", "costoorigen", { editable: false });
+            $self.jqGrid("setColProp", "glosaitem", { editable: false });
+            $self.jqGrid("setColProp", "idproyecto", { editable: false });
+            $self.jqGrid("setColProp", "idtarea", { editable: false });
+            $self.jqGrid("setColProp", "idsubtarea", { editable: false });
+            $self.jqGrid("editGridRow",
+                $self.jqGrid("getGridParam", "selrow"),
+                { // some options
+                    recreateForm: true,
+                    onclickSubmit: function (options, postData) {
+                        return { costoorigen: "" };
+                    },
+                }
+            );
+            // make "myColumn" back as non-editable
+            $self.jqGrid("setColProp", "costoorigen", { editable: true });
+            $self.jqGrid("setColProp", "glosaitem", { editable: true });
+            $self.jqGrid("setColProp", "idproyecto", { editable: true });
+            $self.jqGrid("setColProp", "idtarea", { editable: true });
+            $self.jqGrid("setColProp", "idsubtarea", { editable: true });
+        }
+    });
 }
