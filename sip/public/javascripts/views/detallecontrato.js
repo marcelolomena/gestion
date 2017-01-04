@@ -257,6 +257,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var thissid = rowData.tarea;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Tarea--</option>';                        
                         $.each(data, function (i, item) {
                             if (data[i].id == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
@@ -819,11 +820,14 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 var cantcuotas = new Number(postdata.numerocuotas);       
                 if (postdata.fechacontrol.trim() == "")
                     postdata.fechacontrol = null
-
-                if (parseInt(postdata.idservicio) == 0) {
-                    return [false, "Servicio: Debe escoger un valor", ""];
+                if (parseInt(postdata.sap) == 0) {
+                    return [false, "SAP: Debe escoger un valor", ""];  
                 } if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
+                } else if (parseInt(postdata.idservicio) == 0) {
+                    return [false, "Servicio: Debe escoger un valor", ""];
+                } if (parseInt(postdata.tarea) == 0) {
+                    return [false, "Tarea: Debe escoger un valor", ""];
                 } if (postdata.fechainicio.length == 0) {
                     return [false, "Fecha Inicio: Debe escoger un valor", ""];
                 } if (postdata.fechatermino.length == 0) {
