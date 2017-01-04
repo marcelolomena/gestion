@@ -7,36 +7,40 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
-    var porcentaje = req.body.porcentaje
+    var porcentaje = 0.00
     var fechainicio;
     var fechafin;
+    var tipopago = 84
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
-        if (porcentaje != ""){
-            //porcentaje = porcentaje.split(".").join("").replace(",", ".")
-            porcentaje = parseFloat(req.body.porcentaje)/100;
-        }else{
-            porcentaje = 0.00;
-        }
-        if (req.body.fechainicio != "")
-            fechainicio = req.body.fechainicio.split("-").reverse().join("-")
 
-        if (req.body.fechafin != "")
-            fechafin = req.body.fechafin.split("-").reverse().join("-")
-            
+        var ano = req.body.periodo.substring(0, 4);
+        var mes = req.body.periodo.substring(5, 7);
+        fechainicio = ano + '-' + mes + '-' + '01';
+        if (parseInt(mes) == 02) {
+            fechafin = ano + '-' + mes + '-' + '28';
+        } else {
+            fechafin = ano + '-' + mes + '-' + '30';
+        }
+        if (req.body.idsubtarea != "0") {
+            idsubtarea = req.body.idsubtarea
+        } else {
+            idsubtarea = null
+        }
     }
 
     switch (action) {
         case "add":
             models.flujopagoenvuelo.create({
                 idtareaenvuelo: req.body.parent_id,
+                idsubtarea: idsubtarea,
                 periodo: req.body.periodo,
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
-                idtipopago: req.body.idtipopago,
+                idtipopago: tipopago,
                 fechainicio: fechainicio,
                 fechafin: fechafin,
                 cantidad: req.body.cantidad,
@@ -50,25 +54,45 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            models.flujopagoenvuelo.update({
-                periodo: req.body.periodo,
-                costoorigen: costoorigen,
-                glosaitem: req.body.glosaitem,
-                porcentaje: porcentaje,
-                idtipopago: req.body.idtipopago,
-                fechainicio: fechainicio,
-                fechafin: fechafin,
-                cantidad: req.body.cantidad,
-            }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (detalle) {
-                    res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
+            if (req.body.costoorigen != "") {
+                models.flujopagoenvuelo.update({
+                    idsubtarea: idsubtarea,
+                    periodo: req.body.periodo,
+                    costoorigen: costoorigen,
+                    glosaitem: req.body.glosaitem,
+                    porcentaje: porcentaje,
+                    idtipopago: tipopago,
+                    fechainicio: fechainicio,
+                    fechafin: fechafin,
+                    cantidad: req.body.cantidad,
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (detalle) {
+                        res.json({ error_code: 0 });
+                    }).catch(function (err) {
+                        logger.error(err);
+                        res.json({ error_code: 1 });
+                    });
+
+            } else {
+                models.flujopagoenvuelo.update({
+                    periodo: req.body.periodo,
+                    fechainicio: fechainicio,
+                    fechafin: fechafin,
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (detalle) {
+                        res.json({ error_code: 0 });
+                    }).catch(function (err) {
+                        logger.error(err);
+                        res.json({ error_code: 1 });
+                    });
+            }
+
             break;
         case "del":
             models.flujopagoenvuelo.destroy({
@@ -159,9 +183,9 @@ exports.list = function (req, res) {
     });
 };
 exports.getProyectosPorTareaEnVuelo = function (req, res) {
-    sequelize.query('select a.pId, a.project_name from art_project_master a join art_program b on a.program= b.program_id '+
-    ' join sip.presupuestoenvuelo d on d.program_id=b.program_id join sip.tareaenvuelo e on e.idpresupuestoenvuelo=d.id '+
-    ' where e.id = :idtareaenvuelo and a.is_active=1',
+    sequelize.query('select a.pId, a.project_name from art_project_master a join art_program b on a.program= b.program_id ' +
+        ' join sip.presupuestoenvuelo d on d.program_id=b.program_id join sip.tareaenvuelo e on e.idpresupuestoenvuelo=d.id ' +
+        ' where e.id = :idtareaenvuelo and a.is_active=1',
         { replacements: { idtareaenvuelo: req.params.idtareaenvuelo }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
         res.json(user);
@@ -207,6 +231,16 @@ exports.getSubtareasPorTarea = function (req, res) {
 exports.getSubtareasPorTareaNuevoProyecto = function (req, res) {
     sequelize.query('select z.sub_task_id, z.title from art_sub_task z join art_task x on x.tId= z.task_id join art_project_master a on a.pId=x.pId join art_program b on a.program= b.program_id join sip.iniciativaprograma c on c.codigoart= b.program_code join sip.presupuestoiniciativa d on d.idiniciativaprograma=c.id join sip.tareasnuevosproyectos e on e.idpresupuestoiniciativa=d.id where e.id = :idtareanuevoproyecto and z.is_deleted=1',
         { replacements: { idtareanuevoproyecto: req.params.idtareanuevoproyecto }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+};
+exports.getsubtareasportareaenvuelo = function (req, res) {
+    sequelize.query('select z.sub_task_id, z.title from art_sub_task z join art_task x on x.tId= z.task_id  join art_project_master a on a.pId=x.pId  join art_program b on a.program= b.program_id  join sip.presupuestoenvuelo c on c.program_id=b.program_id join sip.tareaenvuelo d on d.idpresupuestoenvuelo=c.id  where d.id = :idtareaenvuelo and z.is_deleted=1',
+        { replacements: { idtareaenvuelo: req.params.idtareaenvuelo }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
         res.json(user);
     }).catch(function (err) {
