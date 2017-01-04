@@ -24,7 +24,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         subgrid_table_id += suffix;
         pager_id += suffix;
     }
-
+    
+    
+    var idservicio=0;
     var templateServicio = "<div id='responsive-form' class='clearfix'>";
     if (tipocontrato == 'Proyectos') {
         templateServicio += "<div class='form-row'>";
@@ -203,7 +205,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
                             var cui = $("#idcui").val();
-                            var thissid = $(this).val();
+                            var thissid = $(this).val();                          
                             $.ajax({
                                 type: "GET",
                                 url: '/contratoservicio/saldopresup/' + cui + '/' + thissid,
@@ -241,8 +243,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {            
                 label: 'Tarea', name: 'tarea', search: false, editable: true, hidden: false,
                 edittype: "select",
-                editoptions: {
+                editoptions: {                   
                     dataUrl: '/getlistatareas/'+0,
+                    postData: function (rowid, value, cmName) {
+                        return {
+                            idsrv: $('#' + subgrid_table_id).getRowData(rowid).idservicio
+                        }
+                    },                    
                     buildSelect: function (response) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
@@ -250,11 +257,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var thissid = rowData.tarea;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
-                        if (thissid != null){
-                            s += '<option value="'+thissid+'">'+thissid+'</option>';
-                        } else {
-                            s += '<option value="0">--Escoger Tarea--</option>';
-                        }
+                        $.each(data, function (i, item) {
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
 
                         return s + "</select>";
                     },

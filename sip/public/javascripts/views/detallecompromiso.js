@@ -114,19 +114,32 @@ function gridDetail(parentRowID, parentRowKey) {
             template: templateDetalle,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },beforeSubmit: function (postdata, formid) {
+                var grid = $("#" + childGridID);
+                var rowKey = grid.getGridParam("selrow");
+                var idxsel = grid.getInd(rowKey);
+                var rowData = grid.getRowData(rowKey);
+                postdata.idx = idxsel;
+                var cuota = new Number(postdata.valorcuota);
+
+                if (isNaN(cuota) || cuota < 0) {
+                    return [false, "Debe ingresar un numero y con valor  mayor o igual a 0", ""];
+                }            
+                return [true, "", ""];
             }, onclickSubmit: function (rowid) {
                 var subgrid = $("#" + childGridID);
                 var ids = subgrid.jqGrid('getDataIDs');
                 var parentTable = "grid_" + parentRowID.split("_")[1] + "_t";
                 var parentGrid = $('#' + parentTable);
                 var parentRowData = parentGrid.getRowData(parentRowKey);
+                
                 var extraparam = {
                     pk: parentRowKey,
-                    valorcuota: parentRowData.valorcuota,
+                    //valorcuota: parentRowData.valorcuota,
                     idmoneda: parentRowData.idmoneda,
                     impuesto: parentRowData.impuesto,
                     factorimpuesto: parentRowData.factorimpuesto
-                }
+                }             
                 return extraparam;
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;

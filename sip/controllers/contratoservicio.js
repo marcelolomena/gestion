@@ -12,9 +12,11 @@ exports.action = function (req, res) {
     var sap = req.body.sap;
     var sapcampos = "";
     var sapdatos = "";
+    var upsap = "";
     if (sap != null) {
         sapcampos = ", sap, tarea, codigoart";
-        sapdatos =  ", "+req.body.sap+ ", "+req.body.tarea+","+req.body.codigoart;
+        sapdatos =  ", "+req.body.sap+ ", '"+req.body.tarea+"',"+req.body.codigoart;
+        upsap = ", sap="+req.body.sap+ ", tarea='"+req.body.tarea+"', codigoart="+req.body.codigoart;
     } 
         
 
@@ -38,6 +40,7 @@ exports.action = function (req, res) {
                 "DECLARE @id INT;" +
                 "select @id = @@IDENTITY; " +
                 "select @id as id;";
+                console.log("sql:"+sql);
             sequelize.query(sql).spread(function (contratosrv) {
                 logger.debug("------------>cc:" + contratosrv);
                 logger.debug("------------>ID:" + contratosrv[0].id)
@@ -79,9 +82,9 @@ exports.action = function (req, res) {
                 ", idestadocto=" + req.body.idestadocto + ", glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
                 ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
                 ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
-                ", comentario='" + req.body.comentario + "' " +
+                ", comentario='" + req.body.comentario + "' " +upsap+" "+
                 "WHERE id=" + req.body.id;
-            logger.debug("sql:" + sql);
+            console.log("sqlup:" + sql);
             sequelize.query(sql).spread(function (contratosrv) {
                 if (req.body.tipogeneracion == 1) {
                     var cuotas = calculoCuotas(
@@ -264,7 +267,7 @@ function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecu
     var delta = parseInt(mescuota1) - parseInt(desdediferido);
     delta = Math.abs(delta);
     var delta = parseInt(mescuota1) > parseInt(desdediferido) ? parseInt(mescuota1) : parseInt(desdediferido);
-    for (var i = 0; i < (parseInt(ncuotas) * parseInt(mesesentremedio)) + delta; i++) {
+    for (var i = 0; i < (parseInt(ncuotas) * parseInt(mesesentremedio)) + delta - 1; i++) {
         logger.debug("llenando");
         origen.push(0);
         caja.push(0);
@@ -674,9 +677,17 @@ exports.getListaSAP = function (req, res) {
 
 exports.getListaTareas = function (req, res) {
     logger.debug("En getSaldoPresup");
-    var servicio = req.params.id;
+    var servicio1 = req.query.idsrv;
+    var servicio2 = req.params.id;
+    var servicio3 = 0;
+    console.log("servicio3:"+servicio3);
+    if (servicio1>0){
+        servicio3=servicio1;
+    } else if (servicio2>0) {
+        servicio3=servicio2;
+    } 
 
-    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio="+servicio+" "+  
+    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio="+servicio3+" "+  
         "GROUP BY tarea ";
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (tareas) {
