@@ -39,12 +39,12 @@ exports.action = function (req, res) {
                 res.json({ error_code: 1 });
             });*/
             
-            var sql="SELECT * FROM sip.detallecompromiso WHERE iddetalleserviciocto="+req.params.idd +" AND periodo="+req.body.periodo;
+            /*var sql="SELECT * FROM sip.detallecompromiso WHERE iddetalleserviciocto="+req.params.idd +" AND periodo="+req.body.periodo;
             sequelize.query(sql).spread(function (rows) {
                 if (rows.length > 0) {
                     logger.debug("periodo repetido");
                     res.json({ error_code: 10 });
-                } else {
+                } else {*/
                     sequelize.query("EXECUTE sip.InsertaPeriodoContrato "+req.params.idd+","+
                     req.body.periodo+","+valorcuota)
                         .then(function (rows) {
@@ -54,8 +54,8 @@ exports.action = function (req, res) {
                             logger.error(err);
                             res.json({ error_code: 1 });
                         });                       
-                }
-            });            
+                //}
+            //});            
                 
             break;
         case "edit":
@@ -131,7 +131,8 @@ exports.list = function (req, res) {
 
     var orden = sidx + " " + sord;
        
-    sequelize.query("select * from sip.detallecompromiso where iddetalleserviciocto="+req.params.id)
+    sequelize.query("select * from sip.detallecompromiso where iddetalleserviciocto="+
+        req.params.id+" ORDER BY periodo")
         .spread(function (rows) {
         res.json({ records: 1, total: 1, page: 1, rows: rows });
         });    

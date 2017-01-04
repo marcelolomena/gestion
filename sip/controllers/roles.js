@@ -194,12 +194,14 @@ exports.list2 = function (req, res) {
 
 exports.action = function (req, res) {
   var action = req.body.oper;
+  var sistema = req.session.passport.sidebar[0].sistema;
 
   switch (action) {
     case "add":
       models.usrrol.create({
         uid: req.body.parent_id,
         rid: req.body.rid,
+        idsistema: sistema,
         borrado: 1
       }).then(function (parametro) {
         res.json({ error_code: 0 });
