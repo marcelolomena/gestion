@@ -362,7 +362,7 @@ exports.getclausulastoc = function (req, res) {
     sequelize.query(
         'select a.* ' +
         'from sic.plantillaclausula a ' +
-        "where a.id not in (select b.idplantillaclausula from sic.toc b where idclase= (select idclase from sic.toc where id="+id+") and idplantillaclausula is not null ) and idclase = (select idclase from sic.toc where id=" + id + ") ",
+        "where a.id not in (select b.idplantillaclausula from sic.toc b where idclase= (select idclase from sic.toc where id="+id+") and idplantillaclausula is not null and idtipoclausula= (select idtipoclausula from sic.toc where id="+id+")) and idclase = (select idclase from sic.toc where id="+id+") ",
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
