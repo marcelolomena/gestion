@@ -175,17 +175,27 @@ exports.plantillas = function (req, res) {
 
 exports.texto = function (req, res) {
 
-	models.plantillaclausula.findAll({
-		order: 'id ASC',
-		attributes: ['glosaclausula', 'nombrecorto'],
-		where: { id: req.params.id }
+	/*
+		models.plantillaclausula.findAll({
+			order: 'id ASC',
+			attributes: ['glosaclausula', 'nombrecorto'],
+			where: { id: req.params.id }
+		}).then(function (plantillas) {
+			return res.json(plantillas);
+		}).catch(function (err) {
+			logger.error(err.message);
+			res.json({ error_code: 1 });
+		});
+	*/
+	models.cuerpoclausula.findAll({
+		attributes: [['glosa', 'glosaclausula'], ['titulo', 'nombrecorto']],
+		where: { idplantillaclausula: req.params.id, idgrupo: req.params.gid }
 	}).then(function (plantillas) {
 		return res.json(plantillas);
 	}).catch(function (err) {
 		logger.error(err.message);
 		res.json({ error_code: 1 });
 	});
-
 }
 
 exports.download = function (req, res) {

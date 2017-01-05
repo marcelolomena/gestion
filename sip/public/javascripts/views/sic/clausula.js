@@ -103,12 +103,21 @@ var gridClausula = {
                             type: 'change', fn: function (e) {
                                 var thisval = $(this).val();
                                 if (thisval) {
+                                    var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                                    //console.log(parentRowData.idtipo)
+                                    //console.log(parentRowData.idgrupo)
                                     $.ajax({
                                         type: "GET",
-                                        url: '/sic/texto/' + thisval,
+                                        url: '/sic/texto/' + thisval + '/' + parentRowData.idgrupo,
                                         success: function (data) {
-                                            $("input#titulo").val(data[0].titulo);
-                                            tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
+                                            if (data) {
+                                                $("input#titulo").val(data[0].nombrecorto);
+                                                //tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
+                                                tinyMCE.activeEditor.setContent(data[0].glosaclausula);
+                                            } else {
+                                                $("input#titulo").val('');
+                                                tinyMCE.activeEditor.setContent('');
+                                            }
                                         }
                                     });
                                 }
