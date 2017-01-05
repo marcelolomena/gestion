@@ -38,6 +38,7 @@
         "busboy": "latest",
         "async": "latest",
         "csv": "latest",
-        "elementtree": "latest"
+        "elementtree": "latest",
+        "extract-zip": "latest"
     }
 }

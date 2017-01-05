@@ -14,11 +14,11 @@ var gridClausula = {
         tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
+        tmpl += "<div class='column-full'>Nombre<span style='color:red'>*</span>{titulo}</div>";
         tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{texto}</div>";
+        tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{glosa}</div>";
         tmpl += "</div>";
 
         tmpl += "<hr style='width:100%;'/>";
@@ -35,7 +35,7 @@ var gridClausula = {
                     name: 'id', index: 'id', key: true, hidden: true,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }
                 },
-                { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
+                { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.titulo", },
                 { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
@@ -107,7 +107,7 @@ var gridClausula = {
                                         type: "GET",
                                         url: '/sic/texto/' + thisval,
                                         success: function (data) {
-                                            $("input#nombrecorto").val(data[0].nombrecorto);
+                                            $("input#titulo").val(data[0].titulo);
                                             tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
                                         }
                                     });
@@ -116,9 +116,9 @@ var gridClausula = {
                         }]
                     },
                 },
-                { name: 'nombrecorto', index: 'nombrecorto', width: 300, align: "left", editable: true, jsonmap: "plantillaclausula.nombrecorto", },
+                { name: 'titulo', index: 'titulo', width: 300, align: "left", editable: true },
                 {
-                    name: 'texto', index: 'texto', editable: true,
+                    name: 'glosa', index: 'glosa', editable: true,
                     width: 1280, hidden: false,
                     edittype: 'custom',
                     editoptions: {
@@ -273,9 +273,9 @@ var gridClausula = {
                         return [false, "Clase: Debe escoger un valor", ""];
                     } else if (parseInt(postdata.idclausulaplantilla) == 0) {
                         return [false, "Código: Debe escoger un valor", ""];
-                    } if (postdata.nombrecorto.trim().length == 0) {
+                    } if (postdata.titulo.trim().length == 0) {
                         return [false, "Nombre: Debe ingresar un nombre", ""];
-                    } if (postdata.texto.trim().length == 0) {
+                    } if (postdata.glosa.trim().length == 0) {
                         return [false, "Texto: Debe ingresar un texto", ""];
                     } else {
                         return [true, "", ""]
@@ -323,9 +323,9 @@ var gridClausula = {
                         return [false, "Clase: Debe escoger un valor", ""];
                     } else if (parseInt(postdata.idclausulaplantilla) == 0) {
                         return [false, "Código: Debe escoger un valor", ""];
-                    } if (postdata.nombrecorto.trim().length == 0) {
+                    } if (postdata.titulo.trim().length == 0) {
                         return [false, "Nombre: Debe ingresar un nombre", ""];
-                    } if (postdata.texto.trim().length == 0) {
+                    } if (postdata.glosa.trim().length == 0) {
                         return [false, "Texto: Debe ingresar un texto", ""];
                     } else {
                         return [true, "", ""]
@@ -340,7 +340,7 @@ var gridClausula = {
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
                     ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.nombrecorto);
+                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.titulo);
                 },
                 afterSubmit: function (response, postdata) {
                     var json = response.responseText;

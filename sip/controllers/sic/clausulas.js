@@ -13,10 +13,10 @@ exports.action = function (req, res) {
 
 			models.clausulas.create({
 				idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-				idclausula: req.body.idclausulaplantilla,
-				uid: req.session.passport.user,
-				nombrecorto: req.body.nombrecorto,
-				texto: req.body.texto,
+				idplantillaclausula: req.body.idclausulaplantilla,
+				//uid: req.session.passport.user,
+				titulo: req.body.titulo,
+				blosa: req.body.glosa,
 				borrado: 1
 			}).then(function (clausulas) {
 				res.json({ error: 0, glosa: '' });
@@ -28,10 +28,10 @@ exports.action = function (req, res) {
 			break;
 		case "edit":
 			models.clausulas.update({
-				idclausula: req.body.idclausulaplantilla,
-				uid: req.session.passport.user,
-				nombrecorto: req.body.nombrecorto,
-				texto: req.body.texto
+				idplantillaclausula: req.body.idclausulaplantilla,
+				//uid: req.session.passport.user,
+				titulo: req.body.titulo,
+				blosa: req.body.blosa
 			}, {
 					where: {
 						id: req.body.id
@@ -82,12 +82,11 @@ exports.list = function (req, res) {
 		"data": req.params.id
 	}];
 
+
 	utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
 		if (data) {
-
 			models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
 			models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
-			//models.clausulas.belongsTo(models.user, { foreignKey: 'uid' });
 			models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' })
 
 			models.clausulas.count({
@@ -106,9 +105,7 @@ exports.list = function (req, res) {
 						include: [
 							models.clase
 						]
-					}/*, {
-						model: models.user
-					}*/
+					}
 					]
 				}).then(function (clausulas) {
 					return res.json({ records: records, total: total, page: page, rows: clausulas });
@@ -127,27 +124,38 @@ exports.list = function (req, res) {
 }
 
 exports.clases = function (req, res) {
-	var sql = `
-                select e.id, e.nombre from art_user a
-                join sip.usr_rol b on a.uid=b.uid
-                join sip.rol c on b.rid = c.id 
-                join sic.rol_clase d on d.rid= b.rid
-                join sic.clase e on d.cid=e.id
-                where a.uid = :uid
-	                `
-	sequelize.query(sql,
-		{
-			replacements: { uid: req.session.passport.user },
-			type: sequelize.QueryTypes.SELECT
-		}
-	).then(function (clases) {
-		logger.debug(clases);
+
+	models.clase.findAll({
+		attributes: [['id', 'id'], ['titulo', 'nombre']],
+	}).then(function (clases) {
 		return res.json(clases);
 	}).catch(function (err) {
 		logger.error(err.message);
 		res.json({ error_code: 1 });
 	});
 
+	/*	
+		var sql = `
+					select e.id, e.nombre from art_user a
+					join sip.usr_rol b on a.uid=b.uid
+					join sip.rol c on b.rid = c.id 
+					join sic.rol_clase d on d.rid= b.rid
+					join sic.clase e on d.cid=e.id
+					where a.uid = :uid
+						`
+		sequelize.query(sql,
+			{
+				replacements: { uid: req.session.passport.user },
+				type: sequelize.QueryTypes.SELECT
+			}
+		).then(function (clases) {
+			logger.debug(clases);
+			return res.json(clases);
+		}).catch(function (err) {
+			logger.error(err.message);
+			res.json({ error_code: 1 });
+		});
+	*/
 }
 
 exports.plantillas = function (req, res) {
@@ -155,7 +163,7 @@ exports.plantillas = function (req, res) {
 	models.plantillaclausula.findAll({
 		order: 'id ASC',
 		attributes: ['id', 'codigo'],
-		where: { cid: req.params.id }
+		where: { idclase: req.params.id }
 	}).then(function (plantillas) {
 		return res.json(plantillas);
 	}).catch(function (err) {
@@ -946,6 +954,7 @@ exports.default = function (req, res) {
 
 		models.toc.findAll({
 			attributes: [['id', 'id']],
+			//order: 'id ASC',
 			where: {
 				idplantillaclausula: {
 					$ne: null
@@ -957,24 +966,60 @@ exports.default = function (req, res) {
 					model: models.plantillaclausula,
 					required: true,
 					include: [{
-						attributes: [['titulo', 'titulo'], ['glosa', 'glosa'], ['idgrupo', 'idgrupo']], model: models.cuerpoclausula, required: true,
+						attributes: [
+							['idplantillaclausula', 'idplantillaclausula'],
+							['titulo', 'titulo'],
+							['glosa', 'glosa'],
+							['idgrupo', 'idgrupo']
+						],
+						model: models.cuerpoclausula,
+						required: true,
 					}
 					]
 				},
 				{ attributes: [['titulo', 'titulo']], model: models.clase },
 			]
 		}).then(function (clausulas) {
-			console.dir(clausulas)
+			//console.dir(clausulas)
+			var inClau = []
 
 			for (var c in clausulas) {
 				var cuerpoclausulas = clausulas[c].plantillaclausula.cuerpoclausulas
-				var idplantilla = clausulas[c].plantillaclausula.id
 				for (var p in cuerpoclausulas) {
-					logger.debug(idplantilla + '-' + cuerpoclausulas[p].titulo)
+					//logger.debug("idplantilla = " + cuerpoclausulas[p].idplantillaclausula)
+					var item = {}
+					if (cuerpoclausulas[p].idgrupo == 15) {
+						item["idsolicitudcotizacion"] = req.params.id
+						item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
+						item["titulo"] = cuerpoclausulas[p].titulo
+						item["glosa"] = cuerpoclausulas[p].glosa
+						item["borrado"] = 1
+						inClau.push(item)
+					} else {
+						for (var i = 0; i < inClau.length; i++) {
+							//logger.debug(inClau[i]["idplantillaclausula"])
+							if (inClau[i]["idplantillaclausula"] === cuerpoclausulas[p].idplantillaclausula) {
+								//borrando el default 15 
+								inClau.splice(i)
+								item["idsolicitudcotizacion"] = req.params.id
+								item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
+								item["titulo"] = cuerpoclausulas[p].titulo
+								item["glosa"] = cuerpoclausulas[p].glosa
+								item["borrado"] = 1
+								inClau.push(item)
+							}
+						}
+					}
 				}
 			}
+			//console.dir(inClau)
+			models.clausulas.bulkCreate(inClau).then(function (events) {
+				return res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
+			}).catch(function (err) {
+				logger.error(err)
+				res.json({ message: err.message, success: false });
+			});
 
-			return res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
 		}).catch(function (err) {
 			logger.error(err.message);
 			return res.json({ message: '', success: false });
@@ -1012,7 +1057,6 @@ exports.default = function (req, res) {
 		*/
 
 	}).catch(function (err) {
-		console.error("PICO")
 		logger.error(err.message);
 	});
 
