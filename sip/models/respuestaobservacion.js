@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     idsolicitudobservacion: {
       type: DataTypes.INTEGER,
@@ -19,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'art_user',
+        model: 'user',
         key: 'uid'
       }
     },
@@ -40,6 +41,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'respuestaobservacion'
+    schema: 'sip',timestamps: false,tableName: 'respuestaobservacion'
   });
 };
