@@ -57,10 +57,10 @@ module.exports = function (passport) {
     router.route('/getcodigoart/:id')
         .get(isAuthenticated, contratoController.getCodigoart);        
         
-    router.route('/getlistasap/:id')
+    router.route('/getlistasap/:id/:id2')
         .get(isAuthenticated, contratoservicioController.getListaSAP);        
         
-    router.route('/getlistatareas/:id')
+    router.route('/getlistatareas/:id/:id2')
         .get(isAuthenticated, contratoservicioController.getListaTareas);               
         
     return router;

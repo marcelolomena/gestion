@@ -123,7 +123,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             { label: 'SAP', name: 'sap', width: 100, align: 'left', search: true, editable: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/getlistasap/' + proveedor,
+                    dataUrl: '/getlistasap/' + proveedor+'/'+codigoart,
                     buildSelect: function (response) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
@@ -133,7 +133,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var s = "<select>";//el default
                         s += '<option value="0">--Sin SAP--</option>';
                         $.each(data, function (i, item) {
-                            console.log("nombre:"+data[i].id+" = this:"+thissid);
+                            //console.log("nombre:"+data[i].id+" = this:"+thissid);
                             if (data[i].id == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' +  data[i].id+'-'+data[i].nombre + '</option>';
                             } else {
@@ -162,7 +162,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger CUI--</option>';
                         $.each(data, function (i, item) {
-                            console.log("nombre:"+data[i].id+" = this:"+thissid);
+                            //console.log("nombre:"+data[i].id+" = this:"+thissid);
                             if (data[i].id == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' +  data[i].cui+'-'+data[i].nombre + '</option>';
                             } else {
@@ -218,7 +218,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             });
                             $.ajax({
                                 type: "GET",
-                                url: '/getlistatareas/'+ thissid,
+                                url: '/getlistatareas/'+ thissid+'/'+proveedor,
                                 async: false,
                                 success: function (data) {
                                     var r = "<select>";
@@ -244,10 +244,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'Tarea', name: 'tarea', search: false, editable: true, hidden: false,
                 edittype: "select",
                 editoptions: {                   
-                    dataUrl: '/getlistatareas/'+0,
+                    dataUrl: '/getlistatareas/0/0',
                     postData: function (rowid, value, cmName) {
                         return {
-                            idsrv: $('#' + subgrid_table_id).getRowData(rowid).idservicio
+                            idsrv: $('#' + subgrid_table_id).getRowData(rowid).idservicio,
+                            idproveedor: proveedor
                         }
                     },                    
                     buildSelect: function (response) {
@@ -595,11 +596,11 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var thissid = rowData.desde;
                         console.log(response);
                         var data = JSON.parse(response);
-                        console.log(data);
+                        //console.log(data);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Periodo--</option>';
                         $.each(data, function (i, item) {
-                            console.log("***desde:" + data[i].id + ", " + thissid);
+                            //console.log("***desde:" + data[i].id + ", " + thissid);
                             if (data[i].id == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                             } else {
@@ -625,13 +626,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
                         var thissid = rowData.desde;
-                        console.log(response);
+                        //console.log(response);
                         var data = JSON.parse(response);
                         console.log(data);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger Periodo--</option>';
                         $.each(data, function (i, item) {
-                            console.log("***desde:" + data[i].id + ", " + thissid);
+                            //console.log("***desde:" + data[i].id + ", " + thissid);
                             if (data[i].id == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                             } else {
