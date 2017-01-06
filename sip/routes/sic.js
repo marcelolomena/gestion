@@ -93,7 +93,7 @@ module.exports = function (passport) {
     router.route('/sic/plantillas/:id')
         .get(isAuthenticated, clausulasController.plantillas);
 
-    router.route('/sic/texto/:id')
+    router.route('/sic/texto/:id/:gid')
         .get(isAuthenticated, clausulasController.texto);
 
     router.route('/sic/proveedoressugeridostriada/:id')
