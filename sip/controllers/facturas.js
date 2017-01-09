@@ -128,9 +128,14 @@ exports.action = function (req, res) {
   var action = req.body.oper;
   logger.debug("Action:" + action);
   logger.debug("Id:" + req.body.id);
-  var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
-  var impuesto = req.body.impuesto.split(".").join("").replace(",", ".");
-  var montototal = req.body.montototal.split(".").join("").replace(",", ".");
+  var montoneto;
+  var impuesto;
+  var montototal;
+  if (action == "add" || action =="edit"){
+    montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
+    impuesto = req.body.impuesto.split(".").join("").replace(",", ".");
+    montototal = req.body.montototal.split(".").join("").replace(",", ".");
+  }
   
   switch (action) {
     case "add":
@@ -189,12 +194,13 @@ exports.actionDetalle = function (req, res) {
   logger.debug("Id:" + req.params.id);
   console.log("req.body.idprefactura:" + req.body.idprefactura);
   var idprefact = (req.body.idprefactura > 0) ? req.body.idprefactura : 'NULL';
-  if (req.body.montoneto != ""){
-    var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
-  }
+
 
   switch (action) {
     case "add":
+      if (req.body.montoneto != ""){
+        var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
+      }    
       var sql0 = "select * from sip.detallefactura where idfacturacion=" + req.body.idfacturacion;
       console.log("query0:" + sql0);
       sequelize.query(sql0).spread(function (rows) {
@@ -258,6 +264,9 @@ exports.actionDetalle = function (req, res) {
       });
       break;
     case "edit":
+      if (req.body.montoneto != ""){
+        var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
+      }    
       var sql = "UPDATE sip.detallefactura  SET " +
         "idfacturacion = " + req.body.idfacturacion + ", " +
         "montoneto = " + req.body.montoneto + ", " +

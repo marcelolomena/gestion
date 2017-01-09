@@ -1,46 +1,30 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('solicitudobservacion', {
+  return sequelize.define('preguntaproveedor', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    idsolicitud: {
+    idsolicitudcotizacion: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'solicitudcotizacion',
         key: 'id'
       }
-    },
-    idtipoobservacion: {
+    },    
+    idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'valores',
+        model: 'proveedor',
         key: 'id'
       }
     },
-    idregistroobseracuerdotipo: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'valores',
-        key: 'id'
-      }
-    },
-    idrevelancia: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'valores',
-        key: 'id'
-      }
-    },
-    idusrorigen: {
+    idresponsable: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -48,15 +32,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'uid'
       }
     },
-    idusrdestino: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'user',
-        key: 'uid'
-      }
-    },
-    idestado: {
+    idtipo: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -64,12 +40,12 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    glosacorta: {
-      type: DataTypes.STRING,
+    pregunta: {
+      type: DataTypes.TEXT,
       allowNull: true
     },
-    glosalarga: {
-      type: DataTypes.STRING,
+    respuesta: {
+      type: DataTypes.TEXT,
       allowNull: true
     },
     borrado: {
@@ -77,6 +53,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'solicitudobservacion'
+    schema: 'sic',timestamps: false,tableName: 'preguntaproveedor'
   });
 };

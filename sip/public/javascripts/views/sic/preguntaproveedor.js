@@ -357,205 +357,11 @@ $(document).ready(function () {
                     if (item.glosarol === 'Negociador SIC') {
                         $("#add_" + thisId).addClass('ui-disabled');
                         $("#add_gridMaster").hide()
-                        /*
-                        $grid.jqGrid("showCol", "codigosolicitud")
-                        $grid.jqGrid("showCol", "negociador")
-                        $grid.jqGrid("showCol", "correonegociador")
-                        $grid.jqGrid("showCol", "fononegociador")
-                        $grid.jqGrid("showCol", "direccionnegociador")
-                        $grid.jqGrid("showCol", "numerorfp")
-                        $grid.jqGrid("showCol", "fechaenviorfp")
-                        $grid.jqGrid("showCol", "nombreinterlocutor1")
-                        $grid.jqGrid("showCol", "correointerlocutor1")
-                        $grid.jqGrid("showCol", "fonointerlocutor1")
-                        $grid.jqGrid("showCol", "nombreinterlocutor2")
-                        $grid.jqGrid("showCol", "correointerlocutor2")
-                        $grid.jqGrid("showCol", "fonointerlocutor2")
-                        $grid.jqGrid("showCol", "grupo")
-                        $grid.jqGrid("showCol", "tipo")
-                        */
                     }
                 });
             });
         }
     });
-
-    $grid.jqGrid('navGrid', '#pagerMaster', { edit: true, add: true, del: true, search: false },
-        {
-            editCaption: "Modifica Solicitud",
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: t1,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
-
-                if (parseInt(postdata.idcui) == 0) {
-                    return [false, "CUI: Debe escoger un valor", ""];
-                } else if (parseInt(postdata.idtecnico) == 0) {
-                    return [false, "Técnico: Debe escoger un valor", ""];
-                } else {
-                    if (postdata.fonointerlocutor1.trim().length == 0) {
-                        postdata.fonointerlocutor1 = null
-                    }
-                    if (postdata.fonointerlocutor2.trim().length == 0) {
-                        postdata.fonointerlocutor2 = null
-                    }
-                    if (postdata.fechaenviorfp.trim().length == 0) {
-                        postdata.fechaenviorfp = null
-                    }
-                    if (postdata.fononegociador.trim().length == 0) {
-                        postdata.fononegociador = null
-                    }
-                    
-                    return [true, "", ""]
-                }
-
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error != 0) {
-                    return [false, result.glosa, ""];
-                } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
-                    return [true, "", ""];
-                }
-            }, beforeShowForm: function (form) {
-                setTimeout(function () {
-                    $.get('/sic/getsession', function (data) {
-                        $.each(data, function (i, item) {
-                            if (item.glosarol === 'Negociador SIC') {
-                                $("#idcui", form).attr("disabled", true);
-                                $("#idtecnico", form).attr('readonly', 'readonly');
-                                $("#tipocontrato", form).attr('readonly', 'readonly');
-                                $("#codigoart", form).attr('readonly', 'readonly');
-                                $("#sap", form).attr('readonly', 'readonly');
-                                $("#descripcion", form).attr('readonly', 'readonly');
-                                //$("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
-                            } else if (item.glosarol === 'Técnico SIC') {
-                                $("#codigosolicitud", form).attr('readonly', 'readonly');
-                                $("#idclasificacionsolicitud", form).attr('disabled', 'disabled');
-                                $("#idnegociador", form).attr('disabled', 'disabled');
-                                $("#correonegociador", form).attr('readonly', 'readonly');
-                                $("#direccionnegociador", form).attr('readonly', 'readonly');
-                                $("#fononegociador", form).attr('readonly', 'readonly');
-                                $("#numerorfp", form).attr('readonly', 'readonly');
-                                $("#fechaenviorfp", form).attr('disabled', 'disabled');
-                                $("#nombreinterlocutor1", form).attr('readonly', 'readonly');
-                                $("#correointerlocutor1", form).attr('readonly', 'readonly');
-                                $("#fonointerlocutor1", form).attr('readonly', 'readonly');
-                                $("#nombreinterlocutor2", form).attr('readonly', 'readonly');
-                                $("#correointerlocutor2", form).attr('readonly', 'readonly');
-                                $("#fonointerlocutor2", form).attr('readonly', 'readonly');
-                                $("#idgrupo", form).attr('disabled', 'disabled');
-                                $("#idtipo", form).attr('disabled', 'disabled');
-                            }
-                        });
-                    });
-                }, 100);
-            }
-
-        }, {
-            addCaption: "Agrega Solicitud",
-            closeAfterAdd: true,
-            recreateForm: true,
-            mtype: 'POST',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: t1,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, beforeSubmit: function (postdata, formid) {
-
-                if (parseInt(postdata.idcui) == 0) {
-                    return [false, "CUI: Debe escoger un valor", ""];
-                } else if (parseInt(postdata.idtecnico) == 0) {
-                    return [false, "Técnico: Debe escoger un valor", ""];
-                } else if (postdata.descripcion.trim().length == 0) {
-                    return [false, "Descripción: Debe ingresar una descripción", ""];
-                } else {
-                    postdata.codigosolicitud = null;
-                    postdata.idnegociador = null;
-                    postdata.correonegociador = null;
-                    postdata.fononegociador = null;
-                    postdata.direccionnegociador = null;
-                    postdata.numerorfp = null;
-                    postdata.fechaenviorfp = null;
-                    postdata.nombreinterlocutor1 = null;
-                    postdata.correointerlocutor1 = null;
-                    postdata.fonointerlocutor1 = null;
-                    postdata.nombreinterlocutor2 = null;
-                    postdata.correointerlocutor2 = null;
-                    postdata.fonointerlocutor2 = null;
-                    postdata.idtipo = null;
-                    postdata.idgrupo = null;
-
-                    return [true, "", ""]
-                }
-
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error != 0) {
-                    return [false, result.glosa, ""];
-                } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
-                    return [true, "", ""];
-                }
-            }, beforeShowForm: function (form) {
-                setTimeout(function () {
-                    $.get('/sic/getsession', function (data) {
-                        $.each(data, function (i, item) {
-                            if (item.glosarol === 'Negociador SIC') {
-                                $("#d_idcui", form).hide();
-                                $("#d_idtecnico", form).hide();
-                                $("#d_tipocontrato", form).hide();
-                                $("#d_codigoart", form).hide();
-                                $("#d_sap", form).hide();
-                                $("#d_descripcion", form).hide();
-                                $("#d_idclasificacionsolicitud", form).hide();
-                            } else if (item.glosarol === 'Técnico SIC') {
-                                $("#d_codigosolicitud", form).hide();
-                                $("#d_idclasificacionsolicitud", form).hide();
-                                $("#d_idnegociador", form).hide();
-                                $("#d_correonegociador", form).hide();
-                                $("#d_direccionnegociador", form).hide();
-                                $("#d_fononegociador", form).hide();
-                                $("#d_numerorfp", form).hide();
-                                $("#d_fechaenviorfp", form).hide();
-                                $("#d_nombreinterlocutor1", form).hide();
-                                $("#d_correointerlocutor1", form).hide();
-                                $("#d_fonointerlocutor1", form).hide();
-                                $("#d_nombreinterlocutor2", form).hide();
-                                $("#d_correointerlocutor2", form).hide();
-                                $("#d_fonointerlocutor2", form).hide();
-                                $("#d_tipo", form).hide();
-                                $("#d_grupo", form).hide();
-                            }
-                        });
-                    });
-                }, 100);
-            }
-        }, {
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            mtype: 'POST',
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (!result.success)
-                    return [false, result.message, ""];
-                else
-                    return [true, "", ""]
-            }
-
-        }, {
-
-        });
 
     function returnTecnico(cellValue, options, rowdata, action) {
         if (rowdata.tecnico != null)
@@ -573,45 +379,27 @@ $(document).ready(function () {
 
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
-        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
-        tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
-        tabs += "<li><a data-target='#calendario' data-toggle='tab'>Calendario</a></li>"
-        tabs += "<li><a data-target='#responsables' data-toggle='tab'>Responsables</a></li>"
-        tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
-        tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
-        tabs += "<li><a data-target='#anexos' data-toggle='tab'>Anexos</a></li>"
-        tabs += "<li><a data-target='#fechascriticas' data-toggle='tab'>Fechas Críticas</a></li>"
-        tabs += "<li><a data-target='#bitacora' data-toggle='tab'>Bitácora</a></li>"
+        tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
+        tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas</a></li>"
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"
-        tabs += "<div class='tab-pane active' id='documentos'><div class='container-fluid'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div></div>"
-        tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridServ'></div></div>"
-        tabs += "<div class='tab-pane' id='foro'></div>"
-        tabs += "<div class='tab-pane' id='calendario'></div>"
-        tabs += "<div class='tab-pane' id='responsables'></div>"
-        tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
-        tabs += "<div class='tab-pane' id='criterios'></div>"
-        tabs += "<div class='tab-pane' id='anexos'></div>"
-        tabs += "<div class='tab-pane' id='fechascriticas'></div>"
-        tabs += "<div class='tab-pane' id='bitacora'></div>"
+        tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
+        tabs += "<div class='tab-pane' id='preguntas'><table id='preguntas_t_" + parentRowKey + "'></table><div id='navGridPre'></div></div>"
         tabs += "</div>"
 
         $("#" + parentRowID).append(tabs);
-        $('#documentos_tab_' + parentRowKey).addClass('media_node active span')
+        $('#proveedores_tab_' + parentRowKey).addClass('media_node active span')
         $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
-            if (targ === '#documentos') {
-                gridDoc.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#servicios') {
-                gridServ.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#clausulas') {
-                gridClausula.renderGrid(loadurl, parentRowKey, targ)
-            }
+            if (targ === '#proveedores') {
+                gridProveedor.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#preguntas') {
+                gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
+            } 
 
             $this.tab('show');
             return false;
@@ -621,13 +409,11 @@ $(document).ready(function () {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            if (targ === '#documentos') {
-                gridDoc.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#servicios') {
-                gridServ.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#clausulas') {
-                gridClausula.renderGrid(loadurl, parentRowKey, targ)
-            }
+            if (targ === '#proveedores') {
+                gridProveedor.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#preguntas') {
+                gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
+            } 
 
             $this.tab('show');
             return false;

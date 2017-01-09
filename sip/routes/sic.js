@@ -8,10 +8,16 @@ var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 var tocController = require('../controllers/sic/toc');
+var proveedoresController = require('../controllers/sic/proveedores');
+var preguntasController = require('../controllers/sic/preguntas');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
         res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.get('/sic/preguntaproveedor', isAuthenticated, function (req, res) {
+        res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/grid_solicitudcotizacion')
@@ -21,14 +27,29 @@ module.exports = function (passport) {
     router.route('/sic/documentos/:id')
         .get(isAuthenticated, documentosController.list);
 
+    router.route('/sic/proveedores/:id')
+        .get(isAuthenticated, proveedoresController.list);
+
+    router.route('/sic/proveedorespre/:id')
+        .get(isAuthenticated, preguntasController.proveedorespre);
+
+    router.route('/sic/preguntas/:id')
+        .get(isAuthenticated, preguntasController.list);
+
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
+
+    router.route('/sic/pre/falsa')
+        .post(isAuthenticated, preguntasController.action);
 
     router.route('/sic/documentos/action')
         .post(isAuthenticated, documentosController.action);
 
     router.route('/sic/documentos/upload')
         .post(isAuthenticated, documentosController.upload);
+
+    router.route('/sic/preguntas/upload')
+        .post(isAuthenticated, preguntasController.archivo);
 
     router.get('/sic/getsession', function (req, res) {
         //console.dir(req.session.passport.sidebar[0])
@@ -93,7 +114,7 @@ module.exports = function (passport) {
     router.route('/sic/plantillas/:id')
         .get(isAuthenticated, clausulasController.plantillas);
 
-    router.route('/sic/texto/:id')
+    router.route('/sic/texto/:id/:gid')
         .get(isAuthenticated, clausulasController.texto);
 
     router.route('/sic/proveedoressugeridostriada/:id')
@@ -117,7 +138,7 @@ module.exports = function (passport) {
     router.route('/sic/getcalculadoconclase/:id')
         .get(isAuthenticated, serviciosController.getcalculadoconclase);
 
-    router.route('/sic/pruebahtmlword/:id')
+    router.route('/sic/documentoword/:id/:gid')
         .get(isAuthenticated, clausulasController.download);
 
     router.route('/sic/downloadclausulas/:id')
@@ -151,6 +172,9 @@ module.exports = function (passport) {
 
     router.route('/sic/tocclases/action')
         .post(isAuthenticated, tocController.action2);
+
+    router.route('/sic/preguntaproveedor/action')
+        .post(isAuthenticated, proveedoresController.action);
 
     router.route('/sic/clasestoc/:id')
         .get(isAuthenticated, tocController.getclasestoc);

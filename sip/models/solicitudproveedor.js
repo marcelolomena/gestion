@@ -1,46 +1,34 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('respuestaobservacion', {
+  return sequelize.define('solicitudproveedor', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    idsolicitudobservacion: {
+    idsolicitud: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'solicitudobservacion',
+        model: 'solicitudcotizacion',
         key: 'id'
       }
     },
-    idusrorigen: {
+    idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'user',
-        key: 'uid'
-      }
-    },
-    iddocumento: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'documentoscotizacion',
+        model: 'proveedor',
         key: 'id'
       }
-    },
-    asunto: {
-      type: DataTypes.STRING,
-      allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'respuestaobservacion'
+    schema: 'sic',timestamps: false,tableName: 'solicitudproveedor'
   });
 };

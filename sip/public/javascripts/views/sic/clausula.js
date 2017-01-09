@@ -14,11 +14,11 @@ var gridClausula = {
         tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
+        tmpl += "<div class='column-full'>Nombre<span style='color:red'>*</span>{titulo}</div>";
         tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{texto}</div>";
+        tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{glosa}</div>";
         tmpl += "</div>";
 
         tmpl += "<hr style='width:100%;'/>";
@@ -35,7 +35,7 @@ var gridClausula = {
                     name: 'id', index: 'id', key: true, hidden: true,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }
                 },
-                { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.nombre", },
+                { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.titulo", },
                 { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
@@ -103,12 +103,21 @@ var gridClausula = {
                             type: 'change', fn: function (e) {
                                 var thisval = $(this).val();
                                 if (thisval) {
+                                    var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                                    //console.log(parentRowData.idtipo)
+                                    //console.log(parentRowData.idgrupo)
                                     $.ajax({
                                         type: "GET",
-                                        url: '/sic/texto/' + thisval,
+                                        url: '/sic/texto/' + thisval + '/' + parentRowData.idgrupo,
                                         success: function (data) {
-                                            $("input#nombrecorto").val(data[0].nombrecorto);
-                                            tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
+                                            if (data) {
+                                                $("input#titulo").val(data[0].nombrecorto);
+                                                //tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
+                                                tinyMCE.activeEditor.setContent(data[0].glosaclausula);
+                                            } else {
+                                                $("input#titulo").val('');
+                                                tinyMCE.activeEditor.setContent('');
+                                            }
                                         }
                                     });
                                 }
@@ -116,9 +125,9 @@ var gridClausula = {
                         }]
                     },
                 },
-                { name: 'nombrecorto', index: 'nombrecorto', width: 300, align: "left", editable: true, jsonmap: "plantillaclausula.nombrecorto", },
+                { name: 'titulo', index: 'titulo', width: 300, align: "left", editable: true },
                 {
-                    name: 'texto', index: 'texto', editable: true,
+                    name: 'glosa', index: 'glosa', editable: true,
                     width: 1280, hidden: false,
                     edittype: 'custom',
                     editoptions: {
@@ -208,8 +217,8 @@ var gridClausula = {
                         position: "last",
                         onClickButton: function () {
                             var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                            console.log(parentRowData.idtipo)
-                            console.log(parentRowData.idgrupo)
+                            //console.log(parentRowData.idtipo)
+                            //console.log(parentRowData.idgrupo)
 
                             /*
                             $.getJSON('/sic/parametros2/grupoclausula', function(data) {
@@ -273,9 +282,9 @@ var gridClausula = {
                         return [false, "Clase: Debe escoger un valor", ""];
                     } else if (parseInt(postdata.idclausulaplantilla) == 0) {
                         return [false, "Código: Debe escoger un valor", ""];
-                    } if (postdata.nombrecorto.trim().length == 0) {
+                    } if (postdata.titulo.trim().length == 0) {
                         return [false, "Nombre: Debe ingresar un nombre", ""];
-                    } if (postdata.texto.trim().length == 0) {
+                    } if (postdata.glosa.trim().length == 0) {
                         return [false, "Texto: Debe ingresar un texto", ""];
                     } else {
                         return [true, "", ""]
@@ -323,9 +332,9 @@ var gridClausula = {
                         return [false, "Clase: Debe escoger un valor", ""];
                     } else if (parseInt(postdata.idclausulaplantilla) == 0) {
                         return [false, "Código: Debe escoger un valor", ""];
-                    } if (postdata.nombrecorto.trim().length == 0) {
+                    } if (postdata.titulo.trim().length == 0) {
                         return [false, "Nombre: Debe ingresar un nombre", ""];
-                    } if (postdata.texto.trim().length == 0) {
+                    } if (postdata.glosa.trim().length == 0) {
                         return [false, "Texto: Debe ingresar un texto", ""];
                     } else {
                         return [true, "", ""]
@@ -340,7 +349,7 @@ var gridClausula = {
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
                     ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.nombrecorto);
+                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.titulo);
                 },
                 afterSubmit: function (response, postdata) {
                     var json = response.responseText;
@@ -359,12 +368,15 @@ var gridClausula = {
             caption: "",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
-            title: "Generar Documento",
+            title: "Generar Documentito",
             position: "last",
             onClickButton: function () {
                 //var rowKey = $gridTab.getGridParam("selrow");
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
                 try {
-                    var url = '/sic/pruebahtmlword/' + parentRowKey;
+                    var url = '/sic/documentoword/' + parentRowKey + '/' + parentRowData.idgrupo;
                     $gridTab.jqGrid('excelExport', { "url": url });
                 } catch (e) {
                     console.log("error: " + e)

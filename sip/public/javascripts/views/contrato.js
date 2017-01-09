@@ -36,6 +36,7 @@ $(document).ready(function () {
     template += "<div class='column-half'>pmoresponsable{pmoresponsable}</div>";
     template += "<div class='column-half'>tiposolicitud{tiposolicitud}</div>";
     template += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
+    template += "<div class='column-full'>{program_id}</div>";    
     template += "</div>";
     
     template += "<div class='form-row'>";
@@ -415,7 +416,7 @@ $(document).ready(function () {
             editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10, readonly: 'readonly'} 
         },   
         {
-            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
+            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: true,
             hidden: true, editoptions: {defaultValue: "0"}
         }                     
     ];
