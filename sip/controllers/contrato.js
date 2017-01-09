@@ -235,6 +235,7 @@ exports.action = function (req, res) {
         pmoresponsable: req.body.pmoresponsable,
         idcontactofacturacion: req.body.idcontactofacturacion,
         codigoart: req.body.codigoart,
+        program_id: req.body.program_id,
         borrado: 1
       }).then(function (contrato) {
         res.json({ error_code: 0 });
@@ -259,7 +260,8 @@ exports.action = function (req, res) {
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
         idcontactofacturacion:req.body.idcontactofacturacion,
-        codigoart: req.body.codigoart
+        codigoart: req.body.codigoart,
+        program_id: req.body.program_id
       }, {
           where: {
             id: req.body.id

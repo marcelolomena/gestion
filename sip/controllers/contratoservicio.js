@@ -503,28 +503,31 @@ exports.cuiforservice = function (req, res) {
         res.json({ error_code: 1 });
     });*/
     var sap = req.params.sap;
-    if (sap == "0"){
+    console.log("sap:"+sap);
+    if (sap == 'Continuidad'){
         var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
             "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND b.tiposervicio='Continuidad' " +
             "GROUP BY a.idservicio, b.nombre";
+            console.log("sql1:"+sql+ "sap:"+sap);
         sequelize.query(sql).spread(function (cuis) {
             logger.debug("Rescato servicios");
             res.json(cuis);
         }).catch(function (err) {
             logger.error(err)
             res.json({ error_code: 1 });
-        });
+        });       
     } else {
         var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
             "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND  b.tarea IS NOT NULL " +
             "GROUP BY a.idservicio, b.nombre, b.tarea";
+        console.log("sql2:"+sql);
         sequelize.query(sql).spread(function (cuis) {
             logger.debug("Rescato servicios");
             res.json(cuis);
         }).catch(function (err) {
             logger.error(err)
             res.json({ error_code: 1 });
-        });        
+        });              
     }
 }
 
@@ -661,10 +664,20 @@ exports.getSaldoPresup = function (req, res) {
 exports.getListaSAP = function (req, res) {
     logger.debug("En getSaldoPresup");
     var proveedor = req.params.id;
+    var art = req.params.id2;
 
-    var sql = "SELECT b.sap as id, b.nombreproyecto as nombre FROM sip.tareaenvuelo a JOIN sip.presupuestoenvuelo b ON a.idpresupuestoenvuelo=b.id "+
-        "WHERE a.idproveedor = " +proveedor+" "+
+    var sql = "SELECT b.sap as id, b.nombreproyecto as nombre FROM sip.tareaenvuelo a "+
+        "JOIN sip.presupuestoenvuelo b ON a.idpresupuestoenvuelo=b.id "+
+        "JOIN art_program c ON b.program_id=c.program_id "+
+        "WHERE a.idproveedor = " +proveedor+" AND c.program_code="+art
         "GROUP BY b.sap, b.nombreproyecto ";
+           
+        
+    /*var sql = "select a.sap from sip.presupuestoenvuelo a "+
+        "join sip.tareaenvuelo b on b.idpresupuestoenvuelo = a.id "+
+        "join art_program c on c.program_id=a.program_id "+
+        "where c.program_code = "+
+        " group by a.sap";*/
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (saps) {
         logger.debug("En getSAP2:" + saps);
@@ -678,17 +691,23 @@ exports.getListaSAP = function (req, res) {
 exports.getListaTareas = function (req, res) {
     logger.debug("En getSaldoPresup");
     var servicio1 = req.query.idsrv;
+    var proveedor1 = req.query.idproveedor
     var servicio2 = req.params.id;
+    var proveedor2 = req.params.id2
     var servicio3 = 0;
-    console.log("servicio3:"+servicio3);
+    var proveedor =0;
+    console.log("serv       icio3:"+servicio3);
     if (servicio1>0){
         servicio3=servicio1;
+        proveedor=proveedor1;
     } else if (servicio2>0) {
         servicio3=servicio2;
+        proveedor=proveedor2;
     } 
 
-    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio="+servicio3+" "+  
-        "GROUP BY tarea ";
+    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio="+servicio3+
+        " AND  idproveedor="+proveedor+  
+        " GROUP BY tarea ";
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (tareas) {
         logger.debug("En getSAP2:" + tareas);
