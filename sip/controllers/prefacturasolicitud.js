@@ -125,7 +125,7 @@ exports.action = function (req, res) {
       var sql="UPDATE sip.solicitudaprobacion SET "+
       "aprobado="+req.body.aprobado+", montoaprobado="+req.body.montoaprobado+
       ", glosaaprobacion='"+req.body.glosaaprobacion+"', montoaprobadopesos="+parseFloat(req.body.montoaprobado)+"*factorconversion"+
-      ", montomulta="+req.body.montomulta+", montomultapesos="+parseFloat(req.body.montomulta)+"*factorconversion"+
+      ", montomulta="+req.body.montomulta+", montomultapesos="+parseFloat(req.body.montomulta)+"*factorconversion"+ ", montoapagar="+(parseFloat(req.body.montoaprobado)+parseFloat(req.body.montoabono)-parseFloat(req.body.montomulta))+
       ", montototalpesos=("+parseFloat(req.body.montoaprobado)+"*factorconversion)-("+parseFloat(req.body.montomulta)+"*factorconversion)"+
       ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+", glosaabono='"+req.body.glosaabono+"' "+
       ", idcausalmulta="+req.body.idcausalmulta+",montoabono="+req.body.montoabono+", montoabonopesos="+parseFloat(req.body.montoabono)+"*factorconversion "+

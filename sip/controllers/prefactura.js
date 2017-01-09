@@ -326,7 +326,7 @@ UNION
                         'idservicio': rows[i].idservicio,
                         'glosaservicio': rows[i].glosaservicio,
                         'idcontrato': rows[i].idcontrato,
-                        'montoapagar': rows[i].montoapagar,
+                        //'montoapagar': rows[i].montoapagar,
                         'montoaprobado': 0,
                         'montomulta': 0,
                         'idcausalmulta': 0,

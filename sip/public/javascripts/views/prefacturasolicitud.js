@@ -412,6 +412,15 @@ function showDocumentos(cui, periodo, proveedor) {
                 //edittype: "textarea"
             },
             {
+                label: 'Monto Total',
+                name: 'montoapagar',
+                width: 100,
+                search: false,
+                align: 'right',
+                editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            },
+            {
                 label: 'Calificación', name: 'calificacion', width: 120, align: 'left', sortable: false, search: false, editable: true,
                 editrules: { edithidden: false }, hidedlg: true
             }            
