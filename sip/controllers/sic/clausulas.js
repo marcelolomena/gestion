@@ -175,6 +175,7 @@ exports.download = function (req, res) {
 		where: { idsolicitudcotizacion: req.params.id },
 		include: [
 			{
+				attributes: [['descripcion', 'descripcion']],
 				model: models.solicitudcotizacion
 			}, {
 				model: models.plantillaclausula,
@@ -185,10 +186,9 @@ exports.download = function (req, res) {
 			}
 		]
 	}).then(function (clausulas) {
-		console.dir(clausulas)
+		//console.dir(clausulas)
 		//logger.debug(clausulas.titulo)
 
-		/*
 				var result = `
 				<apex:page sidebar="false" contentType="application/msword" cache="true">
 					<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='<a target="_blank" href="http://www.w3.org/TR/REC-html40'" rel="nofollow">http://www.w3.org/TR/REC-html40'</a>>
@@ -857,7 +857,7 @@ exports.download = function (req, res) {
 		lang=ES-CL style='font-size:14.0pt;line-height:115%;font-family:"Cambria",serif;
 		color:#365F91'>&nbsp;</span></b></p>
 						`
-		
+/*		
 				for (var f in clausulas) {
 					var clase = clausulas[f].plantillaclausula.clase.nombre
 					var code = clausulas[f].plantillaclausula.codigo
@@ -880,7 +880,18 @@ exports.download = function (req, res) {
 					result += "<br/>"
 		
 				}
-		
+*/
+		for (var f in clausulas) {
+			var titulo = clausulas[f].titulo
+			var glosa = clausulas[f].glosa
+
+			result += '<h1>' + titulo + '</h1>'
+
+			result += '<h2>' + glosa + '</h2>'
+
+			result += "<br/>"
+
+		}		
 				result +=
 					`
 		</div>
@@ -895,7 +906,7 @@ exports.download = function (req, res) {
 				res.setHeader('Content-disposition', hdr);
 				res.set('Content-Type', 'application/msword;charset=utf-8');
 				res.status(200).send(result);
-		*/
+
 	}).catch(function (err) {
 		logger.error(err.message);
 		res.status(500).send(err.message);

@@ -11,7 +11,7 @@ var async = require('async');
 var csv = require('csv');
 var co = require('co');
 var bulk = require("../../utils/bulk");
-
+var nodeExcel = require('excel-export');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -21,11 +21,11 @@ exports.action = function (req, res) {
     switch (action) {
         case "add":
 
-            res.json({ id: req.body.idsolicitudcotizacio, success: true });
+            res.json({ id: req.body.idsolicitudcotizacion, idproveedor: req.body.idproveedor, success: true });
 
             break;
         case "del":
-            models.solicitudproveedor.destroy({
+            models.preguntaproveedor.destroy({
                 where: {
                     id: req.body.id
                 }
@@ -40,6 +40,38 @@ exports.action = function (req, res) {
             });
             break;
     }
+}
+
+exports.asignar = function (req, res) {
+    models.preguntaproveedor.update({
+        idresponsable: req.body.idresponsable,
+    }, {
+            where: {
+                id: req.body.id
+            }
+        }).then(function (preguntaproveedor) {
+            return res.json({ message: 'Exito', success: true });
+        }).catch(function (err) {
+            logger.error(err)
+            return res.json({ message: err.message, success: false });
+        });
+
+}
+
+exports.responder = function (req, res) {
+    models.preguntaproveedor.update({
+        respuesta: req.body.respuesta,
+    }, {
+            where: {
+                id: req.body.id
+            }
+        }).then(function (preguntaproveedor) {
+            return res.json({ message: 'Exito', success: true });
+        }).catch(function (err) {
+            logger.error(err)
+            return res.json({ message: err.message, success: false });
+        });
+
 }
 
 
@@ -84,7 +116,6 @@ exports.list = function (req, res) {
             models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
             models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
-            models.preguntaproveedor.belongsTo(models.valores, { foreignKey: 'idtipo' });
             models.preguntaproveedor.count({
                 where: data
             }).then(function (records) {
@@ -97,8 +128,7 @@ exports.list = function (req, res) {
                         {
                             model: models.proveedor
                         },
-                        { model: models.user },
-                        { model: models.valores }
+                        { model: models.user }
                     ]
                 }).then(function (preguntaproveedor) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
@@ -110,6 +140,55 @@ exports.list = function (req, res) {
         }
     });
 };
+
+exports.listresponsables = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idsolicitudcotizacion",
+        "op": "eq",
+        "data": req.params.id
+    }, {
+        "field": "idresponsable",
+        "op": "eq",
+        "data": req.session.passport.user
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
+            models.preguntaproveedor.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.preguntaproveedor.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [
+                        {
+                            model: models.proveedor
+                        },
+                        { model: models.user }
+                    ]
+                }).then(function (preguntaproveedor) {
+                    return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
 
 exports.archivo = function (req, res) {
 
@@ -132,92 +211,93 @@ exports.archivo = function (req, res) {
             });
         });
 
+        var awaitIdProveedor = new Promise(function (resolve, reject) {
+
+            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+                if (fieldname === 'idproveedor') {
+                    try {
+                        resolve(val)
+                    } catch (err) {
+                        return reject(err);
+                    }
+                } else {
+                    return;
+                }
+            });
+        });
+
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
-            var saveTo = path.join(__dirname, '..', 'temp', filename);//path al archivo
-
+            var saveTo = path.join(__dirname, '..' + path.sep + '..', 'temp', filename);//path al archivo
+            //logger.debug(saveTo)
             file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
 
-            awaitId.then(function (idDetail) {
+            awaitId.then(function (idsolicitudcotizacion) {
 
-                var carrusel = [];
+                awaitIdProveedor.then(function (idproveedor) {
 
-                var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
+                    logger.debug("idsolicitudcotizacion : " + idsolicitudcotizacion)
 
-                input.on('error', function (err) {
-                    logger.error(err);
+                    logger.debug("idproveedor : " + idproveedor)
+
+                    var carrusel = [];
+
+                    var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
+
+                    input.on('error', function (err) {
+                        logger.error(err);
+                        res.json({ error_code: 1, message: err, success: false });
+                    });
+
+                    var parser = csv.parse({
+                        delimiter: ';',
+                        columns: true,
+                        relax: true,
+                        relax_column_count: true,
+                        skip_empty_lines: true,
+                        trim: true
+                    }); //parser CSV       
+
+                    input.pipe(parser);
+
+                    parser.on('readable', function () {
+                        var line
+                        while (line = parser.read()) {
+                            var item = {}
+                            item['idsolicitudcotizacion'] = idsolicitudcotizacion;
+                            item['idproveedor'] = idproveedor;
+                            item['idresponsable'] = null;
+                            item['tipo'] = line.tipo;
+                            item['pregunta'] = line.pregunta;
+                            item['respuesta'] = null;
+                            item['borrado'] = 1;
+
+                            carrusel.push(item);
+                        }
+                    });
+
+                    parser.on('error', function (err) {
+                        logger.error(err);
+                        res.json({ error_code: 1, message: err, success: false });
+                    });/*error*/
+
+                    //parser.on('end', function (count) {
+                    parser.on('finish', function () {
+                        logger.debug('finish');
+
+                        models.preguntaproveedor.bulkCreate(carrusel).then(function (events) {
+                            return res.json({ message: 'Las preguntas fueron cargadas', success: true });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        });
+
+                    });/*end*/
+
+                }).catch(function (err) {
                     res.json({ error_code: 1, message: err, success: false });
+                    logger.error(err)
                 });
-
-                var parser = csv.parse({
-                    delimiter: ';',
-                    columns: true,
-                    relax: true,
-                    relax_column_count: true,
-                    skip_empty_lines: true,
-                    trim: true
-                }); //parser CSV       
-
-                input.pipe(parser);
-
-                parser.on('readable', function () {
-                    var line
-                    while (line = parser.read()) {
-                        carrusel.push(line);
-                        /*
-                        var length = carrusel.push(line);
-                        if (length % 1000 == 0) {
-                          logger.debug(length);
-                        }*/
-                    }
-                });
-
-                parser.on('error', function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1, message: err, success: false });
-                });/*error*/
-
-                //parser.on('end', function (count) {
-                parser.on('finish', function () {
-                    logger.debug('finish');
-                    /*         
-                             co(function* () {
-                                 models.detallecargas.belongsTo(models.logcargas, { foreignKey: 'idlogcargas' });
-                                 var carga = yield models.detallecargas.findAll({
-                                     limit: 1,
-                                     where: { id: idDetail },
-                                     include: [{
-                                         model: models.logcargas
-                                     }]
-                                 }).catch(function (err) {
-                                     logger.error(err);
-                                 });
-         
-                                 //logger.debug(carga[0].dataValues.logcarga.dataValues.archivo)
-         
-                                 var table = carga[0].dataValues.logcarga.dataValues.archivo//Troya
-                                 var deleted = carga[0].dataValues.logcarga.dataValues.tipocarga//Reemplaza o Incremental
-                                 var dateLoad = carga[0].dataValues.logcarga.dataValues.fechaarchivo//Reemplaza o Incremental
-         
-                                 bulk.bulkLoad(table.split(" ").join(""), carrusel, idDetail, saveTo, deleted, dateLoad, function (err, data) {
-                                     if (err) {
-                                         logger.error("->>> " + err)
-                                         res.json({ error_code: 1, message: err, success: false });
-                                     } else {
-                                         logger.debug("->>> " + data)
-                                         res.json({ error_code: 0, message: data, success: true });
-                                     }
-                                 })
-         
-                             }).catch(function (err) {//co(*)
-                                 res.json({ error_code: 1, message: err, success: false });
-                                 logger.error(err)
-                             })
-                             */
-
-                });/*end*/
-
-                //parser.end();
 
             }).catch(function (err) {
                 res.json({ error_code: 1, message: err, success: false });
@@ -236,4 +316,100 @@ exports.archivo = function (req, res) {
 
 }
 
+exports.descargarespuestas = function (req, res) {
+
+    models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
+    models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+    models.preguntaproveedor.findAll({
+        attributes: [['tipo', 'tipo'], ['pregunta', 'pregunta'], ['respuesta', 'respuesta']],
+        where: { idsolicitudcotizacion: req.params.id },
+        include: [{
+            attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
+            model: models.user
+        },
+        {
+            attributes: [['razonsocial', 'proveedor']],
+            model: models.proveedor
+        }
+        ]
+    }).then(function (preguntaproveedor) {
+
+        var conf = {}
+        conf.cols = [
+            {
+                caption: 'Proveedor',
+                type: 'string',
+                width: 200
+            },
+            {
+                caption: 'Responsable',
+                type: 'string',
+                width: 200
+            },
+            {
+                caption: 'Pregunta',
+                type: 'string',
+                width: 200
+            },
+            {
+                caption: 'Respuesta',
+                type: 'string',
+                width: 200
+            }
+        ];
+
+        var arr = []
+        var noHTML = /(<([^>]+)>)/ig;
+
+        for (var p in preguntaproveedor) {
+
+            var user = preguntaproveedor[p].user
+            var provider = preguntaproveedor[p].proveedor
+            var responsable = ''
+            var proveedor = ''
+
+            for (var x in user) {
+                if (user[x].nombre && user[x].apellido) {
+                    //logger.debug(user[x].nombre + ' ' + user[x].apellido)
+                    responsable = user[x].nombre + ' ' + user[x].apellido
+                }
+            }
+
+            for (var y in provider) {
+                if (provider[y].proveedor) {
+                    proveedor = provider[y].proveedor
+                }
+            }
+
+            var respuesta = ''
+            if (preguntaproveedor[p].respuesta) {
+                respuesta = preguntaproveedor[p].respuesta.replace(noHTML, '')
+                //logger.debug("cvacacv : " + respuesta)
+            }
+
+            a = [
+                proveedor,
+                responsable,
+                preguntaproveedor[p].pregunta,
+                respuesta
+            ]
+            arr.push(a);
+
+
+        }
+
+        conf.rows = arr;
+
+        var result = nodeExcel.execute(conf);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+        res.setHeader("Content-Disposition", "attachment;filename=" + "respuestas_" + + Math.floor(Date.now()) + ".xlsx");
+        res.end(result, 'binary');
+
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+    });
+
+
+}
 

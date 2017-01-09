@@ -191,5 +191,17 @@ module.exports = function (passport) {
     router.route('/sic/tipos')
         .get(isAuthenticated, solicitudcotizacionController.tipoclausula);
 
+    router.route('/sic/asignar')
+        .post(isAuthenticated, preguntasController.asignar);
+
+    router.route('/sic/preguntasresponsable/:id')
+        .get(isAuthenticated, preguntasController.listresponsables);
+        
+    router.route('/sic/responder')
+        .post(isAuthenticated, preguntasController.responder);
+
+    router.route('/sic/descargarespuestas/:id')
+        .get(isAuthenticated, preguntasController.descargarespuestas);
+
     return router;
 }
