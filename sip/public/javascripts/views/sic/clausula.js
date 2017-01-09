@@ -217,8 +217,8 @@ var gridClausula = {
                         position: "last",
                         onClickButton: function () {
                             var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                            console.log(parentRowData.idtipo)
-                            console.log(parentRowData.idgrupo)
+                            //console.log(parentRowData.idtipo)
+                            //console.log(parentRowData.idgrupo)
 
                             /*
                             $.getJSON('/sic/parametros2/grupoclausula', function(data) {
@@ -368,12 +368,15 @@ var gridClausula = {
             caption: "",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
-            title: "Generar Documento",
+            title: "Generar Documentito",
             position: "last",
             onClickButton: function () {
                 //var rowKey = $gridTab.getGridParam("selrow");
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
                 try {
-                    var url = '/sic/pruebahtmlword/' + parentRowKey;
+                    var url = '/sic/documentoword/' + parentRowKey + '/' + parentRowData.idgrupo;
                     $gridTab.jqGrid('excelExport', { "url": url });
                 } catch (e) {
                     console.log("error: " + e)
