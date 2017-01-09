@@ -52,6 +52,11 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'>N° Solicitud Contrato{numerosolicitudcontrato}</div>";
     template += "</div>";
 
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Contrato {idcontrato}</div>";
+    template += "<div class='column-half'>Servicio Ctto {iddetalleserviciocto}</div>";
+    template += "</div>";
+
     template += "<div class='form-row' style='display: none;'>";
     template += "</div>";
 
@@ -142,6 +147,41 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Proveedor--",
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        //$("input#cui").val($('option:selected', this).val());
+                        //$("input#inputcui").val($('option:selected', this).val());
+                        var idProveedor = $('option:selected', this).val();
+                        //var idServicio = $('#idservicio').val();
+                        //console.log('idServicio: ' + idServicio);
+                        if (idProveedor != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/contratosporpresupuesto/' + parentRowKey + '/' + idProveedor,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idcontrato;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Contrato--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].idcontrato == thissid) {
+                                            s += '<option value="' + data[i].id + '" selected>' + data[i].numero + ' - '+data[i].nombre+'</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].id + '">' + data[i].numero + ' - '+data[i].nombre+'</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#idcontrato").empty().html(s);
+                                    
+                                }
+                            });
+                        }
+
+                    }
+                }],
             },
             dataInit: function (elem) { $(elem).width(100); }
 
@@ -441,6 +481,62 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         {
             label: 'N° Sol. Contrato', name: 'numerosolicitudcontrato', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
+        },
+       
+        {
+            label: 'Contrato', name: 'idcontrato', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editrules: { edithidden: true },
+            editoptions: {
+                value: "0:--Escoger Contrato--",
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        //$("input#cui").val($('option:selected', this).val());
+                        //$("input#inputcui").val($('option:selected', this).val());
+                        var idContrato = $('option:selected', this).val();
+                        //var idServicio = $('#idservicio').val();
+                        //console.log('idServicio: ' + idServicio);
+                        if (idContrato != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/tareasporpresupuesto/' + idContrato,
+                                async: false,
+                                success: function (data) {
+                                    var grid = $("#" + childGridID);
+                                    var rowKey = grid.getGridParam("selrow");
+                                    var rowData = grid.getRowData(rowKey);
+                                    var thissid = rowData.idcontrato;
+                                    var s = "<select>";//el default
+                                    s += '<option value="0">--Escoger Servicio Ctto--</option>';
+                                    $.each(data, function (i, item) {
+                                        if (data[i].idcontrato == thissid) {
+                                            s += '<option value="' + data[i].id + '" selected>' + data[i].glosaservicio+'</option>';
+                                        } else {
+                                            s += '<option value="' + data[i].id + '">' + data[i].glosaservicio+'</option>';
+                                        }
+                                    });
+                                    s += "</select>";
+                                    $("select#iddetalleserviciocto").empty().html(s);
+                                    
+                                }
+                            });
+                        }
+
+                    }
+                }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+
+        },
+
+        {
+            label: 'Servicio Contrato', name: 'iddetalleserviciocto', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editrules: { edithidden: true },
+            editoptions: {
+                value: "0:--Escoger Servicio Ctto--"
+                
+            }, dataInit: function (elem) { $(elem).width(200); }
+
         },
 
         

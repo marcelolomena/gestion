@@ -538,7 +538,7 @@ exports.action = function (req, res) {
     }else{
       porcentaje2 = 0.00;
     }
-
+/*
     if (req.body.dolar != "")
       dolar = req.body.dolar.split(".").join("").replace(",", ".")
 
@@ -547,6 +547,8 @@ exports.action = function (req, res) {
 
     if (req.body.fechaconversion != "")
       fecha = req.body.fechaconversion.split("-").reverse().join("-")
+
+    */
   }
   switch (action) {
     case "add":
@@ -563,9 +565,9 @@ exports.action = function (req, res) {
         uidlider: req.body.uidlider,
         uidjefeproyecto: req.body.uidjefeproyecto,
         uidpmoresponsable: req.body.uidpmoresponsable,
-        dolar: dolar,
-        uf: uf,
-        fechaconversion: fecha,
+        //dolar: dolar,
+        //uf: uf,
+        //fechaconversion: fecha,
         borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
@@ -588,9 +590,9 @@ exports.action = function (req, res) {
         uidlider: req.body.uidlider,
         uidjefeproyecto: req.body.uidjefeproyecto,
         uidpmoresponsable: req.body.uidpmoresponsable,
-        dolar: dolar,
-        uf: uf,
-        fechaconversion: req.body.fecha,
+        //dolar: dolar,
+        //uf: uf,
+        //fechaconversion: req.body.fecha,
       }, {
           where: {
             id: req.body.id
