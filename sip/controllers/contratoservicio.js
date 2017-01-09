@@ -503,28 +503,31 @@ exports.cuiforservice = function (req, res) {
         res.json({ error_code: 1 });
     });*/
     var sap = req.params.sap;
-    if (sap == "0"){
+    console.log("sap:"+sap);
+    if (sap == 'Continuidad'){
         var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
             "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND b.tiposervicio='Continuidad' " +
             "GROUP BY a.idservicio, b.nombre";
+            console.log("sql1:"+sql+ "sap:"+sap);
         sequelize.query(sql).spread(function (cuis) {
             logger.debug("Rescato servicios");
             res.json(cuis);
         }).catch(function (err) {
             logger.error(err)
             res.json({ error_code: 1 });
-        });
+        });       
     } else {
         var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
             "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND  b.tarea IS NOT NULL " +
             "GROUP BY a.idservicio, b.nombre, b.tarea";
+        console.log("sql2:"+sql);
         sequelize.query(sql).spread(function (cuis) {
             logger.debug("Rescato servicios");
             res.json(cuis);
         }).catch(function (err) {
             logger.error(err)
             res.json({ error_code: 1 });
-        });        
+        });              
     }
 }
 

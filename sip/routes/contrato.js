@@ -36,7 +36,7 @@ module.exports = function (passport) {
     router.route('/contratoservicio/plantillapresupuesto/:id')
         .get(isAuthenticated, contratoservicioController.plantillapresupuesto);
         
-    router.route('/contratoservicio/cuiforservice/:idp/:ids')
+    router.route('/contratoservicio/cuiforservice/:idp/:ids/:sap')
         .get(isAuthenticated, contratoservicioController.cuiforservice);               
 
     router.route('/contratoservicio/action/:id')
