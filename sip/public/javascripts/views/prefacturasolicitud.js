@@ -117,6 +117,11 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Glosa Abono {glosaabono}</div>";
+    tmpl += "<div class='column-half'>Monto Neto Abono {montoabono}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Causa Descuento {idcausalmulta}</div>";
     tmpl += "<div class='column-half'>Monto Neto Descuento {montomulta}</div>";
     tmpl += "</div>";
@@ -125,6 +130,8 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "<div class='column-half'>Glosa Descuento {glosamulta}</div>";
     tmpl += "<div class='column-half'>Calificación de Servicio {idcalificacion}</div>";
     tmpl += "</div>";
+
+    
 
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div align='left'> {sData} {cData}  </div>";
@@ -384,6 +391,25 @@ function showDocumentos(cui, periodo, proveedor) {
                     }
                 }, dataInit: function (elem) { $(elem).width(200); }
 
+            },
+            {
+                label: 'Monto Abono',
+                name: 'montoabono',
+                width: 100,
+                search: false,
+                align: 'right',
+                editable: true,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            },
+            {
+                label: 'Glosa Abono',
+                name: 'glosaabono',
+                width: 200,
+                search: false,
+                align: 'left',
+                editable: true,
+                hidden: true,
+                //edittype: "textarea"
             },
             {
                 label: 'Calificación', name: 'calificacion', width: 120, align: 'left', sortable: false, search: false, editable: true,

@@ -127,8 +127,8 @@ exports.action = function (req, res) {
       ", glosaaprobacion='"+req.body.glosaaprobacion+"', montoaprobadopesos="+parseFloat(req.body.montoaprobado)+"*factorconversion"+
       ", montomulta="+req.body.montomulta+", montomultapesos="+parseFloat(req.body.montomulta)+"*factorconversion"+
       ", montototalpesos=("+parseFloat(req.body.montoaprobado)+"*factorconversion)-("+parseFloat(req.body.montomulta)+"*factorconversion)"+
-      ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+
-      ", idcausalmulta="+req.body.idcausalmulta+" "+
+      ", glosamulta='"+req.body.glosamulta+"', idcalificacion="+req.body.idcalificacion+", glosaabono='"+req.body.glosaabono+"' "+
+      ", idcausalmulta="+req.body.idcausalmulta+",montoabono="+req.body.montoabono+", montoabonopesos="+parseFloat(req.body.montoabono)+"*factorconversion "+
       "WHERE id="+req.body.id;
       logger.debug("sql:" + sql);
        sequelize.query(sql).then(function (contrato) {
