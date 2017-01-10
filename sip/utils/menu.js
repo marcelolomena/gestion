@@ -3,15 +3,15 @@ var sequelize = require('../models/index').sequelize;
 var models = require('../models');
 var co = require('co');
 
-module.exports = (function() {
-    var builUserdMenu = function(req, callback) {
+module.exports = (function () {
+    var builUserdMenu = function (req, callback) {
         var user = req.user;
         //logger.debug('Sistema ------>> ' + req.body.sistema);
 
         try {
             if (user) {
 
-                var NeoSubMenu = function(op, uid, menu, callback) {
+                var NeoSubMenu = function (op, uid, menu, callback) {
                     var sql_submenu = `
 											select distinct e.id,e.descripcion,e.url from art_user a
 											join sip.usr_rol b on a.uid = b.uid
@@ -25,25 +25,25 @@ module.exports = (function() {
                             replacements: { uid: uid, pid: menu.id, idsys: parseInt(req.body.sistema) },
                             type: sequelize.QueryTypes.SELECT
                         }
-                    ).then(function(submenu) {
+                    ).then(function (submenu) {
                         var opt = {}
                         opt["menu"] = op
                         var subsub = []
 
-                        submenu.forEach(function(subopcion) {
+                        submenu.forEach(function (subopcion) {
                             subsub.push({ "opt": subopcion.descripcion, "url": subopcion.url })
                         });
                         opt["submenu"] = subsub
                         callback(undefined, opt)
 
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         logger.error(err)
                         callback(err, undefined)
                     });
 
                 }
 
-                var NeoMenu = function(uid, callback) {
+                var NeoMenu = function (uid, callback) {
                     var promises = []
                     var sql_menu = `
 											select distinct e.id,e.descripcion from art_user a
@@ -60,18 +60,18 @@ module.exports = (function() {
                                 replacements: { uid: uid, idsys: parseInt(req.body.sistema) },
                                 type: sequelize.QueryTypes.SELECT
                             }
-                        ).catch(function(err) {
+                        ).catch(function (err) {
                             logger.error(err)
                             callback(err, 'undefined');
                         });
                         var todo = []
-                        menu.forEach(function(menu) {
+                        menu.forEach(function (menu) {
                             var item = {}
                             item["id"] = menu.id
                             item["menu"] = menu.descripcion
 
-                            var promise = new Promise(function(resolve, reject) {
-                                return NeoSubMenu(item, uid, menu, function(err, submenu) {
+                            var promise = new Promise(function (resolve, reject) {
+                                return NeoSubMenu(item, uid, menu, function (err, submenu) {
                                     if (submenu)
                                         resolve(submenu);
                                     else
@@ -81,7 +81,7 @@ module.exports = (function() {
                             promises.push(promise);
                         });
 
-                        return Promise.all(promises).then(function(items) {
+                        return Promise.all(promises).then(function (items) {
                             var menuPromises = [];
                             for (var i = 0; i < items.length; i++) {
                                 menuPromises.push(items[i]);
@@ -90,7 +90,7 @@ module.exports = (function() {
                             callback(menuPromises);
                         });
 
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         logger.error(err)
                         callback(err, 'undefined');
                     });
@@ -100,9 +100,17 @@ module.exports = (function() {
                 co(function* () {
                     var _rolnegocio = yield models.rol_negocio.find({
                         where: { 'uid': user.uid }
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         logger.error(err)
                     });
+
+                    var _countQuestion = yield models.preguntaproveedor.count({
+                        where: [{ 'respuesta': { $ne: null } }, { idresponsable: user.uid }]
+                    }).catch(function (err) {
+                        logger.error(err)
+                    });
+
+                    //logger.debug("cantidad : " + _countQuestion)
 
                     var sqlrol = `
                         select c.id, c.glosarol from art_user a 
@@ -118,7 +126,7 @@ module.exports = (function() {
                             type: sequelize.QueryTypes.SELECT
                         }
                     );
-                    console.dir(_roles)
+                    //console.dir(_roles)
 
                     //logger.debug('Usuario ------>> ' + user.uid);
                     var sql = `
@@ -136,11 +144,12 @@ module.exports = (function() {
                             replacements: { uid: user.uid, idsys: parseInt(req.body.sistema) },
                             type: sequelize.QueryTypes.SELECT
                         }
-                    ).then(function(usr) {
+                    ).then(function (usr) {
                         //console.log(usr.length);
                         if (usr.length > 0) {
                             var usuario = []
                             var nombre = {}
+                            nombre["contadorPreguntas"] = _countQuestion
                             nombre["nombre"] = usr[0].first_name + " " + usr[0].last_name
                             nombre["uid"] = user.uid
                             nombre["sistema"] = req.body.sistema;
@@ -149,9 +158,9 @@ module.exports = (function() {
                             nombre["rid"] = _rolnegocio.rolnegocio
                             usuario.push(nombre)
 
-                            return NeoMenu(user.uid, function(menu) {
+                            return NeoMenu(user.uid, function (menu) {
                                 var supermenu = [];
-                                menu.forEach(function(opt) {
+                                menu.forEach(function (opt) {
                                     if (opt.submenu.length != 0) {
                                         supermenu.push(opt)
                                     }
@@ -166,12 +175,12 @@ module.exports = (function() {
                         } else {
                             throw new Error('Sin datos');
                         }
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         logger.error(err)
                         callback(err, undefined)
                     });
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     logger.error(err)
                     return callback(err, undefined);
                 });

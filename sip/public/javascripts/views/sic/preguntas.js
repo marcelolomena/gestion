@@ -17,13 +17,10 @@ var gridPreguntas = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Rut', 'idproveedor', 'Proveedor', 'Archivo'],
+            colNames: ['id', 'idproveedor', 'Proveedor', 'Tipo', 'Pregunta', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false
-                },
-                {
-                    name: 'rut', index: 'rut', hidden: false, width: 10, editable: false, jsonmap: "proveedor.numrut",
                 },
                 {
                     name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "proveedor.id",
@@ -50,8 +47,9 @@ var gridPreguntas = {
                         }
                     }
                 },
-
-                { name: 'proveedor', width: 150, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
+                { name: 'proveedor', width: 300, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
+                { name: 'tipo', width: 100, search: false, editable: false, hidden: false },
+                { name: 'pregunta', width: 400, search: false, editable: false, hidden: false },
                 {
                     name: 'fileToUpload',
                     hidden: true,
@@ -103,7 +101,7 @@ var gridPreguntas = {
 
             }, {
                 mtype: 'POST',
-                url: '/sic/preguntaproveedor/action',
+                url: '/sic/pre/falsa',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 onclickSubmit: function (rowid) {
@@ -123,6 +121,29 @@ var gridPreguntas = {
                         return [true, "", ""]
                 }
             });
+
+        $gridTab.jqGrid('navButtonAdd', '#navGridPre', {
+            caption: "",
+            id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-download-alt",
+            title: "Generar Documento",
+            position: "last",
+            onClickButton: function () {
+                //var rowKey = $gridTab.getGridParam("selrow");
+                //var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
+                try {
+                    var url = '/sic/descargarespuestas/' + parentRowKey;
+                    $gridTab.jqGrid('excelExport', { "url": url });
+                } catch (e) {
+                    console.log("error: " + e)
+
+                }
+
+            }
+        });
+
     }
 }
 
@@ -131,14 +152,14 @@ function UploadPre(response, postdata) {
     var data = $.parseJSON(response.responseText);
     if (data.success) {
         if ($("#fileToUpload").val() != "") {
-            ajaxDocUpload(data.id);
+            ajaxDocUpload(data.id, data.idproveedor);
         }
     }
 
     return [data.success, data.message, data.id];
 }
 
-function ajaxDocUpload(id) {
+function ajaxDocUpload(id, idproveedor) {
     var dialog = bootbox.dialog({
         title: 'Se inicia la transferencia',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
@@ -149,12 +170,12 @@ function ajaxDocUpload(id) {
             secureuri: false,
             fileElementId: 'fileToUpload',
             dataType: 'json',
-            data: { id: id },
+            data: { id: id, idproveedor: idproveedor },
             success: function (data, status) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
                         dialog.find('.bootbox-body').html(data.message);
-                        $("#preguntas_t_" + parent).trigger('reloadGrid');
+                        $("#preguntas_t_" + id).trigger('reloadGrid');
                     } else {
                         dialog.find('.bootbox-body').html(data.message);
                     }

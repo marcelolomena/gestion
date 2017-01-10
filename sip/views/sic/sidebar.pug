@@ -3,6 +3,9 @@
     .user
      #p #{data[0].nombre}
     .usuario1 
+     if(data[0].contadorPreguntas>0)
+      #p
+       a(style='color:orange;',href='/sic/preguntaproveedor') Tiene #{data[0].contadorPreguntas} pregunta sin responder 
     .usuario3
       a(href='signout') Cerrar Sesión
   #cssmenu
