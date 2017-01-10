@@ -24,6 +24,7 @@ exports.action = function (req, res) {
         contacto: req.body.contacto,
         fono: req.body.fono,
         correo: req.body.correo,
+        tipo: req.body.tipo,
         borrado: 1
       }).then(function (contactos) {
         res.json({ error_code: 0 });
@@ -37,6 +38,7 @@ exports.action = function (req, res) {
         contacto: req.body.contacto,
         fono: req.body.fono,
         correo: req.body.correo,
+        tipo: req.body.tipo,
         borrado: 1
       }, {
           where: {
