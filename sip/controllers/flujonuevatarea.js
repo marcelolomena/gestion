@@ -7,29 +7,30 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
-    var porcentaje = req.body.porcentaje
-    var idsubtarea = req.body.idsubtarea
+    var idsubtarea
+    var porcentaje = 0.00
     var fechainicio;
     var fechafin;
+    var tipopago = 84
 
     if (action != "del") {
         if (costoorigen != "")
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
 
-        if (porcentaje != "") {
-            //porcentaje = porcentaje.split(".").join("").replace(",", ".")
-            porcentaje = parseFloat(req.body.porcentaje) / 100;
+        var ano = req.body.periodo.substring(0, 4);
+        var mes = req.body.periodo.substring(5, 7);
+        fechainicio = ano + '-' + mes + '-' + '01';
+        if (parseInt(mes) == 02) {
+            fechafin = ano + '-' + mes + '-' + '28';
         } else {
-            porcentaje = 0.00;
+            fechafin = ano + '-' + mes + '-' + '30';
         }
-        if (req.body.fechainicio != "")
-            fechainicio = req.body.fechainicio.split("-").reverse().join("-")
-
-        if (req.body.fechafin != "")
-            fechafin = req.body.fechafin.split("-").reverse().join("-")
-
-        if (idsubtarea == "0")
+        if (req.body.idsubtarea != "0") {
+            idsubtarea = req.body.idsubtarea
+        } else {
             idsubtarea = null
+        }
+
     }
 
     switch (action) {
@@ -42,10 +43,10 @@ exports.action = function (req, res) {
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
-                idtipopago: req.body.idtipopago,
+                idtipopago: tipopago,
                 fechainicio: fechainicio,
                 fechafin: fechafin,
-                cantidad: req.body.cantidad,
+                cantidad: 1,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
@@ -63,10 +64,10 @@ exports.action = function (req, res) {
                 costoorigen: costoorigen,
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
-                idtipopago: req.body.idtipopago,
+                idtipopago: tipopago,
                 fechainicio: fechainicio,
                 fechafin: fechafin,
-                cantidad: req.body.cantidad
+                cantidad: 1
             }, {
                     where: {
                         id: req.body.id
