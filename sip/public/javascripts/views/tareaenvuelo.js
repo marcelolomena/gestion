@@ -51,12 +51,12 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'>N° Contrato{numerocontrato}</div>";
     template += "<div class='column-half'>N° Solicitud Contrato{numerosolicitudcontrato}</div>";
     template += "</div>";
-
+/*
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Contrato {idcontrato}</div>";
     template += "<div class='column-half'>Servicio Ctto {iddetalleserviciocto}</div>";
     template += "</div>";
-
+*/
     template += "<div class='form-row' style='display: none;'>";
     template += "</div>";
 
@@ -482,7 +482,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             label: 'N° Sol. Contrato', name: 'numerosolicitudcontrato', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
         },
-       
+       /*
         {
             label: 'Contrato', name: 'idcontrato', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -538,7 +538,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             }, dataInit: function (elem) { $(elem).width(200); }
 
         },
-
+*/
         
       
 

@@ -1,5 +1,5 @@
 function returnTaskLink(cellValue, options, rowdata, action) {
-    return "<a href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
+    return "<a target='_blank' href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
 }
 
 $(document).ready(function () {

@@ -100,14 +100,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    iddetalleserviciocto: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'detalleserviciocto',
-        key: 'id'
-      }
-    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

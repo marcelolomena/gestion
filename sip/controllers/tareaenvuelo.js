@@ -12,7 +12,7 @@ exports.action = function (req, res) {
   var fechainicio;
   var fechafin;
   logger.debug(action);
-  var iddetalleserviciocto = null;
+  //var iddetalleserviciocto = null;
 
   if (action != "del") {
     if (req.body.costounitario != "")
@@ -24,8 +24,8 @@ exports.action = function (req, res) {
     if (req.body.fechafin != "")
       fechafin = req.body.fechafin.split("-").reverse().join("-")
 
-    if (req.body.iddetalleserviciocto != "0")
-      iddetalleserviciocto = req.body.iddetalleserviciocto
+    //if (req.body.iddetalleserviciocto != "0")
+      //iddetalleserviciocto = req.body.iddetalleserviciocto
   }
   logger.debug(action);
   switch (action) {
@@ -36,7 +36,6 @@ exports.action = function (req, res) {
         idcui: req.body.idcui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
-        iddetalleserviciocto: iddetalleserviciocto,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
@@ -65,7 +64,6 @@ exports.action = function (req, res) {
         idcui: req.body.idcui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
-        iddetalleserviciocto: iddetalleserviciocto,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
