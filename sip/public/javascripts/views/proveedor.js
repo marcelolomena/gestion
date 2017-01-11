@@ -226,6 +226,10 @@ $(document).ready(function () {
     tmpc += "<div class='form-row'>";
     tmpc += "<div class='column-full'><span style='color:red'>* </span>Correo {correo}</div>";
     tmpc += "</div>";
+    
+    tmpc += "<div class='form-row'>";
+    tmpc += "<div class='column-full'><span style='color:red'>* </span>Tipo {tipo}</div>";
+    tmpc += "</div>";    
 
     tmpc += "<hr style='width:100%;'/>";
     tmpc += "<div> {sData} {cData}  </div>";
@@ -369,7 +373,38 @@ $(document).ready(function () {
             { label: 'Correo', name: 'correo',index: "email", width: 300, align: 'left', search: false, editable: true,                   
                  editoptions: { maxlength: 80, size: 32 }, 
                  editrules: { email: true, required: false} 
-            }
+            },
+            { label: 'Tipo', name: 'tipo',index: "tipo", width: 300, align: 'left', search: false, editable: true,
+               edittype: "select",                   
+                 editoptions: { 
+                    dataUrl: '/usuarios_por_rol/Negociador',
+                    buildSelect: function (response) {
+                        var grid = $("#" + childGridID);
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.tipo;                        
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Tipo--</option>';
+                        if (thissid == "Facturación") {
+                            s += '<option selected value="Facturación">Facturación</option>';
+                        } else {
+                            s += '<option value="Facturación">Facturación</option>';
+                        }
+                        if (thissid == "Comercial") {
+                            s += '<option value="Comercial" selected>Comercial</option>';
+                        } else {
+                            s += '<option value="Comercial">Comercial</option>';
+                        }
+                        if (thissid == "Técnico") {
+                            s += '<option value="Técnico">Técnico</option>';
+                        } else {
+                            s += '<option value="Técnico">Técnico</option>';
+                        }
+                        return s + "</select>";
+                    },
+
+            }, dataInit: function (elem) { $(elem).width(200); }                 
+            }            
             
         ];
 

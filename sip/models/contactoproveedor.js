@@ -31,7 +31,11 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    tipo: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'contactoproveedor'
   });

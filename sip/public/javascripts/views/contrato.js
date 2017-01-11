@@ -155,6 +155,8 @@ $(document).ready(function () {
                         if (actual == 'readonly') {               
                             $("input#codigoart").attr("readonly", false);
                         } else {
+                            $("input#codigoart").val("0");
+                            $("input#nombreart").val("");
                             $("input#codigoart").attr("readonly", true);
                         } 
                     }
