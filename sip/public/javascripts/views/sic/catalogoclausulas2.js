@@ -184,7 +184,6 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
-        checkOnUpdate: true,
         pager: "#" + childGridPagerID,
         subGrid: true,
         subGridRowExpanded: showSubGrids,
