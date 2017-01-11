@@ -218,6 +218,12 @@ exports.excel = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
 
+  var program_id = null
+
+  if(req.body.program_id!="0"){
+    program_id =req.body.program_id
+  }
+
   switch (action) {
     case "add":
       models.contrato.create({
@@ -235,7 +241,7 @@ exports.action = function (req, res) {
         pmoresponsable: req.body.pmoresponsable,
         idcontactofacturacion: req.body.idcontactofacturacion,
         codigoart: req.body.codigoart,
-        program_id: req.body.program_id,
+        program_id: program_id,
         borrado: 1
       }).then(function (contrato) {
         res.json({ error_code: 0 });
@@ -261,7 +267,7 @@ exports.action = function (req, res) {
         pmoresponsable: req.body.pmoresponsable,
         idcontactofacturacion:req.body.idcontactofacturacion,
         codigoart: req.body.codigoart,
-        program_id: req.body.program_id
+        program_id: program_id
       }, {
           where: {
             id: req.body.id

@@ -8,6 +8,7 @@ exports.action = function (req, res) {
     var montoorigen = req.body.montoorigen
     var costoorigen = req.body.costoorigen
     var porcentaje = 0.00
+    var idsubtarea
     var fechainicio;
     var fechafin;
     var tipopago = 84
@@ -43,7 +44,7 @@ exports.action = function (req, res) {
                 idtipopago: tipopago,
                 fechainicio: fechainicio,
                 fechafin: fechafin,
-                cantidad: req.body.cantidad,
+                cantidad: 1,
                 borrado: 1
             }).then(function (detalle) {
                 res.json({ error_code: 0 });
@@ -64,7 +65,7 @@ exports.action = function (req, res) {
                     idtipopago: tipopago,
                     fechainicio: fechainicio,
                     fechafin: fechafin,
-                    cantidad: req.body.cantidad,
+                    cantidad: 1
                 }, {
                         where: {
                             id: req.body.id

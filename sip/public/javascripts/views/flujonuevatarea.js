@@ -14,31 +14,33 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Periodo{periodo}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Porcentaje{porcentaje}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Pagos{costoorigen}</div>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Porcentaje{porcentaje}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'><span style='color: red'>*</span>Glosa Item{glosaitem}</div>";
     template += "</div>";
 
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Fecha Inicio{fechainicio}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Fecha Fin{fechafin}</div>";
-    template += "</div>";
+    //template += "<div class='form-row'>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Fecha Inicio{fechainicio}</div>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Fecha Fin{fechafin}</div>";
+    //template += "</div>";
+
+    //template += "<div class='form-row'>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Cantidad{cantidad}</div>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Costo{costoorigen}</div>";
+    //template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Cantidad{cantidad}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Costo{costoorigen}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
+    //template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
     template += "<div class='column-half'>Proyecto{idproyecto}</div>";
+    template += "<div class='column-half'>Tarea{idtarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tarea{idtarea}</div>";
-    template += "<div class='column-half'>Subtarea{idsubtarea}</div>";
+    //template += "<div class='column-half'>Tarea{idtarea}</div>";
+    template += "<div class='column-full'>Subtarea{idsubtarea}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -76,6 +78,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             search: true, editable: true, hidden: false,
             editrules: {required:true},
         },
+        /*
         {
             label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
@@ -184,9 +187,9 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: {required:true},
-        },
+        },*/
         {
-            label: 'Costo', name: 'costoorigen', width: 80, align: 'right',
+            label: 'Pagos', name: 'costoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: {required:true},
@@ -387,21 +390,10 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Presupuesto Iniciativa",
+            editCaption: "Modificar Flujo Presupuesto",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.idtipopago == 0) {
-                    return [false, "Tipo Pago: Campo obligatorio", ""];
-                } if (postdata.fechainicio == 0) {
-                    return [false, "Fecha Inicio: Campo obligatorio", ""];
-                } if (postdata.fechafin == 0) {
-                    return [false, "Fecha Fin: Campo obligatorio", ""];
-                } else {
-                    return [true, "", ""]
-                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -439,24 +431,13 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Presupuesto Iniciativa",
+            addCaption: "Agregar Flujo Presupuesto",
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.idtipopago == 0) {
-                    return [false, "Tipo Pago: Campo obligatorio", ""];
-                } if (postdata.fechainicio == 0) {
-                    return [false, "Fecha Inicio: Campo obligatorio", ""];
-                } if (postdata.fechafin == 0) {
-                    return [false, "Fecha Fin: Campo obligatorio", ""];
-                } else {
-                    return [true, "", ""]
-                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -476,7 +457,7 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Presupuesto Iniciativa",
+            addCaption: "Eliminar Flujo Presupuesto",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {

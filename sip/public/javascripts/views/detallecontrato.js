@@ -157,7 +157,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.idcui;
+                        var thissid = rowData.idcui;                     
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger CUI--</option>';
@@ -174,9 +174,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
                             var thissid = $(this).val();
+                            var pgrid = $("#grid")
+                            var prowKey = pgrid.getGridParam("selrow");
+                            var prowData = pgrid.getRowData(prowKey);
+                            var pthissid = rowData.tipocontrato;                               
                             $.ajax({
                                 type: "GET",
-                                url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thissid,
+                                url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thissid+'/'+pthissid,
                                 async: false,
                                 success: function (data) {
                                     var r = "<select>";

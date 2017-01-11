@@ -12,6 +12,7 @@ exports.action = function (req, res) {
   var fechainicio;
   var fechafin;
   logger.debug(action);
+  var iddetalleserviciocto = null;
 
   if (action != "del") {
     if (req.body.costounitario != "")
@@ -22,6 +23,9 @@ exports.action = function (req, res) {
 
     if (req.body.fechafin != "")
       fechafin = req.body.fechafin.split("-").reverse().join("-")
+
+    if (req.body.iddetalleserviciocto != "0")
+      iddetalleserviciocto = req.body.iddetalleserviciocto
   }
   logger.debug(action);
   switch (action) {
@@ -32,6 +36,7 @@ exports.action = function (req, res) {
         idcui: req.body.idcui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
+        iddetalleserviciocto: iddetalleserviciocto,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
@@ -60,6 +65,7 @@ exports.action = function (req, res) {
         idcui: req.body.idcui,
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
+        iddetalleserviciocto: iddetalleserviciocto,
         tarea: req.body.tarea,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
@@ -174,3 +180,24 @@ exports.list = function (req, res) {
 };
 
 
+exports.getcontratosporpresupuesto = function (req, res) {
+    sequelize.query('select a.id, a.numero,a.nombre from sip.contrato a join sip.detalleserviciocto b on a.id= b.idcontrato join sip.presupuestoenvuelo c on c.program_id=a.program_id and c.sap=b.sap where c.id=:idpresupuesto and a.idproveedor=:idproveedor',
+        { replacements: { idpresupuesto: req.params.idpresupuesto, idproveedor: req.params.idproveedor  }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.gettareasporpresupuesto = function (req, res) {
+    sequelize.query('select a.id, a.glosaservicio from sip.detalleserviciocto a where a.idcontrato=:idcontrato',
+        { replacements: { idcontrato: req.params.idcontrato }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+};

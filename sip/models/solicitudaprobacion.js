@@ -101,6 +101,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    glosaabono: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     aprobado: {
       type: DataTypes.INTEGER,
       allowNull: true
@@ -148,7 +152,15 @@ module.exports = function(sequelize, DataTypes) {
     factorimpuesto: {
       type: DataTypes.FLOAT,
       allowNull: true
-    }
+    },
+    montoabono: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoabonopesos: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
   }, {
     schema: 'sip',timestamps: false,tableName: 'solicitudaprobacion'
   });

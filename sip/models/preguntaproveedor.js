@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('preguntaproveedor', {
     id: {
       type: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
         model: 'solicitudcotizacion',
         key: 'id'
       }
-    },    
+    },
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -32,17 +32,13 @@ module.exports = function(sequelize, DataTypes) {
         key: 'uid'
       }
     },
-    idtipo: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'valores',
-        key: 'id'
-      }
+    tipo: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     pregunta: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: false
     },
     respuesta: {
       type: DataTypes.TEXT,
@@ -53,6 +49,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'preguntaproveedor'
-  });
+      schema: 'sic', timestamps: false, tableName: 'preguntaproveedor'
+    });
 };
