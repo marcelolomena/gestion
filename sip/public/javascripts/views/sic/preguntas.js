@@ -13,7 +13,7 @@ var gridPreguntas = {
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
-        $gridTab.jqGrid({
+     /*   $gridTab.jqGrid({
             url: loadurl,
             datatype: "json",
             mtype: "GET",
@@ -79,6 +79,8 @@ var gridPreguntas = {
             viewrecords: true,
             caption: "Preguntas"
         });
+
+        */
 
         $gridTab.jqGrid('navGrid', '#navGridPre', { edit: false, add: true, del: true, search: false },
             {
