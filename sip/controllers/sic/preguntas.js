@@ -76,23 +76,43 @@ exports.responder = function (req, res) {
 
 
 exports.proveedorespre = function (req, res) {
+    /*
+        models.solicitudproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitud' });
+        models.solicitudproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+    
+        models.solicitudproveedor.findAll({
+    
+            where: { idsolicitud: req.params.id },
+            include: [{
+                model: models.solicitudcotizacion
+            }, { model: models.proveedor }
+            ]
+        }).then(function (solicitudproveedor) {
+            return res.json(solicitudproveedor);
+        }).catch(function (err) {
+            logger.error(err);
+            res.json({ error_code: 1 });
+        });
+        */
 
-    models.solicitudproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitud' });
-    models.solicitudproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+    //jajajajaja mucho webeo el sequelize aguante las querys
 
-    models.solicitudproveedor.findAll({
+    var id = req.params.id;
 
-        where: { idsolicitud: req.params.id },
-        include: [{
-            model: models.solicitudcotizacion
-        }, { model: models.proveedor }
-        ]
-    }).then(function (solicitudproveedor) {
-        return res.json(solicitudproveedor);
+    sequelize.query(
+        'select c.id, c.razonsocial from sic.proveedorsugerido a ' +
+        'join sic.serviciosrequeridos b on a.idserviciorequerido = b.id ' +
+        'join sip.proveedor c on a.idproveedor=c.id  ' +
+        'where b.idsolicitudcotizacion=:id order by c.razonsocial ',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error_code: 1 });
+        res.json({ error: 1 });
     });
+
 
 
 }
@@ -321,7 +341,7 @@ exports.descargarespuestas = function (req, res) {
     models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
     models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
     models.preguntaproveedor.findAll({
-        attributes: [['tipo', 'tipo'], ['pregunta', 'pregunta'], ['respuesta', 'respuesta']],
+        attributes: [s ['pregunta', 'pregunta'], ['respuesta', 'respuesta']],
         where: { idsolicitudcotizacion: req.params.id },
         include: [{
             attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
