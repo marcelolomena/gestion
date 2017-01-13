@@ -220,7 +220,7 @@ exports.action = function (req, res) {
 
   var program_id = null
 
-  if(req.body.program_id!="0"){
+  if(req.body.program_id!="0" && req.body.program_id!=""){
     program_id =req.body.program_id
   }
 

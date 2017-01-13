@@ -391,7 +391,7 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
         edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
-            closeAfterEdit: true,
+            closeAfterEdit: false,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
