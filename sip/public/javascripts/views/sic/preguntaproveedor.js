@@ -379,29 +379,29 @@ $(document).ready(function () {
 
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
+        //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
         tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas</a></li>"
         tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#asignar' id='asignar_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Asignar</a></li>"        
         tabs += "<li><a href='/sic/preguntasresponsable/" + parentRowKey + "' data-target='#respuestas' id='respuestas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas</a></li>"                
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"
-        tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
+        //tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
         tabs += "<div class='tab-pane' id='preguntas'><table id='preguntas_t_" + parentRowKey + "'></table><div id='navGridPre'></div></div>"
         tabs += "<div class='tab-pane' id='asignar'><table id='asignar_t_" + parentRowKey + "'></table><div id='navGridAsig'></div></div>"        
         tabs += "<div class='tab-pane' id='respuestas'><table id='respuestas_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"                
         tabs += "</div>"
 
         $("#" + parentRowID).append(tabs);
-        $('#proveedores_tab_' + parentRowKey).addClass('media_node active span')
+        $('#preguntas_tab_' + parentRowKey).addClass('media_node active span')
         $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
 
-            if (targ === '#proveedores') {
+            /*if (targ === '#proveedores') {
                 gridProveedor.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#preguntas') {
+            } else */if (targ === '#preguntas') {
                 gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#asignar') {
                 gridAsignar.renderGrid(loadurl, parentRowKey, targ)
@@ -417,9 +417,9 @@ $(document).ready(function () {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            if (targ === '#proveedores') {
+            /*if (targ === '#proveedores') {
                 gridProveedor.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#preguntas') {
+            } else */if (targ === '#preguntas') {
                 gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#asignar') {
                 gridAsignar.renderGrid(loadurl, parentRowKey, targ)

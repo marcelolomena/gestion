@@ -12,7 +12,6 @@ var gridRespuestas = {
         tmpl += "<div class='column-full'>Pregunta<span style='color:red'>*</span>{pregunta}</div>";
         tmpl += "</div>";
 
-
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Respuesta<span style='color:red'>*</span>{respuesta}</div>";
         tmpl += "</div>";
@@ -25,23 +24,24 @@ var gridRespuestas = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Proveedor', 'Tipo', 'Pregunta', 'idresponsable', 'Responsable', 'Respuesta'],
+            colNames: ['id', 'Proveedor', 'Tipo', 'Preguntas', 'idresponsable', 'Responsable', 'Respuestas'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false
                 },
-                { name: 'proveedor', width: 300, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
-                { name: 'tipo', width: 100, search: false, editable: true, hidden: false },
+                { 
+                    name: 'proveedor', width: 250, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
+                { 
+                    name: 'tipo', width: 100, search: false, editable: true, hidden: false },
                 {
-                    name: 'pregunta', width: 400, search: false, editable: true,
-                    hidden: false, edittype: "textarea", editoptions: { rows: "2" }
+                    name: 'pregunta', width: 340, search: false, editable: true, hidden: false, edittype: "textarea", editoptions: { rows: "2" }
                 },
                 {
                     name: 'idresponsable', search: false, editable: false, hidden: true,
                 },
-                { name: 'responsable', width: 200, search: false, editable: false, hidden: false, formatter: returnResponsable, },
+                { name: 'responsable', width: 110, search: false, editable: false, hidden: false, formatter: returnResponsable, },
                 {
-                    name: 'respuesta', width: 800, search: false, editable: true, hidden: false,
+                    name: 'respuesta', width: 340, search: false, editable: true, hidden: false,
                     edittype: 'custom',
                     editoptions: {
                         custom_element: function (value, options) {

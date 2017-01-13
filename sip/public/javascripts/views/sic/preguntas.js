@@ -6,6 +6,9 @@ var gridPreguntas = {
 
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Proveedor<span style='color:red'>*</span>{idproveedor}</div>";
+        tmpl += "</div>";
+
+        tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
         tmpl += "</div>";
 
@@ -13,17 +16,15 @@ var gridPreguntas = {
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
-     /*   $gridTab.jqGrid({
+        $gridTab.jqGrid({
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idproveedor', 'Proveedor', 'Tipo', 'Pregunta', 'Archivo'],
+            colNames: ['id', 'idproveedor', 'Proveedor', 'Tipo', 'Responsable', 'Preguntas', 'Pregunta', 'Respuestas'],
             colModel: [
+                { name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false },
                 {
-                    name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false
-                },
-                {
-                    name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "proveedor.id",
+                    name: 'idproveedor', width: 50, search: false, editable: true, hidden: true, jsonmap: "proveedor.id",
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/proveedorespre/' + $("#gridMaster").getRowData(parentRowKey).id,
@@ -38,18 +39,19 @@ var gridPreguntas = {
                             s += '<option value="0">--Escoger Proveedor--</option>';
                             $.each(data, function (i, item) {
                                 if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].proveedor.id + '" selected>' + data[i].proveedor.razonsocial + '</option>';
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
                                 } else {
-                                    s += '<option value="' + data[i].proveedor.id + '">' + data[i].proveedor.razonsocial + '</option>';
+                                    s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
                                 }
                             });
                             return s + "</select>";
                         }
                     }
                 },
-                { name: 'proveedor', width: 300, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
+                { name: 'proveedor', width: 250, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
                 { name: 'tipo', width: 100, search: false, editable: false, hidden: false },
-                { name: 'pregunta', width: 400, search: false, editable: false, hidden: false },
+                { name: 'responsable', width: 100, search: false, editable: false, hidden: false, formatter: returnResponsable, },
+                { name: 'pregunta', width: 350, search: false, editable: false, hidden: false },
                 {
                     name: 'fileToUpload',
                     hidden: true,
@@ -60,8 +62,8 @@ var gridPreguntas = {
                         enctype: "multipart/form-data"
                     },
                     search: false
-                }
-
+                },
+                { name: 'respuesta', width: 350, search: false, editable: false, hidden: false },
             ],
             rowNum: 20,
             pager: '#navGridPre',
@@ -70,6 +72,8 @@ var gridPreguntas = {
             sortorder: "asc",
             height: "auto",
             autowidth: true,
+            shrinkToFit: true,
+            //width: 1000,
             rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -77,8 +81,6 @@ var gridPreguntas = {
             viewrecords: true,
             caption: "Preguntas"
         });
-
-        */
 
         $gridTab.jqGrid('navGrid', '#navGridPre', { edit: false, add: true, del: true, search: false },
             {
@@ -95,7 +97,7 @@ var gridPreguntas = {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
                     if (parseInt(postdata.idproveedor) == 0) {
-                        return [false, "Tipo Documento: Debe escoger un valor", ""];
+                        return [false, "Tipo Documento: Debe escoger un Valor", ""];
                     } else {
                         return [true, "", ""]
                     }
@@ -192,6 +194,4 @@ function ajaxDocUpload(id, idproveedor) {
         })
     });
 }
-
-
 

@@ -25,20 +25,15 @@ var gridAsignar = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Proveedor', 'Tipo', 'Pregunta', 'idresponsable', 'Responsable'],
+            colNames: ['id', 'Proveedor', 'Tipo', 'Preguntas', 'idresponsable', 'Responsables'],
             colModel: [
-                {
-                    name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false
-                },
+                { name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false },
                 { name: 'proveedor', width: 300, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
                 { name: 'tipo', width: 100, search: false, editable: true, hidden: false },
+                { name: 'pregunta', width: 600, search: false, editable: true, hidden: false, edittype: "textarea", editoptions: { rows: "2" } },
                 {
-                    name: 'pregunta', width: 400, search: false, editable: true,
-                    hidden: false, edittype: "textarea", editoptions: { rows: "2" }
-                },
-                {
-                    name: 'idresponsable', search: false, editable: true, hidden: true,
-                    edittype: "select",
+                    name: 'idresponsable', width: 120, search: false, editable: true, hidden: true, edittype: "select",
+                    editrules: { edithidden: true },
                     editoptions: {
                         dataUrl: '/usuarios_por_rol/Negociador',
                         buildSelect: function (response) {
@@ -59,7 +54,7 @@ var gridAsignar = {
                         }
                     }
                 },
-                { name: 'responsable', width: 400, search: false, editable: false, hidden: false, formatter: returnResponsable, },
+                { name: 'responsable', width: 120, search: false, editable: false, hidden: false, formatter: returnResponsable, },
             ],
             rowNum: 20,
             pager: '#navGridAsig',
@@ -73,7 +68,7 @@ var gridAsignar = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Preguntas"
+            caption: "Asignación"
         });
 
         $gridTab.jqGrid('navGrid', '#navGridAsig', { edit: true, add: false, del: false, search: false },
@@ -81,7 +76,7 @@ var gridAsignar = {
                 editCaption: "Asignar Responsable",
                 closeAfterEdit: true,
                 recreateForm: true,
-                template: tmpl,
+                //template: tmpl,
                 mtype: 'POST',
                 url: '/sic/asignar',
                 ajaxEditOptions: sipLibrary.jsonOptions,

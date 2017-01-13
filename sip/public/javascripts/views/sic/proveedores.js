@@ -25,7 +25,7 @@ var gridProveedor = {
                     name: 'rut', index: 'rut',  hidden: false, width: 10, editable: false,jsonmap: "proveedor.numrut",
                 },                
                 {
-                    name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "proveedor.id",
+                    name: 'idproveedor', search: false, editable: true, hidden: true, width: 100, jsonmap: "proveedor.id",
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/proveedores/combobox',
