@@ -34,6 +34,7 @@ $(document).ready(function () {
     }
 
     $('#periodo').val(getPeriodo());
+    //$('#periodo').val("201702");
 
     $("#cui").change(function () {
         scui = $(this).val();
@@ -89,7 +90,7 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Periodo {periodo}</div>";
+    tmpl += "<div class='column-half'>Periodo {periodocompromiso}</div>";
     tmpl += "<div class='column-half'>Proveedor {razonsocial}</div>";
     tmpl += "</div>";
 
@@ -159,7 +160,7 @@ function showDocumentos(cui, periodo, proveedor) {
             },
             {
                 label: 'Periodo',
-                name: 'periodo',
+                name: 'periodocompromiso',
                 width: 70,
                 align: 'left',
                 search: false,

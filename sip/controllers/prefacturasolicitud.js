@@ -188,6 +188,8 @@ exports.cuisprefactura = function (req, res) {
   console.log("******rol*********:" + req.session.passport.sidebar[0].rid);
   console.log("*ROLADM*:" + constants.ROLADMDIVOT);
   var periodo = req.params.periodo
+  //var periodo="201702";
+  console.log("*Periodo*:" + periodo);
   if (rol == constants.ROLADMDIVOT) {  
     var sql = "SELECT id, nombre, cui FROM sip.estructuracui "+
       "where id IN (SELECT DISTINCT idcui FROM sip.solicitudaprobacion WHERE periodo="+periodo+
