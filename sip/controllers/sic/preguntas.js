@@ -432,4 +432,21 @@ exports.descargarespuestas = function (req, res) {
 
 
 }
+exports.getresponsablessolicitud = function (req, res) {
 
+    var id = req.params.id;
+
+    sequelize.query(
+        'select a.uid, a.first_name, a.last_name from art_user a '+
+'join sic.responsablesolicitud b on b.idresponsable=a.uid '+
+'where b.idsolicitudcotizacion = :id '+
+'order by a.first_name, a.last_name ',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        return res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        return res.json({ error: 1 });
+    });
+}

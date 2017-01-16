@@ -25,17 +25,17 @@ var gridAsignar = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Proveedor', 'Tipo', 'Preguntas', 'idresponsable', 'Responsables'],
+            colNames: ['id', 'Proveedor', 'Tipo', 'Preguntas', 'idresponsable', 'Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true, width: 10, editable: false },
                 { name: 'proveedor', width: 300, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
                 { name: 'tipo', width: 100, search: false, editable: true, hidden: false },
-                { name: 'pregunta', width: 600, search: false, editable: true, hidden: false, edittype: "textarea", editoptions: { rows: "2" } },
+                { name: 'pregunta', width: 450, search: false, editable: true, hidden: false, edittype: "textarea", editoptions: { rows: "4" } },
                 {
                     name: 'idresponsable', width: 120, search: false, editable: true, hidden: true, edittype: "select",
                     editrules: { edithidden: true },
                     editoptions: {
-                        dataUrl: '/usuarios_por_rol/Negociador',
+                        dataUrl: '/sic/getresponsablessolicitud/'+parentRowKey,
                         buildSelect: function (response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);

@@ -10,6 +10,7 @@ var catalogoclausulasController = require('../controllers/sic/catalogoclausulas'
 var tocController = require('../controllers/sic/toc');
 var proveedoresController = require('../controllers/sic/proveedores');
 var preguntasController = require('../controllers/sic/preguntas');
+var responsablesController = require('../controllers/sic/responsables');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -38,6 +39,9 @@ module.exports = function (passport) {
 
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
+
+    router.route('/sic/responsables/:id')
+        .get(isAuthenticated, responsablesController.list);
 
     router.route('/sic/pre/falsa')
         .post(isAuthenticated, preguntasController.action);
@@ -85,9 +89,21 @@ module.exports = function (passport) {
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
 
+    router.route('/sic/responsables/action')
+        .post(isAuthenticated, responsablesController.action);
+
     router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
         res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
     });
+
+    router.route('/sic/usuarios_por_rolid/:id')
+        .get(isAuthenticated, responsablesController.getUsersByRolId);
+
+    router.route('/sic/getroles')
+        .get(isAuthenticated, responsablesController.getRoles);
+
+    router.route('/sic/getresponsablessolicitud/:id')
+        .get(isAuthenticated, preguntasController.getresponsablessolicitud);
 
     router.route('/sic/grid_catalogoclausulas')
         .post(isAuthenticated, catalogoclausulasController.action)
@@ -196,12 +212,14 @@ module.exports = function (passport) {
 
     router.route('/sic/preguntasresponsable/:id')
         .get(isAuthenticated, preguntasController.listresponsables);
-        
+
     router.route('/sic/responder')
         .post(isAuthenticated, preguntasController.responder);
 
     router.route('/sic/descargarespuestas/:id')
         .get(isAuthenticated, preguntasController.descargarespuestas);
+
+
 
     return router;
 }
