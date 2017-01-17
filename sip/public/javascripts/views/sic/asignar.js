@@ -74,7 +74,7 @@ var gridAsignar = {
         $gridTab.jqGrid('navGrid', '#navGridAsig', { edit: true, add: false, del: false, search: false },
             {
                 editCaption: "Asignar Responsable",
-                closeAfterEdit: true,
+                closeAfterEdit: false,
                 recreateForm: true,
                 //template: tmpl,
                 mtype: 'POST',

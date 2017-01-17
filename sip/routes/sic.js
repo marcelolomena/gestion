@@ -222,7 +222,13 @@ module.exports = function (passport) {
     router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
         res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
     });
-    
+
+    router.route('/sic/inboxpreguntaslist')
+        .post(isAuthenticated, preguntasController.listinbox);
+
+    router.route('/sic/inboxpreguntasaction')
+        .post(isAuthenticated, preguntasController.actioninbox);
+
 
 
     return router;

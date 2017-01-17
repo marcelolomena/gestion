@@ -21,7 +21,7 @@ exports.action = function (req, res) {
     switch (action) {
         case "add":
 
-            res.json({ id: req.body.idsolicitudcotizacion, idproveedor: req.body.idproveedor, success: true });
+            return res.json({ id: req.body.idsolicitudcotizacion, idproveedor: req.body.idproveedor, success: true });
 
             break;
         case "del":
@@ -33,10 +33,10 @@ exports.action = function (req, res) {
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
-                res.json({ success: true, glosa: 'Deleted successfully' });
+                return res.json({ success: true, glosa: 'Deleted successfully' });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ success: false, glosa: err.message });
+                return res.json({ success: false, glosa: err.message });
             });
             break;
     }
@@ -87,10 +87,10 @@ exports.proveedorespre = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 
 
@@ -134,7 +134,7 @@ exports.list = function (req, res) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
             })
         }
@@ -182,7 +182,7 @@ exports.listresponsables = function (req, res) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
             })
         }
@@ -246,7 +246,7 @@ exports.archivo = function (req, res) {
 
                     input.on('error', function (err) {
                         logger.error(err);
-                        res.json({ error_code: 1, message: err, success: false });
+                        return res.json({ error_code: 1, message: err, success: false });
                     });
 
                     var parser = csv.parse({
@@ -280,7 +280,7 @@ exports.archivo = function (req, res) {
 
                     parser.on('error', function (err) {
                         logger.error(err);
-                        res.json({ error_code: 1, message: err, success: false });
+                        return res.json({ error_code: 1, message: err, success: false });
                     });/*error*/
 
                     //parser.on('end', function (count) {
@@ -297,12 +297,12 @@ exports.archivo = function (req, res) {
                     });/*end*/
 
                 }).catch(function (err) {
-                    res.json({ error_code: 1, message: err, success: false });
+                    return res.json({ error_code: 1, message: err, success: false });
                     logger.error(err)
                 });
 
             }).catch(function (err) {
-                res.json({ error_code: 1, message: err, success: false });
+                return res.json({ error_code: 1, message: err, success: false });
                 logger.error(err)
             });
 
@@ -443,4 +443,86 @@ exports.getresponsablessolicitud = function (req, res) {
         logger.error(err);
         return res.json({ error: 1 });
     });
+}
+exports.listinbox = function (req, res) {
+    var page = req.body.page;
+    var rows = req.body.rows;
+    var sidx = req.body.sidx;
+    var sord = req.body.sord;
+    var idresponsable = req.session.passport.user;
+    var filters = req.body.filters;
+    var condition = "";
+
+    if (!sidx)
+        sidx = "b.id, a.id";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sic.preguntaproveedor a 
+            where a.idresponsable =  `+ idresponsable + ` and a.respuesta is null ` +
+        `  ` + condition
+
+    var sql = `
+            SELECT 
+                    b.id as idsolicitud, b.descripcion, a.id as idpregunta, a.tipo, a.pregunta, a.respuesta 
+                    FROM sic.preguntaproveedor a 
+                    join sic.solicitudcotizacion b on a.idsolicitudcotizacion = b.id 
+            where a.idresponsable = `+ idresponsable + ` and a.respuesta is null ` +
+        `  ` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+
+    logger.debug("lala : " + sql)
+    logger.debug("lili : " + idresponsable)
+
+
+
+    sequelize.query(count,
+        {
+            replacements: { idresponsable: idresponsable, condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
+            sequelize.query(sql,
+                {
+                    replacements: { page: parseInt(page), rows: parseInt(rows), idresponsable: idresponsable, condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    return res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    logger.error(e)
+                })
+
+        }).catch(function (e) {
+            logger.error(e)
+        })
+}
+
+exports.actioninbox = function (req, res) {
+    models.preguntaproveedor.update({
+        respuesta: req.body.respuesta,
+    }, {
+            where: {
+                id: req.body.id
+            }
+        }).then(function (preguntaproveedor) {
+            return res.json({ message: 'Exito', success: true });
+        }).catch(function (err) {
+            logger.error(err)
+            return res.json({ message: err.message, success: false });
+        });
+
 }
