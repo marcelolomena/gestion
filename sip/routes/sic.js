@@ -8,7 +8,7 @@ var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 var tocController = require('../controllers/sic/toc');
-var proveedoresController = require('../controllers/sic/proveedores');
+//var proveedoresController = require('../controllers/sic/proveedores');
 var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
 
@@ -28,8 +28,8 @@ module.exports = function (passport) {
     router.route('/sic/documentos/:id')
         .get(isAuthenticated, documentosController.list);
 
-    router.route('/sic/proveedores/:id')
-        .get(isAuthenticated, proveedoresController.list);
+    //router.route('/sic/proveedores/:id')
+    //    .get(isAuthenticated, proveedoresController.list);
 
     router.route('/sic/proveedorespre/:id')
         .get(isAuthenticated, preguntasController.proveedorespre);
@@ -189,8 +189,8 @@ module.exports = function (passport) {
     router.route('/sic/tocclases/action')
         .post(isAuthenticated, tocController.action2);
 
-    router.route('/sic/preguntaproveedor/action')
-        .post(isAuthenticated, proveedoresController.action);
+    //router.route('/sic/preguntaproveedor/action')
+    //    .post(isAuthenticated, proveedoresController.action);
 
     router.route('/sic/clasestoc/:id')
         .get(isAuthenticated, tocController.getclasestoc);
@@ -219,6 +219,10 @@ module.exports = function (passport) {
     router.route('/sic/descargarespuestas/:id')
         .get(isAuthenticated, preguntasController.descargarespuestas);
 
+    router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
+        res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
+    });
+    
 
 
     return router;

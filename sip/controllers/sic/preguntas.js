@@ -76,26 +76,6 @@ exports.responder = function (req, res) {
 
 
 exports.proveedorespre = function (req, res) {
-    /*
-        models.solicitudproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitud' });
-        models.solicitudproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-    
-        models.solicitudproveedor.findAll({
-    
-            where: { idsolicitud: req.params.id },
-            include: [{
-                model: models.solicitudcotizacion
-            }, { model: models.proveedor }
-            ]
-        }).then(function (solicitudproveedor) {
-            return res.json(solicitudproveedor);
-        }).catch(function (err) {
-            logger.error(err);
-            res.json({ error_code: 1 });
-        });
-        */
-
-    //jajajajaja mucho webeo el sequelize aguante las querys
 
     var id = req.params.id;
 
@@ -291,6 +271,8 @@ exports.archivo = function (req, res) {
                             item['pregunta'] = line.pregunta;
                             item['respuesta'] = null;
                             item['borrado'] = 1;
+
+                            console.dir(item);
 
                             carrusel.push(item);
                         }
