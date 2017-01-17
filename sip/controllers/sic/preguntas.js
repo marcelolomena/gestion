@@ -341,7 +341,7 @@ exports.descargarespuestas = function (req, res) {
     models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
     models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
     models.preguntaproveedor.findAll({
-        attributes: [s ['pregunta', 'pregunta'], ['respuesta', 'respuesta']],
+        attributes: [['id', 'id'], ['pregunta', 'pregunta'], ['respuesta', 'respuesta']],
         where: { idsolicitudcotizacion: req.params.id },
         include: [{
             attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
@@ -357,6 +357,12 @@ exports.descargarespuestas = function (req, res) {
         var conf = {}
         conf.cols = [
             {
+                caption: 'Id',
+                type: 'string',
+                width: 30
+            },
+            /*
+            {
                 caption: 'Proveedor',
                 type: 'string',
                 width: 200
@@ -366,15 +372,19 @@ exports.descargarespuestas = function (req, res) {
                 type: 'string',
                 width: 200
             },
+            */
             {
                 caption: 'Pregunta',
                 type: 'string',
-                width: 200
+                beforeCellWrite: function (row, cellData) {
+                    return cellData.toUpperCase();
+                },
+                width: 28.7109375
             },
             {
                 caption: 'Respuesta',
                 type: 'string',
-                width: 200
+                width: 600
             }
         ];
 
@@ -406,10 +416,12 @@ exports.descargarespuestas = function (req, res) {
                 respuesta = preguntaproveedor[p].respuesta.replace(noHTML, '')
                 //logger.debug("cvacacv : " + respuesta)
             }
+            //logger.debug("el id es: " + preguntaproveedor[p].id)
 
             a = [
-                proveedor,
-                responsable,
+                preguntaproveedor[p].id.toString(),
+                //proveedor,
+                //responsable,
                 preguntaproveedor[p].pregunta,
                 respuesta
             ]
@@ -423,11 +435,11 @@ exports.descargarespuestas = function (req, res) {
         var result = nodeExcel.execute(conf);
         res.setHeader('Content-Type', 'application/vnd.openxmlformates');
         res.setHeader("Content-Disposition", "attachment;filename=" + "respuestas_" + + Math.floor(Date.now()) + ".xlsx");
-        res.end(result, 'binary');
+        return res.end(result, 'binary');
 
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error_code: 1 });
+        return res.json({ error_code: 1 });
     });
 
 
@@ -437,10 +449,10 @@ exports.getresponsablessolicitud = function (req, res) {
     var id = req.params.id;
 
     sequelize.query(
-        'select a.uid, a.first_name, a.last_name from art_user a '+
-'join sic.responsablesolicitud b on b.idresponsable=a.uid '+
-'where b.idsolicitudcotizacion = :id '+
-'order by a.first_name, a.last_name ',
+        'select a.uid, a.first_name, a.last_name from art_user a ' +
+        'join sic.responsablesolicitud b on b.idresponsable=a.uid ' +
+        'where b.idsolicitudcotizacion = :id ' +
+        'order by a.first_name, a.last_name ',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
