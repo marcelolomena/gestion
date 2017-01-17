@@ -1,0 +1,11 @@
+extends base.pug
+block titulo
+  title SIC Banco de Chile - Sistema Integrado de Contratos - Preguntas Proveedores
+block jsgrilla
+  script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
+  script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           
+  script(type='text/javascript', src='/javascripts/views/sic/inboxpreguntas.js')   
+block titulogrilla
+block grilla
+ table#table_inbox
+ #pager_inbox

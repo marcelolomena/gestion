@@ -105,12 +105,12 @@ module.exports = (function () {
                     });
 
                     var _countQuestion = yield models.preguntaproveedor.count({
-                        where: [{ 'respuesta': { $ne: null } }, { idresponsable: user.uid }]
+                        where: [{ 'respuesta': null }, { idresponsable: user.uid }]
                     }).catch(function (err) {
                         logger.error(err)
                     });
 
-                    //logger.debug("cantidad : " + _countQuestion)
+                    logger.debug("cantidad : " + _countQuestion)
 
                     var sqlrol = `
                         select c.id, c.glosarol from art_user a 

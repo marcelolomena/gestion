@@ -1,14 +1,14 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('solicitudproveedor', {
+  return sequelize.define('responsablesolicitud', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    idsolicitud: {
+    idsolicitudcotizacion: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -16,11 +16,19 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idproveedor: {
+    idresponsable: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'proveedor',
+        model: 'art_user',
+        key: 'uid'
+      }
+    },
+     idrol: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'rol',
         key: 'id'
       }
     },
@@ -29,6 +37,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'solicitudproveedor'
+    schema: 'sic',timestamps: false,tableName: 'responsablesolicitud'
   });
 };
