@@ -279,7 +279,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true,
             },
             {
-                label: 'Cuenta', name: 'cuentacontable', width: 100, align: 'left', search: true, editable: false, hidden: false,
+                label: 'Cuenta', name: 'servicio.cuentascontable.cuentacontable', width: 100, align: 'left', search: true, editable: false, hidden: false,
             },
             {
                 label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'center', search: true, editable: true, hidden: false,
@@ -779,9 +779,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idservicio;
                     var thiscid = rowData.idcui;
+                    var grid = $('#' + subgrid_table_id);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);                    
+                    //var pthissid = rowData.tipocontrato;                       
                     $.ajax({
                         type: "GET",
-                        url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thiscid,
+                        url: '/contratoservicio/cuiforservice/' + $('#grid').getRowData(row_id).idproveedor + '/' + thiscid + '/'+ tipocontrato,
                         async: false,
                         success: function (data) {
                             var r = "<select>";

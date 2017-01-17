@@ -25,15 +25,17 @@ exports.action = function (req, res) {
         case "add":
             var sql = "DECLARE @ctacontable INT; " +
                 "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
+                "DECLARE @estadocto VARCHAR(100); "+
+                "SELECT @estadocto=nombre FROM sip.parametro WHERE id="+req.body.idestadocto+"; "+
                 "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, " +
                 "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
-                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, " +
+                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, estadocontrato, " +
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
                 "diferido, saldopresupuesto, tipogeneracion, comentario "+sapcampos+") "+
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
                 req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
                 req.body.idplazocontrato + "," + req.body.idcondicion + "," +
-                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",'" +
+                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",@estadocto,'" +
                 req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
                 req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
                 req.body.tipogeneracion + ",'" + req.body.comentario + "'"+sapdatos+"); " +
@@ -74,12 +76,14 @@ exports.action = function (req, res) {
 
             var sql = "DECLARE @ctacontable INT; " +
                 "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
+                "DECLARE @estadocto VARCHAR(100); "+
+                "SELECT @estadocto=nombre FROM sip.parametro WHERE id="+req.body.idestadocto+"; "+                
                 "UPDATE sip.detalleserviciocto set anexo='" + anexo + "', idcui=" + req.body.idcui + ", idservicio=" + req.body.idservicio +
                 ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
                 "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + req.body.valorcuota + ", valortotal=" + req.body.valorcuota +
                 ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
                 ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + ", idcontactoproveedor=" + req.body.idcontactoproveedor +
-                ", idestadocto=" + req.body.idestadocto + ", glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
+                ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
                 ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
                 ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
                 ", comentario='" + req.body.comentario + "' " +upsap+" "+
@@ -576,7 +580,7 @@ exports.list = function (req, res) {
             models.detalleserviciocto.belongsTo(models.contrato, { foreignKey: 'idcontrato' });
             models.detalleserviciocto.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
             models.detalleserviciocto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
-            models.detalleserviciocto.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
+            models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
             models.detalleserviciocto.belongsTo(models.moneda, { foreignKey: 'idmoneda' });
 
             models.detalleserviciocto.count({
@@ -593,7 +597,10 @@ exports.list = function (req, res) {
                     }, {
                         model: models.estructuracui
                     }, {
-                        model: models.servicio
+                        model: models.servicio,
+                        include: [{
+                            model: models.cuentascontables
+                        }]
                     }]
                 }).then(function (contratos) {
                     //console.dir(contratos)
