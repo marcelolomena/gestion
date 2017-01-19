@@ -240,6 +240,12 @@ module.exports = function (passport) {
     router.route('/sic/gettiporesponsable')
         .get(isAuthenticated, calendarioController.gettiporesponsable);
 
+    router.route('/sic/buscarsecuenciatoc/:idtipo')
+        .get(isAuthenticated, tocController.buscarsecuenciatoc);
+
+    router.route('/sic/buscarsecuenciatocplantilla/:idtipo/:idclase')
+        .get(isAuthenticated, tocController.buscarsecuenciatocplantilla);
+
 
     return router;
 }
