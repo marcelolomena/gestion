@@ -10,33 +10,31 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechamastardia;
+    var fechatermino;
 
     if (action != "del") {
-        if (req.body.fechamastardia != "")
-            fechamastardia = req.body.fechamastardia.split("-").reverse().join("-")
+        if (req.body.fechatermino != "")
+            fechatermino = req.body.fechatermino.split("-").reverse().join("-")
     }
-
-    logger.debug("la fecha ql:: " + fechamastardia);
 
     switch (action) {
         case "add":
-            models.responsablesolicitud.create({
+            models.calendariosolicitud.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-                idrol: req.body.idrol,
-                idresponsable: req.body.idresponsable,
-                fechamastardia: fechamastardia,
-                descripciondeberesproceso: req.body.descripciondeberesproceso,
+                descripcion: req.body.descripcion,
+                fechatermino: fechatermino,
+                observacion: req.body.observacion,
+                idtiporesponsable: req.body.idtiporesponsable,
                 borrado: 1
             }).then(function (serviciosrequeridos) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
-                    'responsablesolicitud',
+                    'calendariosolicitud',
                     serviciosrequeridos.id,
                     'insert',
                     req.session.passport.user,
                     new Date(),
-                    models.serviciosrequeridos,
+                    models.calendariosolicitud,
                     function (err, data) {
                         if (data) {
                             logger.debug("->>> " + data)
@@ -45,13 +43,46 @@ exports.action = function (req, res) {
                             logger.error("->>> " + err)
                         }
                     });
-                return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
+                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                return res.json({ id: 0, message: err.message, success: false });
+                res.json({ id: 0, message: err.message, success: false });
             });
             break;
         case "edit":
+
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'calendariosolicitud',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.calendariosolicitud, function (err, data) {
+                    if (data) {
+                        logger.debug("->>> " + data)
+
+                        models.calendariosolicitud.update({
+                            descripcion: req.body.descripcion,
+                            fechatermino: fechatermino,
+                            observacion: req.body.observacion,
+                            idtiporesponsable: req.body.idtiporesponsable,
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (serviciosrequeridos) {
+
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ id: 0, message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error("->>> " + err)
+                    }
+
+                });
 
 
             break;
@@ -60,14 +91,14 @@ exports.action = function (req, res) {
 
             bitacora.registrar(
                 req.body.idsolicitudcotizacion,
-                'responsablesolicitud',
+                'calendariosolicitud',
                 req.body.id, 'delete',
                 req.session.passport.user,
                 new Date(),
-                models.responsablesolicitud, function (err, data) {
+                models.calendariosolicitud, function (err, data) {
                     if (data) {
 
-                        models.responsablesolicitud.destroy({
+                        models.calendariosolicitud.destroy({
                             where: {
                                 id: req.body.id
                             }
@@ -79,11 +110,11 @@ exports.action = function (req, res) {
 
                                 logger.debug('Deleted successfully');
                             }
-                            return res.json({ error: 0, glosa: '' });
+                            res.json({ error: 0, glosa: '' });
 
                         }).catch(function (err) {
                             logger.error(err)
-                            return res.json({ id: 0, message: err.message, success: false });
+                            res.json({ id: 0, message: err.message, success: false });
                         });
                     } else {
                         logger.error("->>> " + err)
@@ -128,28 +159,25 @@ exports.list = function (req, res) {
         } else {
             //logger.debug(data)
 
-            models.responsablesolicitud.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-            models.responsablesolicitud.belongsTo(models.user, { foreignKey: 'idresponsable' });
-            models.responsablesolicitud.belongsTo(models.rol, { foreignKey: 'idrol' });
-            models.responsablesolicitud.count({
+            models.calendariosolicitud.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.calendariosolicitud.belongsTo(models.valores, { foreignKey: 'idtiporesponsable' });
+            models.calendariosolicitud.count({
                 where: {
                     idsolicitudcotizacion: id
                 }
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.responsablesolicitud.findAll({
+                models.calendariosolicitud.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     //order: orden,
                     where: {
                         idsolicitudcotizacion: id
                     },
-                    include: [{
-                        model: models.user
-                    },
-                    {
-                        model: models.rol
-                    }
+                    include: [
+                        {
+                            model: models.valores
+                        }
                     ]
                 }).then(function (serviciosrequeridos) {
                     //logger.debug(solicitudcotizacion)
@@ -164,33 +192,14 @@ exports.list = function (req, res) {
 
 };
 
-exports.getUsersByRolId = function (req, res) {
-    models.user.belongsToMany(models.rol, { foreignKey: 'uid', through: models.usrrol });
-    models.rol.belongsToMany(models.user, { foreignKey: 'rid', through: models.usrrol });
+exports.gettiporesponsable = function (req, res) {
 
-    models.user.findAll({
-        attributes: ['uid', 'first_name', 'last_name'],
-        order: ['[user].first_name', '[user].last_name'],
-        include: [{
-            model: models.rol,
-            where: { 'id': req.params.id }, attributes: ['id', 'glosarol']
-        }]
-    }).then(function (gerentes) {
-        return res.json(gerentes);
-    }).catch(function (err) {
-        logger.error(err)
-        return res.json({ error_code: 1 });
-    });
-}
-
-exports.getRoles = function (req, res) {
-
-    var sql = "select * from sip.rol " +
-        "where borrado=1 order by glosarol";
+    var sql = "select * from sic.valores where tipo='tiporesponsable' " +
+        "and borrado=1 order by nombre";
 
     sequelize.query(sql)
         .spread(function (rows) {
-            return res.json(rows);
+            res.json(rows);
         });
 
 };

@@ -16,10 +16,11 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
 
     tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-four'><span style='color: red'>*</span>Clausula {idplantillaclausula}</div>";
+    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Secuencia {secuencia}</div>";
     tmplPF += "</div>";
 
-    tmplPF += "<div class='form-row' id='elradio'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Secuencia {secuencia}</div>";
+    tmplPF += "<div class='form-row' id='mensaje' >";
+    //tmplPF += "<div class='column-half'><span style='color: red'><p>Se movera el orden</p></div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -31,10 +32,10 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
     var grillapadre = subgrid_id.substring(0,subgrid_id.lastIndexOf("_"));
-    console.log("esto necesito: "+grillapadre);
-    console.log("esto tambien necesito: "+parentRowKey);
+    //console.log("esto necesito: "+grillapadre);
+    //console.log("esto tambien necesito: "+parentRowKey);
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    console.log("esyto no va a salir: "+rowData);
+    //console.log("esyto no va a salir: "+rowData);
     var parentClase = rowData.idclase;
     var parentTipo = rowData.idtipoclausula;
 
@@ -69,7 +70,68 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
         },
         { label: 'Codigo Clausula', name: 'plantillaclausula.codigo', width: 150, editable: true, editoptions: { size: 10 } },
 
-        { label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
+        //{ label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
+
+        {
+            label: 'Secuencia', name: 'secuencia', width: 80, search: false, editable: true, hidden: false,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/buscarsecuenciatocplantilla/' + parentTipo + "/"+ parentClase,
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.secuencia;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    //s += '<option value="0">--Seleccione una secuencia--</option>';
+                    if (data == '') {
+                        s += '<option value="' + 1 + '" selected>' + 1 + '</option>';
+                    } else {
+                        var laqueviene = 0;
+                        var ultimasecuencia = data[data.length - 1].secuencia
+
+                        for (i = 1; i <= ultimasecuencia; i++) {
+                            if (data[laqueviene].secuencia == i) {
+                                s += '<option style="background: red; color: #FFF;" value="' + i + '">' + i + '</option>';
+                                laqueviene++;
+                            } else {
+                                s += '<option value="' + i + '">' + i + '</option>';
+                            }
+                        }
+                        s += '<option value="' + (ultimasecuencia + 1) + '" selected>' + (ultimasecuencia + 1) + '</option>';
+
+                    }
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+
+                        var secuencia = $('option:selected', this).val()
+
+                        $.ajax({
+                            type: "GET",
+                            url: '/sic/buscarsecuenciatocplantilla/' + parentTipo + "/"+ parentClase,
+                            async: false,
+                            success: function (data) {
+                                var loencontro=false
+                                $.each(data, function (i, item) {
+                                    if (data[i].secuencia == secuencia) {
+                                        $("#mensaje").html("<div class='column-half'><span style='color: red'><p>Se movera el orden</p></div>");
+                                        loencontro=true;
+                                        //console.log("1 lo encontro")
+                                    } 
+                                });
+                                if(!loencontro){
+                                    $("#mensaje").html("")
+                                    //console.log("1 no encontro")
+                                }
+                            }
+                        });
+
+                    }
+                }],
+            }
+        },
 
 
 
@@ -96,7 +158,7 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
-        checkOnUpdate: true,
+        //checkOnUpdate: true,
         pager: "#" + childGridPagerID,
         editurl: '/sic/tocclausulas/action',
         gridComplete: function () {
@@ -119,11 +181,6 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
             width: 800,
             editCaption: "Modificar Secuencia",
             template: tmplPF,
-            checkOnUpdate: true,
-            saveData: "¿Desea guardar los cambios antes de salir?",
-            bYes: "Sí",
-            bNo: "",
-            bExit: "No",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -153,7 +210,7 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             width: 800,
-            checkOnUpdate: true,
+            //checkOnUpdate: true,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Cláusula",
             template: tmplPF,

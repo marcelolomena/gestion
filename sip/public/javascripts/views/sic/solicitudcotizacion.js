@@ -576,7 +576,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
         tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
         tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
-        tabs += "<li><a data-target='#calendario' data-toggle='tab'>Calendario</a></li>"
+        tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey +"'>Responsables</a></li>"
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
@@ -589,7 +589,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane active' id='documentos'><div class='container-fluid'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div></div>"
         tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridServ'></div></div>"
         tabs += "<div class='tab-pane' id='foro'></div>"
-        tabs += "<div class='tab-pane' id='calendario'></div>"
+        tabs += "<div class='tab-pane' id='calendario'><table id='calendario_t_" + parentRowKey + "'></table><div id='navGridCal'></div></div>"
         tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
         tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
         tabs += "<div class='tab-pane' id='criterios'></div>"
@@ -613,6 +613,8 @@ $(document).ready(function () {
                 gridClausula.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#responsables') {
                 gridResponsables.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#calendario') {
+                gridCalendario.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
@@ -631,6 +633,8 @@ $(document).ready(function () {
                 gridClausula.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#responsables') {
                 gridResponsables.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#calendario') {
+                gridCalendario.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');

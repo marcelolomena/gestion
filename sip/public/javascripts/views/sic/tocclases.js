@@ -1,6 +1,6 @@
 function gridClases(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
-    console.log("aca viene solo: "+subgrid_id)
+    //console.log("aca viene solo: " + subgrid_id)
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
     subgrid_table_id = subgrid_id + '_t';
@@ -16,11 +16,13 @@ function gridClases(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Clase {idclase}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Clase {idclase}</div>";
+    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Secuencia {secuencia}</div>";
+
     tmplPF += "</div>";
 
-    tmplPF += "<div class='form-row' id='elradio'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Secuencia {secuencia}</div>";
+    tmplPF += "<div class='form-row' id='mensaje' >";
+    //tmplPF += "<div class='column-half'><span style='color: red'><p>Se movera el orden</p></div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -35,12 +37,12 @@ function gridClases(parentRowID, parentRowKey, suffix) {
 
     var modelClases = [
         { label: 'id', name: 'id', key: true, hidden: true },
-    
+
         {
             label: 'Clase', name: 'idclase', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/clasestoc/'+parentRowKey,
+                dataUrl: '/sic/clasestoc/' + parentRowKey,
                 buildSelect: function (response) {
                     var rowKey = $("#" + childGridID).getGridParam("selrow");
                     var rowData = $("#" + childGridID).getRowData(rowKey);
@@ -62,10 +64,71 @@ function gridClases(parentRowID, parentRowKey, suffix) {
         },
         { label: 'Clase', name: 'clase.titulo', width: 150, editable: true, editoptions: { size: 10 } },
 
-        { label: 'idtipoclausula', name: 'idtipoclausula',editable: false, editoptions: { size: 10 },hidden: true},
+        { label: 'idtipoclausula', name: 'idtipoclausula', editable: false, editoptions: { size: 10 }, hidden: true },
 
-         { label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
-        
+        //{ label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
+
+        {
+            label: 'Secuencia', name: 'secuencia', width: 80, search: false, editable: true, hidden: false,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/buscarsecuenciatoc/' + parentRowKey,
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.secuencia;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    //s += '<option value="0">--Seleccione una secuencia--</option>';
+                    if (data == '') {
+                        s += '<option value="' + 1 + '" selected>' + 1 + '</option>';
+                    } else {
+                        var laqueviene = 0;
+                        var ultimasecuencia = data[data.length - 1].secuencia
+
+                        for (i = 1; i <= ultimasecuencia; i++) {
+                            if (data[laqueviene].secuencia == i) {
+                                s += '<option style="background: red; color: #FFF;" value="' + i + '">' + i + '</option>';
+                                laqueviene++;
+                            } else {
+                                s += '<option value="' + i + '">' + i + '</option>';
+                            }
+                        }
+                        s += '<option value="' + (ultimasecuencia + 1) + '" selected>' + (ultimasecuencia + 1) + '</option>';
+
+                    }
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+
+                        var secuencia = $('option:selected', this).val()
+
+                        $.ajax({
+                            type: "GET",
+                            url: '/sic/buscarsecuenciatoc/' + parentRowKey,
+                            async: false,
+                            success: function (data) {
+                                var loencontro=false
+                                $.each(data, function (i, item) {
+                                    if (data[i].secuencia == secuencia) {
+                                        $("#mensaje").html("<div class='column-half'><span style='color: red'><p>Se movera el orden</p></div>");
+                                        loencontro=true;
+                                        //console.log("1 lo encontro")
+                                    } 
+                                });
+                                if(!loencontro){
+                                    $("#mensaje").html("")
+                                    //console.log("1 no encontro")
+                                }
+                            }
+                        });
+
+                    }
+                }],
+            }
+        },
+
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -87,7 +150,7 @@ function gridClases(parentRowID, parentRowKey, suffix) {
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
-        checkOnUpdate: true,
+        //checkOnUpdate: true,
         pager: "#" + childGridPagerID,
         subGrid: true,
         subGridRowExpanded: showSubGrids,
@@ -116,33 +179,29 @@ function gridClases(parentRowID, parentRowKey, suffix) {
             width: 800,
             editCaption: "Modificar Secuencia",
             template: tmplPF,
-            checkOnUpdate: true,
-            saveData: "¿Desea guardar los cambios antes de salir?",
-            bYes: "Sí",
-            bNo: "",
-            bExit: "No",
+            //checkOnUpdate: true,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 setTimeout(function () {
-                        $("#idclase", form).attr('disabled', 'disabled');
-                    }, 650);
+                    $("#idclase", form).attr('disabled', 'disabled');
+                }, 650);
             },
 
-           
 
-           
-          
-            
+
+
+
+
         },
         {
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             width: 800,
-            checkOnUpdate: true,
+            //checkOnUpdate: true,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Clase",
             template: tmplPF,
@@ -157,9 +216,9 @@ function gridClases(parentRowID, parentRowKey, suffix) {
             },
 
 
-           
 
-           
+
+
             beforeSubmit: function (postdata, formid) {
                 if (postdata.idclase == 0) {
                     return [false, "Clase: Campo obligatorio", ""];
@@ -167,7 +226,7 @@ function gridClases(parentRowID, parentRowKey, suffix) {
                     return [true, "", ""]
                 }
             }
-            
+
         },
         {
             closeAfterDelete: true,
@@ -177,6 +236,14 @@ function gridClases(parentRowID, parentRowKey, suffix) {
             addCaption: "Eliminar Clase",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },
+            afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error_code != 0)
+                    return [false, result.glosa, ""];
+                else
+                    return [true, "", ""]
             }
         },
         {
@@ -185,7 +252,7 @@ function gridClases(parentRowID, parentRowKey, suffix) {
     );
 
     function showSubGrids(subgrid_id, row_id) {
-        console.log("esto es antes: "+subgrid_id);
+        //console.log("esto es antes: " + subgrid_id);
         gridPlantillas(subgrid_id, row_id, 'plantilla');
     }
 

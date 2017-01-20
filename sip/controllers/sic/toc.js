@@ -158,46 +158,164 @@ exports.action2 = function (req, res) {
 
     switch (action) {
         case "add":
+            sequelize.query(
+                "select a.* " +
+                "from sic.toc a " +
+                "where a.idtipoclausula = " + req.body.parent_id + " and a.idplantillaclausula is null order by a.secuencia ",
+                { type: sequelize.QueryTypes.SELECT }
+            ).then(function (secuencias) {
+                var yaloencontre = false
+                for (i in secuencias) {
+                    if (!yaloencontre) {
+                        if (secuencias[i].secuencia == req.body.secuencia) {
+                            yaloencontre = true;
+                            models.toc.update({
+                                secuencia: secuencias[i].secuencia + 1,
+                            }, {
+                                    where: {
+                                        id: secuencias[i].id
+                                    }
+                                }).then(function (toc) {
+                                    logger.debug('Cambio uno');
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    return res.json({ error: 1, glosa: err.message });
+                                });
+
+                        }
+                    } else {
+                        models.toc.update({
+                            secuencia: secuencias[i].secuencia + 1,
+                        }, {
+                                where: {
+                                    id: secuencias[i].id
+                                }
+                            }).then(function (toc) {
+                                logger.debug('Cambio otro');
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ error: 1, glosa: err.message });
+                            });
+
+                    }
+                }
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ error: 1, glosa: err.message });
+            });
+
+
             models.toc.create({
                 idtipoclausula: req.body.parent_id,
                 idclase: req.body.idclase,
                 secuencia: req.body.secuencia,
                 borrado: 1
             }).then(function (toc) {
-                res.json({ error: 0, glosa: '' });
+                return res.json({ error: 0, glosa: '' });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ error: 1, glosa: err.message });
+                return res.json({ error: 1, glosa: err.message });
             });
-
             break;
         case "edit":
-            models.toc.update({
-                secuencia: req.body.secuencia,
-            }, {
+            sequelize.query(
+                "select a.* " +
+                "from sic.toc a " +
+                "where a.id= " + req.body.id + " ",
+                { type: sequelize.QueryTypes.SELECT }
+            ).then(function (secuenciainicial) {
+
+                sequelize.query(
+                    "select a.* " +
+                    "from sic.toc a " +
+                    "where a.idtipoclausula = " + secuenciainicial[0].idtipoclausula + " and a.idplantillaclausula is null and id <> " + secuenciainicial[0].id + " order by a.secuencia",
+                    { type: sequelize.QueryTypes.SELECT }
+                ).then(function (secuencias) {
+                    var yaloencontre = false
+                    for (i in secuencias) {
+                        if (!yaloencontre) {
+                            if (secuencias[i].secuencia == req.body.secuencia) {
+                                yaloencontre = true;
+                                models.toc.update({
+                                    secuencia: secuencias[i].secuencia + 1,
+                                }, {
+                                        where: {
+                                            id: secuencias[i].id
+                                        }
+                                    }).then(function (toc) {
+                                        logger.debug('Cambio uno');
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        return res.json({ error: 1, glosa: err.message });
+                                    });
+
+                            }
+                        } else {
+                            models.toc.update({
+                                secuencia: secuencias[i].secuencia + 1,
+                            }, {
+                                    where: {
+                                        id: secuencias[i].id
+                                    }
+                                }).then(function (toc) {
+                                    logger.debug('Cambio otro');
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    return res.json({ error: 1, glosa: err.message });
+                                });
+
+                        }
+                    }
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ error: 1, glosa: err.message });
+                });
+
+                models.toc.update({
+                    secuencia: req.body.secuencia,
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (toc) {
+                        return res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        return res.json({ error: 1, glosa: err.message });
+                    });
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ error: 1, glosa: err.message });
+            });
+            break;
+        case "del":
+            sequelize.query(
+                "select count(*) as hijos " +
+                "from sic.toc a " +
+                "where a.idclase = (select b.idclase from sic.toc b where id=" + req.body.id + ") and a.idtipoclausula=(select b.idtipoclausula from sic.toc b where id=" + req.body.id + ")  and a.idplantillaclausula is not null",
+                { type: sequelize.QueryTypes.SELECT }
+            ).then(function (plantillas) {
+                logger.debug("resultado: " + plantillas[0].hijos)
+                if (plantillas[0].hijos > 0) {
+                    return res.json({ error_code: 1, glosa: "Existen plantillas asociadas a esta clase" });
+                }
+                models.toc.destroy({
                     where: {
                         id: req.body.id
                     }
-                }).then(function (toc) {
-                    res.json({ error: 0, glosa: '' });
+                }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                    if (rowDeleted === 1) {
+                        logger.debug('Deleted successfully');
+                    }
+                    return res.json({ error_code: 0, glosa: '' });
                 }).catch(function (err) {
                     logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
+                    return res.json({ error_code: 1, glosa: err.message });
                 });
-            break;
-        case "del":
-            models.toc.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ error: 0, glosa: '' });
+
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ error: 1, glosa: err.message });
+                return res.json({ error_code: 1, glosa: err.message });
             });
 
             break;
@@ -256,10 +374,10 @@ exports.list3 = function (req, res) {
                     }
                     ]
                 }).then(function (toc) {
-                    res.json({ records: records, total: total, page: page, rows: toc });
+                    return res.json({ records: records, total: total, page: page, rows: toc });
                 }).catch(function (err) {
                     //logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
             })
         }
@@ -270,9 +388,6 @@ exports.list3 = function (req, res) {
 exports.action3 = function (req, res) {
     var action = req.body.oper;
 
-
-
-
     switch (action) {
         case "add":
 
@@ -282,7 +397,52 @@ exports.action3 = function (req, res) {
                 }
             }).then(function (toc) {
 
-                console.dir(toc);
+                sequelize.query(
+                    "select a.* " +
+                    "from sic.toc a " +
+                    "where a.idtipoclausula = " + toc[0].idtipoclausula + " and a.idclase = " + toc[0].idclase + " and a.idplantillaclausula is not null order by a.secuencia ",
+                    { type: sequelize.QueryTypes.SELECT }
+                ).then(function (secuencias) {
+                    var yaloencontre = false
+                    for (i in secuencias) {
+                        if (!yaloencontre) {
+                            if (secuencias[i].secuencia == req.body.secuencia) {
+                                yaloencontre = true;
+                                models.toc.update({
+                                    secuencia: secuencias[i].secuencia + 1,
+                                }, {
+                                        where: {
+                                            id: secuencias[i].id
+                                        }
+                                    }).then(function (toc) {
+                                        logger.debug('Cambio uno');
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        return res.json({ error: 1, glosa: err.message });
+                                    });
+
+                            }
+                        } else {
+                            models.toc.update({
+                                secuencia: secuencias[i].secuencia + 1,
+                            }, {
+                                    where: {
+                                        id: secuencias[i].id
+                                    }
+                                }).then(function (toc) {
+                                    logger.debug('Cambio otro');
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    return res.json({ error: 1, glosa: err.message });
+                                });
+
+                        }
+                    }
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ error: 1, glosa: err.message });
+                });
+
                 models.toc.create({
                     idtipoclausula: toc[0].idtipoclausula,
                     idclase: toc[0].idclase,
@@ -303,18 +463,77 @@ exports.action3 = function (req, res) {
 
             break;
         case "edit":
-            models.toc.update({
-                secuencia: req.body.secuencia,
-            }, {
-                    where: {
-                        id: req.body.id
+
+            sequelize.query(
+                "select a.* " +
+                "from sic.toc a " +
+                "where a.id= " + req.body.id + " ",
+                { type: sequelize.QueryTypes.SELECT }
+            ).then(function (secuenciainicial) {
+
+                sequelize.query(
+                    "select a.* " +
+                    "from sic.toc a " +
+                    "where a.idtipoclausula = " + secuenciainicial[0].idtipoclausula + " and a.idclase = " + secuenciainicial[0].idclase + " and a.idplantillaclausula is not null and id <> " + secuenciainicial[0].id + " order by a.secuencia",
+                    { type: sequelize.QueryTypes.SELECT }
+                ).then(function (secuencias) {
+                    var yaloencontre = false
+                    for (i in secuencias) {
+                        if (!yaloencontre) {
+                            if (secuencias[i].secuencia == req.body.secuencia) {
+                                yaloencontre = true;
+                                models.toc.update({
+                                    secuencia: secuencias[i].secuencia + 1,
+                                }, {
+                                        where: {
+                                            id: secuencias[i].id
+                                        }
+                                    }).then(function (toc) {
+                                        logger.debug('Cambio uno');
+                                    }).catch(function (err) {
+                                        logger.error(err)
+                                        return res.json({ error: 1, glosa: err.message });
+                                    });
+
+                            }
+                        } else {
+                            models.toc.update({
+                                secuencia: secuencias[i].secuencia + 1,
+                            }, {
+                                    where: {
+                                        id: secuencias[i].id
+                                    }
+                                }).then(function (toc) {
+                                    logger.debug('Cambio otro');
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    return res.json({ error: 1, glosa: err.message });
+                                });
+
+                        }
                     }
-                }).then(function (toc) {
-                    res.json({ error: 0, glosa: '' });
                 }).catch(function (err) {
                     logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
+                    return res.json({ error: 1, glosa: err.message });
                 });
+
+                models.toc.update({
+                    secuencia: req.body.secuencia,
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (toc) {
+                        return res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        return res.json({ error: 1, glosa: err.message });
+                    });
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ error: 1, glosa: err.message });
+            });
+
             break;
         case "del":
             models.toc.destroy({
@@ -362,7 +581,7 @@ exports.getclausulastoc = function (req, res) {
     sequelize.query(
         'select a.* ' +
         'from sic.plantillaclausula a ' +
-        "where a.id not in (select b.idplantillaclausula from sic.toc b where idclase= (select idclase from sic.toc where id="+id+") and idplantillaclausula is not null and idtipoclausula= (select idtipoclausula from sic.toc where id="+id+")) and idclase = (select idclase from sic.toc where id="+id+") ",
+        "where a.id not in (select b.idplantillaclausula from sic.toc b where idclase= (select idclase from sic.toc where id=" + id + ") and idplantillaclausula is not null and idtipoclausula= (select idtipoclausula from sic.toc where id=" + id + ")) and idclase = (select idclase from sic.toc where id=" + id + ") ",
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -440,4 +659,41 @@ exports.download = function (req, res) {
         res.status(500).send(err.message);
     });
 
+}
+
+exports.buscarsecuenciatoc = function (req, res) {
+
+    var idtipo = req.params.idtipo;
+
+    sequelize.query(
+        "select a.secuencia " +
+        "from sic.toc a " +
+        "where a.idtipoclausula = " + idtipo + " and a.idplantillaclausula is null order by a.secuencia ",
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.buscarsecuenciatocplantilla = function (req, res) {
+
+    var idtipo = req.params.idtipo;
+    var idclase = req.params.idclase;
+
+    sequelize.query(
+        "select a.secuencia " +
+        "from sic.toc a " +
+        "where a.idtipoclausula = " + idtipo + " and idclase = " + idclase + "and a.idplantillaclausula is not null order by a.secuencia ",
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 }

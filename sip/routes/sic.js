@@ -11,6 +11,8 @@ var tocController = require('../controllers/sic/toc');
 //var proveedoresController = require('../controllers/sic/proveedores');
 var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
+var calendarioController = require('../controllers/sic/calendario');
+
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -222,7 +224,27 @@ module.exports = function (passport) {
     router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
         res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
     });
-    
+
+    router.route('/sic/inboxpreguntaslist')
+        .post(isAuthenticated, preguntasController.listinbox);
+
+    router.route('/sic/inboxpreguntasaction')
+        .post(isAuthenticated, preguntasController.actioninbox);
+
+    router.route('/sic/calendario/:id')
+        .get(isAuthenticated, calendarioController.list);
+
+    router.route('/sic/calendario/action')
+        .post(isAuthenticated, calendarioController.action);
+
+    router.route('/sic/gettiporesponsable')
+        .get(isAuthenticated, calendarioController.gettiporesponsable);
+
+    router.route('/sic/buscarsecuenciatoc/:idtipo')
+        .get(isAuthenticated, tocController.buscarsecuenciatoc);
+
+    router.route('/sic/buscarsecuenciatocplantilla/:idtipo/:idclase')
+        .get(isAuthenticated, tocController.buscarsecuenciatocplantilla);
 
 
     return router;

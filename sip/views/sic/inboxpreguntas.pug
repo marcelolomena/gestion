@@ -4,8 +4,15 @@ block titulo
 block jsgrilla
   script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
   script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           
-  script(type='text/javascript', src='/javascripts/views/sic/inboxpreguntas.js')   
+  script(type='text/javascript', src='/javascripts/views/sic/inboxpreguntas.js')
+  script(type='text/javascript', src='/javascripts/highcharts/highcharts.js')
+  script(type='text/javascript', src='/javascripts/highcharts/modules/exporting.js')
+    
 block titulogrilla
 block grilla
+ table#table_inboxRFC
+ #pager_inboxRFC
  table#table_inbox
  #pager_inbox
+ #container(style='min-width: 310px; height: 400px; margin: 0 auto')
+
