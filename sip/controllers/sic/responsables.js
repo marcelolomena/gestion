@@ -10,6 +10,14 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    var fechamastardia;
+
+    if (action != "del") {
+        if (req.body.fechamastardia != "")
+            fechamastardia = req.body.fechamastardia.split("-").reverse().join("-")
+    }
+
+    logger.debug("la fecha ql:: " + fechamastardia);
 
     switch (action) {
         case "add":
@@ -17,6 +25,8 @@ exports.action = function (req, res) {
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idrol: req.body.idrol,
                 idresponsable: req.body.idresponsable,
+                fechamastardia: fechamastardia,
+                descripciondeberesproceso: req.body.descripciondeberesproceso,
                 borrado: 1
             }).then(function (serviciosrequeridos) {
                 bitacora.registrar(
@@ -35,10 +45,10 @@ exports.action = function (req, res) {
                             logger.error("->>> " + err)
                         }
                     });
-                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
+                return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
             break;
         case "edit":
@@ -69,11 +79,11 @@ exports.action = function (req, res) {
 
                                 logger.debug('Deleted successfully');
                             }
-                            res.json({ error: 0, glosa: '' });
+                            return res.json({ error: 0, glosa: '' });
 
                         }).catch(function (err) {
                             logger.error(err)
-                            res.json({ id: 0, message: err.message, success: false });
+                            return res.json({ id: 0, message: err.message, success: false });
                         });
                     } else {
                         logger.error("->>> " + err)
@@ -169,19 +179,19 @@ exports.getUsersByRolId = function (req, res) {
         return res.json(gerentes);
     }).catch(function (err) {
         logger.error(err)
-        res.json({ error_code: 1 });
+        return res.json({ error_code: 1 });
     });
 }
 
 exports.getRoles = function (req, res) {
 
-  var sql = "select * from sip.rol " +
-    "where borrado=1 order by glosarol";
+    var sql = "select * from sip.rol " +
+        "where borrado=1 order by glosarol";
 
-  sequelize.query(sql)
-    .spread(function (rows) {
-      res.json(rows);
-    });
+    sequelize.query(sql)
+        .spread(function (rows) {
+            return res.json(rows);
+        });
 
 };
 

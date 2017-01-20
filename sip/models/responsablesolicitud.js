@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('responsablesolicitud', {
     id: {
       type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'uid'
       }
     },
-     idrol: {
+    idrol: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -32,11 +32,20 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    fechamastardia: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    descripciondeberesproceso: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
-  }, {
-    schema: 'sic',timestamps: false,tableName: 'responsablesolicitud'
-  });
+  },
+    {
+      schema: 'sic', timestamps: false, tableName: 'responsablesolicitud'
+    });
 };
