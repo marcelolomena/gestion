@@ -3,7 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var constants = require("../utils/constants");
 var logger = require("../utils/logger");
 exports.cuitroya = function (req, res) {
-  var rol = req.user[0].rid;
+  var rol = req.session.passport.sidebar[0].rid;
   logger.debug("******usr*********:" + req.session.passport.user);
   logger.debug("******rol*********:" + req.session.passport.sidebar[0].rid);
   logger.debug("*ROLADM*:" + constants.ROLADMDIVOT);
