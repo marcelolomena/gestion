@@ -13,7 +13,7 @@ body {
 </style>
 <script src="http://localhost:3000/javascripts/jquery-1.12.3.js" />
 <script>
-    $(function () {
+    $(function () { 
         var prefactura = {{{toJSON prefactura}}}
 
         var prefactura = data.map(function(b) { return [ b.id,
@@ -29,11 +29,13 @@ body {
 		 b.cuentacontable,
 		 b.nombrecuenta,
 		 b.montomulta,
+		 b.montoabono,
 		 b.nombreresponsable,
 		 b.numcui,
 		 b.montoapagar,
          b.idfacturacion,
 		 b.montomultapesos,
+		 b.montoabonopesos,
 		 b.montototalpesos,
 		 b.subtotal,
 		 b.tipocontrato,
@@ -101,6 +103,9 @@ body {
 						<h4 align="center">Precio  </h4>
 					</th>
 					<th>
+						<h4 align="center">Abono</h4>
+					</th>
+					<th>
 						<h4 align="center">Descuento</h4>
 					</th>
 					<th>
@@ -115,7 +120,7 @@ body {
 					<td>
 						{{servicio}}<br>
 						{{glosaservicio}}<br>
-						Monto Aprobado: {{montoaprobado}} {{glosamoneda}}, descuento {{montomulta}} {{glosamoneda}}, Total: {{montoapagar}} {{glosamoneda}}<br>
+						Monto Aprobado: {{montoaprobado}} {{glosamoneda}}, Abono {{montoabono}} {{glosamoneda}}, Descuento {{montomulta}} {{glosamoneda}}, Total: {{montoapagar}} {{glosamoneda}}<br>
 						Tipo de Cambio: {{factorconversion}}<br>
 						Cuenta Contable: {{cuentacontable}}, {{nombrecuenta}}<br>
 						Cui: {{numcui}}<br>
@@ -126,6 +131,7 @@ body {
 					</td>
 					<td class="text-right">1</td>
 					<td class="text-right" style="white-space: nowrap;">$ {{montoaprobadopesos}}</td>
+					<td class="text-right" style="white-space: nowrap;">$ {{montoabonopesos}}</td>
 					<td class="text-right" style="white-space: nowrap;">$ {{montomultapesos}}</td>					
 					<td class="text-right" style="white-space: nowrap;">$ {{montototalpesos}}</td>
 				</tr>

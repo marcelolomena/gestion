@@ -4,7 +4,7 @@ var logger = require("../utils/logger");
 module.exports = (function () {
 
       var findParamByType = function (label, callback) {
-            models.parametro.findAll({ where: { 'tipo': label } }).then(function (user) {
+            models.parametro.findAll({ where: { 'tipo': label }, order: [ ['secuencia', 'ASC']] }).then(function (user) {
                   callback(undefined, user);
             }).catch(function (err) {
                   logger.error(err)

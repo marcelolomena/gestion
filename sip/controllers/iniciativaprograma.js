@@ -75,6 +75,7 @@ exports.action = function (req, res) {
           pptoaprobadoprevisto: aprobado,
           pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
+          idetapa: req.body.idetapa,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
           duracionprevista: req.body.duracionprevista,
@@ -82,10 +83,10 @@ exports.action = function (req, res) {
           anoinicioprevisto: req.body.anoinicioprevisto,
           borrado: 1
         }).then(function (iniciativa) {
-          res.json({ error_code: 0 });
+          return res.json({ error_code: 0 });
         }).catch(function (err) {
           logger.error(err);
-          res.json({ error_code: 1 });
+          return res.json({ error_code: 1 });
         });
       } else {
         models.iniciativaprograma.create({
@@ -123,6 +124,7 @@ exports.action = function (req, res) {
           pptoaprobadoprevisto: aprobado,
           pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
+          idetapa: req.body.idetapa,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
           duracionprevista: req.body.duracionprevista,
@@ -130,10 +132,10 @@ exports.action = function (req, res) {
           anoinicioprevisto: req.body.anoinicioprevisto,
           borrado: 1
         }).then(function (iniciativa) {
-          res.json({ error_code: 0 });
+          return res.json({ error_code: 0 });
         }).catch(function (err) {
           logger.error(err);
-          res.json({ error_code: 1 });
+          return res.json({ error_code: 1 });
         });
       }
       break;
@@ -173,6 +175,7 @@ exports.action = function (req, res) {
           pptoaprobadoprevisto: aprobado,
           pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
+          idetapa: req.body.idetapa,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
           duracionprevista: req.body.duracionprevista,
@@ -184,11 +187,11 @@ exports.action = function (req, res) {
             }
           }).then(function (iniciativa) {
             logger.debug("*************el gasto modificado es: "+parseFloat(gasto));
-            res.json({ error_code: 0 });
+            return res.json({ error_code: 0 });
           }).catch(function (err) {
             logger.error(err);
             logger.debug("*************el gasto modificado es: "+parseFloat(gasto));
-            res.json({ error_code: 1 });
+            return res.json({ error_code: 1 });
           });
       } else {
         models.iniciativaprograma.update({
@@ -225,6 +228,7 @@ exports.action = function (req, res) {
           pptoaprobadoprevisto: aprobado,
           pptoaprobadodolares: aprobadodolares,
           idestado: req.body.idestado,
+          idetapa: req.body.idetapa,
           estado: req.body.estado,
           subcategoria: req.body.subcategoria,
           duracionprevista: req.body.duracionprevista,
@@ -235,10 +239,10 @@ exports.action = function (req, res) {
               id: req.body.id
             }
           }).then(function (iniciativa) {
-            res.json({ error_code: 0 });
+            return res.json({ error_code: 0 });
           }).catch(function (err) {
             logger.error(err);
-            res.json({ error_code: 1 });
+            return res.json({ error_code: 1 });
           });
       }
 
@@ -252,10 +256,10 @@ exports.action = function (req, res) {
         if (rowDeleted === 1) {
           logger.debug('Deleted successfully');
         }
-        res.json({ error_code: 0 });
+        return res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
-        res.json({ error_code: 1 });
+        return res.json({ error_code: 1 });
       });
 
       break;
@@ -301,10 +305,10 @@ exports.actualizaMontos = function (req, res) {
           id: req.params.idiniciativa
         }
       }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+        return res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
-        res.json({ error_code: 1 });
+        return res.json({ error_code: 1 });
       });
   })
 };
@@ -318,12 +322,12 @@ exports.codigoart = function (req, res) {
   }).then(function (iniciativas) {
     //gerentes.forEach(log)
     if (iniciativas)
-      res.json(iniciativas)
+      return res.json(iniciativas)
     else
       throw new Error('no data');
   }).catch(function (err) {
     logger.error(err);
-    res.json({ error_code: 1 });
+    return res.json({ error_code: 1 });
   });
 };
 
@@ -335,10 +339,10 @@ exports.combobox = function (req, res) {
     order: 'nombre'
   }).then(function (iniciativas) {
     //iniciativas.forEach(log)
-    res.json(iniciativas);
+    return res.json(iniciativas);
   }).catch(function (err) {
     logger.error(err);
-    res.json({ error_code: 1 });
+    return res.json({ error_code: 1 });
   });
 }
 exports.comboboxtotal = function (req, res) {
@@ -346,10 +350,10 @@ exports.comboboxtotal = function (req, res) {
     order: 'nombre'
   }).then(function (iniciativas) {
     //iniciativas.forEach(log)
-    res.json(iniciativas);
+    return res.json(iniciativas);
   }).catch(function (err) {
     logger.error(err);
-    res.json({ error_code: 1 });
+    return res.json({ error_code: 1 });
   });
 }
 
@@ -379,6 +383,7 @@ exports.list = function (req, res) {
     if (err) {
       logger.debug("->>> " + err)
     } else {
+      models.iniciativaprograma.belongsTo(models.parametro, { foreignKey: 'idetapa' });
       models.iniciativaprograma.count({
         where: data
       }).then(function (records) {
@@ -387,12 +392,15 @@ exports.list = function (req, res) {
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data
+          where: data,
+          include: [{
+                        model: models.parametro
+          }]
         }).then(function (iniciativas) {
-          res.json({ records: records, total: total, page: page, rows: iniciativas });
+          return res.json({ records: records, total: total, page: page, rows: iniciativas });
         }).catch(function (err) {
           logger.error(err);
-          res.json({ error_code: 1 });
+          return res.json({ error_code: 1 });
         });
       })
     }
