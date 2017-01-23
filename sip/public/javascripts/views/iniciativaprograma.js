@@ -22,7 +22,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
 
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-half'><span style='color: red'>*</span>Estado {idestado}</div>";
-    tmplP += "<div class='column-half'><span style='color: red'>*</span>Categoría {idcategoria}</div>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Etapa {idetapa}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
@@ -33,9 +33,13 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Categoría {idcategoria}</div>";
     tmplP += "<div class='column-half'>Subcategoría {idsubcategoria}</div>";
-    tmplP += "<div class='column-four'><span style='color: red'>*</span>Año {ano}</div>";
-    tmplP += "<div class='column-four'>Duración Prev. {duracionprevista}</div>";
+    tmplP += "</div>";
+
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-half'><span style='color: red'>*</span>Año {ano}</div>";
+    tmplP += "<div class='column-half'>Duración Prev. {duracionprevista}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
@@ -69,8 +73,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'>Priorización{priorizacion}</div>";
-    tmplP += "<div class='column-half'>Criterio Rechazo{idcriteriorechazo}</div>";
+    tmplP += "<div class='column-half' style='display: none;>Priorización{priorizacion}</div>";
+    tmplP += "<div class='column-half' style='display: none;>Criterio Rechazo{idcriteriorechazo}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row' style='display: none;'>";
@@ -478,6 +482,11 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
+            label: 'Etapa', name: 'parametro.nombre', width: 150, align: 'left',
+            search: false, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
+        },
+        {
             label: 'Estado', name: 'idestado',
             search: false, editable: true, hidden: true,
             editrules: { required: true },
@@ -510,6 +519,32 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                         }
                     }
                 }],
+            }, dataInit: function (elem) { $(elem).width(200); }
+        },
+        {
+            label: 'Etapa', name: 'idetapa',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true },
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/etapainiciativa',
+                buildSelect: function (response) {
+                    var grid = $("#" + childGridID);
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.idetapa;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Etapa--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
@@ -591,6 +626,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 }
             }
         },
+        /*
         {
             label: 'Priorización', name: 'priorizacion', search: false, editable: true, hidden: false,
             edittype: "custom",
@@ -611,6 +647,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                 return dato;
             }
         },
+        
         {
             label: 'Criterio Rechazo', name: 'idcriteriorechazo', search: false, width: 300,
             editable: true, hidden: true,
@@ -638,6 +675,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(100); }
 
         },
+        */
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -746,6 +784,13 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idetapa == 0) {
+                    return [false, "Etapa: Campo obligatorio", ""];
+                } else {
+                    return [true, "", ""]
+                }
             }
         },
         {
@@ -856,6 +901,13 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.idetapa == 0) {
+                    return [false, "Etapa: Campo obligatorio", ""];
+                } else {
+                    return [true, "", ""]
+                }
             }
         },
         {
