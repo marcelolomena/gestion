@@ -1,0 +1,25 @@
+18:09:30 - error:  Error: bind EADDRINUSE null:3000
+    at Object.exports._errnoException (util.js:907:11)
+    at exports._exceptionWithHostPort (util.js:930:20)
+    at cb (net.js:1315:16)
+    at shared (cluster.js:606:5)
+    at Worker.<anonymous> (cluster.js:579:9)
+    at process.<anonymous> (cluster.js:749:8)
+    at emitTwo (events.js:92:20)
+    at process.emit (events.js:172:7)
+    at internal/child_process.js:696:12
+From previous event:
+From previous event:
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jsreport-core\lib\reporter.js:90:8
+From previous event:
+    at Reporter.init (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\jsreport-core\lib\reporter.js:69:30)
+    at E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\controllers\prefactura.js:105:26
+    at tryCatcher (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:510:31)
+    at Promise._settlePromise (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:567:18)
+    at Promise._settlePromise0 (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:612:10)
+    at Promise._settlePromises (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\promise.js:691:18)
+    at Async._drainQueue (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:138:16)
+    at Async._drainQueues (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:148:10)
+    at Immediate.Async.drainQueues [as _onImmediate] (E:\URBANSOFT\Proyectos\BancoChile\Presupuesto\GIT\gestion\sip\node_modules\sequelize\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate [as _immediateCallback] (timers.js:383:17)

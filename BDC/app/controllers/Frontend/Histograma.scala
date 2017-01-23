@@ -48,6 +48,7 @@ object Histograma extends Controller {
         var sidx = request.getQueryString("sidx").get.toString()
         val sord = request.getQueryString("sord").get.toString()
         val mes = request.getQueryString("mes").get.toString()
+        val ano = request.getQueryString("ano").get.toString()
         val uId = request.getQueryString("id").get.toString()
 
         var records: Int = 0
@@ -59,7 +60,7 @@ object Histograma extends Controller {
         val pageIndex = page
         val pageSize = rows
         val startRow = (pageIndex * pageSize) + 1;
-        val histograma = HistogramaService.listadoHistograma(uId,mes)
+        val histograma = HistogramaService.listadoHistograma(uId,mes,ano)
 
         var registro = new JSONArray()
         for (p <- histograma) {
@@ -115,10 +116,11 @@ object Histograma extends Controller {
         var tieneJson = true
         var qrystr = ""
         val mes = request.getQueryString("mes").get.toString()
+        val ano = request.getQueryString("ano").get.toString()
         val uId = request.getQueryString("id").get.toString()
         //val uId = request.session.get("uId").get.toString()
         
-        val panel = HistogramaService.listadoHistograma(uId,mes)
+        val panel = HistogramaService.listadoHistograma(uId,mes,ano)
         var rowhead = sheet.createRow(0)
         val style = wb.createCellStyle()
         val font = wb.createFont()

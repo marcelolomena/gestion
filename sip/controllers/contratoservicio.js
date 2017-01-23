@@ -156,8 +156,11 @@ exports.action = function (req, res) {
 
             var promises = []
             var d = new Date();
-            var anio = d.getFullYear()
-            var mes = 1; //parseInt(mesini);
+            var anio = d.getFullYear();
+            if (mesini < 13) {
+                anio = anio - 1;
+            }
+            var mes = parseInt(mesini); //Antes tenia 1
             var mesidx = 0;
             logger.debug("Recibe:" + cuotas[0][0] + "," + cuotas[0][1] + "," + cuotas[0][2] + "," + cuotas[0][3]);
             for (var i = 0; i < cuotas[0].length; i++) {
@@ -213,7 +216,10 @@ exports.action = function (req, res) {
             var promises = []
             var d = new Date();
             var anio = d.getFullYear()
-            var mes = 1; //parseInt(mesini);
+            if (mesini < 13) {
+                anio = anio - 1;
+            }            
+            var mes = parseInt(mesini); //antes  tenia 1
             var mesidx = 0;
             //borra periodos anteriores
             /*var sqldel = "delete from sip.detallecompromiso where iddetalleserviciocto="+idservicio;
@@ -622,11 +628,22 @@ exports.getPeriodos = function (req, res) {
     var d = new Date();
     var anio = d.getFullYear()
     mes = 1;
+    anio = anio - 1;
     for (var i = 0; i < 12; i++) {
         var mm = mes + i;
         var mmm = mm < 10 ? '0' + mm : mm;
         //var periodo = anio + '' + mmm;
         var periodo = parseInt(mmm);
+        var texto = mmm + '-' + anio;
+        var newPromise = { 'id': periodo, 'nombre': texto };
+        promises.push(newPromise);
+    };    
+    anio = anio + 1;
+    for (var i = 0; i < 12; i++) {
+        var mm = mes + i;
+        var mmm = mm < 10 ? '0' + mm : mm;
+        //var periodo = anio + '' + mmm;
+        var periodo = parseInt(mmm)+ 12;
         var texto = mmm + '-' + anio;
         var newPromise = { 'id': periodo, 'nombre': texto };
         promises.push(newPromise);
@@ -636,7 +653,7 @@ exports.getPeriodos = function (req, res) {
         var mm = mes + i;
         var mmm = mm < 10 ? '0' + mm : mm;
         //var periodo = anio + '' + mmm;
-        var periodo = parseInt(mmm) + 12;
+        var periodo = parseInt(mmm) + 24;
         var texto = mmm + '-' + anio;
         var newPromise = { 'id': periodo, 'nombre': texto };
         promises.push(newPromise);

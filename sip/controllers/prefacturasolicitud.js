@@ -97,7 +97,7 @@ exports.getCausalMulta = function (req, res) {
 };
 
 exports.getCalificacion = function (req, res) {
-  var sql = "SELECT id, nombre FROM sip.parametro WHERE tipo='calificacion'";
+  var sql = "SELECT id, nombre FROM sip.parametro WHERE tipo='calificacion' order by valor";
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
@@ -157,7 +157,7 @@ exports.action = function (req, res) {
                   res.json(rows);
                 });
             }
-          } else if (req.body.aprobado == 2) {
+          } else if (req.body.aprobado == 2 || req.body.aprobado == 3) {
             //deja compromiso en estado rechazado
             var sql = "UPDATE sip.detallecompromiso SET estadopago='RECHAZADO' " +
               "WHERE id=" + req.body.iddetallecompromiso;
