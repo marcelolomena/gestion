@@ -26,9 +26,13 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     var modelPrefacturas = [
-        { label: 'Numero Prefactura', name: 'id', key: true, hidden: false, formatter: returnTaskLink },
+        { label: 'Numero', name: 'id', key: true, width: 80, hidden: false, formatter: returnTaskLink },
         {
-            label: 'Periodo', name: 'periodo', width: 100, align: 'left',
+            label: 'Estado', name: 'estado', width: 80, align: 'left',
+            search: true, editable: false, hidden: false
+        },        
+        {
+            label: 'Periodo', name: 'periodo', width: 70, align: 'left',
             search: true, editable: true, hidden: false
         },
         {
@@ -37,7 +41,7 @@ $(document).ready(function () {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Proveedor', name: 'proveedor', width: 450, align: 'left',
+            label: 'Proveedor', name: 'proveedor', width: 400, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
