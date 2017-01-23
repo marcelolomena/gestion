@@ -22,6 +22,10 @@ module.exports = function (sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    secuencia: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
       schema: 'sip', timestamps: false, tableName: 'parametro'
