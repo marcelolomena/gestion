@@ -94,13 +94,13 @@ var gridDoc = {
                     },
                     editable: true, editrules: { edithidden: true }
                 },
-                { name: 'valore.nombre', width: 50, editable: false, align: "left", hidden: false },
+                { name: 'tipodocumento.nombrecorto', width: 50, editable: false, align: "left", hidden: false },
 
                 {
                     name: 'idtipodocumento', search: false, editable: true, hidden: true,
                     edittype: "select",
                     editoptions: {
-                        dataUrl: '/sic/parametros/tipodocumento',
+                        dataUrl: '/sic/gettipodocumentos',
                         buildSelect: function (response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
@@ -111,9 +111,9 @@ var gridDoc = {
                             $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombrecorto + '</option>';
                                 } else {
-                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombrecorto + '</option>';
                                 }
                             });
                             return s + "</select>";

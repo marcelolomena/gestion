@@ -261,6 +261,9 @@ module.exports = function (passport) {
     router.route('/sic/tipodocumento/upload')
         .post(isAuthenticated, tipodocumentoController.upload);
 
+    router.route('/sic/gettipodocumentos')
+        .get(isAuthenticated, documentosController.gettipodocumentos);
+
     
 
     return router;
