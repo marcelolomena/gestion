@@ -191,7 +191,15 @@ module.exports = function (sequelize, DataTypes) {
     pptoaprobadodolares: {
       type: DataTypes.FLOAT,
       allowNull: true
-    }
+    },
+    idetapa: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'parametro',
+        key: 'id'
+      }
+    },
   }, {
       schema: 'sip', timestamps: false, tableName: 'iniciativaprograma'
     });

@@ -1,33 +1,30 @@
 /* jshint indent: 2 */
 
-module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('parametro', {
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('tipodocumento', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    tipo: {
+    nombrecorto: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombre: {
+    descripcionlarga: {
       type: DataTypes.STRING,
       allowNull: true
-    }, valor: {
-      type: DataTypes.FLOAT,
+    },
+    nombrearchivo: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    secuencia: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     }
   }, {
-      schema: 'sip', timestamps: false, tableName: 'parametro'
-    });
+    schema: 'sic',timestamps: false,tableName: 'tipodocumento'
+  });
 };

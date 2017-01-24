@@ -187,7 +187,7 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 setTimeout(function () {
-                    $("#idclase", form).attr('disabled', 'disabled');
+                    $("#idplantillaclausula", form).attr('disabled', 'disabled');
                 }, 650);
             },
 

@@ -28,10 +28,12 @@ exports.test = function(req, res) {
                 b.idfacturacion,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))) montoaprobado,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoabono), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoabono), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoabono), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoabono), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoabono), 1))) montoabono,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))+1,len(CONVERT(varchar, CONVERT(money, b.factorconversion), 1))) factorconversion,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.')  montoaprobadopesos,
                 REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomultapesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomultapesos), 1))-1) ,',','.')  montomultapesos,
-				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta), 1))) montoapagar,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoabonopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoabonopesos), 1))-1) ,',','.')  montoabonopesos,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1))) montoapagar,
 				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoapagarpesos), 1))) montoapagarpesos,
                 REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montototalpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montototalpesos), 1))-1) ,',','.')  montototalpesos,                                
                 c.razonsocial,
@@ -152,7 +154,6 @@ exports.lista = function(req, res) {
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
-    //var periodo = "201702";
 
     if (!sidx)
         sidx = "cui";
@@ -196,7 +197,7 @@ exports.lista = function(req, res) {
                     JOIN sip.estructuracui D ON B.idcui   = D.id
                     JOIN sip.proveedor E ON A.idproveedor = E.id
                     JOIN sip.moneda M ON B.idmoneda = M.id
-                    WHERE (C.estadopago IS NULL OR C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO') AND  C.montoorigen != 0 AND C.periodo = :periodo` + condition + order +
+                    WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
     sequelize.query(count,
@@ -225,8 +226,7 @@ exports.generar = function(req, res) {
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
-    //var periodo = "201702";
-    
+
     sql = `
                 SELECT
                 C.id, 
@@ -252,8 +252,7 @@ exports.generar = function(req, res) {
                 0,
                 1,
 				b.impuesto,
-				b.factorimpuesto,
-                c.estadopago                
+				b.factorimpuesto                
                 FROM sip.contrato A 
                 JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
@@ -277,9 +276,9 @@ UNION
                 B.idservicio, 
                 B.glosaservicio,
                 A.id idcontrato,
-                IIF(C.estadopago = 'ABONADO', C.saldopago, C.valorcuota) montoneto,
+                C.valorcuota montoneto,
 				IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoimpuesto,
-                IIF(C.estadopago = 'ABONADO', C.saldopago, montoorigen) montoapagar,
+				C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
 				F.valorconversion,
 				0 montoapagarpesos,
                 0,
@@ -291,8 +290,7 @@ UNION
                 0,
                 1,
 				b.impuesto,
-				b.factorimpuesto,
-                c.estadopago               
+				b.factorimpuesto                
                 FROM sip.contrato A 
                 JOIN sip.detalleserviciocto B ON A.id = B.idcontrato
                 JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
@@ -306,11 +304,9 @@ UNION
 				E.numrut != 1 AND
 				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO')                
         `
-        //				--C.valorcuota+IIF(B.impuesto!=0, C.valorcuota * 0.19, 0) montoapagar,
     var promises = []
     var o_promises = []
     var s_promises = []
-    console.log(sql);
     sequelize.query(sql,
         {
             replacements: { periodo: periodo },
@@ -374,18 +370,11 @@ UNION
                 }).then(function(result) {
                     return models.sequelize.transaction({ autocommit: true }, function(t) {
                         for (var i = 0; i < rows.length; i++) {
-                            //var otherPromise = models.detallecompromiso.update({
-                            //    estadopago: 'GENERADO'
-                            //}, {
-                            //    where: { id: rows[i].id}//, estadopago:{ $ne : 'ABONADO'} }
-                            //    }, { transaction: t });
-                            var sql = "update sip.detallecompromiso set estadopago='GENERADO'"+
-                            " where id = "+rows[i].id+" AND isnull(estadopago,'') <> 'ABONADO'";
-                            console.log("sql"+i+":"+sql);
-                            var otherPromise = sequelize.query(sql)
-                            .spread(function (results, metadata) {
-                            },
-                            { transaction: t });                                
+                            var otherPromise = models.detallecompromiso.update({
+                                estadopago: 'GENERADO'
+                            }, {
+                                    where: { id: rows[i].id }
+                                }, { transaction: t });
                             o_promises.push(otherPromise);
 
                         };

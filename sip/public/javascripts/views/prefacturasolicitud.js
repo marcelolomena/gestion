@@ -189,7 +189,7 @@ function showDocumentos(cui, periodo, proveedor) {
             },
             {
                 label: 'Servicio',
-                name: 'nombre',
+                name: 'glosaservicio',
                 width: 220,
                 align: 'left',
                 search: false,
@@ -242,6 +242,8 @@ function showDocumentos(cui, periodo, proveedor) {
                         dato = 'Aprobado';
                     } else if (val == 2) {
                         dato = 'Rechazado';
+                    } else if (val == 3) {
+                        dato = 'Provisionado';
                     }
                     return dato;
                 },
@@ -352,7 +354,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 edittype: "textarea"
             },
             {
-                label: 'Monto Multa',
+                label: 'Monto Descuento',
                 name: 'montomulta',
                 width: 100,
                 search: false,
@@ -473,17 +475,31 @@ function showDocumentos(cui, periodo, proveedor) {
                 postdata.montomulta = postdata.montomulta.replace(",", ".");
                 var monto = new Number(postdata.montoaprobado);
                 var apagar = new Number(postdata.montoneto);
+                var montomulta = new Number(postdata.montomulta);
                 
                 console.log("num:" + monto);
                 if (monto < 0) {
                     return [false, "Monto: El monto no puede ser menor a cero", ""];
-                } else if (monto > apagar){
-                    return [false, "Monto: El monto aprobado no puede ser mayor al monto a pagar", ""];
-                } else if (postdata.aprobado == 0) {
-                    return [false, "Estado: El estado deber ser Aprobado o Rechazado", ""];
-                } else {
-                    return [true, "", ""]
                 }
+                console.log("num2:" + monto);
+                if (monto > apagar){
+                    return [false, "Monto: El monto aprobado no puede ser mayor al monto a pagar", ""];
+                }
+                console.log("num3:" + monto);
+                if (postdata.aprobado == 0) {
+                    return [false, "Estado: El estado deber ser Aprobado, Rechazado o Provisionado", ""];
+                }
+                console.log("num4:" + monto);
+                if (postdata.idcalificacion == 0) {
+                    return [false, "Calificación: Debe elegir una calificación", ""];
+                }     
+                console.log("num5:" + monto);           
+                if (montomulta > monto) {
+                    return [false, "Error: Monto descuento es mayor a monto aprobado", ""];
+                }           
+                console.log("num6:" + monto);       
+                return [true, "", ""]
+                
 
             }
         }, {}

@@ -15,12 +15,15 @@ import play.mvc._
  */
 object HistogramaService {
 
-  def listadoHistograma(uid: String,mes: String): Seq[Histograma] = {
+  def listadoHistograma(uid: String,mes: String, ano: String): Seq[Histograma] = {
+
+    println("EL ANO:" + ano)
 
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.histogramaListado2 {uid},{mes}").on(
+      SQL("EXEC art.histogramaListado2 {uid},{mes},{ano}").on(
         'uid -> uid.toInt,
-        'mes ->mes).executeQuery().as(Histograma.histograma *)
+        'mes ->mes,
+        'ano ->ano).executeQuery().as(Histograma.histograma *)
     }
   }
   

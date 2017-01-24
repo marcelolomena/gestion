@@ -15,14 +15,6 @@ var gridResponsables = {
         tmplServ += "<div class='column-full'>Responsable<span style='color:red'>*</span>{idresponsable}</div>";
         tmplServ += "</div>";
 
-        tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Fecha Tardía<span style='color:red'>*</span>{fechamastardia}</div>";
-        tmplServ += "</div>";
-
-        tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Descripción Deberes en el Proceso<span style='color:red'>*</span>{descripciondeberesproceso}</div>";
-        tmplServ += "</div>";
-
         tmplServ += "<hr style='width:100%;'/>";
         tmplServ += "<div> {sData} {cData}  </div>";
         tmplServ += "</div>";
@@ -31,7 +23,7 @@ var gridResponsables = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idrol', 'Rol', 'idresponsable', 'Nombre Responsable', 'Apellido Responsable', 'Fecha Más Tardía', 'Descripción'],
+            colNames: ['id', 'idrol', 'Rol', 'idresponsable', 'Nombre Responsable', 'Apellido Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 {
@@ -95,7 +87,7 @@ var gridResponsables = {
                     }
                 },
 
-                { name: 'rol.glosarol', index: 'glosarol', width: 150, editable: true, editoptions: { size: 10 } },
+                { name: 'rol.glosarol', index: 'glosarol', width: 250, editable: true, editoptions: { size: 10 } },
                 {
                     name: 'idresponsable', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -103,40 +95,9 @@ var gridResponsables = {
                         value: "0:--Escoger Responsable--"
                     }
                 },
-                { name: 'user.first_name', index: 'servicio', width: 150, editable: true, editoptions: { size: 10 } },
-                { name: 'user.last_name', index: 'servicio', width: 150, editable: true, editoptions: { size: 10 } },
-                {
-                    name: 'fechamastardia', width: 100, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: false },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
-                    },
-                },
-                {
-                   name: 'descripciondeberesproceso', width: 500, align: 'left',
-                    search: false, editable: true, editoptions: { rows: "3", cols: "50" },
-                    editrules: { required: true }, edittype: "textarea", hidden: false
-                },
+                { name: 'user.first_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
+                { name: 'user.last_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
+                
 
 
             ],
@@ -152,27 +113,16 @@ var gridResponsables = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Responsable"
+            caption: "Responsables"
         });
         $gridTab.jqGrid('navGrid', '#navGridResp', { edit: false, add: true, del: true, search: false },
             {
-                editCaption: "Modifica Servicio",
-                mtype: 'POST',
-                url: '/sic/responsables/action',
+                editCaption: "Modifica",
                 closeAfterEdit: true,
                 recreateForm: true,
                 template: tmplServ,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                beforeSubmit: function (postdata, formid) {
-                    if (postdata.idservicio == 0) {
-                        return [false, "Servicio: Campo obligatorio", ""];
-                    } if (postdata.idclasecriticidad == 0) {
-                        return [false, "Clase Criticidad : Campo obligatorio", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                }
             }, {
                 addCaption: "Agrega Responsable",
                 mtype: 'POST',
@@ -205,7 +155,7 @@ var gridResponsables = {
                 recreateForm: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
-                addCaption: "Eliminar Servicio",
+                addCaption: "Eliminar Responsable",
                 mtype: 'POST',
                 url: '/sic/responsables/action',
                 errorTextFormat: function (data) {

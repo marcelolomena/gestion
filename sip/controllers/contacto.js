@@ -47,7 +47,7 @@ exports.action = function (req, res) {
         }).then(function (contactos) {
           res.json({ error_code: 0 });
         }).catch(function (err) {
-          logger.error(e)
+          logger.error(err)
           res.json({ error_code: 1 });
         });
       break;
