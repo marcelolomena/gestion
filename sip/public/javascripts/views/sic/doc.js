@@ -10,6 +10,10 @@ var gridDoc = {
         tmpl += "<div class='column-full'>Tipo<span style='color:red'>*</span>{idtipodocumento}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row', id='laplantilla'>";
+
+        tmpl += "</div>";
+
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
         tmpl += "<div class='column-half'>Responsable<span style='color:red'>*</span>{nombreresponsable}</div>";
@@ -35,7 +39,7 @@ var gridDoc = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Doc','Nombre','Descripción','Tipo','Tipo','Responsable', 'Archivo', 'Archivo'],
+            colNames: ['Doc', 'Nombre', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: false, width: 10,
@@ -117,11 +121,35 @@ var gridDoc = {
                                 }
                             });
                             return s + "</select>";
-                        }
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                var nombretipodocumento = $('option:selected', this).text();
+                                var idtipodocumento = $('option:selected', this).val();
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/sic/getplantillatipo/' + idtipodocumento,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data.length > 0 && data[0].nombrearchivo!=null) {
+                                            $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipodocumento/"+data[0].nombrearchivo+"'>" + data[0].nombrearchivo + "</a></div>");
+                                            //$("input#program_id").val(data[0].nombrearchivo);
+                                        } else {
+                                            $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Documento no tiene plantilla</span></div>");
+                                        }
+                                    }
+                                });
+
+                                
+
+
+                            }
+                        }],
                     }
                 },
-                
-                
+
+
                 { name: 'nombreresponsable', index: 'nombreresponsable', width: 100, align: "left", editable: true },
                 {
                     name: 'nombrearchivo', index: 'nombrearchivo', hidden: false, width: 100, align: "left", editable: true,

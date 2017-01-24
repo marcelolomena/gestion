@@ -308,3 +308,18 @@ exports.gettipodocumentos = function (req, res) {
     res.json({ error: 1 });
   });
 }
+
+exports.getplantillatipo = function (req, res) {
+var idtipo = req.params.idtipo;
+  sequelize.query(
+    'select a.* ' +
+    'from sic.tipodocumento a where id='+ idtipo,
+    { type: sequelize.QueryTypes.SELECT }
+  ).then(function (valores) {
+    //logger.debug(valores)
+    res.json(valores);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error: 1 });
+  });
+}
