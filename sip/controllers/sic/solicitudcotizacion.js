@@ -25,12 +25,12 @@ exports.action = function (req, res) {
                 fononegociador: req.body.fononegociador,
                 numerorfp: req.body.numerorfp,
                 fechaenviorfp: req.body.fechaenviorfp,
-                nombreinterlocutor1: req.body.nombreinterlocutor1,
-                correointerlocutor1: req.body.correointerlocutor1,
-                fonointerlocutor1: req.body.fonointerlocutor1,
-                nombreinterlocutor2: req.body.nombreinterlocutor2,
-                correointerlocutor2: req.body.correointerlocutor2,
-                fonointerlocutor2: req.body.fonointerlocutor2,
+                //nombreinterlocutor1: req.body.nombreinterlocutor1,
+                //correointerlocutor1: req.body.correointerlocutor1,
+                //fonointerlocutor1: req.body.fonointerlocutor1,
+                //nombreinterlocutor2: req.body.nombreinterlocutor2,
+                //correointerlocutor2: req.body.correointerlocutor2,
+                //fonointerlocutor2: req.body.fonointerlocutor2,
                 borrado: 1,
                 idtipo: req.body.idtipo,
                 idgrupo: req.body.idgrupo
@@ -83,12 +83,12 @@ exports.action = function (req, res) {
                     fononegociador: req.body.fononegociador,
                     numerorfp: req.body.numerorfp,
                     fechaenviorfp: req.body.fechaenviorfp,
-                    nombreinterlocutor1: req.body.nombreinterlocutor1,
-                    correointerlocutor1: req.body.correointerlocutor1,
-                    fonointerlocutor1: req.body.fonointerlocutor1,
-                    nombreinterlocutor2: req.body.nombreinterlocutor2,
-                    correointerlocutor2: req.body.correointerlocutor2,
-                    fonointerlocutor2: req.body.fonointerlocutor2,
+                    //nombreinterlocutor1: req.body.nombreinterlocutor1,
+                    //correointerlocutor1: req.body.correointerlocutor1,
+                    //fonointerlocutor1: req.body.fonointerlocutor1,
+                    //nombreinterlocutor2: req.body.nombreinterlocutor2,
+                    //correointerlocutor2: req.body.correointerlocutor2,
+                    //fonointerlocutor2: req.body.fonointerlocutor2,
                     idtipo: req.body.idtipo,
                     idgrupo: req.body.idgrupo
                 }, {
@@ -200,3 +200,32 @@ exports.tipoclausula = function (req, res) {
     });
 
 }
+
+exports.getcolorservicios = function (req, res) {
+
+    var idsolicitud = req.params.idsolicitud;
+
+    var sql = "select colornota from sic.serviciosrequeridos where idsolicitudcotizacion = " + idsolicitud;
+
+    sequelize.query(sql)
+        .spread(function (rows) {
+            var colorfinal = 'Verde'
+
+            for (var f in rows) {
+
+                if (rows[f].colornota == 'Rojo') {
+                    colorfinal = 'Rojo'
+                } else {
+                    if (colorfinal != 'Rojo') {
+                        if (rows[f].colornota == 'Amarillo') {
+                            colorfinal = 'Amarillo'
+                        }
+                    }
+                }
+            }
+            //logger.debug("el color final= "+colorfinal)
+
+            res.json(colorfinal);
+        });
+
+};

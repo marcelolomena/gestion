@@ -12,6 +12,7 @@ var tocController = require('../controllers/sic/toc');
 var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
+var tipodocumentoController = require('../controllers/sic/tipodocumento');
 
 
 module.exports = function (passport) {
@@ -246,6 +247,21 @@ module.exports = function (passport) {
     router.route('/sic/buscarsecuenciatocplantilla/:idtipo/:idclase')
         .get(isAuthenticated, tocController.buscarsecuenciatocplantilla);
 
+    router.route('/sic/getcolorservicios/:idsolicitud')
+        .get(isAuthenticated, solicitudcotizacionController.getcolorservicios);
+
+    router.get('/sic/tipodocumento', isAuthenticated, function (req, res) {
+        res.render('sic/tipodocumento', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/grid_tipodocumento')
+        .post(isAuthenticated, tipodocumentoController.action)
+        .get(isAuthenticated, tipodocumentoController.list);
+
+    router.route('/sic/tipodocumento/upload')
+        .post(isAuthenticated, tipodocumentoController.upload);
+
+    
 
     return router;
 }
