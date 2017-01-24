@@ -200,3 +200,6 @@ exports.tipoclausula = function (req, res) {
     });
 
 }
+
+
+

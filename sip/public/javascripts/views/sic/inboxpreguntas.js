@@ -156,9 +156,8 @@ $(document).ready(function () {
 
     var $grid = $("#table_inboxRFC"),
         catalogoclausulasModel = [
-            { label: 'ID', name: 'id', key: true, hidden: false, width: 30 },
-            { label: 'ID CUI', name: 'idcui', width: 37, align: 'left', search: false, editable: false, editrules: { required: true } },
-            { label: 'ID Técnico', name: 'idtecnico', width: 30, align: 'left', hidden: true, search: false, editable: false, },
+            { label: 'ID', name: 'id', key: true, hidden: false, width: 50 },
+            { label: 'CUI', name: 'idcui', width: 75, align: 'left', search: false, editable: false, editrules: { required: true } },
             { label: 'tipo', name: '', width: 150, align: 'left', search: false, editable: false },
             { label: 'ID Program', name: 'tipo', width: 150, align: 'left', search: false, editable: false },
             { label: 'ID Program', name: 'tipo', width: 150, align: 'left', search: false, editable: false },
