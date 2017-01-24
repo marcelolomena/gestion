@@ -210,7 +210,7 @@ $(document).ready(function () {
             }
         },
         { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 150, align: 'left', search: false, editable: true, hidden: false },
-        {
+        { label: 'Color',
             name: 'colornota',
             index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
             formatter: function (cellvalue, options, rowObject) {

@@ -26,7 +26,13 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Grupo {idgrupo}</div>";
     tmplPF += "</div>";
 
-   
+    tmplPF += "<div class='form-row', id='elarchivo'>";
+    tmplPF += "<div class='column-full'>Archivo Actual<span style='color:red'>*</span>{nombrearchivo}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Subir Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
+    tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
     tmplPF += "</div>";
@@ -117,10 +123,28 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
-        
-        
+        {
+            name: 'nombrearchivo', index: 'nombrearchivo', hidden: true, width: 100, align: "left", editable: true,
+            editoptions: {
+                custom_element: labelEditFunc,
+                custom_value: getLabelValue
+            }
+        },
+        {
+            name: 'fileToUpload',
+            hidden: true,
+            editable: true,
+            edittype: 'file',
+            editrules: { edithidden: true },
+            editoptions: {
+                enctype: "multipart/form-data"
+            },
+            search: false
+        }
 
-        
+
+
+
 
     ];
 
@@ -176,6 +200,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                $('input#nombrearchivo', form).attr('readonly', 'readonly');
             },
 
             afterShowForm: function (form) {
@@ -191,19 +216,10 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 }
 
 
-            },
+            }, afterSubmit: UploadDoc
 
-            /*
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.idtipoclausula == 0) {
-                    return [false, "Tipo Clausula: Campo obligatorio", ""];
-                } if (postdata.idgrupo == 0) {
-                    return [false, "Grupo Clausula: Campo obligatorio", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            }
-            */
+
+
         },
         {
             closeAfterAdd: true,
@@ -226,6 +242,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                $("#elarchivo").empty().html('');
             },
 
 
@@ -233,18 +250,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 oldRadio = $("#elradio").html();
                 console.log("radio antes: " + oldRadio);
             },
-
-            /*
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.idtipoclausula == 0) {
-                    return [false, "Tipo Clausula: Campo obligatorio", ""];
-                } if (postdata.idgrupo == 0) {
-                    return [false, "Grupo Clausula: Campo obligatorio", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            }
-            */
+            afterSubmit: UploadDoc
         },
         {
             closeAfterDelete: true,
@@ -261,6 +267,68 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
         }
     );
 
-    
 
+    function labelEditFunc(value, opt) {
+        return "<span>" + value + "</span";
+    }
+    function getLabelValue(e, action, textvalue) {
+        if (action == 'get') {
+            console.log("esto es?")
+            return e.innerHTML;
+        } else {
+            if (action == 'set') {
+                $(e).html(textvalue);
+                console.log("o no??")
+            }
+            console.log("o nada??")
+        }
+    }
+    function UploadDoc(response, postdata) {
+
+        var data = $.parseJSON(response.responseText);
+        //console.log(data)
+        if (data.success) {
+            if ($("#fileToUpload").val() != "") {
+                ajaxDocUpload(data.id);
+            }
+        }
+
+        return [data.success, data.message, data.id];
+    }
+
+    function ajaxDocUpload(id) {
+        //console.log(id)
+        var dialog = bootbox.dialog({
+            title: 'Se inicia la transferencia',
+            message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
+        });
+        dialog.init(function () {
+            $.ajaxFileUpload({
+                url: '/sic/catalogoclausulas/upload',
+                secureuri: false,
+                fileElementId: 'fileToUpload',
+                dataType: 'json',
+                data: { id: id },
+                success: function (data, status) {
+                    if (typeof (data.success) != 'undefined') {
+                        if (data.success == true) {
+                            dialog.find('.bootbox-body').html(data.message);
+                            $("#" + childGridID).trigger('reloadGrid');
+                        } else {
+                            dialog.find('.bootbox-body').html(data.message);
+                        }
+                    }
+                    else {
+                        dialog.find('.bootbox-body').html(data.message);
+                    }
+                },
+                error: function (data, status, e) {
+                    dialog.find('.bootbox-body').html(e);
+                }
+            })
+        });
+    }
+    function returnDocLink(cellValue, options, rowdata) {
+        return "<a href='/docs/anexosclausulas/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";
+    }
 }

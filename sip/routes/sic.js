@@ -267,5 +267,8 @@ module.exports = function (passport) {
     router.route('/sic/getplantillatipo/:idtipo')
         .get(isAuthenticated, documentosController.getplantillatipo);
 
+    router.route('/sic/catalogoclausulas/upload')
+        .post(isAuthenticated, catalogoclausulasController.upload);
+
     return router;
 }
