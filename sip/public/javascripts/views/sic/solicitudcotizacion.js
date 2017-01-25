@@ -35,22 +35,22 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
     t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
     t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_nombreinterlocutor1'>Nombre Interlocutor 1<span style='color:red'>*</span>{nombreinterlocutor1}</div>";
-    t1 += "<div class='column-half' id='d_correointerlocutor1'>Correo Interlocutor 1<span style='color:red'>*</span>{correointerlocutor1}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_fonointerlocutor1'>Fono Interlocutor 1<span style='color:red'>*</span>{fonointerlocutor1}</div>";
-    t1 += "<div class='column-half' id='d_nombreinterlocutor2'>Nombre Interlocutor 2<span style='color:red'>*</span>{nombreinterlocutor2}</div>";
-    t1 += "</div>";
-
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
-    t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
-    t1 += "</div>";
-
+    /*
+        t1 += "<div class='form-row'>";
+        t1 += "<div class='column-half' id='d_nombreinterlocutor1'>Nombre Interlocutor 1<span style='color:red'>*</span>{nombreinterlocutor1}</div>";
+        t1 += "<div class='column-half' id='d_correointerlocutor1'>Correo Interlocutor 1<span style='color:red'>*</span>{correointerlocutor1}</div>";
+        t1 += "</div>";
+    
+        t1 += "<div class='form-row'>";
+        t1 += "<div class='column-half' id='d_fonointerlocutor1'>Fono Interlocutor 1<span style='color:red'>*</span>{fonointerlocutor1}</div>";
+        t1 += "<div class='column-half' id='d_nombreinterlocutor2'>Nombre Interlocutor 2<span style='color:red'>*</span>{nombreinterlocutor2}</div>";
+        t1 += "</div>";
+    
+        t1 += "<div class='form-row'>";
+        t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
+        t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
+        t1 += "</div>";
+    */
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
     t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
@@ -210,6 +210,39 @@ $(document).ready(function () {
             }
         },
         { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 150, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Color',
+            name: 'colornota',
+            index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
+            formatter: function (cellvalue, options, rowObject) {
+
+                var solicitud = rowObject.id;
+                var color = 'pink'
+
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/getcolorservicios/' + solicitud,
+                    async: false,
+                    success: function (data) {
+                        
+                        if (data == 'Rojo') {
+                            color = 'red';
+                        } else if (data == 'Verde') {
+                            color = 'green';
+                        } else if (data == 'Amarillo') {
+                            color = 'yellow';
+                        } else if (data == 'Azul') {
+                            color = 'blue';
+                        } else if (data == 'indefinido') {
+                            color = 'gray';
+                        }
+
+                    }
+                });
+
+
+                return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
+            }
+        },
         {
             label: 'Negociador', name: 'idnegociador', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -265,12 +298,14 @@ $(document).ready(function () {
                 }
             }
         },
+        /*
         { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, hidden: false, editable: true },
         { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, hidden: false, editable: true },
         { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, hidden: false, editable: true },
         { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, hidden: false, editable: true },
         { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: false, editable: true },
         { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: false, editable: true },
+        */
         {
             name: 'idtipo', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -409,7 +444,7 @@ $(document).ready(function () {
                     if (postdata.fononegociador.trim().length == 0) {
                         postdata.fononegociador = null
                     }
-                    
+
                     return [true, "", ""]
                 }
 
@@ -577,7 +612,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
         tabs += "<li><a data-target='#foro' data-toggle='tab'>Foro</a></li>"
         tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
-        tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey +"'>Responsables</a></li>"
+        tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
         tabs += "<li><a data-target='#anexos' data-toggle='tab'>Anexos</a></li>"

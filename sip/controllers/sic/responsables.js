@@ -10,14 +10,6 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechamastardia;
-
-    if (action != "del") {
-        if (req.body.fechamastardia != "")
-            fechamastardia = req.body.fechamastardia.split("-").reverse().join("-")
-    }
-
-    logger.debug("la fecha ql:: " + fechamastardia);
 
     switch (action) {
         case "add":
@@ -25,8 +17,8 @@ exports.action = function (req, res) {
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idrol: req.body.idrol,
                 idresponsable: req.body.idresponsable,
-                fechamastardia: fechamastardia,
-                descripciondeberesproceso: req.body.descripciondeberesproceso,
+                //fechamastardia: fechamastardia,
+                //descripciondeberesproceso: req.body.descripciondeberesproceso,
                 borrado: 1
             }).then(function (serviciosrequeridos) {
                 bitacora.registrar(
@@ -194,5 +186,7 @@ exports.getRoles = function (req, res) {
         });
 
 };
+
+
 
 

@@ -12,15 +12,16 @@ var tocController = require('../controllers/sic/toc');
 var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
+var tipodocumentoController = require('../controllers/sic/tipodocumento');
 
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
-        res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/sic/preguntaproveedor', isAuthenticated, function (req, res) {
-        res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/grid_solicitudcotizacion')
@@ -60,9 +61,9 @@ module.exports = function (passport) {
     router.get('/sic/getsession', function (req, res) {
         //console.dir(req.session.passport.sidebar[0])
         if (req.session.passport.sidebar[0].rol)
-            res.json(req.session.passport.sidebar[0].rol);//JSON
+            return res.json(req.session.passport.sidebar[0].rol);//JSON
         else
-            res.send("no session value stored in DB ");
+            return res.send("no session value stored in DB ");
     });
 
     router.route('/sic/parametros/:val')
@@ -95,7 +96,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, responsablesController.action);
 
     router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
-        res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/usuarios_por_rolid/:id')
@@ -178,7 +179,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, clausulasController.default);
 
     router.get('/sic/toc', isAuthenticated, function (req, res) {
-        res.render('sic/toc', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/toc', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/grid_toctipo')
@@ -222,7 +223,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, preguntasController.descargarespuestas);
 
     router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
-        res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/inboxpreguntaslist')
@@ -246,6 +247,28 @@ module.exports = function (passport) {
     router.route('/sic/buscarsecuenciatocplantilla/:idtipo/:idclase')
         .get(isAuthenticated, tocController.buscarsecuenciatocplantilla);
 
+    router.route('/sic/getcolorservicios/:idsolicitud')
+        .get(isAuthenticated, solicitudcotizacionController.getcolorservicios);
+
+    router.get('/sic/tipodocumento', isAuthenticated, function (req, res) {
+        res.render('sic/tipodocumento', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/grid_tipodocumento')
+        .post(isAuthenticated, tipodocumentoController.action)
+        .get(isAuthenticated, tipodocumentoController.list);
+
+    router.route('/sic/tipodocumento/upload')
+        .post(isAuthenticated, tipodocumentoController.upload);
+
+    router.route('/sic/gettipodocumentos')
+        .get(isAuthenticated, documentosController.gettipodocumentos);
+
+    router.route('/sic/getplantillatipo/:idtipo')
+        .get(isAuthenticated, documentosController.getplantillatipo);
+
+    router.route('/sic/catalogoclausulas/upload')
+        .post(isAuthenticated, catalogoclausulasController.upload);
 
     return router;
 }

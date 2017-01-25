@@ -14,6 +14,10 @@ $(document).ready(function () {
     tmpl += "<div class='column-full'>Valor {valor}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Secuencia {secuencia}</div>";
+    tmpl += "</div>";
+
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>tipo {tipo}</div>";
     tmpl += "</div>";
@@ -24,7 +28,7 @@ $(document).ready(function () {
 
     var modelParametro = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        {   
+        {
             label: 'Tipo', name: 'tipo', width: 300, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
             stype: 'select',
@@ -50,7 +54,6 @@ $(document).ready(function () {
             }
         },
         {
-            
             label: 'Tipo', name: 'idtipo', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
@@ -78,6 +81,32 @@ $(document).ready(function () {
                     }
                 }],
             }, dataInit: function (elem) { $(elem).width(200); }
+        },
+
+        {
+            label: 'Secuencia', name: 'secuencia', width: 300, align: 'left', search: true, editable: true,
+            editrules: { edithidden: false }, hidedlg: true,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/tipos',
+                buildSelect: function (response) {
+                    var grid = $("#table_parametro");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.tipo;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Secuencia--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].tipo == thissid) {
+                            s += '<option value="' + data[i].secuencia + '" selected>' + data[i].secuencia + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].secuencia + '">' + data[i].secuencia + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
         },
 
         {

@@ -31,7 +31,7 @@ var gridCalendario = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Descripcion', 'Fecha Término', 'Observación', 'idtiporesponsable', 'Tipo Responsable'],
+            colNames: ['id', 'Descripcion', 'Fecha Término', 'Observación', 'idtiporesponsable', 'Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },

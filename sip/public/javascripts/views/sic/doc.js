@@ -10,6 +10,10 @@ var gridDoc = {
         tmpl += "<div class='column-full'>Tipo<span style='color:red'>*</span>{idtipodocumento}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row', id='laplantilla'>";
+
+        tmpl += "</div>";
+
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
         tmpl += "<div class='column-half'>Responsable<span style='color:red'>*</span>{nombreresponsable}</div>";
@@ -19,8 +23,12 @@ var gridDoc = {
         tmpl += "<div class='column-full'>Descripción<span style='color:red'>*</span>{descripcionlarga}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row', id='elarchivo'>";
+        tmpl += "<div class='column-full'>Archivo Actual<span style='color:red'>*</span>{nombrearchivo}</div>";
+        tmpl += "</div>";
+
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
+        tmpl += "<div class='column-full'>Subir Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
         tmpl += "</div>";
 
         tmpl += "<hr style='width:100%;'/>";
@@ -31,39 +39,16 @@ var gridDoc = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Doc', 'Tipo', 'Tipo', 'Nombre', 'Descripción', 'Responsable', 'Archivo', 'Archivo'],
+            colNames: ['Doc', 'Nombre', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: false, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                     formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
                 },
-                { name: 'valore.nombre', width: 50, editable: false, align: "left", hidden: false },
-                {
-                    name: 'idtipodocumento', search: false, editable: true, hidden: true,
-                    edittype: "select",
-                    editoptions: {
-                        dataUrl: '/sic/parametros/tipodocumento',
-                        buildSelect: function (response) {
-                            var rowKey = $gridTab.getGridParam("selrow");
-                            var rowData = $gridTab.getRowData(rowKey);
-                            var thissid = rowData.idtipodocumento;
-                            var data = JSON.parse(response);
-                            var s = "<select>";
-                            s += '<option value="0">--Escoger un Tipo--</option>';
-                            $.each(data, function (i, item) {
 
-                                if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                                } else {
-                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                                }
-                            });
-                            return s + "</select>";
-                        }
-                    }
-                },
                 { name: 'nombrecorto', index: 'nombrecorto', width: 50, align: "left", editable: true },
+
                 {
                     name: 'descripcionlarga', index: 'descripcionlarga', width: 500, hidden: true,
                     edittype: 'custom',
@@ -113,8 +98,66 @@ var gridDoc = {
                     },
                     editable: true, editrules: { edithidden: true }
                 },
+                { name: 'tipodocumento.nombrecorto', width: 50, editable: false, align: "left", hidden: false },
+
+                {
+                    name: 'idtipodocumento', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/sic/gettipodocumentos',
+                        buildSelect: function (response) {
+                            var rowKey = $gridTab.getGridParam("selrow");
+                            var rowData = $gridTab.getRowData(rowKey);
+                            var thissid = rowData.idtipodocumento;
+                            var data = JSON.parse(response);
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger un Tipo--</option>';
+                            $.each(data, function (i, item) {
+
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombrecorto + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].nombrecorto + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                var nombretipodocumento = $('option:selected', this).text();
+                                var idtipodocumento = $('option:selected', this).val();
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/sic/getplantillatipo/' + idtipodocumento,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data.length > 0 && data[0].nombrearchivo!=null) {
+                                            $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipodocumento/"+data[0].nombrearchivo+"'>" + data[0].nombrearchivo + "</a></div>");
+                                            //$("input#program_id").val(data[0].nombrearchivo);
+                                        } else {
+                                            $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Documento no tiene plantilla</span></div>");
+                                        }
+                                    }
+                                });
+
+                                
+
+
+                            }
+                        }],
+                    }
+                },
+
+
                 { name: 'nombreresponsable', index: 'nombreresponsable', width: 100, align: "left", editable: true },
-                { name: 'nombrearchivo', index: 'nombrearchivo', hidden: false, width: 100, align: "left", editable: false },
+                {
+                    name: 'nombrearchivo', index: 'nombrearchivo', hidden: false, width: 100, align: "left", editable: true,
+                    editoptions: {
+                        custom_element: labelEditFunc,
+                        custom_value: getLabelValue
+                    }
+                },
                 {
                     name: 'fileToUpload',
                     hidden: true,
@@ -153,6 +196,9 @@ var gridDoc = {
                 url: '/sic/documentos/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
+                beforeShowForm: function (form) {
+                    $('input#nombrearchivo', form).attr('readonly', 'readonly');
+                },
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
@@ -175,6 +221,9 @@ var gridDoc = {
                 url: '/sic/documentos/action',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
+                beforeShowForm: function (form) {
+                    $("#elarchivo").empty().html('');
+                },
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
@@ -215,7 +264,7 @@ var gridDoc = {
 
 
 function returnDocLink(cellValue, options, rowdata, parentRowKey) {
-    return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/word.jpg' width='16' height='16'></a>";
+    return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";
 }
 
 function UploadDoc(response, postdata) {
@@ -260,4 +309,19 @@ function ajaxDocUpload(id, parent) {
             }
         })
     });
+}
+function labelEditFunc(value, opt) {
+    return "<span>" + value + "</span";
+}
+function getLabelValue(e, action, textvalue) {
+    if (action == 'get') {
+        console.log("esto es?")
+        return e.innerHTML;
+    } else {
+        if (action == 'set') {
+            $(e).html(textvalue);
+            console.log("o no??")
+        }
+        console.log("o nada??")
+    }
 }

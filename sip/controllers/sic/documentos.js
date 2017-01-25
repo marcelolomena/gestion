@@ -160,7 +160,7 @@ exports.list = function (req, res) {
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
             models.documentoscotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-            models.documentoscotizacion.belongsTo(models.valores, { foreignKey: 'idtipodocumento' });
+            models.documentoscotizacion.belongsTo(models.tipodocumento, { foreignKey: 'idtipodocumento' });
             models.documentoscotizacion.belongsTo(models.user, { foreignKey: 'uid' });
             models.documentoscotizacion.count({
                 where: data
@@ -172,7 +172,7 @@ exports.list = function (req, res) {
                     where: data,
                     include: [{
                         model: models.solicitudcotizacion
-                    }, { model: models.valores }, { model: models.user }
+                    }, { model: models.tipodocumento }, { model: models.user }
                     ]
                 }).then(function (documentoscotizacion) {
                     return res.json({ records: records, total: total, page: page, rows: documentoscotizacion });
@@ -293,4 +293,33 @@ exports.upload = function (req, res) {
         return req.pipe(busboy);
     }
 
+}
+exports.gettipodocumentos = function (req, res) {
+
+  sequelize.query(
+    'select a.* ' +
+    'from sic.tipodocumento a ' ,
+    { type: sequelize.QueryTypes.SELECT }
+  ).then(function (valores) {
+    //logger.debug(valores)
+    res.json(valores);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error: 1 });
+  });
+}
+
+exports.getplantillatipo = function (req, res) {
+var idtipo = req.params.idtipo;
+  sequelize.query(
+    'select a.* ' +
+    'from sic.tipodocumento a where id='+ idtipo,
+    { type: sequelize.QueryTypes.SELECT }
+  ).then(function (valores) {
+    //logger.debug(valores)
+    res.json(valores);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error: 1 });
+  });
 }
