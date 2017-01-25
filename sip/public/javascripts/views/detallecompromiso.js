@@ -45,6 +45,15 @@ function gridDetail(parentRowID, parentRowKey) {
                 label: 'Impacto Operacional', name: 'costoorigen', width: 200, editable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 10, readonly: 'readonly'} 
+            },
+            {
+                label: 'Saldo', name: 'saldopago', width: 150, editable: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: { size: 10, readonly: 'readonly'} 
+            },
+            {
+                label: 'Estado', name: 'estadopago', width: 150, editable: false,
+                editoptions: { size: 10, readonly: 'readonly'}  
             }
         ],
         pager: "#" + childGridPagerID,
