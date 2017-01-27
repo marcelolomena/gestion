@@ -28,7 +28,7 @@ $(document).ready(function () {
 
             $.each(j, function (i, item) {
                 console.log("cui:" + item.nombre + "," + item.cui);
-                $('#cui').append('<option value="' + item.id + '">' + item.cui + "-" + item.nombre.substring(0,35) + '</option>');
+                $('#cui').append('<option value="' + item.id + '">' + item.cui + "-" + item.nombre.substring(0, 35) + '</option>');
             });
         });
     }
@@ -42,7 +42,7 @@ $(document).ready(function () {
             $('#proveedor option').remove();
             $('#proveedor').append('<option value="0"> - Escoger Proveedor - </option>');
             $.each(j, function (i, item) {
-                $('#proveedor').append('<option value="' + item.idproveedor + '">' + item.razonsocial.substring(0,35) + '</option>');
+                $('#proveedor').append('<option value="' + item.idproveedor + '">' + item.razonsocial.substring(0, 35) + '</option>');
             });
         });
     });
@@ -68,6 +68,12 @@ function getPeriodo() {
     return anio + '' + mesok;
 
 }
+
+
+var cancelBtn = function (cellVal, options, rowObject) {
+    console.log("ACATO : " + rowObject.id)
+    return "<input style='height:22px;' type='button' value='Anular' onclick=\"window.location.href='editItem.asp?ID=" + cellVal + "'\"  />";
+};
 
 var leida = false;
 function loadGrid(cui, periodo, proveedor) {
@@ -107,7 +113,7 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "<div class='column-half'>Monto Neto a Pagar {montoneto}</div>";
     tmpl += "<div class='column-half'>Moneda Origen {moneda}</div>";
     tmpl += "</div>";
-    
+
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado Solicitud {aprobado}</div>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Monto Neto Aprobado {montoaprobado}</div>";
@@ -132,13 +138,12 @@ function showDocumentos(cui, periodo, proveedor) {
     tmpl += "<div class='column-half'>Calificación de Servicio {idcalificacion}</div>";
     tmpl += "</div>";
 
-    
-
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div align='left'> {sData} {cData}  </div>";
     tmpl += "</div>";
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/prefacturasolicitud/" + cui + "/" + periodo + "/" + proveedor;
+    var $grid = $("#grid");
     $("#grid").jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -159,6 +164,14 @@ function showDocumentos(cui, periodo, proveedor) {
                 editable: true
             },
             {
+                label: 'Anular',
+                name: 'Anular',
+                width: 100,
+                align: 'center',
+                search: false,
+                formatter: cancelBtn
+            },
+            {
                 label: 'Periodo',
                 name: 'periodocompromiso',
                 width: 70,
@@ -177,7 +190,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 editable: true,
                 hidden: false,
                 editoptions: { size: 5, readonly: 'readonly' }
-            },            
+            },
             {
                 label: 'Proveedor',
                 name: 'razonsocial',
@@ -225,7 +238,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 width: 100,
                 editable: true,
                 editoptions: { size: 5, readonly: 'readonly' }
-            },            
+            },
             {
                 label: 'Estado',
                 name: 'aprobado',
@@ -263,7 +276,7 @@ function showDocumentos(cui, periodo, proveedor) {
                         $.each(data, function (i, item) {
                             console.log("***proveedor:" + data[i].id + ", " + thissid);
                             if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre+ '</option>';
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                             } else {
                                 s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                             }
@@ -309,7 +322,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 hidden: true,
                 editable: true,
                 edittype: "textarea"
-            },         
+            },
             {
                 label: 'Calificación',
                 name: 'idcalificacion',
@@ -426,7 +439,7 @@ function showDocumentos(cui, periodo, proveedor) {
             {
                 label: 'Calificación', name: 'calificacion', width: 120, align: 'left', sortable: false, search: false, editable: true,
                 editrules: { edithidden: false }, hidedlg: true
-            }            
+            }
 
         ],
         caption: "Solicitud de Aprobación",
@@ -443,7 +456,19 @@ function showDocumentos(cui, periodo, proveedor) {
         viewrecords: true,
         editurl: '/prefacturasolicitud/action',
         regional: "es",
-        subGrid: false
+        subGrid: false,
+        loadComplete: function (data) {
+            var thisId = $.jgrid.jqID(this.id);
+            $.get('/sic/getsession', function (data) {
+                $.each(data, function (i, item) {
+                    //console.dir(item)
+                    //console.log("ROL : " + item.glosarol)
+                    if(item.glosarol === "Administrador DIVOT"){
+                         $grid.jqGrid("showCol", "Anular")
+                    }
+                });
+            });
+        }
     });
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
@@ -476,13 +501,13 @@ function showDocumentos(cui, periodo, proveedor) {
                 var monto = new Number(postdata.montoaprobado);
                 var apagar = new Number(postdata.montoneto);
                 var montomulta = new Number(postdata.montomulta);
-                
+
                 console.log("num:" + monto);
                 if (monto < 0) {
                     return [false, "Monto: El monto no puede ser menor a cero", ""];
                 }
                 console.log("num2:" + monto);
-                if (monto > apagar){
+                if (monto > apagar) {
                     return [false, "Monto: El monto aprobado no puede ser mayor al monto a pagar", ""];
                 }
                 console.log("num3:" + monto);
@@ -492,14 +517,14 @@ function showDocumentos(cui, periodo, proveedor) {
                 console.log("num4:" + monto);
                 if (postdata.idcalificacion == 0) {
                     return [false, "Calificación: Debe elegir una calificación", ""];
-                }     
-                console.log("num5:" + monto);           
+                }
+                console.log("num5:" + monto);
                 if (montomulta > monto) {
                     return [false, "Error: Monto descuento es mayor a monto aprobado", ""];
-                }           
-                console.log("num6:" + monto);       
+                }
+                console.log("num6:" + monto);
                 return [true, "", ""]
-                
+
 
             }
         }, {}
