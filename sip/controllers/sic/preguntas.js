@@ -485,8 +485,7 @@ exports.listinbox = function (req, res) {
         `  ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-    logger.debug("lala : " + sql)
-    logger.debug("lili : " + idresponsable)
+
 
 
 

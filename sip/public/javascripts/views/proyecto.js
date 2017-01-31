@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var modelProyecto = [
+    var $grid=$("#grid"),modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: '# SAP', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Nombre Proyecto', name: 'nombre', width: 250, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
@@ -112,6 +112,13 @@ $(document).ready(function () {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
                 'errorThrown: ' + errorThrown);
+        },
+        loadComplete: function (data) {
+            
+            $.get('/lastdateload', function (data) {
+                 $grid.jqGrid('setCaption', 'Lista de proyectos ' + data.date);
+            });
+           
         }
     });
 

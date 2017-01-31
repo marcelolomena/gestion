@@ -459,7 +459,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             {
-                label: 'Plazo', name: 'plazocontrato', align: 'center', search: true, editable: true, hidden: false,
+                label: 'Plazo', name: 'parametro.nombre', align: 'center', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -677,13 +677,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         //width: null,
         pager: $('#' + pager_id),
         styleUI: "Bootstrap",
-        loadError: sipLibrary.jqGrid_loadErrorHandler,
-        gridComplete: function () {
-            var recs = $('#' + subgrid_table_id).getGridParam("reccount");
-            if (isNaN(recs) || recs == 0) {
-                $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
-            }
-        },
+//        loadError: sipLibrary.jqGrid_loadErrorHandler,
+//        gridComplete: function () {
+//            var recs = $('#' + subgrid_table_id).getGridParam("reccount");
+//            if (isNaN(recs) || recs == 0) {
+//                $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
+//            }
+//        },
         subGrid: true,
         subGridRowExpanded: gridDetail,
         subGridOptions: {
@@ -724,9 +724,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 var mecuotas =  new Number(postdata.mesesentrecuotas);
                 var cantcuotas = new Number(postdata.numerocuotas);       
 
-                if (postdata.fechacontrol.trim() == "")
-                    postdata.fechacontrol = null
-
                 if (parseInt(postdata.idservicio) == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idcui) == 0) {
@@ -735,6 +732,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Fecha Inicio: Debe escoger un valor", ""];
                 } if (postdata.fechatermino.length == 0) {
                     return [false, "Fecha Termino: Debe escoger un valor", ""];
+                } if (parseInt(postdata.fechacontrol.length) == 0) {
+                    return [false, "Fecha Control: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idestadocto) == 0) {
                     return [false, "Estado: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idplazocontrato) == 0) {
@@ -766,7 +765,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                if (result.error_code == 10)
+                    return [true,"Servicio guardado, flujos no se pudieron actualizar, presione Cancelar", ""];                
+                else if (result.error_code != 0)
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
@@ -827,8 +828,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 var cuota = new Number(postdata.valorcuota);  
                 var mecuotas =  new Number(postdata.mesesentrecuotas);
                 var cantcuotas = new Number(postdata.numerocuotas);       
-                if (postdata.fechacontrol.trim() == "")
-                    postdata.fechacontrol = null
                 if (parseInt(postdata.sap) == 0) {
                     return [false, "SAP: Debe escoger un valor", ""];  
                 } if (parseInt(postdata.idcui) == 0) {
@@ -841,6 +840,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Fecha Inicio: Debe escoger un valor", ""];
                 } if (postdata.fechatermino.length == 0) {
                     return [false, "Fecha Termino: Debe escoger un valor", ""];
+                } if (parseInt(postdata.fechacontrol.length) == 0) {
+                    return [false, "Fecha Control: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idestadocto) == 0) {
                     return [false, "Estado: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idplazocontrato) == 0) {

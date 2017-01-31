@@ -105,17 +105,29 @@ exports.action = function (req, res) {
                     var mescuota = req.body.periodoprimeracuota;
                     logger.debug("***mesini:" + mesini + ", mescuota:" + mescuota);
                     var inicio = mesini < mescuota ? mesini : mescuota;
-                    borraPeriodos(req.body.id, function (nada) {
-                        logger.debug("***Parametros:" + req.body.id + "," + cuotas + "," + inicio);
-                        actualizaPeriodos(req.body.id, cuotas, inicio, function (err, compromisos) {
-                            logger.debug("***Periodos Actualizados");
-                        });
-                        res.json({ error_code: 0 });
+                    var result = borraPeriodos(req.body.id, function (nada) {
+                        logger.debug("*----NDADDD**:"+nada);
+                        if (nada != '10') {
+                            logger.debug("***Parametros:" + req.body.id + "," + cuotas + "," + inicio);
+                            actualizaPeriodos(req.body.id, cuotas, inicio, function (err, compromisos) {
+                                logger.debug("***Periodos Actualizados");
+                            });
+                            res.json({ error_code: 0 });
+                        } else {
+                            res.json({ error_code: 10 });
+                        }
                     });
+                    logger.debug("***result:"+result);
                 } else {
-                    borraPeriodos(req.body.id, function (nada) {
-                        res.json({ error_code: 0 });
+                    var result = borraPeriodos(req.body.id, function (nada) {
+                        logger.debug("*----NDADDD**:"+nada);
+                        if (nada != "10") {
+                            res.json({ error_code: 0 });
+                        } else{
+                            res.json({ error_code: 10 });
+                        }
                     });
+                    logger.debug("***result:"+result);
                 }
             }).catch(function (err) {
                 logger.error(err)
@@ -206,6 +218,10 @@ exports.action = function (req, res) {
         var borraperiodos = sequelize.query(sqldel)
             .spread(function (results) {
                 callback("*");
+            }).catch(function (err) {
+                //logger.error(err)
+                logger.debug("*ERROR en borraPeriodos**:");
+                callback("10");
             });
     }
 
@@ -588,6 +604,7 @@ exports.list = function (req, res) {
             models.detalleserviciocto.belongsTo(models.servicio, { foreignKey: 'idservicio' });
             models.servicio.belongsTo(models.cuentascontables, { foreignKey: 'idcuenta' });
             models.detalleserviciocto.belongsTo(models.moneda, { foreignKey: 'idmoneda' });
+            models.detalleserviciocto.belongsTo(models.parametro, { foreignKey: 'idplazocontrato' })
 
             models.detalleserviciocto.count({
                 where: data
@@ -603,6 +620,8 @@ exports.list = function (req, res) {
                     }, {
                         model: models.estructuracui
                     }, {
+                        model: models.parametro
+                    }, {                        
                         model: models.servicio,
                         include: [{
                             model: models.cuentascontables

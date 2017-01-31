@@ -5,7 +5,7 @@ var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 
-exports.test = function(req, res) {
+exports.test = function (req, res) {
 
     try {
         var jsreport = require('jsreport-core')()
@@ -85,13 +85,13 @@ exports.test = function(req, res) {
             {
                 replacements: { id: req.params.id },
                 type: sequelize.QueryTypes.SELECT
-            }).then(function(rows) {
+            }).then(function (rows) {
 
                 var datum = {
                     "prefactura": rows
                 }
 
-                var datita = JSON.parse(JSON.stringify(datum, function(key, value) {
+                var datita = JSON.parse(JSON.stringify(datum, function (key, value) {
                     if (key === 'tipocontrato') {
                         if (value == 0) {
                             return true;// proyecto
@@ -104,7 +104,7 @@ exports.test = function(req, res) {
                     }
                 }));
 
-                jsreport.init().then(function() {
+                jsreport.init().then(function () {
                     return jsreport.render({
                         template: {
                             content: fs.readFileSync(path.join(__dirname, '..', 'templates', 'prefactura.html'), 'utf8'),
@@ -118,19 +118,19 @@ exports.test = function(req, res) {
                             }
                         },
                         data: datita
-                    }).then(function(resp) {
+                    }).then(function (resp) {
                         res.header('Content-type', 'application/pdf');
                         resp.stream.pipe(res);
                         //console.info("es nuevo")
-                    }).catch(function(e) {
+                    }).catch(function (e) {
                         logger.error(e)
                     })
 
-                }).catch(function(e) {
+                }).catch(function (e) {
                     logger.error(e)
                 })
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 logger.error(e)
             });
 
@@ -143,7 +143,7 @@ exports.test = function(req, res) {
 /*
 # Cambio en paginación
 */
-exports.lista = function(req, res) {
+exports.lista = function (req, res) {
     var page = req.body.page;
     var rows = req.body.rows;
     var sidx = req.body.sidx;
@@ -165,7 +165,7 @@ exports.lista = function(req, res) {
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
-        jsonObj.rules.forEach(function(item) {
+        jsonObj.rules.forEach(function (item) {
             if (item.op === 'cn')
                 condition += " AND " + item.field + " like '%" + item.data + "%'"
         });
@@ -204,24 +204,65 @@ exports.lista = function(req, res) {
         {
             replacements: { periodo: periodo, condition: condition },
             type: sequelize.QueryTypes.SELECT
-        }).then(function(records) {
+        }).then(function (records) {
             var total = Math.ceil(parseInt(records[0].cantidad) / rows);
             sequelize.query(sql,
                 {
                     replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
                     type: sequelize.QueryTypes.SELECT
-                }).then(function(data) {
+                }).then(function (data) {
                     return res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
-                }).catch(function(e) {
+                }).catch(function (e) {
                     logger.error(e)
                 })
 
-        }).catch(function(e) {
+        }).catch(function (e) {
             logger.error(e)
         })
 }
 
-exports.generar = function(req, res) {
+exports.anular = function (req, res) {
+    return models.solicitudaprobacion.find({
+        where: { id: req.params.id }
+    }).then(function (solicitudaprobacion) {
+        return models.sequelize.transaction({ autocommit: true }, function (t) {
+
+            var promises = []
+
+            var onePromise = models.solicitudaprobacion.update({
+                iddetallecompromiso: null
+            }, {
+                    where: { id: req.params.id }
+                }, { transaction: t });
+
+            promises.push(onePromise);
+
+            var twoPromise = models.detallecompromiso.update({
+                saldopago: null,
+                estadopago: null
+            }, {
+                    where: { id: solicitudaprobacion.iddetallecompromiso }
+                }, { transaction: t });
+
+            promises.push(twoPromise);
+
+            return Promise.all(promises);
+
+        }).then(function (result) {
+            res.json({ success: true });
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({ success: false, message: err });
+        });
+
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ success: false, message: err });
+    });
+
+}
+
+exports.generar = function (req, res) {
     var iniDate = new Date();
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
@@ -311,9 +352,9 @@ UNION
         {
             replacements: { periodo: periodo },
             type: sequelize.QueryTypes.SELECT
-        }).then(function(rows) {
+        }).then(function (rows) {
             //logger.debug(rows)
-            models.sequelize.transaction({ autocommit: true }, function(t) {
+            models.sequelize.transaction({ autocommit: true }, function (t) {
                 for (var i = 0; i < rows.length; i++) {
                     //logger.debug(rows[i])
                     var numerointeligente = periodo.toString() + '' + rows[i].iddetallecompromiso
@@ -353,9 +394,9 @@ UNION
                 };
 
                 return Promise.all(promises);
-        }).then(function(result) {
+            }).then(function (result) {
 
-                return models.sequelize.transaction({ autocommit: true }, function(t) {
+                return models.sequelize.transaction({ autocommit: true }, function (t) {
                     for (var i = 0; i < result.length; i++) {
                         var myPromise = models.solicitudaprobacion.update({
                             idfacturacion: result[i].id.toString()
@@ -367,8 +408,8 @@ UNION
                     };
 
                     return Promise.all(s_promises);
-                }).then(function(result) {
-                    return models.sequelize.transaction({ autocommit: true }, function(t) {
+                }).then(function (result) {
+                    return models.sequelize.transaction({ autocommit: true }, function (t) {
                         for (var i = 0; i < rows.length; i++) {
                             var otherPromise = models.detallecompromiso.update({
                                 estadopago: 'GENERADO'
@@ -380,26 +421,26 @@ UNION
                         };
 
                         return Promise.all(o_promises);
-                    }).then(function(result) {
+                    }).then(function (result) {
                         logger.debug("EXITO UPDATE DET");
                         res.json({ error_code: 0, message: "Exito!!" });
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         logger.error(err)
                         res.json({ error_code: 1, message: err });
                     });
 
-                }).catch(function(err) {
+                }).catch(function (err) {
                     logger.error(err)
                     res.json({ error_code: 1, message: err });
                 });
 
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 logger.error(err)
                 res.json({ error_code: 1, message: err });
             });
 
-        }).catch(function(e) {
+        }).catch(function (e) {
             logger.error(e)
             res.json({ error_code: 1, message: err });
         })

@@ -13,6 +13,8 @@ var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
 var tipodocumentoController = require('../controllers/sic/tipodocumento');
+var preguntasrfpController = require('../controllers/sic/preguntasrfp');
+
 
 
 module.exports = function (passport) {
@@ -266,6 +268,19 @@ module.exports = function (passport) {
 
     router.route('/sic/getplantillatipo/:idtipo')
         .get(isAuthenticated, documentosController.getplantillatipo);
+
+    router.route('/sic/getpreguntasrfp/:idsolicitud')
+        .get(isAuthenticated, preguntasrfpController.getpreguntasrfp);
+
+    router.route('/sic/preguntasrfp/:id')
+        .post(isAuthenticated, preguntasrfpController.action)
+        .get(isAuthenticated, preguntasrfpController.list);
+
+    router.route('/sic/preguntasrfps/upload')
+        .post(isAuthenticated, preguntasrfpController.upload);
+
+    router.route('/sic/descargapreguntas/:id')
+        .get(isAuthenticated, preguntasrfpController.descargapreguntas);
 
     router.route('/sic/catalogoclausulas/upload')
         .post(isAuthenticated, catalogoclausulasController.upload);
