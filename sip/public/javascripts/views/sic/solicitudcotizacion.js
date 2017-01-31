@@ -616,7 +616,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
         tabs += "<li><a data-target='#anexos' data-toggle='tab'>Anexos</a></li>"
-        tabs += "<li><a data-target='#fechascriticas' data-toggle='tab'>Fechas Críticas</a></li>"
+        tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas Proveedor</a></li>"
         tabs += "<li><a data-target='#bitacora' data-toggle='tab'>Bitácora</a></li>"
         tabs += "</ul>"
 
@@ -629,7 +629,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
         tabs += "<div class='tab-pane' id='criterios'></div>"
         tabs += "<div class='tab-pane' id='anexos'></div>"
-        tabs += "<div class='tab-pane' id='fechascriticas'></div>"
+        tabs += "<div class='tab-pane' id='preguntasrfp'><table id='preguntasrfp_t_" + parentRowKey + "'></table><div id='navGridPreg'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'></div>"
         tabs += "</div>"
 
@@ -650,6 +650,8 @@ $(document).ready(function () {
                 gridResponsables.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#calendario') {
                 gridCalendario.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#preguntasrfp') {
+                gridPreguntasrfp.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
@@ -670,6 +672,8 @@ $(document).ready(function () {
                 gridResponsables.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#calendario') {
                 gridCalendario.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#preguntasrfp') {
+                gridPreguntasrfp.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
