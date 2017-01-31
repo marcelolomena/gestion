@@ -282,5 +282,8 @@ module.exports = function (passport) {
     router.route('/sic/descargapreguntas/:id')
         .get(isAuthenticated, preguntasrfpController.descargapreguntas);
 
+    router.route('/sic/catalogoclausulas/upload')
+        .post(isAuthenticated, catalogoclausulasController.upload);
+
     return router;
 }

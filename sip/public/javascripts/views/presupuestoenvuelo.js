@@ -77,7 +77,7 @@ $(document).ready(function () {
             editrules: { required: true },
             editoptions: {
                 dataInit: function (element) {
-                    $(element).mask("0000", { placeholder: "____" });
+                    $(element).mask("00000", { placeholder: "_____" });
                 }
             },
             colMenu:true,

@@ -252,7 +252,7 @@ $(document).ready(function () {
         {
             label: 'Número', name: 'numero', width: 150, align: 'left', search: true, editable: true,
             searchoptions: {
-                sopt: ["ge", "le", "eq"] // ge = greater or equal to, le = less or equal to, eq = equal to
+                sopt: ["eq", "ge", "le"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
         },
 

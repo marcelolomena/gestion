@@ -8,7 +8,7 @@ exports.getProyectosPaginados = function (req, res) {
   var page = req.query.page;
   var rows = req.query.rows;
   var sidx = req.query.sidx;
-  var sord = req.query.sord;  
+  var sord = req.query.sord;
   var filters = req.query.filters;
   var condition = "";
 
@@ -19,7 +19,7 @@ exports.getProyectosPaginados = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-  
+
   var sql0 = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rows + "; " +
@@ -56,8 +56,8 @@ exports.getProyectosPaginados = function (req, res) {
         "isnull(saldogasto,0)+isnull(saldoinversion,0) AS totalsaldo, avance*100 AS avance2 " +
         "FROM sip.proyecto WHERE " + condition.substring(0, condition.length - 4) + ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-        
-        logger.debug(sql);
+
+      logger.debug(sql);
 
       models.proyecto.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
         var total = Math.ceil(records / rows);
@@ -91,6 +91,23 @@ exports.getProyectosPaginados = function (req, res) {
   }
 };
 
+exports.lastdateLoad = function (req, res) {
+
+  models.detallecargas.findAll({
+    limit: 1,
+    attributes: ['fechaproceso'],
+    order: 'fechaproceso DESC',
+    where: { idlogcargas: 5 }
+  }).then(function (detallecargas) {
+    console.dir(detallecargas)
+    return res.json({ date: detallecargas[0].fechaproceso });
+  }).catch(function (err) {
+    logger.error(err);
+    //res.json({ error_code: 1 });
+  });
+
+}
+
 exports.getExcel = function (req, res) {
   var page = req.query.page;
   var rows = req.query.rows;
@@ -105,126 +122,126 @@ exports.getExcel = function (req, res) {
     type: 'number',
     width: 3
   },
-    {
-      caption: 'Numero Proyecto',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Nombre Proyecto',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Categoria_2',
-      type: 'string',
-      width: 20
-    },
-    {
-      caption: 'PMO',
-      type: 'string',
-      width: 20
-    },
-    {
-      caption: 'Fecha Creación',
-      type: 'string',  
-      width: 15
-    },
-    {
-      caption: 'Estado2',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Fecha Vigencia',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Avance %',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Ultimo Pago',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Paso Producción Comprometido',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Cep',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Acoplado',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Presupuesto Gasto',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Presupuesto Inversion',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Compromiso Gasto',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Compromiso Inversion',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Real Gasto',
-      type: 'number',
-      width: 15
-    },    
-    {
-      caption: 'Real Inversion',
-      type: 'number',
-      width: 15
-    },
-        {
-      caption: 'Saldo2 Gastoo',
-      type: 'number',
-      width: 15
-    },
-        {
-      caption: 'Saldo2 Inversión',
-      type: 'number',
-      width: 15
-    },
-        {
-      caption: 'Total Presupuesto',
-      type: 'number',
-      width: 15
-    },   
-    {
-      caption: 'Total Compromiso',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Total Acumulado',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Total Saldo',
-      type: 'number',
-      width: 15
-    }           
+  {
+    caption: 'Numero Proyecto',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Nombre Proyecto',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Categoria_2',
+    type: 'string',
+    width: 20
+  },
+  {
+    caption: 'PMO',
+    type: 'string',
+    width: 20
+  },
+  {
+    caption: 'Fecha Creación',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Estado2',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Fecha Vigencia',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Avance %',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Ultimo Pago',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Paso Producción Comprometido',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Cep',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Acoplado',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Presupuesto Gasto',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Presupuesto Inversion',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Compromiso Gasto',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Compromiso Inversion',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Real Gasto',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Real Inversion',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Saldo2 Gastoo',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Saldo2 Inversión',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Total Presupuesto',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Total Compromiso',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Total Acumulado',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Total Saldo',
+    type: 'number',
+    width: 15
+  }
   ];
 
   if (!sidx)
@@ -234,8 +251,8 @@ exports.getExcel = function (req, res) {
     sord = "asc";
 
   var order = sidx + " " + sord;
-   
-    var sql = "SELECT id, sap, nombre, numerotarea, nombretarea, presupuestooriginal, presupuestoactual, estado, tipoproyecto,  " +
+
+  var sql = "SELECT id, sap, nombre, numerotarea, nombretarea, presupuestooriginal, presupuestoactual, estado, tipoproyecto,  " +
     "presupuestogasto, presupuestoinversion, compromisogasto, compromisoinversion, realacumuladogasto,  " +
     "realacumuladoinversion, realperiodo, saldogasto, saldoinversion, wbslevel, CONVERT(VARCHAR(10),fechacreacion,110) AS fechacreacion, " +
     "CONVERT(VARCHAR(10),fechainicio,110) AS fechainicio, CONVERT(VARCHAR(10),fechacierre,110) AS fechacierre, cui, saldo2gasto,  " +
@@ -248,37 +265,37 @@ exports.getExcel = function (req, res) {
     "isnull(realacumuladogasto,0)+isnull(realacumuladoinversion,0) AS totalacumulado,   " +
     "isnull(saldogasto,0)+isnull(saldoinversion,0) AS totalsaldo, avance*100 AS avance2   " +
     "FROM sip.proyecto ";
-    
-    //models.Proyecto.findAll().then(function (proyecto) {
-    sequelize.query(sql)
-      .spread(function (proyecto) {
+
+  //models.Proyecto.findAll().then(function (proyecto) {
+  sequelize.query(sql)
+    .spread(function (proyecto) {
       var arr = []
       for (var i = 0; i < proyecto.length; i++) {
 
         a = [i + 1, proyecto[i].sap,
-          proyecto[i].nombre,
-          proyecto[i].categoria2,
-          proyecto[i].pmo,
-          proyecto[i].fechacreacion,
-          proyecto[i].estado,
-          proyecto[i].fechavigencia,
-          proyecto[i].avance2,
-          proyecto[i].ultimopago,
-          proyecto[i].papcomprometido,
-          proyecto[i].cep,
-          proyecto[i].acoplado,
-          proyecto[i].presupuestogasto,
-          proyecto[i].presupuestoinversion,
-          proyecto[i].compromisogasto,
-          proyecto[i].compromisoinversion,
-          proyecto[i].realacumuladogasto,
-          proyecto[i].realacumuladoinversion,
-          proyecto[i].saldo2gasto,
-          proyecto[i].saldo2inversion,
-          proyecto[i].totalpresupuesto,
-          proyecto[i].totalcompromiso,
-          proyecto[i].totalacumulado,
-          proyecto[i].totalsaldo          
+        proyecto[i].nombre,
+        proyecto[i].categoria2,
+        proyecto[i].pmo,
+        proyecto[i].fechacreacion,
+        proyecto[i].estado,
+        proyecto[i].fechavigencia,
+        proyecto[i].avance2,
+        proyecto[i].ultimopago,
+        proyecto[i].papcomprometido,
+        proyecto[i].cep,
+        proyecto[i].acoplado,
+        proyecto[i].presupuestogasto,
+        proyecto[i].presupuestoinversion,
+        proyecto[i].compromisogasto,
+        proyecto[i].compromisoinversion,
+        proyecto[i].realacumuladogasto,
+        proyecto[i].realacumuladoinversion,
+        proyecto[i].saldo2gasto,
+        proyecto[i].saldo2inversion,
+        proyecto[i].totalpresupuesto,
+        proyecto[i].totalcompromiso,
+        proyecto[i].totalacumulado,
+        proyecto[i].totalsaldo
         ];
         arr.push(a);
       }

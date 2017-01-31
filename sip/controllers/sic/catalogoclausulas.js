@@ -4,6 +4,7 @@ var utilSeq = require('../../utils/seq');
 var logger = require("../../utils/logger");
 var path = require('path');
 var fs = require('fs');
+var Busboy = require('busboy');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
@@ -267,10 +268,10 @@ exports.action3 = function (req, res) {
         idgrupo: req.body.idgrupo,
         borrado: 1
       }).then(function (cuerpoclausula) {
-        res.json({ error: 0, glosa: '' });
+        return res.json({ id: cuerpoclausula.id, message: 'Inicio carga', success: true });
       }).catch(function (err) {
         logger.error(err)
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ id: cuerpoclausula.id, message: 'Falla', success: false });
       });
 
       break;
@@ -284,10 +285,10 @@ exports.action3 = function (req, res) {
             id: req.body.id
           }
         }).then(function (cuerpoclausula) {
-          res.json({ error: 0, glosa: '' });
+          res.json({ id: req.body.id, message: 'Inicio carga', success: true });
         }).catch(function (err) {
           logger.error(err)
-          res.json({ error: 1, glosa: err.message });
+          res.json({ message: err.message, success: false });
         });
       break;
     case "del":
@@ -392,5 +393,111 @@ exports.download = function(req, res) {
         logger.error(err.message);
         res.status(500).send(err.message);
     });
+
+}
+exports.upload = function (req, res) {
+
+    if (req.method === 'POST') {
+
+        var busboy = new Busboy({ headers: req.headers });
+
+        var awaitId = new Promise(function (resolve, reject) {
+
+            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+                if (fieldname === 'id') {
+                    try {
+                        resolve(val)
+                    } catch (err) {
+                        return reject(err);
+                    }
+                } else {
+                    return;
+                }
+            });
+        });
+
+        var awaitParent = new Promise(function (resolve, reject) {
+
+            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+                if (fieldname === 'parent') {
+                    try {
+                        resolve(val)
+                    } catch (err) {
+                        return reject(err);
+                    }
+                } else {
+                    return;
+                }
+            });
+        });
+
+        function copyFile(source, target) {
+            return new Promise(function (resolve, reject) {
+                var rd = fs.createReadStream(source);
+                rd.on('error', rejectCleanup);
+                var wr = fs.createWriteStream(target);
+                wr.on('error', rejectCleanup);
+                function rejectCleanup(err) {
+                    rd.destroy();
+                    wr.end();
+                    reject(err);
+                }
+                wr.on('finish', resolve);
+                rd.pipe(wr);
+            });
+        }
+
+        function checkDirectorySync(directory) {
+            try {
+                fs.statSync(directory);
+            } catch (e) {
+                fs.mkdirSync(directory);
+            }
+        }
+
+        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+
+            var saveTo = path.join(__dirname, '../../docs/', 'anexosclausulas', filename);
+            //logger.debug("actual : " + saveTo)
+            file.pipe(fs.createWriteStream(saveTo));
+
+           
+
+                var dir = path.join(__dirname, '../../', 'public/docs/anexosclausulas');
+                checkDirectorySync(dir);
+                var dest = path.join(__dirname, '../../', 'public/docs/anexosclausulas', filename);
+                copyFile(saveTo, dest)
+
+                awaitId.then(function (idDetail) {
+                    //logger.debug("idDetail : " + idDetail)
+                    models.cuerpoclausula.update({
+                        nombrearchivo: filename
+                    }, {
+                            where: {
+                                id: idDetail
+                            }
+                        }).then(function (documentoscotizacion) {
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ id: 0, message: err.message, success: false });
+                        });
+
+                }).catch(function (err) {
+                    res.json({ error_code: 1, message: err.message, success: false });
+                    logger.error(err)
+                });
+
+            
+
+        });
+
+        busboy.on('finish', function () {
+            logger.debug("Finalizo la transferencia del archivo")
+
+            res.json({ error_code: 0, message: 'Archivo guardado', success: true });
+        });
+
+        return req.pipe(busboy);
+    }
 
 }

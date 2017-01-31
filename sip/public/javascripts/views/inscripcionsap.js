@@ -34,7 +34,7 @@ $(document).ready(function () {
             editrules: { required: true },
             editoptions: {
                 dataInit: function (element) {
-                    $(element).mask("0000", { placeholder: "____" });
+                    $(element).mask("00000", { placeholder: "_____" });
                 }
             },
         },
@@ -228,9 +228,12 @@ $(document).ready(function () {
             beforeSubmit: function (postdata, formid) {
                 if (postdata.codigoart == "") {
                     return [false, "Codigo ART: Campo obligatorio", ""];
-                }
-                else {
-                    return [true, "", ""]
+                } if (postdata.sap.length > 4) {
+                    if (confirm("Numero SAP tiene 5 digitos, es una extensión")){
+                        return [true, "", ""];
+                    } 
+                }else {
+                    return [true, "", ""];
                 }
             },
             afterSubmit: function (response, postdata) {
