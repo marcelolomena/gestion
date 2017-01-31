@@ -69,10 +69,37 @@ function getPeriodo() {
 
 }
 
+function cancelId(id) {
+    bootbox.confirm({
+        title: "¿Anula solicitud de aprobación?",
+        message: "¿Desea anular inmediatamente la solicitud de aprobación?. Posteriormente no puede ser revertido",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> Cancelar'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Confirmar'
+            }
+        },
+        callback: function (confirmed) {
+            if (confirmed == true) {
+                $.ajax({
+                    url: '/solicitud/anular/' + id
+                }).done(function () {
+                    bootbox.alert("Solicitud anulada ...", function () { /* your callback code */ })
+                    $("#grid").trigger("reloadGrid");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    bootbox.alert("Error!!…", function () { /* your callback code */ })
+                }).always(function () {
+                    bootbox.alert("Anulando solicitud ...", function () { /* your callback code */ })
+                });
+            }
+        }
+    });
+}
 
 var cancelBtn = function (cellVal, options, rowObject) {
-    console.log("ACATO : " + rowObject.id)
-    return "<input style='height:22px;' type='button' value='Anular' onclick=\"window.location.href='editItem.asp?ID=" + cellVal + "'\"  />";
+    return "<input style='height:22px;' type='button' value='Anular' onclick=\"return cancelId(" + rowObject.id + ")\"  />";
 };
 
 var leida = false;
@@ -166,7 +193,7 @@ function showDocumentos(cui, periodo, proveedor) {
             {
                 label: 'Anular',
                 name: 'Anular',
-                width: 100,
+                width: 60,
                 align: 'center',
                 search: false,
                 formatter: cancelBtn
@@ -461,15 +488,16 @@ function showDocumentos(cui, periodo, proveedor) {
             var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
                 $.each(data, function (i, item) {
-                    //console.dir(item)
-                    //console.log("ROL : " + item.glosarol)
-                    if(item.glosarol === "Administrador DIVOT"){
-                         $grid.jqGrid("showCol", "Anular")
+
+                    if (item.glosarol === "Administrador DIVOT") {
+                        $grid.jqGrid("showCol", "Anular")
                     }
                 });
             });
         }
     });
+
+    $("#grid").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 

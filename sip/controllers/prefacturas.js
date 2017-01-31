@@ -31,11 +31,11 @@ exports.list = function (req, res) {
         " LEFT OUTER JOIN [sip].[proveedor] proveedor  ON a.[idproveedor] = proveedor.[id] " +
         " LEFT OUTER JOIN  [sip].[estructuracui] estructuracui  ON a.[idcui] = estructuracui.[id] " +
         " LEFT OUTER JOIN  [sip].[moneda] moneda  ON a.[idmoneda] = moneda.[id] " +
-        "WHERE (a.[borrado] = 1) " +
+        "WHERE (a.[borrado] = 1) AND a.[estado] != 'ANULADA'" +
         ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-         logger.debug(sql0);
+    logger.debug(sql0);
 
     if (filters) {
         var jsonObj = JSON.parse(filters);
@@ -59,7 +59,7 @@ exports.list = function (req, res) {
                 " LEFT OUTER JOIN [sip].[proveedor] proveedor  ON a.[idproveedor] = proveedor.[id] " +
                 " LEFT OUTER JOIN  [sip].[estructuracui] estructuracui  ON a.[idcui] = estructuracui.[id] " +
                 " LEFT OUTER JOIN  [sip].[moneda] moneda  ON a.[idmoneda] = moneda.[id] " +
-                "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
+                "WHERE ( a.[borrado] = 1) AND a.[estado] != 'ANULADA' AND " + condition.substring(0, condition.length - 4) + ") " +
                 "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
             logger.debug(sql);
@@ -216,8 +216,8 @@ exports.solicitudesaprobadas = function (req, res) {
             and a.aprobado=1 ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-        logger.debug("lala : " + sql)
-        logger.debug("lilo : " + periodo)
+    logger.debug("lala : " + sql)
+    logger.debug("lilo : " + periodo)
 
 
     sequelize.query(count,
@@ -271,7 +271,7 @@ exports.desgloseporsolicitud = function (req, res) {
             count(*) cantidad
             FROM sip.desglosecontable a 
             where a.idsolicitud =  `+ idsolicitud +
-            `  ` + condition
+        `  ` + condition
 
     var sql = `
             SELECT 
@@ -279,13 +279,13 @@ exports.desgloseporsolicitud = function (req, res) {
                     FROM sip.desglosecontable a 
                     join sip.estructuracui b on a.idcui=b.id 
 					join sip.cuentascontables c on a.idcuentacontable=c.id
-            where a.idsolicitud = `+ idsolicitud+
-            `  ` + condition + order +
+            where a.idsolicitud = `+ idsolicitud +
+        `  ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
-        logger.debug("lala : " + sql)
-        logger.debug("lili : " + idsolicitud)
-        
+    logger.debug("lala : " + sql)
+    logger.debug("lili : " + idsolicitud)
+
 
 
     sequelize.query(count,
@@ -310,82 +310,131 @@ exports.desgloseporsolicitud = function (req, res) {
 }
 
 exports.actiondesglose = function (req, res) {
-  var action = req.body.oper;
-  /*
-  var porcentaje = 0.00
-  
-  if (action != "del") {
-    if (req.body.porcentaje != ""){
-      porcentaje1 = parseFloat(req.body.porcentaje)/100;
-    }else{
-      porcentaje = 0.00;
+    var action = req.body.oper;
+    /*
+    var porcentaje = 0.00
+    
+    if (action != "del") {
+      if (req.body.porcentaje != ""){
+        porcentaje1 = parseFloat(req.body.porcentaje)/100;
+      }else{
+        porcentaje = 0.00;
+      }
     }
-  }
-  */
+    */
 
-  switch (action) {
-    case "add":
-      models.desglosecontable.create({
-        idsolicitud: req.body.parent_id,
-        idcui: req.body.idcui,
-        idcuentacontable: req.body.idcuentacontable,
-        porcentaje: req.body.porcentaje,
-        borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
-      break;
-    case "edit":
-      models.desglosecontable.update({
-        idcui: req.body.idcui,
-        idcuentacontable: req.body.idcuentacontable,
-        porcentaje: req.body.porcentaje
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
-      break;
-    case "del":
-      models.desglosecontable.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+    switch (action) {
+        case "add":
+            models.desglosecontable.create({
+                idsolicitud: req.body.parent_id,
+                idcui: req.body.idcui,
+                idcuentacontable: req.body.idcuentacontable,
+                porcentaje: req.body.porcentaje,
+                borrado: 1
+            }).then(function (iniciativa) {
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                res.json({ error_code: 1 });
+            });
+            break;
+        case "edit":
+            models.desglosecontable.update({
+                idcui: req.body.idcui,
+                idcuentacontable: req.body.idcuentacontable,
+                porcentaje: req.body.porcentaje
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (contrato) {
+                    res.json({ error_code: 0 });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            break;
+        case "del":
+            models.desglosecontable.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                res.json({ error_code: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                res.json({ error_code: 1 });
+            });
 
-      break;
+            break;
 
-  }
+    }
 
 }
 exports.porcentajedesglose = function (req, res) {
-  var sql = "select sum(porcentaje) as total from sip.desglosecontable where idsolicitud="+req.params.parentRowKey;
-  sequelize.query(sql)
-    .spread(function (rows) {
-      res.json(rows);
-    });
+    var sql = "select sum(porcentaje) as total from sip.desglosecontable where idsolicitud=" + req.params.parentRowKey;
+    sequelize.query(sql)
+        .spread(function (rows) {
+            res.json(rows);
+        });
 };
 
 exports.getallcuis = function (req, res) {
-  var sql = "select id, cui, nombre from sip.estructuracui order by cui";
-  sequelize.query(sql)
-    .spread(function (rows) {
-      res.json(rows);
+    var sql = "select id, cui, nombre from sip.estructuracui order by cui";
+    sequelize.query(sql)
+        .spread(function (rows) {
+            res.json(rows);
+        });
+};
+
+exports.anular = function (req, res) {
+    return models.solicitudaprobacion.find({
+        where: { idprefactura: req.params.id }
+    }).then(function (solicitudaprobacion) {
+
+        return models.sequelize.transaction({ autocommit: true }, function (t) {
+
+            var promises = []
+
+            var onePromise = models.solicitudaprobacion.update({
+                iddetallecompromiso: null
+            }, {
+                    where: { id: solicitudaprobacion.id }
+                }, { transaction: t });
+
+            promises.push(onePromise);
+
+            var twoPromise = models.detallecompromiso.update({
+                saldopago: null,
+                estadopago: null
+            }, {
+                    where: { id: solicitudaprobacion.iddetallecompromiso }
+                }, { transaction: t });
+
+            promises.push(twoPromise);
+
+            var threePromise = models.prefactura.update({
+                estado: "Anulada"
+            }, {
+                    where: { id: req.params.id }
+                }, { transaction: t });
+
+            promises.push(threePromise);
+
+            return Promise.all(promises);
+
+        }).then(function (result) {
+            res.json({ success: true });
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({ success: false, message: err });
+        });
+
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ success: false, message: err });
     });
 };

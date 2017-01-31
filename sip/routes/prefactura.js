@@ -20,6 +20,9 @@ module.exports = function (passport) {
     router.route('/solicitud/generar')
         .get(isAuthenticated, prefacturaController.generar);
 
+    router.route('/solicitud/anular/:id')
+        .get(isAuthenticated, prefacturaController.anular);
+
     router.get('/prefactura', isAuthenticated, function (req, res) {
         res.render('prefactura', { user: req.user, data: req.session.passport.sidebar });
     });
@@ -27,6 +30,9 @@ module.exports = function (passport) {
     router.get('/prefacturas', isAuthenticated, function (req, res) {
         res.render('prefacturas', { user: req.user, data: req.session.passport.sidebar });
     });
+
+    router.route('/prefacturas/anular/:id')
+        .get(isAuthenticated, prefacturasController.anular);
 
     router.route('/prefacturas/list')
         .post(isAuthenticated, prefacturasController.list);
@@ -53,7 +59,7 @@ module.exports = function (passport) {
 
     router.route('/desglosecontable/action')
         .post(isAuthenticated, prefacturasController.actiondesglose);
-    
+
     router.route('/porcentajedesglose/:parentRowKey')
         .get(isAuthenticated, prefacturasController.porcentajedesglose);
 

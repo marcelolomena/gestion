@@ -2,6 +2,39 @@ function returnTaskLink(cellValue, options, rowdata, action) {
     return "<a target='_blank' href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
 }
 
+function cancelId(id) {
+    bootbox.confirm({
+        title: "¿Anula prefactura?",
+        message: "¿Desea anular inmediatamente la prefactura?. Posteriormente no puede ser revertido",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> Cancelar'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Confirmar'
+            }
+        },
+        callback: function (confirmed) {
+            if (confirmed == true) {
+                $.ajax({
+                    url: '/prefacturas/anular/' + id
+                }).done(function () {
+                    bootbox.alert("Prefactura anulada ...", function () { /* your callback code */ })
+                    $("#table_prefacturas").trigger("reloadGrid");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    bootbox.alert("Error!!…", function () { /* your callback code */ })
+                }).always(function () {
+                    bootbox.alert("Anulando prefactura ...", function () { /* your callback code */ })
+                });
+            }
+        }
+    });
+}
+
+var cancelBtn = function (cellVal, options, rowObject) {
+    return "<input style='height:22px;' type='button' value='Anular' onclick=\"return cancelId(" + rowObject.id + ")\"  />";
+};
+
 $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
@@ -26,11 +59,19 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     var modelPrefacturas = [
-        { label: 'Numero', name: 'id', key: true, width: 80, hidden: false, formatter: returnTaskLink },
+        {
+            label: 'Anular',
+            name: 'Anular',
+            width: 50,
+            align: 'center',
+            search: false,
+            formatter: cancelBtn
+        },
+        { label: 'Número', name: 'id', key: true, width: 80, hidden: false, formatter: returnTaskLink },
         {
             label: 'Estado', name: 'estado', width: 80, align: 'left',
             search: true, editable: false, hidden: false
-        },        
+        },
         {
             label: 'Periodo', name: 'periodo', width: 70, align: 'left',
             search: true, editable: true, hidden: false
@@ -45,7 +86,7 @@ $(document).ready(function () {
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
-        
+
         {
             label: 'Contrato', name: 'idcontrato', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
@@ -79,7 +120,7 @@ $(document).ready(function () {
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
-        
+
         {
             label: 'Fecha', name: 'fecha', width: 130, align: 'left',
             search: false, editable: true, formatter: 'date',
@@ -144,14 +185,20 @@ $(document).ready(function () {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +
                 'errorThrown: ' + errorThrown);
+        },
+        loadComplete: function (data) {
+            var thisId = $.jgrid.jqID(this.id);
+            $.get('/sic/getsession', function (data) {
+                $.each(data, function (i, item) {
+
+                    if (item.glosarol === "Administrador DIVOT") {
+                        $("#table_prefacturas").jqGrid("showCol", "Anular")
+                    }
+                });
+            });
         }
     });
-    /*
-    $("#table_prefacturas").jqGrid('filterToolbar', {
-        stringResult: true, searchOperators: true,
-        searchOnEnter: false, defaultSearch: 'cn'
-    });
-    */
+    $("#table_prefacturas").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
 
     $('#table_prefacturas').jqGrid('navGrid', "#pager_prefacturas", {
         edit: false, add: false, del: false, search: false, refresh: true,
@@ -169,6 +216,6 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    
+
     $("#pager_prefacturas_left").css("width", "");
 });
