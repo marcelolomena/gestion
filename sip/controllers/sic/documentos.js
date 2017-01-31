@@ -62,8 +62,7 @@ exports.action = function (req, res) {
                             uid: req.session.passport.user,
                             nombrecorto: req.body.nombrecorto,
                             descripcionlarga: req.body.descripcionlarga,
-                            nombreresponsable: req.body.nombreresponsable,
-                            nombrearchivo: ''
+                            nombreresponsable: req.body.nombreresponsable
                         }, {
                                 where: {
                                     id: req.body.id

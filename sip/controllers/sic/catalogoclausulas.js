@@ -13,6 +13,7 @@ exports.action = function (req, res) {
     case "add":
       models.clase.create({
         titulo: req.body.titulo,
+        anexo: req.body.anexo,
         borrado: 1
       }).then(function (clase) {
         res.json({ error: 0, glosa: '' });
@@ -24,7 +25,8 @@ exports.action = function (req, res) {
       break;
     case "edit":
       models.clase.update({
-        titulo: req.body.titulo
+        titulo: req.body.titulo,
+        anexo: req.body.anexo
       }, {
           where: {
             id: req.body.id
@@ -227,14 +229,15 @@ exports.list3 = function (req, res) {
     if (err) {
       //logger.debug("->>> " + err)
     } else {
+      
       models.cuerpoclausula.count({
         where: data
       }).then(function (records) {
         logger.debug("records: "+records);
         var total = Math.ceil(records / rows);
         logger.debug("total: "+total);
-
         models.cuerpoclausula.belongsTo(models.valores, { foreignKey: 'idgrupo' });
+        models.cuerpoclausula.belongsTo(models.valores, { as: 'nombretipoadjunto', foreignKey: 'tipoadjunto' });
         models.cuerpoclausula.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
@@ -242,6 +245,9 @@ exports.list3 = function (req, res) {
           where: data,
           include: [{
                         model: models.valores
+                    },
+                    {
+                        model: models.valores, as: 'nombretipoadjunto'
                     }
                     ]
         }).then(function (cuerpoclausula) {
@@ -258,6 +264,10 @@ exports.list3 = function (req, res) {
 
 exports.action3 = function (req, res) {
   var action = req.body.oper;
+  var nombreadjunto = null
+  if(req.body.tipoadjunto=="48"){
+    nombreadjunto = req.body.elegirtabla
+  }
 
   switch (action) {
     case "add":
@@ -266,6 +276,8 @@ exports.action3 = function (req, res) {
         titulo: req.body.titulo,
         glosa: req.body.glosa,
         idgrupo: req.body.idgrupo,
+        tipoadjunto: req.body.tipoadjunto,
+        nombreadjunto: nombreadjunto,
         borrado: 1
       }).then(function (cuerpoclausula) {
         return res.json({ id: cuerpoclausula.id, message: 'Inicio carga', success: true });
@@ -471,7 +483,7 @@ exports.upload = function (req, res) {
                 awaitId.then(function (idDetail) {
                     //logger.debug("idDetail : " + idDetail)
                     models.cuerpoclausula.update({
-                        nombrearchivo: filename
+                        nombreadjunto: filename
                     }, {
                             where: {
                                 id: idDetail

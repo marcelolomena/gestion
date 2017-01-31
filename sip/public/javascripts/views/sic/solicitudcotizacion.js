@@ -118,7 +118,7 @@ $(document).ready(function () {
         },
         { label: 'Técnico', name: 'tecnico', width: 150, search: false, editable: false, formatter: returnTecnico, hidden: false },
         {
-            label: 'Tipo Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
+            label: 'T.Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false, width:100,
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
@@ -152,7 +152,7 @@ $(document).ready(function () {
             hidden: true, editoptions: { defaultValue: "0" }
         },
         {
-            label: 'Código ART', name: 'codigoart', width: 100, align: 'left', search: false, editable: true, hidden: false,
+            label: 'CódigoART', name: 'codigoart', width: 90, align: 'left', search: false, editable: true, hidden: false,
             editrules: { edithidden: false }, hidedlg: true, editoptions: {
                 size: 10, readonly: 'readonly',
                 dataEvents: [{
@@ -209,7 +209,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 150, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 120, align: 'left', search: false, editable: true, hidden: false },
         { label: 'Color',
             name: 'colornota',
             index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
@@ -272,13 +272,13 @@ $(document).ready(function () {
             }
         },
         { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador, hidden: false },
-        { label: 'Correo Negociador', name: 'correonegociador', width: 150, hidden: false, search: false, editable: true },
-        { label: 'Fono Negociador', name: 'fononegociador', width: 150, hidden: false, search: false, editable: true },
-        { label: 'Dirección Negociador', name: 'direccionnegociador', width: 150, hidden: false, search: false, editable: true },
-        { label: 'Número RFP', name: 'numerorfp', width: 150, hidden: false, search: false, editable: true },
+        { label: 'C.Negociador', name: 'correonegociador', width: 130, hidden: false, search: false, editable: true },
+        { label: 'F.Negociador', name: 'fononegociador', width: 100, hidden: false, search: false, editable: true },
+        { label: 'D.Negociador', name: 'direccionnegociador', width: 150, hidden: false, search: false, editable: true },
+        { label: 'N° RFP', name: 'numerorfp', width: 80, hidden: false, search: false, editable: true },
         {
             label: 'Fecha RFP', name: 'fechaenviorfp',
-            width: 150, align: 'center', search: true, editable: true, hidden: false,
+            width: 90, align: 'center', search: true, editable: true, hidden: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
                 dataInit: function (el) {
@@ -330,7 +330,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Tipo', name: 'tipo', jsonmap: "tipoclausula.nombre", width: 150, align: 'left', search: false, editable: false, hidden: false },
+        { label: 'Tipo', name: 'tipo', jsonmap: "tipoclausula.nombre", width: 100, align: 'left', search: false, editable: false, hidden: false },
         {
             name: 'idgrupo', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -355,7 +355,7 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Grupo', name: 'grupo', jsonmap: "grupo.nombre", width: 150, align: 'left', search: false, editable: false, hidden: false },
+        { label: 'Grupo', name: 'grupo', jsonmap: "grupo.nombre", width: 120, align: 'left', search: false, editable: false, hidden: false },
     ];
     var previousRowId = 0;
     $grid.jqGrid({
@@ -368,6 +368,7 @@ $(document).ready(function () {
         regional: 'es',
         height: 'auto',
         autowidth: true,
+        //width: 1500,
         shrinkToFit: false,
         forceFit: true,
         viewrecords: true,
@@ -432,6 +433,7 @@ $(document).ready(function () {
                 } else if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
+                    /*
                     if (postdata.fonointerlocutor1.trim().length == 0) {
                         postdata.fonointerlocutor1 = null
                     }
@@ -444,7 +446,7 @@ $(document).ready(function () {
                     if (postdata.fononegociador.trim().length == 0) {
                         postdata.fononegociador = null
                     }
-
+*/
                     return [true, "", ""]
                 }
 

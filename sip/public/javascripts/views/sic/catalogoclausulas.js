@@ -7,6 +7,10 @@ $(document).ready(function () {
     t1 += "<div class='column-full' id='d_titulo'>Título<span style='color:red'>*</span>{titulo}</div>";
     t1 += "</div>";
 
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-full' id='d_titulo'>Anexo<span style='color:red'>*</span>{anexo}</div>";
+    t1 += "</div>";
+
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
 
@@ -17,7 +21,26 @@ $(document).ready(function () {
             { label: 'ID', name: 'id', key: true, hidden: true },
 
             { label: 'Título', name: 'titulo', width: 250, align: 'left', search: false, editable: true, editrules: { required: true } },
+{
+            label: 'Anexo', name: 'anexo', width: 20, align: 'left',
+            search: true, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemAnexo
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.anexo;
+                if (val == 1) {
+                    dato = 'Sí';
 
+                } else if (val == 0) {
+                    dato = 'No';
+                }
+                return dato;
+            }
+        },
 
         ];
 
@@ -30,7 +53,7 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: 1200,
+        width: 1100,
         shrinkToFit: true,
         viewrecords: true,
         editurl: '/sic/grid_catalogoclausulas',

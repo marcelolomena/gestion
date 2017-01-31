@@ -26,12 +26,25 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Grupo {idgrupo}</div>";
     tmplPF += "</div>";
 
-    tmplPF += "<div class='form-row', id='elarchivo'>";
-    tmplPF += "<div class='column-full'>Archivo Actual<span style='color:red'>*</span>{nombrearchivo}</div>";
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Tipo Adjunto {tipoadjunto}</div>";
     tmplPF += "</div>";
 
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Subir Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
+    tmplPF += "<div class='form-row' id='modificar'>";
+    tmplPF += "<div class='column-full' id='archivoactual'>Archivo Actual{nombreadjunto}</div>";
+    tmplPF += "<div class='column-full' id='tablaactual'>Tabla Actual{nombreadjunto}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' id='subirarchivo'>";
+    tmplPF += "<div class='column-full'  >Subir Archivo {fileToUpload}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' id='latabla'>"
+    tmplPF += "<div class='column-full' >Elegir Tabla {elegirtabla}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' >";
+
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -75,7 +88,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
 
         { label: 'Título', name: 'titulo', width: 200, align: 'left', search: false, editable: true, editrules: { required: true } },
         {
-            label: 'Glosa', name: 'glosa', width: 600, align: 'left', search: false, editable: true,
+            label: 'Glosa', name: 'glosa', width: 400, align: 'left', search: false, editable: true,
             edittype: 'custom',
             editoptions: {
                 custom_element: function (value, options) {
@@ -95,7 +108,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                             statusbar: false,
                             selector: "#" + options.id,
                             plugins: "link",
-                            height: 300,
+                            height: 200,
                         });
                     }, 50);
                     return elm;
@@ -123,13 +136,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
-        {
-            name: 'nombrearchivo', index: 'nombrearchivo', hidden: true, width: 100, align: "left", editable: true,
-            editoptions: {
-                custom_element: labelEditFunc,
-                custom_value: getLabelValue
-            }
-        },
+
         {
             name: 'fileToUpload',
             hidden: true,
@@ -140,8 +147,95 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 enctype: "multipart/form-data"
             },
             search: false
-        }
+        },
+        {
+            name: 'elegirtabla', index: 'elegirtabla', hidden: true, width: 100, align: "left", editable: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/parametros/tablaanexo',
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.nombreadjunto;
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger una Tabla--</option>';
+                    $.each(data, function (i, item) {
 
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].nombre + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].nombre + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        {
+            name: 'tipoadjunto', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/parametros/tipoadjunto',
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.tipoadjunto;
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger un Tipo--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var tipoadjunto = $('option:selected', this).text();
+                        console.log(tipoadjunto);
+
+                        if (tipoadjunto == "Archivo") {
+                            $("#latabla").css("display", "none");
+                            $("#subirarchivo").css("display", "block");
+
+                            $("#elegirtabla").css("display", "none");
+                            $("#fileToUpload").css("display", "block");
+
+                        } else {
+                            if (tipoadjunto == "Tabla") {
+                                $("#subirarchivo").css("display", "none");
+                                $("#latabla").css("display", "block");
+
+                                $("#fileToUpload").css("display", "none");
+                                $("#elegirtabla").css("display", "block");
+                            }
+
+                        }
+
+                    }
+                }],
+            }
+        },
+        {
+            label: 'Tipo Adjunto', name: 'nombretipoadjunto.nombre', hidden: false, width: 100, align: "left", editable: true,
+            editoptions: {
+                custom_element: labelEditFunc,
+                custom_value: getLabelValue
+            }
+        },
+        {
+            label: 'Nombre Adjunto', name: 'nombreadjunto', hidden: false, width: 100, align: "left", editable: true,
+            formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject); },
+            editoptions: {
+                custom_element: labelEditFunc,
+                custom_value: getLabelValue
+            }
+        },
 
 
 
@@ -200,7 +294,41 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                $('input#nombrearchivo', form).attr('readonly', 'readonly');
+                $("#modificar").show();
+                setTimeout(function () {
+                    $("#tipoadjunto", form).attr('disabled', 'disabled');
+                }, 250);
+                $('input#nombreadjunto', form).attr('readonly', 'readonly');
+
+                var rowKey = $("#" + childGridID).getGridParam("selrow");
+                var rowData = $("#" + childGridID).getRowData(rowKey);
+                var thissid = rowData.tipoadjunto;
+
+
+                if (thissid == 47) {
+                    $("#tablaactual").hide();
+                    $("#archivoactual").show();
+                    var archivo = rowData.nombreadjunto;
+                    $("#archivoactual").html("Archivo Actual: " + archivo)
+                    $("#latabla").css("display", "none");
+                    $("#elegirtabla").css("display", "none");
+                    $("#subirarchivo").css("display", "block");
+                    $("#fileToUpload").css("display", "block");
+
+
+                } else {
+                    if (thissid == 48) {
+                        $("#archivoactual").hide();
+                        $("#tablaactual").hide();
+                        //var tabla = rowData.nombreadjunto;
+                        //$("#tablaactual").html("Tabla Actual: " + tabla)
+                        $("#subirarchivo").css("display", "none");
+                        $("#fileToUpload").css("display", "none");
+                        $("#latabla").css("display", "block");
+                        $("#elegirtabla").css("display", "block");
+
+                    }
+                }
             },
 
             afterShowForm: function (form) {
@@ -242,7 +370,11 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                $("#elarchivo").empty().html('');
+                $("#modificar").hide();
+                $("#subirarchivo").css("display", "none");
+                $("#latabla").css("display", "none");
+                $("#elegirtabla").css("display", "none");
+                $("#fileToUpload").css("display", "none");
             },
 
 
@@ -273,14 +405,14 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
     }
     function getLabelValue(e, action, textvalue) {
         if (action == 'get') {
-            console.log("esto es?")
+
             return e.innerHTML;
         } else {
             if (action == 'set') {
                 $(e).html(textvalue);
-                console.log("o no??")
+
             }
-            console.log("o nada??")
+
         }
     }
     function UploadDoc(response, postdata) {
@@ -329,6 +461,11 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
         });
     }
     function returnDocLink(cellValue, options, rowdata) {
-        return "<a href='/docs/anexosclausulas/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";
+        if (rowdata.tipoadjunto == 47) {
+            return "<a href='/docs/anexosclausulas/" + rowdata.nombreadjunto + "' >" + rowdata.nombreadjunto + "</a>";
+        } else {
+            return rowdata.nombreadjunto
+        }
+
     }
 }
