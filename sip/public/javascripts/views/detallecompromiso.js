@@ -34,7 +34,7 @@ function gridDetail(parentRowID, parentRowKey) {
             },
             {
                 label: 'Neto', name: 'valorcuota', width: 150, editable: true,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },            
             {
                 label: 'Caja', name: 'montoorigen', width: 150, editable: false,
