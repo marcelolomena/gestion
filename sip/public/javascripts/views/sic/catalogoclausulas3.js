@@ -27,6 +27,10 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full' id='d_titulo'>Anexo<span style='color:red'>*</span>{anexo}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Tipo Adjunto {tipoadjunto}</div>";
     tmplPF += "</div>";
 
@@ -172,6 +176,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 }
             }
         },
+        
         {
             name: 'tipoadjunto', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -236,7 +241,26 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 custom_value: getLabelValue
             }
         },
+{
+            label: 'Anexo', name: 'anexo', width: 60, align: 'left',
+            search: true, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemAnexo
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.anexo;
+                if (val == 1) {
+                    dato = 'Sí';
 
+                } else if (val == 0) {
+                    dato = 'No';
+                }
+                return dato;
+            }
+        },
 
 
 

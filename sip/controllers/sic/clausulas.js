@@ -16,7 +16,9 @@ exports.action = function (req, res) {
 				idplantillaclausula: req.body.idclausulaplantilla,
 				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
-				blosa: req.body.glosa,
+				glosa: req.body.glosa,
+				tipoadjunto: req.body.tipoadjunto,
+				nombreadjunto: req.body.nombreadjunto,
 				borrado: 1
 			}).then(function (clausulas) {
 				res.json({ error: 0, glosa: '' });
@@ -28,10 +30,10 @@ exports.action = function (req, res) {
 			break;
 		case "edit":
 			models.clausulas.update({
-				idplantillaclausula: req.body.idclausulaplantilla,
+				//idplantillaclausula: req.body.idclausulaplantilla,
 				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
-				blosa: req.body.blosa
+				glosa: req.body.glosa
 			}, {
 					where: {
 						id: req.body.id
@@ -152,11 +154,30 @@ exports.plantillas = function (req, res) {
 }
 
 exports.texto = function (req, res) {
+	models.cuerpoclausula.belongsTo(models.valores, { foreignKey: 'tipoadjunto' });
 	models.cuerpoclausula.findAll({
-		attributes: [['glosa', 'glosaclausula'], ['titulo', 'nombrecorto']],
-		where: { idplantillaclausula: req.params.id, idgrupo: req.params.gid }
+		where: { idplantillaclausula: req.params.id, idgrupo: req.params.gid },
+		include: [
+			{
+				model: models.valores
+			}]
 	}).then(function (plantillas) {
-		return res.json(plantillas);
+		if (plantillas != "") {
+			return res.json(plantillas);
+		} else {
+			models.cuerpoclausula.findAll({
+				where: { idplantillaclausula: req.params.id, idgrupo: 15 },
+				include: [
+					{
+						model: models.valores
+					}]
+			}).then(function (plantillapordefecto) {
+				return res.json(plantillapordefecto);
+			}).catch(function (err) {
+				logger.error(err.message);
+				res.json({ error_code: 1 });
+			});
+		}
 	}).catch(function (err) {
 		logger.error(err.message);
 		res.json({ error_code: 1 });
@@ -189,7 +210,7 @@ exports.download = function (req, res) {
 		//console.dir(clausulas)
 		//logger.debug(clausulas.titulo)
 
-				var result = `
+		var result = `
 				<apex:page sidebar="false" contentType="application/msword" cache="true">
 					<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='<a target="_blank" href="http://www.w3.org/TR/REC-html40'" rel="nofollow">http://www.w3.org/TR/REC-html40'</a>>
 		<head>
@@ -809,9 +830,9 @@ exports.download = function (req, res) {
 		  <p class=MsoTitle align=center style='margin-left:0cm;text-align:center'><span
 		  lang=ES-CL>
 		  `
-				result += clausulas[0].solicitudcotizacion.descripcion
-		
-				result += `
+		result += clausulas[0].solicitudcotizacion.descripcion
+
+		result += `
 		  </span></p>
 		  </div>
 		  </td>
@@ -857,30 +878,30 @@ exports.download = function (req, res) {
 		lang=ES-CL style='font-size:14.0pt;line-height:115%;font-family:"Cambria",serif;
 		color:#365F91'>&nbsp;</span></b></p>
 						`
-/*		
-				for (var f in clausulas) {
-					var clase = clausulas[f].plantillaclausula.clase.nombre
-					var code = clausulas[f].plantillaclausula.codigo
-					if (!code) {
-						throw new Error("No es posible generar el documento.")
-					}
-		
-					var level = code.split(".");
-					var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
-		
-					result += '<h1>' + clase + '</h1>'
-		
-					if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0)
-						result += '<h2>' + nombrecorto + '</h2>'
-					else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0)
-						result += '<h3>' + nombrecorto + '</h3>'
-		
-		
-					result += clausulas[f].texto
-					result += "<br/>"
-		
-				}
-*/
+		/*		
+						for (var f in clausulas) {
+							var clase = clausulas[f].plantillaclausula.clase.nombre
+							var code = clausulas[f].plantillaclausula.codigo
+							if (!code) {
+								throw new Error("No es posible generar el documento.")
+							}
+				
+							var level = code.split(".");
+							var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
+				
+							result += '<h1>' + clase + '</h1>'
+				
+							if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0)
+								result += '<h2>' + nombrecorto + '</h2>'
+							else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0)
+								result += '<h3>' + nombrecorto + '</h3>'
+				
+				
+							result += clausulas[f].texto
+							result += "<br/>"
+				
+						}
+		*/
 		for (var f in clausulas) {
 			var titulo = clausulas[f].titulo
 			var glosa = clausulas[f].glosa
@@ -891,9 +912,9 @@ exports.download = function (req, res) {
 
 			result += "<br/>"
 
-		}		
-				result +=
-					`
+		}
+		result +=
+			`
 		</div>
 		
 		</body>
@@ -901,11 +922,11 @@ exports.download = function (req, res) {
 		</html>
 		</apex:page>
 		`
-		
-				var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
-				res.setHeader('Content-disposition', hdr);
-				res.set('Content-Type', 'application/msword;charset=utf-8');
-				res.status(200).send(result);
+
+		var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
+		res.setHeader('Content-disposition', hdr);
+		res.set('Content-Type', 'application/msword;charset=utf-8');
+		res.status(200).send(result);
 
 	}).catch(function (err) {
 		logger.error(err.message);

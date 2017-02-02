@@ -43,7 +43,11 @@ module.exports = function(sequelize, DataTypes) {
     tipoadjunto: {
       type: DataTypes.STRING,
       allowNull: true
-    }
+    },
+    anexo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   }, {
     schema: 'sic',timestamps: false,tableName: 'cuerpoclausula'
   });

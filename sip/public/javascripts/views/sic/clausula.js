@@ -5,11 +5,11 @@ var gridClausula = {
         var $gridTab = $(targ + "_t_" + parentRowKey)
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
-        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='form-row' id='laclase'>";
         tmpl += "<div class='column-full'>Clase<span style='color:red'>*</span>{idclase}</div>";
         tmpl += "</div>";
 
-        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='form-row' id='laplantilla'>";
         tmpl += "<div class='column-full'>Código<span style='color:red'>*</span>{idclausulaplantilla}</div>";
         tmpl += "</div>";
 
@@ -21,6 +21,16 @@ var gridClausula = {
         tmpl += "<div class='column-full'>Cláusula<span style='color:red'>*</span>{glosa}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-full' id='eltipo'>Tipo Adjunto: {tipoadjunto}</div>";
+        tmpl += "<div class='column-full' id='tipooculto'>Tipo Adjunto: {tipoadjunto}</div>";
+        tmpl += "</div>";
+
+        tmpl += "<div class='form-row' id='modificar'>";
+        tmpl += "<div class='column-full' id='archivoactual'>Archivo Actual{nombreadjunto}</div>";
+        tmpl += "<div class='column-full' id='tablaactual'>Tabla Actual{nombreadjunto}</div>";
+        tmpl += "</div>";
+
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -29,7 +39,7 @@ var gridClausula = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto'],
+            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto', 'Nombre Adjunto'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true,
@@ -111,9 +121,41 @@ var gridClausula = {
                                         url: '/sic/texto/' + thisval + '/' + parentRowData.idgrupo,
                                         success: function (data) {
                                             if (data) {
-                                                $("input#titulo").val(data[0].nombrecorto);
+                                                $("input#titulo").val(data[0].titulo);
                                                 //tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
-                                                tinyMCE.activeEditor.setContent(data[0].glosaclausula);
+                                                tinyMCE.activeEditor.setContent(data[0].glosa);
+                                                $("#eltipo").show();
+                                                $("input#tipoadjunto").val(data[0].tipoadjunto);
+                                                $("#modificar").show();
+                                                if (data[0].tipoadjunto == 47) {
+                                                    console.log("es archivo")
+                                                    $("#eltipo").html("Tipo Adjunto: Archivo");
+                                                    $("#tablaactual").hide();
+                                                    $("#archivoactual").show();
+                                                    var archivo = data[0].nombreadjunto;
+
+                                                    if (archivo != "null") {
+                                                        $("input#nombreadjunto").val(archivo);
+                                                        $("#archivoactual").html("Archivo Actual: " + "<a href='/docs/anexosclausulas/" + archivo + "' >" + archivo + "</a>")
+                                                    } else {
+                                                        $("input#nombreadjunto").val("");
+                                                        $("#archivoactual").html("No se ha subido un archivo")
+
+                                                    }
+
+                                                    $("#latabla").css("display", "none");
+
+                                                } else {
+                                                    if (data[0].tipoadjunto == 48) {
+                                                        console.log("es tabla")
+                                                        $("#eltipo").html("Tipo Adjunto: Tabla");
+                                                        $("#archivoactual").hide();
+                                                        $("#tablaactual").show();
+                                                        var tabla = data[0].nombreadjunto;
+                                                        $("input#nombreadjunto").val(tabla);
+                                                        $("#tablaactual").html("Tabla Actual: " + tabla)
+                                                    }
+                                                }
                                             } else {
                                                 $("input#titulo").val('');
                                                 tinyMCE.activeEditor.setContent('');
@@ -181,7 +223,22 @@ var gridClausula = {
                             }
                         }
                     },
-                }
+                },
+                {
+                    name: 'tipoadjunto', index: 'tipoadjunto', hidden: false, width: 100, align: "left", editable: true,
+                    editoptions: {
+                        custom_element: labelEditFunc,
+                        custom_value: getLabelValue
+                    }
+                },
+                {
+                    name: 'nombreadjunto', index: 'nombreadjunto', hidden: false, width: 100, align: "left", editable: true,
+                    formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject); },
+                    editoptions: {
+                        custom_element: labelEditFunc,
+                        custom_value: getLabelValue
+                    }
+                },
             ],
             rowNum: 20,
             pager: '#navGridClau',
@@ -269,6 +326,10 @@ var gridClausula = {
                 closeAfterEdit: true,
                 recreateForm: true,
                 checkOnUpdate: true,
+                saveData: "¿Desea guardar los cambios antes de salir?",
+                bYes: "Sí",
+                bNo: "",
+                bExit: "No",
                 template: tmpl,
                 mtype: 'POST',
                 width: 800,
@@ -278,11 +339,12 @@ var gridClausula = {
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
-                    if (parseInt(postdata.codclase) == 0) {
+                    /*if (parseInt(postdata.codclase) == 0) {
                         return [false, "Clase: Debe escoger un valor", ""];
                     } else if (parseInt(postdata.idclausulaplantilla) == 0) {
                         return [false, "Código: Debe escoger un valor", ""];
-                    } if (postdata.titulo.trim().length == 0) {
+                    } */
+                    if (postdata.titulo.trim().length == 0) {
                         return [false, "Nombre: Debe ingresar un nombre", ""];
                     } if (postdata.glosa.trim().length == 0) {
                         return [false, "Texto: Debe ingresar un texto", ""];
@@ -291,6 +353,7 @@ var gridClausula = {
                     }
                 },
                 beforeShowForm: function (form) {
+                    /*
                     setTimeout(function () {
                         $.ajax({
                             type: "GET",
@@ -309,8 +372,16 @@ var gridClausula = {
                                 $("#idclausulaplantilla").html(s);
                             }
                         });
-                    }, 100);
+                    }, 100);*/
                     sipLibrary.centerDialog($gridTab.attr('id'));
+                    $("#laclase").hide();
+                    $("#laplantilla").hide();
+                    $("#eltipo").hide();
+                    $("#tipooculto").hide();
+                    $("#modificar").hide();
+                    sipLibrary.centerDialog($gridTab.attr('id'));
+
+
                 }, afterShowForm: function (form) {
 
                 }
@@ -319,6 +390,10 @@ var gridClausula = {
                 closeAfterAdd: true,
                 recreateForm: true,
                 checkOnUpdate: true,
+                saveData: "¿Desea guardar los cambios antes de salir?",
+                bYes: "Sí",
+                bNo: "",
+                bExit: "No",
                 template: tmpl,
                 width: 800,
                 mtype: 'POST',
@@ -340,7 +415,11 @@ var gridClausula = {
                         return [true, "", ""]
                     }
                 }, beforeShowForm: function (form) {
+                    $("#eltipo").hide();
+                    $("#tipooculto").hide();
+                    $("#modificar").hide();
                     sipLibrary.centerDialog($gridTab.attr('id'));
+
                 }
             }, {
                 mtype: 'POST',
@@ -386,4 +465,17 @@ var gridClausula = {
             }
         });
     }
+}
+function returnDocLink(cellValue, options, rowdata) {
+    if (rowdata.tipoadjunto == 47) {
+        if (rowdata.nombreadjunto != "" && rowdata.nombreadjunto != null) {
+            return "<a href='/docs/anexosclausulas/" + rowdata.nombreadjunto + "' >" + rowdata.nombreadjunto + "</a>";
+        } else {
+            return "";
+        }
+
+    } else {
+        return rowdata.nombreadjunto
+    }
+
 }

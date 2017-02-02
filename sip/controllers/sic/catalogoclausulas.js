@@ -13,7 +13,6 @@ exports.action = function (req, res) {
     case "add":
       models.clase.create({
         titulo: req.body.titulo,
-        anexo: req.body.anexo,
         borrado: 1
       }).then(function (clase) {
         res.json({ error: 0, glosa: '' });
@@ -25,8 +24,7 @@ exports.action = function (req, res) {
       break;
     case "edit":
       models.clase.update({
-        titulo: req.body.titulo,
-        anexo: req.body.anexo
+        titulo: req.body.titulo
       }, {
           where: {
             id: req.body.id
@@ -278,6 +276,7 @@ exports.action3 = function (req, res) {
         idgrupo: req.body.idgrupo,
         tipoadjunto: req.body.tipoadjunto,
         nombreadjunto: nombreadjunto,
+        anexo: req.body.anexo,
         borrado: 1
       }).then(function (cuerpoclausula) {
         return res.json({ id: cuerpoclausula.id, message: 'Inicio carga', success: true });
@@ -292,6 +291,7 @@ exports.action3 = function (req, res) {
         titulo: req.body.titulo,
         glosa: req.body.glosa,
         idgrupo: req.body.idgrupo,
+        anexo: req.body.anexo
       }, {
           where: {
             id: req.body.id
