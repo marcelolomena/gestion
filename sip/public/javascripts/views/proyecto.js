@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
-    var $grid=$("#grid"),modelProyecto = [
+    var $grid = $("#grid"), modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: '# SAP', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Nombre Proyecto', name: 'nombre', width: 250, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'PMO', name: 'pmo', width: 140, align: 'left', search: true },
         {
-            label: 'Fecha Inscripción', name: 'fechacreacion', width: 130, align: 'right', search: false, sortable: false, 
+            label: 'Fecha Inscripción', name: 'fechacreacion', width: 130, align: 'right', search: false, sortable: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 1 },
             editoptions: {
@@ -17,7 +17,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Fecha Paso Producción', name: 'papcomprometido', width: 170, align: 'right', search: false, sortable: false, 
+            label: 'Fecha Paso Producción', name: 'papcomprometido', width: 170, align: 'right', search: false, sortable: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 3, colpos: 2 },
             editoptions: {
@@ -26,9 +26,9 @@ $(document).ready(function () {
                     $(element).datepicker({ dateFormat: 'dd-mm-yy' })
                 }
             }
-        },        
+        },
         {
-            label: 'Fecha Cierre', name: 'fechavigencia', width: 110, align: 'right', search: false, sortable: false, 
+            label: 'Fecha Cierre', name: 'fechavigencia', width: 110, align: 'right', search: false, sortable: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 2 },
             editoptions: {
@@ -38,9 +38,10 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: false },        
-        { label: '% Consumido', name: 'avance2', width: 120, align: 'right', search: false,  sortable: false, 
-        formatter: 'number', formatoptions: {suffix: '%', decimalPlaces: 0 }, sorttype: 'currency'
+        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: false },
+        {
+            label: '% Consumido', name: 'avance2', width: 120, align: 'right', search: false, sortable: false,
+            formatter: 'number', formatoptions: { suffix: '%', decimalPlaces: 0 }, sorttype: 'currency'
         },
         {
             label: 'Ppto Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: false,
@@ -53,10 +54,10 @@ $(document).ready(function () {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Total Presupuesto', name: 'totalpresupuesto', width: 150, align: 'right', search: false, sortable: false, 
+            label: 'Total Presupuesto', name: 'totalpresupuesto', width: 150, align: 'right', search: false, sortable: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },             
+        },
         {
             label: 'Pagado Gasto', name: 'realacumuladogasto', width: 150, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 1 },
@@ -68,10 +69,10 @@ $(document).ready(function () {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Total Pagado', name: 'totalacumulado', width: 150, align: 'right', search: false, sortable: false, 
+            label: 'Total Pagado', name: 'totalacumulado', width: 150, align: 'right', search: false, sortable: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        },           
+        },
         {
             label: 'Saldo Gasto', name: 'saldo2gasto', width: 150, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
@@ -83,11 +84,11 @@ $(document).ready(function () {
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Total Saldo', name: 'totalsaldo', width: 150, align: 'right', search: false, sortable: false, 
+            label: 'Total Saldo', name: 'totalsaldo', width: 150, align: 'right', search: false, sortable: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
-        }                           
-         
+        }
+
     ];
     $("#grid").jqGrid({
         url: '/proyectoslist',
@@ -114,11 +115,13 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         },
         loadComplete: function (data) {
-            
+
             $.get('/lastdateload', function (data) {
-                 $grid.jqGrid('setCaption', 'Lista de proyectos ' + data.date);
+                var theDate = new Date(data.date);
+                var fechaed = theDate.toLocaleString();
+                $grid.jqGrid('setCaption', 'Lista de proyectos al ' + fechaed);
             });
-           
+
         }
     });
 
@@ -149,7 +152,7 @@ $(document).ready(function () {
     $("#pager_left").css("width", "");
 });
 
-    
+
 function showProyectosTareas(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
     var childGridPagerID = parentRowID + "_pager";
@@ -166,52 +169,58 @@ function showProyectosTareas(parentRowID, parentRowKey) {
         datatype: "json",
         page: 1,
         colModel: [
-                   { label: 'id',
-                      name: 'id',
-                      width: 50,
-                      key: true, 
-                      hidden:true
-                   },
-                   { label: 'Numero Tarea',
-                     name: 'tarea',  
-                     search: false,                 
-                     width: 200
-                   },                                      
-                   { label: 'Nombre Tarea',
-                     name: 'nombre',
-                     search: false,
-                     width: 200
-                   },
-                   { label: 'Presupuesto',
-                     name: 'presupuestopesos',
-                     width: 150,
-                     search: false,
-                     align: 'right',
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   },                 
-                   { label: 'Pagado',
-                     name: 'realacumuladopesos',
-                     width: 150,
-                     align: 'right',
-                     search: false,
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   },
-                   { label: 'Saldo',
-                     name: 'saldopesos',
-                     width: 150,
-                     search: false,
-                     align: 'right',
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   }            
+            {
+                label: 'id',
+                name: 'id',
+                width: 50,
+                key: true,
+                hidden: true
+            },
+            {
+                label: 'Numero Tarea',
+                name: 'tarea',
+                search: false,
+                width: 200
+            },
+            {
+                label: 'Nombre Tarea',
+                name: 'nombre',
+                search: false,
+                width: 200
+            },
+            {
+                label: 'Presupuesto',
+                name: 'presupuestopesos',
+                width: 150,
+                search: false,
+                align: 'right',
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Pagado',
+                name: 'realacumuladopesos',
+                width: 150,
+                align: 'right',
+                search: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            },
+            {
+                label: 'Saldo',
+                name: 'saldopesos',
+                width: 150,
+                search: false,
+                align: 'right',
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            }
         ],
         viewrecords: true,
-        styleUI: "Bootstrap", 
+        styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         width: null,
         shrinkToFit: false,
         rowNum: 10,
-        rowList: [5, 10, 20, 50],   
+        rowList: [5, 10, 20, 50],
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showProyectoErogaciones, // javascript function that will take care of showing the child grid
         loadComplete: function () {
@@ -219,36 +228,36 @@ function showProyectosTareas(parentRowID, parentRowKey) {
             var colSum = $grid.jqGrid('getCol', 'presupuestopesos', false, 'sum');
             var colSum2 = $grid.jqGrid('getCol', 'realacumuladopesos', false, 'sum');
             var colSum3 = $grid.jqGrid('getCol', 'saldopesos', false, 'sum');
-            $grid.jqGrid('footerData', 'set', { presupuestopesos: colSum, realacumuladopesos: colSum2, saldopesos:colSum3});
-        },               
+            $grid.jqGrid('footerData', 'set', { presupuestopesos: colSum, realacumuladopesos: colSum2, saldopesos: colSum3 });
+        },
         footerrow: true,
-        userDataOnFooter: true,                           
+        userDataOnFooter: true,
         pager: "#" + childGridPagerID
     });
-    
+
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $("#" + childGridID).jqGrid('navGrid', "#"+ childGridPagerID, {
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         search: false, // show search button on the toolbar
         add: false,
         edit: false,
         del: false,
         refresh: true
-    });    
-    
+    });
+
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-    caption: "",
-    buttonicon: "glyphicon glyphicon-download-alt",
-    title: "Excel",
-    position: "last",
-    onClickButton: function () {
-        var grid = $("#" + childGridID);
-        var rowKey = grid.getGridParam("selrow");
-        var url = '/proyectostareasexcel/'+ parentRowKey;
-        $("#" + childGridID).jqGrid('excelExport', { "url": url });
-    }
-});
-    
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $("#" + childGridID);
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/proyectostareasexcel/' + parentRowKey;
+            $("#" + childGridID).jqGrid('excelExport', { "url": url });
+        }
+    });
+
 }
 
 function showProyectoErogaciones(parentRowID, parentRowKey) {
@@ -257,7 +266,7 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
 
     // send the parent row primary key to the server so that we know which grid to show
     var childGridURL = "/erogacioneslist/" + parentRowKey;
-    
+
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -267,84 +276,90 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
         datatype: "json",
         page: 1,
         colModel: [
-                   { label: 'id',
-                      name: 'id',
-                      width: 50,
-                      key: true,
-                      hidden:true
-                   },                   
-                   { label: 'Nombre Proveedor',
-                     name: 'razonsocial',
-                     sortable: false,
-                     width: 250,
-                   },
-                   { label: 'Numero Factura',
-                     name: 'factura',
-                     align: 'center',
-                     sortable: false,
-                     width: 130,
-                   },
-                   { label: 'Fecha Contable',
-                     name: 'fechagl',
-                     search: false,
-                     sortable: false,
-                     width: 130,
-                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' }
-                   },
-                   { label: '# Tarea',
-                     name: 'numerotarea',
-                     align: 'center',
-                     sortable: false,
-                     search: false,
-                     width: 100,
-                   },
-                   { label: 'Costo DIVOT',
-                     name: 'montosum',
-                     search: false,
-                     sortable: false,
-                     width: 130,
-                     align: 'right',
-                     formatter: 'number', formatoptions: { decimalPlaces: 0 }
-                   }                                              
+            {
+                label: 'id',
+                name: 'id',
+                width: 50,
+                key: true,
+                hidden: true
+            },
+            {
+                label: 'Nombre Proveedor',
+                name: 'razonsocial',
+                sortable: false,
+                width: 250,
+            },
+            {
+                label: 'Numero Factura',
+                name: 'factura',
+                align: 'center',
+                sortable: false,
+                width: 130,
+            },
+            {
+                label: 'Fecha Contable',
+                name: 'fechagl',
+                search: false,
+                sortable: false,
+                width: 130,
+                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' }
+            },
+            {
+                label: '# Tarea',
+                name: 'numerotarea',
+                align: 'center',
+                sortable: false,
+                search: false,
+                width: 100,
+            },
+            {
+                label: 'Costo DIVOT',
+                name: 'montosum',
+                search: false,
+                sortable: false,
+                width: 130,
+                align: 'right',
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            }
         ],
         viewrecords: true,
-        styleUI: "Bootstrap", 
-        regional : "es",
- 		height: 'auto',
+        styleUI: "Bootstrap",
+        regional: "es",
+        height: 'auto',
         width: null,
-        shrinkToFit: false,         
-        rowNum: 10,        
-        rowList: [5, 10, 20, 50],    
+        shrinkToFit: false,
+        rowNum: 10,
+        rowList: [5, 10, 20, 50],
         loadComplete: function () {
             var $grid = $("#" + childGridID);
             var colSum = $grid.jqGrid('getCol', 'montosum', false, 'sum');
-            $grid.jqGrid('footerData', 'set', { montosum: colSum});
-        },               
+            $grid.jqGrid('footerData', 'set', { montosum: colSum });
+        },
         footerrow: true,
-        userDataOnFooter: true,              
+        userDataOnFooter: true,
         pager: "#" + childGridPagerID
     });
 
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $("#" + childGridID).jqGrid('navGrid', "#"+ childGridPagerID, {
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         search: false, // show search button on the toolbar
         add: false,
         edit: false,
         del: false,
         refresh: true
-    });  
+    });
 
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
-    caption: "",
-    buttonicon: "glyphicon glyphicon-download-alt",
-    title: "Excel",
-    position: "last",
-    onClickButton: function () {
-        var grid = $("#" + childGridID);
-        var rowKey = grid.getGridParam("selrow");
-        var url = '/erogacionesexcel/'+ parentRowKey;
-        $("#" + childGridID).jqGrid('excelExport', { "url": url });
-    }
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $("#" + childGridID);
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/erogacionesexcel/' + parentRowKey;
+            $("#" + childGridID).jqGrid('excelExport', { "url": url });
+        }
     });
 }
