@@ -6,6 +6,7 @@ var documentosController = require('../controllers/sic/documentos');
 var serviciosController = require('../controllers/sic/servicios');
 var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
+var anexosController = require('../controllers/sic/anexos');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 var tocController = require('../controllers/sic/toc');
 //var proveedoresController = require('../controllers/sic/proveedores');
@@ -87,6 +88,11 @@ module.exports = function (passport) {
         .get(isAuthenticated, clausulasController.list)
     router.route('/sic/clausulas/action')
         .post(isAuthenticated, clausulasController.action);
+
+    router.route('/sic/anexos/:id')
+        .get(isAuthenticated, anexosController.list)
+    router.route('/sic/anexos/action')
+        .post(isAuthenticated, anexosController.action);
 
     router.route('/sic/segmentoproveedorserv')
         .get(isAuthenticated, serviciosController.segmentoproveedor);

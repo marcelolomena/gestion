@@ -156,8 +156,8 @@ var gridDoc = {
                         custom_element: labelEditFunc,
                         custom_value: getLabelValue
                     },
-                    formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
-                    unformat: function (cellvalue, options, rowObject) { return returnDocLink2(cellvalue, options, rowObject, parentRowKey); },
+                    formatter: function (cellvalue, options, rowObject) { return returnDocLinkDoc(cellvalue, options, rowObject, parentRowKey); },
+                    unformat: function (cellvalue, options, rowObject) { return returnDocLinkDoc2(cellvalue, options, rowObject, parentRowKey); },
 
                 },
                 {
@@ -203,7 +203,7 @@ var gridDoc = {
                     var rowKey = $gridTab.getGridParam("selrow");
                     var rowData = $gridTab.getRowData(rowKey);
                     var thissid = rowData.nombrearchivo;
-                    if (thisid != "") {
+                    if (thissid != "") {
                         var lol = jQuery(thissid).attr('href');
                         var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
                         $('#elarchivo').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
@@ -277,7 +277,7 @@ var gridDoc = {
 }
 
 
-function returnDocLink(cellValue, options, rowdata, parentRowKey) {
+function returnDocLinkDoc(cellValue, options, rowdata, parentRowKey) {
     if (rowdata.nombrearchivo != "") {
         return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >" + rowdata.nombrearchivo + "</a>";
     } else {
@@ -285,7 +285,7 @@ function returnDocLink(cellValue, options, rowdata, parentRowKey) {
     }
 
 }
-function returnDocLink2(cellValue, options, rowdata, parentRowKey) {
+function returnDocLinkDoc2(cellValue, options, rowdata, parentRowKey) {
     if (rowdata.nombrearchivo != "") {
         return rowdata.nombrearchivo;
         //return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >"+rowdata.nombrearchivo+"</a>";
