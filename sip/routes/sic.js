@@ -14,7 +14,7 @@ var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
 var tipodocumentoController = require('../controllers/sic/tipodocumento');
 var preguntasrfpController = require('../controllers/sic/preguntasrfp');
-
+var preguntaforoController = require('../controllers/sic/preguntaforo');
 
 
 module.exports = function (passport) {

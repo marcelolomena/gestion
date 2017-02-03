@@ -138,6 +138,11 @@ function UploadPre(response, postdata) {
     return [data.success, data.message, data.id];
 }
 
+$(window).on("resize", function () {
+    var newWidth = $("#gridPreguntasrfp").closest("jqGrid").parent().width();
+    applicationGrid.jqGrid("setGridWidth", newWidth, true);
+});
+
 function ajaxDocUpload(id) {
     var dialog = bootbox.dialog({
         title: 'Se inicia la transferencia',
