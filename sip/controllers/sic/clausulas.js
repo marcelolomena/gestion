@@ -90,6 +90,7 @@ exports.list = function (req, res) {
 			models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
 			models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
 			models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' })
+			models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
 
 			models.clausulas.count({
 				where: data
@@ -103,9 +104,11 @@ exports.list = function (req, res) {
 					include: [{
 						model: models.solicitudcotizacion
 					}, {
+						
 						model: models.plantillaclausula,
 						include: [
-							models.clase
+							{model: models.clase},
+							{ model: models.cuerpoclausula, where: { anexo: 0 } }
 						]
 					}
 					]
@@ -202,7 +205,7 @@ exports.download = function (req, res) {
 				model: models.plantillaclausula,
 				include: [
 					{ model: models.clase },
-					{ attributes: ['idgrupo'], model: models.cuerpoclausula, where: { idgrupo: req.params.gid } }
+					{ model: models.cuerpoclausula, where: { anexo: 0 } }
 				]
 			}
 		]
@@ -819,7 +822,7 @@ exports.download = function (req, res) {
 		  height:144.0pt'>
 		  <p class=MsoNoSpacing align=center style='text-align:center'><span
 		  style='font-size:18.0pt'><img width=315 height=86 id="Imagen 9"
-		  src="LICITACION%20N1613%20Solución%20Integrador%20Swift_Prueba2_archivos/image001.jpg"></span></p>
+		  src="http://localhost:3000/images/bancodechile.jpg"></span></p>
 		  </td>
 		 </tr>
 		 <tr style='height:72.0pt'>
@@ -902,13 +905,19 @@ exports.download = function (req, res) {
 				
 						}
 		*/
+		var tituloclase = ''
 		for (var f in clausulas) {
+			if (clausulas[f].plantillaclausula.clase.titulo != tituloclase) {
+				tituloclase = clausulas[f].plantillaclausula.clase.titulo
+				logger.debug("EL TITULO: " + tituloclase);
+				result += '<h1>' + tituloclase + '</h1>'
+			}
 			var titulo = clausulas[f].titulo
 			var glosa = clausulas[f].glosa
 
-			result += '<h1>' + titulo + '</h1>'
+			result += '<h2>' + titulo + '</h2>'
 
-			result += '<h2>' + glosa + '</h2>'
+			result += '<p>' + glosa + '</p>'
 
 			result += "<br/>"
 
@@ -969,7 +978,9 @@ exports.default = function (req, res) {
 							['idplantillaclausula', 'idplantillaclausula'],
 							['titulo', 'titulo'],
 							['glosa', 'glosa'],
-							['idgrupo', 'idgrupo']
+							['idgrupo', 'idgrupo'],
+							['nombreadjunto', 'nombreadjunto'],
+							['tipoadjunto', 'tipoadjunto']
 						],
 						model: models.cuerpoclausula,
 						required: true,
@@ -977,35 +988,51 @@ exports.default = function (req, res) {
 					]
 				},
 				{ attributes: [['titulo', 'titulo']], model: models.clase },
-			]
+			],
+			order: [[models.plantillaclausula, 'id', 'ASC'], [models.plantillaclausula, { model: models.cuerpoclausula }, 'idgrupo', 'asc']],
 		}).then(function (clausulas) {
+			//logger.debug("-------->AQUI VIENEN LAS CLAUSULAS")
 			//console.dir(clausulas)
 			var inClau = []
 
 			for (var c in clausulas) {
 				var cuerpoclausulas = clausulas[c].plantillaclausula.cuerpoclausulas
+
 				for (var p in cuerpoclausulas) {
-					//logger.debug("idplantilla = " + cuerpoclausulas[p].idplantillaclausula)
+					logger.debug("LOS CUERPOS = " + cuerpoclausulas[p].titulo)
+					logger.debug("grupo = " + cuerpoclausulas[p].idgrupo)
 					var item = {}
 					if (cuerpoclausulas[p].idgrupo == 15) {
+						logger.debug("ES DEFAULT")
 						item["idsolicitudcotizacion"] = req.params.id
 						item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
 						item["titulo"] = cuerpoclausulas[p].titulo
 						item["glosa"] = cuerpoclausulas[p].glosa
+						item["nombreadjunto"] = cuerpoclausulas[p].nombreadjunto
+						item["tipoadjunto"] = cuerpoclausulas[p].tipoadjunto
 						item["borrado"] = 1
 						inClau.push(item)
 					} else {
-						for (var i = 0; i < inClau.length; i++) {
-							//logger.debug(inClau[i]["idplantillaclausula"])
-							if (inClau[i]["idplantillaclausula"] === cuerpoclausulas[p].idplantillaclausula) {
-								//borrando el default 15 
-								inClau.splice(i)
-								item["idsolicitudcotizacion"] = req.params.id
-								item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
-								item["titulo"] = cuerpoclausulas[p].titulo
-								item["glosa"] = cuerpoclausulas[p].glosa
-								item["borrado"] = 1
-								inClau.push(item)
+						logger.debug("NO ES DEFAULT")
+						logger.debug("Y YO TENGO: " + req.params.gid)
+						if (cuerpoclausulas[p].idgrupo == req.params.gid) {
+							for (var i = 0; i < inClau.length; i++) {
+								//logger.debug(inClau[i]["idplantillaclausula"])
+								logger.debug("ENTRO AL FOR A BUSCAR LA CLAUSULA: " + cuerpoclausulas[p].titulo)
+								if (inClau[i]["idplantillaclausula"] === cuerpoclausulas[p].idplantillaclausula) {
+									//borrando el default 15 
+									logger.debug("ENCONTRE LA CLAUSULA " + inClau[i]["titulo"] + " Y LA BORRO")
+									inClau.splice(i)
+									logger.debug("Y LA REEMPLAZO POR LA CLAUSULA " + cuerpoclausulas[p].titulo)
+									item["idsolicitudcotizacion"] = req.params.id
+									item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
+									item["titulo"] = cuerpoclausulas[p].titulo
+									item["glosa"] = cuerpoclausulas[p].glosa
+									item["nombreadjunto"] = cuerpoclausulas[p].nombreadjunto
+									item["tipoadjunto"] = cuerpoclausulas[p].tipoadjunto
+									item["borrado"] = 1
+									inClau.push(item)
+								}
 							}
 						}
 					}

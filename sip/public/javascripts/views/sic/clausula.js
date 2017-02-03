@@ -247,7 +247,7 @@ var gridClausula = {
             sortorder: "asc",
             height: "auto",
             rownumbers: true,
-            width: 1000,
+            width: 1200,
             shrinkToFit: true,
             //autowidth: true,
             onSelectRow: function (id) {
@@ -447,7 +447,7 @@ var gridClausula = {
             caption: "",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
-            title: "Generar Documentito",
+            title: "Generar Documento",
             position: "last",
             onClickButton: function () {
                 //var rowKey = $gridTab.getGridParam("selrow");
