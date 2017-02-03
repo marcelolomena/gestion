@@ -360,7 +360,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Cuota', name: 'valorcuota', width: 100, align: 'right',
                 search: true, editable: true, hidden: false,
-                formatter: 'number', formatoptions: { decimalPlaces: 0 }
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             {
                 label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true,

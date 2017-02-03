@@ -16,8 +16,6 @@ var nodeExcel = require('excel-export');
 exports.action = function (req, res) {
     var action = req.body.oper;
 
-    logger.debug("----------->> " + req.body.idsolicitudcotizacion)
-
     switch (action) {
         case "add":
             return res.json({ id: req.body.idsolicitudcotizacion, success: true });
@@ -31,11 +29,9 @@ exports.action = function (req, res) {
                 }
             }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
                 }
                 return res.json({ success: true, glosa: 'Deleted successfully' });
             }).catch(function (err) {
-                logger.error(err)
                 return res.json({ success: false, glosa: err.message });
             });
             break;
@@ -116,7 +112,6 @@ exports.upload = function (req, res) {
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
 
             var saveTo = path.join(__dirname, '..' + path.sep + '..', 'temp', filename);//path al archivo
-            //logger.debug(saveTo)
             file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
 
             awaitId.then(function (idsolicitudcotizacion) {
@@ -128,7 +123,6 @@ exports.upload = function (req, res) {
                 var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
 
                 input.on('error', function (err) {
-                    logger.error(err);
                     return res.json({ error_code: 1, message: err, success: false });
                 });
 
@@ -158,18 +152,15 @@ exports.upload = function (req, res) {
                 });
 
                 parser.on('error', function (err) {
-                    logger.error(err);
                     return res.json({ error_code: 1, message: err, success: false });
                 });/*error*/
 
                 //parser.on('end', function (count) {
                 parser.on('finish', function () {
-                    logger.debug('finish');
 
                     models.preguntacotizacion.bulkCreate(carrusel).then(function (events) {
                         return res.json({ message: 'Las preguntas fueron cargadas', success: true });
                     }).catch(function (err) {
-                        logger.error(err)
                         return res.json({ message: err.message, success: false });
                     });
 
@@ -179,14 +170,12 @@ exports.upload = function (req, res) {
 
             }).catch(function (err) {
                 return res.json({ error_code: 1, message: err, success: false });
-                logger.error(err)
             });
 
         });
 
 
         busboy.on('finish', function () {
-            logger.debug("Finalizo la transferencia del archivo")
         });
 
         return req.pipe(busboy);
@@ -225,7 +214,7 @@ exports.descargapreguntas = function (req, res) {
             if (preguntacotizacion[p].pregunta) {
                 pregunta = preguntacotizacion[p].pregunta
             }
-           
+
             a = [
                 preguntacotizacion[p].id.toString(),
                 pregunta
@@ -243,7 +232,6 @@ exports.descargapreguntas = function (req, res) {
         return res.end(result, 'binary');
 
     }).catch(function (err) {
-        logger.error(err);
         return res.json({ error_code: 1 });
     });
 
