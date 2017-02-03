@@ -118,7 +118,7 @@ $(document).ready(function () {
         },
         { label: 'Técnico', name: 'tecnico', width: 150, search: false, editable: false, formatter: returnTecnico, hidden: false },
         {
-            label: 'T.Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false, width:100,
+            label: 'T.Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false, width: 100,
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
@@ -210,7 +210,8 @@ $(document).ready(function () {
             }
         },
         { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 120, align: 'left', search: false, editable: true, hidden: false },
-        { label: 'Color',
+        {
+            label: 'Color',
             name: 'colornota',
             index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
             formatter: function (cellvalue, options, rowObject) {
@@ -223,7 +224,7 @@ $(document).ready(function () {
                     url: '/sic/getcolorservicios/' + solicitud,
                     async: false,
                     success: function (data) {
-                        
+
                         if (data == 'Rojo') {
                             color = 'red';
                         } else if (data == 'Verde') {
@@ -612,7 +613,7 @@ $(document).ready(function () {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
         tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
-        tabs += "<li><a href='/sic/preguntaforo/" + parentRowKey + "' data-target='#preguntaforo' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
+        tabs += "<li><a href='/sic/foro/" + parentRowKey + "' data-target='#foro' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
         tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
@@ -646,6 +647,8 @@ $(document).ready(function () {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#foro') {
+                gridForo.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#clausulas') {
                 gridClausula.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#responsables') {
@@ -668,6 +671,8 @@ $(document).ready(function () {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#foro') {
+                gridForo.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#clausulas') {
                 gridClausula.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#responsables') {

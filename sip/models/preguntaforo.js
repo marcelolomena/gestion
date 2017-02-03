@@ -6,6 +6,14 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    idsolicitudcotizacion: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'solicitudcotizacion',
+        key: 'id'
+      }
+    },
     glosapregunta: {
       type: DataTypes.STRING,
       allowNull: true

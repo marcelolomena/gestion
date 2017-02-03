@@ -14,7 +14,7 @@ var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
 var tipodocumentoController = require('../controllers/sic/tipodocumento');
 var preguntasrfpController = require('../controllers/sic/preguntasrfp');
-var preguntaforoController = require('../controllers/sic/preguntaforo');
+var foroController = require('../controllers/sic/foro');
 
 
 module.exports = function (passport) {
@@ -284,6 +284,21 @@ module.exports = function (passport) {
 
     router.route('/sic/catalogoclausulas/upload')
         .post(isAuthenticated, catalogoclausulasController.upload);
+
+    router.route('/sic/foro')
+        .get(isAuthenticated, foroController.list);
+
+    router.route('/sic/foro/action')
+        .post(isAuthenticated, foroController.action);
+
+    //router.route('/sic/respuestaforo/:id')
+    //.get(isAuthenticated, foroController.respuestaforo);
+
+    //router.route('/sic/respuestaforo/action')
+    //    .post(isAuthenticated, foroController.respuestaforoaction);
+
+    router.route('/sic/respuestaforolist/:id/list')
+        .get(isAuthenticated, foroController.respuestaforolist);
 
     return router;
 }
