@@ -205,7 +205,7 @@ exports.download = function (req, res) {
 				model: models.plantillaclausula,
 				include: [
 					{ model: models.clase },
-					{ model: models.cuerpoclausula, where: { anexo: 0 } }
+					{ model: models.cuerpoclausula, where: { anexo: 1 } }
 				]
 			}
 		]

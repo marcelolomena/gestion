@@ -455,7 +455,7 @@ var gridAnexos = {
                 //console.log(parentRowData.idtipo)
                 //console.log(parentRowData.idgrupo)
                 try {
-                    var url = '/sic/documentoword/' + parentRowKey + '/' + parentRowData.idgrupo;
+                    var url = '/sic/documentowordanexo/' + parentRowKey + '/' + parentRowData.idgrupo;
                     $gridTab.jqGrid('excelExport', { "url": url });
                 } catch (e) {
                     console.log("error: " + e)

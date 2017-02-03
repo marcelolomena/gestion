@@ -168,6 +168,9 @@ module.exports = function (passport) {
     router.route('/sic/documentoword/:id/:gid')
         .get(isAuthenticated, clausulasController.download);
 
+    router.route('/sic/documentowordanexo/:id/:gid')
+        .get(isAuthenticated, anexosController.download);
+
     router.route('/sic/downloadclausulas/:id')
         .get(isAuthenticated, catalogoclausulasController.download);
 
