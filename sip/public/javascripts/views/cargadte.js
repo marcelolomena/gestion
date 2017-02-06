@@ -5,20 +5,6 @@ $(document).ready(function () {
     var modelcargas = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Archivo', name: 'archivo', width: 50, align: 'left', search: true, editable: false, hidden: false },
-        { label: 'Frecuencia', name: 'frecuencia', width: 100, align: 'left', search: true, editable: true },
-        {
-            label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 50, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: { required: true },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                }
-            },
-        },
-        { label: 'Tipo de Carga', name: 'tipocarga', width: 100, align: 'left', search: true, editable: true },
         {
             label: 'Archivo',
             name: 'fileToUpload',
@@ -33,7 +19,7 @@ $(document).ready(function () {
         }
     ];
     $("#grid").jqGrid({
-        url: '/cargas/list',
+        url: '/cargadte/list',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -65,28 +51,23 @@ $(document).ready(function () {
     });
 
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: true, add: false, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false
+        edit: false, add: true, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false
     },
-
-        {
-            editCaption: "Carga de Archivo",
-            closeAfterEdit: true,
+        {}, {
+            addCaption: "Carga de Archivo",
+            closeAfterAdd: true,
             recreateForm: true,
             mtype: 'POST',
-            url: '/cargas/guardar',
-            afterSubmit: UploadFile,
-            beforeShowForm: function (form) {
-                $('input#frecuencia', form).attr('readonly', 'readonly');
-                $('input#tipocarga', form).attr('readonly', 'readonly');
-            }
-        }, {}, {}
+            url: '/cargadte/guardar',
+            afterSubmit: UploadFile
+        }, {}
 
     );
 
     function UploadFile(response, postdata) {
 
         var data = $.parseJSON(response.responseText);
-        if (data.error_code == 0) {
+        if (data.success) {
             if ($("#fileToUpload").val() != "") {
                 ajaxFileUpload(data.id);
             }
@@ -103,7 +84,7 @@ $(document).ready(function () {
         });
         dialog.init(function () {
             $.ajaxFileUpload({
-                url: '/cargas/archivo',
+                url: '/cargadte/archivo',
                 secureuri: false,
                 fileElementId: 'fileToUpload',
                 dataType: 'json',
