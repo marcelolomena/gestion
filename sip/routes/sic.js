@@ -294,12 +294,9 @@ module.exports = function (passport) {
     router.route('/sic/catalogoclausulas/upload')
         .post(isAuthenticated, catalogoclausulasController.upload);
 
-    //router.route('/sic/foro/action')
-      //  .post(isAuthenticated, foroController.action);
-
     router.route('/sic/foro/:id')
         .post(isAuthenticated, foroController.action)
-        .get(isAuthenticated, preguntasrfpController.list);
+        .get(isAuthenticated, foroController.list);
 
     return router;
 }

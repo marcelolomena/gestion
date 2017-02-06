@@ -13,13 +13,22 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            
-            return res.json({ id: req.body.idsolicitudcotizacion, glosapregunta: req.body.glosapregunta, usuariopregunta: req.body.usuariopregunta, fechapregunta: req.body.fechapregunta, success: true });
-
+            models.preguntaforo.create({
+                idsolicitudcotizacion: req.body.idsolicitudcotizacion,
+                glosapregunta: req.body.glosapregunta,
+                usuariopregunta: req.session.passport.user,
+                fechapregunta: new Date(),
+                borrado: 1
+            }).then(function (preguntaforo) {
+                res.json({ error: 0, glosa: '' });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ error: 1, glosa: err.message });
+            });
             break;
         case "edit":
 
-            
+
         case "del":
             models.preguntaforo.destroy({
                 where: {
@@ -54,17 +63,24 @@ exports.list = function (req, res) {
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.preguntacotizacion.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-            models.preguntacotizacion.count({
+            models.preguntaforo.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.preguntaforo.belongsTo(models.user, { foreignKey: 'usuariopregunta' });
+            models.preguntaforo.count({
                 where: data
+
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.preguntacotizacion.findAll({
+                models.preguntaforo.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,
-                }).then(function (preguntacotizacion) {
-                    return res.json({ records: records, total: total, page: page, rows: preguntacotizacion });
+                    include: [
+                        {
+                            model: models.user
+                        }
+                    ]
+                }).then(function (preguntaforo) {
+                    return res.json({ records: records, total: total, page: page, rows: preguntaforo });
                 }).catch(function (err) {
                     logger.error(err);
                     return res.json({ error_code: 1 });

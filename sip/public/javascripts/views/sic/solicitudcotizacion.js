@@ -626,7 +626,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-content'>"
         tabs += "<div class='tab-pane active' id='documentos'><div class='container-fluid'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div></div>"
         tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridServ'></div></div>"
-        tabs += "<div class='tab-pane' id='foro'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridForo'></div></div>"
+        tabs += "<div class='tab-pane' id='foro'><table id='foro_t_" + parentRowKey + "'></table><div id='navGridForo'></div></div>"
         tabs += "<div class='tab-pane' id='calendario'><table id='calendario_t_" + parentRowKey + "'></table><div id='navGridCal'></div></div>"
         tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
         tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
