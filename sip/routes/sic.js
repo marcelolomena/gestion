@@ -278,8 +278,8 @@ module.exports = function (passport) {
     router.route('/sic/getplantillatipo/:idtipo')
         .get(isAuthenticated, documentosController.getplantillatipo);
 
-    router.route('/sic/getpreguntasrfp/:idsolicitud')
-        .get(isAuthenticated, preguntasrfpController.getpreguntasrfp);
+    //router.route('/sic/getpreguntasrfp/:idsolicitud')
+    //    .get(isAuthenticated, preguntasrfpController.getpreguntasrfp);
 
     router.route('/sic/preguntasrfp/:id')
         .post(isAuthenticated, preguntasrfpController.action)
@@ -294,20 +294,12 @@ module.exports = function (passport) {
     router.route('/sic/catalogoclausulas/upload')
         .post(isAuthenticated, catalogoclausulasController.upload);
 
-    router.route('/sic/foro')
-        .get(isAuthenticated, foroController.list);
+    //router.route('/sic/foro/action')
+      //  .post(isAuthenticated, foroController.action);
 
-    router.route('/sic/foro/action')
-        .post(isAuthenticated, foroController.action);
-
-    //router.route('/sic/respuestaforo/:id')
-    //.get(isAuthenticated, foroController.respuestaforo);
-
-    //router.route('/sic/respuestaforo/action')
-    //    .post(isAuthenticated, foroController.respuestaforoaction);
-
-    router.route('/sic/respuestaforolist/:id/list')
-        .get(isAuthenticated, foroController.respuestaforolist);
+    router.route('/sic/foro/:id')
+        .post(isAuthenticated, foroController.action)
+        .get(isAuthenticated, preguntasrfpController.list);
 
     return router;
 }
