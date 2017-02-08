@@ -17,7 +17,6 @@ var tipodocumentoController = require('../controllers/sic/tipodocumento');
 var preguntasrfpController = require('../controllers/sic/preguntasrfp');
 var foroController = require('../controllers/sic/foro');
 
-
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
         return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
@@ -297,6 +296,11 @@ module.exports = function (passport) {
     router.route('/sic/foro/:id')
         .post(isAuthenticated, foroController.action)
         .get(isAuthenticated, foroController.list);
+
+    router.route('/sic/actionrespuesta/:id')
+        .post(isAuthenticated, foroController.actionrespuesta)
+
+
 
     return router;
 }

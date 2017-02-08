@@ -47,6 +47,46 @@ exports.action = function (req, res) {
     }
 }
 
+exports.actionrespuesta = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+            models.respuestaforo.create({
+                idpreguntaforo: req.body.idpreguntaforo,
+                glosarespuesta: req.body.glosarespuesta,
+                usuariopregunta: req.session.passport.user,
+                iddocumento: req.body.iddocumento,
+                fechapregunta: new Date(),
+                borrado: 1
+            }).then(function (respuestaforo) {
+                res.json({ error: 0, glosa: '' });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ error: 1, glosa: err.message });
+            });
+            break;
+        case "edit":
+
+
+        case "del":
+            models.respuestaforo.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                return res.json({ success: true, glosa: 'Deleted successfully' });
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ success: false, glosa: err.message });
+            });
+            break;
+    }
+}
+
 exports.list = function (req, res) {
 
     var page = req.query.page;
