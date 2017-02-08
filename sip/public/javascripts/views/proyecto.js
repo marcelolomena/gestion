@@ -117,8 +117,10 @@ $(document).ready(function () {
         loadComplete: function (data) {
 
             $.get('/lastdateload', function (data) {
+                var treshoras = 3*60*60
                 var theDate = new Date(data.date);
-                var fechaed = theDate.toLocaleString();
+                theDate.setSeconds(treshoras);
+                var fechaed = theDate.toLocaleDateString();
                 $grid.jqGrid('setCaption', 'Lista de proyectos al ' + fechaed);
             });
 
