@@ -89,6 +89,7 @@ exports.list = function (req, res) {
 		if (data) {
 			models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
 			models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
+			models.clausulas.belongsTo(models.valores, { foreignKey: 'tipoadjunto' });
 			models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' })
 			models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
 
@@ -104,6 +105,8 @@ exports.list = function (req, res) {
 					include: [{
 						model: models.solicitudcotizacion
 					}, {
+						model: models.valores
+					},{
 						
 						model: models.plantillaclausula,
 						include: [

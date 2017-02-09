@@ -39,7 +39,7 @@ var gridAnexos = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto', 'Nombre Adjunto'],
+            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto', 'Tipo Adjunto', 'Nombre Adjunto'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true,
@@ -225,7 +225,10 @@ var gridAnexos = {
                     },
                 },
                 {
-                    name: 'tipoadjunto', index: 'tipoadjunto', hidden: false, width: 100, align: "left", editable: true,
+                    name: 'valore.nombre', index: 'valore.nombre', hidden: false, width: 100, align: "left", editable: true
+                },
+                {
+                    name: 'tipoadjunto', index: 'tipoadjunto', hidden: true, width: 100, align: "left", editable: true,
                     editoptions: {
                         custom_element: labelEditFunc,
                         custom_value: getLabelValue
