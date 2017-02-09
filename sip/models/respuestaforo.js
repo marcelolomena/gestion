@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'preguntafoto',
+        model: 'preguntaforo',
         key: 'id'
       }
     },
@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    usuariopregunta: {
+    usuariorespuesta: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -34,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    fechapregunta: {
+    fecha: {
       type: DataTypes.DATE,
       allowNull: true
     },

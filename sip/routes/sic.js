@@ -300,6 +300,11 @@ module.exports = function (passport) {
     router.route('/sic/actionrespuesta/:id')
         .post(isAuthenticated, foroController.actionrespuesta)
 
+    router.route('/sic/listarespuestaforo/:id/list')
+        .get(isAuthenticated, foroController.listarespuestaforo);
+
+    router.route('/sic/docrespuesta/:id')
+        .get(isAuthenticated, foroController.docrespuesta);
 
 
     return router;

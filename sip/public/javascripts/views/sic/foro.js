@@ -7,6 +7,7 @@ var gridForo = {
 
         var tmplForo = "<div id='responsive-form' class='clearfix'>";
 
+
         tmplForo += "<div class='form-row'>";
         tmplForo += "<div class='column-full'>Pregunta<span style='color:red'>*</span>{glosapregunta}</div>";
         tmplForo += "</div>";
@@ -19,9 +20,11 @@ var gridForo = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Pregunta', 'Nombre', 'Apellido', 'Fecha'],
+            colNames: ['id', 'Idsolicitud', 'Pregunta', 'Nombre', 'Apellido', 'Fecha'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
+
+                { name: 'idsolicitudcotizacion', index: 'idsolicitudcotizacion',  hidden: true },
 
                 {
                     name: 'glosapregunta', index: 'glosapregunta', editable: true,
@@ -136,6 +139,7 @@ var gridForo = {
                 addCaption: "Agrega Preguntas",
                 mtype: 'POST',
                 url: '/sic/foro/' + parentRowKey,
+
                 closeAfterAdd: true,
                 recreateForm: true,
                 template: tmplForo,
@@ -195,6 +199,10 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
     tmpresforo += "<div class='column-full'>Respuesta<span style='color:red'>*</span>{glosarespuesta}</div>";
     tmpresforo += "</div>";
 
+    tmpresforo += "<div class='form-row'>";
+    tmpresforo += "<div class='column-full'>Documento Asociado<span style='color:red'>*</span>{iddocumento}</div>";
+    tmpresforo += "</div>";
+
     tmpresforo += "<div class='form-row' style='display: none;'>";
     tmpresforo += "</div>";
 
@@ -203,13 +211,25 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
     tmpresforo += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    //var childGridURL = "/sic/proveedoressugeridoslist/" + parentRowKey + "/list";
+    console.log("la subgrid_id : " + subgrid_id)
 
-    var modelIniciativaFecha = [
+    var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+    console.log("la grilla padre: " + grillapadre)
+    var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+    console.log("la rowData : " + rowData)
+    var parentSolicitud = rowData.idsolicitudcotizacion;
+    console.log("la parentSolicitud : " + parentSolicitud)
+
+    var childGridURL = "/sic/listarespuestaforo/" + parentRowKey + "/list";
+
+
+
+
+    var modelrespuestaforo = [
         { label: 'id', name: 'id', key: true, hidden: true },
 
         {
-            name: 'glosarespuesta', index: 'glosarespuesta', editable: true,
+            name: 'glosarespuesta', index: 'glosarespuesta', label: 'Respuesta', editable: true,
             width: 800, hidden: false,
             edittype: 'custom',
             editoptions: {
@@ -264,10 +284,37 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
-        { name: 'user.first_name', index: 'nombre', width: 250, editable: true, editoptions: { size: 10 } },
-        { name: 'user.last_name', index: 'apellido', width: 250, editable: true, editoptions: { size: 10 } },
         {
-            name: 'fechapregunta', index: 'fechapregunta', width: 150, align: 'left', search: false,
+            name: 'iddocumento', index: 'iddocumento', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/docrespuesta/' + parentSolicitud,
+                buildSelect: function (response) {
+                    var rowKey = $("#" + childGridID).getGridParam("selrow");
+                    var rowData = $("#" + childGridID).getRowData(rowKey);
+                    var thissid = rowData.iddocumento;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Seleccione un Documento--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombrecorto + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombrecorto + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+
+        { label: 'Documento', name: 'documentoscotizacion.nombrecorto', index: 'documento', width: 150, editable: true, editoptions: { size: 10 } },
+
+        { name: 'user.first_name', index: 'user.first_name', label: 'Nombre', width: 250, editable: true, editoptions: { size: 10 } },
+        { name: 'user.last_name', index: 'user.last_name', label: 'Apellido', width: 250, editable: true, editoptions: { size: 10 } },
+        {
+            name: 'fecha', index: 'fecha', label: 'Fecha', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: { required: true },
             searchoptions: {
@@ -286,9 +333,6 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
                 sopt: ["eq", "le", "ge"]
             }
         },
-
-
-
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -299,18 +343,19 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         datatype: "json",
         caption: 'Respuestas',
+        rownumbers: true,
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelIniciativaFecha,
+        colModel: modelrespuestaforo,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/sic/fororespuesta/actionrespuesta',
+        editurl: '/sic/actionrespuesta/' + parentRowKey,
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -359,7 +404,7 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                if (!result.success)
                     return [false, result.error_text, ""];
                 else
                     return [true, "", ""]
@@ -371,22 +416,4 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
     );
 }
 
-function showSubGridsServ(subgrid_id, row_id) {
-    gridRespuestaForo(subgrid_id, row_id, 'respuestaforo');
 
-
-    $.ajax({
-        type: "GET",
-        url: '/sic/getcalculado/' + row_id,
-        async: false,
-        success: function (data) {
-            //console.dir("calc: "+data[0].calculado);
-
-            if (parseInt(data[0].calculado) != 0) {
-                gridCriticidad(subgrid_id, row_id, 'criticidad');
-            }
-
-        }
-    });
-
-}

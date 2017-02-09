@@ -29,6 +29,10 @@ exports.action = function (req, res) {
         case "edit":
 
 
+
+
+            break;
+
         case "del":
             models.preguntaforo.destroy({
                 where: {
@@ -49,15 +53,23 @@ exports.action = function (req, res) {
 
 exports.actionrespuesta = function (req, res) {
     var action = req.body.oper;
+    var idpreguntaforo = req.params.id;
+
+    if (action == "add" || action == "edit") {
+        var iddocto = req.body.iddocumento;
+        if (iddocto == 0) {
+            iddocto = null;
+        }
+    }
 
     switch (action) {
         case "add":
             models.respuestaforo.create({
-                idpreguntaforo: req.body.idpreguntaforo,
+                idpreguntaforo: idpreguntaforo,
                 glosarespuesta: req.body.glosarespuesta,
-                usuariopregunta: req.session.passport.user,
-                iddocumento: req.body.iddocumento,
-                fechapregunta: new Date(),
+                usuariorespuesta: req.session.passport.user,
+                iddocumento: iddocto,
+                fecha: new Date(),
                 borrado: 1
             }).then(function (respuestaforo) {
                 res.json({ error: 0, glosa: '' });
@@ -129,3 +141,72 @@ exports.list = function (req, res) {
         }
     });
 };
+
+exports.listarespuestaforo = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.respuestaforo.belongsTo(models.preguntaforo, { foreignKey: 'idpreguntaforo' });
+            models.respuestaforo.belongsTo(models.user, { foreignKey: 'usuariorespuesta' });
+            models.respuestaforo.belongsTo(models.documentoscotizacion, { foreignKey: 'iddocumento' });
+            models.respuestaforo.count({
+                where: {
+                    idpreguntaforo: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.respuestaforo.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        idpreguntaforo: id
+                    },
+                    include: [
+                        {
+                            model: models.user
+                        },
+                        {
+                            model: models.documentoscotizacion
+                        },
+
+                    ]
+                }).then(function (respuestaforo) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: respuestaforo });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
+exports.docrespuesta = function (req, res) {
+
+    var id = req.params.id;
+
+    sequelize.query(
+        'SELECT a.id, a.nombrecorto ' +
+        'FROM sic.documentoscotizacion a ' +
+        'join sic.solicitudcotizacion b on a.idsolicitudcotizacion=b.id ' +
+        'where b.id=:id',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
