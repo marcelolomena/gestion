@@ -95,12 +95,12 @@ exports.lastdateLoad = function (req, res) {
 
   models.detallecargas.findAll({
     limit: 1,
-    attributes: ['fechaproceso'],
-    order: 'fechaproceso DESC',
+    attributes: ['fechaarchivo'],
+    order: 'fechaarchivo DESC',
     where: { idlogcargas: 5 }
   }).then(function (detallecargas) {
     console.dir(detallecargas)
-    return res.json({ date: detallecargas[0].fechaproceso });
+    return res.json({ date: detallecargas[0].fechaarchivo });
   }).catch(function (err) {
     logger.error(err);
     //res.json({ error_code: 1 });
