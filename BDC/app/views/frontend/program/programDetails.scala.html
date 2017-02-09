@@ -73,7 +73,7 @@
    </h3>
   <div class="width_full" id="program-detail" style="margin-bottom: 26px;" >
   	
-  	<ul style="width: 290px;float:left;  border-right: 1px dashed #666666; min-height:215px;">
+  	<ul style="width: 290px;float:left;  border-right: 1px dashed #666666; min-height:285px;">
   		<li>
   			<div class="width_full" style="margin:5px 0 10px;padding-left: 8px;">
 		  <span class="program-desc-label">@Messages("programDetails.description")</span>
@@ -85,7 +85,7 @@
 		
 		
   	</ul>
-  	<ul style="width: 320px;float:left;margin-left: 10px;border-right: 1px dashed #666666;min-height: 215px;">
+  	<ul style="width: 320px;float:left;margin-left: 10px;border-right: 1px dashed #666666;min-height: 285px;">
   		<li>
   			<span class="header">@Messages("addNewProgram.programTypedetail")</span>
   			<span class="program-data">
@@ -173,7 +173,7 @@
 
 		</li>		
   	</ul>
-  	<ul style="width: 310px;float:left;margin-left: 10px;  min-height:215px;">
+  	<ul style="width: 310px;float:left;margin-left: 10px;  min-height:285px;">
   		
   		<li>
 			<span class="header">@Messages("programDetails.initiationdate")</span>
@@ -263,6 +263,15 @@
 				}
 			</span>
 		</li>
+		
+		<li>
+			<span class="header">Tamaño</span>
+			<span class="program-data ">
+				@if(!program.get.internal_state.isEmpty ){
+					@program.get.internal_state
+				}
+			</span>
+		</li>		
 		
 		
   	</ul>

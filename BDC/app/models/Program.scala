@@ -28,7 +28,7 @@ case class ProgramSearch(
 case class ProgramMaster(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int],
   //program_name: String, program_code: Long, program_description: Option[String],
   program_name: String, program_code: Long, sap_code: Option [Long], program_description: Option[String], //Cambio  
-  work_flow_status: Integer, demand_manager: Integer, program_manager: Integer, completion_percentage: Option[Double], is_active: Option[Int], planned_hours: Option[Long], estimated_cost: Option[Long])
+  work_flow_status: Integer, demand_manager: Integer, program_manager: Integer, completion_percentage: Option[Double], is_active: Option[Int], planned_hours: Option[Long],internal_state: String, estimated_cost: Option[Long])
 
 object ProgramSearch {
   val programSearch = {
@@ -57,15 +57,15 @@ object ProgramMaster extends CustomColumns {
     get[Option[Int]]("program_id") ~ get[Int]("program_type") ~ get[Option[Int]]("program_sub_type") ~ get[String]("program_name") ~
           get[Long]("program_code") ~ get[Option[Long]]("sap_code") ~ get[Option[String]]("program_description") ~ //cambio
       //get[Long]("program_code") ~ get[Option[String]]("program_description") ~
-      get[Int]("work_flow_status") ~ get[Int]("demand_manager") ~ get[Int]("program_manager") ~ get[Option[Double]]("completion_percentage") ~ get[Option[Int]]("is_active") ~ get[Option[Long]]("planned_hours") ~ get[Option[Long]]("estimated_cost") map {
+      get[Int]("work_flow_status") ~ get[Int]("demand_manager") ~ get[Int]("program_manager") ~ get[Option[Double]]("completion_percentage") ~ get[Option[Int]]("is_active") ~ get[Option[Long]]("planned_hours") ~ get[String]("internal_state") ~ get[Option[Long]]("estimated_cost") map {
         //case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~
               case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~ sap_code ~ //cambio
           program_description ~ work_flow_status ~
-          demand_manager ~ program_manager ~ completion_percentage ~ is_active ~ planned_hours ~ estimated_cost =>
+          demand_manager ~ program_manager ~ completion_percentage ~ is_active ~ planned_hours ~ internal_state ~ estimated_cost =>
         //  ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code,
             ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code, sap_code, //cambio
             program_description, work_flow_status,
-            demand_manager, program_manager, completion_percentage, is_active, planned_hours, estimated_cost)
+            demand_manager, program_manager, completion_percentage, is_active, planned_hours, internal_state,estimated_cost)
       }
   }
 }
@@ -286,7 +286,7 @@ object ProgramStatus {
 
 case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,
   program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer,
-  program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], estimated_cost: Option[Long])
+  program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], internal_state:String,estimated_cost: Option[Long])
 
 object Programs {
 

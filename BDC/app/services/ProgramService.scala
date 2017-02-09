@@ -43,12 +43,12 @@ object ProgramService extends CustomColumns {
           program_description, work_flow_status, 
           demand_manager, program_manager, devison, management, department, sap_code,
           impact_type, business_line, creation_date, initiation_planned_date, closure_date,release_date,
-          planned_hours, estimated_cost 
+          planned_hours,internal_state, estimated_cost 
           ) 
           values(
           {program_type},{program_sub_type},{program_name},{program_code},
           {program_description},{work_flow_status}, {demand_manager},{program_manager},{devison},
-					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours}, {estimated_cost} 
+					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost} 
           )
           """).on(
           'program_type -> pm.program_type,
@@ -70,6 +70,7 @@ object ProgramService extends CustomColumns {
           'closure_date -> pm.program_dates.closure_date,
           'release_date -> pm.program_dates.release_date,
           'planned_hours -> pm.planned_hours,
+          'internal_state -> pm.internal_state,
           'estimated_cost -> pm.estimated_cost).executeInsert(scalar[Long].singleOpt)
 
       result.last
@@ -103,6 +104,7 @@ object ProgramService extends CustomColumns {
 					release_date={release_date},
           is_active={is_active},
           planned_hours={planned_hours},
+          internal_state={internal_state},          
           estimated_cost={estimated_cost}
           where program_id = {program_id}
           """).on(
@@ -126,6 +128,7 @@ object ProgramService extends CustomColumns {
           'release_date -> pm.program_dates.release_date,
           'is_active -> pm.is_active.getOrElse(1),
           'planned_hours -> pm.planned_hours,
+          'internal_state -> pm.internal_state,          
           'estimated_cost -> pm.estimated_cost).executeUpdate()
     }
   }
