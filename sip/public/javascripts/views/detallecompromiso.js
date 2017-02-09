@@ -134,7 +134,8 @@ function gridDetail(parentRowID, parentRowKey) {
                 var idxsel = grid.getInd(rowKey);
                 var rowData = grid.getRowData(rowKey);
                 postdata.idx = idxsel;
-                var cuota = new Number(postdata.valorcuota);
+                //var cuota = new Number(postdata.valorcuota);
+                var cuota = new Number(postdata.valorcuota.replace('.','').replace(',','.'));
 
                 if (isNaN(cuota) || cuota < 0) {
                     return [false, "Debe ingresar un numero y con valor  mayor o igual a 0", ""];

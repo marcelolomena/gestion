@@ -1,38 +1,54 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('factura', {
+  return sequelize.define('detallefactura', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    numero: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idproveedor: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    idcui: {
+    idfactura: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'estructuracui',
+        model: 'factura',
         key: 'id'
       }
     },
-    fecha: {
-      type: DataTypes.DATE,
+    idprefactura: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'prefactura',
+        key: 'id'
+      }
+    },
+    idfacturacion: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      references: {
+        model: 'solicitudaprobacion',
+        key: 'idfacturacion'
+      }
+    },
+    idmoneda: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'moneda',
+        key: 'id'
+      }
+    },
+    glosaservicio: {
+      type: DataTypes.STRING,
       allowNull: true
     },
-    montonetoorigen: {
+    cantidad: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    factorconversion: {
+    montonetoorigen: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
@@ -65,6 +81,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'factura'
+    schema: 'sip',timestamps: false,tableName: 'detallefactura'
   });
 };

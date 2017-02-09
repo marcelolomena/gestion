@@ -60,7 +60,6 @@ exports.archivo = function (req, res) {
 
   if (req.method === 'POST') {
 
-
     var busboy = new Busboy({ headers: req.headers });
 
     var processZipEntries = function (req, res, zipEntries, zipFolderName, i) {
@@ -74,27 +73,121 @@ exports.archivo = function (req, res) {
         var data = zipEntryData.toString('utf8');
         etree = et.parse(data);
         var lstDet = etree.findall('*/Documento/Detalle')
+        var FchEmis = etree.findtext('*/Documento/Encabezado/IdDoc/FchEmis')
+        var Folio = etree.findtext('*/Documento/Encabezado/IdDoc/Folio')
+        var RUTEmisor = etree.findtext('*/Documento/Encabezado/Emisor/RUTEmisor')
+        var RznSoc = etree.findtext('*/Documento/Encabezado/Emisor/RznSoc')
+        var MntTotal = etree.findtext('*/Documento/Encabezado/Totales/MntTotal')
+        var MntExe = etree.findtext('*/Documento/Encabezado/Totales/MntExe')
+        var MntNeto = etree.findtext('*/Documento/Encabezado/Totales/MntNeto')
+        var Iva = etree.findtext('*/Documento/Encabezado/Totales/IVA')
 
-        for (var i = 0; i < lstDet.length; i++) {
+        logger.debug("FchEmis : " + FchEmis);
+        logger.debug("Folio : " + Folio);
+        logger.debug("RUTEmisor : " + RUTEmisor);
+        logger.debug("RznSoc : " + RznSoc);
+        logger.debug("MntTotal : " + MntTotal);
 
-          //logger.debug(lstDet[i].findtext('NmbItem'));
-          var s = lstDet[i].findtext('NmbItem').toUpperCase()
-          logger.debug(s);
-          if (s.indexOf("PF") > -1) {
-            var r = /\d+/g;
-            var m;
-            while ((m = r.exec(s)) != null) {
-              logger.debug(m[0]);
+        if (MntExe === undefined)
+          MntExe = null
+
+        if (MntNeto === undefined)
+          MntNeto = null
+
+        if (Iva === undefined)
+          Iva = null
+
+        logger.debug("MntExe : " + MntExe);
+        logger.debug("MntNeto : " + MntNeto);
+        logger.debug("IVA : " + Iva);
+
+        if (MntExe === MntTotal)
+          MntNeto = MntTotal
+
+        return models.proveedor.findAll({
+          attributes: ['id'],
+          where: { numrut: RUTEmisor.split("-")[0] }
+        }).then(function (proveedor) {
+
+          return models.factura.create({
+            numero: Folio,
+            idproveedor: proveedor[0].id,
+            fecha: FchEmis,
+            montoneto: MntNeto,
+            impuesto: Iva,
+            montototal: MntTotal,
+            borrado: 1
+          }).then(function (factura) {
+
+            var idfactura = factura.id
+
+            for (var i = 0; i < lstDet.length; i++) {
+              var s = lstDet[i].findtext('NmbItem').toUpperCase()
+              var ini = s.indexOf("PF");
+              if (ini > -1) {
+                var r = /\d+/g, match, results = [];
+                while ((match = r.exec(s.substring(ini + 2))) != null)
+                  results.push(match[0]);
+
+
+                logger.debug("NUMERITO : " + results[0]);
+
+                return models.solicitudaprobacion.findAll({
+                  attributes: ['id'],
+                  where: { idprefactura: results[0] }
+                }).then(function (solicitudaprobacion) {
+
+                  return models.detallefactura.create({
+                    idfactura: idfactura,
+                    idprefactura: results[0],
+                    idfacturacion: solicitudaprobacion[0].id,
+                    borrado: 1
+                  }).then(function (detallefactura) {
+                  }).catch(function (err) {
+                    logger.error(err)
+                  });
+
+                }).catch(function (err) {
+                  logger.error(err)
+                });
+
+              }
             }
-          }
-        }
 
-        bufferStream.end(zipEntryData);
-        zipEntryName = getZipEntryName(zipEntry, zipFolderName);
 
-        logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
 
-        processZipEntries(req, res, zipEntries, zipFolderName, i + 1);
+            bufferStream.end(zipEntryData);
+            zipEntryName = getZipEntryName(zipEntry, zipFolderName);
+
+            logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
+
+            processZipEntries(req, res, zipEntries, zipFolderName, i + 1);
+
+          }).catch(function (err) {
+            logger.error(err)
+          });
+        }).catch(function (err) {
+          logger.error(err);
+        });
+        /*
+                for (var i = 0; i < lstDet.length; i++) {
+                  var s = lstDet[i].findtext('NmbItem').toUpperCase()
+                  var ini = s.indexOf("PF");
+                  if (ini > -1) {
+                    var r = /\d+/g, match, results = [];
+                    while ((match = r.exec(s.substring(ini + 2))) != null)
+                      results.push(match[0]);
+                    logger.debug("NUMERITO : " + results[0]);
+                  }
+                }
+        
+                bufferStream.end(zipEntryData);
+                zipEntryName = getZipEntryName(zipEntry, zipFolderName);
+        
+                logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
+        
+                processZipEntries(req, res, zipEntries, zipFolderName, i + 1);
+        */
       } else {
         //Nada que hacer
 

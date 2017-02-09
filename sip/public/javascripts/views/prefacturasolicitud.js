@@ -284,6 +284,8 @@ function showDocumentos(cui, periodo, proveedor) {
                         dato = 'Rechazado';
                     } else if (val == 3) {
                         dato = 'Provisionado';
+                    } else if (val == 4) {
+                        dato = 'Factura ya emitida';
                     }
                     return dato;
                 },
