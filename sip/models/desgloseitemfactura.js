@@ -65,6 +65,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'desgloseitemfactura'
+    schema: 'sip',timestamps: false,tableName: 'desgloseitemfactura'
   });
 };
