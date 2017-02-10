@@ -11,124 +11,9 @@ var co = require('co');
 exports.action = function (req, res) {
     var action = req.body.oper;
 
-    if (action == "add" || action == "edit") {
-        var iddocto = req.body.iddoctotecnico;
-        if (iddocto == 0) {
-            iddocto = null;
-        }
-    }
-
     switch (action) {
         case "add":
-            models.serviciosrequeridos.create({
-                idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-                idservicio: req.body.idservicio,
-                glosaservicio: req.body.glosaservicio,
-                iddoctotecnico: iddocto,
-                glosareferencia: req.body.glosareferencia,
-                idclasecriticidad: req.body.idclasecriticidad,
-                notacriticidad: req.body.notacriticidad,
-                idsegmento: req.body.idsegmento,
-                borrado: 1
-            }).then(function (serviciosrequeridos) {
-
-                sequelize.query(
-                    'select b.calculado ' +
-                    'from sic.serviciosrequeridos a ' +
-                    'join sic.clasecriticidad b on a.idclasecriticidad=b.id ' +
-                    'where a.id=:id',
-                    { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
-                ).then(function (valores) {
-                    //logger.debug(valores)
-                    if (valores[0].calculado != 0) {
-
-                        sequelize.query(
-                            'select a.* ' +
-                            'from sic.desglosefactores a ' +
-                            'where a.idclasecriticidad=:id',
-                            { replacements: { id: req.body.idclasecriticidad }, type: sequelize.QueryTypes.SELECT }
-                        ).then(function (factores) {
-                            //logger.debug(valores)
-                            //console.dir(factores)
-
-                            for (var f in factores) {
-                                //console.log(factores[f].nombrefactor);
-                                models.factorescriticidad.create({
-                                    idserviciorequerido: serviciosrequeridos.id,
-                                    iddesglosefactores: factores[f].id,
-                                    porcentaje: factores[f].porcentaje,
-                                    nota: 0,
-                                    valor: 0,
-                                    observacion: "",
-                                    borrado: 1
-                                })
-                            }
-                        }).catch(function (err) {
-                            logger.error(err);
-                            res.json({ error: 1 });
-                        });
-                    } else {
-
-                        sequelize.query(
-                            'select a.nombre ' +
-                            'from sic.valores a  ' +
-                            'join sic.clasecriticidad b on a.id=b.idcolor ' +
-                            'join sic.serviciosrequeridos d on d.idclasecriticidad=b.id ' +
-                            'where d.id=:id ',
-                            { replacements: { id: serviciosrequeridos.id }, type: sequelize.QueryTypes.SELECT }
-                        ).then(function (colores) {
-                            //logger.debug(valores)
-                            //console.dir(factores)
-
-                            console.dir(colores[0]);
-
-                            var color = 'indefinido'
-                            color = colores[0].nombre;
-
-                            console.log("le ponis color: " + color);
-
-
-                            models.serviciosrequeridos.update({
-                                colornota: color,
-
-                            }, {
-                                    where: {
-                                        id: serviciosrequeridos.id
-                                    }
-                                })
-
-                        }).catch(function (err) {
-                            logger.error(err);
-                            res.json({ error: 1 });
-                        });
-
-                    }
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error: 1 });
-                });
-
-                bitacora.registrar(
-                    req.body.idsolicitudcotizacion,
-                    'serviciosrequeridos',
-                    serviciosrequeridos.id,
-                    'insert',
-                    req.session.passport.user,
-                    new Date(),
-                    models.serviciosrequeridos,
-                    function (err, data) {
-                        if (data) {
-                            logger.debug("->>> " + data)
-
-                        } else {
-                            logger.error("->>> " + err)
-                        }
-                    });
-                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
-            });
+            
             break;
         case "edit":
 
@@ -146,11 +31,10 @@ exports.action = function (req, res) {
                         models.serviciosrequeridos.update({
                             idservicio: req.body.idservicio,
                             glosaservicio: req.body.glosaservicio,
-                            iddoctotecnico: iddocto,
-                            glosareferencia: req.body.glosareferencia,
-                            idclasecriticidad: req.body.idclasecriticidad,
-                            notacriticidad: req.body.notacriticidad,
-                            idsegmento: req.body.idsegmento
+                            porcentajeservicio: (req.body.porcentajeservicio/100),
+                            porcentajeeconomico: (req.body.porcentajeeconomico/100),
+                            claseevaluaciontecnica: req.body.claseevaluaciontecnica
+                            
                         }, {
                                 where: {
                                     id: req.body.id
@@ -252,7 +136,7 @@ exports.list = function (req, res) {
             models.serviciosrequeridos.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
             models.serviciosrequeridos.belongsTo(models.documentoscotizacion, { foreignKey: 'iddoctotecnico' });
-            models.serviciosrequeridos.belongsTo(models.clasecriticidad, { foreignKey: 'idclasecriticidad' });
+            models.serviciosrequeridos.belongsTo(models.claseevaluaciontecnica, { as: 'claseevaluacion' , foreignKey: 'claseevaluaciontecnica' });
             models.serviciosrequeridos.belongsTo(models.segmentoproveedor, { foreignKey: 'idsegmento' });
             models.serviciosrequeridos.count({
                 where: {
@@ -277,7 +161,7 @@ exports.list = function (req, res) {
                         model: models.documentoscotizacion
                     },
                     {
-                        model: models.clasecriticidad
+                        model: models.claseevaluaciontecnica, as: 'claseevaluacion'
                     },
                     {
                         model: models.segmentoproveedor

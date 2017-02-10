@@ -617,7 +617,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
-        tabs += "<li><a data-target='#criterios' data-toggle='tab'>Criterios</a></li>"
+        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#criterios' id='criterios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Criterios</a></li>"
         tabs += "<li><a href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
         tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas Proveedor</a></li>"
         tabs += "<li><a data-target='#bitacora' data-toggle='tab'>Bitácora</a></li>"
@@ -630,7 +630,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='calendario'><table id='calendario_t_" + parentRowKey + "'></table><div id='navGridCal'></div></div>"
         tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
         tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
-        tabs += "<div class='tab-pane' id='criterios'></div>"
+        tabs += "<div class='tab-pane' id='criterios'><table id='criterios_t_" + parentRowKey + "'></table><div id='navGridCrit'></div></div>"
         tabs += "<div class='tab-pane' id='anexos'><div class='container-fluid'><table id='anexos_t_" + parentRowKey + "'></table><div id='navGridAnexos'></div></div></div>"
         tabs += "<div class='tab-pane' id='preguntasrfp'><table id='preguntasrfp_t_" + parentRowKey + "'></table><div id='navGridPreg'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'></div>"
@@ -659,6 +659,8 @@ $(document).ready(function () {
                 gridPreguntasrfp.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#anexos') {
                 gridAnexos.renderGrid(loadurl, parentRowKey, targ)
+            }  else if (targ === '#criterios') {
+                gridCriterios.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');
@@ -685,6 +687,8 @@ $(document).ready(function () {
                 gridPreguntasrfp.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#anexos') {
                 gridAnexos.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#criterios') {
+                gridCriterios.renderGrid(loadurl, parentRowKey, targ)
             }
 
             $this.tab('show');

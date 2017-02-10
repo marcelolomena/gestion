@@ -64,6 +64,22 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    porcentajeservicio: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    porcentajeeconomico: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    claseevaluaciontecnica: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'claseevaluaciontecnica',
+        key: 'id'
+      }
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

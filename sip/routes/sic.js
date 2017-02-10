@@ -16,6 +16,8 @@ var calendarioController = require('../controllers/sic/calendario');
 var tipodocumentoController = require('../controllers/sic/tipodocumento');
 var preguntasrfpController = require('../controllers/sic/preguntasrfp');
 var foroController = require('../controllers/sic/foro');
+var criteriosController = require('../controllers/sic/criterios');
+var claseevaluaciontecnicaController = require('../controllers/sic/claseevaluaciontecnica');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -44,6 +46,9 @@ module.exports = function (passport) {
 
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
+
+    router.route('/sic/criterios/:id')
+        .get(isAuthenticated, criteriosController.list); //TODO cambiar a controller de criterios
 
     router.route('/sic/responsables/:id')
         .get(isAuthenticated, responsablesController.list);
@@ -77,6 +82,9 @@ module.exports = function (passport) {
     router.route('/sic/servicios/:id/list')
         .get(isAuthenticated, serviciosController.listaservicios);
 
+    router.route('/sic/clasesevaluacion')
+        .get(isAuthenticated, claseevaluaciontecnicaController.clasesevaluacion);
+
     router.route('/sic/servicios/:id/doctoasociado')
         .get(isAuthenticated, serviciosController.doctoasociado);
 
@@ -99,11 +107,18 @@ module.exports = function (passport) {
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
 
+    router.route('/sic/criterios/action')
+        .post(isAuthenticated, criteriosController.action);
+
     router.route('/sic/responsables/action')
         .post(isAuthenticated, responsablesController.action);
 
     router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
         return res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.get('/sic/claseevaluaciontecnica', isAuthenticated, function (req, res) {
+        return res.render('sic/claseevaluaciontecnica', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/usuarios_por_rolid/:id')
@@ -130,6 +145,10 @@ module.exports = function (passport) {
 
     router.route('/sic/catalogoclausulas3/action')
         .post(isAuthenticated, catalogoclausulasController.action3);
+
+    router.route('/sic/grid_claseevaluaciontecnica')
+        .post(isAuthenticated, claseevaluaciontecnicaController.action)
+        .get(isAuthenticated, claseevaluaciontecnicaController.list);
 
     router.route('/sic/proveedoressugeridos/action')
         .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
