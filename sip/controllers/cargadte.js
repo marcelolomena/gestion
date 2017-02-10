@@ -150,6 +150,15 @@ exports.archivo = function (req, res) {
                   }).then(function (detallefactura) {
                     logger.debug("IDDETALLEFACTURA : " + detallefactura.id);
                     logger.debug("periodo  : " + solicitudaprobacion[0].periodo);
+
+                    return models.desgloseitemfactura.create({
+                      iddetallefactura: detallefactura.id
+                    }).then(function (desgloseitemfactura) {
+                    }).catch(function (err) {
+                      logger.error(err)
+                    });
+
+
                   }).catch(function (err) {
                     logger.error(err)
                   });
