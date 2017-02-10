@@ -24,7 +24,7 @@ var gridForo = {
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
 
-                { name: 'idsolicitudcotizacion', index: 'idsolicitudcotizacion',  hidden: true },
+                { name: 'idsolicitudcotizacion', index: 'idsolicitudcotizacion', hidden: true },
 
                 {
                     name: 'glosapregunta', index: 'glosapregunta', editable: true,
@@ -122,19 +122,66 @@ var gridForo = {
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
+                var recs = $gridTab.getGridParam("reccount");
+                var thisId = $.jgrid.jqID(this.id);
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/forousuario/' + getID,
+                    async: false,
+                    success: function (data) {
+                        var validado = data.validado
+                        console.log(validado)
+                        if (validado != "1") {
+                            //("#add_" + thisId).addClass('ui-disabled');
+                            $("#edit_" + thisId).addClass('ui-disabled');
+                            $("#del_" + thisId).addClass('ui-disabled');
+                            //$("#refresh_" + thisId).addClass('ui-disabled');
+                        } else {
+                            //$("#add_" + thisId).removeClass('ui-disabled');
+                            $("#edit_" + thisId).removeClass('ui-disabled');
+                            $("#del_" + thisId).removeClass('ui-disabled');
+                            //$("#refresh_" + thisId).removeClass('ui-disabled');
+                        }
+
+                    }
+                });
+
             },
             viewrecords: true,
-            caption: "Foro"
+            caption: "Foro",
+            gridComplete: function () {
+                var recs = $gridTab.getGridParam("reccount");
+                var thisId = $.jgrid.jqID(this.id);
+                console.log("este es el id po: " + thisId)
+
+                //$("#add_" + thisId).addClass('ui-disabled');
+                $("#edit_" + thisId).addClass('ui-disabled');
+                $("#del_" + thisId).addClass('ui-disabled');
+                //$("#refresh_" + thisId).addClass('ui-disabled');
+            }
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridForo', { edit: false, add: true, del: true, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridForo', { edit: true, add: true, del: true, search: false },
             {
-                editCaption: "Modifica",
+                editCaption: "Modifica Pregunta",
+                mtype: 'POST',
+                url: '/sic/foro/' + parentRowKey,
                 closeAfterEdit: true,
                 recreateForm: true,
                 template: tmplForo,
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentRowKey };
+                }, beforeSubmit: function (postdata, formid) {
+                    if (postdata.glosapregunta.trim().length == 0) {
+                        return [false, "Pregunta: El campo debe tener datos", ""];
+                    } else {
+                        return [true, "", ""]
+                    }
+                },
+
+
             }, {
                 addCaption: "Agrega Preguntas",
                 mtype: 'POST',
@@ -148,16 +195,17 @@ var gridForo = {
                 beforeShowForm: function (form) {
                     //$('input#notacriticidad', form).attr('readonly', 'readonly');
                 },
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentRowKey };
+                },
                 beforeSubmit: function (postdata, formid) {
-                    if (postdata.idsolicitudcotizacion == 0) {
-                        return [false, "Pregunta : Campo obligatorio", ""];
+                    if (postdata.glosapregunta.trim().length == 0) {
+                        return [false, "Pregunta: el campo debe tener datos", ""];
                     } else {
                         return [true, "", ""]
                     }
                 },
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                },
+
 
             },
 
@@ -356,24 +404,60 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
         height: 'auto',
         pager: "#" + childGridPagerID,
         editurl: '/sic/actionrespuesta/' + parentRowKey,
+        onSelectRow: function (id) {
+            var getID = $(this).jqGrid('getCell', id, 'id');
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            var thisId = $.jgrid.jqID(this.id);
+            $.ajax({
+                type: "GET",
+                url: '/sic/respuestausuario/' + getID,
+                async: false,
+                success: function (data) {
+                    var validado = data.validado
+                    console.log(validado)
+                    if (validado != "1") {
+                        //("#add_" + thisId).addClass('ui-disabled');
+                        $("#edit_" + thisId).addClass('ui-disabled');
+                        $("#del_" + thisId).addClass('ui-disabled');
+                        //$("#refresh_" + thisId).addClass('ui-disabled');
+                    } else {
+                        //$("#add_" + thisId).removeClass('ui-disabled');
+                        $("#edit_" + thisId).removeClass('ui-disabled');
+                        $("#del_" + thisId).removeClass('ui-disabled');
+                        //$("#refresh_" + thisId).removeClass('ui-disabled');
+                    }
+
+                }
+            });
+
+        },
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
             }
-        }
+                var recs = $("#" + childGridID).getGridParam("reccount");
+                var thisId = $.jgrid.jqID(this.id);
+                console.log("este es el id po: " + thisId)
+
+                //$("#add_" + thisId).addClass('ui-disabled');
+                $("#edit_" + thisId).addClass('ui-disabled');
+                $("#del_" + thisId).addClass('ui-disabled');
+                //$("#refresh_" + thisId).addClass('ui-disabled');
+            }
+        
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar ",
+            editCaption: "Modifica Respuesta ",
             template: tmpresforo,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -390,8 +474,15 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey };
-            }
+                return { idsolicitudcotizacion: parentRowKey };
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.glosarespuesta.trim().length == 0) {
+                    return [false, "Respuesta: el campo debe tener datos", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
         },
         {
             closeAfterDelete: true,

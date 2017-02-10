@@ -123,26 +123,42 @@ exports.archivo = function (req, res) {
 
             for (var i = 0; i < lstDet.length; i++) {
               var s = lstDet[i].findtext('NmbItem').toUpperCase()
-              var ini = s.indexOf("PF");
+              var m = lstDet[i].findtext('MontoItem')
+              var ini = s.indexOf("PF")
+
               if (ini > -1) {
                 var r = /\d+/g, match, results = [];
                 while ((match = r.exec(s.substring(ini + 2))) != null)
                   results.push(match[0]);
 
-
-                logger.debug("NUMERITO : " + results[0]);
-
                 return models.solicitudaprobacion.findAll({
-                  attributes: ['id'],
+                  attributes: ['id', 'periodo'],
                   where: { idprefactura: results[0] }
                 }).then(function (solicitudaprobacion) {
+                  logger.debug("FACTURA : " + idfactura);
+                  logger.debug("PREFACTURA : " + results[0]);
+                  logger.debug("SOL : " + solicitudaprobacion[0].id);
 
                   return models.detallefactura.create({
                     idfactura: idfactura,
                     idprefactura: results[0],
                     idfacturacion: solicitudaprobacion[0].id,
+                    glosaservicio: lstDet[i].findtext('NmbItem'),
+                    montoneto: m,
+                    montototal: m,
                     borrado: 1
                   }).then(function (detallefactura) {
+                    logger.debug("IDDETALLEFACTURA : " + detallefactura.id);
+                    logger.debug("periodo  : " + solicitudaprobacion[0].periodo);
+
+                    return models.desgloseitemfactura.create({
+                      iddetallefactura: detallefactura.id
+                    }).then(function (desgloseitemfactura) {
+                    }).catch(function (err) {
+                      logger.error(err)
+                    });
+
+
                   }).catch(function (err) {
                     logger.error(err)
                   });
@@ -152,8 +168,7 @@ exports.archivo = function (req, res) {
                 });
 
               }
-            }
-
+            }/*for*/
 
 
             bufferStream.end(zipEntryData);
@@ -169,25 +184,7 @@ exports.archivo = function (req, res) {
         }).catch(function (err) {
           logger.error(err);
         });
-        /*
-                for (var i = 0; i < lstDet.length; i++) {
-                  var s = lstDet[i].findtext('NmbItem').toUpperCase()
-                  var ini = s.indexOf("PF");
-                  if (ini > -1) {
-                    var r = /\d+/g, match, results = [];
-                    while ((match = r.exec(s.substring(ini + 2))) != null)
-                      results.push(match[0]);
-                    logger.debug("NUMERITO : " + results[0]);
-                  }
-                }
-        
-                bufferStream.end(zipEntryData);
-                zipEntryName = getZipEntryName(zipEntry, zipFolderName);
-        
-                logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
-        
-                processZipEntries(req, res, zipEntries, zipFolderName, i + 1);
-        */
+
       } else {
         //Nada que hacer
 

@@ -325,6 +325,12 @@ module.exports = function (passport) {
     router.route('/sic/docrespuesta/:id')
         .get(isAuthenticated, foroController.docrespuesta);
 
+    router.route('/sic/forousuario/:idforo')
+        .get(isAuthenticated, foroController.forousuario);
+
+    router.route('/sic/respuestausuario/:idforo')
+        .get(isAuthenticated, foroController.respuestausuario);
+
 
     return router;
 }

@@ -27,10 +27,18 @@ exports.action = function (req, res) {
             });
             break;
         case "edit":
-
-
-
-
+            models.preguntaforo.update({
+                glosapregunta: req.body.glosapregunta
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (clase) {
+                    res.json({ error: 0, glosa: '' });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ error: 1, glosa: err.message });
+                });
             break;
 
         case "del":
@@ -79,6 +87,20 @@ exports.actionrespuesta = function (req, res) {
             });
             break;
         case "edit":
+            models.respuestaforo.update({
+                glosarespuesta: req.body.glosarespuesta,
+                iddocumento: iddocto
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (clase) {
+                    res.json({ error: 0, glosa: '' });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ error: 1, glosa: err.message });
+                });
+            break;
 
 
         case "del":
@@ -205,6 +227,49 @@ exports.docrespuesta = function (req, res) {
     ).then(function (valores) {
         //logger.debug(valores)
         res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+exports.forousuario = function (req, res) {
+
+    var idforo = req.params.idforo;
+    var idusuario = req.session.passport.user;
+
+    sequelize.query(
+        'SELECT usuariopregunta ' +
+        'FROM sic.preguntaforo ' +
+        'where id=:idforo',
+        { replacements: { idforo: idforo }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        if (valores[0].usuariopregunta == idusuario) {
+            return res.json({ validado: 1 })
+        } else {
+            return res.json({ validado: 0 })
+        }
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+exports.respuestausuario = function (req, res) {
+
+    var idforo = req.params.idforo;
+    var idusuario = req.session.passport.user;
+
+    sequelize.query(
+        'SELECT usuariorespuesta ' +
+        'FROM sic.respuestaforo ' +
+        'where id=:idforo',
+        { replacements: { idforo: idforo }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        if (valores[0].usuariorespuesta == idusuario) {
+            return res.json({ validado: 1 })
+        } else {
+            return res.json({ validado: 0 })
+        }
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });
