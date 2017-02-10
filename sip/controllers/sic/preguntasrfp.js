@@ -188,7 +188,7 @@ exports.descargapreguntas = function (req, res) {
 
     models.preguntacotizacion.findAll({
         attributes: [['id', 'id'], ['pregunta', 'pregunta']],
-        //where: { idsolicitudcotizacion: req.params.id },
+        where: { idsolicitudcotizacion: req.params.id },
     }).then(function (preguntacotizacion) {
 
         var conf = {}
