@@ -11,6 +11,7 @@ var AdmZip = require('adm-zip');
 var stream = require('stream');
 var et = require('elementtree');
 
+
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
@@ -48,6 +49,7 @@ exports.guardar = function (req, res) {
   return models.cargadte.create({
     horainicio: new Date(),
     estado: 'EN PROCESO',
+    borrado: 1
   }).then(function (cargadte) {
     return res.json({ id: cargadte.id, message: 'inicio carga', success: true });
   }).catch(function (err) {
