@@ -136,7 +136,7 @@ exports.action = function (req, res) {
        sequelize.query(sql).then(function (contrato) {
           logger.debug("Aprobado:" + req.body.aprobado);
 
-          if (req.body.aprobado == 1) {
+          if (req.body.aprobado == 1) { //Estado Aprobado(1)
             logger.debug("Dentro Aprobado:" + req.body.montoapagar + "," + req.body.montoaprobado);
             if (req.body.montoneto == req.body.montoaprobado) {
               //deja compromiso en estado pagado
@@ -159,8 +159,8 @@ exports.action = function (req, res) {
                   res.json(rows);
                 });
             }
-          } else if (req.body.aprobado == 2 || req.body.aprobado == 3) {
-            //deja compromiso en estado rechazado
+          } else if (req.body.aprobado == 2 ) { 
+            //deja compromiso en estado rechazado(2). Si es Provisionado(3) no hace nada
             var sql = "UPDATE sip.detallecompromiso SET estadopago='RECHAZADO' " +
               "WHERE id=" + req.body.iddetallecompromiso;
             logger.debug("query:" + sql);
