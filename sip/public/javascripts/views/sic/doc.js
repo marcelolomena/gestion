@@ -42,15 +42,14 @@ var gridDoc = {
             colNames: ['Doc', 'Nombre', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
                 {
-                    name: 'id', index: 'id', key: true, hidden: false, width: 10,
+                    name: 'id', index: 'id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
-                    formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject, parentRowKey); },
                 },
 
                 { name: 'nombrecorto', index: 'nombrecorto', width: 50, align: "left", editable: true },
 
                 {
-                    name: 'descripcionlarga', index: 'descripcionlarga', width: 500, hidden: true,
+                    name: 'descripcionlarga', index: 'descripcionlarga', width: 100, hidden: true,
                     edittype: 'custom',
                     editoptions: {
                         custom_element: function (value, options) {
@@ -132,8 +131,8 @@ var gridDoc = {
                                     url: '/sic/getplantillatipo/' + idtipodocumento,
                                     async: false,
                                     success: function (data) {
-                                        if (data.length > 0 && data[0].nombrearchivo!=null) {
-                                            $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipodocumento/"+data[0].nombrearchivo+"'>" + data[0].nombrearchivo + "</a></div>");
+                                        if (data.length > 0 && data[0].nombrearchivo != null) {
+                                            $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipodocumento/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
                                             //$("input#program_id").val(data[0].nombrearchivo);
                                         } else {
                                             $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Documento no tiene plantilla</span></div>");
@@ -141,7 +140,7 @@ var gridDoc = {
                                     }
                                 });
 
-                                
+
 
 
                             }
@@ -156,7 +155,10 @@ var gridDoc = {
                     editoptions: {
                         custom_element: labelEditFunc,
                         custom_value: getLabelValue
-                    }
+                    },
+                    formatter: function (cellvalue, options, rowObject) { return returnDocLinkDoc(cellvalue, options, rowObject, parentRowKey); },
+                    unformat: function (cellvalue, options, rowObject) { return returnDocLinkDoc2(cellvalue, options, rowObject, parentRowKey); },
+
                 },
                 {
                     name: 'fileToUpload',
@@ -177,7 +179,8 @@ var gridDoc = {
             sortorder: "asc",
             height: "auto",
             //shrinkToFit: true,
-            autowidth: true,
+            //autowidth: true,
+            width: 1200,
             rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -197,7 +200,18 @@ var gridDoc = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
-                    $('input#nombrearchivo', form).attr('readonly', 'readonly');
+                    var rowKey = $gridTab.getGridParam("selrow");
+                    var rowData = $gridTab.getRowData(rowKey);
+                    var thissid = rowData.nombrearchivo;
+                    if (thissid != "") {
+                        var lol = jQuery(thissid).attr('href');
+                        var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
+                        $('#elarchivo').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
+                        $('input#nombrearchivo', form).attr('readonly', 'readonly');
+                    }else{
+                        $('#elarchivo').html("<div class='column-full'>Archivo Actual: </div>");
+                        $('input#nombrearchivo', form).attr('readonly', 'readonly');
+                    }
                 },
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
@@ -263,8 +277,22 @@ var gridDoc = {
 }
 
 
-function returnDocLink(cellValue, options, rowdata, parentRowKey) {
-    return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";
+function returnDocLinkDoc(cellValue, options, rowdata, parentRowKey) {
+    if (rowdata.nombrearchivo != "") {
+        return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >" + rowdata.nombrearchivo + "</a>";
+    } else {
+        return "";
+    }
+
+}
+function returnDocLinkDoc2(cellValue, options, rowdata, parentRowKey) {
+    if (rowdata.nombrearchivo != "") {
+        return rowdata.nombrearchivo;
+        //return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >"+rowdata.nombrearchivo+"</a>";
+    } else {
+        return "";
+    }
+
 }
 
 function UploadDoc(response, postdata) {

@@ -18,7 +18,7 @@ exports.action = function (req, res) {
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
 
         var ano = req.body.periodo.substring(0, 4);
-        var mes = req.body.periodo.substring(5, 7);
+        var mes = req.body.periodo.substring(4, 6);
         fechainicio = ano + '-' + mes + '-' + '01';
         if (parseInt(mes) == 02) {
             fechafin = ano + '-' + mes + '-' + '28';
@@ -31,6 +31,9 @@ exports.action = function (req, res) {
             idsubtarea = null
         }
     }
+
+    console.log("fecha inicio: "+fechainicio)
+    console.log("fecha fin: "+fechafin)
 
     switch (action) {
         case "add":
@@ -47,10 +50,10 @@ exports.action = function (req, res) {
                 cantidad: 1,
                 borrado: 1
             }).then(function (detalle) {
-                res.json({ error_code: 0 });
+                return res.json({ error_code: 0 });
             }).catch(function (err) {
                 logger.error(err);
-                res.json({ error_code: 1 });
+                return res.json({ error_code: 1 });
             });
 
             break;
@@ -71,10 +74,10 @@ exports.action = function (req, res) {
                             id: req.body.id
                         }
                     }).then(function (detalle) {
-                        res.json({ error_code: 0 });
+                        return res.json({ error_code: 0 });
                     }).catch(function (err) {
                         logger.error(err);
-                        res.json({ error_code: 1 });
+                        return res.json({ error_code: 1 });
                     });
 
             } else {
@@ -87,10 +90,10 @@ exports.action = function (req, res) {
                             id: req.body.id
                         }
                     }).then(function (detalle) {
-                        res.json({ error_code: 0 });
+                        return res.json({ error_code: 0 });
                     }).catch(function (err) {
                         logger.error(err);
-                        res.json({ error_code: 1 });
+                        return res.json({ error_code: 1 });
                     });
             }
 
@@ -104,10 +107,10 @@ exports.action = function (req, res) {
                 if (rowDeleted === 1) {
                     logger.debug('Deleted successfully');
                 }
-                res.json({ error_code: 0 });
+                return res.json({ error_code: 0 });
             }).catch(function (err) {
                 logger.error(err);
-                res.json({ error_code: 1 });
+                return res.json({ error_code: 1 });
             });
 
             break;
@@ -169,10 +172,10 @@ exports.list = function (req, res) {
                             model: models.parametro
                         }]
                 }).then(function (compromisos) {
-                    res.json({ records: records, total: total, page: page, rows: compromisos });
+                    return res.json({ records: records, total: total, page: page, rows: compromisos });
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
                 //} else {
                 //  insertaPeriodos(function (compromisos) {

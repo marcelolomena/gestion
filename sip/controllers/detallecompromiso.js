@@ -12,14 +12,14 @@ exports.action = function (req, res) {
     var impuesto = req.body.impuesto
     var factorimpuesto = req.body.factorimpuesto
 
-/*    if (action != "del") {
-        if (montoorigen != "")
-            montoorigen = montoorigen.split(".").join("").replace(",", ".")
-        if (costoorigen != "")
-            costoorigen = costoorigen.split(".").join("").replace(",", ".")
+    if (action != "del") {
+        //if (montoorigen != "")
+        //    montoorigen = montoorigen.split(".").join("").replace(",", ".")
+        //if (costoorigen != "")
+        //    costoorigen = costoorigen.split(".").join("").replace(",", ".")
         if (valorcuota != "")
             valorcuota = valorcuota.split(".").join("").replace(",", ".")
-    }*/
+    }
 
     logger.debug("montoorigen : " + montoorigen)
     logger.debug("costoorigen : " + costoorigen)

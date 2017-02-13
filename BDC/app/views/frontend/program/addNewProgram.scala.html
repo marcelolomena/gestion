@@ -27,7 +27,6 @@
     				<input id="internal_number" name="internal_number" type="hidden" class="span4" value="00" >
     				<input id="projects_numbers" name="projects_numbers" type="hidden" class="span4" value="0" >
     				<input id="pLevel" name="pLevel" type="hidden" class="span4" value="00" >
-    				<input id="internal_state" name="internal_state" type="hidden" class="span4" value="0" >
     				<input id="demand_management_status" name="demand_management_status" type="hidden" class="span4" value="Initiativa OK" >
     				<input id="program_details.state_gantt" name="program_details.state_gantt" type="hidden" class="span4" value="NA" >
     				<input id="program_dates.baseline_date" name="program_dates.baseline_date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
@@ -244,7 +243,19 @@
 						         '_label -> Messages("addNewProgram.impactType"),
 						          '_default -> Messages("addNewProgram.placeholder.impact_type")
 						      )
-	           			</div>           			
+	           			</div>  
+	           			
+	           			
+					<div class="right width-pr50 padding-top-3px" >
+			      		@select(
+				         programForm("internal_state"),
+				         options("Menor"->"Menor", "Mediano"->"Mediano","Grande"->"Grande"),
+				         'class -> "input-xlarge ",
+				         '_label -> Messages("addNewProgram.internal_state"),
+				          '_default -> Messages("addNewProgram.placeholder.internal_state")
+				      )
+		            </div>	           			
+	           			         			
 	           			
            			</div>
   				

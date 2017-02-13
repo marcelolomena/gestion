@@ -6,6 +6,7 @@ var documentosController = require('../controllers/sic/documentos');
 var serviciosController = require('../controllers/sic/servicios');
 var parametrosController = require('../controllers/sic/parametros');
 var clausulasController = require('../controllers/sic/clausulas');
+var anexosController = require('../controllers/sic/anexos');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 var tocController = require('../controllers/sic/toc');
 //var proveedoresController = require('../controllers/sic/proveedores');
@@ -13,7 +14,10 @@ var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
 var tipodocumentoController = require('../controllers/sic/tipodocumento');
-
+var preguntasrfpController = require('../controllers/sic/preguntasrfp');
+var foroController = require('../controllers/sic/foro');
+var criteriosController = require('../controllers/sic/criterios');
+var claseevaluaciontecnicaController = require('../controllers/sic/claseevaluaciontecnica');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -42,6 +46,9 @@ module.exports = function (passport) {
 
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
+
+    router.route('/sic/criterios/:id')
+        .get(isAuthenticated, criteriosController.list); //TODO cambiar a controller de criterios
 
     router.route('/sic/responsables/:id')
         .get(isAuthenticated, responsablesController.list);
@@ -75,6 +82,9 @@ module.exports = function (passport) {
     router.route('/sic/servicios/:id/list')
         .get(isAuthenticated, serviciosController.listaservicios);
 
+    router.route('/sic/clasesevaluacion')
+        .get(isAuthenticated, claseevaluaciontecnicaController.clasesevaluacion);
+
     router.route('/sic/servicios/:id/doctoasociado')
         .get(isAuthenticated, serviciosController.doctoasociado);
 
@@ -86,17 +96,29 @@ module.exports = function (passport) {
     router.route('/sic/clausulas/action')
         .post(isAuthenticated, clausulasController.action);
 
+    router.route('/sic/anexos/:id')
+        .get(isAuthenticated, anexosController.list)
+    router.route('/sic/anexos/action')
+        .post(isAuthenticated, anexosController.action);
+
     router.route('/sic/segmentoproveedorserv')
         .get(isAuthenticated, serviciosController.segmentoproveedor);
 
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
 
+    router.route('/sic/criterios/action')
+        .post(isAuthenticated, criteriosController.action);
+
     router.route('/sic/responsables/action')
         .post(isAuthenticated, responsablesController.action);
 
     router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
         return res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.get('/sic/claseevaluaciontecnica', isAuthenticated, function (req, res) {
+        return res.render('sic/claseevaluaciontecnica', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/usuarios_por_rolid/:id')
@@ -123,6 +145,10 @@ module.exports = function (passport) {
 
     router.route('/sic/catalogoclausulas3/action')
         .post(isAuthenticated, catalogoclausulasController.action3);
+
+    router.route('/sic/grid_claseevaluaciontecnica')
+        .post(isAuthenticated, claseevaluaciontecnicaController.action)
+        .get(isAuthenticated, claseevaluaciontecnicaController.list);
 
     router.route('/sic/proveedoressugeridos/action')
         .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
@@ -159,6 +185,9 @@ module.exports = function (passport) {
 
     router.route('/sic/documentoword/:id/:gid')
         .get(isAuthenticated, clausulasController.download);
+
+    router.route('/sic/documentowordanexo/:id/:gid')
+        .get(isAuthenticated, anexosController.download);
 
     router.route('/sic/downloadclausulas/:id')
         .get(isAuthenticated, catalogoclausulasController.download);
@@ -267,8 +296,41 @@ module.exports = function (passport) {
     router.route('/sic/getplantillatipo/:idtipo')
         .get(isAuthenticated, documentosController.getplantillatipo);
 
+    //router.route('/sic/getpreguntasrfp/:idsolicitud')
+    //    .get(isAuthenticated, preguntasrfpController.getpreguntasrfp);
+
+    router.route('/sic/preguntasrfp/:id')
+        .post(isAuthenticated, preguntasrfpController.action)
+        .get(isAuthenticated, preguntasrfpController.list);
+
+    router.route('/sic/preguntasrfps/upload')
+        .post(isAuthenticated, preguntasrfpController.upload);
+
+    router.route('/sic/descargapreguntas/:id')
+        .get(isAuthenticated, preguntasrfpController.descargapreguntas);
+
     router.route('/sic/catalogoclausulas/upload')
         .post(isAuthenticated, catalogoclausulasController.upload);
+
+    router.route('/sic/foro/:id')
+        .post(isAuthenticated, foroController.action)
+        .get(isAuthenticated, foroController.list);
+
+    router.route('/sic/actionrespuesta/:id')
+        .post(isAuthenticated, foroController.actionrespuesta)
+
+    router.route('/sic/listarespuestaforo/:id/list')
+        .get(isAuthenticated, foroController.listarespuestaforo);
+
+    router.route('/sic/docrespuesta/:id')
+        .get(isAuthenticated, foroController.docrespuesta);
+
+    router.route('/sic/forousuario/:idforo')
+        .get(isAuthenticated, foroController.forousuario);
+
+    router.route('/sic/respuestausuario/:idforo')
+        .get(isAuthenticated, foroController.respuestausuario);
+
 
     return router;
 }

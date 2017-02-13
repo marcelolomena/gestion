@@ -39,7 +39,7 @@ module.exports = function(sequelize, DataTypes) {
     tiposervicio: {
       type: DataTypes.STRING,
       allowNull: true
-    },  
+    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

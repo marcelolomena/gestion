@@ -297,13 +297,14 @@ object ARTForms {
         "release_date" -> play.api.data.Forms.date("dd-MM-yyyy"))(ProgramDate.apply)(ProgramDate.unapply),
       "is_active" -> optional(number),
       "planned_hours" -> optional(of[Long]),
+        "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, estimated_cost) =>
+        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state,estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
           program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+          program_manager, program_details, program_dates, is_active, planned_hours,internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
         program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
-        program.program_details, program.program_dates, program.is_active, program.planned_hours, program.estimated_cost))))
+        program.program_details, program.program_dates, program.is_active, program.planned_hours,program.internal_state, program.estimated_cost))))
 
   /**
    * edit program front end
@@ -332,13 +333,14 @@ object ARTForms {
         "release_date" -> play.api.data.Forms.date("dd-MM-yyyy"))(ProgramDate.apply)(ProgramDate.unapply),
       "is_active" -> optional(number),
       "planned_hours" -> optional(of[Long]),
+      "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, estimated_cost) =>
+        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours,internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
           program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+          program_manager, program_details, program_dates, is_active, planned_hours, internal_state,estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
         program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
-        program.program_details, program.program_dates, program.is_active, program.planned_hours, program.estimated_cost))))
+        program.program_details, program.program_dates, program.is_active, program.planned_hours,program.internal_state, program.estimated_cost))))
 
   /**
    * Not in use...

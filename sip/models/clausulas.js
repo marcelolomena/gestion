@@ -36,8 +36,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    nombrearchivo: {
+    nombreadjunto: {
       type: DataTypes.STRING,
+      allowNull: true
+    },
+    tipoadjunto: {
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {

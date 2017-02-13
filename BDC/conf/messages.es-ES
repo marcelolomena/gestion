@@ -224,6 +224,8 @@ addNewProgram.estimatedCost=Costo Estimado (UF)
 addNewProgram.placeholder.estimatedCost=Introduzca estimated cost
 addNewProgram.Enterplannedhours=Introduzca horas planificadas
 addNewProgram.isActive=Activo
+addNewProgram.internal_state=Tamaño
+addNewProgram.placeholder.internal_state=Introduzca Tamaño
 
 addNewProject.editProject=*Editar tipo de proyecto
 addNewProject.newproject=Nuevo proyecto para

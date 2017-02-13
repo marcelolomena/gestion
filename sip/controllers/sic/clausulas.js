@@ -16,7 +16,9 @@ exports.action = function (req, res) {
 				idplantillaclausula: req.body.idclausulaplantilla,
 				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
-				blosa: req.body.glosa,
+				glosa: req.body.glosa,
+				tipoadjunto: req.body.tipoadjunto,
+				nombreadjunto: req.body.nombreadjunto,
 				borrado: 1
 			}).then(function (clausulas) {
 				res.json({ error: 0, glosa: '' });
@@ -28,10 +30,10 @@ exports.action = function (req, res) {
 			break;
 		case "edit":
 			models.clausulas.update({
-				idplantillaclausula: req.body.idclausulaplantilla,
+				//idplantillaclausula: req.body.idclausulaplantilla,
 				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
-				blosa: req.body.blosa
+				glosa: req.body.glosa
 			}, {
 					where: {
 						id: req.body.id
@@ -87,7 +89,9 @@ exports.list = function (req, res) {
 		if (data) {
 			models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
 			models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
+			models.clausulas.belongsTo(models.valores, { foreignKey: 'tipoadjunto' });
 			models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' })
+			models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
 
 			models.clausulas.count({
 				where: data
@@ -101,9 +105,13 @@ exports.list = function (req, res) {
 					include: [{
 						model: models.solicitudcotizacion
 					}, {
+						model: models.valores
+					},{
+						
 						model: models.plantillaclausula,
 						include: [
-							models.clase
+							{model: models.clase},
+							{ model: models.cuerpoclausula, where: { anexo: 0 } }
 						]
 					}
 					]
@@ -152,11 +160,30 @@ exports.plantillas = function (req, res) {
 }
 
 exports.texto = function (req, res) {
+	models.cuerpoclausula.belongsTo(models.valores, { foreignKey: 'tipoadjunto' });
 	models.cuerpoclausula.findAll({
-		attributes: [['glosa', 'glosaclausula'], ['titulo', 'nombrecorto']],
-		where: { idplantillaclausula: req.params.id, idgrupo: req.params.gid }
+		where: { idplantillaclausula: req.params.id, idgrupo: req.params.gid },
+		include: [
+			{
+				model: models.valores
+			}]
 	}).then(function (plantillas) {
-		return res.json(plantillas);
+		if (plantillas != "") {
+			return res.json(plantillas);
+		} else {
+			models.cuerpoclausula.findAll({
+				where: { idplantillaclausula: req.params.id, idgrupo: 15 },
+				include: [
+					{
+						model: models.valores
+					}]
+			}).then(function (plantillapordefecto) {
+				return res.json(plantillapordefecto);
+			}).catch(function (err) {
+				logger.error(err.message);
+				res.json({ error_code: 1 });
+			});
+		}
 	}).catch(function (err) {
 		logger.error(err.message);
 		res.json({ error_code: 1 });
@@ -181,7 +208,7 @@ exports.download = function (req, res) {
 				model: models.plantillaclausula,
 				include: [
 					{ model: models.clase },
-					{ attributes: ['idgrupo'], model: models.cuerpoclausula, where: { idgrupo: req.params.gid } }
+					{ model: models.cuerpoclausula, where: { anexo: 0 } }
 				]
 			}
 		]
@@ -189,7 +216,7 @@ exports.download = function (req, res) {
 		//console.dir(clausulas)
 		//logger.debug(clausulas.titulo)
 
-				var result = `
+		var result = `
 				<apex:page sidebar="false" contentType="application/msword" cache="true">
 					<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='<a target="_blank" href="http://www.w3.org/TR/REC-html40'" rel="nofollow">http://www.w3.org/TR/REC-html40'</a>>
 		<head>
@@ -798,7 +825,7 @@ exports.download = function (req, res) {
 		  height:144.0pt'>
 		  <p class=MsoNoSpacing align=center style='text-align:center'><span
 		  style='font-size:18.0pt'><img width=315 height=86 id="Imagen 9"
-		  src="LICITACION%20N1613%20Solución%20Integrador%20Swift_Prueba2_archivos/image001.jpg"></span></p>
+		  src="http://localhost:3000/images/bancodechile.jpg"></span></p>
 		  </td>
 		 </tr>
 		 <tr style='height:72.0pt'>
@@ -809,9 +836,9 @@ exports.download = function (req, res) {
 		  <p class=MsoTitle align=center style='margin-left:0cm;text-align:center'><span
 		  lang=ES-CL>
 		  `
-				result += clausulas[0].solicitudcotizacion.descripcion
-		
-				result += `
+		result += clausulas[0].solicitudcotizacion.descripcion
+
+		result += `
 		  </span></p>
 		  </div>
 		  </td>
@@ -857,43 +884,49 @@ exports.download = function (req, res) {
 		lang=ES-CL style='font-size:14.0pt;line-height:115%;font-family:"Cambria",serif;
 		color:#365F91'>&nbsp;</span></b></p>
 						`
-/*		
-				for (var f in clausulas) {
-					var clase = clausulas[f].plantillaclausula.clase.nombre
-					var code = clausulas[f].plantillaclausula.codigo
-					if (!code) {
-						throw new Error("No es posible generar el documento.")
-					}
-		
-					var level = code.split(".");
-					var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
-		
-					result += '<h1>' + clase + '</h1>'
-		
-					if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0)
-						result += '<h2>' + nombrecorto + '</h2>'
-					else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0)
-						result += '<h3>' + nombrecorto + '</h3>'
-		
-		
-					result += clausulas[f].texto
-					result += "<br/>"
-		
-				}
-*/
+		/*		
+						for (var f in clausulas) {
+							var clase = clausulas[f].plantillaclausula.clase.nombre
+							var code = clausulas[f].plantillaclausula.codigo
+							if (!code) {
+								throw new Error("No es posible generar el documento.")
+							}
+				
+							var level = code.split(".");
+							var nombrecorto = clausulas[f].plantillaclausula.nombrecorto;
+				
+							result += '<h1>' + clase + '</h1>'
+				
+							if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0)
+								result += '<h2>' + nombrecorto + '</h2>'
+							else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0)
+								result += '<h3>' + nombrecorto + '</h3>'
+				
+				
+							result += clausulas[f].texto
+							result += "<br/>"
+				
+						}
+		*/
+		var tituloclase = ''
 		for (var f in clausulas) {
+			if (clausulas[f].plantillaclausula.clase.titulo != tituloclase) {
+				tituloclase = clausulas[f].plantillaclausula.clase.titulo
+				logger.debug("EL TITULO: " + tituloclase);
+				result += '<h1>' + tituloclase + '</h1>'
+			}
 			var titulo = clausulas[f].titulo
 			var glosa = clausulas[f].glosa
 
-			result += '<h1>' + titulo + '</h1>'
+			result += '<h2>' + titulo + '</h2>'
 
-			result += '<h2>' + glosa + '</h2>'
+			result += '<p>' + glosa + '</p>'
 
 			result += "<br/>"
 
-		}		
-				result +=
-					`
+		}
+		result +=
+			`
 		</div>
 		
 		</body>
@@ -901,11 +934,11 @@ exports.download = function (req, res) {
 		</html>
 		</apex:page>
 		`
-		
-				var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
-				res.setHeader('Content-disposition', hdr);
-				res.set('Content-Type', 'application/msword;charset=utf-8');
-				res.status(200).send(result);
+
+		var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
+		res.setHeader('Content-disposition', hdr);
+		res.set('Content-Type', 'application/msword;charset=utf-8');
+		res.status(200).send(result);
 
 	}).catch(function (err) {
 		logger.error(err.message);
@@ -948,7 +981,9 @@ exports.default = function (req, res) {
 							['idplantillaclausula', 'idplantillaclausula'],
 							['titulo', 'titulo'],
 							['glosa', 'glosa'],
-							['idgrupo', 'idgrupo']
+							['idgrupo', 'idgrupo'],
+							['nombreadjunto', 'nombreadjunto'],
+							['tipoadjunto', 'tipoadjunto']
 						],
 						model: models.cuerpoclausula,
 						required: true,
@@ -956,35 +991,51 @@ exports.default = function (req, res) {
 					]
 				},
 				{ attributes: [['titulo', 'titulo']], model: models.clase },
-			]
+			],
+			order: [[models.plantillaclausula, 'id', 'ASC'], [models.plantillaclausula, { model: models.cuerpoclausula }, 'idgrupo', 'asc']],
 		}).then(function (clausulas) {
+			//logger.debug("-------->AQUI VIENEN LAS CLAUSULAS")
 			//console.dir(clausulas)
 			var inClau = []
 
 			for (var c in clausulas) {
 				var cuerpoclausulas = clausulas[c].plantillaclausula.cuerpoclausulas
+
 				for (var p in cuerpoclausulas) {
-					//logger.debug("idplantilla = " + cuerpoclausulas[p].idplantillaclausula)
+					logger.debug("LOS CUERPOS = " + cuerpoclausulas[p].titulo)
+					logger.debug("grupo = " + cuerpoclausulas[p].idgrupo)
 					var item = {}
 					if (cuerpoclausulas[p].idgrupo == 15) {
+						logger.debug("ES DEFAULT")
 						item["idsolicitudcotizacion"] = req.params.id
 						item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
 						item["titulo"] = cuerpoclausulas[p].titulo
 						item["glosa"] = cuerpoclausulas[p].glosa
+						item["nombreadjunto"] = cuerpoclausulas[p].nombreadjunto
+						item["tipoadjunto"] = cuerpoclausulas[p].tipoadjunto
 						item["borrado"] = 1
 						inClau.push(item)
 					} else {
-						for (var i = 0; i < inClau.length; i++) {
-							//logger.debug(inClau[i]["idplantillaclausula"])
-							if (inClau[i]["idplantillaclausula"] === cuerpoclausulas[p].idplantillaclausula) {
-								//borrando el default 15 
-								inClau.splice(i)
-								item["idsolicitudcotizacion"] = req.params.id
-								item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
-								item["titulo"] = cuerpoclausulas[p].titulo
-								item["glosa"] = cuerpoclausulas[p].glosa
-								item["borrado"] = 1
-								inClau.push(item)
+						logger.debug("NO ES DEFAULT")
+						logger.debug("Y YO TENGO: " + req.params.gid)
+						if (cuerpoclausulas[p].idgrupo == req.params.gid) {
+							for (var i = 0; i < inClau.length; i++) {
+								//logger.debug(inClau[i]["idplantillaclausula"])
+								logger.debug("ENTRO AL FOR A BUSCAR LA CLAUSULA: " + cuerpoclausulas[p].titulo)
+								if (inClau[i]["idplantillaclausula"] === cuerpoclausulas[p].idplantillaclausula) {
+									//borrando el default 15 
+									logger.debug("ENCONTRE LA CLAUSULA " + inClau[i]["titulo"] + " Y LA BORRO")
+									inClau.splice(i)
+									logger.debug("Y LA REEMPLAZO POR LA CLAUSULA " + cuerpoclausulas[p].titulo)
+									item["idsolicitudcotizacion"] = req.params.id
+									item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
+									item["titulo"] = cuerpoclausulas[p].titulo
+									item["glosa"] = cuerpoclausulas[p].glosa
+									item["nombreadjunto"] = cuerpoclausulas[p].nombreadjunto
+									item["tipoadjunto"] = cuerpoclausulas[p].tipoadjunto
+									item["borrado"] = 1
+									inClau.push(item)
+								}
 							}
 						}
 					}

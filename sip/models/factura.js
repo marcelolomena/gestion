@@ -5,22 +5,59 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    factura: {
+    numero: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
     idproveedor: {
       type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    idcui: {
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'proveedor',
+        model: 'estructuracui',
         key: 'id'
       }
     },
     fecha: {
       type: DataTypes.DATE,
+      allowNull: true
+    },
+    montonetoorigen: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    factorconversion: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montoneto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    impuesto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    ivanorecuperable: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montocosto: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    ivacredito: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    montototal: {
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     borrado: {

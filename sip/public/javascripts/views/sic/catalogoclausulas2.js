@@ -115,11 +115,6 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             width: 800,
             editCaption: "Modificar Plantilla Cláusula",
             template: tmplPF,
-            checkOnUpdate: true,
-            saveData: "¿Desea guardar los cambios antes de salir?",
-            bYes: "Sí",
-            bNo: "",
-            bExit: "No",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -159,7 +154,6 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             width: 800,
-            checkOnUpdate: true,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Agregar Plantilla Cláusula",
             template: tmplPF,

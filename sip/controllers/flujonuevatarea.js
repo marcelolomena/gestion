@@ -18,7 +18,7 @@ exports.action = function (req, res) {
             costoorigen = costoorigen.split(".").join("").replace(",", ".")
 
         var ano = req.body.periodo.substring(0, 4);
-        var mes = req.body.periodo.substring(5, 7);
+        var mes = req.body.periodo.substring(4, 6);
         fechainicio = ano + '-' + mes + '-' + '01';
         if (parseInt(mes) == 02) {
             fechafin = ano + '-' + mes + '-' + '28';

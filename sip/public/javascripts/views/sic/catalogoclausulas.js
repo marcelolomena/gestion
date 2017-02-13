@@ -17,7 +17,7 @@ $(document).ready(function () {
             { label: 'ID', name: 'id', key: true, hidden: true },
 
             { label: 'Título', name: 'titulo', width: 250, align: 'left', search: false, editable: true, editrules: { required: true } },
-
+     
 
         ];
 
@@ -30,7 +30,7 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: 1200,
+        width: 1100,
         shrinkToFit: true,
         viewrecords: true,
         editurl: '/sic/grid_catalogoclausulas',

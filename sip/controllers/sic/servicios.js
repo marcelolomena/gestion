@@ -18,8 +18,6 @@ exports.action = function (req, res) {
         }
     }
 
-
-
     switch (action) {
         case "add":
             models.serviciosrequeridos.create({
@@ -200,7 +198,6 @@ exports.action = function (req, res) {
 
                                 if (rowDeleted === 1) {
 
-
                                     logger.debug('Deleted successfully');
                                 }
                                 res.json({ error: 0, glosa: '' });
@@ -217,15 +214,6 @@ exports.action = function (req, res) {
                     }
 
                 });
-
-
-
-
-
-
-
-
-
 
             break;
     }
