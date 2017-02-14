@@ -14,7 +14,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     idproveedor: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'proveedor',
+        key: 'id'
+      }
     },
     idcui: {
       type: DataTypes.INTEGER,

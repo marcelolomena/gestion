@@ -11,6 +11,98 @@ var AdmZip = require('adm-zip');
 var stream = require('stream');
 var et = require('elementtree');
 
+exports.excel = function (req, res) {
+
+  var conf = {}
+  conf.cols = [
+    {
+      caption: 'CUI',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'Nombre Cuenta',
+      type: 'string',
+      width: 255
+    },
+    {
+      caption: 'Cuenta',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Monto',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'IVA No Recuperable',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'Costo',
+      type: 'number',
+      width: 3
+    }
+  ];
+
+  models.desgloseitemfactura.belongsTo(models.detallefactura, { foreignKey: 'iddetallefactura' });
+  models.desgloseitemfactura.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+  models.desgloseitemfactura.belongsTo(models.cuentascontables, { foreignKey: 'idcuentacontable' });
+  models.detallefactura.belongsTo(models.factura, { foreignKey: 'idfactura' });
+
+  return models.desgloseitemfactura.findAll({
+    attributes: [['montoneto', 'montoneto'], ['ivanorecuperable', 'ivanorecuperable'], ['montocosto', 'montocosto']],
+    include: [
+      {
+        attributes: [['cui', 'cui']],
+        model: models.estructuracui
+      },
+      {
+        attributes: [['nombrecuenta', 'nombrecuenta'], ['cuentacontable', 'cuentacontable']],
+        model: models.cuentascontables
+      },
+      {
+        attributes: [['id', 'id']],
+        model: models.detallefactura,
+        include: [
+          {
+            attributes: [['id', 'id']],
+            model: models.factura,
+            where: { id: req.params.id }
+          },
+        ]
+      }]
+  }).then(function (desgloseitemfactura) {
+
+    var rows = []
+    for (var f in desgloseitemfactura) {
+      var item = [
+        desgloseitemfactura[f].cui,
+        desgloseitemfactura[f].nombrecuenta,
+        desgloseitemfactura[f].cuentacontable,
+        desgloseitemfactura[f].montoneto,
+        desgloseitemfactura[f].ivanorecuperable,
+        desgloseitemfactura[f].montocosto
+      ]
+      rows.push(item);
+    }
+
+    conf.rows = rows;
+
+    var result = nodeExcel.execute(conf);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+    res.setHeader("Content-Disposition", "attachment;filename=" + "desglose.xlsx");
+    res.end(result, 'binary');
+
+
+  }).catch(function (e) {
+    logger.error(e);
+    throw e;
+  });
+
+}
 
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -21,6 +113,7 @@ exports.list = function (req, res) {
   var filters = req.query.filters;
 
   models.cargadte.belongsTo(models.factura, { foreignKey: 'idfactura' });
+  models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
@@ -37,7 +130,10 @@ exports.list = function (req, res) {
           where: data,
           include: [
             {
-              model: models.factura
+              model: models.factura,
+              include: [
+                { model: models.proveedor },
+              ]
             }]
         }).then(function (cargadte) {
           return res.json({ records: records, total: total, page: page, rows: cargadte });
