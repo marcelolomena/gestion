@@ -24,6 +24,14 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    idcuerpoclausula: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'cuerpoclausula',
+        key: 'id'
+      }
+    },
     titulo: {
       type: DataTypes.STRING,
       allowNull: true

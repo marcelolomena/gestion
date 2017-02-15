@@ -31,6 +31,10 @@ var gridClausula = {
         tmpl += "<div class='column-full' id='tablaactual'>Tabla Actual{nombreadjunto}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row' style='display: none;'>";
+        tmpl += "<div class='column-half'>idcuerpoclausula {idcuerpoclausula}</div>";
+        tmpl += "</div>";
+
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -39,7 +43,7 @@ var gridClausula = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto','Tipo Adjunto', 'Nombre Adjunto'],
+            colNames: ['Id', 'Clase', 'codclase', 'idcuerpoclausula', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto','Tipo Adjunto', 'Nombre Adjunto'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true,
@@ -47,6 +51,7 @@ var gridClausula = {
                 },
                 { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.titulo", },
                 { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
+                { name: 'idcuerpoclausula', index: 'idcuerpoclausula', editable: true, hidden: true, jsonmap: "cuerpoclausula.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -62,9 +67,9 @@ var gridClausula = {
                             $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].titulo + '</option>';
                                 } else {
-                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].id + '">' + data[i].titulo + '</option>';
                                 }
                             });
                             return s + "</select>";
@@ -122,6 +127,7 @@ var gridClausula = {
                                         success: function (data) {
                                             if (data) {
                                                 $("input#titulo").val(data[0].titulo);
+                                                $("input#idcuerpoclausula").val(data[0].id);
                                                 //tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
                                                 tinyMCE.activeEditor.setContent(data[0].glosa);
                                                 $("#eltipo").show();

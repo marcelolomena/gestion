@@ -127,6 +127,9 @@ module.exports = function (passport) {
     router.route('/sic/getroles')
         .get(isAuthenticated, responsablesController.getRoles);
 
+    router.route('/sic/tecnicosresponsables/:idsolicitud')
+        .get(isAuthenticated, responsablesController.tecnicosresponsables);
+
     router.route('/sic/getresponsablessolicitud/:id')
         .get(isAuthenticated, preguntasController.getresponsablessolicitud);
 
@@ -158,6 +161,9 @@ module.exports = function (passport) {
 
     router.route('/sic/plantillas/:id')
         .get(isAuthenticated, clausulasController.plantillas);
+
+    router.route('/sic/plantillasanexos/:id')
+        .get(isAuthenticated, anexosController.plantillas);
 
     router.route('/sic/texto/:id/:gid')
         .get(isAuthenticated, clausulasController.texto);
@@ -330,6 +336,16 @@ module.exports = function (passport) {
 
     router.route('/sic/respuestausuario/:idforo')
         .get(isAuthenticated, foroController.respuestausuario);
+
+    router.route('/sic/clasesanexos')
+        .get(isAuthenticated, anexosController.clases);
+
+    router.route('/sic/tecnicosresponsablescui/:idcui')
+        .get(isAuthenticated, solicitudcotizacionController.tecnicosresponsablescui);
+
+    router.route('/sic/traerdatos/:id')
+        .get(isAuthenticated, solicitudcotizacionController.traerdatos);
+
 
 
     return router;

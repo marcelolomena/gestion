@@ -31,6 +31,10 @@ var gridAnexos = {
         tmpl += "<div class='column-full' id='tablaactual'>Tabla Actual{nombreadjunto}</div>";
         tmpl += "</div>";
 
+        tmpl += "<div class='form-row' style='display: none;'>";
+        tmpl += "<div class='column-half'>idcuerpoclausula {idcuerpoclausula}</div>";
+        tmpl += "</div>";
+
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -39,7 +43,7 @@ var gridAnexos = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Clase', 'codclase', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto', 'Tipo Adjunto', 'Nombre Adjunto'],
+            colNames: ['Id', 'Clase', 'codclase', 'idcuerpoclausula', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto', 'Tipo Adjunto', 'Nombre Adjunto'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true,
@@ -47,11 +51,12 @@ var gridAnexos = {
                 },
                 { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.titulo", },
                 { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
+                { name: 'idcuerpoclausula', index: 'idcuerpoclausula', editable: true, hidden: true, jsonmap: "cuerpoclausula.id", },
                 {
                     name: 'idclase', search: false, editable: true, hidden: true,
                     edittype: "select",
                     editoptions: {
-                        dataUrl: '/sic/clases',
+                        dataUrl: '/sic/clasesanexos',
                         buildSelect: function (response) {
                             var rowKey = $gridTab.getGridParam("selrow");
                             var rowData = $gridTab.getRowData(rowKey);
@@ -62,9 +67,9 @@ var gridAnexos = {
                             $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].titulo + '</option>';
                                 } else {
-                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].id + '">' + data[i].titulo + '</option>';
                                 }
                             });
                             return s + "</select>";
@@ -76,7 +81,7 @@ var gridAnexos = {
                                 if (idClausulaPlantilla != "0") {
                                     $.ajax({
                                         type: "GET",
-                                        url: '/sic/plantillas/' + idClausulaPlantilla,
+                                        url: '/sic/plantillasanexos/' + idClausulaPlantilla,
                                         async: false,
                                         success: function (data) {
                                             var rowKey = $gridTab.getGridParam("selrow");
@@ -122,6 +127,7 @@ var gridAnexos = {
                                         success: function (data) {
                                             if (data) {
                                                 $("input#titulo").val(data[0].titulo);
+                                                $("input#idcuerpoclausula").val(data[0].id);
                                                 //tinymce.activeEditor.execCommand('mceInsertContent', false, data[0].glosaclausula);
                                                 tinyMCE.activeEditor.setContent(data[0].glosa);
                                                 $("#eltipo").show();
@@ -258,69 +264,7 @@ var gridAnexos = {
             },
             viewrecords: true,
             caption: "Anexos",
-            gridComplete: function () {
-                var recs = $gridTab.getGridParam("reccount"),
-                    thisId = $.jgrid.jqID(this.id);
 
-                if (isNaN(recs) || recs == 0) {
-                    $("#add_" + thisId).addClass('ui-disabled');
-                    $("#edit_" + thisId).addClass('ui-disabled');
-                    $("#del_" + thisId).addClass('ui-disabled');
-                    $("#refresh_" + thisId).addClass('ui-disabled');
-                    $("#download_" + thisId).addClass('ui-disabled');
-
-                    $gridTab.jqGrid('navButtonAdd', '#navGridAnexos', {
-                        caption: "",
-                        id: "pushpin_" + $(targ + "_t_" + parentRowKey).attr('id'),
-                        buttonicon: "glyphicon glyphicon-pushpin",
-                        title: "Agrega Cláusulas Predefinidas",
-                        position: "last",
-                        onClickButton: function () {
-                            var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                            //console.log(parentRowData.idtipo)
-                            //console.log(parentRowData.idgrupo)
-
-                            /*
-                            $.getJSON('/sic/parametros2/grupoclausula', function(data) {
-                                bootbox.prompt({
-                                    title: "Generando Cláusulas Predefinidas...",
-                                    inputType: 'select',
-                                    inputOptions: data,
-                                    callback: function(result) {
-                                        if (result) {
-                                            $.getJSON('/sic/default/' + parentRowKey + '/' + result, function(res) {
-                                                $gridTab.trigger("reloadGrid");
-                                                bootbox.alert(res.message);
-                                            });
-                                        } else {
-                                            bootbox.alert("Debe seleccionar un grupo de cláusulas");
-                                        }
-                                    }
-                                });
-                            });
-                            */
-                            var dialog = bootbox.dialog({
-                                title: 'Generando Cláusulas Predefinidas...',
-                                message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
-                            });
-                            dialog.init(function () {
-                                $.getJSON('/sic/default/' + parentRowKey + '/' + parentRowData.idgrupo + '/' + parentRowData.idtipo, function (res) {
-                                    $gridTab.trigger("reloadGrid");
-                                    dialog.find('.bootbox-body').html(res.message);
-                                });
-                            });
-
-                        }
-                    })
-                } else {
-                    $("#add_" + thisId).removeClass('ui-disabled');
-                    $("#edit_" + thisId).removeClass('ui-disabled');
-                    $("#del_" + thisId).removeClass('ui-disabled');
-                    $("#refresh_" + thisId).removeClass('ui-disabled');
-                    $("#download_" + thisId).removeClass('ui-disabled');
-                    $("#pushpin_" + thisId).addClass('ui-disabled');
-                }
-            }
         });
 
         $gridTab.jqGrid('navGrid', '#navGridAnexos', { edit: true, add: true, del: true, view: false, search: false },
@@ -389,7 +333,7 @@ var gridAnexos = {
 
                 }
             }, {
-                addCaption: "Agrega Cláusula",
+                addCaption: "Agrega Anexo",
                 closeAfterAdd: true,
                 recreateForm: true,
                 checkOnUpdate: true,

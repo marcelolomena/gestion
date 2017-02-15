@@ -14,6 +14,7 @@ exports.action = function (req, res) {
 			models.clausulas.create({
 				idsolicitudcotizacion: req.body.idsolicitudcotizacion,
 				idplantillaclausula: req.body.idclausulaplantilla,
+				idcuerpoclausula: req.body.idcuerpoclausula,
 				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
 				glosa: req.body.glosa,
@@ -89,12 +90,28 @@ exports.list = function (req, res) {
 		if (data) {
 			models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
 			models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
+			models.clausulas.belongsTo(models.cuerpoclausula, { foreignKey: 'idcuerpoclausula' });
 			models.clausulas.belongsTo(models.valores, { foreignKey: 'tipoadjunto' });
 			models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' })
-			models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
+			//models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
 
 			models.clausulas.count({
-				where: data
+				where: data,
+				include: [{
+						model: models.solicitudcotizacion
+					},{
+						model: models.valores
+					},
+					{ model: models.cuerpoclausula, where: { anexo: 1 } },
+					 {
+						
+						model: models.plantillaclausula,
+						include: [
+							{model: models.clase},
+							
+						]
+					}
+					]
 			}).then(function (records) {
 				var total = Math.ceil(records / rows);
 				models.clausulas.findAll({
@@ -106,12 +123,14 @@ exports.list = function (req, res) {
 						model: models.solicitudcotizacion
 					},{
 						model: models.valores
-					}, {
+					}, 
+					{ model: models.cuerpoclausula, where: { anexo: 1 } },
+					{
 						
 						model: models.plantillaclausula,
 						include: [
 							{model: models.clase},
-							{ model: models.cuerpoclausula, where: { anexo: 1 } }
+							
 						]
 					}
 					]
@@ -132,30 +151,38 @@ exports.list = function (req, res) {
 }
 
 exports.clases = function (req, res) {
-
-	models.clase.findAll({
-		attributes: [['id', 'id'], ['titulo', 'nombre']],
-	}).then(function (clases) {
-		return res.json(clases);
-	}).catch(function (err) {
-		logger.error(err.message);
-		res.json({ error_code: 1 });
-	});
+	sequelize.query(
+        'select distinct a.id, a.titulo from sic.clase a  ' +
+        'join sic.plantillaclausula b on a.id=b.idclase ' +
+        'join sic.cuerpoclausula c on c.idplantillaclausula=b.id ' +
+        'where c.anexo = 1 ',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 
 }
 
 exports.plantillas = function (req, res) {
+	var id = req.params.id;
 
-	models.plantillaclausula.findAll({
-		order: 'id ASC',
-		attributes: ['id', 'codigo'],
-		where: { idclase: req.params.id }
-	}).then(function (plantillas) {
-		return res.json(plantillas);
-	}).catch(function (err) {
-		logger.error(err.message);
-		res.json({ error_code: 1 });
-	});
+	sequelize.query(
+        'select distinct a.id, a.codigo  from sic.plantillaclausula a   ' +
+        'join sic.cuerpoclausula b on b.idplantillaclausula=a.id ' +
+        'join sic.clase c on c.id=a.idclase ' +
+        'where b.anexo = 1 and c.id=:id ',
+        { replacements:{id: id},type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 
 }
 

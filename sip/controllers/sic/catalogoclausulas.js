@@ -291,7 +291,8 @@ exports.action3 = function (req, res) {
         titulo: req.body.titulo,
         glosa: req.body.glosa,
         idgrupo: req.body.idgrupo,
-        anexo: req.body.anexo
+        anexo: req.body.anexo,
+        nombreadjunto: nombreadjunto
       }, {
           where: {
             id: req.body.id
