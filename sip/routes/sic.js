@@ -18,6 +18,7 @@ var preguntasrfpController = require('../controllers/sic/preguntasrfp');
 var foroController = require('../controllers/sic/foro');
 var criteriosController = require('../controllers/sic/criterios');
 var claseevaluaciontecnicaController = require('../controllers/sic/claseevaluaciontecnica');
+var bitacoraController = require('../controllers/sic/bitacora');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -346,7 +347,8 @@ module.exports = function (passport) {
     router.route('/sic/traerdatos/:id')
         .get(isAuthenticated, solicitudcotizacionController.traerdatos);
 
-
+    router.route('/sic/bitacora/:id')
+        .get(isAuthenticated, bitacoraController.list);
 
     return router;
 }
