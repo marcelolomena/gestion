@@ -39,6 +39,7 @@
         "async": "latest",
         "csv": "latest",
         "elementtree": "latest",
-        "adm-zip": "0.4.7"
+        "adm-zip": "0.4.7",
+        "file-type": "4.1.0"
     }
 }

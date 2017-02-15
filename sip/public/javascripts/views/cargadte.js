@@ -63,7 +63,7 @@ $(document).ready(function () {
         datatype: "json",
         page: 1,
         colModel: modelcargas,
-        rowNum: 10,
+        rowNum: 25,
         regional: 'es',
         height: 'auto',
         autowidth: true,
@@ -71,16 +71,9 @@ $(document).ready(function () {
         caption: 'Lista de Facturas Cargadas',
         pager: "#pager",
         viewrecords: true,
-        rowList: [5, 10, 20, 50],
+        rowList: [50, 100, 500, 1000],
         styleUI: "Bootstrap",
         loadError: sipLibrary.jqGrid_loadErrorHandler,
-        gridComplete: function () {
-            var recs = $("#grid").getGridParam("reccount");
-            if (isNaN(recs) || recs == 0) {
-
-                $("#grid").addRowData("blankRow", { "frecuencia": "No hay datos" });
-            }
-        },
         subGrid: true,
         subGridRowExpanded: showChildGrid,
         subGridOptions: {
@@ -156,6 +149,7 @@ $(document).ready(function () {
                     if (typeof (data.success) != 'undefined') {
                         if (data.success == true) {
                             dialog.find('.bootbox-body').html(data.message);
+                             $grid.trigger('reloadGrid');
                         } else {
                             dialog.find('.bootbox-body').html(data.message);
                         }
