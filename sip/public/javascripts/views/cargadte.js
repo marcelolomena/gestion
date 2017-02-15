@@ -1,10 +1,48 @@
 $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
-    //var $grid = $("#gridMaster");
+    var $grid = $("#grid");
+
     var modelcargas = [
-        { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Archivo', name: 'archivo', width: 50, align: 'left', search: true, editable: false, hidden: false },
+        { label: 'id', name: 'id', key: true, hidden: true, jsonmap: "factura.id" },
+        {
+            label: 'Fecha Carga', name: 'horainicio', hidden: false,
+            search: false, editable: false, width: 50, align: 'left',
+            formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "d/m/Y h:i" }
+        },
+        { label: 'DTE', name: 'archivo', width: 50, align: 'left', search: false, editable: false, hidden: false },
+        {
+            label: 'Estado', name: 'estado', hidden: false,
+            search: false, editable: false, width: 50, align: 'left'
+        },
+        {
+            label: 'Número Factura', name: 'numero', width: 50, align: 'left', search: false, editable: false, hidden: false,
+            jsonmap: "factura.numero"
+        },
+        {
+            label: 'Proveedor', name: 'razonsocial', width: 200, align: 'left', search: true, sortable: false, editable: false,
+            jsonmap: "factura.proveedor.razonsocial"
+        },
+        {
+            label: 'Fecha Factura', name: 'fecha', hidden: false,
+            search: false, editable: false, width: 50, align: 'left',
+            formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "d/m/Y" }, jsonmap: "factura.fecha"
+        },
+        {
+            label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }, jsonmap: "factura.montototal"
+        },
+        { label: 'horafin', name: 'horafin', hidden: true, search: false, editable: false, },
+        {
+            name: 'Tiempo Carga', index: 'tiempo', width: 60, align: 'right', hidden: true,
+            formatter: function (cellvalue, options, rowObject) {
+                var horainicio = rowObject.horainicio,
+                    horafin = rowObject.horafin;
+                console.log("horainicio" + horainicio)
+                console.log("horafin" + horafin)
+                return 100;
+            }
+        },
         {
             label: 'Archivo',
             name: 'fileToUpload',
@@ -18,7 +56,8 @@ $(document).ready(function () {
             search: false
         }
     ];
-    $("#grid").jqGrid({
+
+    $grid.jqGrid({
         url: '/cargadte/list',
         mtype: "GET",
         datatype: "json",
@@ -29,7 +68,7 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        caption: 'Lista de Archivos Disponibles',
+        caption: 'Lista de Facturas Cargadas',
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -50,11 +89,11 @@ $(document).ready(function () {
         },
     });
 
-    $("#grid").jqGrid('navGrid', "#pager", {
-        edit: false, add: true, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false
+    $grid.jqGrid('navGrid', "#pager", {
+        edit: false, add: true, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {}, {
-            addCaption: "Carga de Archivo",
+            addCaption: "Carga de DTE",
             closeAfterAdd: true,
             recreateForm: true,
             mtype: 'POST',
@@ -63,6 +102,30 @@ $(document).ready(function () {
         }, {}
 
     );
+
+    $grid.jqGrid('navButtonAdd', "#pager", {
+        caption: "",
+        id: "download_" + $grid.attr('id'),
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Generar Asiento",
+        position: "first",
+        onClickButton: function () {
+            var rowKey = $grid.getGridParam("selrow");
+            var rowData = $grid.getRowData(rowKey);
+            var thissid = rowData.id;
+            if (thissid === undefined) {
+                bootbox.alert("Debe seleccionar un detalle");
+            }
+            else {
+                try {
+                    var url = '/cargadte/download/' + thissid;
+                    $grid.jqGrid('excelExport', { "url": url });
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+        }
+    });
 
     function UploadFile(response, postdata) {
 
@@ -126,57 +189,78 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     var modelDetalle = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idlogcargas', name: 'idlogcargas', hidden: true },
         {
-            label: 'Fecha Ultima Carga', name: 'fechaarchivo', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: { required: true },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
+            label: 'ID Prefactura',
+            name: 'idprefactura',
+            width: 50,
+            hidden: true,
+            editable: false
         },
         {
-            label: 'Fecha Proceso Carga', name: 'fechaproceso', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: { required: true },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
+            label: 'ID Facturación',
+            name: 'idfacturacion',
+            width: 50,
+            align: 'left',
+            search: false,
+            editable: false,
+            hidden: false,
         },
-        { label: 'Usuario', name: 'usuario', search: true, editable: true, width: 100, editrules: { edithidden: false }, hidedlg: false, search: false },
-        { label: 'Número Registros', name: 'nroregistros', search: true, editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
-        { label: 'Nombre Control 1', name: 'nombre1', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
-        { label: 'Control 1', name: 'control1', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
-        { label: 'Nombre Control 2', name: 'nombre2', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
-        { label: 'Control 2', name: 'control2', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true, search: false },
+        {
+            label: 'Glosa Servicio',
+            name: 'glosaservicio',
+            width: 200,
+            align: 'left',
+            search: false,
+            editable: false,
+            hidden: false
+        },
+        {
+            label: 'Monto Neto',
+            name: 'montoneto',
+            width: 100,
+            align: 'right',
+            search: false,
+            editable: false,
+            hidden: false,
+            formatter: 'number',
+            formatoptions: { decimalPlaces: 2 }
+        },
+        {
+            label: 'Impuesto',
+            name: 'impuesto',
+            width: 100,
+            align: 'right',
+            search: false,
+            editable: false,
+            hidden: false,
+            formatter: 'number',
+            formatoptions: { decimalPlaces: 0 }
+        },
+        {
+            label: 'Cantidad',
+            name: 'cantidad',
+            width: 50,
+            align: 'right',
+            search: false,
+            hidden: false,
+            formatter: 'number',
+            editable: false
+        },
+        {
+            label: 'Total',
+            name: 'montototal',
+            width: 100,
+            align: 'right',
+            search: false,
+            hidden: false,
+            editable: false,
+            formatter: 'number',
+            formatoptions: { decimalPlaces: 0 }
+        }
     ];
 
     $("#" + childGridID).jqGrid({
-        url: '/detallecarga/' + parentRowKey,
+        url: '/cargadte/detalle/' + parentRowKey,
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -186,36 +270,20 @@ function showChildGrid(parentRowID, parentRowKey) {
         rowList: [5, 10, 20, 50],
         shrinkToFit: true,
         width: 1300,
-        caption: 'Detalle de Cargas Realizadas',
+        caption: 'Detalle de Facturas',
         styleUI: "Bootstrap",
-        subGrid: false,
-        subGridOptions: {
-            plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
-        },
         regional: 'es',
-
         height: 'auto',
-        pager: "#" + childGridPagerID,
-        gridComplete: function () {
-            var recs = $("#" + childGridID).getGridParam("reccount");
-            if (isNaN(recs) || recs == 0) {
-
-                $("#" + childGridID).addRowData("blankRow", { "usuario": "No hay datos" });
-            }
-        }
+        pager: "#" + childGridPagerID
     });
 
-    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: false, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    },
-
-        {
-            recreateFilter: true
-        }
+    }
     );
+
+
     $("#" + childGridPagerID).css("width", "");
 
     $(window).bind('resize', function () {

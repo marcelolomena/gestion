@@ -14,6 +14,7 @@ exports.action = function (req, res) {
 			models.clausulas.create({
 				idsolicitudcotizacion: req.body.idsolicitudcotizacion,
 				idplantillaclausula: req.body.idclausulaplantilla,
+				idcuerpoclausula: req.body.idcuerpoclausula,
 				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
 				glosa: req.body.glosa,
@@ -88,13 +89,28 @@ exports.list = function (req, res) {
 	utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
 		if (data) {
 			models.clausulas.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+			models.clausulas.belongsTo(models.cuerpoclausula, { foreignKey: 'idcuerpoclausula' });
 			models.clausulas.belongsTo(models.plantillaclausula, { foreignKey: 'idplantillaclausula' });
 			models.clausulas.belongsTo(models.valores, { foreignKey: 'tipoadjunto' });
 			models.plantillaclausula.belongsTo(models.clase, { foreignKey: 'idclase' })
-			models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
 
 			models.clausulas.count({
-				where: data
+				where: data,
+				include: [{
+						model: models.solicitudcotizacion
+					}, {
+						model: models.valores
+					},
+					{ model: models.cuerpoclausula, where: { anexo: 0 } },
+					{
+						
+						model: models.plantillaclausula,
+						include: [
+							{model: models.clase},
+							
+						]
+					}
+					]
 			}).then(function (records) {
 				var total = Math.ceil(records / rows);
 				models.clausulas.findAll({
@@ -106,12 +122,14 @@ exports.list = function (req, res) {
 						model: models.solicitudcotizacion
 					}, {
 						model: models.valores
-					},{
+					},
+					{ model: models.cuerpoclausula, where: { anexo: 0 } },
+					{
 						
 						model: models.plantillaclausula,
 						include: [
 							{model: models.clase},
-							{ model: models.cuerpoclausula, where: { anexo: 0 } }
+							
 						]
 					}
 					]
@@ -130,7 +148,7 @@ exports.list = function (req, res) {
 	});
 
 }
-
+/*
 exports.clases = function (req, res) {
 
 	models.clase.findAll({
@@ -156,6 +174,43 @@ exports.plantillas = function (req, res) {
 		logger.error(err.message);
 		res.json({ error_code: 1 });
 	});
+
+}
+*/
+
+exports.clases = function (req, res) {
+	sequelize.query(
+        'select distinct a.id, a.titulo from sic.clase a  ' +
+        'join sic.plantillaclausula b on a.id=b.idclase ' +
+        'join sic.cuerpoclausula c on c.idplantillaclausula=b.id ' +
+        'where c.anexo = 0 ',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+
+exports.plantillas = function (req, res) {
+	var id = req.params.id;
+
+	sequelize.query(
+        'select distinct a.id, a.codigo  from sic.plantillaclausula a   ' +
+        'join sic.cuerpoclausula b on b.idplantillaclausula=a.id ' +
+        'join sic.clase c on c.id=a.idclase ' +
+        'where b.anexo = 0 and c.id=:id ',
+        { replacements:{id: id},type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 
 }
 
@@ -978,6 +1033,7 @@ exports.default = function (req, res) {
 					required: true,
 					include: [{
 						attributes: [
+							['id', 'id'],
 							['idplantillaclausula', 'idplantillaclausula'],
 							['titulo', 'titulo'],
 							['glosa', 'glosa'],
@@ -1009,6 +1065,8 @@ exports.default = function (req, res) {
 						logger.debug("ES DEFAULT")
 						item["idsolicitudcotizacion"] = req.params.id
 						item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
+						item["idcuerpoclausula"] = cuerpoclausulas[p].id
+						logger.debug("-------->ESTO ES LO QUE QUIERO: "+cuerpoclausulas[p].id)
 						item["titulo"] = cuerpoclausulas[p].titulo
 						item["glosa"] = cuerpoclausulas[p].glosa
 						item["nombreadjunto"] = cuerpoclausulas[p].nombreadjunto
@@ -1031,6 +1089,8 @@ exports.default = function (req, res) {
 									item["idplantillaclausula"] = cuerpoclausulas[p].idplantillaclausula
 									item["titulo"] = cuerpoclausulas[p].titulo
 									item["glosa"] = cuerpoclausulas[p].glosa
+									item["idcuerpoclausula"] = cuerpoclausulas[p].id
+									logger.debug("-------->ESTO ES LO QUE QUIERO 2: "+cuerpoclausulas[p].id)
 									item["nombreadjunto"] = cuerpoclausulas[p].nombreadjunto
 									item["tipoadjunto"] = cuerpoclausulas[p].tipoadjunto
 									item["borrado"] = 1

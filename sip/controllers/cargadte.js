@@ -11,6 +11,98 @@ var AdmZip = require('adm-zip');
 var stream = require('stream');
 var et = require('elementtree');
 
+exports.excel = function (req, res) {
+
+  var conf = {}
+  conf.cols = [
+    {
+      caption: 'CUI',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'Nombre Cuenta',
+      type: 'string',
+      width: 255
+    },
+    {
+      caption: 'Cuenta',
+      type: 'string',
+      width: 20
+    },
+    {
+      caption: 'Monto',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'IVA No Recuperable',
+      type: 'number',
+      width: 3
+    },
+    {
+      caption: 'Costo',
+      type: 'number',
+      width: 3
+    }
+  ];
+
+  models.desgloseitemfactura.belongsTo(models.detallefactura, { foreignKey: 'iddetallefactura' });
+  models.desgloseitemfactura.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
+  models.desgloseitemfactura.belongsTo(models.cuentascontables, { foreignKey: 'idcuentacontable' });
+  models.detallefactura.belongsTo(models.factura, { foreignKey: 'idfactura' });
+
+  return models.desgloseitemfactura.findAll({
+    attributes: [['montoneto', 'montoneto'], ['ivanorecuperable', 'ivanorecuperable'], ['montocosto', 'montocosto']],
+    include: [
+      {
+        attributes: [['cui', 'cui']],
+        model: models.estructuracui
+      },
+      {
+        attributes: [['nombrecuenta', 'nombrecuenta'], ['cuentacontable', 'cuentacontable']],
+        model: models.cuentascontables
+      },
+      {
+        attributes: [['id', 'id']],
+        model: models.detallefactura,
+        include: [
+          {
+            attributes: [['id', 'id']],
+            model: models.factura,
+            where: { id: req.params.id }
+          },
+        ]
+      }]
+  }).then(function (desgloseitemfactura) {
+
+    var rows = []
+    for (var f in desgloseitemfactura) {
+      var item = [
+        desgloseitemfactura[f].cui,
+        desgloseitemfactura[f].nombrecuenta,
+        desgloseitemfactura[f].cuentacontable,
+        desgloseitemfactura[f].montoneto,
+        desgloseitemfactura[f].ivanorecuperable,
+        desgloseitemfactura[f].montocosto
+      ]
+      rows.push(item);
+    }
+
+    conf.rows = rows;
+
+    var result = nodeExcel.execute(conf);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+    res.setHeader("Content-Disposition", "attachment;filename=" + "desglose.xlsx");
+    res.end(result, 'binary');
+
+
+  }).catch(function (e) {
+    logger.error(e);
+    throw e;
+  });
+
+}
 
 exports.list = function (req, res) {
   // Use the Proyectos model to find all proyectos
@@ -19,6 +111,9 @@ exports.list = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var filters = req.query.filters;
+
+  models.cargadte.belongsTo(models.factura, { foreignKey: 'idfactura' });
+  models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
@@ -32,7 +127,14 @@ exports.list = function (req, res) {
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: 'horainicio desc',
-          where: data
+          where: data,
+          include: [
+            {
+              model: models.factura,
+              include: [
+                { model: models.proveedor },
+              ]
+            }]
         }).then(function (cargadte) {
           return res.json({ records: records, total: total, page: page, rows: cargadte });
         }).catch(function (err) {
@@ -45,9 +147,57 @@ exports.list = function (req, res) {
 
 };
 
+exports.detalle = function (req, res) {
+  var page = req.body.page;
+  var rows = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+
+  if (!sidx)
+    sidx = "id";
+
+  if (!sord)
+    sord = "desc";
+
+  var orden = sidx + " " + sord;
+
+  var additional = [{
+    "field": "idfactura",
+    "op": "eq",
+    "data": req.params.id
+  }];
+
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      logger.debug("->>> " + err)
+    } else {
+      models.detallefactura.count({
+        where: data
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        models.detallefactura.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data
+        }).then(function (dcargas) {
+          res.json({ records: records, total: total, page: page, rows: dcargas });
+        }).catch(function (err) {
+          logger.error(e)
+          res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
+
+
+}
+
 exports.guardar = function (req, res) {
   return models.cargadte.create({
     horainicio: new Date(),
+    usuario: req.session.passport.user,
     estado: 'EN PROCESO',
     borrado: 1
   }).then(function (cargadte) {
@@ -64,7 +214,7 @@ exports.archivo = function (req, res) {
 
     var busboy = new Busboy({ headers: req.headers });
 
-    var processZipEntries = function (req, res, zipEntries, zipFolderName, i) {
+    var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga) {
 
       var bufferStream = new stream.PassThrough();
       var zipEntryName, data, etree;
@@ -123,6 +273,40 @@ exports.archivo = function (req, res) {
 
             var idfactura = factura.id
 
+            /*actualiza tabla de carga*/
+
+            zipEntryName = getZipEntryName(zipEntry, zipFolderName);
+            logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
+
+            models.cargadte.update({
+              horafin: new Date(),
+              archivo: zipEntryName,
+              estado: "CARGADO",
+            }, {
+                where: {
+                  id: idcarga
+                }
+              }).then(function (cargadte) {
+
+              }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err, success: false });
+              });
+
+            models.cargadte.update({
+              idfactura: idfactura,
+            }, {
+                where: {
+                  id: idcarga
+                }
+              }).then(function (cargadte) {
+
+              }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err, success: false });
+              });
+
+
             for (var i = 0; i < lstDet.length; i++) {
               var s = lstDet[i].findtext('NmbItem').toUpperCase()
               var m = lstDet[i].findtext('MontoItem')
@@ -156,35 +340,39 @@ exports.archivo = function (req, res) {
                     return models.desgloseitemfactura.create({
                       iddetallefactura: detallefactura.id
                     }).then(function (desgloseitemfactura) {
+
                     }).catch(function (err) {
                       logger.error(err)
+                      res.json({ message: err, success: false });
                     });
 
 
                   }).catch(function (err) {
                     logger.error(err)
+                    res.json({ message: err, success: false });
                   });
 
                 }).catch(function (err) {
                   logger.error(err)
+                  res.json({ message: err, success: false });
                 });
 
               }
             }/*for*/
 
-
             bufferStream.end(zipEntryData);
-            zipEntryName = getZipEntryName(zipEntry, zipFolderName);
+            //zipEntryName = getZipEntryName(zipEntry, zipFolderName);
+            //logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
 
-            logger.debug("Agregar este archivo a la base de datos >> " + zipEntryName);
-
-            processZipEntries(req, res, zipEntries, zipFolderName, i + 1);
+            processZipEntries(req, res, zipEntries, zipFolderName, i + 1, idcarga);
 
           }).catch(function (err) {
             logger.error(err)
+            res.json({ message: err, success: false });
           });
         }).catch(function (err) {
           logger.error(err);
+          res.json({ message: err, success: false });
         });
 
       } else {
@@ -196,7 +384,6 @@ exports.archivo = function (req, res) {
     var getZipEntryName = function (zipEntry, zipFolderName) {
       return zipEntry.entryName.replace(zipFolderName + "/", "");
     };
-
 
     var awaitId = new Promise(function (resolve, reject) {
 
@@ -211,7 +398,6 @@ exports.archivo = function (req, res) {
           return;
         }
       });
-
 
     });
 
@@ -240,7 +426,16 @@ exports.archivo = function (req, res) {
 
         logger.debug(zipFolderName)
 
-        processZipEntries(req, res, zipEntries, zipFolderName, 0);
+        awaitId.then(function (idcargadte) {
+
+          processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte);
+
+          res.json({ message: "archivo cargado", success: true });
+
+        }).catch(function (err) {
+          logger.error(err)
+          res.json({ message: err, success: false });
+        });
 
       });
 

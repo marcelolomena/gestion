@@ -32,14 +32,6 @@ module.exports = function (sequelize, DataTypes) {
         key: 'id'
       }
     },
-    fechamastardia: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    descripciondeberesproceso: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

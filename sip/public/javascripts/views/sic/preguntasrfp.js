@@ -131,14 +131,14 @@ function UploadPre(response, postdata) {
     var data = $.parseJSON(response.responseText);
     if (data.success) {
         if ($("#fileToUpload").val() != "") {
-            ajaxDocUpload(data.id);
+            ajaxPregUpload(data.id);
         }
     }
 
     return [data.success, data.message, data.id];
 }
 
-function ajaxDocUpload(id) {
+function ajaxPregUpload(id) {
     var dialog = bootbox.dialog({
         title: 'Se inicia la transferencia',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'

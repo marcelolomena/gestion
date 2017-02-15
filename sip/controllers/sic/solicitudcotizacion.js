@@ -19,12 +19,13 @@ exports.action = function (req, res) {
                 sap: req.body.sap,
                 descripcion: req.body.descripcion,
                 codigosolicitud: req.body.codigosolicitud,
-                clasificacionsolicitud: req.body.clasificacionsolicitud,
+                idclasificacionsolicitud: req.body.idclasificacionsolicitud,
                 idnegociador: req.body.idnegociador,
                 correonegociador: req.body.correonegociador,
                 fononegociador: req.body.fononegociador,
                 numerorfp: req.body.numerorfp,
                 fechaenviorfp: req.body.fechaenviorfp,
+                direccionnegociador: req.body.direccionnegociador,
                 //nombreinterlocutor1: req.body.nombreinterlocutor1,
                 //correointerlocutor1: req.body.correointerlocutor1,
                 //fonointerlocutor1: req.body.fonointerlocutor1,
@@ -81,6 +82,7 @@ exports.action = function (req, res) {
                     idnegociador: req.body.idnegociador,
                     correonegociador: req.body.correonegociador,
                     fononegociador: req.body.fononegociador,
+                    direccionnegociador: req.body.direccionnegociador,
                     numerorfp: req.body.numerorfp,
                     fechaenviorfp: req.body.fechaenviorfp,
                     //nombreinterlocutor1: req.body.nombreinterlocutor1,
@@ -228,4 +230,31 @@ exports.getcolorservicios = function (req, res) {
             res.json(colorfinal);
         });
 
+};
+exports.tecnicosresponsablescui = function (req, res) {
+    var id = req.params.idcui;
+    var sql = "select max(periodo) as periodo from RecursosHumanos";
+
+    sequelize.query(sql)
+        .spread(function (rows) {
+            var periodo = rows[0].periodo
+            //console.log("-----------AQUI VIENE")
+            //console.dir(periodo)
+
+            var sql = "select distinct g.uid, f.nombre, f.apellido, f.numRut from sip.estructuracui a join dbo.art_user c on a.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.RecursosHumanos f on e.emailTrab = f.emailJefe join dbo.art_user g on f.emailTrab = g.email where a.id = " + id + " and d.periodo = " + periodo + " and e.periodo = " + periodo + " and f.periodo = " + periodo + "  UNION (select distinct g.uid, e.nombre, e.apellido, e.numRut from sip.estructuracui a join dbo.art_user c on a.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.art_user g on e.emailTrab = g.email where a.id = " + id + " and d.periodo = " + periodo + " and e.periodo = " + periodo + ") UNION (select distinct g.uid, d.nombre, d.apellido, d.numRut from sip.estructuracui a join dbo.art_user c on a.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.art_user g on d.emailTrab = g.email where a.id   =" + id + " and d.periodo = " + periodo + ") UNION (select distinct c.uid, c.first_name, c.last_name, '' from sip.estructuracui a join dbo.art_user c on a.uid = c.uid where a.id = " + id + ") order by  f.nombre, f.apellido, g.uid,f.numRut";
+            sequelize.query(sql)
+                .spread(function (rows) {
+                    return res.json(rows);
+                });
+        });
+};
+
+exports.traerdatos = function (req, res) {
+    var id = req.params.id;
+    var sql = " select email, contact_number from art_user where uid="+id+";";
+
+    sequelize.query(sql)
+        .spread(function (rows) {
+            return res.json(rows);
+        });
 };

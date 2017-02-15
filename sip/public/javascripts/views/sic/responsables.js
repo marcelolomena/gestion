@@ -38,6 +38,11 @@ var gridResponsables = {
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Seleccione un Rol--</option>';
+                            if (thissid == "00") {
+                                s += '<option value="00" selected>Tecnico Responsable</option>';
+                            } else {
+                                s += '<option value="00">Tecnico Responsable</option>';
+                            }
                             $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
@@ -54,32 +59,61 @@ var gridResponsables = {
                                 var idrol = $('option:selected', this).val();
 
                                 if (idrol != "0") {
-                                    $.ajax({
-                                        type: "GET",
-                                        url: '/sic/usuarios_por_rolid/' + idrol,
-                                        async: false,
-                                        success: function (data) {
-                                            var grid = $gridTab;
-                                            var rowKey = grid.getGridParam("selrow");
-                                            var rowData = grid.getRowData(rowKey);
-                                            var thissid = rowData.idresponsable;
-                                            var s = "<select>";//el default
-                                            s += '<option value="0">--Escoger Responsable--</option>';
-                                            $.each(data, function (i, item) {
-                                                if (data[i].uid == thissid) {
-                                                    s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
-                                                } else {
-                                                    s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
-                                                }
-                                            });
-                                            s += "</select>";
-                                            //lahora = new Date();
-                                            //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
-                                            $("select#idresponsable").empty().html(s);
-                                            //lahora = new Date();
-                                            //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
-                                        }
-                                    });
+                                    if (idrol == "00") {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: '/sic/tecnicosresponsables/' + parentRowKey,
+                                            async: false,
+                                            success: function (data) {
+                                                var grid = $gridTab;
+                                                var rowKey = grid.getGridParam("selrow");
+                                                var rowData = grid.getRowData(rowKey);
+                                                var thissid = rowData.idresponsable;
+                                                var s = "<select>";//el default
+                                                s += '<option value="0">--Escoger Responsable--</option>';
+                                                $.each(data, function (i, item) {
+                                                    if (data[i].uid == thissid) {
+                                                        s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + ' ' + data[i].apellido + '</option>';
+                                                    } else {
+                                                        s += '<option value="' + data[i].uid + '">' + data[i].nombre + ' ' + data[i].apellido + '</option>';
+                                                    }
+                                                });
+                                                s += "</select>";
+                                                //lahora = new Date();
+                                                //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                                $("select#idresponsable").empty().html(s);
+                                                //lahora = new Date();
+                                                //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                            }
+                                        });
+                                    } else {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: '/sic/usuarios_por_rolid/' + idrol,
+                                            async: false,
+                                            success: function (data) {
+                                                var grid = $gridTab;
+                                                var rowKey = grid.getGridParam("selrow");
+                                                var rowData = grid.getRowData(rowKey);
+                                                var thissid = rowData.idresponsable;
+                                                var s = "<select>";//el default
+                                                s += '<option value="0">--Escoger Responsable--</option>';
+                                                $.each(data, function (i, item) {
+                                                    if (data[i].uid == thissid) {
+                                                        s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                                                    } else {
+                                                        s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                                                    }
+                                                });
+                                                s += "</select>";
+                                                //lahora = new Date();
+                                                //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                                $("select#idresponsable").empty().html(s);
+                                                //lahora = new Date();
+                                                //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                            }
+                                        });
+                                    }
                                 }
 
                             }
@@ -97,7 +131,7 @@ var gridResponsables = {
                 },
                 { name: 'user.first_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
                 { name: 'user.last_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
-                
+
 
 
             ],

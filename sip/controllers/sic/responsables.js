@@ -187,6 +187,24 @@ exports.getRoles = function (req, res) {
 
 };
 
+exports.tecnicosresponsables = function (req, res) {
+    var id = req.params.idsolicitud;
+    var sql = "select max(periodo) as periodo from RecursosHumanos";
+
+    sequelize.query(sql)
+        .spread(function (rows) {
+            var periodo = rows[0].periodo
+            console.log("-----------AQUI VIENE")
+            console.dir(periodo)
+
+            var sql = "select distinct g.uid, f.nombre, f.apellido, f.numRut from sic.solicitudcotizacion a join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.RecursosHumanos f on e.emailTrab = f.emailJefe join dbo.art_user g on f.emailTrab = g.email where a.id = "+id+" and d.periodo = "+periodo+" and e.periodo = "+periodo+" and f.periodo = "+periodo+"  UNION (select distinct g.uid, e.nombre, e.apellido, e.numRut from sic.solicitudcotizacion a  join  sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.art_user g on e.emailTrab = g.email where a.id = "+id+" and d.periodo = "+periodo+" and e.periodo = "+periodo+") UNION (select distinct g.uid, d.nombre, d.apellido, d.numRut from sic.solicitudcotizacion a  join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.art_user g on d.emailTrab = g.email where a.id   ="+id+" and d.periodo = "+periodo+") UNION (select distinct c.uid, c.first_name, c.last_name, '' from sic.solicitudcotizacion a  join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid where a.id = "+id+") order by  f.nombre, f.apellido, g.uid,f.numRut"; 
+            sequelize.query(sql)
+                .spread(function (rows) {
+                    return res.json(rows);
+                });
+        });
+};
+
 
 
 

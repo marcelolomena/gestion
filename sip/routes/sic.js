@@ -18,6 +18,7 @@ var preguntasrfpController = require('../controllers/sic/preguntasrfp');
 var foroController = require('../controllers/sic/foro');
 var criteriosController = require('../controllers/sic/criterios');
 var claseevaluaciontecnicaController = require('../controllers/sic/claseevaluaciontecnica');
+var bitacoraController = require('../controllers/sic/bitacora');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -127,6 +128,9 @@ module.exports = function (passport) {
     router.route('/sic/getroles')
         .get(isAuthenticated, responsablesController.getRoles);
 
+    router.route('/sic/tecnicosresponsables/:idsolicitud')
+        .get(isAuthenticated, responsablesController.tecnicosresponsables);
+
     router.route('/sic/getresponsablessolicitud/:id')
         .get(isAuthenticated, preguntasController.getresponsablessolicitud);
 
@@ -158,6 +162,9 @@ module.exports = function (passport) {
 
     router.route('/sic/plantillas/:id')
         .get(isAuthenticated, clausulasController.plantillas);
+
+    router.route('/sic/plantillasanexos/:id')
+        .get(isAuthenticated, anexosController.plantillas);
 
     router.route('/sic/texto/:id/:gid')
         .get(isAuthenticated, clausulasController.texto);
@@ -331,6 +338,17 @@ module.exports = function (passport) {
     router.route('/sic/respuestausuario/:idforo')
         .get(isAuthenticated, foroController.respuestausuario);
 
+    router.route('/sic/clasesanexos')
+        .get(isAuthenticated, anexosController.clases);
+
+    router.route('/sic/tecnicosresponsablescui/:idcui')
+        .get(isAuthenticated, solicitudcotizacionController.tecnicosresponsablescui);
+
+    router.route('/sic/traerdatos/:id')
+        .get(isAuthenticated, solicitudcotizacionController.traerdatos);
+
+    router.route('/sic/bitacora/:id')
+        .get(isAuthenticated, bitacoraController.list);
 
     return router;
 }
