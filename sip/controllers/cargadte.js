@@ -2,6 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
+var utilTime = require('../utils/time');
 var logger = require("../utils/logger");
 var Busboy = require('busboy');
 var path = require('path');
@@ -116,7 +117,6 @@ exports.list = function (req, res) {
   var filters = req.query.filters;
 
   models.cargadte.belongsTo(models.factura, { foreignKey: 'idfactura' });
-  models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {
@@ -134,9 +134,6 @@ exports.list = function (req, res) {
           include: [
             {
               model: models.factura,
-              include: [
-                { model: models.proveedor },
-              ]
             }]
         }).then(function (cargadte) {
           return res.json({ records: records, total: total, page: page, rows: cargadte });
@@ -150,7 +147,7 @@ exports.list = function (req, res) {
 
 };
 
-exports.detalle = function (req, res) {
+exports.items = function (req, res) {
   var page = req.body.page;
   var rows = req.body.rows;
   var filters = req.body.filters;
@@ -171,6 +168,7 @@ exports.detalle = function (req, res) {
     "data": req.params.id
   }];
 
+  //models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
   utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
     if (err) {
       logger.debug("->>> " + err)
@@ -184,8 +182,8 @@ exports.detalle = function (req, res) {
           limit: parseInt(rows),
           order: orden,
           where: data
-        }).then(function (dcargas) {
-          res.json({ records: records, total: total, page: page, rows: dcargas });
+        }).then(function (detallefactura) {
+          res.json({ records: records, total: total, page: page, rows: detallefactura });
         }).catch(function (err) {
           logger.error(e)
           res.json({ error_code: 1 });
@@ -194,10 +192,90 @@ exports.detalle = function (req, res) {
     }
   });
 
+}
 
+exports.detalle = function (req, res) {
+  var page = req.body.page;
+  var rows = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+
+  if (!sidx)
+    sidx = "id";
+
+  if (!sord)
+    sord = "desc";
+
+  var orden = sidx + " " + sord;
+
+  /*
+    var additional = [{
+      "field": "idfactura",
+      "op": "eq",
+      "data": req.params.id
+    }];
+   
+      utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (err) {
+          logger.debug("->>> " + err)
+        } else {
+          models.detallefactura.count({
+            where: data
+          }).then(function (records) {
+            var total = Math.ceil(records / rows);
+            return models.detallefactura.findAll({
+              offset: parseInt(rows * (page - 1)),
+              limit: parseInt(rows),
+              order: orden,
+              where: data
+            }).then(function (dcargas) {
+              res.json({ records: records, total: total, page: page, rows: dcargas });
+            }).catch(function (err) {
+              logger.error(e)
+              res.json({ error_code: 1 });
+            });
+          })
+        }
+      });
+    */
+
+  var additional = [{
+    "field": "id",
+    "op": "eq",
+    "data": req.params.id
+  }];
+  models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      logger.debug("->>> " + err)
+    } else {
+      models.factura.count({
+        where: data
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        return models.factura.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data,
+          include: [
+            { model: models.proveedor },
+          ]
+        }).then(function (factura) {
+          res.json({ records: records, total: total, page: page, rows: factura });
+        }).catch(function (err) {
+          logger.error(e)
+          res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
 }
 
 exports.guardar = function (req, res) {
+  logger.debug("HORA UTC : " + utilTime.calcTime(-4))
+  logger.debug("HORA SYS : " + new Date())
   return models.cargadte.create({
     horainicio: new Date(),
     usuario: req.session.passport.user,
@@ -218,6 +296,8 @@ exports.archivo = function (req, res) {
     var busboy = new Busboy({ headers: req.headers });
 
     var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga) {
+
+      //throw new Error("Please enter a valid age")
 
       var bufferStream = new stream.PassThrough();
       var zipEntryName, data, etree;
@@ -271,6 +351,9 @@ exports.archivo = function (req, res) {
             montoneto: MntNeto,
             impuesto: Iva,
             montototal: MntTotal,
+            ivanorecuperable: 0,
+            montocosto: 0,
+            ivacredito: 0,
             borrado: 1
           }).then(function (factura) {
 
@@ -283,7 +366,7 @@ exports.archivo = function (req, res) {
 
             models.cargadte.update({
               horafin: new Date(),
-              archivo: zipEntryName,
+              //archivo: zipEntryName,
               estado: "CARGADO",
               idfactura: idfactura,
             }, {
@@ -381,6 +464,64 @@ exports.archivo = function (req, res) {
                               borrado: 1
                             }).then(function (desgloseitemfactura) {
 
+                              return models.desgloseitemfactura.sum('impuesto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto1) {
+                                return models.desgloseitemfactura.sum('ivanorecuperable', { where: { iddetallefactura: detallefactura.id } }).then(function (monto2) {
+                                  return models.desgloseitemfactura.sum('montocosto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto3) {
+                                    return models.desgloseitemfactura.sum('ivacredito', { where: { iddetallefactura: detallefactura.id } }).then(function (monto4) {
+                                      logger.debug("monto1  : " + monto1);
+                                      logger.debug("monto2  : " + monto2);
+                                      logger.debug("monto3  : " + monto3);
+                                      logger.debug("monto4  : " + monto4);
+                                      return models.detallefactura.update({
+                                        ivanorecuperable: monto1,
+                                        impuesto: monto2,
+                                        montocosto: monto3,
+                                        ivacredito: monto4
+                                      }, {
+                                          where: {
+                                            id: detallefactura.id
+                                          }
+                                        }).then(function (detf) {
+
+                                          return models.factura.find({
+                                            where: { id: idfactura }
+                                          }).then(function (fact) {
+                                            logger.debug("fact.ivanorecuperable : " + fact.ivanorecuperable)
+                                            logger.debug("fact.montocosto : " + fact.montocosto)
+                                            logger.debug("fact.ivacredito : " + fact.ivacredito)
+                                            return models.factura.update({
+                                              ivanorecuperable: fact.ivanorecuperable + monto2,
+                                              montocosto: fact.montocosto + monto3,
+                                              ivacredito: fact.ivacredito + monto4
+                                            }, {
+                                                where: {
+                                                  id: idfactura
+                                                }
+                                              }).then(function (f) {
+
+
+                                              }).catch(function (err) {
+                                                logger.error(err)
+                                                res.json({ message: err, success: false });
+                                              });
+
+                                          }).catch(function (err) {
+                                            logger.error(err)
+                                            res.json({ message: err, success: false });
+                                          });
+
+
+                                        }).catch(function (err) {
+                                          logger.error(err)
+                                          res.json({ message: err, success: false });
+                                        });
+
+                                    })
+                                  })
+                                })
+                              })
+
+
                             }).catch(function (err) {
                               logger.error(err)
                               res.json({ message: err, success: false });
@@ -425,6 +566,7 @@ exports.archivo = function (req, res) {
             processZipEntries(req, res, zipEntries, zipFolderName, i + 1, idcarga);
 
           }).catch(function (err) {
+            logger.debug("fallo")
             logger.error(err)
             res.json({ message: err, success: false });
           });
@@ -498,9 +640,32 @@ exports.archivo = function (req, res) {
 
           awaitId.then(function (idcargadte) {
 
-            processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte);
+            try {
 
-            res.json({ message: "archivo cargado", success: true });
+              models.cargadte.update({
+                horafin: new Date(),
+                archivo: filename,
+                estado: "CARGADO"
+              }, {
+                  where: {
+                    id: idcargadte
+                  }
+                }).then(function (cargadte) {
+
+                }).catch(function (err) {
+                  logger.error(err)
+                  res.json({ message: err, success: false });
+                });
+
+              processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte);
+
+              res.json({ message: "archivo cargado", success: true });
+
+            }
+            catch (err) {
+              logger.error(err)
+              res.json({ message: err, success: false });
+            }
 
           }).catch(function (err) {
             logger.error(err)
@@ -508,6 +673,7 @@ exports.archivo = function (req, res) {
           });
 
         } else {
+
           res.json({ message: "El archivo no es ZIP", success: false });
         }
 
