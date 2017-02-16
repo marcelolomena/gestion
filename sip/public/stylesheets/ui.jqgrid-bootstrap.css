@@ -543,7 +543,7 @@ div.tablediv > .table-bordered {
 	display: inline-block;
 }
 .EditTable td textarea { 
-	width:auto; 
+	width: auto;
 	height:auto;
 }
 .EditTable .FormData td { 

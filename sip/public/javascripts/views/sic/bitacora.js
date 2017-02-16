@@ -15,25 +15,31 @@ var gridBitacora = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'tabla', 'idregistro', 'accion', 'dataold', 'idusuario', 'fecha'],
+            colNames: ['id', 'Tabla', 'Registro', 'Acción', 'Datos', 'ID Usuario', 'Nombre Responsable', 'Apellido Responsable','Fecha'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
-                { name: 'tabla', index: 'tabla', label: 'Tabla', width: 150, editable: true, search: true,editoptions: { size: 10 } },
+                { name: 'tabla', index: 'tabla', width: 150, editable: true, search: true,editoptions: { size: 10 } },
                 { name: 'idregistro', index: 'idregistro', label: 'Registro', width: 100, editable: true, editoptions: { size: 10 } },
                 { name: 'accion', index: 'accion', width: 100, editable: true, editoptions: { size: 10 } },
                 { name: 'dataold', index: 'accion', width: 700, editable: true, editoptions: { size: 10 } },
-                { name: 'idusuario', label: '', width: 50, editable: true, editoptions: { size: 10 } },
-
+                { name: 'idusuario', label: '', width: 100, editable: true, editoptions: { size: 10 } },
+                { name: 'user.first_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
+                { name: 'user.last_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
                 {
-                    label: 'Fecha', name: 'fecha',
-                    width: 150, align: 'center', search: true, editable: true, hidden: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+                    name: 'fecha', width: 100, align: 'left', search: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    editable: true, editrules: { required: true },
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datepicker({
                                 language: 'es',
-                                format: 'yyyy-mm-dd',
-                                autoclose: true
+                                format: 'dd-mm-yyyy',
+                                autoclose: true,
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        $gridTab[0].triggerToolbar();
+                                    }, 100);
+                                }
                             });
                         },
                         sopt: ["eq", "le", "ge"]
@@ -41,10 +47,10 @@ var gridBitacora = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                            $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                         }
-                    }
+                    },
                 },
             ],
             rowNum: 10,
