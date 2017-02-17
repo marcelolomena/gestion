@@ -16,20 +16,24 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idprefactura: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'prefactura',
-        key: 'id'
-      }
-    },
     glosa: {
       type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    idfactura: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'factura',
+        key: 'id'
+      }
+    },
+    archivo: {
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {

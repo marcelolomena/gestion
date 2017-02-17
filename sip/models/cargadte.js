@@ -39,14 +39,6 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    idfactura: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'factura',
-        key: 'id'
-      }
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'cargadte'

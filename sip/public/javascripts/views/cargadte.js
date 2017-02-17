@@ -4,7 +4,7 @@ $(document).ready(function () {
     var $grid = $("#grid");
 
     var modelcargas = [
-        { label: 'id', name: 'id', key: true, hidden: true, jsonmap: "factura.id" },
+        { label: 'id', name: 'id', key: true, hidden: true/*, jsonmap: "factura.id"*/ },
         {
             label: 'Fecha Carga', name: 'horainicio', hidden: false,
             search: false, editable: false, width: 50, align: 'left',
@@ -15,36 +15,6 @@ $(document).ready(function () {
             label: 'Estado', name: 'estado', hidden: false,
             search: false, editable: false, width: 50, align: 'left'
         },
-        /*        
-                {
-                    label: 'Número Factura', name: 'numero', width: 50, align: 'left', search: false, editable: false, hidden: false,
-                    jsonmap: "factura.numero"
-                },
-                {
-                    label: 'Proveedor', name: 'razonsocial', width: 200, align: 'left', search: true, sortable: false, editable: false,
-                    jsonmap: "factura.proveedor.razonsocial"
-                },
-                {
-                    label: 'Fecha Factura', name: 'fecha', hidden: false,
-                    search: false, editable: false, width: 50, align: 'left',
-                    formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "d/m/Y" }, jsonmap: "factura.fecha"
-                },
-                {
-                    label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: false,
-                    formatter: 'number', formatoptions: { decimalPlaces: 0 }, jsonmap: "factura.montototal"
-                },
-                { label: 'horafin', name: 'horafin', hidden: true, search: false, editable: false, },
-                {
-                    name: 'Tiempo Carga', index: 'tiempo', width: 60, align: 'right', hidden: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        var horainicio = rowObject.horainicio,
-                            horafin = rowObject.horafin;
-                        console.log("horainicio" + horainicio)
-                        console.log("horafin" + horafin)
-                        return 100;
-                    }
-                },
-        */
         {
             label: 'Archivo',
             name: 'fileToUpload',
@@ -159,98 +129,28 @@ function showChildGrid(parentRowID, parentRowKey) {
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     var modelDetalle = [
-        { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'id', name: 'id', key: true, hidden: true, jsonmap: "factura.id" },
         {
-            label: 'Número Factura', name: 'numero', width: 50, align: 'left', search: false, editable: false, hidden: false
+            label: 'DTE', name: 'archivo', width: 50, align: 'left', search: false, editable: false, hidden: false
+        },
+        {
+            label: 'Número Factura', name: 'numero', width: 50, align: 'left', search: false, editable: false, hidden: false, jsonmap: "factura.numero"
         },
         {
             label: 'Proveedor', name: 'razonsocial', width: 200, align: 'left', search: true, sortable: false, editable: false,
-            jsonmap: "proveedor.razonsocial"
+            jsonmap: "factura.proveedor.razonsocial"
         },
         {
             label: 'Fecha Factura', name: 'fecha', hidden: false,
             search: false, editable: false, width: 50, align: 'left',
-            formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "d/m/Y" }
+            formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "d/m/Y" }, jsonmap: "factura.fecha"
         },
         {
             label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            formatter: 'number', formatoptions: { decimalPlaces: 0 }, jsonmap: "factura.montototal"
         }
     ];
 
-    /*
-        var modelDetalle = [
-            { label: 'id', name: 'id', key: true, hidden: true },
-            {
-                label: 'ID Prefactura',
-                name: 'idprefactura',
-                width: 50,
-                hidden: true,
-                editable: false
-            },
-            {
-                label: 'ID Facturación',
-                name: 'idfacturacion',
-                width: 50,
-                align: 'left',
-                search: false,
-                editable: false,
-                hidden: false,
-            },
-            {
-                label: 'Glosa Servicio',
-                name: 'glosaservicio',
-                width: 200,
-                align: 'left',
-                search: false,
-                editable: false,
-                hidden: false
-            },
-            {
-                label: 'Monto Neto',
-                name: 'montoneto',
-                width: 100,
-                align: 'right',
-                search: false,
-                editable: false,
-                hidden: false,
-                formatter: 'number',
-                formatoptions: { decimalPlaces: 2 }
-            },
-            {
-                label: 'Impuesto',
-                name: 'impuesto',
-                width: 100,
-                align: 'right',
-                search: false,
-                editable: false,
-                hidden: false,
-                formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }
-            },
-            {
-                label: 'Cantidad',
-                name: 'cantidad',
-                width: 50,
-                align: 'right',
-                search: false,
-                hidden: false,
-                formatter: 'number',
-                editable: false
-            },
-            {
-                label: 'Total',
-                name: 'montototal',
-                width: 100,
-                align: 'right',
-                search: false,
-                hidden: false,
-                editable: false,
-                formatter: 'number',
-                formatoptions: { decimalPlaces: 0 }
-            }
-        ];
-    */
     $("#" + childGridID).jqGrid({
         url: '/cargadte/detalle/' + parentRowKey,
         mtype: "GET",
@@ -304,7 +204,7 @@ function showChildGrid(parentRowID, parentRowKey) {
                 }
             }
         }
-    });    
+    });
 
 
     $("#" + childGridPagerID).css("width", "");
@@ -415,12 +315,10 @@ function showThirdGrid(parentRowID, parentRowKey) {
         pager: "#" + childGridPagerID
     });
 
-
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     }
     );
-
 
     $("#" + childGridPagerID).css("width", "");
 
