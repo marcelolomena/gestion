@@ -497,18 +497,6 @@ exports.clasecriticidad = function (req, res) {
     });
 }
 
-exports.segmentoproveedor = function (req, res) {
-
-    models.segmentoproveedor.findAll({
-
-    }).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
-    }).catch(function (err) {
-        logger.error(err);
-        res.json({ error: 1 });
-    });
-}
 
 exports.desgloseaction = function (req, res) {
     var action = req.body.oper;

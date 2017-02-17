@@ -20,6 +20,7 @@ exports.action = function (req, res) {
         case "add":
             return res.json({ id: req.body.idsolicitudcotizacion, success: true });
             break;
+            
 
 
         case "del":

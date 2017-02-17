@@ -22,6 +22,9 @@ module.exports = function (passport) {
     router.route('/cargadte/detalle/:id')
         .get(isAuthenticated, cargadteController.detalle);
 
+    router.route('/cargadte/items/:id')
+        .get(isAuthenticated, cargadteController.items);        
+
     router.route('/cargadte/download/:id')
         .get(isAuthenticated, cargadteController.excel);
 

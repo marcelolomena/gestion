@@ -196,6 +196,7 @@ function showDocumentos(cui, periodo, proveedor) {
                 width: 60,
                 align: 'center',
                 search: false,
+                hidden: true,
                 formatter: cancelBtn
             },
             {
@@ -490,7 +491,7 @@ function showDocumentos(cui, periodo, proveedor) {
             var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
                 $.each(data, function (i, item) {
-
+                    console.log("ROL:"+item.glosarol)
                     if (item.glosarol === "Administrador DIVOT") {
                         $grid.jqGrid("showCol", "Anular")
                     }
