@@ -16,8 +16,12 @@ var gridCriterios = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-half'><span style='color: red'>*</span>% de Ponderación del Servicio{porcentajeservicio}</div>";
+        tmplServ += "<div class='column-full'><span style='color: red'>*</span>% de Ponderación del Servicio{porcentajeservicio}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
         tmplServ += "<div class='column-half'><span style='color: red'>*</span>% de Ponderación Economica{porcentajeeconomico}</div>";
+        tmplServ += "<div class='column-half'><span style='color: red'>*</span>% de Ponderación Técnica{porcentajetecnico}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
@@ -32,7 +36,7 @@ var gridCriterios = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Porcentaje Servicio', 'Porcentaje Económico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
+            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Porcentaje Servicio', 'Porcentaje Económico', 'Porcentaje Técnico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 {
@@ -84,7 +88,17 @@ var gridCriterios = {
                     editoptions: {
                         dataInit: function (el) {
                             $(el).mask('000', { reverse: true, placeholder: "___" });
-                        }
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                var porcentajeeconomico = $(this).val();
+                                console.log("el % eco: " + porcentajeeconomico)
+                                var porcentajetecnico = 100 - parseInt(porcentajeeconomico)
+                                console.log("el % tec: " + porcentajetecnico)
+                                $("input#porcentajetecnico").val(porcentajetecnico);
+
+                            }
+                        }]
                     },
                     formatter: function (cellvalue, options, rowObject) {
                         var dato = '';
@@ -93,6 +107,25 @@ var gridCriterios = {
                         return dato;
                     },
                     search: false, editable: true, hidden: false,
+                    editrules: { edithidden: false, required: true },
+
+
+                },
+                {
+                    name: 'porcentajetecnico', index: 'porcentajetecnico', width: 150, align: 'left',
+                    formatoptions: { decimalPlaces: 0 },
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).mask('000', { reverse: true, placeholder: "___" });
+                        }
+                    },
+                    formatter: function (cellvalue, options, rowObject) {
+                        var dato = '';
+                        var val = rowObject.porcentajeeconomico;
+                        dato = val * 100;
+                        return dato;
+                    },
+                    search: false, editable: true, hidden: true,
                     editrules: { edithidden: false, required: true },
                 },
                 {
@@ -156,6 +189,11 @@ var gridCriterios = {
                     $('input#notacriticidad', form).attr('readonly', 'readonly');
                     setTimeout(function () {
                         $("#idclasecriticidad", form).attr('disabled', 'disabled');
+                        var porcentajeeconomico = $("input#porcentajeeconomico").val();
+                        console.log("el % eco: " + porcentajeeconomico)
+                        var porcentajetecnico = 100 - parseInt(porcentajeeconomico)
+                        console.log("el % tec: " + porcentajetecnico)
+                        $("input#porcentajetecnico").val(porcentajetecnico);
                     }, 450);
 
 
