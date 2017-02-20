@@ -128,12 +128,6 @@ exports.list = function (req, res) {
           limit: parseInt(rows),
           order: 'horainicio desc',
           where: data,
-          /*
-          include: [
-            {
-              model: models.factura,
-            }]
-            */
         }).then(function (cargadte) {
           return res.json({ records: records, total: total, page: page, rows: cargadte });
         }).catch(function (err) {
