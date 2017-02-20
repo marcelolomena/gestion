@@ -17,30 +17,27 @@ exports.action = function (req, res) {
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 idrol: req.body.idrol,
                 idresponsable: req.body.idresponsable,
-                //fechamastardia: fechamastardia,
-                //descripciondeberesproceso: req.body.descripciondeberesproceso,
                 borrado: 1
-            }).then(function (serviciosrequeridos) {
+            }).then(function (responsables) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
-                    'responsablesolicitud',
-                    serviciosrequeridos.id,
+                    'responsables',
+                    responsables.id,
                     'insert',
                     req.session.passport.user,
                     new Date(),
-                    models.serviciosrequeridos,
+                    models.responsables,
                     function (err, data) {
-                        if (data) {
-                            logger.debug("->>> " + data)
-
+                        if (!err) {
+                            return res.json({ id: responsables.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
-                            logger.error("->>> " + err)
+                            logger.error(err)
+                            return res.json({ id: responsables.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
                         }
                     });
-                return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                return res.json({ id: 0, message: err.message, success: false });
+                res.json({ message: err.message, success: false });
             });
             break;
         case "edit":
@@ -48,44 +45,37 @@ exports.action = function (req, res) {
 
             break;
         case "del":
-
-
-            bitacora.registrar(
-                req.body.idsolicitudcotizacion,
-                'responsablesolicitud',
-                req.body.id, 'delete',
-                req.session.passport.user,
-                new Date(),
-                models.responsablesolicitud, function (err, data) {
-                    if (data) {
-
-                        models.responsablesolicitud.destroy({
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (rowDeleted) {
-                            // rowDeleted will return number of rows deleted
-
-                            if (rowDeleted === 1) {
-
-
-                                logger.debug('Deleted successfully');
-                            }
-                            return res.json({ error: 0, glosa: '' });
-
-                        }).catch(function (err) {
+            models.responsablesolicitud.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (responsables) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'responsables',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.responsablesolicitud,
+                    function (err, data) {
+                        if (!err) {
+                            models.responsablesolicitud.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
                             logger.error(err)
-                            return res.json({ id: 0, message: err.message, success: false });
-                        });
-                    } else {
-                        logger.error("->>> " + err)
-                    }
-
-                });
-
-
-
-
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+            });
             break;
     }
 }
@@ -197,7 +187,7 @@ exports.tecnicosresponsables = function (req, res) {
             console.log("-----------AQUI VIENE")
             console.dir(periodo)
 
-            var sql = "select distinct g.uid, f.nombre, f.apellido, f.numRut from sic.solicitudcotizacion a join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.RecursosHumanos f on e.emailTrab = f.emailJefe join dbo.art_user g on f.emailTrab = g.email where a.id = "+id+" and d.periodo = "+periodo+" and e.periodo = "+periodo+" and f.periodo = "+periodo+"  UNION (select distinct g.uid, e.nombre, e.apellido, e.numRut from sic.solicitudcotizacion a  join  sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.art_user g on e.emailTrab = g.email where a.id = "+id+" and d.periodo = "+periodo+" and e.periodo = "+periodo+") UNION (select distinct g.uid, d.nombre, d.apellido, d.numRut from sic.solicitudcotizacion a  join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.art_user g on d.emailTrab = g.email where a.id   ="+id+" and d.periodo = "+periodo+") UNION (select distinct c.uid, c.first_name, c.last_name, '' from sic.solicitudcotizacion a  join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid where a.id = "+id+") order by  f.nombre, f.apellido, g.uid,f.numRut"; 
+            var sql = "select distinct g.uid, f.nombre, f.apellido, f.numRut from sic.solicitudcotizacion a join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.RecursosHumanos f on e.emailTrab = f.emailJefe join dbo.art_user g on f.emailTrab = g.email where a.id = " + id + " and d.periodo = " + periodo + " and e.periodo = " + periodo + " and f.periodo = " + periodo + "  UNION (select distinct g.uid, e.nombre, e.apellido, e.numRut from sic.solicitudcotizacion a  join  sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.art_user g on e.emailTrab = g.email where a.id = " + id + " and d.periodo = " + periodo + " and e.periodo = " + periodo + ") UNION (select distinct g.uid, d.nombre, d.apellido, d.numRut from sic.solicitudcotizacion a  join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.art_user g on d.emailTrab = g.email where a.id   =" + id + " and d.periodo = " + periodo + ") UNION (select distinct c.uid, c.first_name, c.last_name, '' from sic.solicitudcotizacion a  join sip.estructuracui b on a.idcui = b.id join dbo.art_user c on b.uid = c.uid where a.id = " + id + ") order by  f.nombre, f.apellido, g.uid,f.numRut";
             sequelize.query(sql)
                 .spread(function (rows) {
                     return res.json(rows);

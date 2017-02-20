@@ -13,47 +13,42 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            
+
             break;
         case "edit":
-
             bitacora.registrar(
                 req.body.idsolicitudcotizacion,
-                'serviciosrequeridos',
+                'criterios',
                 req.body.id,
                 'update',
                 req.session.passport.user,
                 new Date(),
-                models.serviciosrequeridos, function (err, data) {
-                    if (data) {
-                        logger.debug("->>> " + data)
-
+                models.serviciosrequeridos,
+                function (err, data) {
+                    if (!err) {
                         models.serviciosrequeridos.update({
                             idservicio: req.body.idservicio,
                             glosaservicio: req.body.glosaservicio,
-                            porcentajeservicio: (req.body.porcentajeservicio/100),
-                            porcentajeeconomico: (req.body.porcentajeeconomico/100),
+                            porcentajeservicio: (req.body.porcentajeservicio / 100),
+                            porcentajeeconomico: (req.body.porcentajeeconomico / 100),
                             claseevaluaciontecnica: req.body.claseevaluaciontecnica
-                            
                         }, {
                                 where: {
                                     id: req.body.id
                                 }
                             }).then(function (serviciosrequeridos) {
-
-                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ id: 0, message: err.message, success: false });
+                                res.json({ message: err.message, success: false });
                             });
                     } else {
-                        logger.error("->>> " + err)
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
                     }
-
                 });
-
-
             break;
+
         case "del":
 
 
@@ -136,7 +131,7 @@ exports.list = function (req, res) {
             models.serviciosrequeridos.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
             models.serviciosrequeridos.belongsTo(models.documentoscotizacion, { foreignKey: 'iddoctotecnico' });
-            models.serviciosrequeridos.belongsTo(models.claseevaluaciontecnica, { as: 'claseevaluacion' , foreignKey: 'claseevaluaciontecnica' });
+            models.serviciosrequeridos.belongsTo(models.claseevaluaciontecnica, { as: 'claseevaluacion', foreignKey: 'claseevaluaciontecnica' });
             models.serviciosrequeridos.belongsTo(models.segmentoproveedor, { foreignKey: 'idsegmento' });
             models.serviciosrequeridos.count({
                 where: {
@@ -462,7 +457,7 @@ exports.proveedoressugeridosaction = function (req, res) {
                 }
             }).then(function (rowDeleted) {
 
-                res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code:0 });
+                res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code: 0 });
 
             }).catch(function (err) {
                 logger.error(err)

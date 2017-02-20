@@ -97,7 +97,7 @@ exports.excel = function (req, res) {
 
     var result = nodeExcel.execute(conf);
     res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-    res.setHeader("Content-Disposition", "attachment;filename=" + "desglose.xlsx");
+    res.setHeader("Content-Disposition", "attachment;filename=" + "asiento_" + Math.floor(Date.now()) + ".xlsx");
     res.end(result, 'binary');
 
   }).catch(function (e) {
@@ -294,35 +294,35 @@ exports.archivo = function (req, res) {
           if (_MntExe === MntTotal)
             _MntNeto = MntTotal
 
-          models.proveedor.findAll({
-            attributes: ['id'],
-            where: { numrut: RUTEmisor.split("-")[0] }
-          }).then(function (proveedor) {
+          return models.sequelize.transaction({ autocommit: true }, function (t) {
+            return models.proveedor.findOne({
+              attributes: ['id'],
+              where: { numrut: RUTEmisor.split("-")[0] }
+            }).then(function (proveedor) {
 
-            models.factura.create({
-              numero: Folio,
-              idproveedor: proveedor[0].id,
-              fecha: FchEmis,
-              montoneto: _MntNeto,
-              impuesto: _IVA,
-              montototal: MntTotal,
-              ivanorecuperable: 0,
-              montocosto: 0,
-              ivacredito: 0,
-              borrado: 1
-            }).then(function (factura) {
-
-              models.procesodte.create({
-                idcarga: idcargadte,
-                archivo: zipEntryName,
-                glosa: "EXITO",
-                idfactura: factura.id,
+              return models.factura.create({
+                numero: Folio,
+                idproveedor: proveedor.id,
+                fecha: FchEmis,
+                montoneto: _MntNeto,
+                impuesto: _IVA,
+                montototal: MntTotal,
+                ivanorecuperable: 0,
+                montocosto: 0,
+                ivacredito: 0,
                 borrado: 1
-              }).then(function (procesodte) {
-                resolve(factura.id);
-              }).catch(function (err) {
-                logger.error(err)
-                return reject(err);
+              }, { transaction: t }).then(function (factura) {
+
+                return models.procesodte.create({
+                  idcarga: idcargadte,
+                  archivo: zipEntryName,
+                  glosa: "EXITO",
+                  idfactura: factura.id,
+                  borrado: 1
+                }, { transaction: t }).then(function (procesodte) {
+                  return procesodte.idfactura
+                });
+
               });
 
             }).catch(function (err) {
@@ -330,9 +330,11 @@ exports.archivo = function (req, res) {
               return reject(err);
             });
 
+          }).then(function (result) {
+            resolve(result);
           }).catch(function (err) {
-            logger.error(err)
-            return reject(err);
+            logger.error(err);
+            reject(err);
           });
 
         } catch (err) {
@@ -354,17 +356,200 @@ exports.archivo = function (req, res) {
               results.push(match[0]);
 
             logger.debug("IDPREFACTURADTE : " + results[0]);
-            models.solicitudaprobacion.findAll({
-              attributes: ['id', 'periodo'],
-              where: { idprefactura: results[0] }
-            }).then(function (solicitudaprobacion) {
 
-              logger.debug("IDSOL : " + solicitudaprobacion[0].id);
+            if (results[0] != undefined) {
+
+              models.solicitudaprobacion.belongsTo(models.prefactura, { foreignKey: 'idprefactura' });
+              models.solicitudaprobacion.findOne({
+                attributes: ['id', 'periodo'],
+                where: { idprefactura: results[0] },
+                include: [
+                  {
+                    attributes: [['impuesto', 'impuesto']],
+                    model: models.prefactura
+                  }
+                ]
+              }).then(function (solicitudaprobacion) {
+                logger.debug("IDSOL : " + solicitudaprobacion.id);
+                logger.debug("PERIODO:" + solicitudaprobacion.periodo)
+                logger.debug("IMPUESTO:" + solicitudaprobacion.prefactura.dataValues.impuesto)
+
+                var periodo = solicitudaprobacion.periodo
+                var impuesto = solicitudaprobacion.prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion.prefactura.dataValues.impuesto : 0
+
+                models.detallefactura.create({
+                  idfactura: idfactura,
+                  idprefactura: results[0],
+                  idfacturacion: solicitudaprobacion.id,
+                  glosaservicio: NmbItem,
+                  cantidad: QtyItem,
+                  montonetoorigen: MontoItem,
+                  montoneto: MontoItem,
+                  montototal: MontoItem,
+                  impuesto: impuesto,
+                  borrado: 1
+                }).then(function (detallefactura) {
+
+                  models.desglosecontable.findOne({
+                    attributes: ['idcui', 'idcuentacontable', 'porcentaje'],
+                    where: { idsolicitud: solicitudaprobacion.id }
+                  }).then(function (desglosecontable) {
+                    logger.debug("IDCUI  : " + desglosecontable.idcui);
+                    logger.debug("IDCUENTACONTABLE  : " + desglosecontable.idcuentacontable);
+                    logger.debug("PORCENTAJE  : " + desglosecontable.porcentaje);
+
+                    models.factoriva.findOne({
+                      attributes: ['factorrecuperacion'],
+                      where: { periodo: periodo }
+                    }).then(function (factoriva) {
+
+                      logger.debug("factorrecuperacion  : " + factoriva.factorrecuperacion);
+                      var factorrecuperacion = factoriva.factorrecuperacion
+
+                      models.desgloseitemfactura.create({
+                        iddetallefactura: detallefactura.id,
+                        idcui: desglosecontable.idcui,
+                        idcuentacontable: desglosecontable.idcuentacontable,
+                        porcentaje: desglosecontable.porcentaje,
+                        montoneto: (desglosecontable.porcentaje * MontoItem) / 100,
+                        impuesto: (desglosecontable.porcentaje * impuesto) / 100,
+                        ivanorecuperable: (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
+                        montocosto: (desglosecontable.porcentaje * MontoItem / 100) + (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
+                        ivacredito: (desglosecontable.porcentaje * impuesto / 100) * (1 - factorrecuperacion),
+                        montototal: MontoItem * desglosecontable.porcentaje / 100 + impuesto * desglosecontable.porcentaje / 100,
+                        borrado: 1
+                      }).then(function (desgloseitemfactura) {
+
+                        models.desgloseitemfactura.sum('impuesto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto1) {
+                          models.desgloseitemfactura.sum('ivanorecuperable', { where: { iddetallefactura: detallefactura.id } }).then(function (monto2) {
+                            models.desgloseitemfactura.sum('montocosto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto3) {
+                              models.desgloseitemfactura.sum('ivacredito', { where: { iddetallefactura: detallefactura.id } }).then(function (monto4) {
+                                logger.debug("monto1  : " + monto1);
+                                logger.debug("monto2  : " + monto2);
+                                logger.debug("monto3  : " + monto3);
+                                logger.debug("monto4  : " + monto4);
+                                models.detallefactura.update({
+                                  ivanorecuperable: monto1,
+                                  impuesto: monto2,
+                                  montocosto: monto3,
+                                  ivacredito: monto4
+                                }, {
+                                    where: {
+                                      id: detallefactura.id
+                                    }
+                                  }).then(function (detf) {
+
+                                    models.factura.findOne({
+                                      where: { id: idfactura }
+                                    }).then(function (fact) {
+                                      logger.debug("fact.ivanorecuperable : " + fact.ivanorecuperable)
+                                      logger.debug("fact.montocosto : " + fact.montocosto)
+                                      logger.debug("fact.ivacredito : " + fact.ivacredito)
+                                      models.factura.update({
+                                        ivanorecuperable: fact.ivanorecuperable + monto2,
+                                        montocosto: fact.montocosto + monto3,
+                                        ivacredito: fact.ivacredito + monto4
+                                      }, {
+                                          where: {
+                                            id: idfactura
+                                          }
+                                        }).then(function (f) {
+                                          return resolve(detallefactura.id);
+                                        }).catch(function (err) {
+                                          logger.error(err)
+                                          return reject(err);
+                                        });
+
+                                    }).catch(function (err) {
+                                      logger.error(err)
+                                      return reject(err);
+                                    });
+
+                                  }).catch(function (err) {
+                                    logger.error(err)
+                                    return reject(err);
+                                  });
+
+                              })
+                            })
+                          })
+                        })
+
+                      }).catch(function (err) {
+                        logger.error(err)
+                        return reject(err);
+                      });
+
+                    }).catch(function (err) {
+                      logger.error(err)
+                      return reject(err);
+                    });
+
+                  }).catch(function (err) {
+                    logger.error(err)
+                    return reject(err);
+                  });
+
+                }).catch(function (err) {
+                  logger.error(err)
+                  return reject(err);
+                });
+
+              }).catch(function (err) {
+                logger.error(err)
+                return reject(err);
+              });
+
+            } else {
+              logger.debug("no matching")
+            }
+
+          } else {
+
+            models.detallefactura.create({
+              idfactura: idfactura,
+              idprefactura: null,
+              idfacturacion: null,
+              glosaservicio: NmbItem,
+              cantidad: QtyItem,
+              montonetoorigen: MontoItem,
+              montoneto: MontoItem,
+              montototal: 0,
+              impuesto: 0,
+              borrado: 1
+            }).then(function (f) {
+              resolve(f.id);
+            }).catch(function (err) {
+              logger.error(err)
+              return reject(err);
+            });
+          }
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    var billDetailsT = function (idfactura, NmbItem, MontoItem, QtyItem) {
+
+      return new Promise(function (resolve, reject) {
+        try {
+          logger.debug("GRABANDO : " + NmbItem)
+          var ini = NmbItem.toUpperCase().indexOf("PF")
+
+          return models.sequelize.transaction({ autocommit: true }, function (t) {
+
+            if (ini > -1) {
+              var r = /\d+/g, match, results = [];
+              while ((match = r.exec(NmbItem.substring(ini + 2))) != null)
+                results.push(match[0]);
+
+              logger.debug("IDPREFACTURADTE : " + results[0]);
 
               if (results[0] != undefined) {
 
                 models.solicitudaprobacion.belongsTo(models.prefactura, { foreignKey: 'idprefactura' });
-                models.solicitudaprobacion.findAll({
+                return models.solicitudaprobacion.findOne({
                   attributes: ['id', 'periodo'],
                   where: { idprefactura: results[0] },
                   include: [
@@ -374,109 +559,115 @@ exports.archivo = function (req, res) {
                     }
                   ]
                 }).then(function (solicitudaprobacion) {
-                  logger.debug("PERIODO:" + solicitudaprobacion[0].periodo)
-                  logger.debug("IMPUESTO:" + solicitudaprobacion[0].prefactura.dataValues.impuesto)
+                  logger.debug("IDSOL : " + solicitudaprobacion.id);
+                  logger.debug("PERIODO:" + solicitudaprobacion.periodo)
+                  logger.debug("IMPUESTO:" + solicitudaprobacion.prefactura.dataValues.impuesto)
 
-                  var periodo = solicitudaprobacion[0].periodo
-                  var impuesto = solicitudaprobacion[0].prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion[0].prefactura.dataValues.impuesto : 0
+                  var periodo = solicitudaprobacion.periodo
+                  var impuesto = solicitudaprobacion.prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion.prefactura.dataValues.impuesto : 0
 
-                  models.detallefactura.create({
+                  return models.detallefactura.create({
                     idfactura: idfactura,
                     idprefactura: results[0],
-                    idfacturacion: solicitudaprobacion[0].id,
+                    idfacturacion: solicitudaprobacion.id,
                     glosaservicio: NmbItem,
                     cantidad: QtyItem,
                     montonetoorigen: MontoItem,
                     montoneto: MontoItem,
-                    montototal: impuesto,
+                    montototal: MontoItem,
                     impuesto: impuesto,
                     borrado: 1
-                  }).then(function (detallefactura) {
+                  }, { transaction: t }).then(function (detallefactura) {
 
-                    models.desglosecontable.findAll({
+                    return models.desglosecontable.findOne({
                       attributes: ['idcui', 'idcuentacontable', 'porcentaje'],
-                      where: { idsolicitud: solicitudaprobacion[0].id }
+                      where: { idsolicitud: solicitudaprobacion.id }
                     }).then(function (desglosecontable) {
-                      logger.debug("IDCUI  : " + desglosecontable[0].idcui);
-                      logger.debug("IDCUENTACONTABLE  : " + desglosecontable[0].idcuentacontable);
-                      logger.debug("PORCENTAJE  : " + desglosecontable[0].porcentaje);
+                      logger.debug("IDCUI  : " + desglosecontable.idcui);
+                      logger.debug("IDCUENTACONTABLE  : " + desglosecontable.idcuentacontable);
+                      logger.debug("PORCENTAJE  : " + desglosecontable.porcentaje);
 
-                      models.factoriva.findAll({
+                      return models.factoriva.findOne({
                         attributes: ['factorrecuperacion'],
                         where: { periodo: periodo }
                       }).then(function (factoriva) {
 
-                        logger.debug("factorrecuperacion  : " + factoriva[0].factorrecuperacion);
-                        var factorrecuperacion = factoriva[0].factorrecuperacion
+                        logger.debug("factorrecuperacion  : " + factoriva.factorrecuperacion);
+                        var factorrecuperacion = factoriva.factorrecuperacion
 
-                        models.desgloseitemfactura.create({
+                        return models.desgloseitemfactura.create({
                           iddetallefactura: detallefactura.id,
-                          idcui: desglosecontable[0].idcui,
-                          idcuentacontable: desglosecontable[0].idcuentacontable,
-                          porcentaje: desglosecontable[0].porcentaje,
-                          montoneto: (desglosecontable[0].porcentaje * MontoItem) / 100,
-                          impuesto: (desglosecontable[0].porcentaje * impuesto) / 100,
-                          ivanorecuperable: (desglosecontable[0].porcentaje * impuesto / 100) * factorrecuperacion,
-                          montocosto: (desglosecontable[0].porcentaje * MontoItem / 100) + (desglosecontable[0].porcentaje * impuesto / 100) * factorrecuperacion,
-                          ivacredito: (desglosecontable[0].porcentaje * impuesto / 100) * (1 - factorrecuperacion),
-                          montototal: MontoItem * desglosecontable[0].porcentaje / 100 + impuesto * desglosecontable[0].porcentaje / 100,
+                          idcui: desglosecontable.idcui,
+                          idcuentacontable: desglosecontable.idcuentacontable,
+                          porcentaje: desglosecontable.porcentaje,
+                          montoneto: (desglosecontable.porcentaje * MontoItem) / 100,
+                          impuesto: (desglosecontable.porcentaje * impuesto) / 100,
+                          ivanorecuperable: (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
+                          montocosto: (desglosecontable.porcentaje * MontoItem / 100) + (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
+                          ivacredito: (desglosecontable.porcentaje * impuesto / 100) * (1 - factorrecuperacion),
+                          montototal: MontoItem * desglosecontable.porcentaje / 100 + impuesto * desglosecontable.porcentaje / 100,
                           borrado: 1
-                        }).then(function (desgloseitemfactura) {
+                        }, { transaction: t }).then(function (desgloseitemfactura) {
 
-                          models.desgloseitemfactura.sum('impuesto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto1) {
-                            models.desgloseitemfactura.sum('ivanorecuperable', { where: { iddetallefactura: detallefactura.id } }).then(function (monto2) {
-                              models.desgloseitemfactura.sum('montocosto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto3) {
-                                models.desgloseitemfactura.sum('ivacredito', { where: { iddetallefactura: detallefactura.id } }).then(function (monto4) {
-                                  logger.debug("monto1  : " + monto1);
-                                  logger.debug("monto2  : " + monto2);
-                                  logger.debug("monto3  : " + monto3);
-                                  logger.debug("monto4  : " + monto4);
-                                  models.detallefactura.update({
-                                    ivanorecuperable: monto1,
-                                    impuesto: monto2,
-                                    montocosto: monto3,
-                                    ivacredito: monto4
-                                  }, {
-                                      where: {
-                                        id: detallefactura.id
-                                      }
-                                    }).then(function (detf) {
+                          //models.desgloseitemfactura.sum('impuesto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto1) {
+                          //models.desgloseitemfactura.sum('ivanorecuperable', { where: { iddetallefactura: detallefactura.id } }).then(function (monto2) {
+                          //models.desgloseitemfactura.sum('montocosto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto3) {
+                          //models.desgloseitemfactura.sum('ivacredito', { where: { iddetallefactura: detallefactura.id } }).then(function (monto4) {
+                          var monto1 = 0
+                          var monto2 = 0
+                          var monto3 = 0
+                          var monto4 = 0
+                          logger.debug("monto1  : " + monto1);
+                          logger.debug("monto2  : " + monto2);
+                          logger.debug("monto3  : " + monto3);
+                          logger.debug("monto4  : " + monto4);
+                          return models.detallefactura.update({
+                            ivanorecuperable: monto1,
+                            impuesto: monto2,
+                            montocosto: monto3,
+                            ivacredito: monto4
+                          }, {
+                              where: {
+                                id: detallefactura.id
+                              }
+                            }).then(function (detf) {
 
-                                      models.factura.find({
-                                        where: { id: idfactura }
-                                      }).then(function (fact) {
-                                        logger.debug("fact.ivanorecuperable : " + fact.ivanorecuperable)
-                                        logger.debug("fact.montocosto : " + fact.montocosto)
-                                        logger.debug("fact.ivacredito : " + fact.ivacredito)
-                                        models.factura.update({
-                                          ivanorecuperable: fact.ivanorecuperable + monto2,
-                                          montocosto: fact.montocosto + monto3,
-                                          ivacredito: fact.ivacredito + monto4
-                                        }, {
-                                            where: {
-                                              id: idfactura
-                                            }
-                                          }).then(function (f) {
-                                            resolve(detallefactura.id);
-                                          }).catch(function (err) {
-                                            logger.error(err)
-                                            return reject(err);
-                                          });
+                              return models.factura.find({
+                                where: { id: idfactura }
+                              }).then(function (fact) {
+                                logger.debug("fact.ivanorecuperable : " + fact.ivanorecuperable)
+                                logger.debug("fact.montocosto : " + fact.montocosto)
+                                logger.debug("fact.ivacredito : " + fact.ivacredito)
+                                return models.factura.update({
+                                  ivanorecuperable: fact.ivanorecuperable + monto2,
+                                  montocosto: fact.montocosto + monto3,
+                                  ivacredito: fact.ivacredito + monto4
+                                }, {
+                                    where: {
+                                      id: idfactura
+                                    }
+                                  }).then(function (ff) {
+                                    logger.debug("que paso " + detallefactura.id)
+                                    return detallefactura.id;
+                                  }).catch(function (err) {
+                                    logger.error(err)
+                                    return reject(err);
+                                  });
 
-                                      }).catch(function (err) {
-                                        logger.error(err)
-                                        return reject(err);
-                                      });
+                              }).catch(function (err) {
+                                logger.error(err)
+                                return reject(err);
+                              });
 
-                                    }).catch(function (err) {
-                                      logger.error(err)
-                                      return reject(err);
-                                    });
+                            }).catch(function (err) {
+                              logger.error(err)
+                              return reject(err);
+                            });
 
-                                })
-                              })
-                            })
-                          })
+                          //})
+                          //})
+                          //})
+                          //})
 
                         }).catch(function (err) {
                           logger.error(err)
@@ -507,36 +698,41 @@ exports.archivo = function (req, res) {
                 logger.debug("no matching")
               }
 
-            }).catch(function (err) {
-              logger.error(err)
-              return reject(err);
-            });
+            } else {
 
-          } else {
+              return models.detallefactura.create({
+                idfactura: idfactura,
+                idprefactura: null,
+                idfacturacion: null,
+                glosaservicio: NmbItem,
+                cantidad: QtyItem,
+                montonetoorigen: MontoItem,
+                montoneto: MontoItem,
+                montototal: 0,
+                impuesto: 0,
+                borrado: 1
+              }, { transaction: t }).then(function (f) {
+                return f.id;
+              }).catch(function (err) {
+                logger.error(err)
+                return reject(err);
+              });
+            }
 
-            models.detallefactura.create({
-              idfactura: idfactura,
-              idprefactura: null,
-              idfacturacion: null,
-              glosaservicio: NmbItem,
-              cantidad: QtyItem,
-              montonetoorigen: MontoItem,
-              montoneto: MontoItem,
-              montototal: 0,
-              impuesto: 0,
-              borrado: 1
-            }).then(function (f) {
-              resolve(f.id);
-            }).catch(function (err) {
-              logger.error(err)
-              return reject(err);
-            });
-          }
+          }).then(function (result) {
+            logger.debug("NUMERO de FALSE = " + result)
+            resolve(result);
+          }).catch(function (err) {
+            logger.error(err);
+            reject(err);
+          });
+
         } catch (err) {
           reject(err);
         }
       });
     }
+
 
     var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga) {
 
