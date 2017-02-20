@@ -73,22 +73,42 @@ exports.action = function (req, res) {
             break;
 
         case "del":
-            models.preguntaforo.destroy({
+            models.preguntaforo.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                return res.json({ success: true, glosa: 'Deleted successfully' });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({ success: false, glosa: err.message });
+            }).then(function (preguntaforo) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'foro',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.preguntaforo,
+                    function (err, data) {
+                        if (!err) {
+                            models.preguntaforo.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
             });
             break;
     }
 }
+
+
 
 exports.actionrespuesta = function (req, res) {
     var action = req.body.oper;

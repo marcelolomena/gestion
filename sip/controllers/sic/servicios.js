@@ -506,25 +506,34 @@ exports.desgloseaction = function (req, res) {
 
             break;
         case "edit":
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'factorescriticidad',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.factorescriticidad,
+                function (err, data) {
+                    if (!err) {
+                        models.factorescriticidad.update({
 
-            models.factorescriticidad.update({
-                nota: req.body.nota,
-                valor: req.body.valor,
-                observacion: req.body.observacion
-            }, {
-                    where: {
-                        id: req.body.id
+                            glosapregunta: req.body.glosapregunta
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (factorescriticidad) {
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
                     }
-                }).then(function (factorescriticidad) {
-
-                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ id: 0, message: err.message, success: false });
                 });
-
-
-
             break;
         case "del":
 
@@ -538,20 +547,31 @@ exports.proveedoressugeridosaction = function (req, res) {
 
     switch (action) {
         case "add":
-
             models.proveedorsugerido.create({
                 idserviciorequerido: req.body.parent_id,
                 idproveedor: req.body.idproveedor,
                 borrado: 1
-            }).then(function (serviciosrequeridos) {
-
-                res.json({ id: serviciosrequeridos.id, message: 'Agregado', success: true });
-
+            }).then(function (proveedorsugerido) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'proveedorsugerido',
+                    proveedorsugerido.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.proveedorsugerido,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: proveedorsugerido.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: proveedorsugerido.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                res.json({ error: 1, glosa: err.message });
             });
-
             break;
         case "edit":
 
@@ -559,21 +579,37 @@ exports.proveedoressugeridosaction = function (req, res) {
 
             break;
         case "del":
-
-            models.proveedorsugerido.destroy({
+            models.proveedorsugerido.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) {
-
-                res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code:0 });
-
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+            }).then(function (proveedorsugerido) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'proveedorsugerido',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.proveedorsugerido,
+                    function (err, data) {
+                        if (!err) {
+                            models.proveedorsugerido.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
             });
-
-
             break;
     }
 }

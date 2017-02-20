@@ -19,11 +19,79 @@ exports.action = function (req, res) {
     switch (action) {
         case "add":
             return res.json({ id: req.body.idsolicitudcotizacion, success: true });
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'preguntasalproveedor',
+                preguntacotizacion.id,
+                'insert',
+                req.session.passport.user,
+                new Date(),
+                models.preguntacotizacion,
+                function (err, data) {
+                    if (!err) {
+                        return res.json({ id: preguntacotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                    } else {
+                        logger.error(err)
+                        return res.json({ id: preguntacotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                    }
+                });
             break;
-            
-
-
         case "del":
+           models.preguntacotizacion.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (preguntacotizacion) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'preguntasalproveedor',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.preguntacotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            models.preguntacotizacion.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+            });
+            break; 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             models.preguntacotizacion.destroy({
                 where: {
                     id: req.body.id
