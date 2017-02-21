@@ -395,7 +395,6 @@ exports.archivo = function (req, res) {
                   var periodo = solicitudaprobacion.periodo
                   var impuesto = solicitudaprobacion.prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion.prefactura.dataValues.impuesto : 0
 
-
                   return models.detallefactura.findAll({ where: { idfacturacion: solicitudaprobacion.id } }).then(function (detallefactura) {
                     if (detallefactura) throw new Error("Ya exite esta prefactura")
                   });
@@ -499,7 +498,13 @@ exports.archivo = function (req, res) {
                                             id: idfactura
                                           }
                                         }).then(function (f) {
-                                          return resolve(detallefactura.id);
+
+                                          return models.prefactura.update({ factura: results[0] }, { where: { id: results[0] } }).then(function (tet) {
+                                            return resolve(detallefactura.id);
+                                          }).catch(function (err) {
+                                            throw new Error(err);
+                                          });
+
                                         }).catch(function (err) {
                                           throw new Error(err);
                                         });
@@ -574,7 +579,6 @@ exports.archivo = function (req, res) {
       });
     }
 
-
     var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga, callback) {
 
       try {
@@ -615,13 +619,13 @@ exports.archivo = function (req, res) {
                 logger.debug("IDDETALLEFACTURA : " + iddetalle);
               }).catch(function (err) {
                 logger.error(err)
-                //throw new Error(err);
+                throw new Error(err);
               });
             }
 
           }).catch(function (err) {
             logger.error(err)
-            //throw new Error(err);
+            throw new Error(err);
           });
 
           bufferStream.end(zipEntryData);
@@ -629,10 +633,9 @@ exports.archivo = function (req, res) {
           processZipEntries(req, res, zipEntries, zipFolderName, i + 1, idcarga, callback);
 
         } else {
-          // ZIP VACIO?
+          // EL ULTIMO DTE?
+          callback(undefined, i);
         }
-
-        callback(undefined, i);
 
       } catch (e) {
         logger.error(e)
@@ -704,24 +707,8 @@ exports.archivo = function (req, res) {
 
               processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte, function (err, data) {
 
-                if (err) {
-
-                  models.cargadte.update({
-                    horafin: new Date(),
-                    archivo: filename,
-                    estado: "CARGADO CON ERRORES"
-                  }, {
-                      where: {
-                        id: idcargadte
-                      }
-                    }).then(function (cargadte) {
-                      res.json({ message: "archivo " + filename + " cargado", success: true });
-                    }).catch(function (err) {
-                      logger.error(err)
-                      res.json({ message: err, success: false });
-                    });
-                } else {
-                  models.cargadte.update({
+                if (!err) {
+                  return models.cargadte.update({
                     horafin: new Date(),
                     archivo: filename,
                     estado: "CARGADO OK"
@@ -730,15 +717,29 @@ exports.archivo = function (req, res) {
                         id: idcargadte
                       }
                     }).then(function (cargadte) {
-                      res.json({ message: "archivo " + filename + " cargado", success: true });
+                      return res.json({ message: "archivo " + filename + " cargado", success: true });
                     }).catch(function (err) {
                       logger.error(err)
-                      res.json({ message: err, success: false });
+                      return res.json({ message: err, success: false });
+                    });
+                } else {
+                  return models.cargadte.update({
+                    horafin: new Date(),
+                    archivo: filename,
+                    estado: err
+                  }, {
+                      where: {
+                        id: idcargadte
+                      }
+                    }).then(function (cargadte) {
+                      return res.json({ message: "archivo " + filename + " cargado", success: true });
+                    }).catch(function (err) {
+                      logger.error(err)
+                      return res.json({ message: err, success: false });
                     });
                 }
 
               });
-
 
             }
             catch (err) {
