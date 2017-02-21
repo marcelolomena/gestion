@@ -18,6 +18,11 @@ exports.excel = function (req, res) {
   var conf = {}
   conf.cols = [
     {
+      caption: 'Proveedor',
+      type: 'string',
+      width: 255
+    },
+    {
       caption: 'CUI',
       type: 'number',
       width: 3
@@ -53,6 +58,7 @@ exports.excel = function (req, res) {
   models.desgloseitemfactura.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
   models.desgloseitemfactura.belongsTo(models.cuentascontables, { foreignKey: 'idcuentacontable' });
   models.detallefactura.belongsTo(models.factura, { foreignKey: 'idfactura' });
+  models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
 
   return models.desgloseitemfactura.findAll({
     attributes: [['montoneto', 'montoneto'], ['ivanorecuperable', 'ivanorecuperable'], ['montocosto', 'montocosto']],
@@ -72,7 +78,10 @@ exports.excel = function (req, res) {
           {
             attributes: [['id', 'id']],
             model: models.factura,
-            where: { id: req.params.id }
+            where: { id: req.params.id }, include: [{
+              attributes: [['razonsocial', 'razonsocial']],
+              model: models.proveedor,
+            }]
           },
         ]
       }]
@@ -82,7 +91,9 @@ exports.excel = function (req, res) {
       logger.debug(desgloseitemfactura[f].estructuracui.cui)
       logger.debug(desgloseitemfactura[f].cuentascontable.nombrecuenta)
       logger.debug(desgloseitemfactura[f].cuentascontable.cuentacontable)
+      logger.debug(desgloseitemfactura[f].detallefactura.factura.proveedor.razonsocial)
       var item = [
+        desgloseitemfactura[f].detallefactura.factura.proveedor.razonsocial,
         desgloseitemfactura[f].estructuracui.cui,
         desgloseitemfactura[f].cuentascontable.nombrecuenta,
         desgloseitemfactura[f].cuentascontable.cuentacontable,
@@ -384,6 +395,11 @@ exports.archivo = function (req, res) {
                   var periodo = solicitudaprobacion.periodo
                   var impuesto = solicitudaprobacion.prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion.prefactura.dataValues.impuesto : 0
 
+
+                  return models.detallefactura.findAll({ where: { idfacturacion: solicitudaprobacion.id } }).then(function (detallefactura) {
+                    if (detallefactura) throw new Error("Ya exite esta prefactura")
+                  });
+
                   return models.detallefactura.create({
                     idfactura: idfactura,
                     idprefactura: results[0],
@@ -559,61 +575,70 @@ exports.archivo = function (req, res) {
     }
 
 
-    var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga) {
+    var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga, callback) {
 
-      var bufferStream = new stream.PassThrough();
-      var zipEntryName, data, etree;
+      try {
+        var bufferStream = new stream.PassThrough();
+        var zipEntryName, data, etree;
 
-      if (i < zipEntries.length) {
-        var zipEntry = zipEntries[i];
-        var zipEntryData = zipEntry.getData();
-        var data = zipEntryData.toString('utf8');
-        etree = et.parse(data);
-        var lstDet = etree.findall('*/Documento/Detalle')
-        var FchEmis = etree.findtext('*/Documento/Encabezado/IdDoc/FchEmis')
-        var Folio = etree.findtext('*/Documento/Encabezado/IdDoc/Folio')
-        var RUTEmisor = etree.findtext('*/Documento/Encabezado/Emisor/RUTEmisor')
-        var RznSoc = etree.findtext('*/Documento/Encabezado/Emisor/RznSoc')
-        var MntTotal = etree.findtext('*/Documento/Encabezado/Totales/MntTotal')
-        var MntExe = etree.findtext('*/Documento/Encabezado/Totales/MntExe')
-        var MntNeto = etree.findtext('*/Documento/Encabezado/Totales/MntNeto')
-        var IVA = etree.findtext('*/Documento/Encabezado/Totales/IVA')
+        if (i < zipEntries.length) {
+          var zipEntry = zipEntries[i];
+          var zipEntryData = zipEntry.getData();
+          var data = zipEntryData.toString('utf8');
+          etree = et.parse(data);
+          var lstDet = etree.findall('*/Documento/Detalle')
+          var FchEmis = etree.findtext('*/Documento/Encabezado/IdDoc/FchEmis')
+          var Folio = etree.findtext('*/Documento/Encabezado/IdDoc/Folio')
+          var RUTEmisor = etree.findtext('*/Documento/Encabezado/Emisor/RUTEmisor')
+          var RznSoc = etree.findtext('*/Documento/Encabezado/Emisor/RznSoc')
+          var MntTotal = etree.findtext('*/Documento/Encabezado/Totales/MntTotal')
+          var MntExe = etree.findtext('*/Documento/Encabezado/Totales/MntExe')
+          var MntNeto = etree.findtext('*/Documento/Encabezado/Totales/MntNeto')
+          var IVA = etree.findtext('*/Documento/Encabezado/Totales/IVA')
 
-        logger.debug("FchEmis : " + FchEmis);
-        logger.debug("Folio : " + Folio);
-        logger.debug("RUTEmisor : " + RUTEmisor);
-        logger.debug("RznSoc : " + RznSoc);
-        logger.debug("MntTotal : " + MntTotal);
+          logger.debug("FchEmis : " + FchEmis);
+          logger.debug("Folio : " + Folio);
+          logger.debug("RUTEmisor : " + RUTEmisor);
+          logger.debug("RznSoc : " + RznSoc);
+          logger.debug("MntTotal : " + MntTotal);
 
-        zipEntryName = getZipEntryName(zipEntry, zipFolderName);
-        logger.debug("Agregar este dte a la base de datos >> " + zipEntryName);
+          zipEntryName = getZipEntryName(zipEntry, zipFolderName);
+          logger.debug("Agregar este dte a la base de datos >> " + zipEntryName);
 
-        billHead(idcarga, zipEntryName, FchEmis, Folio, RUTEmisor, RznSoc, MntTotal, MntExe, MntNeto, IVA).then(function (idfactura) {
-          logger.debug("IDFACTURA : " + idfactura);
-          for (var i = 0; i < lstDet.length; i++) {
-            var NmbItem = lstDet[i].findtext('NmbItem')
-            var MontoItem = lstDet[i].findtext('MontoItem')
-            var QtyItem = lstDet[i].findtext('QtyItem')
-            billDetails(idfactura, NmbItem, MontoItem, QtyItem).then(function (iddetalle) {
-              logger.debug("IDDETALLEFACTURA : " + iddetalle);
-            }).catch(function (err) {
-              logger.error(err)
-              res.json({ message: err, success: false });
-            });
-          }
+          billHead(idcarga, zipEntryName, FchEmis, Folio, RUTEmisor, RznSoc, MntTotal, MntExe, MntNeto, IVA).then(function (idfactura) {
+            logger.debug("IDFACTURA : " + idfactura);
+            for (var i = 0; i < lstDet.length; i++) {
+              var NmbItem = lstDet[i].findtext('NmbItem')
+              var MontoItem = lstDet[i].findtext('MontoItem')
+              var QtyItem = lstDet[i].findtext('QtyItem')
+              billDetails(idfactura, NmbItem, MontoItem, QtyItem).then(function (iddetalle) {
+                logger.debug("IDDETALLEFACTURA : " + iddetalle);
+              }).catch(function (err) {
+                logger.error(err)
+                //throw new Error(err);
+              });
+            }
 
-        }).catch(function (err) {
-          logger.error(err)
-          res.json({ message: err, success: false });
-        });
+          }).catch(function (err) {
+            logger.error(err)
+            //throw new Error(err);
+          });
 
-        bufferStream.end(zipEntryData);
+          bufferStream.end(zipEntryData);
 
-        processZipEntries(req, res, zipEntries, zipFolderName, i + 1, idcarga);
+          processZipEntries(req, res, zipEntries, zipFolderName, i + 1, idcarga, callback);
 
-      } else {
-        // ZIP VACIO?
+        } else {
+          // ZIP VACIO?
+        }
+
+        callback(undefined, i);
+
+      } catch (e) {
+        logger.error(e)
+        return callback(e, undefined);
       }
+
     };
 
     var getZipEntryName = function (zipEntry, zipFolderName) {
@@ -677,22 +702,44 @@ exports.archivo = function (req, res) {
 
             try {
 
-              processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte);
+              processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte, function (err, data) {
 
-              models.cargadte.update({
-                horafin: new Date(),
-                archivo: filename,
-                estado: "CARGADO"
-              }, {
-                  where: {
-                    id: idcargadte
-                  }
-                }).then(function (cargadte) {
-                  res.json({ message: "archivo " + filename + " cargado", success: true });
-                }).catch(function (err) {
-                  logger.error(err)
-                  res.json({ message: err, success: false });
-                });
+                if (err) {
+
+                  models.cargadte.update({
+                    horafin: new Date(),
+                    archivo: filename,
+                    estado: "CARGADO CON ERRORES"
+                  }, {
+                      where: {
+                        id: idcargadte
+                      }
+                    }).then(function (cargadte) {
+                      res.json({ message: "archivo " + filename + " cargado", success: true });
+                    }).catch(function (err) {
+                      logger.error(err)
+                      res.json({ message: err, success: false });
+                    });
+                } else {
+                  models.cargadte.update({
+                    horafin: new Date(),
+                    archivo: filename,
+                    estado: "CARGADO OK"
+                  }, {
+                      where: {
+                        id: idcargadte
+                      }
+                    }).then(function (cargadte) {
+                      res.json({ message: "archivo " + filename + " cargado", success: true });
+                    }).catch(function (err) {
+                      logger.error(err)
+                      res.json({ message: err, success: false });
+                    });
+                }
+
+              });
+
+
             }
             catch (err) {
               logger.error(err)
