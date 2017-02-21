@@ -2,37 +2,59 @@ function returnTaskLink(cellValue, options, rowdata, action) {
     return "<a target='_blank' href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
 }
 
-function cancelId(id) {
-    bootbox.confirm({
-        title: "¿Anula prefactura?",
-        message: "¿Desea anular inmediatamente la prefactura?. Posteriormente no puede ser revertido",
-        buttons: {
-            cancel: {
-                label: '<i class="fa fa-times"></i> Cancelar'
+function getPeriodo() {
+    var d = new Date();
+    var anio = d.getFullYear();
+    console.log("anio:" + anio);
+    var mes = parseInt(d.getMonth()) + 1;
+    console.log("mes:" + mes);
+    var mesok = mes < 10 ? '0' + mes : mes;
+    console.log("mesok:" + mesok);
+    return anio + '' + mesok;
+
+}
+
+function cancelId(id, factura) {
+    console.log ("factura:"+factura+", id:"+id);
+    if (factura > 0){
+        alert("No puede anular prefactura, hay una factura ingresada");
+    } else {
+        bootbox.confirm({
+            title: "¿Anula prefactura?",
+            message: "¿Desea anular inmediatamente la prefactura?. Posteriormente no puede ser revertido",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancelar'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirmar'
+                }
             },
-            confirm: {
-                label: '<i class="fa fa-check"></i> Confirmar'
+            callback: function (confirmed) {
+                if (confirmed == true) {
+                    $.ajax({
+                        url: '/prefacturas/anular/' + id
+                    }).done(function () {
+                        bootbox.alert("Prefactura anulada ...", function () { /* your callback code */ })
+                        $("#table_prefacturas").trigger("reloadGrid");
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        bootbox.alert("Error!!…", function () { /* your callback code */ })
+                    }).always(function () {
+                        bootbox.alert("Anulando prefactura ...", function () { /* your callback code */ })
+                    });
+                }
             }
-        },
-        callback: function (confirmed) {
-            if (confirmed == true) {
-                $.ajax({
-                    url: '/prefacturas/anular/' + id
-                }).done(function () {
-                    bootbox.alert("Prefactura anulada ...", function () { /* your callback code */ })
-                    $("#table_prefacturas").trigger("reloadGrid");
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    bootbox.alert("Error!!…", function () { /* your callback code */ })
-                }).always(function () {
-                    bootbox.alert("Anulando prefactura ...", function () { /* your callback code */ })
-                });
-            }
-        }
-    });
+        });
+    }
 }
 
 var cancelBtn = function (cellVal, options, rowObject) {
-    return "<input style='height:22px;' type='button' value='Anular' onclick=\"return cancelId(" + rowObject.id + ")\"  />";
+    var periodoactual = getPeriodo();
+    if (rowObject.periodo == periodoactual) {
+        return "<input style='height:22px;' type='button' value='Anular' onclick=\"return cancelId(" + rowObject.id + ", "+ rowObject.factura+")\"  />";
+    } else {
+        return "";
+    }
 };
 
 $(document).ready(function () {
@@ -62,9 +84,10 @@ $(document).ready(function () {
         {
             label: 'Anular',
             name: 'Anular',
-            width: 50,
+            width: 80,
             align: 'center',
             search: false,
+            hidden: true,
             formatter: cancelBtn
         },
         { label: 'Número', name: 'id', key: true, width: 80, hidden: false, formatter: returnTaskLink },
@@ -154,6 +177,10 @@ $(document).ready(function () {
             search: true, editable: true, hidedlg: true, hidden: true,
             editrules: { edithidden: false, required: true }
         },
+        {
+            label: 'Factura', name: 'factura', width: 100, align: 'left',
+            search: true, editable: false, hidden: true
+        },        
 
     ];
     $("#table_prefacturas").jqGrid({

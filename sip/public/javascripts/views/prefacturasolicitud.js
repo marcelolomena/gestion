@@ -99,7 +99,12 @@ function cancelId(id) {
 }
 
 var cancelBtn = function (cellVal, options, rowObject) {
-    return "<input style='height:22px;' type='button' value='Anular' onclick=\"return cancelId(" + rowObject.id + ")\"  />";
+    var periodoactual = $('#periodo').val();
+    if (rowObject.periodocompromiso == periodoactual) {
+        return "<input style='height:22px;' type='button' value='Anular' onclick=\"return cancelId(" + rowObject.id + ")\"  />";
+    } else {
+        return "";
+    }
 };
 
 var leida = false;

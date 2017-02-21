@@ -230,7 +230,8 @@ exports.anular = function (req, res) {
             var promises = []
 
             var onePromise = models.solicitudaprobacion.update({
-                iddetallecompromiso: null
+                iddetallecompromiso: null,
+                idcontrato:null
             }, {
                     where: { id: req.params.id }
                 }, { transaction: t });
@@ -343,7 +344,10 @@ UNION
 				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
 				E.numrut != 1 AND
-				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO')                
+				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO') and
+                C.id NOT IN (SELECT a.iddetallecompromiso FROM sip.solicitudaprobacion a
+				JOIN sip.detallecompromiso b ON a.iddetallecompromiso=b.id WHERE a.periodo=:periodo 
+				AND b.periodo < :periodo )                                
         `
     var promises = []
     var o_promises = []

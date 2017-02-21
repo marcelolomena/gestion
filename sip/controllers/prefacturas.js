@@ -400,7 +400,8 @@ exports.anular = function (req, res) {
             var promises = []
 
             var onePromise = models.solicitudaprobacion.update({
-                iddetallecompromiso: null
+                iddetallecompromiso: null,
+                idcontrato:null
             }, {
                     where: { id: solicitudaprobacion.id }
                 }, { transaction: t });

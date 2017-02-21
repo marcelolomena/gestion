@@ -168,6 +168,14 @@ exports.action = function (req, res) {
               .spread(function (rows) {
                 res.json(rows);
               });
+          } else if (req.body.aprobado == 4 ) {
+            var sql = "UPDATE sip.detallecompromiso SET estadopago='YA FACTURADO' " +
+              "WHERE id=" + req.body.iddetallecompromiso;
+            logger.debug("query:" + sql);
+            sequelize.query(sql)
+              .spread(function (rows) {
+                res.json(rows);
+              });            
           }
 
           //res.json({ error_code: 0 });
