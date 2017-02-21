@@ -19,49 +19,101 @@ exports.action = function (req, res) {
                 usuariopregunta: req.session.passport.user,
                 fechapregunta: new Date(),
                 borrado: 1
-            }).then(function (preguntaforo) {
-                res.json({ error: 0, glosa: '' });
+            }).then(function (foro) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'foro',
+                    foro.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.preguntaforo,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    });
             }).catch(function (err) {
                 logger.error(err)
                 res.json({ error: 1, glosa: err.message });
             });
             break;
         case "edit":
-            models.preguntaforo.update({
-                glosapregunta: req.body.glosapregunta
-            }, {
-                    where: {
-                        id: req.body.id
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'foro',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.preguntaforo,
+                function (err, data) {
+                    if (!err) {
+                        models.preguntaforo.update({
+
+                            glosapregunta: req.body.glosapregunta
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (preguntaforo) {
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
                     }
-                }).then(function (clase) {
-                    res.json({ error: 0, glosa: '' });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
                 });
             break;
 
         case "del":
-            models.preguntaforo.destroy({
+            models.preguntaforo.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                return res.json({ success: true, glosa: 'Deleted successfully' });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({ success: false, glosa: err.message });
+            }).then(function (preguntaforo) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'foro',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.preguntaforo,
+                    function (err, data) {
+                        if (!err) {
+                            models.preguntaforo.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
             });
             break;
     }
 }
 
+
+
 exports.actionrespuesta = function (req, res) {
     var action = req.body.oper;
     var idpreguntaforo = req.params.id;
+    var idsolicitudcotizacion = req.params.idpadre;
 
     if (action == "add" || action == "edit") {
         var iddocto = req.body.iddocumento;
@@ -79,11 +131,27 @@ exports.actionrespuesta = function (req, res) {
                 iddocumento: iddocto,
                 fecha: new Date(),
                 borrado: 1
-            }).then(function (respuestaforo) {
-                res.json({ error: 0, glosa: '' });
+            }).then(function (foro) {
+                bitacora.registrar(
+                    idsolicitudcotizacion,
+                    'foro',
+                    foro.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.respuestaforo,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: foro.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: foro.id, parent: idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    }
+                )
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ error: 1, glosa: err.message });
+                res.json({ message: err.message, success: false })
             });
             break;
         case "edit":

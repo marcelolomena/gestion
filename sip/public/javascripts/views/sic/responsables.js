@@ -38,10 +38,10 @@ var gridResponsables = {
                             var data = JSON.parse(response);
                             var s = "<select>";//el default
                             s += '<option value="0">--Seleccione un Rol--</option>';
-                            if (thissid == "00") {
-                                s += '<option value="00" selected>Tecnico Responsable</option>';
+                            if (thissid == "999") {
+                                s += '<option value="999" selected>Tecnico Responsable</option>';
                             } else {
-                                s += '<option value="00">Tecnico Responsable</option>';
+                                s += '<option value="999">Tecnico Responsable</option>';
                             }
                             $.each(data, function (i, item) {
 
@@ -59,7 +59,7 @@ var gridResponsables = {
                                 var idrol = $('option:selected', this).val();
 
                                 if (idrol != "0") {
-                                    if (idrol == "00") {
+                                    if (idrol == "999") {
                                         $.ajax({
                                             type: "GET",
                                             url: '/sic/tecnicosresponsables/' + parentRowKey,
@@ -121,7 +121,23 @@ var gridResponsables = {
                     }
                 },
 
-                { name: 'rol.glosarol', index: 'glosarol', width: 250, editable: true, editoptions: { size: 10 } },
+                {
+                    name: 'rol.glosarol', index: 'glosarol', width: 250, editable: true, editoptions: { size: 10 },
+                    formatter: function (cellvalue, options, rowObject) {
+                        var dato = '';
+                        var val = rowObject.idrol;
+                        //console.log(val);
+                        if (val == "999") {
+                            dato = 'Tecnico Responsable';
+
+                        } else {
+                            //console.log(rowObject.rol.glosarol);
+                            dato = rowObject.rol.glosarol;
+                        }
+
+                        return dato;
+                    }
+                },
                 {
                     name: 'idresponsable', search: false, editable: true, hidden: true,
                     edittype: "select",

@@ -31,10 +31,6 @@ var gridServ = {
         tmplServ += "<div class='column-full'>Nota Criticidad<span style='color:red'>*</span>{notacriticidad}</div>";
         tmplServ += "</div>";
 
-        tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Segmento Proveedor<span style='color:red'>*</span>{idsegmento}</div>";
-        tmplServ += "</div>";
-
         tmplServ += "<hr style='width:100%;'/>";
         tmplServ += "<div> {sData} {cData}  </div>";
         tmplServ += "</div>";
@@ -43,7 +39,7 @@ var gridServ = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota', 'ID Segmento', 'Segmento Proveedor'],
+            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 {
@@ -169,31 +165,6 @@ var gridServ = {
                         return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
                     }
                 },
-                {
-                    name: 'idsegmento', search: false, editable: true, hidden: true,
-                    edittype: "select",
-                    editoptions: {
-                        dataUrl: '/sic/segmentoproveedorserv',
-                        buildSelect: function (response) {
-                            var rowKey = $gridTab.getGridParam("selrow");
-                            var rowData = $gridTab.getRowData(rowKey);
-                            var thissid = rowData.idclasecriticidad;
-                            var data = JSON.parse(response);
-                            var s = "<select>";//el default
-                            s += '<option value="0">--Seleccione Segmento Proveedor--</option>';
-                            $.each(data, function (i, item) {
-
-                                if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].id + '" selected>' + data[i].sigla + ' - ' + data[i].nombre + '</option>';
-                                } else {
-                                    s += '<option value="' + data[i].id + '">' + data[i].sigla + ' - ' + data[i].nombre + '</option>';
-                                }
-                            });
-                            return s + "</select>";
-                        }
-                    }
-                },
-                { name: 'segmentoproveedor.sigla', index: 'segmentoproveedor', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
             ],
             rowNum: 10,
             rowList: [3, 6],
@@ -412,12 +383,13 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             label: 'Observación', name: 'observacion', width: 200,
             align: 'left', edittype: "textarea",
             search: true, editable: true, hidden: false,
-            editoptions: { placeholder: "Ingresar comentario sobre la nota" }
+            editoptions: {placeholder: "Ingresar comentario sobre la nota"},
+
         },
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
+     
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
@@ -500,6 +472,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                 $('input#nombrefactor', form).attr('readonly', 'readonly');
                 $('input#porcentaje', form).attr('readonly', 'readonly');
                 $('input#valor', form).attr('readonly', 'readonly');
+                $(".EditTable td textarea").css("width", "360");
 
                 var grid = $("#" + childGridID);
                 var rowKey = grid.getGridParam("selrow");
@@ -597,7 +570,7 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
             name: 'idproveedor', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/proveedoressugeridostriada/'+parentRowKey,
+                dataUrl: '/sic/proveedoressugeridostriada/' + parentRowKey,
                 buildSelect: function (response) {
                     var rowKey = $("#" + childGridID).getGridParam("selrow");
                     var rowData = $("#" + childGridID).getRowData(rowKey);

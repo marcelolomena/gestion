@@ -75,7 +75,7 @@ $(document).ready(function () {
                     var thissid = rowData.idcui;
                     var data = JSON.parse(response);
                     var s = "<select>";
-                    s += '<option value="0">--Escoger EL CUI--</option>';
+                    s += '<option value="0">--Escoger CUI--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
@@ -365,7 +365,7 @@ $(document).ready(function () {
                     s += '<option value="0">--Escoger un Tipo--</option>';
                     $.each(data, function (i, item) {
 
-                        if (data[i].id == thissid) {
+                        if (data[i].id == 3) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                         } else {
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
@@ -507,6 +507,7 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 setTimeout(function () {
+                    $("#idtipo", form).attr('disabled', 'disabled');
                     $.get('/sic/getsession', function (data) {
                         $.each(data, function (i, item) {
                             if (item.glosarol === 'Negociador SIC') {
@@ -516,6 +517,7 @@ $(document).ready(function () {
                                 $("#codigoart", form).attr('readonly', 'readonly');
                                 $("#sap", form).attr('readonly', 'readonly');
                                 $("#descripcion", form).attr('readonly', 'readonly');
+                                $("#idtipo", form).attr('disabled', 'disabled');
                                 //$("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
                             } else if (item.glosarol === 'Técnico SIC') {
                                 $("#codigosolicitud", form).attr('readonly', 'readonly');
@@ -590,6 +592,7 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 setTimeout(function () {
+                    $("#idtipo", form).attr('disabled', 'disabled');
                     $.get('/sic/getsession', function (data) {
                         $.each(data, function (i, item) {
                             if (item.glosarol === 'Negociador SIC') {

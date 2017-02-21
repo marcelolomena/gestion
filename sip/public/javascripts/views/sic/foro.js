@@ -403,7 +403,7 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/sic/actionrespuesta/' + parentRowKey,
+        editurl: '/sic/actionrespuesta/' + parentRowKey + '/' + parentSolicitud,
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
             var recs = $("#" + childGridID).getGridParam("reccount");
@@ -437,16 +437,16 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
             }
-                var recs = $("#" + childGridID).getGridParam("reccount");
-                var thisId = $.jgrid.jqID(this.id);
-                console.log("este es el id po: " + thisId)
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            var thisId = $.jgrid.jqID(this.id);
+            console.log("este es el id po: " + thisId)
 
-                //$("#add_" + thisId).addClass('ui-disabled');
-                $("#edit_" + thisId).addClass('ui-disabled');
-                $("#del_" + thisId).addClass('ui-disabled');
-                //$("#refresh_" + thisId).addClass('ui-disabled');
-            }
-        
+            //$("#add_" + thisId).addClass('ui-disabled');
+            $("#edit_" + thisId).addClass('ui-disabled');
+            $("#del_" + thisId).addClass('ui-disabled');
+            //$("#refresh_" + thisId).addClass('ui-disabled');
+        }
+
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {

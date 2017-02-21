@@ -26,11 +26,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     idrol: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'rol',
-        key: 'id'
-      }
+      allowNull: true
     },
     borrado: {
       type: DataTypes.INTEGER,

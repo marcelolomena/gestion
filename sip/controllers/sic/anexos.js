@@ -10,57 +10,99 @@ exports.action = function (req, res) {
 	var action = req.body.oper;
 	switch (action) {
 		case "add":
-
 			models.clausulas.create({
 				idsolicitudcotizacion: req.body.idsolicitudcotizacion,
 				idplantillaclausula: req.body.idclausulaplantilla,
 				idcuerpoclausula: req.body.idcuerpoclausula,
-				//uid: req.session.passport.user,
 				titulo: req.body.titulo,
 				glosa: req.body.glosa,
 				tipoadjunto: req.body.tipoadjunto,
 				nombreadjunto: req.body.nombreadjunto,
 				borrado: 1
 			}).then(function (clausulas) {
-				res.json({ error: 0, glosa: '' });
+				bitacora.registrar(
+					req.body.idsolicitudcotizacion,
+					'anexos',
+					clausulas.id,
+					'insert',
+					req.session.passport.user,
+					new Date(),
+					models.clausulas,
+					function (err, data) {
+						if (!err) {
+							return res.json({ id: clausulas.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+						} else {
+							logger.error(err)
+							return res.json({ id: clausulas.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+						}
+					});
 			}).catch(function (err) {
 				logger.error(err)
 				res.json({ error: 1, glosa: err.message });
 			});
-
 			break;
 		case "edit":
-			models.clausulas.update({
-				//idplantillaclausula: req.body.idclausulaplantilla,
-				//uid: req.session.passport.user,
-				titulo: req.body.titulo,
-				glosa: req.body.glosa
-			}, {
-					where: {
-						id: req.body.id
+			bitacora.registrar(
+				req.body.idsolicitudcotizacion,
+				'anexos',
+				req.body.id,
+				'update',
+				req.session.passport.user,
+				new Date(),
+				models.clausulas,
+				function (err, data) {
+					if (!err) {
+						models.clausulas.update({
+							titulo: req.body.titulo,
+							glosa: req.body.glosa
+						}, {
+								where: {
+									id: req.body.id
+								}
+							}).then(function (clausulas) {
+								res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+							}).catch(function (err) {
+								logger.error(err)
+								res.json({ message: err.message, success: false });
+							});
+					} else {
+						logger.error(err)
+						return res.json({ message: err.message, success: false });
 					}
-				}).then(function (clausulas) {
-					res.json({ error: 0, glosa: '' });
-				}).catch(function (err) {
-					logger.error(err)
-					res.json({ error: 1, glosa: err.message });
 				});
 			break;
 		case "del":
-			models.clausulas.destroy({
+			models.clausulas.findAll({
 				where: {
 					id: req.body.id
 				}
-			}).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-				if (rowDeleted === 1) {
-					logger.debug('Deleted successfully');
-				}
-				res.json({ success: true, glosa: 'Deleted successfully' });
-			}).catch(function (err) {
-				logger.error(err)
-				res.json({ success: false, glosa: err.message });
+			}).then(function (clausulas) {
+				bitacora.registrar(
+					req.body.idsolicitudcotizacion,
+					'anexos',
+					req.body.id,
+					'delete',
+					req.session.passport.user,
+					new Date(),
+					models.clausulas,
+					function (err, data) {
+						if (!err) {
+							models.clausulas.destroy({
+								where: {
+									id: req.body.id
+								}
+							}).then(function (rowDeleted) {
+								return res.json({ message: '', success: true });
+							}).catch(function (err) {
+								logger.error(err)
+								res.json({ message: err.message, success: false });
+							});
+						} else {
+							logger.error(err)
+							return res.json({ message: err.message, success: false });
+						}
+					});
 			});
-
 			break;
 	}
 }
@@ -98,20 +140,20 @@ exports.list = function (req, res) {
 			models.clausulas.count({
 				where: data,
 				include: [{
-						model: models.solicitudcotizacion
-					},{
-						model: models.valores
-					},
-					{ model: models.cuerpoclausula, where: { anexo: 1 } },
-					 {
-						
-						model: models.plantillaclausula,
-						include: [
-							{model: models.clase},
-							
-						]
-					}
+					model: models.solicitudcotizacion
+				}, {
+					model: models.valores
+				},
+				{ model: models.cuerpoclausula, where: { anexo: 1 } },
+				{
+
+					model: models.plantillaclausula,
+					include: [
+						{ model: models.clase },
+
 					]
+				}
+				]
 			}).then(function (records) {
 				var total = Math.ceil(records / rows);
 				models.clausulas.findAll({
@@ -121,16 +163,16 @@ exports.list = function (req, res) {
 					where: data,
 					include: [{
 						model: models.solicitudcotizacion
-					},{
+					}, {
 						model: models.valores
-					}, 
+					},
 					{ model: models.cuerpoclausula, where: { anexo: 1 } },
 					{
-						
+
 						model: models.plantillaclausula,
 						include: [
-							{model: models.clase},
-							
+							{ model: models.clase },
+
 						]
 					}
 					]
@@ -152,18 +194,18 @@ exports.list = function (req, res) {
 
 exports.clases = function (req, res) {
 	sequelize.query(
-        'select distinct a.id, a.titulo from sic.clase a  ' +
-        'join sic.plantillaclausula b on a.id=b.idclase ' +
-        'join sic.cuerpoclausula c on c.idplantillaclausula=b.id ' +
-        'where c.anexo = 1 ',
-        { type: sequelize.QueryTypes.SELECT }
-    ).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
-    }).catch(function (err) {
-        logger.error(err);
-        res.json({ error: 1 });
-    });
+		'select distinct a.id, a.titulo from sic.clase a  ' +
+		'join sic.plantillaclausula b on a.id=b.idclase ' +
+		'join sic.cuerpoclausula c on c.idplantillaclausula=b.id ' +
+		'where c.anexo = 1 ',
+		{ type: sequelize.QueryTypes.SELECT }
+	).then(function (valores) {
+		//logger.debug(valores)
+		res.json(valores);
+	}).catch(function (err) {
+		logger.error(err);
+		res.json({ error: 1 });
+	});
 
 }
 
@@ -171,18 +213,18 @@ exports.plantillas = function (req, res) {
 	var id = req.params.id;
 
 	sequelize.query(
-        'select distinct a.id, a.codigo  from sic.plantillaclausula a   ' +
-        'join sic.cuerpoclausula b on b.idplantillaclausula=a.id ' +
-        'join sic.clase c on c.id=a.idclase ' +
-        'where b.anexo = 1 and c.id=:id ',
-        { replacements:{id: id},type: sequelize.QueryTypes.SELECT }
-    ).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
-    }).catch(function (err) {
-        logger.error(err);
-        res.json({ error: 1 });
-    });
+		'select distinct a.id, a.codigo  from sic.plantillaclausula a   ' +
+		'join sic.cuerpoclausula b on b.idplantillaclausula=a.id ' +
+		'join sic.clase c on c.id=a.idclase ' +
+		'where b.anexo = 1 and c.id=:id ',
+		{ replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+	).then(function (valores) {
+		//logger.debug(valores)
+		res.json(valores);
+	}).catch(function (err) {
+		logger.error(err);
+		res.json({ error: 1 });
+	});
 
 }
 

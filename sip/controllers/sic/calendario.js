@@ -174,6 +174,7 @@ exports.list = function (req, res) {
                     where: {
                         idsolicitudcotizacion: id
                     },
+                    order: 'fechatermino desc',
                     include: [
                         {
                             model: models.valores

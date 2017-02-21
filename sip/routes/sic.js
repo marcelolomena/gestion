@@ -102,9 +102,6 @@ module.exports = function (passport) {
     router.route('/sic/anexos/action')
         .post(isAuthenticated, anexosController.action);
 
-    router.route('/sic/segmentoproveedorserv')
-        .get(isAuthenticated, serviciosController.segmentoproveedor);
-
     router.route('/sic/servicios/action')
         .post(isAuthenticated, serviciosController.action);
 
@@ -323,7 +320,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, foroController.action)
         .get(isAuthenticated, foroController.list);
 
-    router.route('/sic/actionrespuesta/:id')
+    router.route('/sic/actionrespuesta/:id/:idpadre')
         .post(isAuthenticated, foroController.actionrespuesta)
 
     router.route('/sic/listarespuestaforo/:id/list')
