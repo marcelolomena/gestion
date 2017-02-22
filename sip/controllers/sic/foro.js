@@ -22,7 +22,7 @@ exports.action = function (req, res) {
             }).then(function (foro) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
-                    'foro',
+                    'foropregunta',
                     foro.id,
                     'insert',
                     req.session.passport.user,
@@ -44,7 +44,7 @@ exports.action = function (req, res) {
         case "edit":
             bitacora.registrar(
                 req.body.idsolicitudcotizacion,
-                'foro',
+                'foropregunta',
                 req.body.id,
                 'update',
                 req.session.passport.user,
@@ -80,7 +80,7 @@ exports.action = function (req, res) {
             }).then(function (preguntaforo) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
-                    'foro',
+                    'foropregunta',
                     req.body.id,
                     'delete',
                     req.session.passport.user,
@@ -134,7 +134,7 @@ exports.actionrespuesta = function (req, res) {
             }).then(function (foro) {
                 bitacora.registrar(
                     idsolicitudcotizacion,
-                    'foro',
+                    'fororespuesta',
                     foro.id,
                     'insert',
                     req.session.passport.user,
@@ -172,19 +172,37 @@ exports.actionrespuesta = function (req, res) {
 
 
         case "del":
-            models.respuestaforo.destroy({
+            models.respuestaforo.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                return res.json({ success: true, glosa: 'Deleted successfully' });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({ success: false, glosa: err.message });
-            });
+            }).then(function (respuesta) {
+                bitacora.registrar(
+                    idsolicitudcotizacion,
+                    'fororespuesta',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.respuestaforo,
+                    function (err, data) {
+                        if (!err) {
+                            models.respuestaforo.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', sucess: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+            })
             break;
     }
 }

@@ -125,7 +125,7 @@ exports.action = function (req, res) {
                                 return res.json({ message: '', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ message: err.message, success: false });
+                                return res.json({ message: err.message, success: false });
                             });
                         } else {
                             logger.error(err)
@@ -135,7 +135,7 @@ exports.action = function (req, res) {
 
             }).catch(function (err) {
                 logger.error(err);
-                res.json({ message: err.message, success: false });
+                return res.json({ message: err.message, success: false });
             });
 
             break;

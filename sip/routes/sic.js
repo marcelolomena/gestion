@@ -151,8 +151,8 @@ module.exports = function (passport) {
         .post(isAuthenticated, claseevaluaciontecnicaController.action)
         .get(isAuthenticated, claseevaluaciontecnicaController.list);
 
-    router.route('/sic/proveedoressugeridos/action')
-        .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
+    //router.route('/sic/proveedoressugeridos/action')
+    //    .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
 
     router.route('/sic/clases')
         .get(isAuthenticated, clausulasController.clases);
@@ -346,6 +346,10 @@ module.exports = function (passport) {
 
     router.route('/sic/bitacora/:id')
         .get(isAuthenticated, bitacoraController.list);
+
+    router.route('/sic/proveedoressugeridosaction/:id/:idpadre')
+        .post(isAuthenticated, serviciosController.proveedoressugeridosaction)
+
 
     return router;
 }
