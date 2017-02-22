@@ -13,7 +13,8 @@ exports.xmltest = function (req, res) {
     data = fs.readFileSync('factura.xml').toString();
     console.log(data);
     etree = et.parse(data);
-    console.log(etree.findtext('*/Documento/Referencia/FolioRef')); 
+    //console.log(etree.findtext('*/Documento/Referencia/FolioRef')); 
+    console.log(etree.findtext('*/DTE/Documento/Detalle/NmbItem'));
     //console.log(etree.findall('*/TenantId').length); // 2
     //console.log(etree.findtext('./entry/ServiceName')); // MaaS
     //console.log(etree.findall('./entry/category')[0].get('term')); // monitoring.entity.create

@@ -1,167 +1,142 @@
-<?xml version='1.0' encoding='ISO-8859-1'?><DATA><DTE version="1.0">
-	<Documento ID="R76227698-4T34F189">
-		<Encabezado>
-			<IdDoc>
-				<TipoDTE>34</TipoDTE>
-				<Folio>189</Folio>
-				<FchEmis>2016-11-24</FchEmis>
-				<FchVenc>2016-12-24</FchVenc>
-			</IdDoc>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<DTE version="1.0" xmlns="http://www.sii.cl/SiiDte">
+<Documento ID="S20170215T033F0000044277">
+<Encabezado>
+<IdDoc>
+<TipoDTE>33</TipoDTE>
+<Folio>44277</Folio>
+<FchEmis>2017-02-15</FchEmis>
+<MedioPago>EF</MedioPago>
+</IdDoc>
 			<Emisor>
-				<RUTEmisor>76227698-4</RUTEmisor>
-				<RznSoc>BP Branding y Publicidad SpA</RznSoc>
-				<GiroEmis>Empresas De Publicidad, Asesorias En Gestion Publicitaria</GiroEmis>
-				<Acteco>743001</Acteco>
-				<DirOrigen>Av. Del Valle Norte 750 Of. 201</DirOrigen>
-				<CmnaOrigen>Huechuraba</CmnaOrigen>
-				<CiudadOrigen>Santiago</CiudadOrigen>
+				<RUTEmisor>96678680-9</RUTEmisor>
+				<RznSoc>HEWLETT PACKARD CHILE COMERCIAL LIMITADA</RznSoc>
+				<GiroEmis>VENTA AL POR MAYOR DE MAQUINARIA, HERRAMIENTAS, EQUIPO Y MATERIALES N.</GiroEmis>
+				<Telefono>2903537</Telefono>
+				<Acteco>671990</Acteco>
+				<Sucursal>Casa Matriz</Sucursal>
+				<DirOrigen>MARIANO SANCHEZ FONTECILLA 310</DirOrigen>
+				<CmnaOrigen>LAS CONDES</CmnaOrigen>
+				<CiudadOrigen>SANTIAGO</CiudadOrigen>
 			</Emisor>
-			<Receptor>
-				<RUTRecep>97004000-5</RUTRecep>
-				<RznSocRecep>Banco De Chile</RznSocRecep>
-				<GiroRecep>Banco</GiroRecep>
-				<DirRecep>Ahumada 251</DirRecep>
-				<CmnaRecep>Santiago Centro</CmnaRecep>
-				<CiudadRecep>Santaigo</CiudadRecep>
-			</Receptor>
-			<Totales>
-				<MntExe>5260602</MntExe>
-				<MntTotal>5260602</MntTotal>
-			</Totales>
-		</Encabezado>
-		<Detalle>
-			<NroLinDet>1</NroLinDet>
-			<CdgItem>
-				<TpoCodigo>INT1</TpoCodigo>
-				<VlrCodigo>4101012</VlrCodigo>
-			</CdgItem>
-			<IndExe>1</IndExe>
-			<NmbItem>Mes Diseño Noviembre 2016 Sap 6359</NmbItem>
-			<QtyItem>1.00</QtyItem>
-			<UnmdItem>Unid</UnmdItem>
-			<PrcItem>5260602.00</PrcItem>
-			<MontoItem>5260602</MontoItem>
-		</Detalle>
-		<Detalle>
-			<NroLinDet>2</NroLinDet>
-			<CdgItem>
-				<TpoCodigo>INT1</TpoCodigo>
-				<VlrCodigo>4101012</VlrCodigo>
-			</CdgItem>
-			<IndExe>1</IndExe>
-			<NmbItem>Tareas 2.53 Contrato Pdr-403</NmbItem>
-			<QtyItem>1.00</QtyItem>
-			<UnmdItem>Unid</UnmdItem>
-			<MontoItem>0</MontoItem>
-		</Detalle>
-		<Detalle>
-			<NroLinDet>3</NroLinDet>
-			<CdgItem>
-				<TpoCodigo>INT1</TpoCodigo>
-				<VlrCodigo>4101012</VlrCodigo>
-			</CdgItem>
-			<IndExe>1</IndExe>
-			<NmbItem>Contacto Raimundo Cobo</NmbItem>
-			<QtyItem>1.00</QtyItem>
-			<UnmdItem>Unid</UnmdItem>
-			<MontoItem>0</MontoItem>
-		</Detalle>
-		<Detalle>
-			<NroLinDet>4</NroLinDet>
-			<CdgItem>
-				<TpoCodigo>INT1</TpoCodigo>
-				<VlrCodigo>4101012</VlrCodigo>
-			</CdgItem>
-			<IndExe>1</IndExe>
-			<NmbItem>Cuenta Contable  625507040</NmbItem>
-			<QtyItem>1.00</QtyItem>
-			<UnmdItem>Unid</UnmdItem>
-			<MontoItem>0</MontoItem>
-		</Detalle>
-		<Detalle>
-			<NroLinDet>5</NroLinDet>
-			<CdgItem>
-				<TpoCodigo>INT1</TpoCodigo>
-				<VlrCodigo>4101012</VlrCodigo>
-			</CdgItem>
-			<IndExe>1</IndExe>
-			<NmbItem>Monto 200Uf</NmbItem>
-			<QtyItem>1.00</QtyItem>
-			<UnmdItem>Unid</UnmdItem>
-			<MontoItem>0</MontoItem>
-		</Detalle>
-		<Referencia>
-			<NroLinRef>1</NroLinRef>
-			<TpoDocRef>801</TpoDocRef>
-			<FolioRef>SAP 6359</FolioRef>
-			<FchRef>2016-11-24</FchRef>
-			<RazonRef>Tareas 2.53 Contrato Pdr-403</RazonRef>
-		</Referencia>
-		<TED version="1.0">
-			<DD>
-				<RE>76227698-4</RE>
-				<TD>34</TD>
-				<F>189</F>
-				<FE>2016-11-24</FE>
-				<RR>97004000-5</RR>
-				<RSR>Banco De Chile</RSR>
-				<MNT>5260602</MNT>
-				<IT1>Mes Diseño Noviembre 2016 Sap 6359</IT1>
-				<CAF version="1.0">
-					<DA>
-						<RE>76227698-4</RE>
-						<RS>BP BRANDING Y PUBLICIDAD SPA</RS>
-						<TD>34</TD>
-						<RNG>
-							<D>117</D>
-							<H>216</H>
-						</RNG>
-						<FA>2016-01-13</FA>
-						<RSAPK>
-							<M>3Aard60sJPCO5SOS6+WN9ZyGPcAA3fGtfIxbO9hA+YbX9bc4bdmdjSa+3eW3Sle3JTzq53dRWe0H9g6/MkjguQ==</M>
-							<E>Aw==</E>
-						</RSAPK>
-						<IDK>300</IDK>
-					</DA>
-					<FRMA algoritmo="SHA1withRSA">KZibsyFMyphpa6vatAHNEefHOqMvJEgK0h4838ZvZ2iH9gSVq5rFZNLKkDo0L5miMYOhjDevfJcdjb6m1bAvhw==</FRMA>
-				</CAF>
-				<TSTED>2016-11-24T18:08:07</TSTED>
-			</DD>
-			<FRMT algoritmo="SHA1withRSA">VXjRKjQkaXCv9hTB5fRPcgVLnA8GAlTqA4Euby2LjhRlMhQ42SBFxu2z/Kbx8FNcstF30WSxV1wJ7UB4DZQu0Q==</FRMT>
-		</TED>
-		<TmstFirma>2016-11-24T18:08:07</TmstFirma>
-	</Documento>
-	<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#R76227698-4T34F189"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>ycSc4LB2t6Z+l5XBwSABDxt6GWM=</DigestValue></Reference></SignedInfo><SignatureValue>Qt/GNxYe6KVpDSknNsH6o/4tXlgJC7DxMvMJm1QKbVOdnUc5jD0azxd3UfBAV+OA5BZLUxz44h7FCX0kNjfzeVXmQGbT5Zk8KicDqNIPPT231/6pylBdKUTSER9/epPPLH26lPsyVHPY+3DASu+1tNjKqTZQWisl9QtusuqUf4Y=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>kxYe7xc4MGYY/piWeqVMwm08h3fDvdde7tiSXpN/SCH6o+0P60qUbZPVsS0i+1MZ4TtFH9cGBo3KopQwAuuJG3DumQlhIJ8FW8nwiNVA6SMWHH6aFOUNPuJFNDa/3Baah/LFprtNis/bOiVbHJSsMZH5Wmeu9s/+Zbm4kIVOve0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIGSzCCBTOgAwIBAgIKd4MDhwAAAAMkRzANBgkqhkiG9w0BAQUFADCB0jELMAkG
-A1UEBhMCQ0wxHTAbBgNVBAgTFFJlZ2lvbiBNZXRyb3BvbGl0YW5hMREwDwYDVQQH
-EwhTYW50aWFnbzEUMBIGA1UEChMLRS1DRVJUQ0hJTEUxIDAeBgNVBAsTF0F1dG9y
-aWRhZCBDZXJ0aWZpY2Fkb3JhMTAwLgYDVQQDEydFLUNFUlRDSElMRSBDQSBGSVJN
-QSBFTEVDVFJPTklDQSBTSU1QTEUxJzAlBgkqhkiG9w0BCQEWGHNjbGllbnRlc0Bl
-LWNlcnRjaGlsZS5jbDAeFw0xNTEyMTYxNjI5NDBaFw0xODEyMTUxNjI5NDBaMIHO
-MQswCQYDVQQGEwJDTDEjMCEGA1UECBMaTUVUUk9QT0xJVEFOQSBERSBTQU5USUFH
-TyAxETAPBgNVBAcTCFNhbnRpYWdvMSUwIwYDVQQKExxCUCBCUkFORElORyBZIFBV
-QkxJQ0lEQUQgU1BBMQowCAYDVQQLDAEqMSkwJwYDVQQDEyBEaWVnbyAgQWNldmVk
-byBDYW5hbGEtRWNoZXZhcnJpYTEpMCcGCSqGSIb3DQEJARYaZW5yaXF1ZS5zYWxh
-c0BicmFuZGJvb2suY2wwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAJMWHu8X
-ODBmGP6YlnqlTMJtPId3w73XXu7Ykl6Tf0gh+qPtD+tKlG2T1bEtIvtTGeE7RR/X
-BgaNyqKUMALriRtw7pkJYSCfBVvJ8IjVQOkjFhx+mhTlDT7iRTQ2v9wWmofyxaa7
-TYrP2zolWxyUrDGR+VpnrvbP/mW5uJCFTr3tAgMBAAGjggKnMIICozA9BgkrBgEE
-AYI3FQcEMDAuBiYrBgEEAYI3FQiC3IMvhZOMZoXVnReC4twnge/sPGGBy54UhqiC
-WAIBZAIBBDAdBgNVHQ4EFgQUFdh8HznSkfUmpxmqPuZgpGlp/XswCwYDVR0PBAQD
-AgTwMB8GA1UdIwQYMBaAFHjhPp/SErN6PI3NMA5Ts0MpB7NVMD4GA1UdHwQ3MDUw
-M6AxoC+GLWh0dHA6Ly9jcmwuZS1jZXJ0Y2hpbGUuY2wvZWNlcnRjaGlsZWNhRkVT
-LmNybDA6BggrBgEFBQcBAQQuMCwwKgYIKwYBBQUHMAGGHmh0dHA6Ly9vY3NwLmVj
-ZXJ0Y2hpbGUuY2wvb2NzcDAjBgNVHREEHDAaoBgGCCsGAQQBwQEBoAwWCjEzMDM5
-ODc5LTAwIwYDVR0SBBwwGqAYBggrBgEEAcEBAqAMFgo5NjkyODE4MC01MIIBTQYD
-VR0gBIIBRDCCAUAwggE8BggrBgEEAcNSBTCCAS4wLQYIKwYBBQUHAgEWIWh0dHA6
-Ly93d3cuZS1jZXJ0Y2hpbGUuY2wvQ1BTLmh0bTCB/AYIKwYBBQUHAgIwge8egewA
-QwBlAHIAdABpAGYAaQBjAGEAZABvACAARgBpAHIAbQBhACAAUwBpAG0AcABsAGUA
-LgAgAEgAYQAgAHMAaQBkAG8AIAB2AGEAbABpAGQAYQBkAG8AIABlAG4AIABmAG8A
-cgBtAGEAIABwAHIAZQBzAGUAbgBjAGkAYQBsACwAIABxAHUAZQBkAGEAbgBkAG8A
-IABoAGEAYgBpAGwAaQB0AGEAZABvACAAZQBsACAAQwBlAHIAdABpAGYAaQBjAGEA
-ZABvACAAcABhAHIAYQAgAHUAcwBvACAAdAByAGkAYgB1AHQAYQByAGkAbzANBgkq
-hkiG9w0BAQUFAAOCAQEAVDyJnBkwbrczHi4YxztrHN0Djiz4JWbn89gW5sF3/+1a
-lNMwe/DzNTbON/7uLuSXMsapqp5Kp9kSTfvF5MEHwFgi7uBJvBAXr8IGrD669Z/w
-BQEiU8Min/Gdy42UU+Gh6KSTsgrWo1u2xfC17/7k9qRiYHh132hyo5CSawYe65s4
-ABShb+IpbKioldCZ0RIL1wgRPS65UfpuVtU6Um+w1oXflgiM/sau9QOQP8Glv3/9
-4ESl5jQ1YzbHJwMWRY35NGy+29B1Q1yP5eFqPPpdp7BDm+x67HQce/2ZMpp29OJo
-kAfu4MzOQULPZg7m6hwieqMbj75WAO2je0QN8XRHOQ==</X509Certificate></X509Data></KeyInfo></Signature></DTE><DatosAdicionales/></DATA>
+
+<Receptor>
+<RUTRecep>97004000-5</RUTRecep>
+<RznSocRecep>BANCO DE CHILE</RznSocRecep>
+<GiroRecep>BANCO</GiroRecep>
+<DirRecep>AHUMADA 251</DirRecep>
+<CmnaRecep>SANTIAGO</CmnaRecep>
+<CiudadRecep>SANTIAGO</CiudadRecep>
+</Receptor>
+<Totales>
+<MntNeto>71318133</MntNeto>
+<MntExe>0</MntExe>
+<TasaIVA>19</TasaIVA>
+<IVA>13550445</IVA>
+<MntTotal>84868578</MntTotal>
+</Totales>
+</Encabezado>
+<Detalle>
+<NroLinDet>1</NroLinDet>
+<CdgItem><TpoCodigo>INT1</TpoCodigo>
+<VlrCodigo />
+</CdgItem>
+<NmbItem>CODIGO DE SERVICIO: PF43-776, MANTENCION HW, CONTRATO: 27624 PARTE EN CLP (</NmbItem>
+<DscItem>CODIGO DE SERVICIO: PF43-776, MANTENCION HW, CONTRATO: 27624 PARTE EN CLP (65%), CUOTA DE $ 71.318.133 CLP, MES DE ENERO 2017, CUOTA 1/12, MONTO APROBADO $ 71.317.133,00 CLP, DESCUENTO: 0,00 CLP, TOTAL: 71.318.133,00 CLP, TIPO DE CAMBIO $1, CUENTA CONTABLE: 623506827, MANT-E INSTAL Y REPAR.EQUIPOS COMPUTACIONALES, CUI: 6432</DscItem>
+<QtyItem>1</QtyItem>
+<PrcItem>71318133</PrcItem>
+<MontoItem>71318133</MontoItem>
+</Detalle>
+<TED version="1.0"><DD><RE>96678680-9</RE><TD>33</TD><F>44277</F><FE>2017-02-15</FE><RR>97004000-5</RR><RSR>BANCO DE CHILE</RSR><MNT>84868578</MNT><IT1>CODIGO DE SERVICIO: PF43-776, MANTENCION</IT1><CAF version="1.0"><DA><RE>96678680-9</RE><RS>HEWLETT PACKARD CHILE COMERCIAL LIMITADA</RS><TD>33</TD><RNG><D>36844</D><H>49754</H></RNG><FA>2015-10-23</FA><RSAPK><M>15HVSWHDKWzPHs75/xt4rk9vQf+vz4ddvj++fS8c9WnS2dOWGfBR31Hr6+crZIc/y3JEke8KnSvpzJmqIGA2OQ==</M><E>Aw==</E></RSAPK><IDK>300</IDK></DA><FRMA algoritmo="SHA1withRSA">OzEExoDV+bgMeQD/wz1OxKlJ5AZUaHBE9DGnVerCvIqrtYTCmvWzNtBa4NQbFWDoiAKCdKCeP1NBDdMsa2z0UA==</FRMA></CAF><TSTED>2017-02-15T16:38:59</TSTED></DD><FRMT algoritmo="SHA1withRSA">X3J/JOpZvlXIrwyk0Mkc9rEtPo2jGDXUQdxjK6Tzi2IlJ7cMWeea0gKAB23VAoeJTTZw/MR5jltC
+WRXviAGkdw==
+</FRMT></TED>
+<TmstFirma>2017-02-15T16:38:59</TmstFirma>
+</Documento>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+  <SignedInfo>
+    <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+    <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+    <Reference URI="#S20170215T033F0000044277">
+      <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <DigestValue>EBQbbx8evlyZabfPSqOngh5r0xM=</DigestValue>
+    </Reference>
+  </SignedInfo>
+  <SignatureValue>
+    E3FbWNz5pw4B9q3WFuG4CQ063r4etI4wl/PurPBt4wNBVMr8qO9wCw85Z0EaRoZa
+    ATrzmewcvT2u2XbxvybdWL1S7a0p+RkvFiD2d2tpn+LJAGYM3xke6C5V2uTzBUz8
+    vHiYaAIpmuZoCWTCGnuiWtGVFtICV2Ipw2r9QW0exa0fh2vz7pGjBcOg5P6ntG/Y
+    sCBheB49Q3v844F35l5tpiz9lyv2Vzz0UQQGpIqWTQOhTSGcVbaKkkMW/TdFYMlz
+    a/LQvwX2Lm+IlWMAEJUgtuXr0or+G01W4XzjKToj1QLv15i6cMXvIpVj2YZj5wl/
+    XwUoo8dv1Y+6mJFSKXWC9w==
+  </SignatureValue>
+  <KeyInfo>
+    <KeyValue>
+      <RSAKeyValue>
+        <Modulus>
+          nLULSnFyRlSVD5TMbpFwfWBEQDgqPjA4BrQhCA9e5DqAgUUDyqr1HrUml6wLlaFe
+          ZLhNIrc3/FnqY6Lun62FKjKibvMAFLOr1pK5jUhNUl9BhppdwffQ0AUpKpo8ess6
+          H5YDKL96mjKKFkvLvqxjlS9Z5SIQVb4ypvWW3LxwzykrZhCrv1FuEYH6WHjtFsVW
+          5iH1BbUov0XGr/Lm/zTWIwkrGWNuz7OJilm9Il+D/p9PYmJLfYeCkGDKAT+9pTOO
+          U+kh7EkJ2k6Tf8MnpTmMKVyasqL/t+fagDzcB4XAjLHLKOxnGUZFisYqic8plb/o
+          F2+x99vB6/H8gKGxGO4l6w==
+        </Modulus>
+        <Exponent>AQAB</Exponent>
+      </RSAKeyValue>
+    </KeyValue>
+    <X509Data>
+      
+      <X509Certificate>
+        MIIGqTCCBZGgAwIBAgIKRabcFgAAAAAA7jANBgkqhkiG9w0BAQUFADCB0DELMAkG
+        A1UEBhMCQ0wxHTAbBgNVBAgTFFJlZ2lvbiBNZXRyb3BvbGl0YW5hMREwDwYDVQQH
+        EwhTYW50aWFnbzESMBAGA1UEChMJUEFQRVJMRVNTMSAwHgYDVQQLExdBdXRvcmlk
+        YWQgQ2VydGlmaWNhZG9yYTEuMCwGA1UEAxMlUEFQRVJMRVNTIENBIEZJUk1BIEVM
+        RUNUUk9OSUNBIFNJTVBMRTEpMCcGCSqGSIb3DQEJARYaY29tdW5pY2FjaW9uZXNA
+        cGtpY2hpbGUuY2wwHhcNMTQwOTExMTQ1MzU5WhcNMTcwOTEwMTQ1MzU5WjCB7jEL
+        MAkGA1UEBhMCQ0wxKjAoBgNVBAgMIVJFR0nDk04gTUVUUk9QT0xJVEFOQSBERSBT
+        QU5USUFHTzERMA8GA1UEBxMIU0FOVElBR08xMTAvBgNVBAoTKEhld2xldHQgUGFj
+        a2FyZCBDaGlsZSBDb21lcmNpYWwgTGltaXRhZGExHzAdBgNVBAsTFkVuY2FyZ2Fk
+        byBkZSBJbXB1ZXN0b3MxJzAlBgNVBAMTHk1hdXJpY2lvIElnbmFjaW8gUGFycmEg
+        UmFtaXJlejEjMCEGCSqGSIb3DQEJARYUbWF1cmljaW9wYXJyYUBocC5jb20wggEi
+        MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCctQtKcXJGVJUPlMxukXB9YERA
+        OCo+MDgGtCEID17kOoCBRQPKqvUetSaXrAuVoV5kuE0itzf8Wepjou6frYUqMqJu
+        8wAUs6vWkrmNSE1SX0GGml3B99DQBSkqmjx6yzoflgMov3qaMooWS8u+rGOVL1nl
+        IhBVvjKm9ZbcvHDPKStmEKu/UW4RgfpYeO0WxVbmIfUFtSi/Rcav8ub/NNYjCSsZ
+        Y27Ps4mKWb0iX4P+n09iYkt9h4KQYMoBP72lM45T6SHsSQnaTpN/wyelOYwpXJqy
+        ov+359qAPNwHhcCMscso7GcZRkWKxiqJzymVv+gXb7H328Hr8fyAobEY7iXrAgMB
+        AAGjggJjMIICXzA9BgkrBgEEAYI3FQcEMDAuBiYrBgEEAYI3FQiCzM4+gvjNHdmL
+        HoKPhVeEzpU1gRCCvo1+hsyNSAIBZAIBAjCCAYUGA1UdIASCAXwwggF4MIIBdAYI
+        KwYBBAGCxDcwggFmMIIBYgYIKwYBBQUHAgIwggFUHoIBUABDAGUAcgB0AGkAZgBp
+        AGMAYQBkAG8AIABwAGEAcgBhACAAdQBzAG8AIABUAHIAaQBiAHUAdABhAHIAaQBv
+        AC4AIABQAFMAQwAgAFAAYQBwAGUAcgBsAGUAcwBzACAAYQBjAHIAZQBkAGkAdABh
+        AGQAbwAgAHMAZQBnAPoAbgAgAFIALgBBAC4AIABFAHgAZQBuAHQAYQAgAE4AugAg
+        ADEANwAyACwAIABkAGUAIAAzADAAIABkAGUAIABlAG4AZQByAG8AIABkAGUAIAAy
+        ADAAMQAzACwAIABkAGUAIABsAGEAIABTAHUAYgBzAGUAYwByAGUAdABhAHIA7QBh
+        ACAAZABlACAARQBjAG8AbgBvAG0A7QBhACwAIAB5ACAARQBtAHAAcgBlAHMAYQBz
+        ACAAZABlACAATQBlAG4AbwByACAAVABhAG0AYQDxAG8ALjAdBgNVHQ4EFgQUnD0s
+        55m4PC9zC6I9ZKLwKMF63+swCwYDVR0PBAQDAgTwMB8GA1UdIwQYMBaAFJTkrzdl
+        Zl3pZ8w+vJ1vcRrLjIvsMCMGA1UdEQQcMBqgGAYIKwYBBAHBAQGgDBYKMTU4MDUy
+        NzEtNzAjBgNVHRIEHDAaoBgGCCsGAQQBwQECoAwWCjk2OTE1MzEwLTAwDQYJKoZI
+        hvcNAQEFBQADggEBAAkssuUGqcksnaSR2/KoE5/2oJRkuOge7yZOdiGOk42MEUOw
+        lklVdClR5j0Exkj2+JM9/reliaOHAswk/8bEDal9UTpzJdEYCpQQttRZYqy52TIK
+        D0wJwfmlt2wDUEPTL9cEMGfKF7femOTzyE70JNoZigbkNKMlTr+dUQk4yFovy+NU
+        d+Vlz5GVazerutL/RZ5SxrQe2wDP/JyvbSLZCrs9Lj4BR2dLKtBdoBHT6nPwVl4e
+        f0UVJtDz40YJ+zTfZh0JoozjfIH1qBRY2nVcK8ZpWrV6VO3OZs7DLcHq7mQ1bXj1
+        3XjWcUP2ZuqQI13RizpCF8MEKM00QxzOt36KhdI=
+      </X509Certificate>
+    </X509Data>
+  </KeyInfo>
+</Signature>
+<Personalizados>
+<DocPersonalizado xmlns="http://www.sii.cl/SiiDte" dteID="S20170215T033F0000044277">
+<campoString name="PPLOnline">true</campoString>
+
+<campoString name="pplPDFTemplateName">33.manual.jasper</campoString>
+<campoString name="pplManual">true</campoString>
+<campoString name="pplUsuarioGenDteNom">pvallejos</campoString>
+<campoString name="pplUsuarioGenDteID">4488</campoString>
+<campoString name="GlosaMonto">OCHENTA Y CUATRO MILLONES OCHOCIENTOS SESENTA Y OCHO MIL QUINIENTOS SETENTA Y OCHO PESOS</campoString>
+<campoString name="Condiciones">30 DIAS</campoString>
+<campoString name="RefInternaActg">6006054 / 6006053 / 2502227265</campoString>
+</DocPersonalizado>
+</Personalizados>
+</DTE>
