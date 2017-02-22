@@ -686,10 +686,16 @@ console.log("la parentSolicitud : " + parentSolicitud)
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.success)
-                    return [true, "", ""]
-                else
+                console.dir(result);
+                if (result.sucess) {
+                    console.log("hola")
+                    return [true, "", ""];
+                } else {
+                    console.log("CHAo")
                     return [false, result.error_text, ""];
+                    
+                }
+
             }
         },
         {
