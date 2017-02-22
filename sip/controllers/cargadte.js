@@ -212,61 +212,48 @@ exports.detalle = function (req, res) {
 
   var orden = sidx + " " + sord;
 
-  return models.procesodte.find({
-    attributes: [['idfactura', 'idfactura']],
-    where: { idcarga: req.params.id }
-  }).then(function (pdte) {
+  var additional = [{
+    "field": "idcarga",
+    "op": "eq",
+    "data": req.params.id
+  }];
 
-    logger.debug("idfactura : " + pdte.idfactura)
+  models.procesodte.belongsTo(models.factura, { foreignKey: 'idfactura' });
+  models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
 
-    var additional = [{
-      "field": "idfactura",
-      "op": "eq",
-      "data": pdte.idfactura
-    }];
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      logger.debug("->>> " + err)
+    } else {
+      return models.procesodte.count({
+        where: data
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        return models.procesodte.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data,
+          include: [
+            {
+              model: models.factura,
 
-    models.procesodte.belongsTo(models.factura, { foreignKey: 'idfactura' });
-    models.factura.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-      if (err) {
-        logger.debug("->>> " + err)
-      } else {
-        return models.procesodte.count({
-          where: data
-        }).then(function (records) {
-          var total = Math.ceil(records / rows);
-          return models.procesodte.findAll({
-            offset: parseInt(rows * (page - 1)),
-            limit: parseInt(rows),
-            order: orden,
-            where: data,
-            include: [
-              {
-                model: models.factura,
-
-                include: [
-                  {
-                    model: models.proveedor
-                  },
-                ]
-              },
-            ]
-          }).then(function (procesodte) {
-            return res.json({ records: records, total: total, page: page, rows: procesodte });
-          }).catch(function (err) {
-            logger.error(e)
-            res.json({ error_code: 1 });
-          });
-        })
-      }
-    });
-
-  }).catch(function (e) {
-    logger.error(e)
-    res.json({ error_code: 1 });
+              include: [
+                {
+                  model: models.proveedor
+                },
+              ]
+            },
+          ]
+        }).then(function (procesodte) {
+          return res.json({ records: records, total: total, page: page, rows: procesodte });
+        }).catch(function (err) {
+          logger.error(e)
+          res.json({ error_code: 1 });
+        });
+      })
+    }
   });
-
 }
 
 exports.guardar = function (req, res) {
@@ -310,7 +297,7 @@ exports.archivo = function (req, res) {
               attributes: ['id'],
               where: { numrut: RUTEmisor.split("-")[0] }
             }).then(function (proveedor) {
-
+              logger.debug("PROVEEDOR ENCONTRADO " + proveedor.id)
               return models.factura.create({
                 numero: Folio,
                 idproveedor: proveedor.id,
@@ -323,7 +310,7 @@ exports.archivo = function (req, res) {
                 ivacredito: 0,
                 borrado: 1
               }, { transaction: t }).then(function (factura) {
-
+                logger.debug("FACTURA CREADA " + factura.id)
                 return models.procesodte.create({
                   idcarga: idcargadte,
                   archivo: zipEntryName,
@@ -331,20 +318,25 @@ exports.archivo = function (req, res) {
                   idfactura: factura.id,
                   borrado: 1
                 }, { transaction: t }).then(function (procesodte) {
+                  logger.debug("REGISTRO DTE CREADO " + procesodte.id)
                   return procesodte.idfactura
                 }).catch(function (err) {
+                  logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                   throw new Error(err);
                 });
 
               }).catch(function (err) {
+                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                 throw new Error(err);
               });
 
             }).catch(function (err) {
+              logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
               throw new Error(err);
             });
 
           }).then(function (result) {
+            logger.debug("ENCABEZADO CREADO " + result)
             resolve(result);
           }).catch(function (err) {
             logger.error(err);
@@ -388,138 +380,163 @@ exports.archivo = function (req, res) {
                   ],
                   transaction: t,
                 }).then(function (solicitudaprobacion) {
-                  logger.debug("IDSOL : " + solicitudaprobacion.id);
-                  logger.debug("PERIODO:" + solicitudaprobacion.periodo)
-                  logger.debug("IMPUESTO:" + solicitudaprobacion.prefactura.dataValues.impuesto)
+                  if (!solicitudaprobacion) {
 
-                  var periodo = solicitudaprobacion.periodo
-                  var impuesto = solicitudaprobacion.prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion.prefactura.dataValues.impuesto : 0
+                    return models.detallefactura.create({
+                      idfactura: idfactura,
+                      idprefactura: null,
+                      idfacturacion: null,
+                      glosaservicio: NmbItem,
+                      cantidad: QtyItem,
+                      montonetoorigen: MontoItem,
+                      montoneto: MontoItem,
+                      montototal: 0,
+                      impuesto: 0,
+                      borrado: 1
+                    }, { transaction: t }).then(function (f) {
+                      return f.id;
+                    }).catch(function (err) {
+                      logger.error(err)
+                      //return reject(err);
+                    });
+                    //throw new Error("No existe la prefactura " + results[0] + " en tabla solicitudaprobacion");
+                  } else {
+                    logger.debug("IDSOL : " + solicitudaprobacion.id);
+                    logger.debug("PERIODO:" + solicitudaprobacion.periodo)
+                    logger.debug("IMPUESTO:" + solicitudaprobacion.prefactura.dataValues.impuesto)
 
-                  return models.detallefactura.findAll({ where: { idfacturacion: solicitudaprobacion.id } }).then(function (detallefactura) {
-                    if (detallefactura) throw new Error("Ya exite esta prefactura")
-                  });
+                    var periodo = solicitudaprobacion.periodo
+                    var impuesto = solicitudaprobacion.prefactura.dataValues.impuesto != undefined ? MontoItem * solicitudaprobacion.prefactura.dataValues.impuesto : 0
+                    /*
+                                      return models.detallefactura.findAll({ where: { idfacturacion: solicitudaprobacion.id } }).then(function (detallefactura) {
+                                        if (detallefactura) throw new Error("Ya exite esta prefactura")
+                                      });
+                    */
+                    return models.detallefactura.create({
+                      idfactura: idfactura,
+                      idprefactura: results[0],
+                      idfacturacion: solicitudaprobacion.id,
+                      glosaservicio: NmbItem,
+                      cantidad: QtyItem,
+                      montonetoorigen: MontoItem,
+                      montoneto: MontoItem,
+                      montototal: MontoItem,
+                      impuesto: impuesto,
+                      borrado: 1
+                    }, { transaction: t }).then(function (detallefactura) {
 
-                  return models.detallefactura.create({
-                    idfactura: idfactura,
-                    idprefactura: results[0],
-                    idfacturacion: solicitudaprobacion.id,
-                    glosaservicio: NmbItem,
-                    cantidad: QtyItem,
-                    montonetoorigen: MontoItem,
-                    montoneto: MontoItem,
-                    montototal: MontoItem,
-                    impuesto: impuesto,
-                    borrado: 1
-                  }, { transaction: t }).then(function (detallefactura) {
+                      return models.desglosecontable.findOne({
+                        attributes: ['idcui', 'idcuentacontable', 'porcentaje'],
+                        where: { idsolicitud: solicitudaprobacion.id }
+                      }).then(function (desglosecontable) {
+                        logger.debug("DETALLEFACTURA  : " + detallefactura.id);
+                        logger.debug("IDCUI  : " + desglosecontable.idcui);
+                        logger.debug("IDCUENTACONTABLE  : " + desglosecontable.idcuentacontable);
+                        logger.debug("PORCENTAJE  : " + desglosecontable.porcentaje);
 
-                    return models.desglosecontable.findOne({
-                      attributes: ['idcui', 'idcuentacontable', 'porcentaje'],
-                      where: { idsolicitud: solicitudaprobacion.id }
-                    }).then(function (desglosecontable) {
-                      logger.debug("DETALLEFACTURA  : " + detallefactura.id);
-                      logger.debug("IDCUI  : " + desglosecontable.idcui);
-                      logger.debug("IDCUENTACONTABLE  : " + desglosecontable.idcuentacontable);
-                      logger.debug("PORCENTAJE  : " + desglosecontable.porcentaje);
+                        return models.factoriva.findOne({
+                          attributes: ['factorrecuperacion'],
+                          where: { periodo: periodo },
+                          transaction: t,
+                        }).then(function (factoriva) {
 
-                      return models.factoriva.findOne({
-                        attributes: ['factorrecuperacion'],
-                        where: { periodo: periodo },
-                        transaction: t,
-                      }).then(function (factoriva) {
+                          logger.debug("factorrecuperacion  : " + factoriva.factorrecuperacion);
+                          var factorrecuperacion = factoriva.factorrecuperacion
 
-                        logger.debug("factorrecuperacion  : " + factoriva.factorrecuperacion);
-                        var factorrecuperacion = factoriva.factorrecuperacion
+                          return models.desgloseitemfactura.sum('impuesto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto1) {
+                            return models.desgloseitemfactura.sum('ivanorecuperable', { where: { iddetallefactura: detallefactura.id } }).then(function (monto2) {
+                              return models.desgloseitemfactura.sum('montocosto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto3) {
+                                return models.desgloseitemfactura.sum('ivacredito', { where: { iddetallefactura: detallefactura.id } }).then(function (monto4) {
+                                  return models.desgloseitemfactura.create({
+                                    iddetallefactura: detallefactura.id,
+                                    idcui: desglosecontable.idcui,
+                                    idcuentacontable: desglosecontable.idcuentacontable,
+                                    porcentaje: desglosecontable.porcentaje,
+                                    montoneto: (desglosecontable.porcentaje * MontoItem) / 100,
+                                    impuesto: (desglosecontable.porcentaje * impuesto) / 100,
+                                    ivanorecuperable: (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
+                                    montocosto: (desglosecontable.porcentaje * MontoItem / 100) + (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
+                                    ivacredito: (desglosecontable.porcentaje * impuesto / 100) * (1 - factorrecuperacion),
+                                    montototal: MontoItem * desglosecontable.porcentaje / 100 + impuesto * desglosecontable.porcentaje / 100,
+                                    borrado: 1
+                                  }, { transaction: t }).then(function (desgloseitemfactura) {
 
-                        return models.desgloseitemfactura.sum('impuesto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto1) {
-                          return models.desgloseitemfactura.sum('ivanorecuperable', { where: { iddetallefactura: detallefactura.id } }).then(function (monto2) {
-                            return models.desgloseitemfactura.sum('montocosto', { where: { iddetallefactura: detallefactura.id } }).then(function (monto3) {
-                              return models.desgloseitemfactura.sum('ivacredito', { where: { iddetallefactura: detallefactura.id } }).then(function (monto4) {
-                                return models.desgloseitemfactura.create({
-                                  iddetallefactura: detallefactura.id,
-                                  idcui: desglosecontable.idcui,
-                                  idcuentacontable: desglosecontable.idcuentacontable,
-                                  porcentaje: desglosecontable.porcentaje,
-                                  montoneto: (desglosecontable.porcentaje * MontoItem) / 100,
-                                  impuesto: (desglosecontable.porcentaje * impuesto) / 100,
-                                  ivanorecuperable: (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
-                                  montocosto: (desglosecontable.porcentaje * MontoItem / 100) + (desglosecontable.porcentaje * impuesto / 100) * factorrecuperacion,
-                                  ivacredito: (desglosecontable.porcentaje * impuesto / 100) * (1 - factorrecuperacion),
-                                  montototal: MontoItem * desglosecontable.porcentaje / 100 + impuesto * desglosecontable.porcentaje / 100,
-                                  borrado: 1
-                                }, { transaction: t }).then(function (desgloseitemfactura) {
+                                    if (!monto1)
+                                      monto1 = 0
+                                    else
+                                      logger.debug("monto1  : " + monto1);
+                                    if (!monto2)
+                                      monto2 = 0
+                                    else
+                                      logger.debug("monto1  : " + monto2);
+                                    if (!monto3)
+                                      monto3 = 0
+                                    else
+                                      logger.debug("monto1  : " + monto3);
+                                    if (!monto4)
+                                      monto4 = 0
+                                    else
+                                      logger.debug("monto1  : " + monto4);
 
-                                  if (!monto1)
-                                    monto1 = 0
-                                  else
-                                    logger.debug("monto1  : " + monto1);
-                                  if (!monto2)
-                                    monto2 = 0
-                                  else
-                                    logger.debug("monto1  : " + monto2);
-                                  if (!monto3)
-                                    monto3 = 0
-                                  else
-                                    logger.debug("monto1  : " + monto3);
-                                  if (!monto4)
-                                    monto4 = 0
-                                  else
-                                    logger.debug("monto1  : " + monto4);
+                                    monto1 = monto1 + desgloseitemfactura.impuesto
+                                    monto2 = monto2 + desgloseitemfactura.ivanorecuperable
+                                    monto3 = monto3 + desgloseitemfactura.montocosto
+                                    monto4 = monto4 + desgloseitemfactura.ivacredito
 
-                                  monto1 = monto1 + desgloseitemfactura.impuesto
-                                  monto2 = monto2 + desgloseitemfactura.ivanorecuperable
-                                  monto3 = monto3 + desgloseitemfactura.montocosto
-                                  monto4 = monto4 + desgloseitemfactura.ivacredito
+                                    logger.debug("pmonto1  : " + monto1);
+                                    logger.debug("pmonto2  : " + monto2);
+                                    logger.debug("pmonto3  : " + monto3);
+                                    logger.debug("pmonto4  : " + monto4);
 
-                                  logger.debug("pmonto1  : " + monto1);
-                                  logger.debug("pmonto2  : " + monto2);
-                                  logger.debug("pmonto3  : " + monto3);
-                                  logger.debug("pmonto4  : " + monto4);
+                                    detallefactura.ivanorecuperable = monto1
+                                    detallefactura.impuesto = monto2
+                                    detallefactura.montocosto = monto3
+                                    detallefactura.ivacredito = monto4
 
-                                  detallefactura.ivanorecuperable = monto1
-                                  detallefactura.impuesto = monto2
-                                  detallefactura.montocosto = monto3
-                                  detallefactura.ivacredito = monto4
+                                    return detallefactura.save({ transaction: t }).then(function (detf) {
 
-                                  return detallefactura.save({ transaction: t }).then(function (detf) {
+                                      return models.factura.find({
+                                        where: { id: idfactura }
+                                      }).then(function (bill) {
+                                        logger.debug("fact.ivanorecuperable : " + bill.ivanorecuperable)
+                                        logger.debug("fact.montocosto : " + bill.montocosto)
+                                        logger.debug("fact.ivacredito : " + bill.ivacredito)
 
-                                    return models.factura.find({
-                                      where: { id: idfactura }
-                                    }).then(function (bill) {
-                                      logger.debug("fact.ivanorecuperable : " + bill.ivanorecuperable)
-                                      logger.debug("fact.montocosto : " + bill.montocosto)
-                                      logger.debug("fact.ivacredito : " + bill.ivacredito)
+                                        return models.factura.update({
+                                          ivanorecuperable: bill.ivanorecuperable + monto2,
+                                          montocosto: bill.montocosto + monto3,
+                                          ivacredito: bill.ivacredito + monto4
+                                        }, {
+                                            where: {
+                                              id: idfactura
+                                            }
+                                          }).then(function (f) {
 
-                                      return models.factura.update({
-                                        ivanorecuperable: bill.ivanorecuperable + monto2,
-                                        montocosto: bill.montocosto + monto3,
-                                        ivacredito: bill.ivacredito + monto4
-                                      }, {
-                                          where: {
-                                            id: idfactura
-                                          }
-                                        }).then(function (f) {
+                                            return models.prefactura.update({ factura: results[0] }, { where: { id: results[0] } }).then(function (tet) {
+                                              return resolve(detallefactura.id);
+                                            }).catch(function (err) {
+                                              throw new Error(err);
+                                            });
 
-                                          return models.prefactura.update({ factura: results[0] }, { where: { id: results[0] } }).then(function (tet) {
-                                            return resolve(detallefactura.id);
                                           }).catch(function (err) {
                                             throw new Error(err);
                                           });
 
-                                        }).catch(function (err) {
-                                          throw new Error(err);
-                                        });
-
+                                      }).catch(function (err) {
+                                        throw new Error(err);
+                                      });
                                     }).catch(function (err) {
                                       throw new Error(err);
                                     });
-                                  }).catch(function (err) {
-                                    throw new Error(err);
-                                  });
 
+                                  })
                                 })
                               })
                             })
-                          })
+
+                          }).catch(function (err) {
+                            throw new Error(err);
+                          });
 
                         }).catch(function (err) {
                           throw new Error(err);
@@ -532,11 +549,7 @@ exports.archivo = function (req, res) {
                     }).catch(function (err) {
                       throw new Error(err);
                     });
-
-                  }).catch(function (err) {
-                    throw new Error(err);
-                  });
-
+                  }
                 }).catch(function (err) {
                   throw new Error(err);
                 });
@@ -569,7 +582,8 @@ exports.archivo = function (req, res) {
           }).then(function (result) {
             resolve(result);
           }).catch(function (err) {
-            logger.error(err);
+            logger.debug("se fue por aca")
+            //logger.error(err);
             reject(err);
           });
 
@@ -582,6 +596,7 @@ exports.archivo = function (req, res) {
     var processZipEntries = function (req, res, zipEntries, zipFolderName, i, idcarga, callback) {
 
       try {
+        logger.debug("VUELTA " + i)
         var bufferStream = new stream.PassThrough();
         var zipEntryName, data, etree;
 
@@ -590,15 +605,26 @@ exports.archivo = function (req, res) {
           var zipEntryData = zipEntry.getData();
           var data = zipEntryData.toString('utf8');
           etree = et.parse(data);
-          var lstDet = etree.findall('*/Documento/Detalle')
-          var FchEmis = etree.findtext('*/Documento/Encabezado/IdDoc/FchEmis')
-          var Folio = etree.findtext('*/Documento/Encabezado/IdDoc/Folio')
-          var RUTEmisor = etree.findtext('*/Documento/Encabezado/Emisor/RUTEmisor')
-          var RznSoc = etree.findtext('*/Documento/Encabezado/Emisor/RznSoc')
-          var MntTotal = etree.findtext('*/Documento/Encabezado/Totales/MntTotal')
-          var MntExe = etree.findtext('*/Documento/Encabezado/Totales/MntExe')
-          var MntNeto = etree.findtext('*/Documento/Encabezado/Totales/MntNeto')
-          var IVA = etree.findtext('*/Documento/Encabezado/Totales/IVA')
+
+          //var lstDet = etree.findall('*/Documento/Detalle')
+          //var FchEmis = etree.findtext('*/Documento/Encabezado/IdDoc/FchEmis')
+          //var Folio = etree.findtext('*/Documento/Encabezado/IdDoc/Folio')
+          //var RUTEmisor = etree.findtext('*/Documento/Encabezado/Emisor/RUTEmisor')
+          //var RznSoc = etree.findtext('*/Documento/Encabezado/Emisor/RznSoc')
+          //var MntTotal = etree.findtext('*/Documento/Encabezado/Totales/MntTotal')
+          //var MntExe = etree.findtext('*/Documento/Encabezado/Totales/MntExe')
+          //var MntNeto = etree.findtext('*/Documento/Encabezado/Totales/MntNeto')
+          //var IVA = etree.findtext('*/Documento/Encabezado/Totales/IVA')
+          var lstDet = etree.findall('./Documento/Detalle')
+          var FchEmis = etree.findtext('./Documento/Encabezado/IdDoc/FchEmis')
+          var Folio = etree.findtext('./Documento/Encabezado/IdDoc/Folio')
+          var RUTEmisor = etree.findtext('./Documento/Encabezado/Emisor/RUTEmisor')
+          var RznSoc = etree.findtext('./Documento/Encabezado/Emisor/RznSoc')
+          var MntTotal = etree.findtext('./Documento/Encabezado/Totales/MntTotal')
+          var MntExe = etree.findtext('./Documento/Encabezado/Totales/MntExe')
+          var MntNeto = etree.findtext('./Documento/Encabezado/Totales/MntNeto')
+          var IVA = etree.findtext('./Documento/Encabezado/Totales/IVA')
+
 
           logger.debug("FchEmis : " + FchEmis);
           logger.debug("Folio : " + Folio);
@@ -618,8 +644,9 @@ exports.archivo = function (req, res) {
               billDetails(idfactura, NmbItem, MontoItem, QtyItem).then(function (iddetalle) {
                 logger.debug("IDDETALLEFACTURA : " + iddetalle);
               }).catch(function (err) {
+                logger.debug("salio por aqui")
                 logger.error(err)
-                throw new Error(err);
+                //throw new Error(err);
               });
             }
 
@@ -629,7 +656,7 @@ exports.archivo = function (req, res) {
           });
 
           bufferStream.end(zipEntryData);
-
+          logger.debug("recursiva")
           processZipEntries(req, res, zipEntries, zipFolderName, i + 1, idcarga, callback);
 
         } else {
@@ -688,75 +715,75 @@ exports.archivo = function (req, res) {
           pos += data[i].length;
         }
 
-        var ext = validateZip(buf);
-        logger.debug(ext);
+        //var ext = validateZip(buf);
+        //logger.debug("EXTENSION : " + ext);
 
-        if (ext === "zip") {
+        //       if (ext === "zip") {
 
-          var zip = new AdmZip(buf);
+        var zip = new AdmZip(buf);
 
-          var zipEntries = zip.getEntries();
+        var zipEntries = zip.getEntries();
 
-          var zipFolderName = filename.replace(".zip", "");
+        var zipFolderName = filename.replace(".zip", "");
 
-          logger.debug(zipFolderName)
+        logger.debug(zipFolderName)
 
-          awaitId.then(function (idcargadte) {
+        awaitId.then(function (idcargadte) {
 
-            try {
+          try {
 
-              processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte, function (err, data) {
+            processZipEntries(req, res, zipEntries, zipFolderName, 0, idcargadte, function (err, data) {
 
-                if (!err) {
-                  return models.cargadte.update({
-                    horafin: new Date(),
-                    archivo: filename,
-                    estado: "CARGADO OK"
-                  }, {
-                      where: {
-                        id: idcargadte
-                      }
-                    }).then(function (cargadte) {
-                      return res.json({ message: "archivo " + filename + " cargado", success: true });
-                    }).catch(function (err) {
-                      logger.error(err)
-                      return res.json({ message: err, success: false });
-                    });
-                } else {
-                  return models.cargadte.update({
-                    horafin: new Date(),
-                    archivo: filename,
-                    estado: err
-                  }, {
-                      where: {
-                        id: idcargadte
-                      }
-                    }).then(function (cargadte) {
-                      return res.json({ message: "archivo " + filename + " cargado", success: true });
-                    }).catch(function (err) {
-                      logger.error(err)
-                      return res.json({ message: err, success: false });
-                    });
-                }
+              if (!err) {
+                return models.cargadte.update({
+                  horafin: new Date(),
+                  archivo: filename,
+                  estado: "CARGADO OK"
+                }, {
+                    where: {
+                      id: idcargadte
+                    }
+                  }).then(function (cargadte) {
+                    return res.json({ message: "archivo " + filename + " cargado", success: true });
+                  }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ message: err, success: false });
+                  });
+              } else {
+                return models.cargadte.update({
+                  horafin: new Date(),
+                  archivo: filename,
+                  estado: err
+                }, {
+                    where: {
+                      id: idcargadte
+                    }
+                  }).then(function (cargadte) {
+                    return res.json({ message: "archivo " + filename + " cargado", success: true });
+                  }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ message: err, success: false });
+                  });
+              }
 
-              });
+            });
 
-            }
-            catch (err) {
-              logger.error(err)
-              res.json({ message: err, success: false });
-            }
-
-          }).catch(function (err) {
+          }
+          catch (err) {
             logger.error(err)
             res.json({ message: err, success: false });
-          });
+          }
 
-        } else {
-
-          res.json({ message: "El archivo no es ZIP", success: false });
-        }
-
+        }).catch(function (err) {
+          logger.error(err)
+          res.json({ message: err, success: false });
+        });
+        /*
+                } else {
+        
+                  res.json({ message: "El archivo no es ZIP", success: false });
+                }
+        */
       });
 
     });
