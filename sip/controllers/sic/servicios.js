@@ -580,6 +580,11 @@ exports.proveedoressugeridosaction = function (req, res) {
 
             break;
         case "del":
+            models.proveedorsugerido.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (proveedorsugerido) {
                 bitacora.registrar(
                     idsolicitudcotizacion,
                     'proveedorsugerido',
@@ -588,24 +593,24 @@ exports.proveedoressugeridosaction = function (req, res) {
                     req.session.passport.user,
                     new Date(),
                     models.proveedorsugerido,
-                    function(err, data){
-                        if(!err){
+                    function (err, data) {
+                        if (!err) {
                             models.proveedorsugerido.destroy({
                                 where: {
                                     id: req.body.id
                                 }
-                            }).then(function (rowDeleted){
-                                return res.json({ message: '', sucess: true});
-                            }).catch(function (err){
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', sucess: true });
+                            }).catch(function (err) {
                                 logger.error(err)
-                                return res.json({ message: err.message, success: false});
+                                return res.json({ message: err.message, success: false });
                             });
-                        }else{
+                        } else {
                             logger.error(err)
-                            return res.json({ message: err.message, success: false});
+                            return res.json({ message: err.message, success: false });
                         }
                     });
-           
+            })
             break;
     }
 }

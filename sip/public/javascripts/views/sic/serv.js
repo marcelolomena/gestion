@@ -668,11 +668,11 @@ console.log("la parentSolicitud : " + parentSolicitud)
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
-                    if (parseInt(postdata.idproveedor)==0) {
-                        return [false, "Proveedor: Seleccionar un proveedor", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
+                if (parseInt(postdata.idproveedor) == 0) {
+                    return [false, "Proveedor: Seleccionar un proveedor", ""];
+                } else {
+                    return [true, "", ""]
+                }
             },
         },
         {
@@ -686,10 +686,10 @@ console.log("la parentSolicitud : " + parentSolicitud)
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
+                if (result.success)
                     return [true, "", ""]
+                else
+                    return [false, result.error_text, ""];
             }
         },
         {
