@@ -553,7 +553,7 @@ exports.proveedoressugeridosaction = function (req, res) {
                 idproveedor: req.body.idproveedor,
                 borrado: 1
             }).then(function (proveedorsugerido) {
-                bitacora.registrar(
+                bitacora.registrarhijo(
                     idsolicitudcotizacion,
                     'proveedorsugerido',
                     proveedorsugerido.id,
@@ -575,17 +575,16 @@ exports.proveedoressugeridosaction = function (req, res) {
             });
             break;
         case "edit":
-
-
-
             break;
         case "del":
+            console.log("hola " + idsolicitudcotizacion)
+            
             models.proveedorsugerido.findAll({
                 where: {
                     id: req.body.id
                 }
             }).then(function (proveedorsugerido) {
-                bitacora.registrar(
+                bitacora.registrarhijo(
                     idsolicitudcotizacion,
                     'proveedorsugerido',
                     req.body.id,
@@ -610,7 +609,10 @@ exports.proveedoressugeridosaction = function (req, res) {
                             return res.json({ message: err.message, success: false });
                         }
                     });
-            })
+            }).catch(function (err) {
+                logger.error(err);
+                res.json({ message: err.message, success: false });
+            });
             break;
     }
 }

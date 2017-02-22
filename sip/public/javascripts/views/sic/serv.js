@@ -688,10 +688,8 @@ console.log("la parentSolicitud : " + parentSolicitud)
                 var result = JSON.parse(json);
                 console.dir(result);
                 if (result.sucess) {
-                    console.log("hola")
                     return [true, "", ""];
                 } else {
-                    console.log("CHAo")
                     return [false, result.error_text, ""];
                     
                 }
