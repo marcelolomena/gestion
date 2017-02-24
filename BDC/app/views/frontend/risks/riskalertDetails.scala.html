@@ -6,10 +6,12 @@
 @if(alert != null){
 	 <ul>
 	 @if(utils.UserAccess.checkAccess(req,"alert_close")){
+	 	@if(utils.UserAccess.checkCanShowDeleteRisk(req,alert.get.id.get.toString())){
 		 <li>
 		 		 <span class="right "><input type="checkbox" id="alert_disable_@alert.get.id.get" name="alert_disable" class="right alert_disable input-hide-label" value="@alert.get.id.get" style="margin-right: 10px;"></span>
 		 		 <span class="right hide_label"> Eliminar :</span>
 		 </li>
+		 }
 	 }
 	 	<li>
 	 	<span class="alert-label">Programa</span>

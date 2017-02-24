@@ -334,7 +334,8 @@
 		<span class="left">@Messages("subtaskdetail.programrisk")</span>
 	</h3>
  	<div class="program-div" id="new-risk">
-	   	<span><a href="@controllers.Frontend.routes.Risks.riskManagement(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>
+ 		<span><a href="@controllers.Frontend.routes.Risks.addRisk(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>
+	   	@*<span><a href="@controllers.Frontend.routes.Risks.riskManagement(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>*@
 	</div>
 	<div class="width_full">
 				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)

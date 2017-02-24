@@ -14,6 +14,7 @@
 			<span class="active header">@Messages("program.action")</span>
 		</li>
 		@for( (p,index) <- risks.zipWithIndex){
+			<a href="/risk-details/@p.id" class="left">
 			<li class="@if(index%2==0){even_row}else{odd_row} @p.id.get.toString"  style="@if(parent_type==3){width:99%}">	
 				<span id="p_s_@p.id" class="role @*@if(p.is_active==1){active-sap}else{in-active-sap}*@">@{new java.text.SimpleDateFormat("dd-MM-yyyy").format(p.risk_clouser_date)}</span>
 				<span class="member">@p.name </span>
@@ -49,6 +50,7 @@
 				<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
 				}
 			</li>
+			</a>
 		}
   }else{
   	<li><span>No hay Riesgos...</span></li>

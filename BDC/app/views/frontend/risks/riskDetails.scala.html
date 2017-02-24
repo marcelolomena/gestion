@@ -1,6 +1,14 @@
-@(risk:Option[RiskManagementMaster],parent_id:String)
-@import services._;
+@(alerts:Seq[RiskAlerts], risk:Option[RiskManagementMaster],parent_id:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import services._
+@import utils._
+@import play.api.i18n._
+@import play.api._
 @import org.apache.commons.lang3.StringUtils
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
 <div class="width_full" id="risk-master-data">
 
 <div class="width_full">
@@ -12,7 +20,7 @@
 	<span class="header even_row">Causa</span><span class="infos">@risk.get.cause</span>
 	<span class="header odd_row">Evento</span><span class="infos">@risk.get.event</span>
 	<span class="header even_row">Impacto</span><span class="infos">@risk.get.imapct</span>	
-	<span class="header odd_row ">Categoria/Subcategoria</span>	
+	<span class="header odd_row">Categoria/Subcategoria</span>	
 	<span class="infos">
 	@{
 		if(!RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).isEmpty){
@@ -131,4 +139,6 @@
 </div>
 <div id="risk_alert">
 </div>
+</div>
+</body>
 

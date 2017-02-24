@@ -378,13 +378,13 @@ object Risks extends Controller {
 
   def riskDetails(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-
+      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
       val risk = RiskService.findRiskDetails(id)
       risk match {
         case None =>
           Ok("No Details Available");
         case Some(r: RiskManagementMaster) =>
-          Ok(views.html.frontend.risks.riskDetails(risk, id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok(views.html.frontend.risks.riskDetails(alerts,risk, id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
     }.getOrElse {

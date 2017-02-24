@@ -938,6 +938,14 @@ object RiskService extends CustomColumns {
       result
     }
   }
+  
+  def findAllActiveAlertsByRiskId(id: String): Seq[RiskAlerts] = {
+    val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      result
+    }
+  }  
 
   def findRiskAlertsById(id: String): Option[RiskAlerts] = {
     if (!StringUtils.isEmpty(id)) {
