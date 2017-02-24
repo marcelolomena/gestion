@@ -479,7 +479,7 @@ $(document).ready(function () {
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
     $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
-        searchOnEnter: false, defaultSearch: 'cn'
+        searchOnEnter: true, defaultSearch: 'cn'
     });
 
     $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {

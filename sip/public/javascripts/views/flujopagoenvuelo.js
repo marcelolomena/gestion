@@ -521,4 +521,30 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             $self.jqGrid("setColProp", "idsubtarea", { editable: true });
         }
     });
+
+    $("#" + childGridID).jqGrid("navButtonAdd", "#" + childGridPagerID, {
+        caption: ""/*"My Edit"*/,
+        buttonicon: "glyphicon glyphicon-eye-close",
+        title: "Reducir Filas",
+        beforeShowForm: function (form) {
+            var grid = $("#" + childGridID);
+            var rowKey = grid.getGridParam("selrow");
+            var rowData = grid.getRowData(rowKey);
+            var thissid = rowData.id;
+            /*if (thissid == 0) {
+                alert("Debe seleccionar una fila");
+                return [false, result.error_text, ""];
+            }
+            */
+            sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            //$('input#codigoart', form).attr('readonly', 'readonly');
+            
+        },
+
+        onClickButton: function () {
+            
+            
+            
+        }
+    });
 }

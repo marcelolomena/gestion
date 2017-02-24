@@ -178,8 +178,8 @@ module.exports = function (passport) {
     router.route('/sic/getcalculado/:id')
         .get(isAuthenticated, serviciosController.getcalculado);
 
-    router.route('/sic/desglosefactoresserv/action')
-        .post(isAuthenticated, serviciosController.desgloseaction);
+    //router.route('/sic/desglosefactoresserv/action')
+    //    .post(isAuthenticated, serviciosController.desgloseaction);
 
     router.route('/sic/actualizanotafactor/:id')
         .get(isAuthenticated, serviciosController.actualizanotafactor);
@@ -349,6 +349,19 @@ module.exports = function (passport) {
 
     router.route('/sic/proveedoressugeridosaction/:id/:idpadre')
         .post(isAuthenticated, serviciosController.proveedoressugeridosaction)
+
+    router.route('/sic/desglosefactoraction/:id/:idpadre')
+        .post(isAuthenticated, serviciosController.desglosefactoraction)
+
+    router.route('/bitacora/combobox')
+        .get(isAuthenticated, bitacoraController.combobox);
+
+    router.route('/bitacora/comboboxaction')
+        .get(isAuthenticated, bitacoraController.comboboxaction);
+
+    //router.route('/sic/desglosefactoresserv/action')
+    //   .post(isAuthenticated, serviciosController.desgloseaction);
+
 
 
     return router;

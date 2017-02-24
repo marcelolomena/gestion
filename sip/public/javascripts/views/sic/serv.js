@@ -322,6 +322,9 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
+    console.log("la subgrid_id : " + subgrid_id)
+    var parentSolicitud = subgrid_id.split("_")[2]
+    console.log("la parentSolicitud : " + parentSolicitud)
     var childGridURL = "/sic/desglosefactoresserv/" + parentRowKey + "/list";
 
     var modelIniciativaFecha = [
@@ -408,7 +411,9 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         height: 'auto',
         navkeys: true,
         pager: "#" + childGridPagerID,
-        editurl: '/sic/desglosefactoresserv/action',
+        //editurl: '/sic/desglosefactoresserv/action',
+        editurl: '/sic/desglosefactoraction/' + parentRowKey + '/' + parentSolicitud,
+        
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
                 var grid = $("#" + childGridID);

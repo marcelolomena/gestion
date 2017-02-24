@@ -132,7 +132,7 @@ exports.actionrespuesta = function (req, res) {
                 fecha: new Date(),
                 borrado: 1
             }).then(function (foro) {
-                bitacora.registrar(
+                bitacora.registrarhijo(
                     idsolicitudcotizacion,
                     'fororespuesta',
                     foro.id,
@@ -177,7 +177,7 @@ exports.actionrespuesta = function (req, res) {
                     id: req.body.id
                 }
             }).then(function (respuesta) {
-                bitacora.registrar(
+                bitacora.registrarhijo(
                     idsolicitudcotizacion,
                     'fororespuesta',
                     req.body.id,

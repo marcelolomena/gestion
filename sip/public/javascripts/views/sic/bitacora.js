@@ -15,31 +15,60 @@ var gridBitacora = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Tabla', 'Registro', 'Acción', 'Datos', 'ID Usuario', 'Nombre Responsable', 'Apellido Responsable','Fecha'],
+            colNames: ['id', 'Tabla', 'Registro', 'Acción', 'Datos', 'ID Usuario', 'Nombre Responsable', 'Apellido Responsable', 'Fecha'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
-                { name: 'tabla', index: 'tabla', width: 150, editable: true, search: true,editoptions: { size: 10 } },
-                { name: 'idregistro', index: 'idregistro', label: 'Registro', width: 100, editable: true, editoptions: { size: 10 } },
-                { name: 'accion', index: 'accion', width: 100, editable: true, editoptions: { size: 10 } },
-                { name: 'dataold', index: 'accion', width: 700, editable: true, editoptions: { size: 10 } },
-                { name: 'idusuario', label: '', width: 100, editable: true, editoptions: { size: 10 } },
-                { name: 'user.first_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
-                { name: 'user.last_name', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
                 {
-                    name: 'fecha', width: 100, align: 'left', search: false,
+                    name: 'tabla', index: 'tabla', width: 100, search: true, editable: true, stype: 'select', searchoptions: {
+                        dataUrl: '/bitacora/combobox',
+                        width: 100,
+                        buildSelect: function (response) {
+                            var data = JSON.parse(response);
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger Tabla--</option>';
+                            $.each(data, function (i, item) {
+                                s += '<option value="' + data[i].id + '">' + data[i].tabla + '</option>';
+                            });
+                            return s + "</select>";
+                        }
+                    }
+                },
+                { name: 'idregistro', index: 'idregistro', label: 'Registro', width: 70, editable: true },
+                {
+                    name: 'accion', index: 'accion', width: 70, editable: true, search: true, stype: 'select', searchoptions: {
+                        dataUrl: '/bitacora/comboboxaction',
+                        buildSelect: function (response) {
+                            var data = JSON.parse(response);
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger Acción--</option>';
+                            $.each(data, function (i, item) {
+                                s += '<option value="' + data[i].id + '">' + data[i].accion + '</option>';
+                            });
+                            return s + "</select>";
+                        }
+                    }
+                },
+                { name: 'dataold', index: 'accion', width: 350, editable: true, search: false },
+                { name: 'idusuario', label: '', width: 70, editable: true, editoptions: { size: 10 } },
+                { name: 'user.first_name', index: 'user.first_name', width: 100, editable: true, search: false },
+                { name: 'user.last_name', index: 'user.last_name', width: 100, editable: true, search: false },
+                {
+                    name: 'fecha', width: 100, align: 'left', search: true,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
                     editable: true, editrules: { required: true },
                     searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
+                        dataInit: function (element) {
+                            $(element).datepicker({
                                 language: 'es',
                                 format: 'dd-mm-yyyy',
                                 autoclose: true,
+                                orientation: 'bottom',
+                                /*
                                 onSelect: function (dateText, inst) {
                                     setTimeout(function () {
                                         $gridTab[0].triggerToolbar();
                                     }, 100);
-                                }
+                                }*/
                             });
                         },
                         sopt: ["eq", "le", "ge"]
@@ -61,21 +90,23 @@ var gridBitacora = {
             sortorder: "asc",
             shrinkToFit: false,
             height: "auto",
+            //editurl: '/bitacora/action',
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
             caption: "Bitacora"
-        }).jqGrid('filterToolbar', {
-        stringResult: true,
-        searchOnEnter: true,
-        defaultSearch: "cn",
-        searchOperators: true,
-        afterSearch: function () {
+        });
+        $gridTab.jqGrid('filterToolbar', {
+            stringResult: true,
+            searchOperators: true,
+            searchOnEnter: true,
+            defaultSearch: 'cn',
+            afterSearch: function () {
 
-        }
-    });;
-        
+            }
+        });
+
         $gridTab.jqGrid('navGrid', '#navGridBita', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modifica",

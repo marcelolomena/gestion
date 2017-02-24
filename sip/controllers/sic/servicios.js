@@ -498,16 +498,18 @@ exports.clasecriticidad = function (req, res) {
 }
 
 
-exports.desgloseaction = function (req, res) {
+exports.desglosefactoraction = function (req, res) {
     var action = req.body.oper;
+    var idproveedor = req.params.id;
+    var idsolicitudcotizacion = req.params.idpadre;
 
     switch (action) {
         case "add":
 
             break;
         case "edit":
-            bitacora.registrar(
-                req.body.idsolicitudcotizacion,
+            bitacora.registrarhijo(
+                idsolicitudcotizacion,
                 'factorescriticidad',
                 req.body.id,
                 'update',
@@ -517,14 +519,14 @@ exports.desgloseaction = function (req, res) {
                 function (err, data) {
                     if (!err) {
                         models.factorescriticidad.update({
-
-                            glosapregunta: req.body.glosapregunta
+                            nota: req.body.nota,
+                            observacion: req.body.observacion
                         }, {
                                 where: {
                                     id: req.body.id
                                 }
                             }).then(function (factorescriticidad) {
-                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
                                 return res.json({ message: err.message, success: false });
@@ -576,9 +578,7 @@ exports.proveedoressugeridosaction = function (req, res) {
             break;
         case "edit":
             break;
-        case "del":
-            console.log("hola " + idsolicitudcotizacion)
-            
+        case "del":    
             models.proveedorsugerido.findAll({
                 where: {
                     id: req.body.id

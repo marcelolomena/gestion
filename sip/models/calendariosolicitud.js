@@ -20,7 +20,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        fechatermino: {
+        fechaesperada: {
             type: DataTypes.DATE,
             allowNull: true
         },
@@ -38,6 +38,10 @@ module.exports = function (sequelize, DataTypes) {
         },
         borrado: {
             type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        fechareal: {
+            type: DataTypes.DATE,
             allowNull: true
         }
     }, {
