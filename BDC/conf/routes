@@ -259,7 +259,8 @@ POST   /edit-risk/$id<[A-Za-z0-9_-]+>                                           
 GET    /delete-risk/$id<[A-Za-z0-9_-]+>                                                               controllers.Frontend.Risks.deleteRisk(id:String)
 #GET    /risk-details                                                                                 controllers.Frontend.Risks.riskDetails(id:String)
 GET    /risk-details/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.Risks.riskDetails(id:String)
-GET    /new-alert                                                                                     controllers.Frontend.Risks.newAlerts(risk_id: String)
+#GET    /new-alert                                                                                    controllers.Frontend.Risks.newAlerts(risk_id: String)
+GET    /new-alert/$risk_id<[A-Za-z0-9_-]+>                                                                 controllers.Frontend.Risks.newAlerts(risk_id: String)
 POST   /save-alert                                                                                    controllers.Frontend.Risks.saveRiskAlert(risk_id: String)
 GET    /delete-risk-alert                                                                             controllers.Frontend.Risks.deleteRiskAlert(risk_alert_id:String)
 

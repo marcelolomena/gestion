@@ -1,9 +1,15 @@
 @(risk_id: String, alertForm : Form[RiskAlerts],userMap: Seq[Users],start_date:java.util.Date,end_date: java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import play.api.i18n._
+@import play.api._
 @import helper._
 @import services._
 @import java.util.Date._
 @import utils._
-
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
 		<input type="hidden" value="@start_date.format("dd-MM-yyyy")" name="start_date" id="start_date"/>
 		<input type="hidden" value="@end_date.format("dd-MM-yyyy")" name="end_date" id="end_date"/>
 			@form(action = controllers.Frontend.routes.Risks.saveRiskAlert(risk_id), 'id->"risk-management-alert-form") {
@@ -120,5 +126,7 @@
 			       	<span class="" style="margin-left:30px;"> <input id="done-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
 	          	</div>
 			}
+</div>
+</body>			
 
 	
