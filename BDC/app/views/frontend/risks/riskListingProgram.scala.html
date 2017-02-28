@@ -26,8 +26,8 @@
 				@if(p.parent_type.get==0){Programa}
 				@if(p.parent_type.get==1){Proyecto}
 				@if(p.parent_type.get==2){Tarea}
-				@println(p.parent_type.get)
 				</span>
+				</a>
 				@*<span class="member">
 				@if(!p.risk_state.isEmpty){
 					@{
@@ -45,12 +45,12 @@
 				  
 				</span> *@
 				<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
-				<a href="@controllers.Frontend.routes.Risks.riskManagement(parent_id,parent_type)"><span id="r_@p.id">¡Alerta!</span></a>
-					@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
-				<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
+				@*<a href="@controllers.Frontend.routes.Risks.riskManagement(parent_id,parent_type)"><span id="r_@p.id">¡Alerta!</span></a>*@
+				@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
+					<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
 				}
 			</li>
-			</a>
+			
 		}
   }else{
   	<li><span>No hay Riesgos...</span></li>

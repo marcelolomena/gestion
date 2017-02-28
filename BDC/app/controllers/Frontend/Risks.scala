@@ -132,7 +132,7 @@ object Risks extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-
+  
   def saveRisk(parent_id: String, parent_type: Integer) = Action(parse.multipartFormData) { implicit request =>
     request.session.get("username").map { user =>
       val subCategoryMap = new java.util.LinkedHashMap[String, String]()
@@ -346,7 +346,7 @@ object Risks extends Controller {
             riskStateMap.put(state.id.get.toString(), state.state_name)
           }
 
-          Ok(views.html.frontend.risks.editRisk(id, ARTForms.riskManagementForm.fill(rm), usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, rm.sub_category.toString)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok(views.html.frontend.risks.editRisk(id, ARTForms.riskManagementForm.fill(rm), usersMap, riskCategoryMap, subCategoryMap, riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, rm.sub_category.toString)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
     }.getOrElse {
@@ -380,11 +380,13 @@ object Risks extends Controller {
     request.session.get("username").map { user =>
       val alerts = RiskService.findAllActiveAlertsByRiskId(id)
       val risk = RiskService.findRiskDetails(id)
+      val parent_id = risk.get.parent_id.get.toString()
+      println("parent_id [" + parent_id + "]")
       risk match {
         case None =>
           Ok("No Details Available");
         case Some(r: RiskManagementMaster) =>
-          Ok(views.html.frontend.risks.riskDetails(alerts,risk, id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
     }.getOrElse {
@@ -456,7 +458,7 @@ object Risks extends Controller {
               if (!oldform("sub_category").value.isEmpty) {
                 selectedSubCategory = oldform("sub_category").value.get.toString
               }
-              BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap, riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
             },
             risk => {
               val the_Form = RiskService.validateRiskForUpdate(oldform, progrm, id, parent_id.toString(), parent_type.toString())
@@ -466,7 +468,7 @@ object Risks extends Controller {
                 if (!the_Form("sub_category").value.isEmpty) {
                   selectedSubCategory = the_Form("sub_category").value.get.toString
                 }
-                BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+                BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap, riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
               } else {
 
                 var newFileName = ""
@@ -613,6 +615,25 @@ object Risks extends Controller {
     }
   }
 
+   /*
+    def riskDetails(id: String) = Action { implicit request =>
+        request.session.get("username").map { user =>
+          val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+          val risk = RiskService.findRiskDetails(id)
+          val parent_id = risk.get.parent_id.get.toString()
+          println("parent_id [" + parent_id + "]")
+          risk match {
+            case None =>
+              Ok("No Details Available");
+            case Some(r: RiskManagementMaster) =>
+              Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          }
+    
+        }.getOrElse {
+          Redirect(routes.Login.loginUser())
+        }
+      } 
+   */
   def saveRiskAlert(risk_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var program: Option[ProgramMaster] = null
@@ -670,7 +691,10 @@ object Risks extends Controller {
                   Activity.saveLog(act)
                   //RiskService.sendAutomaticAlerts(last_index.toString)
 
-                  Ok("Sccuess");
+                  //Ok("Sccuess");
+                  val parent_id = risk.get.parent_id.get.toString()
+                  val alerts = RiskService.findAllActiveAlertsByRiskId(risk_id)
+                  Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
                 })
           }
 

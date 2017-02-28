@@ -15,19 +15,27 @@
 @frontend.header()
 <section class="slider" id="pDetail_page">
 
-
 		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
 		  <div class="product_detail_1 ">
 			  <h3 id="productNm" class="parent-new-h3">
 			    	<span class="parent-icon"> &#60; </span>
-				  <a href="">
+					@{
+		    			risk.get.parent_type.get match{
+		    				case 0 =>
+		    					Html("<a href='/program-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		  	  				case 1=>
+		  	  					Html("<a href='/project-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				case 2=>
+		    					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				case 3=>
+		    					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				
+		    			}
+					}
 				  	<span class="left"></span>
 			  	  </a>
-			  	   <span class="parent-icon">></span>
-			  	   <a href="">
-			  	   		<span class="left"></span>
-			  	   </a>
-			 		<a href="" style="float:right"><span id="" class="edit-project edit-icon edit-text edit_tasks_details " style="float:right;margin-right:27px">@Messages("employee.edit")</span></a>
+			  	   
+			 		<a href="/edit-risk/@risk.get.id" style="float:right"><span id="" class="edit-project edit-icon edit-text edit_tasks_details " style="float:right;margin-right:27px">@Messages("employee.edit")</span></a>
 
 			  	  <span  class=""></span>
 			  </h3>
@@ -191,17 +199,19 @@
 				
 				@if(alerts.size>0){
 					<li class="top-header"  style="width:99%">
-						<span class="role header">Nombre</span>
+						<span class="member header">Nombre</span>
+						<span class="member header">Detalle</span>
 						<span class="member header">Fecha</span>
 						<span class="member header">Responsable</span>
 						<span class="member header">Criticidad</span>
 						<span class="member header">Tipo</span>
-						<span class="active header">Accion</span>
+						<span class="member header">Accion</span>
 					</li>
 					@for( (p,index) <- alerts.zipWithIndex){
 						<a href="/risk-details/@p.id" class="left">
 						<li class="@if(index%2==0){even_row}else{odd_row}">	
 							<span class="member">@p.event_title</span>
+							<span class="member">@p.event_details</span>
 							<span class="member">@if(!p.event_date.isEmpty){
 		 						@p.event_date.get.format("dd-MM-yyyy")
 		 					}
@@ -226,9 +236,14 @@
 						 		}
 					 		}
 							</span>
-			
+							</a>
+							<span class="member">
+								@if(utils.UserAccess.checkAccess(req,"delete_alert")){    
+									<span class="delete-alert delete-icon" id="alert_@p.id" style="margin-left: 5px"></span>
+								}
+							</span>
 						</li>
-						</a>
+						
 					}
 				  }else{
 				  	<li><span>No hay Alertas...</span></li>
@@ -239,8 +254,13 @@
   </div>
 	  @frontend.footer()
 </section>
-	
+<div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"> 
+  	</div>	
 </div>	 
 @frontend.headerScripts()	
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
 </body>	
 </html>

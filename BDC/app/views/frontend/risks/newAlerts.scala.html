@@ -10,6 +10,7 @@
 @frontend.topLayout()
 <div class="main">
 @frontend.header()
+<section class="slider" id="pDetail_page">
 		<input type="hidden" value="@start_date.format("dd-MM-yyyy")" name="start_date" id="start_date"/>
 		<input type="hidden" value="@end_date.format("dd-MM-yyyy")" name="end_date" id="end_date"/>
 			@form(action = controllers.Frontend.routes.Risks.saveRiskAlert(risk_id), 'id->"risk-management-alert-form") {
@@ -123,10 +124,25 @@
 		    	</dl>
 	      		<div class="width_full" style="margin-top: 20px;">
 			       	<span class=""><input id="send-alert" class="btn  form-button" value="Enviar" type="button"/></span>
-			       	<span class="" style="margin-left:30px;"> <input id="done-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/></span>
+			       	<span class="" style="margin-left:30px;"> 
+			       	@*<input id="done-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>*@
+			       	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
+			       	</span>
 	          	</div>
 			}
+  		@frontend.footer()
+	</section>			
 </div>
-</body>			
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	   $('#cancel-alert').on('click',function() {
+		 window.location.href='/risk-details/@risk_id';
+	   });
+	});	   
+</script>
+		
 
 	
