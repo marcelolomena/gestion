@@ -255,7 +255,17 @@ object Risks extends Controller {
                  */
                 val act = Activity(ActivityTypes.Risk.id, "New Risk created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
                 Activity.saveLog(act)
-                Redirect(routes.Risks.riskManagement(parent_id, parent_type))
+                //Redirect(routes.Risks.riskManagement(parent_id, parent_type))
+               parent_type.intValue() match {
+                  case 0 =>
+                    Redirect(routes.Program.programDetails(parent_id))
+                  case 1 =>
+                    Redirect(routes.ProjectMaster.projectDetails(parent_id))
+                  case 2 =>
+                    Redirect(routes.Task.projectTaskDetails(parent_id))
+                  case 3 =>
+                    Redirect(routes.SubTask.subTaskDetails(parent_id))
+                }                
             }.getOrElse {
               implicit val newFlash = request.flash + ("error" -> "Something went wrong.")
               /* if (uploadType.equals("ADD")) {
@@ -279,8 +289,21 @@ object Risks extends Controller {
               val act = Activity(ActivityTypes.Risk.id, "New Risk created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
               Activity.saveLog(act)
 
-              Redirect(routes.Risks.riskManagement(parent_id, parent_type))
-              /* }*/
+              //Redirect(routes.Risks.riskManagement(parent_id, parent_type))
+
+               parent_type.intValue() match {
+                  case 0 =>
+                    Redirect(routes.Program.programDetails(parent_id))
+                  case 1 =>
+                    Redirect(routes.ProjectMaster.projectDetails(parent_id))
+                  case 2 =>
+                    Redirect(routes.Task.projectTaskDetails(parent_id))
+                  case 3 =>
+                    Redirect(routes.SubTask.subTaskDetails(parent_id))
+                }
+              
+              
+              
             }
           }
 
@@ -640,6 +663,7 @@ object Risks extends Controller {
       var start_date: Date = new Date()
       var end_date: Date = new Date()
       var program_id = ""
+
       val risk = RiskService.findRiskDetails(risk_id)
       risk match {
         case None =>
@@ -691,10 +715,10 @@ object Risks extends Controller {
                   Activity.saveLog(act)
                   //RiskService.sendAutomaticAlerts(last_index.toString)
 
-                  //Ok("Sccuess");
-                  val parent_id = risk.get.parent_id.get.toString()
-                  val alerts = RiskService.findAllActiveAlertsByRiskId(risk_id)
-                  Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+                  Ok("Sccuess");
+                  //val parent_id = risk.get.parent_id.get.toString()
+                  //val alerts = RiskService.findAllActiveAlertsByRiskId(risk_id)
+                  //Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
                 })
           }
 
