@@ -132,7 +132,7 @@ object Risks extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-  
+
   def saveRisk(parent_id: String, parent_type: Integer) = Action(parse.multipartFormData) { implicit request =>
     request.session.get("username").map { user =>
       val subCategoryMap = new java.util.LinkedHashMap[String, String]()
@@ -256,7 +256,7 @@ object Risks extends Controller {
                 val act = Activity(ActivityTypes.Risk.id, "New Risk created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
                 Activity.saveLog(act)
                 //Redirect(routes.Risks.riskManagement(parent_id, parent_type))
-               parent_type.intValue() match {
+                parent_type.intValue() match {
                   case 0 =>
                     Redirect(routes.Program.programDetails(parent_id))
                   case 1 =>
@@ -265,7 +265,7 @@ object Risks extends Controller {
                     Redirect(routes.Task.projectTaskDetails(parent_id))
                   case 3 =>
                     Redirect(routes.SubTask.subTaskDetails(parent_id))
-                }                
+                }
             }.getOrElse {
               implicit val newFlash = request.flash + ("error" -> "Something went wrong.")
               /* if (uploadType.equals("ADD")) {
@@ -291,19 +291,17 @@ object Risks extends Controller {
 
               //Redirect(routes.Risks.riskManagement(parent_id, parent_type))
 
-               parent_type.intValue() match {
-                  case 0 =>
-                    Redirect(routes.Program.programDetails(parent_id))
-                  case 1 =>
-                    Redirect(routes.ProjectMaster.projectDetails(parent_id))
-                  case 2 =>
-                    Redirect(routes.Task.projectTaskDetails(parent_id))
-                  case 3 =>
-                    Redirect(routes.SubTask.subTaskDetails(parent_id))
-                }
-              
-              
-              
+              parent_type.intValue() match {
+                case 0 =>
+                  Redirect(routes.Program.programDetails(parent_id))
+                case 1 =>
+                  Redirect(routes.ProjectMaster.projectDetails(parent_id))
+                case 2 =>
+                  Redirect(routes.Task.projectTaskDetails(parent_id))
+                case 3 =>
+                  Redirect(routes.SubTask.subTaskDetails(parent_id))
+              }
+
             }
           }
 
@@ -377,6 +375,38 @@ object Risks extends Controller {
     }
   }
 
+  /*
+  def editRiskAlert(id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var alert = RiskService.findRiskAlertsById(id)
+
+      alert match {
+        case None =>
+          Redirect(routes.Login.loginUser())
+        case Some(r: RiskAlerts) =>
+        val rm = RiskAlerts(r.id,
+                      r.risk_id,
+                      r.event_type,
+                      r.event_code,
+                      r.event_date,
+                      r.event_title,
+                      r.event_details,
+                      r.responsible,
+                      r.person_invloved,
+                      r.alert_type,
+                      r.criticality,
+                      r.is_active)
+                      
+        
+          Ok(views.html.frontend.risks.newAlerts(risk_id, ARTForms.alertsForm, users, start_date, end_date)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+      }
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+*/
   def deleteRisk(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 
@@ -638,25 +668,6 @@ object Risks extends Controller {
     }
   }
 
-   /*
-    def riskDetails(id: String) = Action { implicit request =>
-        request.session.get("username").map { user =>
-          val alerts = RiskService.findAllActiveAlertsByRiskId(id)
-          val risk = RiskService.findRiskDetails(id)
-          val parent_id = risk.get.parent_id.get.toString()
-          println("parent_id [" + parent_id + "]")
-          risk match {
-            case None =>
-              Ok("No Details Available");
-            case Some(r: RiskManagementMaster) =>
-              Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
-          }
-    
-        }.getOrElse {
-          Redirect(routes.Login.loginUser())
-        }
-      } 
-   */
   def saveRiskAlert(risk_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var program: Option[ProgramMaster] = null
@@ -716,9 +727,6 @@ object Risks extends Controller {
                   //RiskService.sendAutomaticAlerts(last_index.toString)
 
                   Ok("Sccuess");
-                  //val parent_id = risk.get.parent_id.get.toString()
-                  //val alerts = RiskService.findAllActiveAlertsByRiskId(risk_id)
-                  //Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
                 })
           }
 

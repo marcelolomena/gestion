@@ -340,6 +340,88 @@
 	<div class="width_full">
 				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
 	</div>
+
+  	<h3 id="matrixRk">
+		<span class="left">Matriz de Riesgo</span>
+	</h3>	
+	
+	<div class="width_full">
+				<div class="panel panel-primary">
+					<div>
+						<h4>Probability</h4>
+					</div>
+					<div class="table-responsive">
+						<table width="98%">
+							<tr>
+								<td width="10%">
+									<div class="vertical-text">
+										<h4>Impact</h4>
+									</div>
+								</td>
+								<td width="90%">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="15%"></th>
+												<th width="17%" style="text-align: center">1</th>
+												<th width="17%" style="text-align: center">2</th>
+												<th width="17%" style="text-align: center">3</th>
+												<th width="17%" style="text-align: center">4</th>
+												<th width="17%" style="text-align: center">5</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td align="center">5</td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="yellow">C1,T1</td>
+												<td align="center" bgcolor="orange"></td>
+												<td align="center" bgcolor="red"></td>
+												<td align="center" bgcolor="red"></td>
+											</tr>
+											<tr>
+												<td align="center">4</td>
+												<td align="center" bgcolor="yellow">T5</td>
+												<td align="center" bgcolor="yellow">C2,C3</td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="orange"></td>
+												<td align="center" bgcolor="red"></td>
+											</tr>
+											<tr>
+												<td align="center">3</td>
+												<td align="center" bgcolor="greenyellow">T6</td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="yellow">C4,T3,T4</td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="orange"></td>
+											</tr>
+											<tr>
+												<td align="center">2</td>
+												<td align="center" bgcolor="green"></td>
+												<td align="center" bgcolor="greenyellow"></td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="yellow">T2</td>
+											</tr>
+											<tr>
+												<td align="center">1</td>
+												<td align="center" bgcolor="green"></td>
+												<td align="center" bgcolor="green"></td>
+												<td align="center" bgcolor="greenyellow"></td>
+												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="yellow"></td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</div>
+
+				</div>
+
+	</div>	
+	
 	@if(utils.UserAccess.checkAccess(req,"program_member_listing")){
 		<h3 id="productNm" style="margin-top: 20px;">
 			    <span class="left">@Messages("programdetails.programmembers")</span>
@@ -801,6 +883,7 @@
 <script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/matrix.css")">
 <script type="text/javascript">
 	function validatePositive(value, column) {
 		if ( isNaN(value) && value < 0)

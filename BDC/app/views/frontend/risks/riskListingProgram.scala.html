@@ -44,8 +44,8 @@
 				}
 				  
 				</span> *@
-				<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
-				@*<a href="@controllers.Frontend.routes.Risks.riskManagement(parent_id,parent_type)"><span id="r_@p.id">¡Alerta!</span></a>*@
+				@*<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
+				<a href="@controllers.Frontend.routes.Risks.riskManagement(parent_id,parent_type)"><span id="r_@p.id">¡Alerta!</span></a>*@
 				@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
 					<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
 				}

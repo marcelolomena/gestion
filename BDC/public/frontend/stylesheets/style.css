@@ -2245,6 +2245,14 @@ padding: 6px 20px 6px 8px;
     padding: 0 0 0 5px;
 }
 
+#matrixRk {
+    background-color: #F3F4F5;
+    height: auto;
+    min-height: 30px;
+    line-height: 27px;
+    padding: 0 0 0 5px;
+}
+
 .download_button {
 	width: 125px;
 	margin-left: 10px;

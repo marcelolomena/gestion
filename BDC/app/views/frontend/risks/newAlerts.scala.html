@@ -142,11 +142,11 @@
 function renderSendAlert() {
 
 	var url = $("#risk-management-alert-form").attr("action");
-	console.log(url)
+
 	var sData = $('#risk-management-alert-form').serialize();
-	console.log(sData)
+
 	$.post(url, sData, function(data) {
-		console.log(data)
+
 		if (data == "Sccuess") {
 			window.location.href = "/risk-details/"	+ $("#risk_id").val()
 			/*
