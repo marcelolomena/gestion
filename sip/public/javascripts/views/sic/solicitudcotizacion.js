@@ -201,16 +201,18 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'SAP', name: 'sap', width: 50, align: 'left', search: false, editable: true, hidden: false, editoptions: {
-dataInit: function(element){
-    $(element).mask("00000", {placeholder: "_____"});
-}            
-        }},
+        {
+            label: 'SAP', name: 'sap', width: 50, align: 'left', search: false, editable: true, hidden: false, editoptions: {
+                dataInit: function (element) {
+                    $(element).mask("00000", { placeholder: "_____" });
+                }
+            }
+        },
         {
             label: 'Descripción', name: 'descripcion', width: 250, align: 'left',
             search: false, editable: true, editoptions: { rows: "2", cols: "50" },
             editrules: { required: true }, edittype: "textarea", hidden: false
-            
+
         },
 
         { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: false, editable: true, hidden: false },
@@ -325,34 +327,34 @@ dataInit: function(element){
         { label: 'C.Negociador', name: 'correonegociador', width: 130, hidden: false, search: false, editable: true },
         { label: 'F.Negociador', name: 'fononegociador', width: 100, hidden: false, search: false, editable: true },
         { label: 'D.Negociador', name: 'direccionnegociador', width: 150, hidden: false, search: false, editable: true },
-        { label: 'N° RFP', name: 'numerorfp', width: 80, hidden: false, search: false, editable: true, formatter: 'integer'},
+        { label: 'N° RFP', name: 'numerorfp', width: 80, hidden: false, search: false, editable: true, formatter: 'integer' },
         {
-                    label: 'Fecha RFP', name: 'fechaenviorfp', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+            label: 'Fecha RFP', name: 'fechaenviorfp', width: 150, align: 'left', search: false,
+            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+            editable: true, editrules: { required: true },
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $gridTab[0].triggerToolbar();
+                            }, 100);
                         }
-                    },
+                    });
                 },
+                sopt: ["eq", "le", "ge"]
+            },
+            editoptions: {
+                size: 10, maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                }
+            },
+        },
         /*
         
         {
@@ -672,7 +674,7 @@ dataInit: function(element){
                 else
                     return [true, "", ""]
             }
-            
+
 
         }, {
 
@@ -725,7 +727,6 @@ dataInit: function(element){
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-
             if (targ === '#documentos') {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {

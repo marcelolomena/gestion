@@ -359,10 +359,6 @@ module.exports = function (passport) {
     router.route('/bitacora/comboboxaction')
         .get(isAuthenticated, bitacoraController.comboboxaction);
 
-    //router.route('/sic/desglosefactoresserv/action')
-    //   .post(isAuthenticated, serviciosController.desgloseaction);
-
-
-
+   
     return router;
 }

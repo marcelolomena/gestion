@@ -12,7 +12,11 @@ var gridCalendario = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Fecha Término<span style='color:red'>*</span>{fechatermino}</div>";
+        tmplServ += "<div class='column-full'>Fecha Esperada<span style='color:red'>*</span>{fechaesperada}</div>";
+        tmplServ += "</div>";
+
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-full'>Fecha Real<span style='color:red'>*</span>{fechareal}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
@@ -31,12 +35,39 @@ var gridCalendario = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Descripcion', 'Fecha Término', 'Observación', 'idtiporesponsable', 'Responsable'],
+            colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Fecha Real', 'Observación', 'idtiporesponsable', 'Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
-                    name: 'fechatermino', width: 150, align: 'left', search: false,
+                    name: 'fechaesperada', width: 150, align: 'left', search: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    editable: true, editrules: { required: true },
+                    searchoptions: {
+                        dataInit: function (el) {
+                            $(el).datepicker({
+                                language: 'es',
+                                format: 'dd-mm-yyyy',
+                                autoclose: true,
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        $gridTab[0].triggerToolbar();
+                                    }, 100);
+                                }
+                            });
+                        },
+                        sopt: ["eq", "le", "ge"]
+                    },
+                    editoptions: {
+                        size: 10, maxlengh: 10,
+                        dataInit: function (element) {
+                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                        }
+                    },
+                },
+                {
+                    name: 'fechareal', width: 150, align: 'left', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
                     editable: true, editrules: { required: true },
                     searchoptions: {
@@ -88,7 +119,7 @@ var gridCalendario = {
                     }
                 },
                 { name: 'valore.nombre', width: 250, editable: true, editoptions: { size: 10 } },
-                
+
 
 
 
