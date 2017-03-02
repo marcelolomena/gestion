@@ -59,9 +59,13 @@ module.exports = function (passport) {
 
     router.route('/contratosporpresupuesto/:idpresupuesto/:idproveedor')
         .get(isAuthenticated, tareaenvueloController.getcontratosporpresupuesto);
-        
+
     router.route('/tareasporpresupuesto/:idcontrato')
         .get(isAuthenticated, tareaenvueloController.gettareasporpresupuesto);
+
+
+    router.route('/presupuestoenvuelo/comboboxpmo')
+        .get(isAuthenticated, presupuestoenvueloController.comboboxpmo);
 
     return router;
 

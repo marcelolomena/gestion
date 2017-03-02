@@ -50,15 +50,27 @@ module.exports = function(sequelize, DataTypes) {
     },
     uidlider: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'uid'
+      }
     },
     uidjefeproyecto: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'uid'
+      }
     },
     uidpmoresponsable: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'uid'
+      }
     },
     dolar: {
       type: DataTypes.FLOAT,

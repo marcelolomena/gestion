@@ -34,14 +34,14 @@ $(document).ready(function () {
     template += "<div class='column-three'><span style='color: red'>*</span>Jefe Proyecto{uidjefeproyecto}</div>";
     template += "<div class='column-three'><span style='color: red'>*</span>PMO Responsable{uidpmoresponsable}</div>";
     template += "</div>";
-/*
-    template += "<div class='form-row'>";
-    template += "<div class='column-three'><span style='color: red'>*</span>Dolar{dolar}</div>";
-    template += "<div class='column-three'><span style='color: red'>*</span>UF{uf}</div>";
-    template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
-    template += "</div>";
-
-*/
+    /*
+        template += "<div class='form-row'>";
+        template += "<div class='column-three'><span style='color: red'>*</span>Dolar{dolar}</div>";
+        template += "<div class='column-three'><span style='color: red'>*</span>UF{uf}</div>";
+        template += "<div class='column-three'><span style='color: red'>*</span>Fecha Conversión{fechaconversion}</div>";
+        template += "</div>";
+    
+    */
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
@@ -66,9 +66,11 @@ $(document).ready(function () {
             label: 'Proyecto', name: 'nombreproyecto', width: 250, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
 
         {
@@ -80,9 +82,11 @@ $(document).ready(function () {
                     $(element).mask("00000", { placeholder: "_____" });
                 }
             },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: 'program_id', name: 'program_id', width: 150, align: 'left',
@@ -157,9 +161,11 @@ $(document).ready(function () {
         {
             label: 'Art', name: 'codigoart', width: 70, align: 'left',
             search: false, editable: true, jsonmap: 'codigoart',
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: 'Cui 1', name: 'cuifinanciamiento1', width: 120, align: 'left',
@@ -171,9 +177,11 @@ $(document).ready(function () {
             },
             editrules: { edithidden: false, required: true, number: true },
             hidedlg: true,
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: '% Cui 1', name: 'porcentaje1', width: 85, align: 'left',
@@ -187,14 +195,16 @@ $(document).ready(function () {
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.porcentaje1;
-                dato = val*100;
+                dato = val * 100;
                 return dato;
             },
             search: false, editable: true, hidden: false,
             editrules: { edithidden: false, required: true },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
             //hidedlg: true
         },
         {
@@ -208,9 +218,11 @@ $(document).ready(function () {
             },
             editrules: { edithidden: false, required: false, number: true },
             hidedlg: true,
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: '% Cui 2', name: 'porcentaje2', width: 85, align: 'left',
@@ -224,31 +236,37 @@ $(document).ready(function () {
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.porcentaje2;
-                dato = val*100;
+                dato = val * 100;
                 return dato;
             },
             search: false, editable: true, hidden: false,
             editrules: { edithidden: false, required: false },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
             //hidedlg: true
         },
         {
             label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
             align: 'left', edittype: "textarea",
             search: true, editable: true, hidden: true,
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200,
             align: 'left', edittype: "textarea",
             search: true, editable: true, hidden: true,
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: 'uidlider', name: 'uidlider',
@@ -287,9 +305,11 @@ $(document).ready(function () {
         {
             label: 'Lider', name: 'lider', width: 120, align: 'left',
             search: false, editable: true, hidden: false, jsonmap: "nombrelider",
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: 'uidjefeproyecto', name: 'uidjefeproyecto',
@@ -327,9 +347,11 @@ $(document).ready(function () {
         {
             label: 'Jefe Area Responsable', name: 'jefeproyecto', width: 150, align: 'left',
             search: false, editable: true, hidden: false, jsonmap: "nombrejefe",
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
         {
             label: 'uidpmoresponsable', name: 'uidpmoresponsable',
@@ -364,73 +386,87 @@ $(document).ready(function () {
         },
         {
             label: 'PMO Responsable', name: 'pmoresponsable', width: 150, align: 'left',
-            search: false, editable: true, hidden: false, jsonmap: "nombrepmo",
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
-        },
-/*
-        {
-            label: 'Dolar', name: 'dolar', width: 55, align: 'right',
-            search: false, editable: true, hidden: false,
-            editrules: { required: true },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000', { reverse: true });
-                }
-            },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
-        },
-
-        {
-            label: 'UF', name: 'uf', width: 60, align: 'right',
-            search: false, editable: true, hidden: false,
-            editrules: { required: true },
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('00.000', { reverse: true });
-                }
-            },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
-        },
-        {
-            label: 'Fecha Conv', name: 'fechaconversion', width: 100, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true,
-            editrules: { required: true },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                childGridID[0].triggerToolbar();
-                            }, 100);
-                        }
+            search: true, editable: true, stype: 'select', searchoptions: {
+                dataUrl: '/presupuestoenvuelo/comboboxpmo',
+                buildSelect: function (response) {
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger PMO--</option>';
+                    $.each(data, function (i, item) {
+                        s += '<option value="' + data[i].id + '">' + data[i].accion + '</option>';
                     });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                    return s + "</select>";
                 }
             },
-            colMenu:true,
-            coloptions: {sorting:false, columns: true, filtering: false, searching: false,
-                grouping: false, freeze: false},
+            hidden: false, jsonmap: "nombrepmo",
+            colMenu: true,
+            coloptions: {
+                sorting: false, columns: true, filtering: false, searching: false,
+                grouping: false, freeze: false
+            },
         },
-*/
+        /*
+                {
+                    label: 'Dolar', name: 'dolar', width: 55, align: 'right',
+                    search: false, editable: true, hidden: false,
+                    editrules: { required: true },
+                    formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).mask('000', { reverse: true });
+                        }
+                    },
+                    colMenu:true,
+                    coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                        grouping: false, freeze: false},
+                },
+        
+                {
+                    label: 'UF', name: 'uf', width: 60, align: 'right',
+                    search: false, editable: true, hidden: false,
+                    editrules: { required: true },
+                    formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).mask('00.000', { reverse: true });
+                        }
+                    },
+                    colMenu:true,
+                    coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                        grouping: false, freeze: false},
+                },
+                {
+                    label: 'Fecha Conv', name: 'fechaconversion', width: 100, align: 'left', search: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    editable: true,
+                    editrules: { required: true },
+                    searchoptions: {
+                        dataInit: function (el) {
+                            $(el).datepicker({
+                                language: 'es',
+                                format: 'dd-mm-yyyy',
+                                autoclose: true,
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        childGridID[0].triggerToolbar();
+                                    }, 100);
+                                }
+                            });
+                        },
+                        sopt: ["eq", "le", "ge"]
+                    },
+                    editoptions: {
+                        size: 10, maxlengh: 10,
+                        dataInit: function (element) {
+                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                        }
+                    },
+                    colMenu:true,
+                    coloptions: {sorting:false, columns: true, filtering: false, searching: false,
+                        grouping: false, freeze: false},
+                },
+        */
     ];
 
     $("#table_iniciativa").jqGrid({
@@ -512,7 +548,7 @@ $(document).ready(function () {
                 var elporcentaje1 = parseInt(postdata.porcentaje1);
                 console.log('porcentaje1: ' + elporcentaje1);
                 var elporcentaje2 = 0;
-                if(postdata.porcentaje2!=""){
+                if (postdata.porcentaje2 != "") {
                     //elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
                     elporcentaje2 = parseInt(postdata.porcentaje2);
                 }
@@ -600,7 +636,7 @@ $(document).ready(function () {
                 var elporcentaje1 = parseInt(postdata.porcentaje1);
                 console.log('porcentaje1: ' + elporcentaje1);
                 var elporcentaje2 = 0;
-                if(postdata.porcentaje2!=""){
+                if (postdata.porcentaje2 != "") {
                     //elporcentaje2 = parseFloat(postdata.porcentaje2.split(".").join("").replace(",", "."));
                     elporcentaje2 = parseInt(postdata.porcentaje2);
                 }
