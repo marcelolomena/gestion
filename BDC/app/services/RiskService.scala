@@ -947,6 +947,65 @@ object RiskService extends CustomColumns {
     }
   }  
 
+    def countRisk(parent_id: String,probablity: Int, impact: Int): Long = {
+    DB.withConnection { implicit connection =>
+      val count1: Long = SQL("""
+              SELECT count(*) FROM art_risk 
+              WHERE 
+              probablity_of_occurence = {probablity} 
+              AND quantification = {impact} 
+              AND is_active = 1 
+              AND parent_id = {parent_id} 
+        """)
+      .on(
+          'parent_id -> parent_id.toInt,
+          'probablity -> probablity,
+          'impact -> impact).as(scalar[Long].single)
+          
+      val count2: Long = SQL("""
+              SELECT count(*) FROM art_risk 
+              WHERE 
+              probablity_of_occurence = {probablity} 
+              AND quantification = {impact} 
+              AND is_active = 1 
+              AND parent_id in (SELECT pId FROM art_project_master WHERE program = {parent_id} AND is_active = 1)
+        """)
+      .on(
+          'parent_id -> parent_id.toInt,
+          'probablity -> probablity,
+          'impact -> impact).as(scalar[Long].single)  
+          
+          
+      val count3: Long = SQL("""
+            SELECT count(*) FROM art_risk 
+            WHERE 
+            probablity_of_occurence = {probablity} 
+            AND quantification = {impact} 
+            AND is_active = 1 
+            AND parent_id in (SELECT tId FROM art_task WHERE is_active = 1 AND pId in (SELECT pId FROM art_project_master WHERE program = {parent_id} AND is_active = 1))
+        """)
+      .on(
+          'parent_id -> parent_id.toInt,
+          'probablity -> probablity,
+          'impact -> impact).as(scalar[Long].single)           
+          
+          
+      count1 + count2 + count3;
+    }
+  }
+    
+    def countAlertForRisk(risk_id: String): Long = {
+    DB.withConnection { implicit connection =>
+      val count: Long = SQL("""
+              SELECT count(*) FROM art_risk_alert WHERE risk_id = {risk_id} AND is_active = 1
+        """)
+      .on(
+          'risk_id -> risk_id.toInt).as(scalar[Long].single)
+      count;
+    }
+  }    
+    
+
   def findRiskAlertsById(id: String): Option[RiskAlerts] = {
     if (!StringUtils.isEmpty(id)) {
       val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + id

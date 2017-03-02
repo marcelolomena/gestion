@@ -348,14 +348,14 @@
 	<div class="width_full">
 				<div class="panel panel-primary">
 					<div>
-						<h4>Probability</h4>
+						<h4 style="text-align: center;">Probabilidad</h4>
 					</div>
 					<div class="table-responsive">
 						<table width="98%">
 							<tr>
 								<td width="10%">
 									<div class="vertical-text">
-										<h4>Impact</h4>
+										<h4>Impacto</h4>
 									</div>
 								</td>
 								<td width="90%">
@@ -366,50 +366,26 @@
 												<th width="17%" style="text-align: center">1</th>
 												<th width="17%" style="text-align: center">2</th>
 												<th width="17%" style="text-align: center">3</th>
-												<th width="17%" style="text-align: center">4</th>
-												<th width="17%" style="text-align: center">5</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td align="center">5</td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="yellow">C1,T1</td>
-												<td align="center" bgcolor="orange"></td>
-												<td align="center" bgcolor="red"></td>
-												<td align="center" bgcolor="red"></td>
-											</tr>
-											<tr>
-												<td align="center">4</td>
-												<td align="center" bgcolor="yellow">T5</td>
-												<td align="center" bgcolor="yellow">C2,C3</td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="orange"></td>
-												<td align="center" bgcolor="red"></td>
-											</tr>
-											<tr>
 												<td align="center">3</td>
-												<td align="center" bgcolor="greenyellow">T6</td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="yellow">C4,T3,T4</td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="orange"></td>
+												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,0,2)</td>
+												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,1,2)</td>
+												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,2,2)</td>
 											</tr>
 											<tr>
 												<td align="center">2</td>
-												<td align="center" bgcolor="green"></td>
-												<td align="center" bgcolor="greenyellow"></td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="yellow">T2</td>
+												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,0,1)</td>
+												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,1,1)</td>
+												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,2,1)</td>
 											</tr>
 											<tr>
 												<td align="center">1</td>
-												<td align="center" bgcolor="green"></td>
-												<td align="center" bgcolor="green"></td>
-												<td align="center" bgcolor="greenyellow"></td>
-												<td align="center" bgcolor="yellow"></td>
-												<td align="center" bgcolor="yellow"></td>
+												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,0,0)</td>
+												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,1,0)</td>
+												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,2,0)</td>
 											</tr>
 										</tbody>
 									</table>
