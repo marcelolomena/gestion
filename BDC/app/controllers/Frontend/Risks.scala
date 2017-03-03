@@ -375,38 +375,61 @@ object Risks extends Controller {
     }
   }
 
-  /*
-  def editRiskAlert(id: String) = Action { implicit request =>
+  def editRiskAlert(risk_id: String, alert_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      var alert = RiskService.findRiskAlertsById(id)
 
-      alert match {
+      var alert = RiskService.findRiskAlertsById(alert_id)
+      val risk = RiskService.findRiskDetails(risk_id)
+      var program: Option[ProgramMaster] = null
+      var program_id = ""
+
+      risk match {
         case None =>
           Redirect(routes.Login.loginUser())
-        case Some(r: RiskAlerts) =>
-        val rm = RiskAlerts(r.id,
-                      r.risk_id,
-                      r.event_type,
-                      r.event_code,
-                      r.event_date,
-                      r.event_title,
-                      r.event_details,
-                      r.responsible,
-                      r.person_invloved,
-                      r.alert_type,
-                      r.criticality,
-                      r.is_active)
-                      
-        
-          Ok(views.html.frontend.risks.newAlerts(risk_id, ARTForms.alertsForm, users, start_date, end_date)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
+        case Some(r: RiskManagementMaster) =>
+          r.parent_type.get match {
+            case 0 =>
+              program_id = r.parent_id.get.toString()
+            case 1 =>
+              program = ProjectService.findProgramDetailForProject(r.parent_id.get.toString())
+              program_id = program.get.program_id.get.toString()
+            case 2 =>
+              program = TaskService.findProgramDetailForTask(r.parent_id.get.toString())
+              program_id = program.get.program_id.get.toString()
+            case 3 =>
+              program = SubTaskServices.findProgramDetailForSubTask(r.parent_id.get.toString())
+              program_id = program.get.program_id.get.toString()
+          }
+
+          alert match {
+            case None =>
+              Redirect(routes.Login.loginUser())
+            case Some(rr: RiskAlerts) =>
+              val ra = RiskAlerts(rr.id,
+                rr.risk_id,
+                rr.event_type,
+                rr.event_code,
+                rr.event_date,
+                rr.event_title,
+                rr.event_details,
+                rr.responsible,
+                rr.person_invloved,
+                rr.alert_type,
+                rr.criticality,
+                rr.is_active)
+
+              val users = ProgramMemberService.findAllProgramMembers(program_id);
+              Ok(views.html.frontend.risks.editAlert(risk_id, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+          }
       }
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
   }
-*/
+
   def deleteRisk(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 

@@ -208,7 +208,7 @@
 						<span class="member header">Accion</span>
 					</li>
 					@for( (p,index) <- alerts.zipWithIndex){
-						<a href="/risk-details/@p.id" class="left">
+						<a href="/edit-alert/@risk.get.id/@p.id" class="left">
 						<li class="@if(index%2==0){even_row}else{odd_row}">	
 							<span class="member">@p.event_title</span>
 							<span class="member">@p.event_details</span>

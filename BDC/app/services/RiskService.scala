@@ -26,7 +26,7 @@ import java.util.Calendar
 import models.RiskAlerts
 import models.Users
 import models.SpiCpiCalculations
-import views.html.frontend.task.issueDetails
+//import views.html.frontend.task.issueDetails
 import models.UserSetting
 import play.Play
 import models.RiskManagementIssueMain
