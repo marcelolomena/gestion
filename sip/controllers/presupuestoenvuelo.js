@@ -214,64 +214,138 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
+
   var order = sidx + " " + sord;
 
-  var sql0 = "declare @rowsPerPage as bigint; " +
-    "declare @pageNum as bigint;" +
-    "set @rowsPerPage=" + rows + "; " +
-    "set @pageNum=" + page + ";   " +
-    "With SQLPaging As   ( " +
-    "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
-    "FROM [sip].[presupuestoenvuelo] a " +
-    " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
-    " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
-    " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
-    " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
-    "WHERE (a.[borrado] = 1) " +
-    ") " +
-    "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+  if (filters!=undefined) {
+    logger.debug(filters)
+    //jsonString = filters.replace("\"pmoresponsable\":", "\"pmo.first_name\":");
 
-  if (filters) {
-    var jsonObj = JSON.parse(filters);
+    //logger.debug(jsonString)
+  }
 
-    if (JSON.stringify(jsonObj.rules) != '[]') {
+  models.presupuestoenvuelo.belongsTo(models.user, { as: 'lider', foreignKey: 'uidlider' });
+  models.presupuestoenvuelo.belongsTo(models.user, { as: 'jefe', foreignKey: 'uidjefeproyecto' });
+  models.presupuestoenvuelo.belongsTo(models.user, { as: 'pmo', foreignKey: 'uidpmoresponsable' });
+  models.presupuestoenvuelo.belongsTo(models.programa, { foreignKey: 'program_id' });
 
-      jsonObj.rules.forEach(function (item) {
-
-        if (item.op === 'cn')
-          condition += item.field + " like '%" + item.data + "%' AND"
-      });
-
-      var sql = "declare @rowsPerPage as bigint; " +
-        "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rows + "; " +
-        "set @pageNum=" + page + ";   " +
-        "With SQLPaging As   ( " +
-        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
-        "FROM [sip].[presupuestoenvuelo] a " +
-        " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
-        " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
-        " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
-        " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
-        "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
-        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-
-      logger.debug(sql);
-
-      models.presupuestoenvuelo.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        sequelize.query(sql)
-          .spread(function (rows) {
-            res.json({ records: records, total: total, page: page, rows: rows });
-          });
-      })
-
+  return utilSeq.buildCondition(filters, function (err, data) {
+    if (err) {
+      logger.debug("->>> " + err)
     } else {
+      return models.presupuestoenvuelo.count({
+        where: data
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        return models.presupuestoenvuelo.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          //rder: 'horainicio desc',
+          where: data,
+          //attributes: [
+          //  [sequelize.fn('DISTINCT', sequelize.col('nombrepmo')), 'nombrepmo']
+          //],
+          //order: 'nombrepmo',
+          include: [
+            {
+              attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
+              model: models.user, as: 'lider'
+            },
+            {
+              attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
+              model: models.user, as: 'jefe'
+            },
+            {
+              attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
+              model: models.user, as: 'pmo'
+            },
+            {
+              model: models.programa
+            }
+          ],
 
+        }).then(function (presupuestoenvuelo) {
+          return res.json({ records: records, total: total, page: page, rows: presupuestoenvuelo });
+        }).catch(function (err) {
+          logger.error(err);
+          res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
+
+
+
+  /*
+    var sql0 = "declare @rowsPerPage as bigint; " +
+      "declare @pageNum as bigint;" +
+      "set @rowsPerPage=" + rows + "; " +
+      "set @pageNum=" + page + ";   " +
+      "With SQLPaging As   ( " +
+      "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+      "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
+      "FROM [sip].[presupuestoenvuelo] a " +
+      " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
+      " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
+      " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
+      " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
+      "WHERE (a.[borrado] = 1) " +
+      ") " +
+      "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+  
+    if (filters) {
+      var jsonObj = JSON.parse(filters);
+  
+      if (JSON.stringify(jsonObj.rules) != '[]') {
+  
+        jsonObj.rules.forEach(function (item) {
+  
+          if (item.op === 'cn')
+            condition += item.field + " like '%" + item.data + "%' AND"
+        });
+  
+        var sql = "declare @rowsPerPage as bigint; " +
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rows + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+          "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
+          "FROM [sip].[presupuestoenvuelo] a " +
+          " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
+          " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
+          " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
+          " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
+          "WHERE ( a.[borrado] = 1) AND " + condition.substring(0, condition.length - 4) + ") " +
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+  
+        logger.debug(sql);
+  
+        models.presupuestoenvuelo.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
+          var total = Math.ceil(records / rows);
+          sequelize.query(sql)
+            .spread(function (rows) {
+              res.json({ records: records, total: total, page: page, rows: rows });
+            });
+        })
+  
+      } else {
+  
+        models.presupuestoenvuelo.count({
+  
+        }).then(function (records) {
+          var total = Math.ceil(records / rows);
+          sequelize.query(sql0)
+            .spread(function (rows) {
+              res.json({ records: records, total: total, page: page, rows: rows });
+            });
+        })
+      }
+  
+    } else {
+  
       models.presupuestoenvuelo.count({
-
+  
       }).then(function (records) {
         var total = Math.ceil(records / rows);
         sequelize.query(sql0)
@@ -280,21 +354,7 @@ exports.list = function (req, res) {
           });
       })
     }
-
-  } else {
-
-    models.presupuestoenvuelo.count({
-
-    }).then(function (records) {
-      var total = Math.ceil(records / rows);
-      sequelize.query(sql0)
-        .spread(function (rows) {
-          res.json({ records: records, total: total, page: page, rows: rows });
-        });
-    })
-
-  }
-
+  */
   /*
     utilSeq.buildCondition(filters, function (err, data) {
       if (err) {
@@ -627,8 +687,8 @@ exports.action = function (req, res) {
 
 exports.comboboxpmo = function (req, res) {
   models.presupuestoenvuelo.belongsTo(models.art_user, { foreignKey: 'uidlider' });
-  models.presupuestoenvuelo.belongsTo(models.art_user, { as: 'idjefepro',  foreignKey: 'uidjefeproyecto' });
-  models.presupuestoenvuelo.belongsTo(models.art_user, { as: 'idpmo',  foreignKey: 'uidpmoresponsable' });
+  models.presupuestoenvuelo.belongsTo(models.art_user, { as: 'idjefepro', foreignKey: 'uidjefeproyecto' });
+  models.presupuestoenvuelo.belongsTo(models.art_user, { as: 'idpmo', foreignKey: 'uidpmoresponsable' });
   models.presupuestoenvuelo.belongsTo(models.art_program, { foreignKey: 'program_id' });
   models.presupuestoenvuelo.findAll({
     attributes: [
@@ -645,9 +705,9 @@ exports.comboboxpmo = function (req, res) {
       {
         model: models.art_user, as: 'idpmo'
       },
-     {
+      {
         model: models.art_program
-     }
+      }
     ],
   }).then(function (presupuestoenvuelo) {
     //iniciativas.forEach(log)
