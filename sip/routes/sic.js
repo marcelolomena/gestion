@@ -151,8 +151,8 @@ module.exports = function (passport) {
         .post(isAuthenticated, claseevaluaciontecnicaController.action)
         .get(isAuthenticated, claseevaluaciontecnicaController.list);
 
-    router.route('/sic/proveedoressugeridos/action')
-        .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
+    //router.route('/sic/proveedoressugeridos/action')
+    //    .post(isAuthenticated, serviciosController.proveedoressugeridosaction);
 
     router.route('/sic/clases')
         .get(isAuthenticated, clausulasController.clases);
@@ -178,8 +178,8 @@ module.exports = function (passport) {
     router.route('/sic/getcalculado/:id')
         .get(isAuthenticated, serviciosController.getcalculado);
 
-    router.route('/sic/desglosefactoresserv/action')
-        .post(isAuthenticated, serviciosController.desgloseaction);
+    //router.route('/sic/desglosefactoresserv/action')
+    //    .post(isAuthenticated, serviciosController.desgloseaction);
 
     router.route('/sic/actualizanotafactor/:id')
         .get(isAuthenticated, serviciosController.actualizanotafactor);
@@ -347,5 +347,18 @@ module.exports = function (passport) {
     router.route('/sic/bitacora/:id')
         .get(isAuthenticated, bitacoraController.list);
 
+    router.route('/sic/proveedoressugeridosaction/:id/:idpadre')
+        .post(isAuthenticated, serviciosController.proveedoressugeridosaction)
+
+    router.route('/sic/desglosefactoraction/:id/:idpadre')
+        .post(isAuthenticated, serviciosController.desglosefactoraction)
+
+    router.route('/bitacora/combobox')
+        .get(isAuthenticated, bitacoraController.combobox);
+
+    router.route('/bitacora/comboboxaction')
+        .get(isAuthenticated, bitacoraController.comboboxaction);
+
+   
     return router;
 }

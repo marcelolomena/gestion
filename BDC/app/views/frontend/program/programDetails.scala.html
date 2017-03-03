@@ -334,11 +334,70 @@
 		<span class="left">@Messages("subtaskdetail.programrisk")</span>
 	</h3>
  	<div class="program-div" id="new-risk">
-	   	<span><a href="@controllers.Frontend.routes.Risks.riskManagement(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>
+ 		<span><a href="@controllers.Frontend.routes.Risks.addRisk(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>
+	   	@*<span><a href="@controllers.Frontend.routes.Risks.riskManagement(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>*@
 	</div>
 	<div class="width_full">
 				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
 	</div>
+
+  	<h3 id="matrixRk">
+		<span class="left">Matriz de Riesgo</span>
+	</h3>	
+	
+	<div class="width_full">
+				<div class="panel panel-primary">
+					<div>
+						<h4 style="text-align: center;">Probabilidad</h4>
+					</div>
+					<div class="table-responsive">
+						<table width="98%">
+							<tr>
+								<td width="10%">
+									<div class="vertical-text">
+										<h4>Impacto</h4>
+									</div>
+								</td>
+								<td width="90%">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th width="15%"></th>
+												<th width="17%" style="text-align: center">1</th>
+												<th width="17%" style="text-align: center">2</th>
+												<th width="17%" style="text-align: center">3</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td align="center">3</td>
+												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,0,2)</td>
+												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,1,2)</td>
+												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,2,2)</td>
+											</tr>
+											<tr>
+												<td align="center">2</td>
+												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,0,1)</td>
+												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,1,1)</td>
+												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,2,1)</td>
+											</tr>
+											<tr>
+												<td align="center">1</td>
+												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,0,0)</td>
+												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,1,0)</td>
+												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,2,0)</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</div>
+
+				</div>
+
+	</div>	
+	
 	@if(utils.UserAccess.checkAccess(req,"program_member_listing")){
 		<h3 id="productNm" style="margin-top: 20px;">
 			    <span class="left">@Messages("programdetails.programmembers")</span>
@@ -800,6 +859,7 @@
 <script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/matrix.css")">
 <script type="text/javascript">
 	function validatePositive(value, column) {
 		if ( isNaN(value) && value < 0)

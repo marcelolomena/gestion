@@ -11,9 +11,10 @@
 			<span class="member header">@Messages("programdetails.impact")</span>
 			<span class="member header">@Messages("programdetails.responsible")</span>
 			<span class="member header">Nivel</span>
-			<span class="active header">@Messages("program.action")</span>
+			<span class="active header">Alertas</span>
 		</li>
 		@for( (p,index) <- risks.zipWithIndex){
+			<a href="/risk-details/@p.id" class="left">
 			<li class="@if(index%2==0){even_row}else{odd_row} @p.id.get.toString"  style="@if(parent_type==3){width:99%}">	
 				<span id="p_s_@p.id" class="role @*@if(p.is_active==1){active-sap}else{in-active-sap}*@">@{new java.text.SimpleDateFormat("dd-MM-yyyy").format(p.risk_clouser_date)}</span>
 				<span class="member">@p.name </span>
@@ -25,8 +26,8 @@
 				@if(p.parent_type.get==0){Programa}
 				@if(p.parent_type.get==1){Proyecto}
 				@if(p.parent_type.get==2){Tarea}
-				@println(p.parent_type.get)
 				</span>
+				</a>
 				@*<span class="member">
 				@if(!p.risk_state.isEmpty){
 					@{
@@ -43,12 +44,14 @@
 				}
 				  
 				</span> *@
-				<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
+				@*<a href="@controllers.Frontend.routes.Risks.editRisk(p.id.get.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
 				<a href="@controllers.Frontend.routes.Risks.riskManagement(parent_id,parent_type)"><span id="r_@p.id">¡Alerta!</span></a>
-					@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
-				<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
-				}
+				@if(utils.UserAccess.checkAccess(request,"delete_risk")){    
+					<span class="delete-risk delete-icon" id="risk_@p.id" style="margin-left: 5px"></span>
+				}*@
+				<span class="delete-risk" id="risk_@p.id" style="margin-left: 5px">@RiskService.countAlertForRisk(p.id.get.toString)</span>
 			</li>
+			
 		}
   }else{
   	<li><span>No hay Riesgos...</span></li>

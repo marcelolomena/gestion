@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       references: {
         model: 'art_user',
-        key: 'uid'
+        key: 'id'
       }
     },
     fecha: {

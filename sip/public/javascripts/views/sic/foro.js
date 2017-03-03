@@ -495,10 +495,13 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (!result.success)
+                console.dir(result);
+                if (result.sucess) {
+                    return [true, "", ""];
+                } else {
                     return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
+                    
+                }
             }
         },
         {

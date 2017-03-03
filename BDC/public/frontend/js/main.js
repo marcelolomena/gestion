@@ -119,6 +119,7 @@ $(document).ready(
 			$("#role_id").on("change", renderMembersFromRole);
 
 			$(".delete-risk").on("click", renderDeleteRisk);
+			$(".delete-alert").on("click", renderDeleteAlert);
 			$("#risk-filter-tab li").on("click", toggleTabRisk);
 			$("#issue-filter-tab li").on("click", toggleTabIssue);
 			
@@ -5275,6 +5276,46 @@ function renderDeleteRisk() {
 				$("#dialog-confirm").css("display", "none");
 
 				var url = "/delete-risk/" + id;
+				$.get(url, function(data) {
+					if (data == "Success") {
+						// $("#booking-list input").val("");
+						window.location.reload();
+					}
+				});
+
+			},
+			"No" : function() {
+				$(this).dialog('close');
+				$("#pop-box-over").css("display", "none");
+				$("#dialog-confirm").css("display", "none");
+			}
+		}
+	});
+
+	$("#pop-box-over").css("display", "block");
+	$("#dialog-confirm").css("display", "block");
+
+}
+
+function renderDeleteAlert() {
+	var _this = $(this);
+	var id = _this.attr("id").split("_")[1];
+	$("#dialog-confirm").html("¿Está seguro que desea eliminar esta alerta?");
+	// Define the Dialog and its properties.
+	$("#dialog-confirm").dialog({
+		resizable : false,
+		modal : true,
+		title : "Confirmar",
+		height : 150,
+		width : 300,
+		buttons : {
+			"Sí" : function() {
+				$(this).dialog('close');
+				$("#pop-box-over").css("display", "none");
+				$("#dialog-confirm").css("display", "none");
+
+				//var url = "/delete-alert/" + id;
+				var url ="/delete-risk-alert?risk_alert_id="+id;
 				$.get(url, function(data) {
 					if (data == "Success") {
 						// $("#booking-list input").val("");

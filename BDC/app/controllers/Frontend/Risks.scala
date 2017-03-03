@@ -255,7 +255,17 @@ object Risks extends Controller {
                  */
                 val act = Activity(ActivityTypes.Risk.id, "New Risk created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
                 Activity.saveLog(act)
-                Redirect(routes.Risks.riskManagement(parent_id, parent_type))
+                //Redirect(routes.Risks.riskManagement(parent_id, parent_type))
+                parent_type.intValue() match {
+                  case 0 =>
+                    Redirect(routes.Program.programDetails(parent_id))
+                  case 1 =>
+                    Redirect(routes.ProjectMaster.projectDetails(parent_id))
+                  case 2 =>
+                    Redirect(routes.Task.projectTaskDetails(parent_id))
+                  case 3 =>
+                    Redirect(routes.SubTask.subTaskDetails(parent_id))
+                }
             }.getOrElse {
               implicit val newFlash = request.flash + ("error" -> "Something went wrong.")
               /* if (uploadType.equals("ADD")) {
@@ -279,8 +289,19 @@ object Risks extends Controller {
               val act = Activity(ActivityTypes.Risk.id, "New Risk created by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last.toInt)
               Activity.saveLog(act)
 
-              Redirect(routes.Risks.riskManagement(parent_id, parent_type))
-              /* }*/
+              //Redirect(routes.Risks.riskManagement(parent_id, parent_type))
+
+              parent_type.intValue() match {
+                case 0 =>
+                  Redirect(routes.Program.programDetails(parent_id))
+                case 1 =>
+                  Redirect(routes.ProjectMaster.projectDetails(parent_id))
+                case 2 =>
+                  Redirect(routes.Task.projectTaskDetails(parent_id))
+                case 3 =>
+                  Redirect(routes.SubTask.subTaskDetails(parent_id))
+              }
+
             }
           }
 
@@ -346,7 +367,62 @@ object Risks extends Controller {
             riskStateMap.put(state.id.get.toString(), state.state_name)
           }
 
-          Ok(views.html.frontend.risks.editRisk(id, ARTForms.riskManagementForm.fill(rm), usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, rm.sub_category.toString)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok(views.html.frontend.risks.editRisk(id, ARTForms.riskManagementForm.fill(rm), usersMap, riskCategoryMap, subCategoryMap, riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, rm.sub_category.toString)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+      }
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+  def editRiskAlert(risk_id: String, alert_id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      var alert = RiskService.findRiskAlertsById(alert_id)
+      val risk = RiskService.findRiskDetails(risk_id)
+      var program: Option[ProgramMaster] = null
+      var program_id = ""
+
+      risk match {
+        case None =>
+          Redirect(routes.Login.loginUser())
+
+        case Some(r: RiskManagementMaster) =>
+          r.parent_type.get match {
+            case 0 =>
+              program_id = r.parent_id.get.toString()
+            case 1 =>
+              program = ProjectService.findProgramDetailForProject(r.parent_id.get.toString())
+              program_id = program.get.program_id.get.toString()
+            case 2 =>
+              program = TaskService.findProgramDetailForTask(r.parent_id.get.toString())
+              program_id = program.get.program_id.get.toString()
+            case 3 =>
+              program = SubTaskServices.findProgramDetailForSubTask(r.parent_id.get.toString())
+              program_id = program.get.program_id.get.toString()
+          }
+
+          alert match {
+            case None =>
+              Redirect(routes.Login.loginUser())
+            case Some(rr: RiskAlerts) =>
+              val ra = RiskAlerts(rr.id,
+                rr.risk_id,
+                rr.event_type,
+                rr.event_code,
+                rr.event_date,
+                rr.event_title,
+                rr.event_details,
+                rr.responsible,
+                rr.person_invloved,
+                rr.alert_type,
+                rr.criticality,
+                rr.is_active)
+
+              val users = ProgramMemberService.findAllProgramMembers(program_id);
+              Ok(views.html.frontend.risks.editAlert(risk_id, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+          }
       }
 
     }.getOrElse {
@@ -378,13 +454,15 @@ object Risks extends Controller {
 
   def riskDetails(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-
+      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
       val risk = RiskService.findRiskDetails(id)
+      val parent_id = risk.get.parent_id.get.toString()
+      println("parent_id [" + parent_id + "]")
       risk match {
         case None =>
           Ok("No Details Available");
         case Some(r: RiskManagementMaster) =>
-          Ok(views.html.frontend.risks.riskDetails(risk, id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
     }.getOrElse {
@@ -456,7 +534,7 @@ object Risks extends Controller {
               if (!oldform("sub_category").value.isEmpty) {
                 selectedSubCategory = oldform("sub_category").value.get.toString
               }
-              BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap, riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
             },
             risk => {
               val the_Form = RiskService.validateRiskForUpdate(oldform, progrm, id, parent_id.toString(), parent_type.toString())
@@ -466,7 +544,7 @@ object Risks extends Controller {
                 if (!the_Form("sub_category").value.isEmpty) {
                   selectedSubCategory = the_Form("sub_category").value.get.toString
                 }
-                BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap,riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+                BadRequest(views.html.frontend.risks.editRisk(id, the_Form, usersMap, riskCategoryMap, subCategoryMap, riskStateMap, r.parent_id.get.toString(), r.parent_type.get, progrm, selectedSubCategory)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
               } else {
 
                 var newFileName = ""
@@ -619,6 +697,7 @@ object Risks extends Controller {
       var start_date: Date = new Date()
       var end_date: Date = new Date()
       var program_id = ""
+
       val risk = RiskService.findRiskDetails(risk_id)
       risk match {
         case None =>

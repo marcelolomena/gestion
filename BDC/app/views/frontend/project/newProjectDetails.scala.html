@@ -165,7 +165,8 @@
 			    
 	   	</h3>
 		<div class="program-div" id="new-risk">
-	   		<span><a href="@controllers.Frontend.routes.Risks.riskManagement(project.get.pId.get.toString,riskParentType.Project.id)"> @Messages("programdetails.addrisk")</a></span>
+			<span><a href="@controllers.Frontend.routes.Risks.addRisk(project.get.pId.get.toString,riskParentType.Project.id)"> @Messages("programdetails.addrisk")</a></span>
+	   		@*<span><a href="@controllers.Frontend.routes.Risks.riskManagement(project.get.pId.get.toString,riskParentType.Project.id)"> @Messages("programdetails.addrisk")</a></span>*@
 		</div>
 		<div class="width_full">
 			@frontend.risks.riskListing(project.get.pId.get.toString(),riskParentType.Project.id)

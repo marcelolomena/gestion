@@ -322,6 +322,9 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
+    console.log("la subgrid_id : " + subgrid_id)
+    var parentSolicitud = subgrid_id.split("_")[2]
+    console.log("la parentSolicitud : " + parentSolicitud)
     var childGridURL = "/sic/desglosefactoresserv/" + parentRowKey + "/list";
 
     var modelIniciativaFecha = [
@@ -383,13 +386,13 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             label: 'Observación', name: 'observacion', width: 200,
             align: 'left', edittype: "textarea",
             search: true, editable: true, hidden: false,
-            editoptions: {placeholder: "Ingresar comentario sobre la nota"},
+            editoptions: { placeholder: "Ingresar comentario sobre la nota" },
 
         },
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-     
+
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
@@ -408,7 +411,9 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         height: 'auto',
         navkeys: true,
         pager: "#" + childGridPagerID,
-        editurl: '/sic/desglosefactoresserv/action',
+        //editurl: '/sic/desglosefactoresserv/action',
+        editurl: '/sic/desglosefactoraction/' + parentRowKey + '/' + parentSolicitud,
+        
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
                 var grid = $("#" + childGridID);
@@ -561,6 +566,19 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
+    console.log("la subgrid_id : " + subgrid_id)
+    var parentSolicitud = subgrid_id.split("_")[2]
+    console.log("la parentSolicitud : " + parentSolicitud)
+    /*
+var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+
+console.log("la grilla padre: " + grillapadre)
+var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+console.log("la rowData : " + rowData)
+var parentSolicitud = rowData.idsolicitudcotizacion;
+console.log("la parentSolicitud : " + parentSolicitud)
+*/
+
     var childGridURL = "/sic/proveedoressugeridoslist/" + parentRowKey + "/list";
 
     var modelIniciativaFecha = [
@@ -616,7 +634,8 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        editurl: '/sic/proveedoressugeridos/action',
+        //editurl: '/sic/proveedoressugeridos/action',
+        editurl: '/sic/proveedoressugeridosaction/' + parentRowKey + '/' + parentSolicitud,
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -652,7 +671,14 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
-            }
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (parseInt(postdata.idproveedor) == 0) {
+                    return [false, "Proveedor: Seleccionar un proveedor", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
         },
         {
             closeAfterDelete: true,
@@ -665,10 +691,14 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
+                console.dir(result);
+                if (result.sucess) {
+                    return [true, "", ""];
+                } else {
                     return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
+                    
+                }
+
             }
         },
         {

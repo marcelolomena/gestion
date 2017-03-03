@@ -13,7 +13,7 @@ exports.getPersonal = function (req, res) {
     "RTRIM(LTRIM(nombre)) + ' ' + RTRIM(LTRIM(apellido)) label " +
     "FROM RecursosHumanos WHERE LEN(emailTrab) != 1 AND " +
     "periodo=(select max(periodo) from RecursosHumanos) AND " +
-	   "nombre+apellido like '%" + term + "%' order by nombre";
+    "nombre+apellido like '%" + term + "%' order by nombre";
 
   sequelize.query(sql)
     .spread(function (rows) {
@@ -35,86 +35,86 @@ exports.getExcel = function (req, res) {
     type: 'number',
     width: 3
   },
-    {
-      caption: 'Nombre',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'División',
-      type: 'string',
-      width: 100
-    },
-    {
-      caption: 'Sponsor 1',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Sponsor 2',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'PMO',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Gerente',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Estado',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Categoría',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Q1',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Q2',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Q3',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Q4',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Fecha Comite',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Año',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Presupuesto Gasto (USD)',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Presupuesto Inversión (USD)',
-      type: 'number',
-      width: 15
-    }
+  {
+    caption: 'Nombre',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'División',
+    type: 'string',
+    width: 100
+  },
+  {
+    caption: 'Sponsor 1',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Sponsor 2',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'PMO',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Gerente',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Estado',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Categoría',
+    type: 'string',
+    width: 50
+  },
+  {
+    caption: 'Q1',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Q2',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Q3',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Q4',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Fecha Comite',
+    type: 'string',
+    width: 15
+  },
+  {
+    caption: 'Año',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Presupuesto Gasto (USD)',
+    type: 'number',
+    width: 15
+  },
+  {
+    caption: 'Presupuesto Inversión (USD)',
+    type: 'number',
+    width: 15
+  }
 
   ];
 
@@ -144,21 +144,21 @@ exports.getExcel = function (req, res) {
           for (var i = 0; i < iniciativas.length; i++) {
 
             a = [i + 1, iniciativas[i].nombre,
-              iniciativas[i].divisionsponsor,
-              iniciativas[i].sponsor1,
-              iniciativas[i].sponsor2,
-              iniciativas[i].pmoresponsable,
-              iniciativas[i].gerenteresponsable,
-              iniciativas[i].estado,
-              iniciativas[i].categoria,
-              iniciativas[i].q1,
-              iniciativas[i].q2,
-              iniciativas[i].q3,
-              iniciativas[i].q4,
-              iniciativas[i].fechacomite,
-              iniciativas[i].ano,
-              iniciativas[i].pptoestimadogasto,
-              iniciativas[i].pptoestimadoinversion
+            iniciativas[i].divisionsponsor,
+            iniciativas[i].sponsor1,
+            iniciativas[i].sponsor2,
+            iniciativas[i].pmoresponsable,
+            iniciativas[i].gerenteresponsable,
+            iniciativas[i].estado,
+            iniciativas[i].categoria,
+            iniciativas[i].q1,
+            iniciativas[i].q2,
+            iniciativas[i].q3,
+            iniciativas[i].q4,
+            iniciativas[i].fechacomite,
+            iniciativas[i].ano,
+            iniciativas[i].pptoestimadogasto,
+            iniciativas[i].pptoestimadoinversion
             ];
             arr.push(a);
           }
@@ -224,8 +224,8 @@ exports.list = function (req, res) {
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, a.*, lider.[first_name]+ ' '+lider.[last_name] as nombrelider, jefeproyecto.[first_name] +' '+ jefeproyecto.[last_name] as nombrejefe, pmo.[first_name] +' '+ pmo.[last_name] as nombrepmo, programa.program_code as codigoart " +
     "FROM [sip].[presupuestoenvuelo] a " +
-	   " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
-	   " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
+    " LEFT OUTER JOIN [dbo].[art_user] lider  ON a.[uidlider] = lider.[uid] " +
+    " LEFT OUTER JOIN  [dbo].[art_user] jefeproyecto  ON a.[uidjefeproyecto] = jefeproyecto.[uid] " +
     " LEFT OUTER JOIN [dbo].[art_user] pmo  ON a.[uidpmoresponsable] = pmo.[uid] " +
     " LEFT OUTER JOIN [dbo].[art_program] programa  ON a.[program_id] = programa.[program_id] " +
     "WHERE (a.[borrado] = 1) " +
@@ -509,8 +509,8 @@ exports.generarproyectoenvuelo = function (req, res) {
 */
 
 exports.generarproyectoenvuelo = function (req, res) {
-  sequelize.query('EXECUTE sip.generarproyectoenvuelo ' + 
-  req.params.id).then(function (response) {
+  sequelize.query('EXECUTE sip.generarproyectoenvuelo ' +
+    req.params.id).then(function (response) {
       logger.debug("****Ejecutando SP sip.generarproyectoenvuelo");
       console.dir(response);
       res.json(response)
@@ -525,30 +525,30 @@ exports.action = function (req, res) {
   var fecha;
 
   if (action != "del") {
-    if (req.body.porcentaje1 != ""){
+    if (req.body.porcentaje1 != "") {
       //porcentaje1 = req.body.porcentaje1.split(".").join("").replace(",", ".");
-      porcentaje1 = parseFloat(req.body.porcentaje1)/100;
-    }else{
+      porcentaje1 = parseFloat(req.body.porcentaje1) / 100;
+    } else {
       porcentaje1 = 0.00;
     }
 
-    if (req.body.porcentaje2 != ""){
+    if (req.body.porcentaje2 != "") {
       //porcentaje2 = req.body.porcentaje2.split(".").join("").replace(",", ".");
-      porcentaje2 = parseFloat(req.body.porcentaje2)/100;
-    }else{
+      porcentaje2 = parseFloat(req.body.porcentaje2) / 100;
+    } else {
       porcentaje2 = 0.00;
     }
-/*
-    if (req.body.dolar != "")
-      dolar = req.body.dolar.split(".").join("").replace(",", ".")
-
-    if (req.body.uf != "")
-      uf = req.body.uf.split(".").join("").replace(",", ".")
-
-    if (req.body.fechaconversion != "")
-      fecha = req.body.fechaconversion.split("-").reverse().join("-")
-
-    */
+    /*
+        if (req.body.dolar != "")
+          dolar = req.body.dolar.split(".").join("").replace(",", ".")
+    
+        if (req.body.uf != "")
+          uf = req.body.uf.split(".").join("").replace(",", ".")
+    
+        if (req.body.fechaconversion != "")
+          fecha = req.body.fechaconversion.split("-").reverse().join("-")
+    
+        */
   }
   switch (action) {
     case "add":
@@ -623,4 +623,37 @@ exports.action = function (req, res) {
 
   }
 
+}
+
+exports.comboboxpmo = function (req, res) {
+  models.presupuestoenvuelo.belongsTo(models.art_user, { foreignKey: 'uidlider' });
+  models.presupuestoenvuelo.belongsTo(models.art_user, { as: 'idjefepro',  foreignKey: 'uidjefeproyecto' });
+  models.presupuestoenvuelo.belongsTo(models.art_user, { as: 'idpmo',  foreignKey: 'uidpmoresponsable' });
+  models.presupuestoenvuelo.belongsTo(models.art_program, { foreignKey: 'program_id' });
+  models.presupuestoenvuelo.findAll({
+    attributes: [
+      [sequelize.fn('DISTINCT', sequelize.col('nombrepmo')), 'nombrepmo']
+    ],
+    order: 'nombrepmo',
+    include: [
+      {
+        model: models.art_user
+      },
+      {
+        model: models.art_user, as: 'idjefepro'
+      },
+      {
+        model: models.art_user, as: 'idpmo'
+      },
+     {
+        model: models.art_program
+     }
+    ],
+  }).then(function (presupuestoenvuelo) {
+    //iniciativas.forEach(log)
+    res.json(presupuestoenvuelo);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error_code: 1 });
+  });
 }

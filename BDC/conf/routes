@@ -257,12 +257,13 @@ POST   /add-risk/$parent_id<[A-Za-z0-9_-]+>/$parent_type<[A-Za-z0-9_-]>         
 GET    /edit-risk/$id<[A-Za-z0-9_-]+>                                                                 controllers.Frontend.Risks.editRisk(id:String)
 POST   /edit-risk/$id<[A-Za-z0-9_-]+>                                                                 controllers.Frontend.Risks.updateRisk(id:String)
 GET    /delete-risk/$id<[A-Za-z0-9_-]+>                                                               controllers.Frontend.Risks.deleteRisk(id:String)
-GET    /risk-details                                                                                  controllers.Frontend.Risks.riskDetails(id:String)
-GET    /new-alert                                                                                     controllers.Frontend.Risks.newAlerts(risk_id: String)
+#GET   /risk-details                                                                                  controllers.Frontend.Risks.riskDetails(id:String)
+GET    /risk-details/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.Risks.riskDetails(id:String)
+#GET   /new-alert                                                                                     controllers.Frontend.Risks.newAlerts(risk_id: String)
+GET    /new-alert/$risk_id<[A-Za-z0-9_-]+>                                                            controllers.Frontend.Risks.newAlerts(risk_id: String)
 POST   /save-alert                                                                                    controllers.Frontend.Risks.saveRiskAlert(risk_id: String)
 GET    /delete-risk-alert                                                                             controllers.Frontend.Risks.deleteRiskAlert(risk_alert_id:String)
-
-
+GET    /edit-alert/$risk_id<[A-Za-z0-9_-]+>/$alert_id<[A-Za-z0-9_-]>                                  controllers.Frontend.Risks.editRiskAlert(risk_id:String,alert_id:String)
 GET    /risk-sub-category/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Risks.getRiskSubCategory(id: String)
 GET    /issue-sub-category                                                                            controllers.Frontend.Program.getIssueSubCategory(id: String)
 

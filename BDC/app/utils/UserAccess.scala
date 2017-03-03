@@ -31,6 +31,7 @@ import models.ProgramSearch
 import services.ProgramService
 import services.FunctionRoleService
 import play.api.mvc.Session
+import services.RiskService
 
 trait AuthentiCate {
   /**
@@ -83,19 +84,19 @@ trait AuthentiCate {
     }
     isValid
   }
-  
+
   def checkAccessSession(implicit session: Session, element_type: String): Boolean = {
     var isValid = false
     if (!session.get("user_profile").isEmpty) {
       var user_role = session.get("user_profile").get
-      if(FunctionRoleService.checkDBAccess(user_role,element_type)==1){
+      if (FunctionRoleService.checkDBAccess(user_role, element_type) == 1) {
         isValid = true
-      }else{
+      } else {
         //println("acceso denegado a: " + element_type)
       }
     }
     isValid
-  }  
+  }
 
   def checkAccess(implicit request: RequestHeader, element_type: String): Boolean = {
     var isValid = false
@@ -104,48 +105,64 @@ trait AuthentiCate {
       var user_role = request.session.get("user_profile").get
       //println ("user_role:[" + user_role + "]")
       //println ("element_type:[" + element_type + "]")
-      if(FunctionRoleService.checkDBAccess(user_role,element_type)==1){
+      if (FunctionRoleService.checkDBAccess(user_role, element_type) == 1) {
         isValid = true
-      }else{
+      } else {
         //println("acceso denegado a: " + element_type)
       }
 
     }
     isValid
-  } 
-  
-    def isBoss(implicit request: RequestHeader): Boolean = {
+  }
+
+  def checkCanShowDeleteRisk(implicit request: RequestHeader, risk_alert_id: String): Boolean = {
+    var isValid = false
+
+    if (!request.session.get("user_profile").isEmpty) {
+      var uId = request.session.get("uId").get.toString()
+      var alert = RiskService.findRiskAlertsById(risk_alert_id)
+      //println("uId [" + uId+ "] alert [" +  alert.get.responsible.get.toString() + "]")
+      
+      if (alert.get.responsible.get.toString().equals(uId)) {
+        isValid = true
+      } 
+
+    }
+    isValid
+  }
+
+  def isBoss(implicit request: RequestHeader): Boolean = {
     var isValid = false
     if (!request.session.get("user_profile").isEmpty) {
       var uId = request.session.get("uId").get.toString()
 
-      if(ProgramaService.cantidadSubalternos(uId)>1){
+      if (ProgramaService.cantidadSubalternos(uId) > 1) {
         isValid = true
-      }else{
+      } else {
         //println("no es jefe: " + uId)
       }
 
     }
     isValid
-  } 
+  }
 
-    def canCreateSubTask(implicit request: RequestHeader, tid: String): Boolean = {
+  def canCreateSubTask(implicit request: RequestHeader, tid: String): Boolean = {
     var isValid = false
     //println("uid:" + request.session.get("uId").get + ", tid:" +tid)
     if (!request.session.get("uId").isEmpty) {
       var uid = request.session.get("uId").get
-      
-      if(TaskService.canCreateSubTask(uid,tid)==1){
+
+      if (TaskService.canCreateSubTask(uid, tid) == 1) {
         //println(uid + " tiene permiso para crear subtarea")
         isValid = true
-      }else{
+      } else {
         //println(uid + " no tiene permiso para crear subtarea")
       }
 
     }
     isValid
-  } 
-  
+  }
+
   def isAuthenticaedProject(implicit request: RequestHeader, project_id: String): Boolean = {
     var isValid = false
     if (!request.session.get("user_profile").isEmpty) {
@@ -159,7 +176,7 @@ trait AuthentiCate {
       if (!program.isEmpty) {
         val programMemmber = ProgramMemberService.findAllProgramMember(program.get.program_id.get.toString())
         for (pm <- programMemmber) {
-          if ((pm.role_id == 6 || pm.role_id == 7 ) && pm.member_id == user_id.toInt) {
+          if ((pm.role_id == 6 || pm.role_id == 7) && pm.member_id == user_id.toInt) {
             isValidProgramMamnager = true
           }
         }
@@ -196,15 +213,13 @@ trait AuthentiCate {
       if (!program_id.isEmpty) {
         val programMemmber = ProgramMemberService.findAllProgramMember(program_id)
         for (pm <- programMemmber) {
-          if ((pm.role_id == 6 || pm.role_id == 7 ) && pm.member_id == user_id.toInt) {
+          if ((pm.role_id == 6 || pm.role_id == 7) && pm.member_id == user_id.toInt) {
             isValidProgramMamnager = true
           }
         }
       } else {
 
       }
-
-     
 
       //println(isValidProject +"---"+isValidProgramMamnager)
       if (user_role == "pmo" || user_role == "su" || isValidProject || isValidProgramMamnager) {
@@ -214,7 +229,7 @@ trait AuthentiCate {
     isValid
 
   }
-  
+
 }
 
 object UserAccess extends AuthentiCate {

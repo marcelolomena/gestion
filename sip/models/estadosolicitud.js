@@ -1,7 +1,5 @@
-/* jshint indent: 2 */
-
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('calendariosolicitud', {
+    return sequelize.define('estadosolicitud', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -16,19 +14,7 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        descripcion: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        fechaesperada: {
-            type: DataTypes.DATE,
-            allowNull: true
-        },
-        observacion: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        idtiporesponsable: {
+        idcolor: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -36,15 +22,19 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
+        comentario: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        fecha: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
         borrado: {
             type: DataTypes.INTEGER,
             allowNull: true
-        },
-        fechareal: {
-            type: DataTypes.DATE,
-            allowNull: true
         }
     }, {
-            schema: 'sic', timestamps: false, tableName: 'calendariosolicitud'
+            schema: 'sic', timestamps: false, tableName: 'estadosolicitud'
         });
 };

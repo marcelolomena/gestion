@@ -10,11 +10,13 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechatermino;
+    var fechaesperada;
+    var fechareal;
 
     if (action != "del") {
-        if (req.body.fechatermino != "")
-            fechatermino = req.body.fechatermino.split("-").reverse().join("-")
+        if (req.body.fechaesperada != "" || req.body.fechareal != "")
+            fechaesperada = req.body.fechaesperada.split("-").reverse().join("-")
+            fechareal = req.body.fechareal.split("-").reverse().join("-")
     }
 
     switch (action) {
@@ -22,10 +24,11 @@ exports.action = function (req, res) {
             models.calendariosolicitud.create({
                 idsolicitudcotizacion: req.body.idsolicitudcotizacion,
                 descripcion: req.body.descripcion,
-                fechatermino: fechatermino,
+                fechaesperada: fechaesperada,
                 observacion: req.body.observacion,
                 idtiporesponsable: req.body.idtiporesponsable,
-                borrado: 1
+                borrado: 1,
+                fechareal: fechareal
             }).then(function (serviciosrequeridos) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
@@ -43,10 +46,10 @@ exports.action = function (req, res) {
                             logger.error("->>> " + err)
                         }
                     });
-                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
+                return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
             break;
         case "edit":
@@ -64,19 +67,20 @@ exports.action = function (req, res) {
 
                         models.calendariosolicitud.update({
                             descripcion: req.body.descripcion,
-                            fechatermino: fechatermino,
+                            fechaesperada: fechaesperada,
                             observacion: req.body.observacion,
                             idtiporesponsable: req.body.idtiporesponsable,
+                            fechareal: fechareal,
                         }, {
                                 where: {
                                     id: req.body.id
                                 }
                             }).then(function (serviciosrequeridos) {
 
-                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ id: 0, message: err.message, success: false });
+                                return res.json({ id: 0, message: err.message, success: false });
                             });
                     } else {
                         logger.error("->>> " + err)
@@ -110,11 +114,11 @@ exports.action = function (req, res) {
 
                                 logger.debug('Deleted successfully');
                             }
-                            res.json({ error: 0, glosa: '' });
+                            return res.json({ error: 0, glosa: '' });
 
                         }).catch(function (err) {
                             logger.error(err)
-                            res.json({ id: 0, message: err.message, success: false });
+                            return res.json({ id: 0, message: err.message, success: false });
                         });
                     } else {
                         logger.error("->>> " + err)
@@ -174,7 +178,7 @@ exports.list = function (req, res) {
                     where: {
                         idsolicitudcotizacion: id
                     },
-                    order: 'fechatermino desc',
+                    order: 'fechareal desc',
                     include: [
                         {
                             model: models.valores
@@ -200,7 +204,7 @@ exports.gettiporesponsable = function (req, res) {
 
     sequelize.query(sql)
         .spread(function (rows) {
-            res.json(rows);
+        return res.json(rows);
         });
 
 };

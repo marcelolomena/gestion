@@ -19,8 +19,19 @@
 	<div class="width_full" >
 		<h3 id="productNm " class="parent-new-h3" style="width:100%; padding:0px;">
     		<span class="parent-icon"> &#60; </span>
-    		<a href="@controllers.Frontend.routes.Risks.riskManagement(parent_id, parent_type)" style="font-weight: bold"><span class="left">@Messages("employeeProfile.back")</span></a>
-	  		
+					@{
+		    			parent_type.intValue() match{
+		    				case 0 =>
+		    					Html("<a href='/program-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		  	  				case 1=>
+		  	  					Html("<a href='/project-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				case 2=>
+		    					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				case 3=>
+		    					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				
+		    			}
+					}  		
    		</h3>
    		
    		<div id="new_program_header" class="">
@@ -289,7 +300,19 @@
 		});
 
 		 $('#done-risk').on('click',function() {
-			   window.location.href='@controllers.Frontend.routes.Risks.riskManagement(parent_id, parent_type)';
+					@{
+		    			parent_type.intValue() match{
+		    				case 0 =>
+		    					Html("window.location.href='/program-details/"+parent_id+"'")
+		  	  				case 1=>
+		  	  					Html("window.location.href='/project-details/"+parent_id+"'")
+		    				case 2=>
+		    					Html("window.location.href='/project-task-details/"+parent_id+"'")
+		    				case 3=>
+		    					Html("window.location.href='/sub-task-details/"+parent_id+"'")
+		    				
+		    			}
+					}  					   
 		});
 		});
 	

@@ -1,134 +1,266 @@
-@(risk:Option[RiskManagementMaster],parent_id:String)
-@import services._;
+@(alerts:Seq[RiskAlerts], risk:Option[RiskManagementMaster],parent_id:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import services._
+@import utils._
+@import play.api.i18n._
+@import play.api._
 @import org.apache.commons.lang3.StringUtils
-<div class="width_full" id="risk-master-data">
 
-<div class="width_full">
-	<div class="width_full">
-		<span class="listing-header">Detalles<span class="add-alert" id="al_@risk.get.id">Enviar Alerta</span></span>
-	</div>
-<div id="risk-other-details" class="width_full">
-	<span class="header odd_row">Nombre</span><span class="infos">@risk.get.name</span>
-	<span class="header even_row">Causa</span><span class="infos">@risk.get.cause</span>
-	<span class="header odd_row">Evento</span><span class="infos">@risk.get.event</span>
-	<span class="header even_row">Impacto</span><span class="infos">@risk.get.imapct</span>	
-	<span class="header odd_row ">Categoria/Subcategoria</span>	
-	<span class="infos">
-	@{
-		if(!RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).isEmpty){
-			RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).get.category_name
-		}
-		
-		
-		
-	}
-<span style="margin-left: 10px;margin-right: 10px;"> / </span>
-	@{
-		if(risk.get.sub_category.isWhole()){
-			if(!RiskCategoryService.findRiskSubCategoryById(risk.get.sub_category.toString()).isEmpty){
-				RiskCategoryService.findRiskSubCategoryById(risk.get.sub_category.toString()).get.name		
-			}else{
-				"NA"	
-			}
-		
-		}else{
-		"NA"
-		}
-	}
+</head>
+<body>
+@frontend.topLayout()
 
-	</span>
-	<span class="header even_row">Variables Impactados</span><span class="infos">
-	@{
-		risk.get.variable_imapact.toInt match{
-			case 0=>"Plazo"
-			case 1=>"Presupuesto"
-			case 2=>"Alcance"
-			case 3=>"Calidad"
-			case 4=>"Plazo/Presupuesto"
-			case 5=>"Plazo/Alcance"
-	        case 6=>"Plazo/Alcance/Presupuesto"
-			case 7=>"Plazo/Calidad"
-			case 8=>"Presupuesto/Calidad"
-		    case 9=>"Alcance/Calidad"
-			case 10=>"Plazo/Presupuesto/Alcance/CalidadPlazo/Presupuesto/Calidad"
-		}
-	}
-		</span>
-	<span class="header odd_row">Probabilidad de ocurrencia</span><span class="infos">
-	@{
-		risk.get.probablity_of_occurence match{
-			case 0=>"Alto"
-			case 1=>"Mediano"
-			case 2=>"Bajo"
+<div class="main">
+
+@frontend.header()
+<section class="slider" id="pDetail_page">
+
+		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
+		  <div class="product_detail_1 ">
+			  <h3 id="productNm" class="parent-new-h3">
+			    	<span class="parent-icon"> &#60; </span>
+					@{
+		    			risk.get.parent_type.get match{
+		    				case 0 =>
+		    					Html("<a href='/program-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		  	  				case 1=>
+		  	  					Html("<a href='/project-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				case 2=>
+		    					Html("<a href='/project-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				case 3=>
+		    					Html("<a href='/sub-task-details/"+parent_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+		    				
+		    			}
+					}
+				  	<span class="left"></span>
+			  	  </a>
+			  	   
+			 		<a href="/edit-risk/@risk.get.id" style="float:right"><span id="" class="edit-project edit-icon edit-text edit_tasks_details " style="float:right;margin-right:27px">@Messages("employee.edit")</span></a>
+
+			  	  <span  class=""></span>
+			  </h3>
+			 
+			  
+			  <h3 id="productNm">
+				   <span class="left">@risk.get.name</span>
+			  </h3>
+			  
+		  </div>
+
+			<div class="width_full push_top10px" id="project_task_details">
+		    	<table>
+				  	<tbody>
+				  		<tr>
+				  			<td class="table_header"><strong>Nombre</strong></td>
+				  			<td class="p_values width380px">@risk.get.name</td>
+				  			<td class="table_header"><strong>Causa</strong></td>
+				  			<td class="p_values">@risk.get.cause</td>
+				  		</tr>	
+		  
+				  		<tr>
+				  			<td class="table_header"><strong>Evento</strong></td>
+				  			<td class="p_values width380px">@risk.get.event</td>
+				  			<td class="table_header"><strong>Impacto</strong></td>
+				  			<td class="p_values">@risk.get.imapct</td>
+				  		</tr>	
+				  		
+				  		<tr>
+				  			<td class="table_header"><strong>Categoria/Subcategoria</strong></td>
+				  			<td class="p_values width380px">
+								@{
+									if(!RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).isEmpty){
+										RiskCategoryService.findRiskCategoryById(risk.get.risk_category.toString()).get.category_name
+									}
+								}
+							<span style="margin-left: 10px;margin-right: 10px;"> / </span>
+								@{
+									if(risk.get.sub_category.isWhole()){
+										if(!RiskCategoryService.findRiskSubCategoryById(risk.get.sub_category.toString()).isEmpty){
+											RiskCategoryService.findRiskSubCategoryById(risk.get.sub_category.toString()).get.name		
+										}else{
+											"NA"	
+										}
+									
+									}else{
+									"NA"
+									}
+								}
+				  			</td>
+				  			<td class="table_header"><strong>Variables Impactadas</strong></td>
+				  			<td class="p_values">
+				  				@{
+								risk.get.variable_imapact.toInt match{
+									case 0=>"Plazo"
+									case 1=>"Presupuesto"
+									case 2=>"Alcance"
+									case 3=>"Calidad"
+									case 4=>"Plazo/Presupuesto"
+									case 5=>"Plazo/Alcance"
+							        case 6=>"Plazo/Alcance/Presupuesto"
+									case 7=>"Plazo/Calidad"
+									case 8=>"Presupuesto/Calidad"
+								    case 9=>"Alcance/Calidad"
+									case 10=>"Plazo/Presupuesto/Alcance/CalidadPlazo/Presupuesto/Calidad"
+								}
+								}				  			
+				  			</td>
+				  		</tr>	
+				  		
+				  		<tr>
+				  			<td class="table_header"><strong>Probabilidad de ocurrencia</strong></td>
+				  			<td class="p_values width380px">
+								@{
+									risk.get.probablity_of_occurence match{
+										case 0=>"Alto"
+										case 1=>"Mediano"
+										case 2=>"Bajo"
+										
+									}
+									
+								}				  			
+				  			</td>
+				  			<td class="table_header"><strong>Quantificacion Impacto</strong></td>
+				  			<td class="p_values">
+							@{
+									risk.get.quantification match{
+										case 0=>"Alto"
+										case 1=>"Mediano"
+										case 2=>"Bajo"
+									}
+									
+							}				  			
+				  			</td>
+				  		</tr>					  		
+		  
+				  		<tr>
+				  			<td class="table_header"><strong>Estrategia de Respuesta</strong></td>
+				  			<td class="p_values width380px">
+							@{
+									risk.get.strategic_reply match{
+										case 0=> "Acceptar"
+										case 1=> "Mitgar"
+										case 2=> "Evitar"
+										case 3=> "Transerir"
+									}
+							}				  			
+				  			</td>
+				  			<td class="table_header"><strong>Responsable</strong></td>
+				  			<td class="p_values">@UserService.findUserDetails(risk.get.responsible).get.first_name.substring(0,1)&nbsp;.@UserService.findUserDetails(risk.get.responsible).get.last_name</td>
+				  		</tr>
+				  		
+				  		<tr>
+				  			<td class="table_header"><strong>Plan de Respuesta</strong></td>
+				  			<td class="p_values width380px">
+							@if(!risk.get.reply_action.isEmpty){
+										@risk.get.reply_action.get
+									}else{
+										&nbsp;
+							}				  			
+				  			</td>
+				  			<td class="table_header"><strong>Plan de Contingencia</strong></td>
+				  			<td class="p_values">
+							@if(!risk.get.configuration_plan.isEmpty){
+								@risk.get.configuration_plan.get
+							}else{
+								&nbsp;
+							}				  			
+				  			</td>
+				  		</tr>		
+				  		
+				  		<tr>
+				  			<td class="table_header"><strong>Documento Contingencia</strong></td>
+				  			<td class="p_values width380px">
+							@if(!risk.get.document_category.isEmpty && !StringUtils.isEmpty(risk.get.document_category.get.trim())){
+									<a target="_blank" href='/documents/@risk.get.document_category.get' id="document_category_1" name="document_category_1" style="color: #000000;font-weight: bold;">Download Document</a>
+							} else{
+								NA
+							}				  			
+				  			</td>
+				  			<td class="table_header"><strong>Fecha de Control</strong></td>
+				  			<td class="p_values">@risk.get.risk_clouser_date.format("dd/MM/YYYY")</td>
+				  		</tr>				  					  			
+
+				</tbody>
+		  		</table>
+	    	
+	      </div> 
+
+		  	<h3 id="productNm">
+				<span class="left">Alertas</span>
+			</h3>
 			
-		}
-		
-	}</span>
-	<span class="header even_row">Quantificacion Impacto</span><span class="infos">
-	@{
-		risk.get.quantification match{
-			case 0=>"Alto"
-			case 1=>"Mediano"
-			case 2=>"Bajo"
-		}
-		
-	}</span>
-	<span class="header odd_row">Estrategia de Respuesta</span><span class="infos">
-	@{
-		risk.get.strategic_reply match{
-			case 0=> "Acceptar"
-			case 1=> "Mitgar"
-			case 2=> "Evitar"
-			case 3=> "Transerir"
-		}
-	}
-	</span>
-	<span class="header even_row">Responsable</span><span class="infos">@UserService.findUserDetails(risk.get.responsible).get.first_name.substring(0,1)&nbsp;.@UserService.findUserDetails(risk.get.responsible).get.last_name  </span>
-	<span class="header odd_row">Plan de Respuesta</span><span class="infos">
-		@if(!risk.get.reply_action.isEmpty){
-			@risk.get.reply_action.get
-		}else{
-			&nbsp;
-		}
-	</span>
-	<span class="header even_row">Plan de Contingencia</span><span class="infos">
-		@if(!risk.get.configuration_plan.isEmpty){
-			@risk.get.configuration_plan.get
-		}else{
-			&nbsp;
-		}
-	</span>
-@*	<span class="header odd_row ">Risk State : </span><span class="infos">
-		@if(!risk.get.risk_state.isEmpty){
-			@{
-				risk.get.risk_state.get match{
-					case 0=>"Latente"
-					case 1=>"Mitigado"
-					case 2=>"Evitado"
-					case 3=>"Materializado"
-					case 4=>"No Materializado"
-				}
-			}
-		}else{
-			&nbsp;
-		}
-		
-	</span>*@
-	<span class="header odd_row">Documento Contingencia</span><span class="infos">
+		 	<div class="program-div" id="new-risk">
+		 		<span><a href="/new-alert/@risk.get.id">Agregar Alerta</a></span>
+			</div>
+	
+			<div class="width_full">
 
-		@if(!risk.get.document_category.isEmpty && !StringUtils.isEmpty(risk.get.document_category.get.trim())){
-				<a target="_blank" href='/documents/@risk.get.document_category.get' id="document_category_1" name="document_category_1" style="color: #000000;font-weight: bold;">Download Document</a>
-		} else{
-			NA
-		}
-	</span>
-	<span class="header even_row">Fecha de Control</span><span class="infos">
-	@risk.get.risk_clouser_date.format("dd/MM/YYYY")
-	</span>
-	<span class="header odd_row"> &nbsp; </span><span class="infos">&nbsp;</span>
-</div>
-</div>	
-</div>
-<div id="risk_alert">
-</div>
-
+				<ul id="risk_list">
+				
+				@if(alerts.size>0){
+					<li class="top-header"  style="width:99%">
+						<span class="member header">Nombre</span>
+						<span class="member header">Detalle</span>
+						<span class="member header">Fecha</span>
+						<span class="member header">Responsable</span>
+						<span class="member header">Criticidad</span>
+						<span class="member header">Tipo</span>
+						<span class="member header">Accion</span>
+					</li>
+					@for( (p,index) <- alerts.zipWithIndex){
+						<a href="/edit-alert/@risk.get.id/@p.id" class="left">
+						<li class="@if(index%2==0){even_row}else{odd_row}">	
+							<span class="member">@p.event_title</span>
+							<span class="member">@p.event_details</span>
+							<span class="member">@if(!p.event_date.isEmpty){
+		 						@p.event_date.get.format("dd-MM-yyyy")
+		 					}
+							</span>
+							<span class="member">@UserService.findUserDetailsById(p.responsible.get.toLong).get.first_name.substring(0,1).&nbsp;@UserService.findUserDetailsById(p.responsible.get.toLong).get.last_name </span>
+							<span class="member">
+							@{
+							 	if(!p.criticality.isEmpty){
+							 		p.criticality.get.toInt match{
+							 		 case 1=>"Alta"
+							 		 case 2=>"Mediana"
+							 		 case 3=>"Baja"	
+							 		}
+							 	}
+						 	}							
+							</span>
+							<span class="member">
+							@{
+						 		p.alert_type.get match{
+						 			case 1=>"RISK-General"
+						 			case 2=>"RISK-Serious"		
+						 		}
+					 		}
+							</span>
+							</a>
+							<span class="member">
+								@if(utils.UserAccess.checkAccess(req,"delete_alert")){    
+									<span class="delete-alert delete-icon" id="alert_@p.id" style="margin-left: 5px"></span>
+								}
+							</span>
+						</li>
+						
+					}
+				  }else{
+				  	<li><span>No hay Alertas...</span></li>
+				  }
+								
+				</ul>
+			</div>
+  </div>
+	  @frontend.footer()
+</section>
+<div id="dialog-confirm"></div> 
+  	<div id="pop-box-over" class="display-none"> 
+  	</div>	
+</div>	 
+@frontend.headerScripts()	
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
+</body>	
+</html>

@@ -1,0 +1,204 @@
+@(risk_id: String, alertForm : Form[RiskAlerts],alert: Option[RiskAlerts],userMap: Seq[Users])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@frontend.layout()
+@import play.api.i18n._
+@import play.api._
+@import helper._
+@import services._
+@import java.util.Date._
+@import utils._
+<body>
+@frontend.topLayout()
+<div class="main">
+@frontend.header()
+<section class="slider" id="pDetail_page">
+			@form(action = controllers.Frontend.routes.Risks.saveRiskAlert(risk_id), 'id->"risk-management-alert-form") {
+		      <input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
+		      <input type="hidden" value="2" name="event_type" id="event_type"/>    
+		       	<div class="left 	 width_full">
+	      			@select(
+				         alertForm("event_code"),
+				         options("1"->"Risk", "2"->"Issue"),
+				         'class -> "input-xlarge",
+				         '_label -> "*Tipo de Evento"
+				      )
+		         </div>
+		         
+		      	<div class="left width_full">
+		      		@inputText(
+		                alertForm("event_title"),
+		                'class -> "span5", 
+		                '_label -> "*Evento"		                
+		            )
+		         </div>
+		         
+		         
+		      	<div class="left width_full">
+		      		 @textarea(
+		                alertForm("event_details"),
+		                'class -> "span5", 
+		                '_label ->  "Detalles",		                
+					    'rows -> 3,
+					    'cols -> 60
+	            	)
+		         </div>
+		         
+		         <div class="left width_full">
+			      	<div class="left width-pr50 padding-top-3px" >
+					
+			      		<dl id="members_involved_field1" class=" ">
+						    <dt><label for="members_involved1">Miembros Implicado</label></dt>
+						    <dd>
+						    	
+						    	 <div class="mutliSelect">
+						            <ul class="width_full">
+						            @if(userMap.size>0){
+						            		@for(ts <- userMap){
+									 	          <li class="width_full">
+								                    <span class="left"><input name="user_list" id="user_list_@ts.uid.get" type="checkbox" value="@ts.uid.get" /></span> 
+								                    <span class="left issue-member">@ts.first_name.substring(0,1) .&nbsp;@ts.last_name</span>
+								                 </li>
+							 				}
+							 		}else{
+							 		<span style="float: left;color:#666;margin:10px 0 10px;"> No Members Available...  </span>
+				    				}     
+						                
+						            </ul>
+						        </div>
+						    
+							</dd>
+						    
+						    
+						</dl>
+						<div class="left width_full">
+			      	      	@inputText(
+				                alertForm("person_invloved"),
+				                'class -> "span5 ", 
+				                '_label -> "",
+				                'type -> "hidden"
+				            )
+				            </div>
+			      		@*@select(
+					         issueForm("members_involved"),
+					         options(userMap),
+					         'class -> "input-xlarge ",
+					         '_label -> Messages("addIssue.membersInvolved"),
+					          '_default -> Messages("addIssue.placeholder.membersInvolved")
+					      )*@
+			         </div>
+		         </div>
+		         
+		         <div class="left width_full">
+		         	<div class="left width-pr50 padding-top-3px" >
+			      		@select(
+					         alertForm("alert_type"),
+					         options("1"->"Riesgos- General", "2"->"Riesgos- Serio"),
+					         'class -> "input-xlarge ",
+					         '_label -> "*Tipo de Alerto"
+					      )
+				      </div>
+		         </div>
+		         
+		         <div class="left width_full">
+		         	<div class="left width-pr50 padding-top-3px" >
+			      		@select(
+					         alertForm("criticality"),
+					         options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
+					         'class -> "input-xlarge ",
+					         '_label -> "*Criticidad"
+					      )
+				      </div>
+		         </div>
+		         
+		         <dl id="member_id_search_field " class=" display-none">
+	   				<dt>
+	   					<label for="member_id_search"> @Messages("newmember.member")</label>
+	   				</dt>
+		    		<dd>
+		   			 <input type="text" value="" id="member_id_search" name="member_id_search" placeholder="Search Member"/>	
+					</dd>
+		    	</dl>
+	      		<div class="width_full" style="margin-top: 20px;">
+			       	<span class="">
+			       	<input class="btn form-button" value="Enviar" id="send-alert"  type="button"/>
+			       	</span>
+			       	<span class="" style="margin-left:30px;"> 
+			       	@*<input id="done-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>*@
+			       	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
+			       	</span>
+	          	</div>
+			}
+  		@frontend.footer()
+	</section>			
+</div>
+@frontend.headerScripts()
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+
+<script type="text/javascript">
+function renderSendAlert() {
+
+	var url = $("#risk-management-alert-form").attr("action");
+
+	var sData = $('#risk-management-alert-form').serialize();
+
+	$.post(url, sData, function(data) {
+
+		if (data == "Sccuess") {
+			window.location.href = "/risk-details/"	+ $("#risk_id").val()
+			/*
+			$("#risk-other-details").slideDown(2000);
+			$("#risk-other-details").removeClass("display-none");
+			$("#risk_alert").css("display", "none");
+			$("#risk_alert").html("");
+			*/
+		} else {
+			$("#risk_alert").html(data);
+
+			$("#send-alert").on("click", renderSendAlert);
+			$("#done-alert").on("click", renderCancelAlert);
+
+			$('.mutliSelect').on('click', function() {
+				var ids = ""
+				$(this).find(':checked').map(function() {
+					if (ids == "") {
+						ids = $(this).val();
+					} else {
+						ids = ids + "," + $(this).val();
+					}
+				});
+				$("#person_invloved").val(ids);
+
+			});
+			var ids = $("#person_invloved").val().split(",");
+			for ( var i in ids) {
+				$("#user_list_" + ids[i]).attr("checked", "checked");
+			}
+
+		}
+	});
+}	   
+
+$(document).ready(function(){
+	
+		$('.mutliSelect').on('click', function() {
+			var ids = ""
+			$(this).find(':checked').map(function() {
+				if (ids == "") {
+					ids = $(this).val();
+				} else {
+					ids = ids + "," + $(this).val();
+				}
+			});
+			$("#person_invloved").val(ids);
+	
+		});
+	
+	   $('#cancel-alert').on('click',function() {
+		 window.location.href='/risk-details/@risk_id';
+	   });
+	   
+	   $('#send-alert').on('click', renderSendAlert);
+});	   
+</script>
+		
+
+	

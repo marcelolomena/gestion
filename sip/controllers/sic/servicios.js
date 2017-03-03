@@ -65,7 +65,7 @@ exports.action = function (req, res) {
                             }
                         }).catch(function (err) {
                             logger.error(err);
-                            res.json({ error: 1 });
+                            return res.json({ error: 1 });
                         });
                     } else {
 
@@ -99,13 +99,13 @@ exports.action = function (req, res) {
 
                         }).catch(function (err) {
                             logger.error(err);
-                            res.json({ error: 1 });
+                            return res.json({ error: 1 });
                         });
 
                     }
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error: 1 });
+                    return res.json({ error: 1 });
                 });
 
                 bitacora.registrar(
@@ -124,10 +124,10 @@ exports.action = function (req, res) {
                             logger.error("->>> " + err)
                         }
                     });
-                res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
+                return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
             break;
         case "edit":
@@ -157,10 +157,10 @@ exports.action = function (req, res) {
                                 }
                             }).then(function (serviciosrequeridos) {
 
-                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ id: 0, message: err.message, success: false });
+                                return res.json({ id: 0, message: err.message, success: false });
                             });
                     } else {
                         logger.error("->>> " + err)
@@ -200,14 +200,14 @@ exports.action = function (req, res) {
 
                                     logger.debug('Deleted successfully');
                                 }
-                                res.json({ error: 0, glosa: '' });
+                                return res.json({ error: 0, glosa: '' });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ id: 0, message: err.message, success: false });
+                                return res.json({ id: 0, message: err.message, success: false });
                             });
                         }).catch(function (err) {
                             logger.error(err)
-                            res.json({ id: 0, message: err.message, success: false });
+                            return res.json({ id: 0, message: err.message, success: false });
                         });
                     } else {
                         logger.error("->>> " + err)
@@ -285,10 +285,10 @@ exports.list = function (req, res) {
                     ]
                 }).then(function (serviciosrequeridos) {
                     //logger.debug(solicitudcotizacion)
-                    res.json({ records: records, total: total, page: page, rows: serviciosrequeridos });
+                    return res.json({ records: records, total: total, page: page, rows: serviciosrequeridos });
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
             })
         }
@@ -329,10 +329,10 @@ exports.desglosefactoreslist = function (req, res) {
                     ]
                 }).then(function (factorescriticidad) {
                     //logger.debug(solicitudcotizacion)
-                    res.json({ records: records, total: total, page: page, rows: factorescriticidad });
+                    return res.json({ records: records, total: total, page: page, rows: factorescriticidad });
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
             })
         }
@@ -373,10 +373,10 @@ exports.proveedoressugeridoslist = function (req, res) {
                     ]
                 }).then(function (proveedorsugerido) {
                     //logger.debug(solicitudcotizacion)
-                    res.json({ records: records, total: total, page: page, rows: proveedorsugerido });
+                    return res.json({ records: records, total: total, page: page, rows: proveedorsugerido });
                 }).catch(function (err) {
                     logger.error(err);
-                    res.json({ error_code: 1 });
+                    return res.json({ error_code: 1 });
                 });
             })
         }
@@ -399,10 +399,10 @@ exports.listaservicios = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -421,10 +421,10 @@ exports.proveedoressugeridostriada = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -440,10 +440,10 @@ exports.getcalculado = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -458,10 +458,10 @@ exports.getcalculadoconclase = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -477,10 +477,10 @@ exports.doctoasociado = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -490,24 +490,26 @@ exports.clasecriticidad = function (req, res) {
 
     }).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
 
-exports.desgloseaction = function (req, res) {
+exports.desglosefactoraction = function (req, res) {
     var action = req.body.oper;
+    var idproveedor = req.params.id;
+    var idsolicitudcotizacion = req.params.idpadre;
 
     switch (action) {
         case "add":
 
             break;
         case "edit":
-            bitacora.registrar(
-                req.body.idsolicitudcotizacion,
+            bitacora.registrarhijo(
+                idsolicitudcotizacion,
                 'factorescriticidad',
                 req.body.id,
                 'update',
@@ -517,17 +519,17 @@ exports.desgloseaction = function (req, res) {
                 function (err, data) {
                     if (!err) {
                         models.factorescriticidad.update({
-
-                            glosapregunta: req.body.glosapregunta
+                            nota: req.body.nota,
+                            observacion: req.body.observacion
                         }, {
                                 where: {
                                     id: req.body.id
                                 }
                             }).then(function (factorescriticidad) {
-                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ message: err.message, success: false });
+                                return res.json({ message: err.message, success: false });
                             });
                     } else {
                         logger.error(err)
@@ -544,7 +546,8 @@ exports.desgloseaction = function (req, res) {
 
 exports.proveedoressugeridosaction = function (req, res) {
     var action = req.body.oper;
-
+    var idproveedor = req.params.id;
+    var idsolicitudcotizacion = req.params.idpadre;
     switch (action) {
         case "add":
             models.proveedorsugerido.create({
@@ -552,8 +555,8 @@ exports.proveedoressugeridosaction = function (req, res) {
                 idproveedor: req.body.idproveedor,
                 borrado: 1
             }).then(function (proveedorsugerido) {
-                bitacora.registrar(
-                    req.body.idsolicitudcotizacion,
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
                     'proveedorsugerido',
                     proveedorsugerido.id,
                     'insert',
@@ -562,10 +565,10 @@ exports.proveedoressugeridosaction = function (req, res) {
                     models.proveedorsugerido,
                     function (err, data) {
                         if (!err) {
-                            return res.json({ id: proveedorsugerido.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            return res.json({ id: proveedorsugerido.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
                             logger.error(err)
-                            return res.json({ id: proveedorsugerido.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                            return res.json({ id: proveedorsugerido.id, parent: idsolicitudcotizacion, message: 'Falla', success: false });
                         }
                     });
             }).catch(function (err) {
@@ -574,18 +577,15 @@ exports.proveedoressugeridosaction = function (req, res) {
             });
             break;
         case "edit":
-
-
-
             break;
-        case "del":
+        case "del":    
             models.proveedorsugerido.findAll({
                 where: {
                     id: req.body.id
                 }
             }).then(function (proveedorsugerido) {
-                bitacora.registrar(
-                    req.body.idsolicitudcotizacion,
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
                     'proveedorsugerido',
                     req.body.id,
                     'delete',
@@ -599,16 +599,19 @@ exports.proveedoressugeridosaction = function (req, res) {
                                     id: req.body.id
                                 }
                             }).then(function (rowDeleted) {
-                                return res.json({ message: '', success: true });
+                                return res.json({ message: '', sucess: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ message: err.message, success: false });
+                                return res.json({ message: err.message, success: false });
                             });
                         } else {
                             logger.error(err)
                             return res.json({ message: err.message, success: false });
                         }
                     });
+            }).catch(function (err) {
+                logger.error(err);
+                res.json({ message: err.message, success: false });
             });
             break;
     }
@@ -640,15 +643,15 @@ exports.actualizanotafactor = function (req, res) {
                     id: id
                 }
             }).then(function (factorescriticidad) {
-                res.json({ message: 'Actualizada la nota', success: true });
+                return res.json({ message: 'Actualizada la nota', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
 
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 exports.getnotasdefactor = function (req, res) {
@@ -664,10 +667,10 @@ exports.getnotasdefactor = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 exports.actualizacolorfactor = function (req, res) {
@@ -699,14 +702,14 @@ exports.actualizacolorfactor = function (req, res) {
                     id: id
                 }
             }).then(function (factorescriticidad) {
-                res.json({ message: 'Actualizado el color', success: true });
+                return res.json({ message: 'Actualizado el color', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 

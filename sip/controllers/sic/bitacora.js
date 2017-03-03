@@ -35,6 +35,12 @@ exports.list = function (req, res) {
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,
+                    include: [
+                        {
+                            model: models.user,
+                            model: models.solicitudcotizacion
+                        }
+                    ],
                     order: 'fecha desc',
                 }).then(function (bitacora) {
                     return res.json({ records: records, total: total, page: page, rows: bitacora });
@@ -46,3 +52,33 @@ exports.list = function (req, res) {
         }
     });
 };
+
+exports.combobox = function (req, res) {
+  models.bitacora.findAll({
+    attributes: [
+        [sequelize.fn('DISTINCT', sequelize.col('tabla')), 'tabla']
+    ],
+    order: 'tabla'
+  }).then(function (bitacora) {
+    //iniciativas.forEach(log)
+    res.json(bitacora);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error_code: 1 });
+  });
+}
+
+exports.comboboxaction = function (req, res) {
+  models.bitacora.findAll({
+    attributes: [
+        [sequelize.fn('DISTINCT', sequelize.col('accion')), 'accion']
+    ],
+    order: 'accion'
+  }).then(function (bitacora) {
+    //iniciativas.forEach(log)
+    res.json(bitacora);
+  }).catch(function (err) {
+    logger.error(err);
+    res.json({ error_code: 1 });
+  });
+}
