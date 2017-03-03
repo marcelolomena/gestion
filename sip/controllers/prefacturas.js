@@ -391,32 +391,32 @@ exports.getallcuis = function (req, res) {
 };
 
 exports.anular = function (req, res) {
-    return models.solicitudaprobacion.find({
+    return models.solicitudaprobacion.findAll({
         where: { idprefactura: req.params.id }
     }).then(function (solicitudaprobacion) {
 
         return models.sequelize.transaction({ autocommit: true }, function (t) {
 
             var promises = []
+            for(var i=0; i<solicitudaprobacion.length;i++){
+                var onePromise = models.solicitudaprobacion.update({
+                    iddetallecompromiso: null,
+                    idcontrato:null
+                }, {
+                        where: { id: solicitudaprobacion[i].id }
+                    }, { transaction: t });
 
-            var onePromise = models.solicitudaprobacion.update({
-                iddetallecompromiso: null,
-                idcontrato:null
-            }, {
-                    where: { id: solicitudaprobacion.id }
-                }, { transaction: t });
+                promises.push(onePromise);
 
-            promises.push(onePromise);
+                var twoPromise = models.detallecompromiso.update({
+                    saldopago: null,
+                    estadopago: null
+                }, {
+                        where: { id: solicitudaprobacion[i].iddetallecompromiso }
+                    }, { transaction: t });
 
-            var twoPromise = models.detallecompromiso.update({
-                saldopago: null,
-                estadopago: null
-            }, {
-                    where: { id: solicitudaprobacion.iddetallecompromiso }
-                }, { transaction: t });
-
-            promises.push(twoPromise);
-
+                promises.push(twoPromise);
+            } //cierro for
             var threePromise = models.prefactura.update({
                 estado: "Anulada"
             }, {

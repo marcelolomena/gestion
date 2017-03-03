@@ -15,6 +15,9 @@ $(document).ready(function () {
             label: 'Estado', name: 'estado', hidden: false,
             search: false, editable: false, width: 50, align: 'left'
         },
+        { label: 'Exito', name: 'exito', width: 30, align: 'left', search: false, editable: false, hidden: false },
+        { label: 'Error', name: 'error', width: 30, align: 'left', search: false, editable: false, hidden: false },
+        
         {
             label: 'Archivo',
             name: 'fileToUpload',
@@ -70,9 +73,10 @@ $(document).ready(function () {
     function UploadFile(response, postdata) {
 
         var data = $.parseJSON(response.responseText);
+        //alert("ID:"+data.id);
         if (data.success) {
             if ($("#fileToUpload").val() != "") {
-                ajaxFileUpload(data.id);
+                ajaxFileUpload(data.id);                                    
             }
         }
 
@@ -89,6 +93,7 @@ $(document).ready(function () {
             $.ajaxFileUpload({
                 url: '/cargadte/archivo',
                 secureuri: false,
+                async: false,
                 fileElementId: 'fileToUpload',
                 dataType: 'json',
                 data: { id: id },
@@ -99,11 +104,22 @@ $(document).ready(function () {
                             $grid.trigger('reloadGrid');
                         } else {
                             dialog.find('.bootbox-body').html(data.message);
+                            $grid.trigger('reloadGrid');
                         }
                     }
                     else {
                         dialog.find('.bootbox-body').html(data.message);
+                        $grid.trigger('reloadGrid');
                     }
+                    
+                    $.ajax({ 
+                        url: "/cargadte/updateResumen/"+id, 
+                        dataType: 'json', 
+                        async: false, 
+                        success: function(j){ 
+                            console.log("Termino");
+                        } 
+                    });                       
                 },
                 error: function (data, status, e) {
                     dialog.find('.bootbox-body').html(e);
@@ -131,22 +147,25 @@ function showChildGrid(parentRowID, parentRowKey) {
     var modelDetalle = [
         { label: 'id', name: 'id', key: true, hidden: true, jsonmap: "factura.id" },
         {
-            label: 'DTE', name: 'archivo', width: 50, align: 'left', search: false, editable: false, hidden: false
+            label: 'DTE', name: 'archivo', width: 200, align: 'left', search: false, editable: false, hidden: false
         },
         {
-            label: 'Número Factura', name: 'numero', width: 50, align: 'left', search: false, editable: false, hidden: false, jsonmap: "factura.numero"
+            label: 'Estado', name: 'glosa', width: 100, align: 'left', search: true, sortable: false, editable: false,
+        },        
+        {
+            label: 'Número Factura', name: 'numero', width: 80, align: 'left', search: false, editable: false, hidden: false, jsonmap: "factura.numero"
         },
         {
-            label: 'Proveedor', name: 'razonsocial', width: 200, align: 'left', search: true, sortable: false, editable: false,
+            label: 'Proveedor', name: 'razonsocial', width: 250, align: 'left', search: true, sortable: false, editable: false,
             jsonmap: "factura.proveedor.razonsocial"
         },
         {
             label: 'Fecha Factura', name: 'fecha', hidden: false,
-            search: false, editable: false, width: 50, align: 'left',
+            search: false, editable: false, width: 100, align: 'left',
             formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "d/m/Y" }, jsonmap: "factura.fecha"
         },
         {
-            label: 'Total', name: 'montototal', width: 150, align: 'right', search: false, sortable: false, editable: false,
+            label: 'Total', name: 'montototal', width: 200, align: 'right', search: false, sortable: false, editable: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 }, jsonmap: "factura.montototal"
         }
     ];
@@ -160,7 +179,7 @@ function showChildGrid(parentRowID, parentRowKey) {
         rowNum: 10,
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        shrinkToFit: true,
+        shrinkToFit: false,
         width: 1300,
         caption: 'Lista de Facturas Cargadas',
         styleUI: "Bootstrap",
@@ -194,8 +213,9 @@ function showChildGrid(parentRowID, parentRowKey) {
             var thissid = rowData.id;
             if (thissid === undefined) {
                 bootbox.alert("Debe seleccionar una factura");
-            }
-            else {
+            } else if (thissid === '') {
+                bootbox.alert("No se puede descargar");
+            } else {
                 try {
                     var url = '/cargadte/download/' + thissid;
                     $("#" + childGridID).jqGrid('excelExport', { "url": url });
@@ -246,7 +266,7 @@ function showThirdGrid(parentRowID, parentRowKey) {
         {
             label: 'Glosa Servicio',
             name: 'glosaservicio',
-            width: 200,
+            width: 250,
             align: 'left',
             search: false,
             editable: false,
@@ -277,7 +297,7 @@ function showThirdGrid(parentRowID, parentRowKey) {
         {
             label: 'Cantidad',
             name: 'cantidad',
-            width: 50,
+            width: 80,
             align: 'right',
             search: false,
             hidden: false,
@@ -306,7 +326,7 @@ function showThirdGrid(parentRowID, parentRowKey) {
         rowNum: 10,
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        shrinkToFit: true,
+        shrinkToFit: false,
         width: 1300,
         caption: 'Detalle de Factura',
         styleUI: "Bootstrap",
