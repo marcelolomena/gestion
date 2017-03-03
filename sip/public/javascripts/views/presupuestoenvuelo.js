@@ -294,6 +294,7 @@ $(document).ready(function () {
                     return s + "</select>";
                 },
                 */
+
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#lider").val($('option:selected', this).val());
@@ -304,12 +305,14 @@ $(document).ready(function () {
         },
         {
             label: 'Lider', name: 'lider', width: 120, align: 'left',
-            search: false, editable: true, hidden: false, jsonmap: "nombrelider",
+            search: false, editable: true, hidden: false/*, jsonmap: "lider.first_name"*/,
             colMenu: true,
             coloptions: {
                 sorting: false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false
-            },
+            }, formatter: function (cellvalue, options, rowObject) {
+                return rowObject.lider.nombre + ' ' + rowObject.lider.apellido;
+            }
         },
         {
             label: 'uidjefeproyecto', name: 'uidjefeproyecto',
@@ -346,12 +349,17 @@ $(document).ready(function () {
         },
         {
             label: 'Jefe Area Responsable', name: 'jefeproyecto', width: 150, align: 'left',
-            search: false, editable: true, hidden: false, jsonmap: "nombrejefe",
+            search: false, editable: true, hidden: false, /*jsonmap: "nombrejefe",*/
             colMenu: true,
             coloptions: {
                 sorting: false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false
-            },
+            }, formatter: function (cellvalue, options, rowObject) {
+                if (rowObject.jefe)
+                    return rowObject.jefe.nombre + ' ' + rowObject.jefe.apellido;
+                else
+                    return ''
+            }
         },
         {
             label: 'uidpmoresponsable', name: 'uidpmoresponsable',
@@ -386,24 +394,18 @@ $(document).ready(function () {
         },
         {
             label: 'PMO Responsable', name: 'pmoresponsable', width: 150, align: 'left',
-            search: true, editable: true, stype: 'select', searchoptions: {
-                dataUrl: '/presupuestoenvuelo/comboboxpmo',
-                buildSelect: function (response) {
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger PMO--</option>';
-                    $.each(data, function (i, item) {
-                        s += '<option value="' + data[i].id + '">' + data[i].accion + '</option>';
-                    });
-                    return s + "</select>";
-                }
-            },
-            hidden: false, jsonmap: "nombrepmo",
+            search: true, editable: true,
+            hidden: false,/* jsonmap: "nombrepmo",*/
             colMenu: true,
             coloptions: {
                 sorting: false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false
-            },
+            }, formatter: function (cellvalue, options, rowObject) {
+                if (rowObject.pmo)
+                    return rowObject.pmo.nombre + ' ' + rowObject.pmo.apellido;
+                else
+                    return ''
+            }
         },
         /*
                 {
