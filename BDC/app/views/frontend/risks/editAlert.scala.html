@@ -1,4 +1,4 @@
-@(risk_id: String, alertForm : Form[RiskAlerts],alert: Option[RiskAlerts],userMap: Seq[Users])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(risk_id: String, alert_id: String, alertForm : Form[RiskAlerts],alert: Option[RiskAlerts],userMap: Seq[Users])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import play.api.i18n._
 @import play.api._
@@ -11,8 +11,9 @@
 <div class="main">
 @frontend.header()
 <section class="slider" id="pDetail_page">
-			@form(action = controllers.Frontend.routes.Risks.saveRiskAlert(risk_id), 'id->"risk-management-alert-form") {
+			@form(action = controllers.Frontend.routes.Risks.updateAlert(alert_id), 'id->"risk-management-alert-form") {
 		      <input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
+		      <input type="hidden" value="@alert_id" name="alert_id" id="alert_id"/>
 		      <input type="hidden" value="2" name="event_type" id="event_type"/>    
 		       	<div class="left 	 width_full">
 	      			@select(

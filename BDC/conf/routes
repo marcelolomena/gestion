@@ -262,6 +262,7 @@ GET    /risk-details/$id<[A-Za-z0-9_-]+>                                        
 #GET   /new-alert                                                                                     controllers.Frontend.Risks.newAlerts(risk_id: String)
 GET    /new-alert/$risk_id<[A-Za-z0-9_-]+>                                                            controllers.Frontend.Risks.newAlerts(risk_id: String)
 POST   /save-alert                                                                                    controllers.Frontend.Risks.saveRiskAlert(risk_id: String)
+POST   /edit-alert/$id<[A-Za-z0-9_-]+>                                                                controllers.Frontend.Risks.updateAlert(id:String)
 GET    /delete-risk-alert                                                                             controllers.Frontend.Risks.deleteRiskAlert(risk_alert_id:String)
 GET    /edit-alert/$risk_id<[A-Za-z0-9_-]+>/$alert_id<[A-Za-z0-9_-]>                                  controllers.Frontend.Risks.editRiskAlert(risk_id:String,alert_id:String)
 GET    /risk-sub-category/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Risks.getRiskSubCategory(id: String)
@@ -274,10 +275,7 @@ POST   /edit-issue/$id<[A-Za-z0-9_-]+>                                          
 GET    /issue-details                                                                                 controllers.Frontend.Program.issueDetails(id:String)
 GET    /delete-issue/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.Program.deleteIssue(id:String)
 
-
-
 GET    /get-members-from-role/$id<[A-Za-z0-9_-]+>                                                     controllers.Frontend.Program.getMembersFromRole(id:String)
-
 
 GET    /update-program-status/$program_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.Program.updateProgramStatus(program_id:String)
 POST   /update-program-status/$program_id<[A-Za-z0-9_-]+>                                             controllers.Frontend.Program.updateStatus(program_id:String)

@@ -85,6 +85,35 @@ object RiskService extends CustomColumns {
     }
 
   } /*  'risk_state -> risk.risk_state,*/
+  
+  def updateAlertDetails(alert: RiskAlerts) = {
+     DB.withConnection { implicit connection =>
+      val alert_detail = SQL(
+        """
+          update art_risk_alert  SET 
+          event_type={event_type},
+          event_code={event_code},
+          event_date={event_date},
+          event_title={event_title},
+          event_details={event_details},
+          responsible={responsible},
+          person_invloved={person_invloved},
+          alert_type={alert_type},
+          criticality={criticality}
+          where id={id}
+          """).on(
+          'id -> alert.id.get,
+          'event_type -> alert.event_type,
+          'event_code -> alert.event_code,
+          'event_date -> alert.event_date,
+          'event_title -> alert.event_title,
+          'event_details -> alert.event_details,
+          'responsible -> alert.responsible,
+          'person_invloved -> alert.person_invloved,
+          'alert_type -> alert.alert_type,
+          'criticality -> alert.criticality).executeUpdate()
+    } 
+  }
 
   def updateRiskDetails(risk: RiskManagementMaster) = {
 

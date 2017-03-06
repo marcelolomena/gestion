@@ -420,7 +420,7 @@ object Risks extends Controller {
                 rr.is_active)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              Ok(views.html.frontend.risks.editAlert(risk_id, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              Ok(views.html.frontend.risks.editAlert(risk_id, alert_id, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
           }
       }
@@ -462,6 +462,41 @@ object Risks extends Controller {
         case None =>
           Ok("No Details Available");
         case Some(r: RiskManagementMaster) =>
+          Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+      }
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+  def updateAlert(id: String) = Action(parse.multipartFormData) { implicit request =>
+    request.session.get("username").map { user =>
+      val alertObj = RiskService.findRiskAlertsById(id)
+
+      alertObj match {
+        case None =>
+          Redirect(routes.Login.loginUser())
+        case Some(rr: RiskAlerts) =>
+          val ra = RiskAlerts(rr.id,
+            rr.risk_id,
+            rr.event_type,
+            rr.event_code,
+            rr.event_date,
+            rr.event_title,
+            rr.event_details,
+            rr.responsible,
+            rr.person_invloved,
+            rr.alert_type,
+            rr.criticality,
+            rr.is_active)
+
+          val risk_id = rr.risk_id.toString
+          val last = RiskService.updateAlertDetails(ra)
+
+          val risk = RiskService.findRiskDetails(risk_id)
+          val parent_id = risk.get.parent_id.toString
+
           Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
@@ -632,7 +667,6 @@ object Risks extends Controller {
                 /*
                 r.parent_type.get match {
                   case 0 =>
-                    println("LA PTA")
                     Redirect(routes.Program.programDetails(r.parent_id.get.toString()))
                   case 1 =>
                     Redirect(routes.ProjectMaster.projectDetails(r.parent_id.get.toString()))
