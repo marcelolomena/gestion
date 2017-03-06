@@ -180,6 +180,11 @@ function renderSendAlert() {
 
 $(document).ready(function(){
 	
+		var ids = $("#person_invloved").val().split(",");
+		for ( var i in ids) {
+			$("#user_list_" + ids[i]).attr("checked", "checked");
+		}
+		
 		$('.mutliSelect').on('click', function() {
 			var ids = ""
 			$(this).find(':checked').map(function() {

@@ -88,6 +88,7 @@ object RiskService extends CustomColumns {
   
   def updateAlertDetails(alert: RiskAlerts) = {
      DB.withConnection { implicit connection =>
+       println("DETALLE : " + alert.event_details)
       val alert_detail = SQL(
         """
           update art_risk_alert  SET 

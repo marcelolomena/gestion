@@ -470,11 +470,11 @@ object Risks extends Controller {
     }
   }
 
-  def updateAlert(id: String) = Action(parse.multipartFormData) { implicit request =>
+  def updateAlert(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      val alertObj = RiskService.findRiskAlertsById(id)
+      val alert = RiskService.findRiskAlertsById(id)
 
-      alertObj match {
+      alert match {
         case None =>
           Redirect(routes.Login.loginUser())
         case Some(rr: RiskAlerts) =>
@@ -491,13 +491,17 @@ object Risks extends Controller {
             rr.criticality,
             rr.is_active)
 
-          val risk_id = rr.risk_id.toString
+          //println("risk_id" + risk_id)
           val last = RiskService.updateAlertDetails(ra)
 
-          val risk = RiskService.findRiskDetails(risk_id)
-          val parent_id = risk.get.parent_id.toString
+          /**
+           * Activity log
+           */
+          val act = Activity(ActivityTypes.Alert.id, "Alert sent by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
+          Activity.saveLog(act)
+          //RiskService.sendAutomaticAlerts(last_index.toString)
 
-          Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok("Sccuess");
       }
 
     }.getOrElse {
