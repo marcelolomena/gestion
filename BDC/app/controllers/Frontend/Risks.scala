@@ -457,7 +457,7 @@ object Risks extends Controller {
       val alerts = RiskService.findAllActiveAlertsByRiskId(id)
       val risk = RiskService.findRiskDetails(id)
       val parent_id = risk.get.parent_id.get.toString()
-      println("parent_id [" + parent_id + "]")
+      //println("parent_id [" + parent_id + "]")
       risk match {
         case None =>
           Ok("No Details Available");
@@ -475,6 +475,7 @@ object Risks extends Controller {
       //var program = ProgramService.findProgramMasterDetailsById(program_id)
 
       val riskObj = RiskService.findRiskDetails(id)
+      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
       riskObj match {
         case None =>
           Redirect(routes.Login.loginUser())
@@ -628,8 +629,10 @@ object Risks extends Controller {
                  */
                 val act = Activity(ActivityTypes.Risk.id, "Risk Upadated by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
                 Activity.saveLog(act)
+                /*
                 r.parent_type.get match {
                   case 0 =>
+                    println("LA PTA")
                     Redirect(routes.Program.programDetails(r.parent_id.get.toString()))
                   case 1 =>
                     Redirect(routes.ProjectMaster.projectDetails(r.parent_id.get.toString()))
@@ -638,6 +641,9 @@ object Risks extends Controller {
                   case 3 =>
                     Redirect(routes.SubTask.subTaskDetails(r.parent_id.get.toString()))
                 }
+                */
+                val newrisk = RiskService.findRiskDetails(id)
+                Ok(views.html.frontend.risks.riskDetails(alerts, newrisk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
               }
 
             })

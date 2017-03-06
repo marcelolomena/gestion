@@ -340,7 +340,7 @@
 	<div class="width_full">
 				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
 	</div>
-
+@if(RiskService.countRiskForShow(program.get.program_id.get.toString)>0){
   	<h3 id="matrixRk">
 		<span class="left">Matriz de Riesgo</span>
 	</h3>	
@@ -397,7 +397,7 @@
 				</div>
 
 	</div>	
-	
+}
 	@if(utils.UserAccess.checkAccess(req,"program_member_listing")){
 		<h3 id="productNm" style="margin-top: 20px;">
 			    <span class="left">@Messages("programdetails.programmembers")</span>
