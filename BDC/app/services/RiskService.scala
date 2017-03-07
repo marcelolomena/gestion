@@ -85,13 +85,18 @@ object RiskService extends CustomColumns {
     }
 
   } /*  'risk_state -> risk.risk_state,*/
-  
+
   def updateAlertDetails(alert: RiskAlerts) = {
-     DB.withConnection { implicit connection =>
-       println("DETALLE : " + alert.event_details)
+    DB.withConnection { implicit connection =>
+      println("ID : " + alert.id.get)
+      println("DETALLE : " + alert.event_details.get.toString)
+      println("TITULO : " + alert.event_title)
+      println("FECHA : " + alert.event_date)
+      println("risk_id : " + alert.risk_id)
       val alert_detail = SQL(
         """
           update art_risk_alert  SET 
+          risk_id={risk_id},          
           event_type={event_type},
           event_code={event_code},
           event_date={event_date},
@@ -104,16 +109,17 @@ object RiskService extends CustomColumns {
           where id={id}
           """).on(
           'id -> alert.id.get,
+          'risk_id -> alert.risk_id,
           'event_type -> alert.event_type,
           'event_code -> alert.event_code,
           'event_date -> alert.event_date,
           'event_title -> alert.event_title,
-          'event_details -> alert.event_details,
+          'event_details -> alert.event_details.get.toString,
           'responsible -> alert.responsible,
           'person_invloved -> alert.person_invloved,
           'alert_type -> alert.alert_type,
           'criticality -> alert.criticality).executeUpdate()
-    } 
+    }
   }
 
   def updateRiskDetails(risk: RiskManagementMaster) = {
@@ -901,6 +907,20 @@ object RiskService extends CustomColumns {
       }
     }*/
 
+    if (new_form != null) {
+      new_form
+    } else {
+      form
+    }
+  }
+
+  def validateAlert(form: play.api.data.Form[RiskAlerts]) = {
+    var new_form: play.api.data.Form[RiskAlerts] = null
+
+    if (form("event_title").value.isEmpty) {
+        new_form = form.withError("event_title", "Por favor, ingrese un nombre para la alerta.")
+    }
+    
     if (new_form != null) {
       new_form
     } else {

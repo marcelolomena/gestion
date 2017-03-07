@@ -491,17 +491,58 @@ object Risks extends Controller {
             rr.criticality,
             rr.is_active)
 
-          //println("risk_id" + risk_id)
-          val last = RiskService.updateAlertDetails(ra)
+          ARTForms.alertsForm.bindFromRequest.fold(
+            errors => {
+              var program_id = ""
+              println("Errors - " + errors.errors);
+              val riskObj = RiskService.findRiskDetails(ra.risk_id.toString)
+              var program: Option[ProgramMaster] = null
+              riskObj.get.parent_type.get match {
+                case 0 =>
+                  program_id = riskObj.get.parent_id.get.toString()
+                case 1 =>
+                  program = ProjectService.findProgramDetailForProject(riskObj.get.parent_id.toString())
+                  program_id = program.get.program_id.get.toString()
+                case 2 =>
+                  program = TaskService.findProgramDetailForTask(riskObj.get.parent_id.get.toString())
+                  program_id = program.get.program_id.get.toString()
+                case 3 =>
+                  program = SubTaskServices.findProgramDetailForSubTask(riskObj.get.parent_id.get.toString())
+                  program_id = program.get.program_id.get.toString()
+              }
+              val users = ProgramMemberService.findAllProgramMembers(program_id);
+              BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString, id, errors, alert, users))
+            },
+            success => {
 
-          /**
-           * Activity log
-           */
-          val act = Activity(ActivityTypes.Alert.id, "Alert sent by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
-          Activity.saveLog(act)
-          //RiskService.sendAutomaticAlerts(last_index.toString)
+              val theForm = RiskService.validateAlert(ARTForms.alertsForm.fill(success))
+              println("concheta : " + success.event_details.toString)
+              val theAlert = RiskAlerts(ra.id,
+                ra.risk_id,
+                success.event_type,
+                success.event_code,
+                ra.event_date,
+                success.event_title.toString,
+                success.event_details,
+                ra.responsible,
+                success.person_invloved,
+                success.alert_type,
+                success.criticality,
+                ra.is_active)
 
-          Ok("Sccuess");
+              val last = RiskService.updateAlertDetails(theAlert)
+
+              /**
+               * Activity log
+               */
+              val act = Activity(ActivityTypes.Alert.id, "Alert sent by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
+              Activity.saveLog(act)
+              //RiskService.sendAutomaticAlerts(last_index.toString)
+
+              Ok("Sccuess");
+
+              ////            
+            })
       }
 
     }.getOrElse {
