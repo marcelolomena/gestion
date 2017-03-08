@@ -332,6 +332,19 @@ object ProgramCodes {
   }
 }
 
+case class ListStatus(id: Option[Int], nid: Int, status_for_date: Date,reason_for_change: String,status: Int, level: String)
+
+object ListStatus extends CustomColumns  {
+
+  val lstatus = {
+    get[Option[Int]]("id") ~ get[Int]("nid") ~ get[Date]("status_for_date") ~
+    get[String]("reason_for_change")~ get[Int]("status") ~ get[String]("level") map {
+      case id ~ nid ~ status_for_date ~ reason_for_change ~ status ~ level =>
+        ListStatus(id, nid, status_for_date, reason_for_change,status,level)
+    }
+  }
+}
+
 case class ProgramHours(program_id: Option[Int], planned_hours: Option[Long], estimated_cost: Option[Long])
 
 object ProgramHours {

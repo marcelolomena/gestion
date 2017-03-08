@@ -1,4 +1,17 @@
-@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramInternalMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternalAllocation],programWorkflowStatus:String,impacto:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@(expected_completion_percentage:String,
+	completion_percentage_forProgram : String,
+	program:Option[ProgramMaster],
+	programDetail:Option[ProgramDetails],
+	programDates:Option[ProgramDates],
+	projectList :Seq[Project],
+	 documents : Seq[DocumentMaster],
+	  changeSet:String,
+	  progrma_members: Seq[ProgramInternalMembers],
+	  saps:List[SAP],
+	   external_resource: Seq[models.
+	   ProgramMembersExternalAllocation],
+	   programWorkflowStatus:String,
+	   impacto:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import utils._
@@ -340,6 +353,14 @@
 	<div class="width_full">
 				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
 	</div>
+	
+  	<h3 id="productNm">
+		<span class="left">Lista de Estados)</span>
+	</h3>
+	<div class="width_full">
+				@frontend.program.statusListprogram(program.get.program_id.get.toString())
+	</div>	
+	
 @if(RiskService.countRiskForShow(program.get.program_id.get.toString)>0){
   	<h3 id="matrixRk">
 		<span class="left">Matriz de Riesgo</span>

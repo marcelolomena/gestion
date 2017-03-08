@@ -412,6 +412,28 @@ object ProgramService extends CustomColumns {
 
     }
   }
+  
+    def findAllStatus(pid: String): Seq[ListStatus] = {
+    var sqlString = """
+          SELECT id,program_id as nid,status_for_date,reason_for_change,status, 'Program' level FROM art_program_status 
+          WHERE program_id = {pid}
+          UNION
+          SELECT id,project_id as nid,status_for_date,reason_for_change,status, 'Proyecto' level FROM art_project_status 
+          WHERE project_id IN (SELECT pId FROM art_project_master WHERE is_active = 1 AND program = {pid} )
+          UNION
+          SELECT id,task_id as nid,status_for_date,reason_for_change,status, 'Tarea' level FROM art_task_status 
+          WHERE task_id IN (SELECT tId FROM art_task WHERE is_active = 1 AND pId IN (SELECT pId FROM art_project_master WHERE is_active = 1 AND program = {pid}))
+          UNION
+          SELECT id,sub_task_id as nid,status_for_date,reason_for_change,status, 'Sub Tarea' level FROM art_sub_task_status
+          WHERE sub_task_id IN (SELECT sub_task_id FROM art_sub_task WHERE is_deleted = 1 and task_id IN (SELECT tId FROM art_task WHERE is_active = 1 AND pId IN (SELECT pId FROM art_project_master WHERE is_active = 1 AND program = {pid})))
+          ORDER BY status_for_date DESC      
+      """
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).on('pid -> pid.toInt).executeQuery().as(ListStatus.lstatus *)
+      result
+
+    }
+  }
 
   def programas_sin_avance_en_tareas(uid: String): Seq[ProgramMaster] = {
     var sqlString = "EXEC art.sin_avance {uid}"

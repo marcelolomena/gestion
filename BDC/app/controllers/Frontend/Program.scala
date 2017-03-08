@@ -115,7 +115,7 @@ object Program extends Controller {
       }
       val programs = ProgramService.findAllUserJunior(user_id.toInt, programnumber.toInt)
       val programCount = ProgramService.countAllUserJunior(user_id.toInt)
-      
+
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
       Ok(views.html.frontend.program.paginationProgramListing(programs, programCount)).withSession(userSession)
     }.getOrElse {
@@ -162,12 +162,12 @@ object Program extends Controller {
     for (d <- ProgramTypeService.findAllProgramType) {
       modelManagementValues.put(d.id.get.toString, d.program_type.toString())
     }
-    
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.HashMap[String, String]()
-      for (s <- impacttype) {
-        impacttypeMap.put(s.id.get.toString, s.impact_type)
-      }
+
+    var impacttype = ImpactTypeService.findAllImpactTypeList();
+    var impacttypeMap = new java.util.HashMap[String, String]()
+    for (s <- impacttype) {
+      impacttypeMap.put(s.id.get.toString, s.impact_type)
+    }
 
     var divisionValues = new java.util.HashMap[String, String]()
     for (d <- DivisionService.findAllDivision) {
@@ -210,7 +210,7 @@ object Program extends Controller {
     sortValues.put("1", "Alphabetically");
     sortValues.put("2", "Release Date");
 
-    Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/impacttypeMap, workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/ impacttypeMap, workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
   }
 
   def searchResult() = Action { implicit request =>
@@ -242,13 +242,12 @@ object Program extends Controller {
       for (d <- DivisionService.findAllDivision) {
         divisionValues.put(d.dId.get.toString, d.division.toString())
       }
-      
+
       var impacttype = ImpactTypeService.findAllImpactTypeList();
       var impacttypeMap = new java.util.HashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
       }
-     
 
       var programSubTypeValues = new java.util.HashMap[String, String]()
       for (d <- SubTypeService.findAllSubTypeList) {
@@ -288,7 +287,7 @@ object Program extends Controller {
       sortValues.put("2", "Release Date");
       ARTForms.searchProgram.bindFromRequest.fold(
         errors => {
-          Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/impacttypeMap, workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/ impacttypeMap, workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         },
         searchForm => {
           //var delay_level = ""
@@ -305,7 +304,7 @@ object Program extends Controller {
           var sort_type = ""
           var gerencia = ""
           var department = ""
-          var impact_type =""
+          var impact_type = ""
 
           if (!searchForm.work_flow_status.isEmpty) {
             work_flow_status = searchForm.work_flow_status.get.trim()
@@ -319,7 +318,7 @@ object Program extends Controller {
           }
           if (!searchForm.sap_code.isEmpty) { //agregado
             sap_code = searchForm.sap_code.get.trim()
-          }          
+          }
           if (!searchForm.program_type.isEmpty) {
             program_type = searchForm.program_type.get.trim()
           }
@@ -345,7 +344,7 @@ object Program extends Controller {
           if (!searchForm.sort_type.isEmpty) {
             sort_type = searchForm.sort_type.get.trim()
           }
-          
+
           if (!searchForm.impact_type.isEmpty) {
             impact_type = searchForm.impact_type.get.trim()
           }
@@ -366,7 +365,7 @@ object Program extends Controller {
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(impact_type,work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
+            val programs = ProgramService.searchDashboardReport(impact_type, work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
             //Ok("SUCCESS");
@@ -403,12 +402,13 @@ object Program extends Controller {
       val utype = Integer.parseInt(request.session.get("utype").get)
       val program = ProgramService.findProgramMasterDetailsById(programId)
       val statusWorkflow = ProgramTypeService.findWorkflowByProgramId(programId)
+      //val listStatus = ProgramService.findAllStatus(programId)
 
       var statusWF = statusWorkflow.get.workflow_status.toString()
       val programDetail = ProgramService.findProgramOtherDetailsById(programId)
-      
-      val  impact_type=     ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString())
-      var impactType=impact_type.get.impact_type.toString()
+
+      val impact_type = ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString())
+      var impactType = impact_type.get.impact_type.toString()
       val programDates = ProgramService.findProgramDateDetailsById(programId)
       val projectList = UserService.findProjectListForUserAndProgram(uId, programId)
       val projects = ProjectService.findProjectListForProgram(programId)
@@ -472,10 +472,34 @@ object Program extends Controller {
 
       if (plan_time_for_program.!=(0)) {
         val completion_percentage_forProgram = ProgramService.completionPercentageForProgram(programId)
-        Ok(views.html.frontend.program.programDetails(expected_completion_percentage.toString(), completion_percentage_forProgram.toString(), program, programDetail, programDates, projectList, documents, changeSet, progrma_members, saps, externalEmployees, statusWF,impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.program.programDetails(
+            expected_completion_percentage.toString(), 
+            completion_percentage_forProgram.toString(),
+            program, programDetail, 
+            programDates, projectList, 
+            documents, 
+            changeSet,
+            progrma_members, 
+            saps, 
+            externalEmployees,
+            statusWF, 
+            impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       } else {
 
-        Ok(views.html.frontend.program.programDetails(expected_completion_percentage.toString(), plan_time_for_program.toString(), program, programDetail, programDates, projectList, documents, changeSet, progrma_members, saps, externalEmployees, statusWF,impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(views.html.frontend.program.programDetails(
+            expected_completion_percentage.toString(),
+            plan_time_for_program.toString(),
+            program,
+            programDetail, 
+            programDates, 
+            projectList, 
+            documents, 
+            changeSet, 
+            progrma_members, 
+            saps, 
+            externalEmployees, 
+            statusWF, 
+            impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }
 
     }.getOrElse {
@@ -517,13 +541,13 @@ object Program extends Controller {
       for (d <- divisions) {
         divisionMap.put(d.dId.get.toString(), d.division)
       }
-      
+
       var impacttype = ImpactTypeService.findAllImpactTypeList();
       var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
       }
-      
+
       // val departments = DepartmentService.findAllDepartmentS
       var departmentsMap = new java.util.LinkedHashMap[String, String]()
       /*for (d <- departments) {
@@ -589,12 +613,12 @@ object Program extends Controller {
     for (s <- programtype) {
       programType.put(s.id.get.toString, s.program_type)
     }
-    
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.HashMap[String, String]()
-      for (s <- impacttype) {
-        impacttypeMap.put(s.id.get.toString, s.impact_type)
-      }
+
+    var impacttype = ImpactTypeService.findAllImpactTypeList();
+    var impacttypeMap = new java.util.HashMap[String, String]()
+    for (s <- impacttype) {
+      impacttypeMap.put(s.id.get.toString, s.impact_type)
+    }
 
     val divisions = DivisionService.findAllDivisions
     var divisionMap = new java.util.HashMap[String, String]()
@@ -651,7 +675,7 @@ object Program extends Controller {
           }
         }
 
-        BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       },
       program => {
@@ -665,7 +689,7 @@ object Program extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
         } else {
 
@@ -861,7 +885,7 @@ object Program extends Controller {
       for (s <- programtype) {
         programType.put(s.id.get.toString, s.program_type)
       }
-      
+
       var impacttype = ImpactTypeService.findAllImpactTypeList();
       var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
@@ -922,7 +946,7 @@ object Program extends Controller {
       val pDetail = ProgramDetail(programDetails.get.devison, programDetails.get.management, programDetails.get.department, programDetails.get.impact_type, programDetails.get.business_line, programDetails.get.sap_code)
       val pDate = ProgramDate(programDates.get.initiation_planned_date, programDates.get.creation_date, programDates.get.closure_date.getOrElse(new Date), programDates.get.release_date)
 
-      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state,program.get.estimated_cost)
+      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state, program.get.estimated_cost)
 
       var users = UserService.findAllDemandManager();
 
@@ -931,7 +955,7 @@ object Program extends Controller {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
 
-      Ok(views.html.frontend.program.editProgram(ARTForms.programFormEdit.fill(progrm), id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.editProgram(ARTForms.programFormEdit.fill(progrm), id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -974,12 +998,12 @@ object Program extends Controller {
     for (u <- users) {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
-    
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.HashMap[String, String]()
-      for (s <- impacttype) {
-        impacttypeMap.put(s.id.get.toString, s.impact_type)
-      }
+
+    var impacttype = ImpactTypeService.findAllImpactTypeList();
+    var impacttypeMap = new java.util.HashMap[String, String]()
+    for (s <- impacttype) {
+      impacttypeMap.put(s.id.get.toString, s.impact_type)
+    }
 
     /*    val divisionObj = DivisionService.findDivisionByName("Division Operaciones y Tecnologia")
 
@@ -1036,7 +1060,7 @@ object Program extends Controller {
             departmentsMap.put(d.dId.get.toString(), d.department)
           }
         }
-        BadRequest(views.html.frontend.program.editProgram(errors, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.editProgram(errors, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       },
       program => {
         val theForm = ProgramService.validateForm(ARTForms.programFormEdit.fill(program), id)
@@ -1067,7 +1091,7 @@ object Program extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.editProgram(theForm, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.editProgram(theForm, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
         } else {
 
           val dm = program.demand_manager
@@ -1136,9 +1160,9 @@ object Program extends Controller {
           val timesheetList = TimesheetService.getAllTimesheetIds()
 
           for (project <- projectlist) {
-            if(true){
-              do_delete=false
-            }/*
+            if (true) {
+              do_delete = false
+            } /*
             val tasklist = TaskService.findAllTaskIdListByProjectId(project.toString())
             for (task <- tasklist) {
               val subtask_list = SubTaskServices.findAllocatedSubTaskIdsByTask(task.toString())
@@ -1152,7 +1176,6 @@ object Program extends Controller {
 
             }
             */
-            
 
           }
 
@@ -1761,7 +1784,7 @@ object Program extends Controller {
       } else {
         close_date = None
       }
-      val sap = SAPMaster(program_id.toInt, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, invst, expds, 1, None, None, None, approved_date, comitted_date,close_date)
+      val sap = SAPMaster(program_id.toInt, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per, invst, expds, 1, None, None, None, approved_date, comitted_date, close_date)
       oldForm = oldForm.fill(sap)
       oldForm.fold(
         errors => {
@@ -1877,7 +1900,7 @@ object Program extends Controller {
           Option(current_e_development), Option(current_e_other), Option(current_e_qa), Option(current_e_improvements), Option(current_e_recurring_first))
 
         val objSAP = SAPMaster(sapMaster.get.program_id, sapMaster.get.sap_number, sapMaster.get.budget_type, sapMaster.get.cui1,
-          sapMaster.get.cui1_per, sapMaster.get.cui2, sapMaster.get.cui2_per, invest, expend, sapMaster.get.is_active, sapMaster.get.creation_date, sapMaster.get.last_update, sapMaster.get.planned_hours, sapMaster.get.approved_date, sapMaster.get.comitted_date,sapMaster.get.close_date)
+          sapMaster.get.cui1_per, sapMaster.get.cui2, sapMaster.get.cui2_per, invest, expend, sapMaster.get.is_active, sapMaster.get.creation_date, sapMaster.get.last_update, sapMaster.get.planned_hours, sapMaster.get.approved_date, sapMaster.get.comitted_date, sapMaster.get.close_date)
 
         var bts = new java.util.LinkedHashMap[String, String]()
         val bType = BudgetTypeService.findActiveBudgetTypes
@@ -2300,7 +2323,7 @@ object Program extends Controller {
           close_date = None
         }
         val sap = SAPMaster(program_id.toInt, sap_number, budget_type, cui1, cui1_per, cui2, cui2_per,
-          invst, expds, 1, None, None, None, approved_date, comitted_date,close_date)
+          invst, expds, 1, None, None, None, approved_date, comitted_date, close_date)
 
         oldForm = oldForm.fill(sap)
         oldForm.fold(
@@ -2442,7 +2465,8 @@ object Program extends Controller {
       val e_actual_cost_map = new java.util.LinkedHashMap[Long, Double];
 
       var spicpiCal = SpiCpiCalculationsService.findCalculationsById(program_id);
-      if (!spicpiCal.isEmpty) {
+      //if (!spicpiCal.isEmpty) {
+      if (spicpiCal != null) {
         for (s <- spicpiCal) {
           var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
           if (!s.spi.isEmpty && !s.fecha.isEmpty) {
@@ -2463,49 +2487,7 @@ object Program extends Controller {
           }
 
         }
-      } else {
 
-      }
-
-      node.put("spi_date_map", spi_date_map)
-      node.put("cpi_date_map", cpi_date_map)
-      node.put("ecpi_date_map", ecpi_date_map)
-      node.put("espi_date_map", espi_date_map)
-
-      node.put("actual_cost_map", actual_cost_map)
-      node.put("e_actual_cost_map", e_actual_cost_map)
-
-      node.put("earn_value_map", earn_value_map)
-      node.put("e_earn_value_map", e_earn_value_map)
-
-      node.put("planned_value_map", planned_value_map)
-      node.put("e_planned_value_map", e_planned_value_map)
-
-      node.put("ta", ta)
-      node.put("tp", tp)
-      node.put("program_id", program_id_map);
-      /* for (i <- 0 to 11) {
-        val date = new DateTime().minusWeeks(i).withDayOfWeek(DateTimeConstants.FRIDAY).toDate()
-        var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-        var date1 = formattedDate.format(date)*/
-      val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
-      for (ev_obj <- EV_list) {
-        var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-        var date1 = formattedDate.format(ev_obj.recorded_date)
-        //spi_date_map.put(formattedDate.parse(date1).getTime(), ev_obj.scheduled_perforamce_index.get)
-        //cpi_date_map.put(formattedDate.parse(date1).getTime(), ev_obj.cost_performance_index.get)
-
-        //actual_cost_map.put(formattedDate.parse(date1).getTime(), ev_obj.actual_cost.get)
-        //earn_value_map.put(formattedDate.parse(date1).getTime(), ev_obj.erned_value.get)
-        //planned_value_map.put(formattedDate.parse(date1).getTime(), ev_obj.planned_value.get)
-      }
-
-      /* }*/
-      //  val nmap = spi_date_map.descendingMap();
-      /*
-      if (EV_list.isEmpty || EV_list.size == 0) {
-        node.put("empty_object", "empty_object")
-      } else {
         node.put("spi_date_map", spi_date_map)
         node.put("cpi_date_map", cpi_date_map)
         node.put("ecpi_date_map", ecpi_date_map)
@@ -2523,9 +2505,14 @@ object Program extends Controller {
         node.put("ta", ta)
         node.put("tp", tp)
         node.put("program_id", program_id_map);
+        val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
+        for (ev_obj <- EV_list) {
+          var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+          var date1 = formattedDate.format(ev_obj.recorded_date)
 
+        }
       }
-*/
+
       Ok(node.toString())
 
     }.getOrElse {
@@ -2728,7 +2715,7 @@ object Program extends Controller {
           if (!subtask.isEmpty) {
             start_date = subtask.get.plan_start_date
             end_date = subtask.get.plan_end_date
-          }          
+          }
       }
       if (!program.isEmpty) {
         val users = ProgramMemberService.findAllProgramMembers(program.get.program_id.get.toString);
@@ -2780,7 +2767,7 @@ object Program extends Controller {
             start_date = subtask.get.plan_start_date
             end_date = subtask.get.plan_end_date
             task_id = subtask.get.task_id.toString()
-          }          
+          }
       }
       if (!program.isEmpty) {
 

@@ -403,7 +403,7 @@ object ProgramJira extends Controller {
       val utype = Integer.parseInt(request.session.get("utype").get)
       val program = ProgramService.findProgramMasterDetailsById(programId)
       val statusWorkflow = ProgramTypeService.findWorkflowByProgramId(programId)
-
+      //val listStatus = ProgramService.findAllStatus(programId)
       var statusWF = statusWorkflow.get.workflow_status.toString()
       val programDetail = ProgramService.findProgramOtherDetailsById(programId)
       

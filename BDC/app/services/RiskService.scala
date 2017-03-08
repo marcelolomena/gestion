@@ -1096,6 +1096,18 @@ object RiskService extends CustomColumns {
     }
 
   }
+  
+  def findAlertsForRisk(risk_id: String, alert_id: String): Option[RiskAlerts] = {
+
+      val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
+      println(sqlString)
+
+      DB.withConnection { implicit connection =>
+        val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+        result
+      }
+
+  }  
 
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
     if (!StringUtils.isEmpty(id)) {

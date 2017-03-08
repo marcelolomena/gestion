@@ -17,7 +17,7 @@ object ApplicationBuild extends Build {
     ws,
     jdbc,
     anorm,
-    "net.liftweb" %% "lift-json" % "2.6+",
+    "net.liftweb" %% "lift-json" % "2.6.3",
     "org.json" % "org.json" % "chargebee-1.0",
     "org.mindrot" % "jbcrypt" % "0.3m",
     "org.imgscalr" % "imgscalr-lib" % "4.2",

@@ -4100,7 +4100,6 @@ form button {
 
 #member_id,#member_id_field {
 	/*display: none;*/
-	
 }
 
 #member_id_search {
@@ -4369,7 +4368,7 @@ form button {
 	{
 	margin-top: 20px;
 }
-/********/
+
 #risk_list_detail_page li.top-header {
 	background: #315663;
 }
@@ -4426,9 +4425,6 @@ form button {
 	background: #fff;
 }
 
-
-
-/*----*/
 #risk_list li.top-header {
 	background: #315663;
 }
