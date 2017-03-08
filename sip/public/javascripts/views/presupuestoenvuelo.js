@@ -311,7 +311,10 @@ $(document).ready(function () {
                 sorting: false, columns: true, filtering: false, searching: false,
                 grouping: false, freeze: false
             }, formatter: function (cellvalue, options, rowObject) {
-                return rowObject.lider.nombre + ' ' + rowObject.lider.apellido;
+                if (rowObject.lider)
+                    return rowObject.lider.nombre + ' ' + rowObject.lider.apellido;
+                else
+                    return ''
             }
         },
         {
@@ -393,8 +396,8 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO Responsable', name: 'pmoresponsable', width: 150, align: 'left',
-            search: true, editable: true,
+            label: 'PMO Responsable', name: 'first_name', width: 150, align: 'left',
+            search: true, editable: false,
             hidden: false,/* jsonmap: "nombrepmo",*/
             colMenu: true,
             coloptions: {

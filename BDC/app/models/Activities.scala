@@ -44,6 +44,7 @@ object ActivityTypes extends Enumeration {
   Allocation,
   Timesheet, 
   Risk,
+  Alert,
   Issue,
   Document,
   Estimation_Cost, 
