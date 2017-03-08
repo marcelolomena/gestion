@@ -28,8 +28,6 @@ module.exports = function (passport) {
     router.route('/cargadte/download/:id')
         .get(isAuthenticated, cargadteController.excel);
 
-    router.route('/cargadte/updateResumen/:id')
-        .get(isAuthenticated, cargadteController.updateResumen);
         
     return router;
 
