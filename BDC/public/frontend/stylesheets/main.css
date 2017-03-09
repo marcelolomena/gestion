@@ -4466,6 +4466,47 @@ form button {
 	width: 120px;
 }
 
+#risk_list .status {
+	float: left;
+	width: 420px;
+}
+
+#risk_list .icon {
+	float: left;
+	width: 40px;
+}
+
+#risk_list .status_0
+	{
+	background-image: url("../images/circle-green.png");
+	background-repeat: no-repeat;
+	float: left;
+	height: 16px;
+	margin-right: 5px;
+	width: 16px;
+}
+
+#risk_list .status_1
+	{
+	background-image: url("../images/circle-amber.png");
+	background-repeat: no-repeat;
+	float: left;
+	height: 16px;
+	margin-right: 5px;
+	width: 16px;
+}
+
+#risk_list .status_2
+	{
+	background-image: url("../images/circle-red.png");
+	background-repeat: no-repeat;
+	float: left;
+	height: 16px;
+	margin-right: 5px;
+	width: 16px;
+}
+
+
 #risk_list .active {
 	float: left;
 	width: 15px;

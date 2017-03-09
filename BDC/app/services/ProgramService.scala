@@ -415,7 +415,7 @@ object ProgramService extends CustomColumns {
   
     def findAllStatus(pid: String): Seq[ListStatus] = {
     var sqlString = """
-          SELECT id,program_id as nid,status_for_date,reason_for_change,status, 'Program' level FROM art_program_status 
+          SELECT id,program_id as nid,status_for_date,reason_for_change,status, 'Programa' level FROM art_program_status 
           WHERE program_id = {pid}
           UNION
           SELECT id,project_id as nid,status_for_date,reason_for_change,status, 'Proyecto' level FROM art_project_status 

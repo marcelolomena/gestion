@@ -342,6 +342,12 @@
 					</table>
 	  			</div>
  		  }  	
+  	<h3 id="productNm">
+		<span class="left">Lista de Estados</span>
+	</h3>
+	<div class="width_full">
+				@frontend.program.statusListprogram(program.get.program_id.get.toString())
+	</div>	
   	
   	<h3 id="productNm">
 		<span class="left">@Messages("subtaskdetail.programrisk")</span>
@@ -353,13 +359,6 @@
 	<div class="width_full">
 				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
 	</div>
-	
-  	<h3 id="productNm">
-		<span class="left">Lista de Estados)</span>
-	</h3>
-	<div class="width_full">
-				@frontend.program.statusListprogram(program.get.program_id.get.toString())
-	</div>	
 	
 @if(RiskService.countRiskForShow(program.get.program_id.get.toString)>0){
   	<h3 id="matrixRk">
