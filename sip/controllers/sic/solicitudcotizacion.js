@@ -140,7 +140,7 @@ exports.list = function (req, res) {
     var sord = req.body.sord;
 
     if (!sidx)
-        sidx = "descripcion";
+        sidx = "id";
 
     if (!sord)
         sord = "asc";

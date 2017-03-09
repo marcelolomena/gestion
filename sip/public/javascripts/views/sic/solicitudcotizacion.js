@@ -210,7 +210,7 @@ $(document).ready(function () {
         },
         {
             label: 'Descripción', name: 'descripcion', width: 250, align: 'left',
-            search: false, editable: true, editoptions: { rows: "2", cols: "50" },
+            search: true, editable: true, editoptions: { rows: "2", cols: "50" },
             editrules: { required: true }, edittype: "textarea", hidden: false
 
         },
@@ -244,7 +244,7 @@ $(document).ready(function () {
         {
             label: 'Color',
             name: 'colornota',
-            index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
+            index: 'colornota', width: 50, align: "left", editable: true, search: false, editoptions: { size: 10 },
             formatter: function (cellvalue, options, rowObject) {
 
                 var solicitud = rowObject.id;
@@ -498,6 +498,11 @@ $(document).ready(function () {
         }
     });
 
+    $grid.jqGrid('filterToolbar', {
+        stringResult: true, searchOperators: true,
+        searchOnEnter: false, defaultSearch: 'cn'
+    });
+
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: true, add: true, del: true, search: false },
         {
             editCaption: "Modifica Solicitud",
@@ -631,7 +636,8 @@ $(document).ready(function () {
                 if (result.error != 0) {
                     return [false, result.glosa, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                    console.log(postdata)
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
