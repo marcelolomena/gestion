@@ -597,6 +597,12 @@ $(document).ready(function () {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } else if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
+                } else if (parseInt(postdata.idnegociador) == 0) {
+                    return [false, "Negociador: Debe escoger un valor", ""];
+                } else if (parseInt(postdata.idgrupo) == 0) {
+                    return [false, "Grupo: Debe escoger un valor", ""];
+                } else if (parseInt(postdata.idclasificacionsolicitud) == 0) {
+                    return [false, "Clasificación: Debe escoger un valor", ""];
                 } else if (postdata.descripcion.trim().length == 0) {
                     return [false, "Descripción: Debe ingresar una descripción", ""];
                 } else {

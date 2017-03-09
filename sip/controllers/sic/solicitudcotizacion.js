@@ -7,6 +7,10 @@ var fs = require('fs');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    if (action != "del") {
+        if (req.body.fechaenviorfp != "")
+            fechaenviorfp = req.body.fechaenviorfp.split("-").reverse().join("-")
+    }
 
     switch (action) {
         case "add":
@@ -24,7 +28,7 @@ exports.action = function (req, res) {
                 correonegociador: req.body.correonegociador,
                 fononegociador: req.body.fononegociador,
                 numerorfp: req.body.numerorfp,
-                fechaenviorfp: req.body.fechaenviorfp,
+                fechaenviorfp: fechaenviorfp,
                 direccionnegociador: req.body.direccionnegociador,
                 //nombreinterlocutor1: req.body.nombreinterlocutor1,
                 //correointerlocutor1: req.body.correointerlocutor1,
@@ -84,7 +88,7 @@ exports.action = function (req, res) {
                     fononegociador: req.body.fononegociador,
                     direccionnegociador: req.body.direccionnegociador,
                     numerorfp: req.body.numerorfp,
-                    fechaenviorfp: req.body.fechaenviorfp,
+                    fechaenviorfp: fechaenviorfp,
                     //nombreinterlocutor1: req.body.nombreinterlocutor1,
                     //correointerlocutor1: req.body.correointerlocutor1,
                     //fonointerlocutor1: req.body.fonointerlocutor1,
@@ -251,7 +255,7 @@ exports.tecnicosresponsablescui = function (req, res) {
 
 exports.traerdatos = function (req, res) {
     var id = req.params.id;
-    var sql = " select email, contact_number from art_user where uid="+id+";";
+    var sql = " select email, contact_number from art_user where uid=" + id + ";";
 
     sequelize.query(sql)
         .spread(function (rows) {

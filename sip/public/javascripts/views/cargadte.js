@@ -13,10 +13,20 @@ $(document).ready(function () {
         { label: 'Archivo', name: 'archivo', width: 50, align: 'left', search: false, editable: false, hidden: false },
         {
             label: 'Estado', name: 'estado', hidden: false,
-            search: false, editable: false, width: 50, align: 'left'
+            search: false, editable: false, width: 50, align: 'left',
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.error;
+                if (val == 0) {
+                    dato = 'CARGADO OK';
+                } else {
+                    dato = 'CARGADO ERROR';
+                }
+                return dato;
+            }             
         },
-        { label: 'Exito', name: 'exito', width: 30, align: 'left', search: false, editable: false, hidden: false },
-        { label: 'Error', name: 'error', width: 30, align: 'left', search: false, editable: false, hidden: false },
+        { label: 'DTE OK', name: 'exito', width: 30, align: 'left', search: false, editable: false, hidden: false },
+        { label: 'DTE Error', name: 'error', width: 30, align: 'left', search: false, editable: false, hidden: false },
         
         {
             label: 'Archivo',
@@ -111,15 +121,7 @@ $(document).ready(function () {
                         dialog.find('.bootbox-body').html(data.message);
                         $grid.trigger('reloadGrid');
                     }
-                    
-                    $.ajax({ 
-                        url: "/cargadte/updateResumen/"+id, 
-                        dataType: 'json', 
-                        async: false, 
-                        success: function(j){ 
-                            console.log("Termino");
-                        } 
-                    });                       
+                                        
                 },
                 error: function (data, status, e) {
                     dialog.find('.bootbox-body').html(e);

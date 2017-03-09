@@ -217,11 +217,24 @@ exports.list = function (req, res) {
 
   var order = sidx + " " + sord;
 
-  if (filters != undefined) {
-    logger.debug(filters)
-    //jsonString = filters.replace("\"pmoresponsable\":", "\"pmo.first_name\":");
+  var filter_one = []
+  var filter_two = []
 
-    //logger.debug(jsonString)
+  if (filters != undefined) {
+    //logger.debug(filters)
+    var item = {}
+    var jsonObj = JSON.parse(filters);
+
+    jsonObj.rules.forEach(function (item) {
+      if (item.field === "sap") {
+        filter_one.push({ [item.field]: item.data });
+      } else if (item.field === "first_name") {
+        filter_two.push({ [item.field]: { $like: '%' + item.data + '%' } });
+      } else if (item.field === "nombreproyecto") {
+        filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
+      }
+    })
+    filter_one.push({ borrado: 1 })
   }
 
   models.presupuestoenvuelo.belongsTo(models.user, { as: 'lider', foreignKey: 'uidlider' });
@@ -235,7 +248,7 @@ exports.list = function (req, res) {
     } else {
 
       return models.presupuestoenvuelo.count({
-        where: [{ borrado: 1 }],
+        where: filter_one,
         include: [
           {
             attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
@@ -247,7 +260,7 @@ exports.list = function (req, res) {
           },
           {
             attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
-            model: models.user, as: 'pmo', where: data,
+            model: models.user, as: 'pmo', where: filter_two,
           },
           {
             model: models.programa
@@ -259,7 +272,7 @@ exports.list = function (req, res) {
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           //order: 'horainicio desc',
-          where: [{ borrado: 1 }],
+          where: filter_one,
           //attributes: [
           //  [sequelize.fn('DISTINCT', sequelize.col('nombrepmo')), 'nombrepmo']
           //],
@@ -275,7 +288,7 @@ exports.list = function (req, res) {
             },
             {
               attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
-              model: models.user, as: 'pmo', where: data,
+              model: models.user, as: 'pmo', where: filter_two,
             },
             {
               model: models.programa
@@ -319,13 +332,13 @@ exports.combobox = function (req, res) {
 }
 /*
 exports.generarproyectoenvuelo = function (req, res) {
-
+ 
   var insertaTareas = function (idpresupuestoenvuelocreado, tareasnuevosproyectos, callback) {
-
+ 
     models.sequelize.transaction({ autocommit: true }, function (t) {
       var promises = []
       for (var i = 0; i < tareasnuevosproyectos.length; i++) {
-
+ 
         var newPromise = models.tareaenvuelo.create({
           'idpresupuestoenvuelo': idpresupuestoenvuelocreado,
           'glosa': tareasnuevosproyectos[i].glosa,
@@ -345,7 +358,7 @@ exports.generarproyectoenvuelo = function (req, res) {
           'numerosolicitudcontrato': null,
           'borrado': 1, 'pending': true
         }, { transaction: t });
-
+ 
         promises.push(newPromise);
       };
       return Promise.all(promises).then(function (compromisos) {
@@ -355,22 +368,22 @@ exports.generarproyectoenvuelo = function (req, res) {
         }
         return Promise.all(compromisoPromises);
       });
-
+ 
     }).then(function (tareaenvuelo) {
       callback(tareaenvuelo)
     }).catch(function (err) {
       logger.debug("--------> " + err);
     });
   }
-
-
+ 
+ 
   var insertaFlujos = function (flujonuevatarea, tareaenvuelo, callback) {
-
+ 
     models.sequelize.transaction({ autocommit: true }, function (t) {
       var promises = []
-
+ 
       for (var k = 0; k < flujonuevatarea.length; k++) {
-
+ 
         var newPromise = models.flujopagoenvuelo.create({
           'idtareaenvuelo': tareaenvuelo.id,
           'periodo': flujonuevatarea[k].periodo,
@@ -385,9 +398,9 @@ exports.generarproyectoenvuelo = function (req, res) {
         }, { transaction: t });
         promises.push(newPromise);
       }
-
-
-
+ 
+ 
+ 
       return Promise.all(promises).then(function (compromisos) {
         var compromisoPromises = [];
         for (var i = 0; i < compromisos.length; i++) {
@@ -395,19 +408,19 @@ exports.generarproyectoenvuelo = function (req, res) {
         }
         return Promise.all(compromisoPromises);
       });
-
+ 
     }).then(function (flujopagoenvuelo) {
       callback(flujopagoenvuelo)
     }).catch(function (err) {
       logger.debug("--------> " + err);
     });
   }
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
   var idpresupuestoenvuelocreado;
   var idtareaenvuelocreada;
   models.presupuestoiniciativa.belongsTo(models.iniciativaprograma, { foreignKey: 'idiniciativaprograma' });
@@ -441,25 +454,25 @@ exports.generarproyectoenvuelo = function (req, res) {
         
         insertaTareas(idpresupuestoenvuelocreado, tareasnuevosproyectos, function (tareaenvuelo) {
           console.dir(tareaenvuelo)
-
+ 
           for (var j = 0; j < tareasnuevosproyectos.length; j++) {
-
+ 
             var sql = "select * from sip.flujonuevatarea " +
               "where idtareasnuevosproyectos=" + tareasnuevosproyectos[j].id;
-
+ 
             sequelize.query(sql)
               .spread(function (flujonuevatarea) {
                 insertaFlujos(flujonuevatarea, tareaenvuelo[j], function (flujopagoenvuelo) {
                   console.dir(flujopagoenvuelo)
                 })
-
+ 
               });
-
+ 
             
           }
-
-
-
+ 
+ 
+ 
         })
       });
       res.json(presupuestoenvuelo);
@@ -468,7 +481,7 @@ exports.generarproyectoenvuelo = function (req, res) {
       res.json({ error_code: 1 });
     });
   })
-
+ 
 }
 */
 

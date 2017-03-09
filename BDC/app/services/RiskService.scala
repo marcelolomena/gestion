@@ -86,6 +86,42 @@ object RiskService extends CustomColumns {
 
   } /*  'risk_state -> risk.risk_state,*/
 
+  def updateAlertDetails(alert: RiskAlerts) = {
+    DB.withConnection { implicit connection =>
+      println("ID : " + alert.id.get)
+      println("DETALLE : " + alert.event_details.get.toString)
+      println("TITULO : " + alert.event_title)
+      println("FECHA : " + alert.event_date)
+      println("risk_id : " + alert.risk_id)
+      val alert_detail = SQL(
+        """
+          update art_risk_alert  SET 
+          risk_id={risk_id},          
+          event_type={event_type},
+          event_code={event_code},
+          event_date={event_date},
+          event_title={event_title},
+          event_details={event_details},
+          responsible={responsible},
+          person_invloved={person_invloved},
+          alert_type={alert_type},
+          criticality={criticality}
+          where id={id}
+          """).on(
+          'id -> alert.id.get,
+          'risk_id -> alert.risk_id,
+          'event_type -> alert.event_type,
+          'event_code -> alert.event_code,
+          'event_date -> alert.event_date,
+          'event_title -> alert.event_title,
+          'event_details -> alert.event_details.get.toString,
+          'responsible -> alert.responsible,
+          'person_invloved -> alert.person_invloved,
+          'alert_type -> alert.alert_type,
+          'criticality -> alert.criticality).executeUpdate()
+    }
+  }
+
   def updateRiskDetails(risk: RiskManagementMaster) = {
 
     var planned_hours: Double = 0
@@ -878,6 +914,20 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def validateAlert(form: play.api.data.Form[RiskAlerts]) = {
+    var new_form: play.api.data.Form[RiskAlerts] = null
+
+    if (form("event_title").value.isEmpty) {
+        new_form = form.withError("event_title", "Por favor, ingrese un nombre para la alerta.")
+    }
+    
+    if (new_form != null) {
+      new_form
+    } else {
+      form
+    }
+  }
+
   def getRiskManagementTasksForProgramId(program_id: String) = {
     val sqlString = "SELECT * from art_task where  is_active = 1 AND pId =(SELECT pId  FROM art_project_master where is_active = 1 AND program=" + program_id + " AND project_name = 'Risk Management')"
     //println(sqlString)
@@ -1046,6 +1096,18 @@ object RiskService extends CustomColumns {
     }
 
   }
+  
+  def findAlertsForRisk(risk_id: String, alert_id: String): Option[RiskAlerts] = {
+
+      val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
+      println(sqlString)
+
+      DB.withConnection { implicit connection =>
+        val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+        result
+      }
+
+  }  
 
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
     if (!StringUtils.isEmpty(id)) {

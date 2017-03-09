@@ -375,11 +375,11 @@ object Risks extends Controller {
     }
   }
 
-  def editRiskAlert(risk_id: String, alert_id: String) = Action { implicit request =>
+  def editRiskAlert(risk_id: Integer, alert_id: Integer) = Action { implicit request =>
+    println("ENTRO risk_id : "+ risk_id + " alert_id : " + alert_id)
     request.session.get("username").map { user =>
-
-      var alert = RiskService.findRiskAlertsById(alert_id)
-      val risk = RiskService.findRiskDetails(risk_id)
+      var alert = RiskService.findAlertsForRisk(risk_id.toString,alert_id.toString)
+      val risk = RiskService.findRiskDetails(risk_id.toString)
       var program: Option[ProgramMaster] = null
       var program_id = ""
 
@@ -420,7 +420,7 @@ object Risks extends Controller {
                 rr.is_active)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              Ok(views.html.frontend.risks.editAlert(risk_id, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              Ok(views.html.frontend.risks.editAlert(risk_id.toString, alert_id.toString, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
           }
       }
@@ -463,6 +463,86 @@ object Risks extends Controller {
           Ok("No Details Available");
         case Some(r: RiskManagementMaster) =>
           Ok(views.html.frontend.risks.riskDetails(alerts, risk, parent_id)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+      }
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+  def updateAlert(id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val alert = RiskService.findRiskAlertsById(id)
+
+      alert match {
+        case None =>
+          Redirect(routes.Login.loginUser())
+        case Some(rr: RiskAlerts) =>
+          val ra = RiskAlerts(rr.id,
+            rr.risk_id,
+            rr.event_type,
+            rr.event_code,
+            rr.event_date,
+            rr.event_title,
+            rr.event_details,
+            rr.responsible,
+            rr.person_invloved,
+            rr.alert_type,
+            rr.criticality,
+            rr.is_active)
+
+          ARTForms.alertsForm.bindFromRequest.fold(
+            errors => {
+              var program_id = ""
+              println("Errors - " + errors.errors);
+              val riskObj = RiskService.findRiskDetails(ra.risk_id.toString)
+              var program: Option[ProgramMaster] = null
+              riskObj.get.parent_type.get match {
+                case 0 =>
+                  program_id = riskObj.get.parent_id.get.toString()
+                case 1 =>
+                  program = ProjectService.findProgramDetailForProject(riskObj.get.parent_id.toString())
+                  program_id = program.get.program_id.get.toString()
+                case 2 =>
+                  program = TaskService.findProgramDetailForTask(riskObj.get.parent_id.get.toString())
+                  program_id = program.get.program_id.get.toString()
+                case 3 =>
+                  program = SubTaskServices.findProgramDetailForSubTask(riskObj.get.parent_id.get.toString())
+                  program_id = program.get.program_id.get.toString()
+              }
+              val users = ProgramMemberService.findAllProgramMembers(program_id);
+              BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString, id, errors, alert, users))
+            },
+            success => {
+
+              val theForm = RiskService.validateAlert(ARTForms.alertsForm.fill(success))
+
+              val theAlert = RiskAlerts(ra.id,
+                ra.risk_id,
+                success.event_type,
+                success.event_code,
+                ra.event_date,
+                success.event_title.toString,
+                success.event_details,
+                ra.responsible,
+                success.person_invloved,
+                success.alert_type,
+                success.criticality,
+                ra.is_active)
+
+              val last = RiskService.updateAlertDetails(theAlert)
+
+              /**
+               * Activity log
+               */
+              val act = Activity(ActivityTypes.Alert.id, "Alert sent by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
+              Activity.saveLog(act)
+              //RiskService.sendAutomaticAlerts(last_index.toString)
+
+              Ok("Sccuess");
+
+              ////            
+            })
       }
 
     }.getOrElse {
@@ -632,7 +712,6 @@ object Risks extends Controller {
                 /*
                 r.parent_type.get match {
                   case 0 =>
-                    println("LA PTA")
                     Redirect(routes.Program.programDetails(r.parent_id.get.toString()))
                   case 1 =>
                     Redirect(routes.ProjectMaster.projectDetails(r.parent_id.get.toString()))
