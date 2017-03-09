@@ -520,6 +520,7 @@ exports.desglosefactoraction = function (req, res) {
                     if (!err) {
                         models.factorescriticidad.update({
                             nota: req.body.nota,
+                            valor: req.body.valor,
                             observacion: req.body.observacion
                         }, {
                                 where: {

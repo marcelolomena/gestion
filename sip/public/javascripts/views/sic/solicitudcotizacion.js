@@ -543,7 +543,17 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
+                var grid = $("#grid");
+                var rowKey = $grid.getGridParam("selrow");
+                var rowData = $grid.getRowData(rowKey);
+                var tipocontrato = rowData.tipocontrato;
+                //console.log(tipocontrato)
                 setTimeout(function () {
+
+                    if (tipocontrato == "Proyectos") {
+                        $("input#codigoart").attr("readonly", false);
+                    }
+
                     $("#idtipo", form).attr('disabled', 'disabled');
                     $.get('/sic/getsession', function (data) {
                         $.each(data, function (i, item) {
@@ -554,8 +564,6 @@ $(document).ready(function () {
                                 $("#codigoart", form).attr('readonly', 'readonly');
                                 $("#sap", form).attr('readonly', 'readonly');
                                 $("#descripcion", form).attr('readonly', 'readonly');
-                                $("#idtipo", form).attr('disabled', 'disabled');
-                                //$("#idclasificacionsolicitud", form).attr('readonly', 'readonly');
                             } else if (item.glosarol === 'Técnico SIC') {
                                 $("#codigosolicitud", form).attr('readonly', 'readonly');
                                 $("#idclasificacionsolicitud", form).attr('disabled', 'disabled');
@@ -565,18 +573,12 @@ $(document).ready(function () {
                                 $("#fononegociador", form).attr('readonly', 'readonly');
                                 $("#numerorfp", form).attr('readonly', 'readonly');
                                 $("#fechaenviorfp", form).attr('disabled', 'disabled');
-                                $("#nombreinterlocutor1", form).attr('readonly', 'readonly');
-                                $("#correointerlocutor1", form).attr('readonly', 'readonly');
-                                $("#fonointerlocutor1", form).attr('readonly', 'readonly');
-                                $("#nombreinterlocutor2", form).attr('readonly', 'readonly');
-                                $("#correointerlocutor2", form).attr('readonly', 'readonly');
-                                $("#fonointerlocutor2", form).attr('readonly', 'readonly');
-                                $("#idgrupo", form).attr('disabled', 'disabled');
-                                $("#idtipo", form).attr('disabled', 'disabled');
                             }
                         });
                     });
-                }, 100);
+                    $("#idtipo", form).attr('disabled', 'disabled');
+                    $("#idgrupo", form).attr('disabled', 'disabled');
+                }, 550);
             }
 
         }, {
@@ -649,18 +651,13 @@ $(document).ready(function () {
                                 $("#d_fononegociador", form).hide();
                                 $("#d_numerorfp", form).hide();
                                 $("#d_fechaenviorfp", form).hide();
-                                $("#d_nombreinterlocutor1", form).hide();
-                                $("#d_correointerlocutor1", form).hide();
-                                $("#d_fonointerlocutor1", form).hide();
-                                $("#d_nombreinterlocutor2", form).hide();
-                                $("#d_correointerlocutor2", form).hide();
-                                $("#d_fonointerlocutor2", form).hide();
                                 $("#d_tipo", form).hide();
                                 $("#d_grupo", form).hide();
                             }
                         });
                     });
-                }, 100);
+                    $("#idtipo", form).attr('disabled', 'disabled');
+                }, 500);
             }
         }, {
             ajaxEditOptions: sipLibrary.jsonOptions,
