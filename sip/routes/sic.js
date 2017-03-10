@@ -19,6 +19,7 @@ var foroController = require('../controllers/sic/foro');
 var criteriosController = require('../controllers/sic/criterios');
 var claseevaluaciontecnicaController = require('../controllers/sic/claseevaluaciontecnica');
 var bitacoraController = require('../controllers/sic/bitacora');
+var estadosolicitudController = require('../controllers/sic/estadosolicitud');
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -358,6 +359,12 @@ module.exports = function (passport) {
 
     router.route('/bitacora/comboboxaction')
         .get(isAuthenticated, bitacoraController.comboboxaction);
+
+    router.route('/sic/estadosolicitud/action')
+        .post(isAuthenticated, estadosolicitudController.action);
+
+    router.route('/sic/estadosolicitud/:id')
+        .get(isAuthenticated, estadosolicitudController.list);
 
    
     return router;

@@ -133,14 +133,14 @@ exports.action = function (req, res) {
 
 exports.list = function (req, res) {
 
-    var page = req.body.page;
-    var rows = req.body.rows;
-    var filters = req.body.filters;
-    var sidx = req.body.sidx;
-    var sord = req.body.sord;
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
 
     if (!sidx)
-        sidx = "id";
+        sidx = "descripcion";
 
     if (!sord)
         sord = "asc";

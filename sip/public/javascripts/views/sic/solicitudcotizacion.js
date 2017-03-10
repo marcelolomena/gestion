@@ -451,6 +451,8 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         //width: 1500,
+        sortname: 'descripcion',
+        sortorder: "asc",
         shrinkToFit: false,
         forceFit: true,
         viewrecords: true,
@@ -705,6 +707,7 @@ $(document).ready(function () {
 
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
+        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
         tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
         tabs += "<li><a href='/sic/foro/" + parentRowKey + "' data-target='#foro' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
@@ -718,7 +721,8 @@ $(document).ready(function () {
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"
-        tabs += "<div class='tab-pane active' id='documentos'><div class='container-fluid'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div></div>"
+        tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
+        tabs += "<div class='tab-pane' id='documentos'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div>"
         tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridServ'></div></div>"
         tabs += "<div class='tab-pane' id='foro'><table id='foro_t_" + parentRowKey + "'></table><div id='navGridForo'></div></div>"
         tabs += "<div class='tab-pane' id='calendario'><table id='calendario_t_" + parentRowKey + "'></table><div id='navGridCal'></div></div>"
@@ -731,12 +735,14 @@ $(document).ready(function () {
         tabs += "</div>"
 
         $("#" + parentRowID).append(tabs);
-        $('#documentos_tab_' + parentRowKey).addClass('media_node active span')
+        $('#estadosolicitud_tab_' + parentRowKey).addClass('media_node active span')
         $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            if (targ === '#documentos') {
+            if (targ === '#estadosolicitud') {
+                gridEstado.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#documentos') {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
@@ -766,7 +772,9 @@ $(document).ready(function () {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            if (targ === '#documentos') {
+            if (targ === '#estadosolicitud') {
+                gridEstado.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#documentos') {
                 gridDoc.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#servicios') {
                 gridServ.renderGrid(loadurl, parentRowKey, targ)
