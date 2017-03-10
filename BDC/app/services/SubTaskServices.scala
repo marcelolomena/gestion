@@ -99,17 +99,12 @@ object SubTaskServices extends CustomColumns {
 
   def updateSubTask(task: SubTaskMaster): Int = {
     var actual_end_date: Date = null
-    var actual_end_date_final: Date = null
     //if (!task.actual_end_date.isEmpty) {
-    //if (!task.actual_end_date.getOrElse("").toString().isEmpty()) {
     //println(task)
-    if (task.actual_end_date != null) {
+    if (!task.actual_end_date.getOrElse("").toString().isEmpty()) {
       actual_end_date = task.actual_end_date.get
     } else {
       actual_end_date = task.plan_end_date
-    }
-    if(task.actual_end_date_final == null){
-      actual_end_date_final = task.plan_end_date
     }
     DB.withConnection { implicit connection =>
       SQL(
@@ -139,7 +134,7 @@ object SubTaskServices extends CustomColumns {
           'plan_end_date -> task.plan_end_date,
           'actual_start_date -> task.actual_start_date,
           'actual_end_date -> actual_end_date,
-          'actual_end_date_final -> actual_end_date_final,
+          'actual_end_date_final -> task.actual_end_date_final,
           'added_date -> task.added_date,
           'status -> task.status,
           'completion_percentage -> task.completion_percentage,
