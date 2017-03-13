@@ -126,7 +126,7 @@ $(document).ready(function () {
             },
             dataInit: function (elem) { $(elem).width(200); }
         },
-        { label: 'CUI', name: 'nombrecui', jsonmap: "estructuracui.cui", width: 50, align: 'left', search: false, sortable: false, editable: true, hidden: false },
+        { label: 'CUI', name: 'cui', jsonmap: "estructuracui.cui", width: 80, align: 'left', search: true, sortable: false, editable: true, hidden: false },
         {
             label: 'Técnico', name: 'idtecnico', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -140,7 +140,7 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'Técnico', name: 'tecnico', width: 150, search: false, editable: false, formatter: returnTecnico, hidden: false },
+        { label: 'Técnico', name: 'first_name', width: 150, search: true, editable: false, formatter: returnTecnico, hidden: false },
         {
             label: 'T.Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false, width: 100,
             edittype: "custom",
@@ -215,7 +215,7 @@ $(document).ready(function () {
 
         },
 
-        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: false, editable: true, hidden: false },
+        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, hidden: false },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
             edittype: "select",
