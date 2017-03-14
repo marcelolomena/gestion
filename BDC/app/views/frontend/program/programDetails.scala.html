@@ -602,7 +602,6 @@
 					        		<span class="display-none" id="show_pr_@p.pId.get">@p.project_name </span>
 					        		<span class="design_team_span " style="margin-left:48px">@p.start_date.format("dd-MM-yyyy") &nbsp;To&nbsp;@p.final_release_date.format("dd-MM-yyyy")</span>
 				        			<span class="design_team_span " style="width:80px;margin-left:100px">@TaskService.findProjectTaskCount(p.pId.get.toString)</span>
-				        			@{/* <span class="design_team_span " style="width:80px;margin-left:100px">@Goals.findProjectGoalCount(p.project_id)</span> */}
 				        			</a>
 				        			
 				        			@{
@@ -631,18 +630,18 @@
 			
 		 }
 	 }
-	 <div class="width_full" >
+	 
+	 <!--<div class="width_full">-->
 	     	@if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
-     			<div class="width_full">
-				    <h3  class="header-background" id="task-gantt-label">
-					<span class="left" style="padding: 5px;">@Messages("programdetails.ganttchartview")</span>
+     			<!--<div class="width_full">-->
+				    <h3 class="header-background" id="task-gantt-label">
+					<a href="javascript:toggleDiv('project-gantt');"><span class="left" style="padding: 5px;">@Messages("programdetails.ganttchartview")</span></a>
 				    </h3>
-				    
-				</div>
-				<div class="width_full" id="project-gantt" style="width: 97.7%;">
+				<!--</div>-->
+				<div class="width_full" id="project-gantt">
 				</div>
 			}
-    </div>
+      <!--</div>-->
     
     @if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
 	  	 <h3 id="productNm">
@@ -782,15 +781,13 @@
 									</ul>
 								</div>
 						}else {
-							<h2 class="left push-top20px no-document"> @Messages("uploaddocument.nodocumentavailable")</h2>
+							<h2 class="left push-top20px no-document">@Messages("uploaddocument.nodocumentavailable")</h2>
 						}
 					</div>
 	 			</div>
 		</div>
   	}
-  @*<div class="width_full push-top15px">
-  	<a href="/programs" class=" content-box-content width_full" style="width:97%"><span class="back-to-programs"></span><span class="back-to">Back to Program List</span></a>
-  </div>*@
+
   </div>
  </div>
     @frontend.footer()
@@ -808,13 +805,9 @@
 <div id="dialog-edit-member-capacity"><table id="scroll38"></table><div id="jqGridPager"></div></div>
 </div>	 
 @frontend.headerScripts()	
-@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
-<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
-@*<script src="@routes.Assets.at("frontend/js/highcharts.js")"></script>*@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
-@*<script src="@routes.Assets.at("frontend/js/highstock.js")"></script>*@
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">

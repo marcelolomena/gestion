@@ -548,6 +548,75 @@ object RiskService extends CustomColumns {
     }
   }
 
+  /**
+   * Risk Initial Management Project & Task Creation from template ...
+   */
+  def createInitialRiskManagementProject(parent_id: String, risk_id: String) {
+
+    var end_date: Date = new Date();
+
+    var progrm: Option[ProgramMaster] = null
+
+    progrm = ProgramService.findProgramMasterDetailsById(parent_id)
+    val program_detail = ProgramService.findProgramDateDetailsById(progrm.get.program_id.get.toString())
+    if (!program_detail.isEmpty)
+      end_date = program_detail.get.release_date
+
+    val risk = findRiskDetails(risk_id)
+
+    if (!progrm.isEmpty && !risk.isEmpty) {
+      val risk_project = ProjectService.getRiskProjectDetails(progrm.get.program_id.get)
+      risk_project match {
+        case None =>
+          val program_detail = ProgramService.findProgramDateDetailsById(progrm.get.program_id.get.toString())
+          val res = risk.get.responsible
+          val projectVlaues = Project(None, "ART" + Random.nextInt(9999), progrm.get.program_id.get, 0, "Risk Management",
+            risk.get.name, risk.get.responsible, program_detail.get.initiation_planned_date, program_detail.get.release_date, Option(0), Option(0), Option(1), false, Option(0))
+
+          val pId = ProjectService.insertProject(projectVlaues)
+
+          /**
+           * assign
+           */
+
+          var isExist = false;
+          isExist = UserService.checkUserSettingbyuIdandpId(res, pId.toInt)
+          if (isExist) {
+            val projectmapping = UserSetting(res, pId, 1)
+            UserService.saveUserSetting(projectmapping)
+          }
+
+          val taskDetails = Tasks(None, pId.toInt, risk.get.name, "SYS" + Random.nextInt(9999),
+            new Date(), program_detail.get.release_date, risk.get.cause, 0,
+            new Date(), 0, 1, risk.get.responsible, Option(0), Option(0),
+            Option(""), Option(""), Option(1), Option(0), Option(0), Option(0), 1, 1)
+
+          val latest_task = TaskService.insertTask(taskDetails)
+
+        case Some(project: models.Project) =>
+
+          val taskDetails = Tasks(None, project.pId.get, risk.get.name, "SYS" + Random.nextInt(9999),
+            new Date(), end_date, risk.get.cause, 0,
+            new Date(), 0, 1, risk.get.responsible, Option(0), Option(0),
+            Option(""), Option(""), Option(1), Option(0), Option(0), Option(0), 1, 1)
+
+          /**
+           * asssign
+           *
+           */
+          var isExist = false;
+          isExist = UserService.checkUserSettingbyuIdandpId(risk.get.responsible, project.pId.get)
+          if (isExist) {
+            val projectmapping = UserSetting(risk.get.responsible, project.pId.get, 1)
+            UserService.saveUserSetting(projectmapping)
+          }
+
+          val latest_task = TaskService.insertTask(taskDetails)
+
+      }
+    }
+  }
+
   def validateRisk(form: play.api.data.Form[RiskManagement], progrm: Option[ProgramDates]) = {
     var date1: Long = 0
     var date2: Long = 0
@@ -918,9 +987,9 @@ object RiskService extends CustomColumns {
     var new_form: play.api.data.Form[RiskAlerts] = null
 
     if (form("event_title").value.isEmpty) {
-        new_form = form.withError("event_title", "Por favor, ingrese un nombre para la alerta.")
+      new_form = form.withError("event_title", "Por favor, ingrese un nombre para la alerta.")
     }
-    
+
     if (new_form != null) {
       new_form
     } else {
@@ -1096,18 +1165,18 @@ object RiskService extends CustomColumns {
     }
 
   }
-  
+
   def findAlertsForRisk(risk_id: String, alert_id: String): Option[RiskAlerts] = {
 
-      val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
-      println(sqlString)
+    val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
+    println(sqlString)
 
-      DB.withConnection { implicit connection =>
-        val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
-        result
-      }
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+      result
+    }
 
-  }  
+  }
 
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
     if (!StringUtils.isEmpty(id)) {

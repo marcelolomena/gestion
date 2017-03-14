@@ -2231,7 +2231,8 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 #program-details h3 {
-	width: 97%;
+	/*width: 97%;*/
+	width: 100%;
 	padding-left: 8px;
 }
 
