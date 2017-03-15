@@ -8,11 +8,11 @@ $(document).ready(function () {
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_tipocontrato'>Tipo Contrato<span style='color:red'>*</span>{tipocontrato}</div>";
-    t1 += "<div class='column-half' id='d_codigoart'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
+    t1 += "<div class='column-half' id='d_codigoart'>Codigo Art{codigoart}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_sap'>SAP<span style='color:red'>*</span>{sap}</div>";
+    t1 += "<div class='column-half' id='d_sap'>SAP{sap}</div>";
     t1 += "<div class='column-half'>Descripción<span style='color:red'>*</span>{descripcion}</div>";
     t1 += "</div>";
 
@@ -89,7 +89,7 @@ $(document).ready(function () {
                     type: 'change', fn: function (e) {
                         //$("input#lider").val($('option:selected', this).val());
                         var idcui = $('option:selected', this).val();
-                        console.log(idcui);
+                        //console.log(idcui);
 
                         if (idcui != "0") {
 
@@ -323,10 +323,10 @@ $(document).ready(function () {
                 }],
             }
         },
-        { label: 'Negociador', name: 'negociador', width: 150, search: false, editable: false, formatter: returnNegociador, hidden: false },
-        { label: 'C.Negociador', name: 'correonegociador', width: 130, hidden: false, search: false, editable: true },
-        { label: 'F.Negociador', name: 'fononegociador', width: 100, hidden: false, search: false, editable: true },
-        { label: 'D.Negociador', name: 'direccionnegociador', width: 150, hidden: false, search: false, editable: true },
+        { label: 'Negociador', name: 'negociador', width: 150, search: true, editable: false, formatter: returnNegociador, hidden: false },
+        { label: 'C.Negociador', name: 'correonegociador', width: 130, hidden: true, search: false, editable: true },
+        { label: 'F.Negociador', name: 'fononegociador', width: 100, hidden: true, search: false, editable: true },
+        { label: 'D.Negociador', name: 'direccionnegociador', width: 150, hidden: true, search: false, editable: true },
         { label: 'N° RFP', name: 'numerorfp', width: 80, hidden: false, search: false, editable: true, formatter: 'integer' },
         {
             label: 'Fecha RFP', name: 'fechaenviorfp', width: 150, align: 'left', search: false,
@@ -554,6 +554,8 @@ $(document).ready(function () {
                 var rowKey = $grid.getGridParam("selrow");
                 var rowData = $grid.getRowData(rowKey);
                 var tipocontrato = rowData.tipocontrato;
+                var thisidcui = rowData.idcui;
+                var thisidtecnico = rowData.idtecnico;
                 //console.log(tipocontrato)
                 setTimeout(function () {
 
@@ -585,6 +587,35 @@ $(document).ready(function () {
                     });
                     $("#idtipo", form).attr('disabled', 'disabled');
                     $("#idgrupo", form).attr('disabled', 'disabled');
+
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/sic/tecnicosresponsablescui/' + thisidcui,
+                        success: function (data) {
+                            //console.log(thisidtecnico)
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Técnico--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].uid == thisidtecnico) {
+                                    s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + ' ' + data[i].apellido + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].uid + '">' + data[i].nombre + ' ' + data[i].apellido + '</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("select#idtecnico").html(s);
+                        }
+                    });
+
+
+
+
+
+
+
+
                 }, 550);
             }
 
@@ -638,7 +669,7 @@ $(document).ready(function () {
                 if (result.error != 0) {
                     return [false, result.glosa, ""];
                 } else {
-                    console.log(postdata)
+                    //console.log(postdata)
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
                     $grid.jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
@@ -718,6 +749,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
         tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas Proveedor</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
+        //tabs += "<li><a href='/sic/genrfc/" + parentRowKey + "' data-target='#genrfc' id='genrfc_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Generar RFC</a></li>"
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"
@@ -732,6 +764,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='anexos'><div class='container-fluid'><table id='anexos_t_" + parentRowKey + "'></table><div id='navGridAnexos'></div></div></div>"
         tabs += "<div class='tab-pane' id='preguntasrfp'><table id='preguntasrfp_t_" + parentRowKey + "'></table><div id='navGridPreg'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
+        //tabs += "<div class='tab-pane' id='genrfc'><table id='genrfc_t_" + parentRowKey + "'></table><div id='navGridGen'></div></div>"
         tabs += "</div>"
 
         $("#" + parentRowID).append(tabs);
@@ -762,7 +795,9 @@ $(document).ready(function () {
                 gridCriterios.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
-            }
+            } /*else if (targ === '#genrfc') {
+                gridGenrfc.renderGrid(loadurl, parentRowKey, targ)
+            }*/
 
             $this.tab('show');
             return false;
@@ -794,7 +829,9 @@ $(document).ready(function () {
                 gridCriterios.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
-            }
+            } /*else if (targ === '#genrfc') {
+                gridGenrfc.renderGrid(loadurl, parentRowKey, targ)
+            }*/
 
             $this.tab('show');
             return false;

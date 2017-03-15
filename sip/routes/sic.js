@@ -366,6 +366,12 @@ module.exports = function (passport) {
     router.route('/sic/estadosolicitud/:id')
         .get(isAuthenticated, estadosolicitudController.list);
 
+    router.route('/sic/genrfc/:id')
+        .get(isAuthenticated, calendarioController.list);
+
+    router.route('/sic/documentowordfinal/:id/:gid')
+        .get(isAuthenticated, estadosolicitudController.download);
+
    
     return router;
 }

@@ -163,6 +163,7 @@ exports.list = function (req, res) {
     var filter_one = []
     var filter_two = []
     var filter_three = []
+    var filter_four = []
 
     if (filters != undefined) {
         //logger.debug(filters)
@@ -178,7 +179,9 @@ exports.list = function (req, res) {
                 filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
             } else if (item.field === "first_name") {
                 filter_three.push({ [item.field]: { $like: '%' + item.data + '%' } });
-            }
+            } else if (item.field === "negociador") {
+                filter_four.push({ ['first_name']: { $like: '%' + item.data + '%' } });
+            } 
         })
         filter_one.push({ borrado: 1 })
     }
@@ -200,6 +203,8 @@ exports.list = function (req, res) {
                     model: models.estructuracui, where: filter_two
                 },{
                         model: models.user, as: 'tecnico',  where: filter_three
+                    },{
+                        model: models.user, as: 'negociador',  where: filter_four
                     }
                 ]
             }).then(function (records) {
@@ -218,7 +223,7 @@ exports.list = function (req, res) {
                     }, {
                         model: models.valores, as: 'clasificacion'
                     }, {
-                        model: models.user, as: 'negociador'
+                         model: models.user, as: 'negociador',  where: filter_four
                     }, {
                         model: models.tipoclausula
                     }, {

@@ -232,5 +232,26 @@ var gridEstado = {
                         return [true, "", ""]
                 }
             });
+        $gridTab.jqGrid('navButtonAdd', '#navGridEst', {
+            caption: "Generar Documento RFC",
+            id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-download-alt",
+            title: "Generar Documento RFC",
+            position: "last",
+            onClickButton: function () {
+                //var rowKey = $gridTab.getGridParam("selrow");
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
+                try {
+                    var url = '/sic/documentowordfinal/' + parentRowKey + '/' + parentRowData.idgrupo;
+                    $gridTab.jqGrid('excelExport', { "url": url });
+                } catch (e) {
+                    console.log("error: " + e)
+
+                }
+
+            }
+        });
     }
 }
