@@ -473,33 +473,33 @@ object Program extends Controller {
       if (plan_time_for_program.!=(0)) {
         val completion_percentage_forProgram = ProgramService.completionPercentageForProgram(programId)
         Ok(views.html.frontend.program.programDetails(
-            expected_completion_percentage.toString(), 
-            completion_percentage_forProgram.toString(),
-            program, programDetail, 
-            programDates, projectList, 
-            documents, 
-            changeSet,
-            progrma_members, 
-            saps, 
-            externalEmployees,
-            statusWF, 
-            impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          expected_completion_percentage.toString(),
+          completion_percentage_forProgram.toString(),
+          program, programDetail,
+          programDates, projectList,
+          documents,
+          changeSet,
+          progrma_members,
+          saps,
+          externalEmployees,
+          statusWF,
+          impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       } else {
 
         Ok(views.html.frontend.program.programDetails(
-            expected_completion_percentage.toString(),
-            plan_time_for_program.toString(),
-            program,
-            programDetail, 
-            programDates, 
-            projectList, 
-            documents, 
-            changeSet, 
-            progrma_members, 
-            saps, 
-            externalEmployees, 
-            statusWF, 
-            impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          expected_completion_percentage.toString(),
+          plan_time_for_program.toString(),
+          program,
+          programDetail,
+          programDates,
+          projectList,
+          documents,
+          changeSet,
+          progrma_members,
+          saps,
+          externalEmployees,
+          statusWF,
+          impactType)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       }
 
     }.getOrElse {
@@ -851,6 +851,11 @@ object Program extends Controller {
             }
           }
 */
+
+          /**
+           * Default project Risk and its tasks...
+           */
+
           /**
            * Activity log
            */
@@ -859,6 +864,36 @@ object Program extends Controller {
           Redirect(routes.Program.programDetails(last_program.toString()))
         }
       })
+  }
+
+  def algo(dm: Int) {
+
+    val projectTypes = GenericProjectService.findProjectTypeDetailsByType(1);
+    if (!projectTypes.isEmpty) {
+      var tasksDependents = new java.util.HashMap[Integer, Long]()
+      val genericTasks = GenericService.findGenericProjectTypeTasks(projectTypes.get.id.get.toString)
+      var isBaselined = false
+      for (g <- genericTasks) {
+        val predefined_id = g.predefined_task_id.toString()
+        val service_id = GenericService.findPredefinedTasksDetails(predefined_id).get.catalogue_service
+        val taskDetails = Tasks(None, pId.toInt, g.task_title, g.task_code,
+          start_date, end_date, g.task_description, g.plan_time,
+          new Date(), g.task_status, 1, dm, g.task_discipline, g.completion_percentage,
+          g.remark, g.task_depend, Option(1), g.stage, g.user_role, Option(g.deliverable), g.task_type, 1)
+
+        if (g.task_type == 3) {
+          isBaselined = true
+        }
+
+        val latest_task = TaskService.insertTask(taskDetails)
+        tasksDependents.put(g.tId.get, latest_task)
+
+        val subtask = SubTaskMaster(None, latest_task, g.task_title, g.task_description,
+          start_date, end_date, new Date(), null, null, new Date(), g.task_status, g.completion_percentage, 0, Option(""), Option(0), Option(service_id))
+        SubTaskServices.insertSubTask(subtask)
+      }
+    }
+
   }
 
   /**
