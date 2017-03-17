@@ -231,7 +231,7 @@ exports.anular = function (req, res) {
 
             var onePromise = models.solicitudaprobacion.update({
                 iddetallecompromiso: null,
-                idcontrato:null
+                idcontrato: null
             }, {
                     where: { id: req.params.id }
                 }, { transaction: t });
@@ -349,6 +349,8 @@ UNION
 				JOIN sip.detallecompromiso b ON a.iddetallecompromiso=b.id WHERE a.periodo=:periodo 
 				AND b.periodo < :periodo )                                
         `
+
+
     var promises = []
     var o_promises = []
     var s_promises = []
@@ -450,3 +452,313 @@ UNION
         })
 
 }
+
+
+exports.listaProyectos = function (req, res) {
+    var page = req.body.page;
+    var rows = req.body.rows;
+    var sidx = req.body.sidx;
+    var sord = req.body.sord;
+    var filters = req.body.filters;
+    var condition = "";
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
+
+    if (!sidx)
+        sidx = "cui";
+
+    if (!sord)
+        sord = "asc";
+
+    var order = " ORDER BY " + sidx + " " + sord + " ";
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.op === 'cn')
+                condition += " AND " + item.field + " like '%" + item.data + "%'"
+        });
+    }
+
+    var count = `
+            SELECT 
+            count(*) cantidad
+            FROM sip.presupuestoenvuelo A 
+            JOIN sip.tareaenvuelo B ON A.id = B.idpresupuestoenvuelo
+            JOIN sip.flujopagoenvuelo C ON B.id = C.idtareaenvuelo
+            JOIN sip.estructuracui D ON B.idcui = D.id
+            JOIN sip.proveedor E ON B.idproveedor = E.id
+            WHERE E.numrut != 1 AND C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition
+
+    var sql = `
+            SELECT  C.periodo,
+                    D.cui,
+                    D.nombre nomcui,
+                    D.nombreresponsable, 
+                    A.nombreproyecto contrato,
+                    A.sap sap,
+                    B.tarea tarea,
+                    B.glosa servicio,
+                    M.moneda,
+                    C.montoorigen costo,
+                    E.razonsocial
+                    FROM sip.presupuestoenvuelo A 
+                    JOIN sip.tareaenvuelo B ON A.id = B.idpresupuestoenvuelo
+                    JOIN sip.flujopagoenvuelo C ON B.id  = C.idtareaenvuelo
+                    JOIN sip.estructuracui D ON B.idcui   = D.id
+                    JOIN sip.proveedor E ON B.idproveedor = E.id
+                    JOIN sip.moneda M ON B.idmoneda = M.id
+                    WHERE E.numrut != 1 AND C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition + order +
+        `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
+
+    sequelize.query(count,
+        {
+            replacements: { periodo: periodo, condition: condition },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (records) {
+            var total = Math.ceil(parseInt(records[0].cantidad) / rows);
+            sequelize.query(sql,
+                {
+                    replacements: { page: parseInt(page), rows: parseInt(rows), periodo: periodo, condition: condition },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(function (data) {
+                    return res.json({ records: parseInt(records[0].cantidad), total: total, page: page, rows: data });
+                }).catch(function (e) {
+                    logger.error(e)
+                })
+
+        }).catch(function (e) {
+            logger.error(e)
+        })
+}
+
+exports.generarProyectos = function (req, res) {
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
+    return sequelize.query('EXECUTE sip.GeneraSolicitudesAprobProyectos '
+      + periodo + ';').then(function (response) {
+        logger.debug("EXITO AL GENERAR SOLICITUDES PROYECTO");
+        res.json({ error_code: 0, message: "Exito!!" });
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1, message: err });
+    });            
+}
+
+/*
+exports.generarProyectosOld = function (req, res) {
+    var iniDate = new Date();
+    var mes = parseInt(iniDate.getMonth()) + 1
+    var mm = mes < 10 ? '0' + mes : mes;
+    var periodo = iniDate.getFullYear() + '' + mm;
+
+    sql = `
+                SELECT
+                C.id, 
+                C.periodo,
+                C.id iddetallecompromiso,
+                NULL idprefactura,
+                D.id idcui,
+                A.sap,
+                B.tarea,                
+                B.idproveedor,
+                B.idservicio, 
+                B.glosa,
+                A.id idcontrato,
+                C.montoorigen/1.19 montoneto,
+				IIF(B.coniva!=0, C.montoorigen - (C.montoorigen/1.19), 0) montoimpuesto,
+				C.montoorigen montoapagar,
+				F.valorconversion,
+				0 montoapagarpesos,
+                0,
+                0,
+                NULL,
+                NULL,
+                0,
+                NULL,
+                0,
+                1,
+				B.coniva,
+				IIF(B.coniva!=0, 0.77, 0) factorimpuesto                
+                FROM sip.presupuestoenvuelo A 
+                JOIN sip.tareaenvuelo B ON A.id = B.idpresupuestoenvuelo
+                JOIN sip.flujopagoenvuelo C ON B.id = C.idtareaenvuelo
+                JOIN sip.estructuracui D ON B.idcui = D.id
+				JOIN sip.proveedor E ON B.idproveedor = E.id
+				JOIN sip.monedasconversion F ON F.idmoneda = B.idmoneda 
+                WHERE
+				 C.estadopago IS NULL AND 
+				 C.periodo = :periodo AND
+				 F.periodo = :periodo AND
+				C.montoorigen != 0 AND
+				E.numrut != 1
+UNION               
+				SELECT
+                C.id, 
+                C.periodo,
+                C.id iddetallecompromiso,
+                NULL idprefactura,
+                D.id idcui,
+                A.sap,
+                B.tarea,                
+                B.idproveedor,
+                B.idservicio, 
+                B.glosa,
+                A.id idcontrato,
+                C.montoorigen/1.19 montoneto,
+				IIF(B.coniva!=0, C.montoorigen - (C.montoorigen/1.19), 0) montoimpuesto,
+				C.montoorigen montoapagar,
+				F.valorconversion,
+				0 montoapagarpesos,
+                0,
+                0,
+                NULL,
+                NULL,
+                0,
+                NULL,
+                0,
+                1,
+				B.coniva,
+				IIF(B.coniva!=0, 0.77, 0) factorimpuesto                
+                FROM sip.presupuestoenvuelo A 
+                JOIN sip.tareaenvuelo B ON A.id = B.idpresupuestoenvuelo
+                JOIN sip.flujopagoenvuelo C ON B.id = C.idtareaenvuelo
+                JOIN sip.estructuracui D ON B.idcui = D.id
+				JOIN sip.proveedor E ON B.idproveedor = E.id
+				JOIN sip.monedasconversion F ON F.idmoneda = B.idmoneda 
+                WHERE
+				 C.periodo < :periodo AND
+				 F.periodo = :periodo AND
+				C.montoorigen != 0 AND
+				E.numrut != 1 AND
+				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO' OR C.estadopago IS NULL) and
+                C.id NOT IN (SELECT a.iddetallecompromiso FROM sip.solicitudaprobacion a
+				JOIN sip.flujopagoenvuelo b ON a.iddetallecompromiso=b.id WHERE a.periodo=:periodo 
+				AND b.periodo < :periodo )                              
+        `
+    var promises = []
+    var o_promises = []
+    var s_promises = []
+    sequelize.query('EXECUTE sip.ActualizaIVATareaEnVuelo;').then(function (response) {
+        sequelize.query(sql,
+            {
+                replacements: { periodo: periodo },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (rows) {
+                //logger.debug(rows)
+                models.sequelize.transaction({ autocommit: true }, function (t) {
+                    for (var i = 0; i < 10; i++) {
+                        //consultar si existe contrato
+                        var sqlcto = "SELECT a.idproveedor, b.sap, b.tarea, b.impuesto  " +
+                            "FROM sip.contrato a JOIN sip.detalleserviciocto b ON a.id=b.idcontrato " +
+                            "WHERE a.idproveedor="+rows[i].idproveedor+" AND b.sap="+rows[i].sap+
+                            " AND b.tarea='"+rows[i].tarea+"'";
+                        logger.debug(sqlcto);
+                        sequelize.query(sqlcto).spread(function (existecto) {
+                            if (existecto.length > 0) {
+                                logger.debug("*******EXISTE CTO:"+existecto);
+                                 logger.debug("*******EXISTE CTO:"+JSON.stringify(existecto));
+                                var iva = (existecto[0].impuesto > 0) ? 1 : 0;
+                                var factorrec = (iva == 1) ? 0.77 : 0;
+                                //logger.debug(rows[i])
+                                var numerointeligente = periodo.toString() + '' + rows[i].iddetallecompromiso
+                                //logger.debug(numerointeligente)
+                                var newPromise = models.solicitudaprobacion.create({
+                                    'periodo': periodo,
+                                    'iddetallecompromiso': rows[i].iddetallecompromiso,
+                                    'idprefactura': rows[i].idprefactura,
+                                    'idfacturacion': numerointeligente,
+                                    'idcui': rows[i].idcui,
+                                    'sap': rows[i].sap,
+                                    'tarea': rows[i].tarea,
+                                    'idproveedor': rows[i].idproveedor,
+                                    'idservicio': rows[i].idservicio,
+                                    'glosaservicio': rows[i].glosa,
+                                    'idcontrato': rows[i].idcontrato,
+                                    //'montoapagar': rows[i].montoapagar,
+                                    'montoaprobado': 0,
+                                    'montomulta': 0,
+                                    'idcausalmulta': 0,
+                                    'glosamulta': null,
+                                    'aprobado': 0,
+                                    'glosaaprobacion': null,
+                                    'idcalificacion': 0,
+                                    'borrado': 1,
+                                    'impuesto': iva,
+                                    'factorimpuesto': factorrec,
+                                    'montoapagarpesos': rows[i].montoapagarpesos,
+                                    'montomultapesos': 0,
+                                    'montoimpuesto': rows[i].montoimpuesto,
+                                    'factorconversion': rows[i].valorconversion,
+                                    'montoaprobadopesos': 0,
+                                    'montoneto': rows[i].montoneto,
+                                    'pending': true
+                                }, { transaction: t });
+
+                                promises.push(newPromise);
+                            }
+                        });
+
+                    };
+
+                    return Promise.all(promises);
+                }).then(function (result) {
+
+                    return models.sequelize.transaction({ autocommit: true }, function (t) {
+                        for (var i = 0; i < result.length; i++) {
+                            var myPromise = models.solicitudaprobacion.update({
+                                idfacturacion: result[i].id.toString()
+                            }, {
+                                    where: { id: result[i].id }
+                                }, { transaction: t });
+                            s_promises.push(myPromise);
+
+                        };
+
+                        return Promise.all(s_promises);
+                    }).then(function (result) {
+                        return models.sequelize.transaction({ autocommit: true }, function (t) {
+                            for (var i = 0; i < rows.length; i++) {
+                                var otherPromise = models.flujopagoenvuelo.update({
+                                    estadopago: 'GENERADO'
+                                }, {
+                                        where: { id: rows[i].id }
+                                    }, { transaction: t });
+                                o_promises.push(otherPromise);
+
+                            };
+
+                            return Promise.all(o_promises);
+                        }).then(function (result) {
+                            logger.debug("EXITO UPDATE DET");
+                            res.json({ error_code: 0, message: "Exito!!" });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ error_code: 1, message: err });
+                        });
+
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({ error_code: 1, message: err });
+                    });
+
+
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ error_code: 1, message: err });
+                });
+
+            }).catch(function (e) {
+                logger.error(e)
+                res.json({ error_code: 1, message: err });
+            })
+    }).catch(function (e) {
+        logger.error(e)
+        res.json({ error_code: 1, message: err });
+    })
+
+}*/

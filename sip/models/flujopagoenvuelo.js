@@ -75,7 +75,15 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    estadopago: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    saldopago: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'flujopagoenvuelo'
   });

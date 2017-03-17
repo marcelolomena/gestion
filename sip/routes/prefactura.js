@@ -46,13 +46,23 @@ module.exports = function (passport) {
 
     router.route('/generarprefacturas')
         .get(isAuthenticated, prefacturasController.generar);
+        
+    router.route('/generarprefacturasproy')
+        .get(isAuthenticated, prefacturasController.generarproy);        
 
     router.route('/solicitudesaprobadas')
         .post(isAuthenticated, prefacturasController.solicitudesaprobadas);
+        
+    router.route('/solicitudesaprobadasproy')
+        .post(isAuthenticated, prefacturasController.solicitudesaprobadasproy);        
 
     router.get('/genprefacturas', isAuthenticated, function (req, res) {
         res.render('genprefacturas', { user: req.user, data: req.session.passport.sidebar });
     });
+    
+    router.get('/genprefacturasproy', isAuthenticated, function (req, res) {
+        res.render('genprefacturasproy', { user: req.user, data: req.session.passport.sidebar });
+    });    
 
     router.route('/desgloseporsolicitud/:id')
         .post(isAuthenticated, prefacturasController.desgloseporsolicitud);
@@ -66,6 +76,16 @@ module.exports = function (passport) {
     router.route('/allcuis')
         .get(isAuthenticated, prefacturasController.getallcuis);
 
+    router.get('/solicitudProyectos', isAuthenticated, function (req, res) {
+        res.render('solicitudProyectos', { user: req.user, data: req.session.passport.sidebar });
+    });
+    
+    router.route('/solicitudProyectos/lista')
+        .post(isAuthenticated, prefacturaController.listaProyectos);
+            
+    router.route('/solicitud/generarProyectos')
+        .get(isAuthenticated, prefacturaController.generarProyectos);
+                
     return router;
 
 }

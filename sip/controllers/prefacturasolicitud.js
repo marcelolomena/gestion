@@ -16,6 +16,7 @@ exports.getSolicitudAprob = function (req, res) {
     "SELECT @PageSize=" + filas + "; " +
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
+    "With SQLPaging As   ("+
     "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso, f.moneda, g.nombre AS calificacion, h.cui "+ 
     "FROM sip.solicitudaprobacion a JOIN sip.proveedor b ON b.id = a.idproveedor " +
     "JOIN sip.detallecompromiso c ON c.id=a.iddetallecompromiso JOIN sip.servicio d ON a.idservicio=d.id " +
@@ -25,9 +26,24 @@ exports.getSolicitudAprob = function (req, res) {
     "JOIN sip.estructuracui h ON a.idcui = h.id "+
     "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + "  AND idprefactura IS NULL ";
     if (proveedor != "0"){
-      sql=sql+"AND idproveedor="+proveedor+" ";
+      sql=sql+"AND a.idproveedor="+proveedor+" ";
+    } 
+    sql=sql+"UNION "+
+    "SELECT a.*, b.razonsocial, d.nombre, c.periodo AS periodocompromiso,  "+
+    "f.moneda, g.nombre AS calificacion, h.cui FROM sip.solicitudaprobacion a  "+
+    "JOIN sip.proveedor b ON b.id = a.idproveedor  "+
+    "JOIN sip.flujopagoenvuelo c ON c.id=a.iddetallecompromiso  "+
+    "JOIN sip.servicio d ON a.idservicio=d.id  "+
+    "LEFT JOIN sip.tareaenvuelo e ON c.idtareaenvuelo=e.id  "+
+    "JOIN sip.moneda f ON e.idmoneda=f.id  "+
+    "LEFT JOIN sip.parametro g ON a.idcalificacion = g.id  "+
+    "JOIN sip.estructuracui h ON a.idcui = h.id  "+
+    "WHERE a.periodo = " + periodo + " AND a.idcui= " + cui + "  AND idprefactura IS NULL ";
+    if (proveedor != "0"){
+      sql=sql+"AND a.idproveedor="+proveedor+" ";
     }    
-  var sql2 = sql + "ORDER BY b.razonsocial, a.periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    sql=sql+") select * from SQLPaging ";    
+  var sql2 = sql + "ORDER BY razonsocial, periodo OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
   logger.debug("query:" + sql2);
   sequelize.query(sql)

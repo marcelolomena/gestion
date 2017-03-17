@@ -111,7 +111,7 @@ $(document).ready(function () {
         },
 
         {
-            label: 'Contrato', name: 'idcontrato', width: 150, align: 'left',
+            label: 'Contrato', name: 'numero', width: 100, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
@@ -126,11 +126,20 @@ $(document).ready(function () {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'CUI', name: 'cui', width: 150, align: 'left',
+            label: 'CUI', name: 'cui', width: 100, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
-
+        {
+            label: 'SAP', name: 'sap', width: 100, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
+        },
+        {
+            label: 'Tarea', name: 'tarea', width: 100, align: 'left',
+            search: true, editable: true, hidedlg: true,
+            editrules: { edithidden: false, required: true }
+        },        
         {
             label: 'Moneda', name: 'idmoneda',
             search: false, editable: true, hidden: true,

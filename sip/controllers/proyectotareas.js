@@ -29,7 +29,7 @@ exports.getProyectosTareas = function (req, res) {
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
     "as resultNum, * " +
-    "FROM sip.detalleproyecto where idproyecto="+id+")" +
+    "FROM sip.detalleproyecto where idproyecto="+id+" and isnull(estado,'') <> 'HISTORICO')" +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
   if (filters) {
