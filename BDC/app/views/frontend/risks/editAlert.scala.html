@@ -11,6 +11,14 @@
 <div class="main">
 @frontend.header()
 <section class="slider" id="pDetail_page">
+
+			<div id="new_program_header" class="">
+				<p> 
+					<span class="title-head">Actualizar Alerta</span>
+					<span class="title-head-status" style="padding-right: 20px"></span>
+				</p>
+			</div>
+			<div class="width_full">
 			@form(action = controllers.Frontend.routes.Risks.updateAlert(alert_id), 'id->"risk-management-alert-form") {
 		      <input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
 		      <input type="hidden" value="@alert_id" name="alert_id" id="alert_id"/>
@@ -128,6 +136,7 @@
 			       	</span>
 	          	</div>
 			}
+			</div>
   		@frontend.footer()
 	</section>			
 </div>

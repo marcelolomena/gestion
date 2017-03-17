@@ -375,11 +375,11 @@ object Risks extends Controller {
     }
   }
 
-  def editRiskAlert(risk_id: String, alert_id: String) = Action { implicit request =>
+  def editRiskAlert(risk_id: Integer, alert_id: Integer) = Action { implicit request =>
+    println("ENTRO risk_id : "+ risk_id + " alert_id : " + alert_id)
     request.session.get("username").map { user =>
-
-      var alert = RiskService.findRiskAlertsById(alert_id)
-      val risk = RiskService.findRiskDetails(risk_id)
+      var alert = RiskService.findAlertsForRisk(risk_id.toString,alert_id.toString)
+      val risk = RiskService.findRiskDetails(risk_id.toString)
       var program: Option[ProgramMaster] = null
       var program_id = ""
 
@@ -420,7 +420,7 @@ object Risks extends Controller {
                 rr.is_active)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              Ok(views.html.frontend.risks.editAlert(risk_id, alert_id, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              Ok(views.html.frontend.risks.editAlert(risk_id.toString, alert_id.toString, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
           }
       }
@@ -516,7 +516,7 @@ object Risks extends Controller {
             success => {
 
               val theForm = RiskService.validateAlert(ARTForms.alertsForm.fill(success))
-              println("concheta : " + success.event_details.toString)
+
               val theAlert = RiskAlerts(ra.id,
                 ra.risk_id,
                 success.event_type,

@@ -2231,7 +2231,8 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 #program-details h3 {
-	width: 97%;
+	/*width: 97%;*/
+	width: 100%;
 	padding-left: 8px;
 }
 
@@ -4100,7 +4101,6 @@ form button {
 
 #member_id,#member_id_field {
 	/*display: none;*/
-	
 }
 
 #member_id_search {
@@ -4369,7 +4369,7 @@ form button {
 	{
 	margin-top: 20px;
 }
-/********/
+
 #risk_list_detail_page li.top-header {
 	background: #315663;
 }
@@ -4426,9 +4426,6 @@ form button {
 	background: #fff;
 }
 
-
-
-/*----*/
 #risk_list li.top-header {
 	background: #315663;
 }
@@ -4469,6 +4466,47 @@ form button {
 	float: left;
 	width: 120px;
 }
+
+#risk_list .status {
+	float: left;
+	width: 420px;
+}
+
+#risk_list .icon {
+	float: left;
+	width: 40px;
+}
+
+#risk_list .status_0
+	{
+	background-image: url("../images/circle-green.png");
+	background-repeat: no-repeat;
+	float: left;
+	height: 16px;
+	margin-right: 5px;
+	width: 16px;
+}
+
+#risk_list .status_1
+	{
+	background-image: url("../images/circle-amber.png");
+	background-repeat: no-repeat;
+	float: left;
+	height: 16px;
+	margin-right: 5px;
+	width: 16px;
+}
+
+#risk_list .status_2
+	{
+	background-image: url("../images/circle-red.png");
+	background-repeat: no-repeat;
+	float: left;
+	height: 16px;
+	margin-right: 5px;
+	width: 16px;
+}
+
 
 #risk_list .active {
 	float: left;

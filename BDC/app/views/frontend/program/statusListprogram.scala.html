@@ -1,0 +1,31 @@
+@(program_id:String)(implicit request: play.api.mvc.RequestHeader,lang:Lang)
+@import services._; val listStatus = ProgramService.findAllStatus(program_id);
+
+<ul id="risk_list">
+	@if(listStatus.size>0){
+		<li class="top-header"  style="width:99%">
+			<span class="member header">Fecha</span>
+			<span class="status header">Motivo</span>
+			<span class="member header">Nivel</span>
+			<span class="icon header">Estado</span>
+		</li>
+		@for( (p,index) <- listStatus.zipWithIndex){
+			<li class="@if(index%2==0){even_row}else{odd_row} @p.id.get.toString"  style="width:99%">	
+				<span id="p_s_@p.id" class="member">@{new java.text.SimpleDateFormat("dd-MM-yyyy").format(p.status_for_date)}</span>
+				<span class="status">@p.reason_for_change</span>
+				<span class="member">@p.level</span>
+				@{
+					p.status match{
+						case 0 => <span class='status_0 status-change'></span>	
+						case 1 => <span class='status_1 status-change'></span>	
+						case 2 => <span class='status_2 status-change'></span>
+					}
+				}				
+			</li>
+			
+		}
+  }else{
+  	<li><span>No hay Estados...</span></li>
+  }
+
+</ul>

@@ -37,8 +37,8 @@ exports.list = function (req, res) {
                     where: data,
                     include: [
                         {
-                            model: models.user,
-                            model: models.solicitudcotizacion
+                            model: models.user},
+                            {model: models.solicitudcotizacion
                         }
                     ],
                     order: 'fecha desc',

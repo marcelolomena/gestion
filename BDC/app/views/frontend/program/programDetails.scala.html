@@ -1,4 +1,17 @@
-@(expected_completion_percentage:String,completion_percentage_forProgram : String,program:Option[ProgramMaster],programDetail:Option[ProgramDetails],programDates:Option[ProgramDates],projectList :Seq[Project], documents : Seq[DocumentMaster], changeSet:String,progrma_members: Seq[ProgramInternalMembers],saps:List[SAP], external_resource: Seq[models.ProgramMembersExternalAllocation],programWorkflowStatus:String,impacto:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
+@(expected_completion_percentage:String,
+	completion_percentage_forProgram : String,
+	program:Option[ProgramMaster],
+	programDetail:Option[ProgramDetails],
+	programDates:Option[ProgramDates],
+	projectList :Seq[Project],
+	 documents : Seq[DocumentMaster],
+	  changeSet:String,
+	  progrma_members: Seq[ProgramInternalMembers],
+	  saps:List[SAP],
+	   external_resource: Seq[models.
+	   ProgramMembersExternalAllocation],
+	   programWorkflowStatus:String,
+	   impacto:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import utils._
@@ -68,10 +81,9 @@
   	  	 </a>*@
    </h3>
    <h3 id="productNm">
-	    <span class="left font13px" style="width:930px;   word-wrap: break-word;">@program.get.program_name </span>
-			     
+	    <a href="javascript:toggleDiv('program-detail');"><span class="left font13px" style="width:930px;   word-wrap: break-word;">@program.get.program_name </span></a>
    </h3>
-  <div class="width_full" id="program-detail" style="margin-bottom: 26px;" >
+  <div class="width_full" id="program-detail">
   	
   	<ul style="width: 290px;float:left;  border-right: 1px dashed #666666; min-height:285px;">
   		<li>
@@ -81,10 +93,8 @@
 			<span class="program-desc">@program.get.program_description</span>	
 		  </div>
 		</li>
-		
-		
-		
   	</ul>
+  	
   	<ul style="width: 320px;float:left;margin-left: 10px;border-right: 1px dashed #666666;min-height: 285px;">
   		<li>
   			<span class="header">@Messages("addNewProgram.programTypedetail")</span>
@@ -142,20 +152,6 @@
  				}
 			</span>
 		</li>
-		@*
-		<li>
-			<span class="header"> @Messages("programDetails.completionpercentage")</span>
-			<span class="program-data" style="margin-left: 10px;">
-  					@completion_percentage_forProgram
-			</span>
-		</li>
-				<li>
-			<span class="header">@Messages("programDetails.expectedcompletionpercentage")</span>
-			<span class="program-data" style="margin-left: 10px;">
-  					@expected_completion_percentage
-			</span>
-		</li>
-		*@
 		
          <li>
 			<span class="header">Estado </span>
@@ -204,18 +200,7 @@
 				}
 			</span>
 		</li>
-		@*		
-		<li>
-			<span class="header">@Messages("programDetails.allocatedhours")</span>
-			<span class="program-data">@ProgramService.findSpentHoursForPrgoram(program.get.program_id.get.toString())
-			</span>
-		</li>
-		<li>
-			<span class="header">@Messages("programDetails.bookedhours") </span>
-			<span class="program-data">@ProgramService.findBookedHoursForPrgoram(program.get.program_id.get.toString())
-			</span>
-		</li>
-		*@
+
 		<li>
 			<span class="header">@Messages("programDetails.ha")</span>
 			<span class="program-data ">
@@ -278,9 +263,9 @@
   	</div>
   	
 	@if(projectList.size>0 && utils.UserAccess.checkAccess(req,"task_listing")){
-					<h3 class="header-background" style="margin-top: 30px;width:100.2%;">
-					<span class="left">@Messages("programDetails.earnedvalueanalysis")</span>
-					</h3>
+				<h3 id="productNm">
+					<a href="javascript:toggleDiv('earn-value-info');"><span class="left">@Messages("programDetails.earnedvalueanalysis")</span></a>
+				</h3>
 				<div class="width_full" id="earn-value-info"  >
 					 <table id="subtask-details">
 						<tbody>
@@ -329,23 +314,29 @@
 					</table>
 	  			</div>
  		  }  	
+  	<h3 id="productNm">
+		<a href="javascript:toggleDiv('mstatus');"><span class="left">Lista de Estados</span></a>
+	</h3>
+	<div class="width_full" id="mstatus">
+				@frontend.program.statusListprogram(program.get.program_id.get.toString())
+	</div>	
   	
   	<h3 id="productNm">
-		<span class="left">@Messages("subtaskdetail.programrisk")</span>
+		<a href="javascript:toggleDiv('trisk');"><span class="left">@Messages("subtaskdetail.programrisk")</span></a>
 	</h3>
  	<div class="program-div" id="new-risk">
  		<span><a href="@controllers.Frontend.routes.Risks.addRisk(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>
-	   	@*<span><a href="@controllers.Frontend.routes.Risks.riskManagement(program.get.program_id.get.toString,riskParentType.Program.id)"> @Messages("programdetails.addrisk")</a></span>*@
 	</div>
-	<div class="width_full">
-				@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
+	<div class="width_full" id="trisk">
+		@frontend.risks.riskListingProgram(program.get.program_id.get.toString(),riskParentType.Program.id)
 	</div>
+	
 @if(RiskService.countRiskForShow(program.get.program_id.get.toString)>0){
-  	<h3 id="matrixRk">
-		<span class="left">Matriz de Riesgo</span>
+  	<h3 id="productNm">
+		<a href="javascript:toggleDiv('mrisk');"><span class="left">Matriz de Riesgo</span></a>
 	</h3>	
 	
-	<div class="width_full">
+	<div class="width_full" id="mrisk">
 				<div class="panel panel-primary">
 					<div>
 						<h4 style="text-align: center;">Probabilidad</h4>
@@ -363,26 +354,26 @@
 										<thead>
 											<tr>
 												<th width="15%"></th>
-												<th width="17%" style="text-align: center">1</th>
-												<th width="17%" style="text-align: center">2</th>
-												<th width="17%" style="text-align: center">3</th>
+												<th width="17%" style="text-align: center">Bajo</th>
+												<th width="17%" style="text-align: center">Medio</th>
+												<th width="17%" style="text-align: center">Alto</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
-												<td align="center">3</td>
+												<td align="center">Alto</td>
 												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,0,2)</td>
 												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,1,2)</td>
 												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,2,2)</td>
 											</tr>
 											<tr>
-												<td align="center">2</td>
+												<td align="center">Medio</td>
 												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,0,1)</td>
 												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,1,1)</td>
 												<td align="center" bgcolor="red">@RiskService.countRisk(program.get.program_id.get.toString,2,1)</td>
 											</tr>
 											<tr>
-												<td align="center">1</td>
+												<td align="center">Bajo</td>
 												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,0,0)</td>
 												<td align="center" bgcolor="green">@RiskService.countRisk(program.get.program_id.get.toString,1,0)</td>
 												<td align="center" bgcolor="yellow">@RiskService.countRisk(program.get.program_id.get.toString,2,0)</td>
@@ -399,9 +390,8 @@
 	</div>	
 }
 	@if(utils.UserAccess.checkAccess(req,"program_member_listing")){
-		<h3 id="productNm" style="margin-top: 20px;">
-			    <span class="left">@Messages("programdetails.programmembers")</span>
-			    
+		<h3 id="productNm">
+			    <a href="javascript:toggleDiv('program_member_list');"><span class="left">@Messages("programdetails.programmembers")</span></a>
 		</h3>
 		
 		@if(utils.UserAccess.checkAccess(req,"program_member_add")){
@@ -409,7 +399,6 @@
 	   			<span><a href="@controllers.Frontend.routes.Program.newMembers(program.get.program_id.get.toString)">  @Messages("programdetails.newmember")</a></span>
 			</div>
 		}
-		
 		
 			<div class="width_full" id="program_member_list" >
 				<ul id="member_list">
@@ -535,7 +524,7 @@
 		}
 		@if(utils.UserAccess.checkAccess(req,"program_sap_listing")){
 			<h3 id="productNm">
-			    <span class="left"> @Messages("projectdetails.projectSAPlisting")</span>
+			    <a href="javascript:toggleDiv('sap_listing');"><span class="left"> @Messages("projectdetails.projectSAPlisting")</span></a>
 		   	</h3>
 		   	@if(utils.UserAccess.checkAccess(req,"program_sap_add")){
 			   	<div class="program-div" id="new-program-sap">
@@ -543,39 +532,24 @@
 				</div>
 			}
 			
-			<div class="width_full " id="sap_listing" style="margin-bottom:30px;">
+			<div class="width_full" id="sap_listing">
 			@if(saps.size>0){
 				<ul id="sap_list">
-				
 					<li class="top-header height28px">
 						<span class="role header" style="width:83px"> @Messages("programDetails.sapcode")</span>
-						@*<span class="member header">@Messages("programdetails.sapdetails.sapno")</span>
-						<span class="member header">@Messages("programdetails.sapdetails.budgettype")</span>
-						*@
 						<span class="member header">@Messages("programdetails.sapdetails.investment")</span>
 						<span class="member header">@Messages("programdetails.sapdetails.expenditure")</span>
-						@*<span class="member header">@Messages("programdetails.availableinvestment")</span>
-						*@
 						<span class="member header">Presupuesto Total</span>
 						<span class="member header">Fecha Aprobación</span>
 						<span class="member header">Fecha Paso a Prod.</span>
 						<span class="member header">Fecha Cierre</span>
-						@*<span class="member header">@Messages("programdetails.availableexpenditure")</span>
-						<span class="member header">@Messages("saplisting.projectedinvestment")</span>
-						<span class="member header">@Messages("saplisting.projectedexpenses")</span>
-						*@
 						<span class="active header">@Messages("programDetails.action")</span>
 					</li>
 					@for( (p,index) <- saps.zipWithIndex){
 					<li class="@if(index%2==0){even_row}else{odd_row} @p.id.toString">	
 						<span id="p_s_@p.id" class="role  @if(p.is_active==1){active-sap}else{in-active-sap}">@p.sap_number</span>
-						@*<span class="member">@p.sap_number </span>
-						<span class="member">@BudgetTypeService.findBudgetTypeById(p.budget_type.toString).get.budget_type </span>
-						*@
 						<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPInvestment(p.id.toString))</span>
 						<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPExpenditure(p.id.toString))</span>
-						@*<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPInvestment(p.id.toString)) </span>
-						*@
 						<span class="member">@FormattedOutPuts.formattedvalue((SAPServices.calculateSAPInvestment(p.id.toString)+SAPServices.calculateSAPExpenditure(p.id.toString))) </span>
 						<span class="member">@if(p.approved_date){
 						@p.approved_date.get.format("dd/MM/YYYY")}&nbsp;</span>
@@ -583,10 +557,6 @@
 						@p.comitted_date.get.format("dd/MM/YYYY")}&nbsp;</span>
 						<span class="member">@if(p.close_date){
 						@p.close_date.get.format("dd/MM/YYYY")}&nbsp;</span>
-						@*<span class="member">@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPExpenditure(p.id.toString)) </span>
-						<span class="member">@if(SAPServices.calculateProgramSAPAvailableInvestment(p.id.toString)==0){@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPInvestment(p.id.toString))}else{@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPAvailableInvestment(p.id.toString))} </span>
-						<span class="member">@if(SAPServices.calculateProgramSAPAvailableExpenditure(p.id.toString)==0){@FormattedOutPuts.formattedvalue(SAPServices.calculateSAPExpenditure(p.id.toString))}else{@FormattedOutPuts.formattedvalue(SAPServices.calculateProgramSAPAvailableExpenditure(p.id.toString))} </span>
-						*@
 						@if(utils.UserAccess.checkAccess(req,"program_sap_update")){
 							<a href="@controllers.Frontend.routes.Program.editSAP(p.id.toString)"><span class="active edit-icon" id="m_@p.id"></span></a>
 						}
@@ -604,7 +574,7 @@
 	}
 		
 	@if(utils.UserAccess.checkAccess(req,"project_listing")){
-	 	<h3  class="header-background">
+	 	<h3 id="productNm">
 		   <span class="left">@Messages("programDetails.projects")</span>
 	    </h3>
 	    
@@ -632,7 +602,6 @@
 					        		<span class="display-none" id="show_pr_@p.pId.get">@p.project_name </span>
 					        		<span class="design_team_span " style="margin-left:48px">@p.start_date.format("dd-MM-yyyy") &nbsp;To&nbsp;@p.final_release_date.format("dd-MM-yyyy")</span>
 				        			<span class="design_team_span " style="width:80px;margin-left:100px">@TaskService.findProjectTaskCount(p.pId.get.toString)</span>
-				        			@{/* <span class="design_team_span " style="width:80px;margin-left:100px">@Goals.findProjectGoalCount(p.project_id)</span> */}
 				        			</a>
 				        			
 				        			@{
@@ -661,32 +630,30 @@
 			
 		 }
 	 }
-	 <div class="width_full" >
+	 
+	 <!--<div class="width_full">-->
 	     	@if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
-     			<div class="width_full">
-				    <h3  class="header-background" id="task-gantt-label">
-					<span class="left" style="padding: 5px;">@Messages("programdetails.ganttchartview")</span>
+     			<!--<div class="width_full">-->
+				    <h3 class="header-background" id="task-gantt-label">
+					<a href="javascript:toggleDiv('project-gantt');"><span class="left" style="padding: 5px;">@Messages("programdetails.ganttchartview")</span></a>
 				    </h3>
-				    
-				</div>
-				<div class="width_full" id="project-gantt" style="width: 97.7%;">
+				<!--</div>-->
+				<div class="width_full" id="project-gantt">
 				</div>
 			}
-			
-				
-    </div>
+      <!--</div>-->
+    
     @if(projectList.size!=0 && utils.UserAccess.checkAccess(req,"project_gantt")){
-	  	 <h3 id="productNm_earnedvalueanalysis" style="margin-top: 20px">
-		    <span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
+	  	 <h3 id="productNm">
+		    <a href="javascript:toggleDiv('earn-value');"><span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span></a>
 		 </h3>
 		<div class="width_full" id="earn-value">
-		     <div id="container_id" style="height: 300px;"> </div>
+		    <div id="container_id" style="height: 300px;"> </div>
 		    <div id="container_2" style="height: 300px;"> </div>
 		    <div id="container_3" style="height: 300px;"> </div>
 		</div>
 	}else{
 		 <div class="width_full" id="earn-value" style="display: none;">
-
 	          <div id="container_id" style="height: 300px;"></div>
 	 		  <div id="container_2" style="height: 300px;"></div>
 	 		  <div id="container_3" style="height: 300px;"></div>
@@ -695,22 +662,19 @@
 			<p>@Messages("programDetails.noprojectsavailable") </p>
 		</div>
 	}
-	
-
 		
-	<h3 class="header-background" style="margin-top: 30px;width:100.2%;">
-	    <span class="left">Sub Resumen de tareas</span>
+	<h3 id="productNm">
+	    <a href="javascript:toggleDiv('program-subtask-summary');"><span class="left">Sub Resumen de tareas</span></a>
    	</h3>	
 	<div class="width_full" id="program-subtask-summary">
 	@{subTasks = SubTaskServices.findAllSubTasksForProgram(program.get.program_id.get.toString)}
 	
 	@frontend.program.programSubTaskSummary(subTasks)
 	<ul id="sub_task_items"></ul>
-	
 	</div>
 		
-	<h3  class="header-background" style="margin-top: 30px;">
-	    <span class="left"> @Messages("uploaddocument.documents")</span>
+	<h3 class="header-background" style="margin-top: 30px;">
+	    <span class="left">@Messages("uploaddocument.documents")</span>
    	</h3>
 	
 	@if(utils.UserAccess.checkAccess(req,"upload_program_document")){
@@ -817,15 +781,13 @@
 									</ul>
 								</div>
 						}else {
-							<h2 class="left push-top20px no-document"> @Messages("uploaddocument.nodocumentavailable")</h2>
+							<h2 class="left push-top20px no-document">@Messages("uploaddocument.nodocumentavailable")</h2>
 						}
 					</div>
 	 			</div>
 		</div>
   	}
-  @*<div class="width_full push-top15px">
-  	<a href="/programs" class=" content-box-content width_full" style="width:97%"><span class="back-to-programs"></span><span class="back-to">Back to Program List</span></a>
-  </div>*@
+
   </div>
  </div>
     @frontend.footer()
@@ -843,13 +805,9 @@
 <div id="dialog-edit-member-capacity"><table id="scroll38"></table><div id="jqGridPager"></div></div>
 </div>	 
 @frontend.headerScripts()	
-@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
-<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
-@*<script src="@routes.Assets.at("frontend/js/highcharts.js")"></script>*@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
-@*<script src="@routes.Assets.at("frontend/js/highstock.js")"></script>*@
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
@@ -861,6 +819,9 @@
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/matrix.css")">
 <script type="text/javascript">
+	function toggleDiv(divId) {
+	   $("#"+divId).toggle();
+	}
 	function validatePositive(value, column) {
 		if ( isNaN(value) && value < 0)
 			return [false, "Por favor ingrese un valor positivo."];

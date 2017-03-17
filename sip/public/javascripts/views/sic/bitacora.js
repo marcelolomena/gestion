@@ -15,7 +15,7 @@ var gridBitacora = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Tabla', 'Registro', 'Acción', 'Datos', 'ID Usuario', 'Nombre Responsable', 'Apellido Responsable', 'Fecha'],
+            colNames: ['id', 'Tabla', 'Registro', 'Acción', 'Datos', 'ID Usuario', 'Nombre', 'Apellido', 'Fecha'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 {

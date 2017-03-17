@@ -7,6 +7,10 @@ var fs = require('fs');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    if (action != "del") {
+        if (req.body.fechaenviorfp != "")
+            fechaenviorfp = req.body.fechaenviorfp.split("-").reverse().join("-")
+    }
 
     switch (action) {
         case "add":
@@ -24,7 +28,7 @@ exports.action = function (req, res) {
                 correonegociador: req.body.correonegociador,
                 fononegociador: req.body.fononegociador,
                 numerorfp: req.body.numerorfp,
-                fechaenviorfp: req.body.fechaenviorfp,
+                fechaenviorfp: fechaenviorfp,
                 direccionnegociador: req.body.direccionnegociador,
                 //nombreinterlocutor1: req.body.nombreinterlocutor1,
                 //correointerlocutor1: req.body.correointerlocutor1,
@@ -64,7 +68,15 @@ exports.action = function (req, res) {
                     program_id: req.body.program_id,
                     codigoart: req.body.codigoart,
                     sap: req.body.sap,
-                    descripcion: req.body.descripcion
+                    descripcion: req.body.descripcion,
+                    codigosolicitud: req.body.codigosolicitud,
+                    idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                    idnegociador: req.body.idnegociador,
+                    correonegociador: req.body.correonegociador,
+                    fononegociador: req.body.fononegociador,
+                    direccionnegociador: req.body.direccionnegociador,
+                    numerorfp: req.body.numerorfp,
+                    fechaenviorfp: fechaenviorfp,
                 }, {
                         where: {
                             id: req.body.id
@@ -77,6 +89,13 @@ exports.action = function (req, res) {
                     });
             } else {
                 models.solicitudcotizacion.update({
+                    idcui: req.body.idcui,
+                    idtecnico: req.body.idtecnico,
+                    tipocontrato: req.body.tipocontrato,
+                    program_id: req.body.program_id,
+                    codigoart: req.body.codigoart,
+                    sap: req.body.sap,
+                    descripcion: req.body.descripcion,
                     codigosolicitud: req.body.codigosolicitud,
                     idclasificacionsolicitud: req.body.idclasificacionsolicitud,
                     idnegociador: req.body.idnegociador,
@@ -84,15 +103,13 @@ exports.action = function (req, res) {
                     fononegociador: req.body.fononegociador,
                     direccionnegociador: req.body.direccionnegociador,
                     numerorfp: req.body.numerorfp,
-                    fechaenviorfp: req.body.fechaenviorfp,
+                    fechaenviorfp: fechaenviorfp,
                     //nombreinterlocutor1: req.body.nombreinterlocutor1,
                     //correointerlocutor1: req.body.correointerlocutor1,
                     //fonointerlocutor1: req.body.fonointerlocutor1,
                     //nombreinterlocutor2: req.body.nombreinterlocutor2,
                     //correointerlocutor2: req.body.correointerlocutor2,
                     //fonointerlocutor2: req.body.fonointerlocutor2,
-                    idtipo: req.body.idtipo,
-                    idgrupo: req.body.idgrupo
                 }, {
                         where: {
                             id: req.body.id
@@ -129,11 +146,11 @@ exports.action = function (req, res) {
 
 exports.list = function (req, res) {
 
-    var page = req.body.page;
-    var rows = req.body.rows;
-    var filters = req.body.filters;
-    var sidx = req.body.sidx;
-    var sord = req.body.sord;
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
 
     if (!sidx)
         sidx = "descripcion";
@@ -143,8 +160,36 @@ exports.list = function (req, res) {
 
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
-    utilSeq.buildCondition(filters, function (err, data) {
-        if (data) {
+    var filter_one = []
+    var filter_two = []
+    var filter_three = []
+    var filter_four = []
+
+    if (filters != undefined) {
+        //logger.debug(filters)
+        var item = {}
+        var jsonObj = JSON.parse(filters);
+
+        jsonObj.rules.forEach(function (item) {
+            if (item.field === "codigosolicitud") {
+                filter_one.push({ [item.field]: item.data });
+            } else if (item.field === "cui") {
+                filter_two.push({ [item.field]: { $like: '%' + item.data + '%' } });
+            } else if (item.field === "descripcion") {
+                filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
+            } else if (item.field === "first_name") {
+                filter_three.push({ [item.field]: { $like: '%' + item.data + '%' } });
+            } else if (item.field === "negociador") {
+                filter_four.push({ ['first_name']: { $like: '%' + item.data + '%' } });
+            } 
+        })
+        filter_one.push({ borrado: 1 })
+    }
+
+    utilSeq.buildConditionFilter(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
             models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
             models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
             models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
@@ -153,24 +198,32 @@ exports.list = function (req, res) {
             models.solicitudcotizacion.belongsTo(models.tipoclausula, { foreignKey: 'idtipo' });
             models.solicitudcotizacion.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
             models.solicitudcotizacion.count({
-                where: data
+                where: filter_one,
+                include: [{
+                    model: models.estructuracui, where: filter_two
+                },{
+                        model: models.user, as: 'tecnico',  where: filter_three
+                    },{
+                        model: models.user, as: 'negociador',  where: filter_four
+                    }
+                ]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.solicitudcotizacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: orden,
-                    where: data,
+                    where: filter_one,
                     include: [{
-                        model: models.estructuracui
+                        model: models.estructuracui, where: filter_two
                     }, {
                         model: models.programa
                     }, {
-                        model: models.user, as: 'tecnico'
+                        model: models.user, as: 'tecnico',  where: filter_three
                     }, {
                         model: models.valores, as: 'clasificacion'
                     }, {
-                        model: models.user, as: 'negociador'
+                         model: models.user, as: 'negociador',  where: filter_four
                     }, {
                         model: models.tipoclausula
                     }, {
@@ -251,7 +304,7 @@ exports.tecnicosresponsablescui = function (req, res) {
 
 exports.traerdatos = function (req, res) {
     var id = req.params.id;
-    var sql = " select email, contact_number from art_user where uid="+id+";";
+    var sql = " select email, contact_number from art_user where uid=" + id + ";";
 
     sequelize.query(sql)
         .spread(function (rows) {

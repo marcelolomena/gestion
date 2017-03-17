@@ -100,6 +100,7 @@ object SubTaskServices extends CustomColumns {
   def updateSubTask(task: SubTaskMaster): Int = {
     var actual_end_date: Date = null
     //if (!task.actual_end_date.isEmpty) {
+    //println(task)
     if (!task.actual_end_date.getOrElse("").toString().isEmpty()) {
       actual_end_date = task.actual_end_date.get
     } else {

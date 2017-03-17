@@ -26,18 +26,24 @@ object SpiCpiCalculationsService extends CustomColumns {
   def findCalculationsById(id: String): Seq[SpiCpiCalculations] = {
 
     var sqlString = "EXEC art.grafico {programId}"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiCalculations.spiCpiCalculations *)
+    val result_empty: Seq[SpiCpiCalculations] = null
+    try {
+      println("SIN ERROR!!!")
+      DB.withConnection { implicit connection =>
+        SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiCalculations.spiCpiCalculations *)
+      }
+    } catch {
+      case e: com.microsoft.sqlserver.jdbc.SQLServerException => result_empty
     }
   }
-  
+
   def graficoPorProyecto(id: String): Seq[SpiCpiPyCalculations] = {
 
     var sqlString = "EXEC art.proyectos {programId}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('programId -> id).executeQuery() as (SpiCpiPyCalculations.spiCpiPyCalculations *)
     }
-  }  
+  }
 
   def findIndicators(id: String, nivel: Int): Seq[Indicators] = {
 

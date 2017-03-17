@@ -835,8 +835,12 @@ object SubTask extends Controller {
             case None =>
             case Some(s: SubTasks) =>
               val sId = Integer.parseInt(sub_task_id)
+              //println("aca 1 : " + s.actual_end_date)
+              //println("aca 2 : " + s.actual_end_date_final)
               val sub_task_detail = SubTaskMaster(Option(sId), s.task_id, s.task, s.task_Details,
-                s.plan_start_date, s.plan_end_date, s.actual_start_date, null, null, s.added_date, status, s.completion_percentage, s.task_complete, s.sub_task_depend, s.dependencies_type, Option(s.catalogue_id))
+                s.plan_start_date, s.plan_end_date, s.actual_start_date, s.actual_end_date, s.actual_end_date_final,
+                s.added_date, status, s.completion_percentage, 
+                s.task_complete, s.sub_task_depend, s.dependencies_type, Option(s.catalogue_id))
               SubTaskServices.updateSubTask(sub_task_detail)
               TaskService.updateTaskStatus(sub_task_id)
           }
