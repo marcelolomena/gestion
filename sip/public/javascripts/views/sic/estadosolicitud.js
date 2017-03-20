@@ -64,13 +64,31 @@ var gridEstado = {
                     }
                 },
                 {
-                    label: 'Color', name: 'valore.nombre', width: 100, align: 'left',
+                    label: 'Color', name: 'valore.nombre', width: 50, align: 'center',
                     search: false, editable: true, hidedlg: true,
-                    editrules: { edithidden: false, required: true }
+                    editrules: { edithidden: false, required: true },
+                    formatter: function (cellvalue, options, rowObject) {
+                        var color = rowObject.valore.nombre;
+
+                        if (color == 'Rojo') {
+                            color = 'red';
+                        } else if (color == 'Verde') {
+                            color = 'green';
+                        } else if (color == 'Amarillo') {
+                            color = 'yellow';
+                        } else if (color == 'Azul') {
+                            color = 'blue';
+                        } else if (color == 'indefinido') {
+                            color = 'gray';
+                        }
+
+
+                        return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
+                    }
                 },
 
                 {
-                    name: 'comentario', index: 'comentario', width: 100, hidden: false,
+                    name: 'comentario', index: 'comentario', width: 400, hidden: false,
                     edittype: 'custom',
                     editoptions: {
                         custom_element: function (value, options) {
@@ -119,7 +137,7 @@ var gridEstado = {
                     editable: true, editrules: { edithidden: true }
                 },
                 {
-                    name: 'fecha', width: 150, align: 'left', search: false,
+                    name: 'fecha', width: 250, align: 'left', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
                     editable: true, editrules: { required: true },
                     searchoptions: {
@@ -154,7 +172,7 @@ var gridEstado = {
             height: "auto",
             //shrinkToFit: true,
             //autowidth: true,
-            width: 1200,
+            width: 850,
             rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
