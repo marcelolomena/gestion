@@ -40,12 +40,12 @@ $(document).ready(function () {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
         pager: "#pager_claseevtecnica",
-        /*subGrid: true,
+        subGrid: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
-        }*/
+        }
     });
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
@@ -101,8 +101,7 @@ $(document).ready(function () {
         });
 
 })
-/*
+
 function showSubGrids(subgrid_id, row_id) {
-    gridClausulas(subgrid_id, row_id, 'clausulas');
+    gridCriterios(subgrid_id, row_id, 'criterios');
 }
-*/
