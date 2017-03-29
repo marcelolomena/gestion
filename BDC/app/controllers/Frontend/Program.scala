@@ -700,6 +700,14 @@ object Program extends Controller {
           //println("program member -------" + pms)
           val lastsaved = ProgramMemberService.insertProgramMemberDetails(pms)
 
+          ///NUEVO PARA RIESGO
+          val user_id = Integer.parseInt(request.session.get("uId").get)
+          val ret = createInitialRisk(user_id, last_program, 0)
+          if (ret == 1)
+            println("FRACASO AL CREAR RIESGOS!!!")
+           else
+            println("EXITO AL CREAR RIESGOS!!!")
+          ///FIN RIESGO
           /**
            * Default project of type Initiative and its tasks...
            */
@@ -866,33 +874,55 @@ object Program extends Controller {
       })
   }
 
-  def algo(dm: Int) {
+  def createInitialRisk(user_id: Integer, parent_id: Long, parent_type: Integer): Long = {
+    try {
+      val projectTypes = GenericProjectService.findProjectTypeDetailsByDescription(0);
+      println(projectTypes)
+      if (!projectTypes.isEmpty) {
+        println("ENTRO!!")
+        var tasksDependents = new java.util.HashMap[Integer, Long]()
+        val genericTasks = GenericService.findGenericProjectTypeTasks(projectTypes.get.id.get.toString)
+        var isBaselined = false
+        for (g <- genericTasks) {
+          val predefined_id = g.predefined_task_id.toString()
+          val task_title = GenericService.findPredefinedTasksDetails(predefined_id).get.task_title
 
-    val projectTypes = GenericProjectService.findProjectTypeDetailsByType(1);
-    if (!projectTypes.isEmpty) {
-      var tasksDependents = new java.util.HashMap[Integer, Long]()
-      val genericTasks = GenericService.findGenericProjectTypeTasks(projectTypes.get.id.get.toString)
-      var isBaselined = false
-      for (g <- genericTasks) {
-        val predefined_id = g.predefined_task_id.toString()
-        val service_id = GenericService.findPredefinedTasksDetails(predefined_id).get.catalogue_service
-        val taskDetails = Tasks(None, pId.toInt, g.task_title, g.task_code,
-          start_date, end_date, g.task_description, g.plan_time,
-          new Date(), g.task_status, 1, dm, g.task_discipline, g.completion_percentage,
-          g.remark, g.task_depend, Option(1), g.stage, g.user_role, Option(g.deliverable), g.task_type, 1)
+          val risk_master = RiskManagementMaster(Option(0),
+            Option(parent_id.toInt),
+            Option(parent_type),
+            task_title, //name
+            task_title, //risk.cause
+            task_title, //risk.event
+            task_title, //risk.imapct
+            1, //risk.risk_category
+            "0", //risk.variable_imapact
+            0, //risk.probablity_of_occurence
+            0, //risk.quantification
+            0, //risk.strategic_reply
+            user_id, //risk.responsible
+            Option(""), //risk.reply_action
+            Option(""), //risk.configuration_plan
+            Option(""),
+            new Date(), //risk.risk_clouser_date
+            Option(user_id),
+            Option(new Date()),
+            Option(new Date()),
+            1, //risk.risk_state
+            111 //risk.sub_category
+            )
 
-        if (g.task_type == 3) {
-          isBaselined = true
+          val last = RiskService.insertRisk(risk_master)
+
+          if (last.isWhole()) {
+            val risk_project_id = RiskService.createRiskManagementProject(parent_id.toString(), parent_type, last.toString())
+          }
+
         }
-
-        val latest_task = TaskService.insertTask(taskDetails)
-        tasksDependents.put(g.tId.get, latest_task)
-
-        val subtask = SubTaskMaster(None, latest_task, g.task_title, g.task_description,
-          start_date, end_date, new Date(), null, null, new Date(), g.task_status, g.completion_percentage, 0, Option(""), Option(0), Option(service_id))
-        SubTaskServices.insertSubTask(subtask)
       }
+    } catch {
+      case e: Exception => return 1
     }
+    return 0
 
   }
 

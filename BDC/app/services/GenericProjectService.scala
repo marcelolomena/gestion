@@ -47,11 +47,11 @@ object GenericProjectService extends CustomColumns {
     }
   }
   
-  def findProjectTypeDetailsByDescription(description: String): Option[ProjectType] = {
+  def findProjectTypeDetailsByDescription(state: Integer): Option[ProjectType] = {
     DB.withConnection { implicit connection =>
       val result = SQL(
-        "select * from art_project_type_master where states=0 and description like '%{description}%'").on(
-          'description -> description).as(
+        "select * from art_project_type_master where states={state} and description like 'Risk Management'").on(
+          'state -> state.toInt).as(
             ProjectType.projectDisplay.singleOpt)
       result
     }
