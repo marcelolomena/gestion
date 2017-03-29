@@ -10,13 +10,16 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechaesperada;
-    var fechareal;
+    var fechaesperada = null;
+    var fechareal = null;
 
     if (action != "del") {
-        if (req.body.fechaesperada != "" || req.body.fechareal != "")
+        if (req.body.fechaesperada != "" )
             fechaesperada = req.body.fechaesperada.split("-").reverse().join("-")
+
+        if (req.body.fechareal != "")
             fechareal = req.body.fechareal.split("-").reverse().join("-")
+        
     }
 
     switch (action) {
