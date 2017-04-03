@@ -15,7 +15,7 @@ var gridDoc = {
         tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
+        tmpl += "<div class='column-half'>Nombre Documento<span style='color:red'>*</span>{nombrecorto}</div>";
         tmpl += "<div class='column-half'>Responsable<span style='color:red'>*</span>{nombreresponsable}</div>";
         tmpl += "</div>";
 
@@ -39,7 +39,7 @@ var gridDoc = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Doc', 'Nombre', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Archivo', 'Archivo'],
+            colNames: ['Doc', 'Nombre Documento', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Archivo', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true, width: 10,

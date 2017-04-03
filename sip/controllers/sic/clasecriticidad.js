@@ -589,7 +589,7 @@ exports.actiondesglosenotas = function (req, res) {
 exports.getColor = function (req, res) {
 
   var sql = "select id,nombre from sic.valores " +
-    "where borrado=1 and tipo = 'Color' order by nombre ";
+    "where borrado=1 and tipo = 'color' order by nombre ";
 
   sequelize.query(sql)
     .spread(function (rows) {

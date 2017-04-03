@@ -15,7 +15,10 @@ var gridEstado = {
         tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Fecha<span style='color:red'>*</span>{fecha}</div>";
+        tmpl += "<div class='column-full' style='display: none;'>Fecha {fecha}</div>";
+        tmpl += "</div>";
+        tmpl += "<div class='form-row', id='mensajefecha'>";
+        tmpl += "<div class='column-full'></div>";
         tmpl += "</div>";
 
         tmpl += "<hr style='width:100%;'/>";
@@ -139,7 +142,7 @@ var gridEstado = {
                 {
                     name: 'fecha', width: 250, align: 'left', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
+                    editable: true,
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datepicker({
@@ -157,10 +160,7 @@ var gridEstado = {
                     },
                     editoptions: {
                         size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
+
                     },
                 },
             ],
@@ -192,7 +192,10 @@ var gridEstado = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
-
+                    var rowKey = $gridTab.getGridParam("selrow");
+                    var rowData = $gridTab.getRowData(rowKey);
+                    var thissid = rowData.fecha;
+                    $('#mensajefecha').html("<div class='column-full'>Estado con fecha: " + thissid + "</div>");
                 },
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
@@ -215,10 +218,37 @@ var gridEstado = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
+                    var lafechaactual = new Date();
+                    var elanoactual = lafechaactual.getFullYear();
+                    var elmesactual = (lafechaactual.getMonth() + 1);
+                    if (elmesactual < 10) {
+                        elmesactual = "0" + elmesactual
+                    }
+                    var eldiaactual = lafechaactual.getDate();
+                    if (eldiaactual < 10) {
+                        eldiaactual = "0" + eldiaactual
+                    }
+
+                    var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
+                    $('input#fecha').html(lafechastring);
+                    $('input#fecha').attr('value', lafechastring);
+                    $('#mensajefecha').html("<div class='column-full'>El estado se guardará con fecha: " + lafechastring + "</div>");
 
                 },
                 onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
+                    var lafechaactual = new Date();
+                    var elanoactual = lafechaactual.getFullYear();
+                    var elmesactual = (lafechaactual.getMonth() + 1);
+                    if (elmesactual < 10) {
+                        elmesactual = "0" + elmesactual
+                    }
+                    var eldiaactual = lafechaactual.getDate();
+                    if (eldiaactual < 10) {
+                        eldiaactual = "0" + eldiaactual
+                    }
+
+                    var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
+                    return { idsolicitudcotizacion: parentRowKey, fecha: lafechastring };
                 }, beforeSubmit: function (postdata, formid) {
                     if (parseInt(postdata.idcolor) == 0) {
                         return [false, "Color: Debe escoger un valor", ""];

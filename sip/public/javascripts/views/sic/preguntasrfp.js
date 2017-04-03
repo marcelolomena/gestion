@@ -50,7 +50,7 @@ var gridPreguntasrfp = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Preguntas Proveedor"
+            caption: "Preguntas al Proveedor"
         });
         $gridTab.jqGrid('navGrid', '#navGridPreg', { edit: false, add: true, del: true, search: false },
             {
