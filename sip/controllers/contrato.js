@@ -394,7 +394,7 @@ exports.list = function (req, res) {
   if (!sord)
     sord = "asc";
 
-  var orden = "[Contrato]." + sidx + " " + sord;
+  var orden = "[contrato]." + sidx + " " + sord;
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {

@@ -15,10 +15,10 @@ exports.action = function (req, res) {
         nombre: req.body.nombre,
         borrado: 1
       }).then(function (clase) {
-        res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ error: 1, glosa: err.message });
       });
 
       break;
@@ -30,10 +30,10 @@ exports.action = function (req, res) {
             id: req.body.id
           }
         }).then(function (clase) {
-          res.json({ error: 0, glosa: '' });
+          return res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
           logger.error(err)
-          res.json({ error: 1, glosa: err.message });
+          return res.json({ error: 1, glosa: err.message });
         });
       break;
     case "del":
@@ -45,10 +45,10 @@ exports.action = function (req, res) {
         if (rowDeleted === 1) {
           logger.debug('Deleted successfully');
         }
-        res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ error: 1, glosa: err.message });
       });
 
       break;
@@ -86,10 +86,10 @@ exports.list = function (req, res) {
           where: data
         }).then(function (clase) {
           //logger.debug(solicitudcotizacion)
-          res.json({ records: records, total: total, page: page, rows: clase });
+          return res.json({ records: records, total: total, page: page, rows: clase });
         }).catch(function (err) {
           logger.error(err.message);
-          res.json({ error_code: 1 });
+          return res.json({ error_code: 1 });
         });
       })
     }
@@ -103,11 +103,11 @@ exports.list2 = function (req, res) {
   var filters = req.query.filters;
   var sidx = req.query.sidx;
   var sord = req.query.sord;
-  logger.debug('rows: '+rows)
-  logger.debug('page: '+page)
+  //logger.debug('rows: '+rows)
+  //logger.debug('page: '+page)
 
   if (!sidx)
-    sidx = "codigo";
+    sidx = "nombre";
 
   if (!sord)
     sord = "asc";
@@ -115,7 +115,7 @@ exports.list2 = function (req, res) {
   var orden = sidx + " " + sord;
 
   var additional = [{
-    "field": "idclase",
+    "field": "idclaseevaluaciontecnica",
     "op": "eq",
     "data": req.params.id
   }];
@@ -124,22 +124,22 @@ exports.list2 = function (req, res) {
     if (err) {
       //logger.debug("->>> " + err)
     } else {
-      models.plantillaclausula.count({
+      models.criterioevaluacion.count({
         where: data
       }).then(function (records) {
-        logger.debug("records: "+records);
+        //logger.debug("records: "+records);
         var total = Math.ceil(records / rows);
-        logger.debug("total: "+total);
-        models.plantillaclausula.findAll({
+        //logger.debug("total: "+total);
+        models.criterioevaluacion.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
           where: data
-        }).then(function (plantillaclausula) {
-          res.json({ records: records, total: total, page: page, rows: plantillaclausula });
+        }).then(function (criterioevaluacion) {
+          return res.json({ records: records, total: total, page: page, rows: criterioevaluacion });
         }).catch(function (err) {
           //logger.error(err);
-          res.json({ error_code: 1 });
+          return res.json({ error_code: 1 });
         });
       })
     }
@@ -152,36 +152,38 @@ exports.action2 = function (req, res) {
 
   switch (action) {
     case "add":
-      models.plantillaclausula.create({
-        idclase: req.body.parent_id,
-        codigo: req.body.codigo,
-        criticidad: req.body.criticidad,
+      models.criterioevaluacion.create({
+        idclaseevaluaciontecnica: req.body.parent_id,
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
         borrado: 1
       }).then(function (plantillaclausula) {
-        res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ error: 1, glosa: err.message });
       });
 
       break;
     case "edit":
-      models.plantillaclausula.update({
-        codigo: req.body.codigo,
-        criticidad: req.body.criticidad,
+      models.criterioevaluacion.update({
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
       }, {
           where: {
             id: req.body.id
           }
         }).then(function (plantillaclausula) {
-          res.json({ error: 0, glosa: '' });
+          return res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
           logger.error(err)
-          res.json({ error: 1, glosa: err.message });
+          return res.json({ error: 1, glosa: err.message });
         });
       break;
     case "del":
-      models.plantillaclausula.destroy({
+      models.criterioevaluacion.destroy({
         where: {
           id: req.body.id
         }
@@ -189,10 +191,10 @@ exports.action2 = function (req, res) {
         if (rowDeleted === 1) {
           logger.debug('Deleted successfully');
         }
-        res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ error: 1, glosa: err.message });
       });
 
       break;
@@ -337,178 +339,10 @@ exports.clasesevaluacion = function (req, res) {
     res.json({ error: 1 });
   });
 }
-
-exports.gettipoclausula = function (req, res) {
-
-  sequelize.query(
-    'select a.* ' +
-    'from sic.valores a ' +
-    "where a.tipo='tipoclausula' ",
-    { type: sequelize.QueryTypes.SELECT }
-  ).then(function (valores) {
-    //logger.debug(valores)
-    res.json(valores);
-  }).catch(function (err) {
-    logger.error(err);
-    res.json({ error: 1 });
-  });
-}
-
-exports.download = function(req, res) {
-    
-    models.plantillaclausula.findAll({
-        order: 'codigo ASC',
-        //attributes: ['texto'],
-        where: { idgrupo: req.params.id },
-        /*
-        include: [{
-            model: models.plantillaclausula
-        }]
-        */
-    }).then(function(clausulas) {
-
-      //console.dir(clausulas);
-
-        var result = '<html><body>'
-
-        for (var f in clausulas) {
-
-            var code = clausulas[f].codigo
-            if (!code) {
-                throw new Error("No es posible generar el documento.")
-            }
-
-            var level = code.split(".");
-            var nombrecorto = clausulas[f].nombrecorto;
-
-            //console.dir("los niveles oe: "+level)
-
-            if (parseInt(level[0]) > 0 && parseInt(level[1]) == 0 )
-                result += '<h1>' + nombrecorto + '</h1>'
-            else if (parseInt(level[0]) > 0 && parseInt(level[1]) > 0 )
-                result += '<h2>' + nombrecorto + '</h2>'
-
-
-
-            result += clausulas[f].glosaclausula
-        }
-
-        result += '</html></body>'
-
-        var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
-        res.setHeader('Content-disposition', hdr);
-        res.set('Content-Type', 'application/msword;charset=utf-8');
-        res.status(200).send(result);
-
-    }).catch(function(err) {
-        logger.error(err.message);
-        res.status(500).send(err.message);
-    });
-
-}
-exports.upload = function (req, res) {
-
-    if (req.method === 'POST') {
-
-        var busboy = new Busboy({ headers: req.headers });
-
-        var awaitId = new Promise(function (resolve, reject) {
-
-            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
-                if (fieldname === 'id') {
-                    try {
-                        resolve(val)
-                    } catch (err) {
-                        return reject(err);
-                    }
-                } else {
-                    return;
-                }
-            });
+exports.porcentajecriterios = function (req, res) {
+    var sql = "select sum(porcentaje) as total from sic.criterioevaluacion where idclaseevaluaciontecnica=" + req.params.parentRowKey;
+    sequelize.query(sql)
+        .spread(function (rows) {
+            res.json(rows);
         });
-
-        var awaitParent = new Promise(function (resolve, reject) {
-
-            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
-                if (fieldname === 'parent') {
-                    try {
-                        resolve(val)
-                    } catch (err) {
-                        return reject(err);
-                    }
-                } else {
-                    return;
-                }
-            });
-        });
-
-        function copyFile(source, target) {
-            return new Promise(function (resolve, reject) {
-                var rd = fs.createReadStream(source);
-                rd.on('error', rejectCleanup);
-                var wr = fs.createWriteStream(target);
-                wr.on('error', rejectCleanup);
-                function rejectCleanup(err) {
-                    rd.destroy();
-                    wr.end();
-                    reject(err);
-                }
-                wr.on('finish', resolve);
-                rd.pipe(wr);
-            });
-        }
-
-        function checkDirectorySync(directory) {
-            try {
-                fs.statSync(directory);
-            } catch (e) {
-                fs.mkdirSync(directory);
-            }
-        }
-
-        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-
-            var saveTo = path.join(__dirname, '../../docs/', 'anexosclausulas', filename);
-            //logger.debug("actual : " + saveTo)
-            file.pipe(fs.createWriteStream(saveTo));
-
-           
-
-                var dir = path.join(__dirname, '../../', 'public/docs/anexosclausulas');
-                checkDirectorySync(dir);
-                var dest = path.join(__dirname, '../../', 'public/docs/anexosclausulas', filename);
-                copyFile(saveTo, dest)
-
-                awaitId.then(function (idDetail) {
-                    //logger.debug("idDetail : " + idDetail)
-                    models.cuerpoclausula.update({
-                        nombreadjunto: filename
-                    }, {
-                            where: {
-                                id: idDetail
-                            }
-                        }).then(function (documentoscotizacion) {
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({ id: 0, message: err.message, success: false });
-                        });
-
-                }).catch(function (err) {
-                    res.json({ error_code: 1, message: err.message, success: false });
-                    logger.error(err)
-                });
-
-            
-
-        });
-
-        busboy.on('finish', function () {
-            logger.debug("Finalizo la transferencia del archivo")
-
-            res.json({ error_code: 0, message: 'Archivo guardado', success: true });
-        });
-
-        return req.pipe(busboy);
-    }
-
-}
+};

@@ -30,12 +30,7 @@ exports.action = function (req, res) {
                 numerorfp: req.body.numerorfp,
                 fechaenviorfp: fechaenviorfp,
                 direccionnegociador: req.body.direccionnegociador,
-                //nombreinterlocutor1: req.body.nombreinterlocutor1,
-                //correointerlocutor1: req.body.correointerlocutor1,
-                //fonointerlocutor1: req.body.fonointerlocutor1,
-                //nombreinterlocutor2: req.body.nombreinterlocutor2,
-                //correointerlocutor2: req.body.correointerlocutor2,
-                //fonointerlocutor2: req.body.fonointerlocutor2,
+                colorestado: 'Rojo',
                 borrado: 1,
                 idtipo: req.body.idtipo,
                 idgrupo: req.body.idgrupo
@@ -48,80 +43,34 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
+            models.solicitudcotizacion.update({
+                idcui: req.body.idcui,
+                idtecnico: req.body.idtecnico,
+                tipocontrato: req.body.tipocontrato,
+                program_id: req.body.program_id,
+                codigoart: req.body.codigoart,
+                sap: req.body.sap,
+                descripcion: req.body.descripcion,
+                codigosolicitud: req.body.codigosolicitud,
+                idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                idnegociador: req.body.idnegociador,
+                correonegociador: req.body.correonegociador,
+                fononegociador: req.body.fononegociador,
+                direccionnegociador: req.body.direccionnegociador,
+                numerorfp: req.body.numerorfp,
+                fechaenviorfp: fechaenviorfp,
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (solicitudcotizacion) {
+                    res.json({ error: 0, glosa: '' });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ error: 1, glosa: err.message });
+                });
 
-            var roles = req.session.passport.sidebar[0].rol
-            var isTec = false
 
-            for (var i in roles) {
-
-                if (roles[i].glosarol === 'Técnico SIC') {
-                    isTec = true
-                }
-
-            }
-
-            if (isTec) {
-                models.solicitudcotizacion.update({
-                    idcui: req.body.idcui,
-                    idtecnico: req.body.idtecnico,
-                    tipocontrato: req.body.tipocontrato,
-                    program_id: req.body.program_id,
-                    codigoart: req.body.codigoart,
-                    sap: req.body.sap,
-                    descripcion: req.body.descripcion,
-                    codigosolicitud: req.body.codigosolicitud,
-                    idclasificacionsolicitud: req.body.idclasificacionsolicitud,
-                    idnegociador: req.body.idnegociador,
-                    correonegociador: req.body.correonegociador,
-                    fononegociador: req.body.fononegociador,
-                    direccionnegociador: req.body.direccionnegociador,
-                    numerorfp: req.body.numerorfp,
-                    fechaenviorfp: fechaenviorfp,
-                }, {
-                        where: {
-                            id: req.body.id
-                        }
-                    }).then(function (solicitudcotizacion) {
-                        res.json({ error: 0, glosa: '' });
-                    }).catch(function (err) {
-                        logger.error(err)
-                        res.json({ error: 1, glosa: err.message });
-                    });
-            } else {
-                models.solicitudcotizacion.update({
-                    idcui: req.body.idcui,
-                    idtecnico: req.body.idtecnico,
-                    tipocontrato: req.body.tipocontrato,
-                    program_id: req.body.program_id,
-                    codigoart: req.body.codigoart,
-                    sap: req.body.sap,
-                    descripcion: req.body.descripcion,
-                    codigosolicitud: req.body.codigosolicitud,
-                    idclasificacionsolicitud: req.body.idclasificacionsolicitud,
-                    idnegociador: req.body.idnegociador,
-                    correonegociador: req.body.correonegociador,
-                    fononegociador: req.body.fononegociador,
-                    direccionnegociador: req.body.direccionnegociador,
-                    numerorfp: req.body.numerorfp,
-                    fechaenviorfp: fechaenviorfp,
-                    //nombreinterlocutor1: req.body.nombreinterlocutor1,
-                    //correointerlocutor1: req.body.correointerlocutor1,
-                    //fonointerlocutor1: req.body.fonointerlocutor1,
-                    //nombreinterlocutor2: req.body.nombreinterlocutor2,
-                    //correointerlocutor2: req.body.correointerlocutor2,
-                    //fonointerlocutor2: req.body.fonointerlocutor2,
-                }, {
-                        where: {
-                            id: req.body.id
-                        }
-                    }).then(function (solicitudcotizacion) {
-                        res.json({ error: 0, glosa: '' });
-                    }).catch(function (err) {
-                        logger.error(err)
-                        res.json({ error: 1, glosa: err.message });
-                    });
-
-            }
 
             break;
         case "del":
@@ -181,7 +130,7 @@ exports.list = function (req, res) {
                 filter_three.push({ [item.field]: { $like: '%' + item.data + '%' } });
             } else if (item.field === "negociador") {
                 filter_four.push({ ['first_name']: { $like: '%' + item.data + '%' } });
-            } 
+            }
         })
         filter_one.push({ borrado: 1 })
     }
@@ -201,11 +150,11 @@ exports.list = function (req, res) {
                 where: filter_one,
                 include: [{
                     model: models.estructuracui, where: filter_two
-                },{
-                        model: models.user, as: 'tecnico',  where: filter_three
-                    },{
-                        model: models.user, as: 'negociador',  where: filter_four
-                    }
+                }, {
+                    model: models.user, as: 'tecnico', where: filter_three
+                }, {
+                    model: models.user, as: 'negociador', where: filter_four
+                }
                 ]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
@@ -219,11 +168,11 @@ exports.list = function (req, res) {
                     }, {
                         model: models.programa
                     }, {
-                        model: models.user, as: 'tecnico',  where: filter_three
+                        model: models.user, as: 'tecnico', where: filter_three
                     }, {
                         model: models.valores, as: 'clasificacion'
                     }, {
-                         model: models.user, as: 'negociador',  where: filter_four
+                        model: models.user, as: 'negociador', where: filter_four
                     }, {
                         model: models.tipoclausula
                     }, {

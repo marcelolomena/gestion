@@ -27,15 +27,20 @@ var gridBitacora = {
                             var s = "<select>";
                             s += '<option value="0">--Escoger Tabla--</option>';
                             $.each(data, function (i, item) {
-                                s += '<option value="' + data[i].id + '">' + data[i].tabla + '</option>';
+                                s += '<option value="' + data[i].tabla + '">' + data[i].tabla + '</option>';
                             });
                             return s + "</select>";
                         }
                     }
                 },
-                { name: 'idregistro', index: 'idregistro', label: 'Registro', width: 70, editable: true },
                 {
-                    name: 'accion', index: 'accion', width: 70, editable: true, search: true, stype: 'select', searchoptions: {
+                    name: 'idregistro', index: 'idregistro', label: 'Registro', width: 70, editable: true, search: true,
+                    searchoptions: {
+                        sopt: ["eq"]
+                    }
+                },
+                {
+                    name: 'accion', index: 'accion', width: 70, editable: true, search: false, stype: 'select', searchoptions: {
                         dataUrl: '/bitacora/comboboxaction',
                         buildSelect: function (response) {
                             var data = JSON.parse(response);
@@ -49,11 +54,11 @@ var gridBitacora = {
                     }
                 },
                 { name: 'dataold', index: 'accion', width: 350, editable: true, search: false },
-                { name: 'idusuario', label: '', width: 70, editable: true, editoptions: { size: 10 } },
+                { name: 'idusuario', label: '', width: 70, editable: true, search: false, editoptions: { size: 10 } },
                 { name: 'user.first_name', index: 'user.first_name', width: 100, editable: true, search: false },
                 { name: 'user.last_name', index: 'user.last_name', width: 100, editable: true, search: false },
                 {
-                    name: 'fecha', width: 100, align: 'left', search: true,
+                    name: 'fecha', width: 100, align: 'left', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
                     editable: true, editrules: { required: true },
                     searchoptions: {

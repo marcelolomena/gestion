@@ -23,18 +23,58 @@ exports.list = function (req, res) {
         "data": req.params.id
     }];
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
+    if (!sidx)
+        sidx = "descripcion";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[bitacora]." + sidx + " " + sord;
+
+    var filter_one = []
+    var filter_two = []
+    var filter_three = []
+    var filter_four = []
+    filter_one.push({ idsolicitudcotizacion: req.params.id })
+
+    if (filters != undefined) {
+        //logger.debug(filters)
+        var item = {}
+        var jsonObj = JSON.parse(filters);
+
+        jsonObj.rules.forEach(function (item) {
+            if (item.field === "tabla" && item.data!=0) {
+                filter_one.push({ [item.field]: item.data });
+            } else if (item.field === "idregistro") {
+                filter_one.push({ [item.field]: item.data });
+            } /*else if (item.field === "cui") {
+                filter_two.push({ [item.field]: { $like: '%' + item.data + '%' } });
+            } else if (item.field === "descripcion") {
+                filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
+            } else if (item.field === "first_name") {
+                filter_three.push({ [item.field]: { $like: '%' + item.data + '%' } });
+            } else if (item.field === "negociador") {
+                filter_four.push({ ['first_name']: { $like: '%' + item.data + '%' } });
+            } */
+        })
+        filter_one.push({ borrado: 1 })
+       
+    }
+
+    utilSeq.buildConditionFilter(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
             models.bitacora.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.bitacora.belongsTo(models.user, { foreignKey: 'idusuario' });
             models.bitacora.count({
-                where: data
+                where: filter_one
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.bitacora.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    where: data,
+                    where: filter_one,
                     include: [
                         {
                             model: models.user},

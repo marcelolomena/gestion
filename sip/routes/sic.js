@@ -372,6 +372,14 @@ module.exports = function (passport) {
     router.route('/sic/documentowordfinal/:id/:gid')
         .get(isAuthenticated, estadosolicitudController.download);
 
+    router.route('/sic/criteriosevaluacion/:id/list')
+        .get(isAuthenticated, claseevaluaciontecnicaController.list2)
+
+    router.route('/sic/criteriosevaluacion/action')
+        .post(isAuthenticated, claseevaluaciontecnicaController.action2);
+
+    router.route('/sic/porcentajecriterios/:parentRowKey')
+        .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios);
    
     return router;
 }

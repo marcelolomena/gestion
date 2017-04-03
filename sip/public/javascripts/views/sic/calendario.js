@@ -69,7 +69,7 @@ var gridCalendario = {
                 {
                     name: 'fechareal', width: 150, align: 'left', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
+                    editable: true, editrules: { required: false },
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datepicker({
@@ -149,10 +149,8 @@ var gridCalendario = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeSubmit: function (postdata, formid) {
-                    if (postdata.idservicio == 0) {
-                        return [false, "Servicio: Campo obligatorio", ""];
-                    } if (postdata.idclasecriticidad == 0) {
-                        return [false, "Clase Criticidad : Campo obligatorio", ""];
+                    if (postdata.idtiporesponsable == 0) {
+                        return [false, "Tipo Responsable: Campo obligatorio", ""];
                     } else {
                         return [true, "", ""]
                     }
@@ -171,10 +169,8 @@ var gridCalendario = {
                     //$('input#notacriticidad', form).attr('readonly', 'readonly');
                 },
                 beforeSubmit: function (postdata, formid) {
-                    if (postdata.idrol == 0) {
-                        return [false, "Rol: Campo obligatorio", ""];
-                    } if (postdata.idresponsable == 0) {
-                        return [false, "Responsable : Campo obligatorio", ""];
+                    if (postdata.idtiporesponsable == 0) {
+                        return [false, "Tipo Responsable: Campo obligatorio", ""];
                     } else {
                         return [true, "", ""]
                     }

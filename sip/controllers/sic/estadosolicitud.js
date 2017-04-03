@@ -267,7 +267,7 @@ exports.download = function (req, res) {
 		`
 
 		sequelize.query('EXECUTE sic.laviejaconfiable ' + idsolicitud).then(function (imprimir) {
-			console.log(imprimir[0][0].resultado)
+			//console.log(imprimir[0][0].resultado)
 			result += imprimir[0][0].resultado
 			//logger.debug("ESTE ES EL RESULT " + result)
 
