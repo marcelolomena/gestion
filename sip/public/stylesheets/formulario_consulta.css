@@ -24,12 +24,34 @@
 	background-color: #ecf4f7;
 	margin-left: 30px;
 }
+.formSap #funcionalidad {
+	color: #036;
+	padding-right: 25px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: left;
+	border: 1px solid #7fb2cc;
+	background-color: #ecf4f7;
+	margin-left: 30px;
+}
 .formSap .titForm {
 	width: 50px;
 	float: left;
 }
 
 .formSap #proveedor {
+	color: #036;
+	padding-right: 25px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: left;
+	border: 1px solid #7fb2cc;
+	background-color: #ecf4f7;
+	margin-left: 10px;
+}
+.formSap #transaccion {
 	color: #036;
 	padding-right: 25px;
 	padding-left: 5px;
@@ -57,9 +79,33 @@
 	line-height: 24px;
 	padding-left: 5px;
 }
+.formFactura #usuario {
+	margin-left: 20px;
+	border: 1px solid #7fb2cc;
+	color: #036;
+	width: 155px;
+	height: 27px;
+	line-height: 24px;
+	padding-left: 5px;
+}
+.formFactura #idregistro {
+	margin-left: 0px;
+	border: 1px solid #7fb2cc;
+	color: #036;
+	width: 155px;
+	height: 27px;
+	line-height: 24px;
+	padding-left: 5px;
+}
+
 .titCajaPeriodo {
 	margin-left: 10px;
 }
+
+.titCajaRegistro {
+	margin-left: 10px;
+}
+
 .formFactura #fechaini {
 	border: 1px solid #7fb2cc;
 	color: #036;
@@ -105,7 +151,7 @@
 	padding-left: 20px;
 	float: left;
 	position: relative;
-	left: 590px;
+	left: 840px;
 	bottom: 37px;
 }
 
