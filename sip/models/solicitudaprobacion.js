@@ -161,14 +161,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    sap: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },   
-    tarea: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },    
   }, {
     schema: 'sip',timestamps: false,tableName: 'solicitudaprobacion'
   });

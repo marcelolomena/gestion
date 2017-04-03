@@ -131,6 +131,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'valores',
         key: 'id'
       }
+    },
+    colorestado: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'sic',timestamps: false,tableName: 'solicitudcotizacion'

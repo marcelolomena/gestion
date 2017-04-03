@@ -173,7 +173,7 @@ module.exports = (function () {
                             });
 
                         } else {
-                            throw new Error('Sin datos');
+                            throw new Error('No autorizado');
                         }
                     }).catch(function (err) {
                         logger.error(err)

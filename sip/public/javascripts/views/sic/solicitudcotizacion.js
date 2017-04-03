@@ -35,22 +35,7 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
     t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
     t1 += "</div>";
-    /*
-        t1 += "<div class='form-row'>";
-        t1 += "<div class='column-half' id='d_nombreinterlocutor1'>Nombre Interlocutor 1<span style='color:red'>*</span>{nombreinterlocutor1}</div>";
-        t1 += "<div class='column-half' id='d_correointerlocutor1'>Correo Interlocutor 1<span style='color:red'>*</span>{correointerlocutor1}</div>";
-        t1 += "</div>";
-    
-        t1 += "<div class='form-row'>";
-        t1 += "<div class='column-half' id='d_fonointerlocutor1'>Fono Interlocutor 1<span style='color:red'>*</span>{fonointerlocutor1}</div>";
-        t1 += "<div class='column-half' id='d_nombreinterlocutor2'>Nombre Interlocutor 2<span style='color:red'>*</span>{nombreinterlocutor2}</div>";
-        t1 += "</div>";
-    
-        t1 += "<div class='form-row'>";
-        t1 += "<div class='column-half' id='d_correointerlocutor2'>Correo Interlocutor 2<span style='color:red'>*</span>{correointerlocutor2}</div>";
-        t1 += "<div class='column-half' id='d_fonointerlocutor2'>Fono Interlocutor 2<span style='color:red'>*</span>{fonointerlocutor2}</div>";
-        t1 += "</div>";
-    */
+
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
     t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
@@ -63,6 +48,35 @@ $(document).ready(function () {
 
     var $grid = $("#gridMaster"), solicitudcotizacionModel = [
         { label: 'ID', name: 'id', key: true, hidden: true },
+        {
+            label: 'Estado',
+            name: 'colorestado',
+            index: 'colorestado', width: 60, align: "left", editable: true, search: false, editoptions: { size: 10 },
+            formatter: function (cellvalue, options, rowObject) {
+                var color = rowObject.colorestado;
+
+                if (color == 'Rojo') {
+                    color = 'red';
+                } else if (color == 'Verde') {
+                    color = 'green';
+                } else if (color == 'Amarillo') {
+                    color = 'yellow';
+                } else if (color == 'Azul') {
+                    color = 'blue';
+                } else if (color == 'indefinido') {
+                    color = 'gray';
+                }
+
+
+                return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
+
+
+
+
+
+            }
+        },
+        { label: 'N° RFP', name: 'numerorfp', width: 60, hidden: false, search: false, editable: true, formatter: 'integer' },
         {
             label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, sortable: false, editable: true, hidden: true,
             edittype: "select",
@@ -215,7 +229,7 @@ $(document).ready(function () {
 
         },
 
-        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, editrules: { required: true }, hidden: false },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -242,9 +256,9 @@ $(document).ready(function () {
         },
         { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 120, align: 'left', search: false, editable: true, hidden: false },
         {
-            label: 'Color',
+            label: 'Criticidad',
             name: 'colornota',
-            index: 'colornota', width: 50, align: "left", editable: true, search: false, editoptions: { size: 10 },
+            index: 'colornota', width: 80, align: "left", editable: true, search: false, editoptions: { size: 10 },
             formatter: function (cellvalue, options, rowObject) {
 
                 var solicitud = rowObject.id;
@@ -327,7 +341,7 @@ $(document).ready(function () {
         { label: 'C.Negociador', name: 'correonegociador', width: 130, hidden: true, search: false, editable: true },
         { label: 'F.Negociador', name: 'fononegociador', width: 100, hidden: true, search: false, editable: true },
         { label: 'D.Negociador', name: 'direccionnegociador', width: 150, hidden: true, search: false, editable: true },
-        { label: 'N° RFP', name: 'numerorfp', width: 80, hidden: false, search: false, editable: true, formatter: 'integer' },
+        
         {
             label: 'Fecha RFP', name: 'fechaenviorfp', width: 150, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
@@ -355,39 +369,7 @@ $(document).ready(function () {
                 }
             },
         },
-        /*
-        
-        {
-            label: 'Fecha RFP', name: 'fechaenviorfp',
-            width: 90, align: 'center', search: true, editable: true, hidden: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
-                }
-            }
-        },
-        */
-        /*
-        { label: 'Interlocutor 1', name: 'nombreinterlocutor1', width: 150, search: false, hidden: false, editable: true },
-        { label: 'Correo Interlocutor 1', name: 'correointerlocutor1', width: 150, search: false, hidden: false, editable: true },
-        { label: 'Fono Interlocutor 1', name: 'fonointerlocutor1', width: 150, search: false, hidden: false, editable: true },
-        { label: 'Interlocutor 2', name: 'nombreinterlocutor2', width: 150, search: false, hidden: false, editable: true },
-        { label: 'Correo Interlocutor 2', name: 'correointerlocutor2', width: 150, search: false, hidden: false, editable: true },
-        { label: 'Fono Interlocutor 2', name: 'fonointerlocutor2', width: 150, search: false, hidden: false, editable: true },
-        */
+       
         {
             name: 'idtipo', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -477,23 +459,6 @@ $(document).ready(function () {
                     if (item.glosarol === 'Negociador SIC') {
                         $("#add_" + thisId).addClass('ui-disabled');
                         $("#add_gridMaster").hide()
-                        /*
-                        $grid.jqGrid("showCol", "codigosolicitud")
-                        $grid.jqGrid("showCol", "negociador")
-                        $grid.jqGrid("showCol", "correonegociador")
-                        $grid.jqGrid("showCol", "fononegociador")
-                        $grid.jqGrid("showCol", "direccionnegociador")
-                        $grid.jqGrid("showCol", "numerorfp")
-                        $grid.jqGrid("showCol", "fechaenviorfp")
-                        $grid.jqGrid("showCol", "nombreinterlocutor1")
-                        $grid.jqGrid("showCol", "correointerlocutor1")
-                        $grid.jqGrid("showCol", "fonointerlocutor1")
-                        $grid.jqGrid("showCol", "nombreinterlocutor2")
-                        $grid.jqGrid("showCol", "correointerlocutor2")
-                        $grid.jqGrid("showCol", "fonointerlocutor2")
-                        $grid.jqGrid("showCol", "grupo")
-                        $grid.jqGrid("showCol", "tipo")
-                        */
                     }
                 });
             });
@@ -522,20 +487,6 @@ $(document).ready(function () {
                 } else if (parseInt(postdata.idtecnico) == 0) {
                     return [false, "Técnico: Debe escoger un valor", ""];
                 } else {
-                    /*
-                    if (postdata.fonointerlocutor1.trim().length == 0) {
-                        postdata.fonointerlocutor1 = null
-                    }
-                    if (postdata.fonointerlocutor2.trim().length == 0) {
-                        postdata.fonointerlocutor2 = null
-                    }
-                    if (postdata.fechaenviorfp.trim().length == 0) {
-                        postdata.fechaenviorfp = null
-                    }
-                    if (postdata.fononegociador.trim().length == 0) {
-                        postdata.fononegociador = null
-                    }
-*/
                     return [true, "", ""]
                 }
 
@@ -609,13 +560,6 @@ $(document).ready(function () {
                         }
                     });
 
-
-
-
-
-
-
-
                 }, 550);
             }
 
@@ -644,21 +588,6 @@ $(document).ready(function () {
                 } else if (postdata.descripcion.trim().length == 0) {
                     return [false, "Descripción: Debe ingresar una descripción", ""];
                 } else {
-                    /*postdata.codigosolicitud = null;
-                    postdata.idnegociador = null;
-                    postdata.correonegociador = null;
-                    postdata.fononegociador = null;
-                    postdata.direccionnegociador = null;
-                    postdata.numerorfp = null;
-                    postdata.fechaenviorfp = null;
-                    postdata.nombreinterlocutor1 = null;
-                    postdata.correointerlocutor1 = null;
-                    postdata.fonointerlocutor1 = null;
-                    postdata.nombreinterlocutor2 = null;
-                    postdata.correointerlocutor2 = null;
-                    postdata.fonointerlocutor2 = null;
-                    postdata.idtipo = null;
-                    postdata.idgrupo = null;*/
 
                     return [true, "", ""]
                 }
@@ -739,11 +668,11 @@ $(document).ready(function () {
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
+        tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
+        tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
         tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
-        tabs += "<li><a href='/sic/foro/" + parentRowKey + "' data-target='#foro' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
-        tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
-        tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
+        tabs += "<li><a href='/sic/foro/" + parentRowKey + "' data-target='#foro' id='foro_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#criterios' id='criterios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Criterios</a></li>"
         tabs += "<li><a href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
@@ -754,11 +683,11 @@ $(document).ready(function () {
 
         tabs += "<div class='tab-content'>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
+        tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
+        tabs += "<div class='tab-pane' id='calendario'><table id='calendario_t_" + parentRowKey + "'></table><div id='navGridCal'></div></div>"
         tabs += "<div class='tab-pane' id='documentos'><table id='documentos_t_" + parentRowKey + "'></table><div id='navGrid'></div></div>"
         tabs += "<div class='tab-pane' id='servicios'><table id='servicios_t_" + parentRowKey + "'></table><div id='navGridServ'></div></div>"
         tabs += "<div class='tab-pane' id='foro'><table id='foro_t_" + parentRowKey + "'></table><div id='navGridForo'></div></div>"
-        tabs += "<div class='tab-pane' id='calendario'><table id='calendario_t_" + parentRowKey + "'></table><div id='navGridCal'></div></div>"
-        tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
         tabs += "<div class='tab-pane' id='clausulas'><div class='container-fluid'><table id='clausulas_t_" + parentRowKey + "'></table><div id='navGridClau'></div></div></div>"
         tabs += "<div class='tab-pane' id='criterios'><table id='criterios_t_" + parentRowKey + "'></table><div id='navGridCrit'></div></div>"
         tabs += "<div class='tab-pane' id='anexos'><div class='container-fluid'><table id='anexos_t_" + parentRowKey + "'></table><div id='navGridAnexos'></div></div></div>"
