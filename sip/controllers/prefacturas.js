@@ -203,7 +203,6 @@ exports.solicitudesaprobadas = function (req, res) {
             count(*) cantidad
             FROM sip.solicitudaprobacion a 
             where a.periodo= :periodo and a.idprefactura is null 
-            a.sap is null
             and a.aprobado=1 ` + condition
 
     var sql = `
@@ -218,7 +217,6 @@ exports.solicitudesaprobadas = function (req, res) {
 					join sip.servicio g on a.idservicio= g.id 
                     LEFT JOIN sip.parametro h ON a.idcalificacion = h.id
             where a.periodo= :periodo and a.idprefactura is null 
-            a.sap is null
             and a.aprobado=1 ` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
@@ -413,13 +411,27 @@ exports.anular = function (req, res) {
                     }, { transaction: t });
 
                 promises.push(onePromise);
-
-                var twoPromise = models.detallecompromiso.update({
-                    saldopago: null,
-                    estadopago: null
-                }, {
-                        where: { id: solicitudaprobacion[i].iddetallecompromiso }
-                    }, { transaction: t });
+                var sap = solicitudaprobacion[i].sap;
+                var twoPromise;
+                console.log("***SAP:"+sap);
+                if (sap) {
+                    console.log("***SAP else");
+                    twoPromise = models.flujopagoenvuelo.update({
+                        saldopago: null,
+                        estadopago: null
+                    }, {
+                            where: { id: solicitudaprobacion[i].iddetallecompromiso }
+                        }, { transaction: t });    
+                } else {
+                    console.log("***SAP dentro");
+                    twoPromise = models.detallecompromiso.update({
+                        saldopago: null,
+                        estadopago: null
+                    }, {
+                            where: { id: solicitudaprobacion[i].iddetallecompromiso }
+                        }, { transaction: t });                    
+                                    
+                }
 
                 promises.push(twoPromise);
             } //cierro for

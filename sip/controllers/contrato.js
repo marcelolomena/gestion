@@ -3,6 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
 
 exports.excel = function (req, res) {
   var page = req.query.page;
@@ -243,8 +244,23 @@ exports.action = function (req, res) {
         codigoart: req.body.codigoart,
         program_id: program_id,
         borrado: 1
-      }).then(function (contrato) {
-        res.json({ error_code: 0 });
+      }).then(function (contratonew) {
+				logtransaccion.registrar(
+					4,
+					contratonew.id,
+					'insert',
+					req.session.passport.user,
+					'contrato',
+          contratonew,
+					function (err, data) {
+						if (!err) {
+							res.json({ error_code: 0 });
+						} else {
+							logger.error(err)
+							return res.json({ error_code: 1 });
+						}
+					});        
+        
       }).catch(function (err) {
         logger.error(err)
         res.json({ error_code: 1 });
@@ -252,48 +268,85 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.contrato.update({
-        //tipocontrato: req.body.tipocontrato,
-        tipodocumento: req.body.tipodocumento,
-        solicitudcontrato: req.body.solicitudcontrato,
-        idtiposolicitud: req.body.idtiposolicitud,
-        tiposolicitud: req.body.tiposolicitud,
-        idestadosol: req.body.idestadosol,
-        estadosolicitud: req.body.estadosolicitud,
-        numero: req.body.numero,
-        nombre: req.body.nombre,
-        idproveedor: req.body.idproveedor,
-        uidpmo: req.body.uidpmo,
-        pmoresponsable: req.body.pmoresponsable,
-        idcontactofacturacion:req.body.idcontactofacturacion,
-        codigoart: req.body.codigoart,
-        program_id: program_id
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err)
-          res.json({ error_code: 1 });
-        });
+				logtransaccion.registrar(
+					5,
+					req.body.id,
+					'update',
+					req.session.passport.user,
+					models.contrato,
+          req.body,
+					function (err, idlog) {
+						if (!err) {    
+              models.contrato.update({
+                //tipocontrato: req.body.tipocontrato,
+                tipodocumento: req.body.tipodocumento,
+                solicitudcontrato: req.body.solicitudcontrato,
+                idtiposolicitud: req.body.idtiposolicitud,
+                tiposolicitud: req.body.tiposolicitud,
+                idestadosol: req.body.idestadosol,
+                estadosolicitud: req.body.estadosolicitud,
+                numero: req.body.numero,
+                nombre: req.body.nombre,
+                idproveedor: req.body.idproveedor,
+                uidpmo: req.body.uidpmo,
+                pmoresponsable: req.body.pmoresponsable,
+                idcontactofacturacion:req.body.idcontactofacturacion,
+                codigoart: req.body.codigoart,
+                program_id: program_id
+              }, {
+                  where: {
+                    id: req.body.id
+                  }
+                }).then(function (contrato) {
+                  console.log("****IDLog:"+idlog+"Contrato:"+JSON.stringify(contrato));
+                  logtransaccion.actualizar(idlog, req.body.id, models.contrato,
+                  function (err, idlog) {
+                    if (!err) {
+                      res.json({ error_code: 0 });
+                    } else {
+                      logger.error(err)
+                      return res.json({ error_code: 1 });
+                    }
+                  });  
+                  //res.json({ error_code: 0 });
+                }).catch(function (err) {
+                  logger.error(err)
+                  res.json({ error_code: 1 });
+                });
+						} else {
+							logger.error(err)
+							return res.json({ error_code: 1 });
+						}
+					});                  
       break;
     case "del":
-      models.contrato.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-      });
-
+				logtransaccion.registrar(
+					6,
+					req.body.id,
+					'delete',
+					req.session.passport.user,
+					models.contrato,
+          req.body,
+					function (err, data) {    
+            if (!err) {  
+              models.contrato.destroy({
+                where: {
+                  id: req.body.id
+                }
+              }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                  logger.debug('Deleted successfully');
+                }
+                res.json({ error_code: 0 });
+              }).catch(function (err) {
+                logger.error(err)
+                res.json({ error_code: 1 });
+              });
+						} else {
+							logger.error(err)
+							return res.json({ error_code: 1 });
+						}
+					});
       break;
 
   }

@@ -237,14 +237,26 @@ exports.anular = function (req, res) {
                 }, { transaction: t });
 
             promises.push(onePromise);
-
-            var twoPromise = models.detallecompromiso.update({
-                saldopago: null,
-                estadopago: null
-            }, {
-                    where: { id: solicitudaprobacion.iddetallecompromiso }
-                }, { transaction: t });
-
+            var sap = solicitudaprobacion.sap;
+            console.log("***SAP:"+sap);
+            var twoPromise
+             if (sap) {
+                console.log("***SAP else");
+                twoPromise = models.flujopagoenvuelo.update({
+                    saldopago: null,
+                    estadopago: null
+                }, {
+                        where: { id: solicitudaprobacion.iddetallecompromiso }
+                    }, { transaction: t });                 
+             } else {
+                console.log("***SAP dentro");
+                twoPromise = models.detallecompromiso.update({
+                    saldopago: null,
+                    estadopago: null
+                }, {
+                        where: { id: solicitudaprobacion.iddetallecompromiso }
+                    }, { transaction: t });                                  
+             }
             promises.push(twoPromise);
 
             return Promise.all(promises);
