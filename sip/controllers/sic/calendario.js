@@ -14,12 +14,32 @@ exports.action = function (req, res) {
     var fechareal = null;
 
     if (action != "del") {
-        if (req.body.fechaesperada != "" )
-            fechaesperada = req.body.fechaesperada.split("-").reverse().join("-")
+        if (req.body.fechaesperada != "")
+            var d = new Date(req.body.fechaesperada),
+                dformat = [d.getMonth() + 1,
+                d.getDate(),
+                d.getFullYear()].join('-') + ' ' +
+                    [d.getHours(),
+                    d.getMinutes(),
+                    d.getSeconds()].join(':');
+
+        fechaesperada = dformat
+        //fechaesperada = req.body.fechaesperada.split("-").reverse().join("-")
+        logger.debug("la fecha rql1: " + fechaesperada)
 
         if (req.body.fechareal != "")
-            fechareal = req.body.fechareal.split("-").reverse().join("-")
-        
+            //fechareal = req.body.fechareal.split("-").reverse().join("-")
+            var d2 = new Date(req.body.fechareal),
+                dformat2 = [d2.getMonth() + 1,
+                d2.getDate(),
+                d2.getFullYear()].join('-') + ' ' +
+                    [d2.getHours(),
+                    d2.getMinutes(),
+                    d2.getSeconds()].join(':');
+
+        fechareal = dformat2
+        logger.debug("la fecha rql2: " + fechareal)
+
     }
 
     switch (action) {
@@ -207,7 +227,7 @@ exports.gettiporesponsable = function (req, res) {
 
     sequelize.query(sql)
         .spread(function (rows) {
-        return res.json(rows);
+            return res.json(rows);
         });
 
 };
