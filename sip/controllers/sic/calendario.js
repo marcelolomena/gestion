@@ -26,16 +26,16 @@ exports.action = function (req, res) {
         fechaesperada = dformat
         //fechaesperada = req.body.fechaesperada.split("-").reverse().join("-")
         logger.debug("la fecha rql1: " + fechaesperada)
-
-        if (req.body.fechareal != "")
-            //fechareal = req.body.fechareal.split("-").reverse().join("-")
-            var d2 = new Date(req.body.fechareal),
-                dformat2 = [d2.getMonth() + 1,
-                d2.getDate(),
-                d2.getFullYear()].join('-') + ' ' +
-                    [d2.getHours(),
-                    d2.getMinutes(),
-                    d2.getSeconds()].join(':');
+    }
+    if (req.body.fechareal != "") {
+        //fechareal = req.body.fechareal.split("-").reverse().join("-")
+        var d2 = new Date(req.body.fechareal),
+            dformat2 = [d2.getMonth() + 1,
+            d2.getDate(),
+            d2.getFullYear()].join('-') + ' ' +
+                [d2.getHours(),
+                d2.getMinutes(),
+                d2.getSeconds()].join(':');
 
         fechareal = dformat2
         logger.debug("la fecha rql2: " + fechareal)
