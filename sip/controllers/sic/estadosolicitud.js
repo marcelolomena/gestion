@@ -41,6 +41,29 @@ exports.action = function (req, res) {
 							return res.json({ id: estadosolicitud.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
 						}
 					});
+				models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
+				models.estadosolicitud.findAll({
+					order: 'fecha DESC',
+					where: {
+						idsolicitudcotizacion: req.body.idsolicitudcotizacion
+					},
+					include: [
+						{ model: models.valores }
+					]
+				}).then(function (estadosolicitud) {
+
+					//logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
+					models.solicitudcotizacion.update({
+						colorestado: estadosolicitud[0].valore.nombre,
+					}, {
+							where: {
+								id: req.body.idsolicitudcotizacion
+							}
+						})
+
+
+				});
+
 
 			}).catch(function (err) {
 				logger.error(err.message)
@@ -63,12 +86,36 @@ exports.action = function (req, res) {
 							idtipodocumento: req.body.idtipodocumento,
 							idcolor: req.body.idcolor,
 							comentario: req.body.comentario,
-							fecha: fecha,
+							//fecha: fecha,
 						}, {
 								where: {
 									id: req.body.id
 								}
 							}).then(function (estadosolicitud) {
+								models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
+								models.estadosolicitud.findAll({
+									order: 'fecha DESC',
+									where: {
+										idsolicitudcotizacion: req.body.idsolicitudcotizacion
+									},
+									include: [
+										{ model: models.valores }
+									]
+								}).then(function (estadosolicitud) {
+
+									logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
+									models.solicitudcotizacion.update({
+										colorestado: estadosolicitud[0].valore.nombre,
+									}, {
+											where: {
+												id: req.body.idsolicitudcotizacion
+											}
+										})
+
+
+								});
+
+
 								res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
 							}).catch(function (err) {
 								logger.error(err)
@@ -79,6 +126,7 @@ exports.action = function (req, res) {
 						return res.json({ message: err.message, success: false });
 					}
 				});
+
 
 			break;
 		case "del":
@@ -104,6 +152,33 @@ exports.action = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (rowDeleted) {
+
+								models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
+								models.estadosolicitud.findAll({
+									order: 'fecha DESC',
+									where: {
+										idsolicitudcotizacion: req.body.idsolicitudcotizacion
+									},
+									include: [
+										{ model: models.valores }
+									]
+								}).then(function (estadosolicitud) {
+
+									var nuevocolor = "Rojo"
+									if (estadosolicitud[0] != undefined) {
+										logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
+										nuevocolor = estadosolicitud[0].valore.nombre
+									}
+									models.solicitudcotizacion.update({
+										colorestado: nuevocolor
+									}, {
+											where: {
+												id: req.body.idsolicitudcotizacion
+											}
+										})
+
+
+								});
 								return res.json({ message: '', success: true });
 							}).catch(function (err) {
 								logger.error(err)

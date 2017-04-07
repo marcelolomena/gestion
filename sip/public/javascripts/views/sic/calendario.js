@@ -1,9 +1,13 @@
 //doc.js
 var gridCalendario = {
 
+
+
     renderGrid: function (loadurl, parentRowKey, targ) {
         //var $gridTab = $(targ + "_t")
         var $gridTab = $(targ + "_t_" + parentRowKey)
+
+
 
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -41,19 +45,17 @@ var gridCalendario = {
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
                     name: 'fechaesperada', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i' },
                     editable: true, editrules: { required: true },
                     searchoptions: {
                         dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
+                            $(el).datetimepicker({
+                                format: "dd-mm-yyyy hh:ii",
+                                weekStart: 1,
+                                language: "es",
                                 autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
+                                todayHighlight: true,
+                                startDate: todaysDate
                             });
                         },
                         sopt: ["eq", "le", "ge"]
@@ -61,26 +63,31 @@ var gridCalendario = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                            //$(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datetimepicker({
+                                format: "dd-mm-yyyy hh:ii",
+                                weekStart: 1,
+                                language: "es",
+                                autoclose: true,
+                                todayHighlight: true
+
+                            });
                         }
                     },
                 },
                 {
                     name: 'fechareal', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i' },
                     editable: true, editrules: { required: false },
                     searchoptions: {
                         dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
+                            $(el).datetimepicker({
+                                format: "dd-mm-yyyy hh:ii",
+                                weekStart: 1,
+                                language: "es",
                                 autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
+                                todayHighlight: true,
+                                startDate: todaysDate
                             });
                         },
                         sopt: ["eq", "le", "ge"]
@@ -88,8 +95,14 @@ var gridCalendario = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                            //$(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datetimepicker({
+                                format: "dd-mm-yyyy hh:ii",
+                                weekStart: 1,
+                                language: "es",
+                                autoclose: true,
+                                todayHighlight: true
+                            });
                         }
                     },
                 },
@@ -138,6 +151,7 @@ var gridCalendario = {
             viewrecords: true,
             caption: "Calendario"
         });
+
         $gridTab.jqGrid('navGrid', '#navGridCal', { edit: true, add: true, del: true, search: false },
             {
                 editCaption: "Modifica Fecha",
@@ -174,9 +188,36 @@ var gridCalendario = {
                     } else {
                         return [true, "", ""]
                     }
+
                 },
                 onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
+                    var fechaespe = $("input#fechaesperada").val()
+                    console.log("esta es la fecha 1:" +fechaespe)
+                    var d = new Date(fechaespe)
+                    var dformat = [d.getDate(),
+                    d.getMonth() + 1,
+                    d.getFullYear()].join('-') + ' ' +
+                        [d.getHours(),
+                        d.getMinutes(),
+                        d.getSeconds()].join(':');
+                    var fechaintermedia = new Date(dformat + ' UTC')
+                    console.log("esta es la fecha 1:" +fechaintermedia)
+                    fechaespe = fechaintermedia
+                    console.log("esta es la fecha 1:" +fechaespe)
+                    var fecharea = $("input#fechareal").val()
+                    console.log("esta es la fecha 1:" +fecharea)
+                    var d2 = new Date(fecharea)
+                    var dformat2 = [d2.getDate(),
+                    d2.getMonth() + 1,
+                    d2.getFullYear()].join('-') + ' ' +
+                        [d2.getHours(),
+                        d2.getMinutes(),
+                        d2.getSeconds()].join(':');
+                    var fechaintermedia2 = new Date(dformat2 + ' UTC')
+                    fecharea = fechaintermedia2
+
+
+                    return { idsolicitudcotizacion: parentRowKey, fechanueva: fechaespe, fechanuevar: fecharea };
                 }
 
             },

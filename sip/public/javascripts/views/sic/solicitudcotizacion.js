@@ -76,7 +76,7 @@ $(document).ready(function () {
 
             }
         },
-        { label: 'N° RFP', name: 'numerorfp', width: 60, hidden: false, search: false, editable: true, formatter: 'integer' },
+        { label: 'N° RFP', name: 'numerorfp', width: 60, hidden: false, search: false, editable: true, formatter: 'integer',editrules: { required: true } },
         {
             label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, sortable: false, editable: true, hidden: true,
             edittype: "select",
@@ -433,8 +433,8 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         //width: 1500,
-        sortname: 'descripcion',
-        sortorder: "asc",
+        sortname: 'numerorfp',
+        sortorder: "desc",
         shrinkToFit: false,
         forceFit: true,
         viewrecords: true,
@@ -676,7 +676,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
         tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#criterios' id='criterios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Criterios</a></li>"
         tabs += "<li><a href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
-        tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas Proveedor</a></li>"
+        tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas al Proveedor</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         //tabs += "<li><a href='/sic/genrfc/" + parentRowKey + "' data-target='#genrfc' id='genrfc_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Generar RFC</a></li>"
         tabs += "</ul>"
