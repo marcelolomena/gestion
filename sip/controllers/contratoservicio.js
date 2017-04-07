@@ -2,6 +2,8 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
+
 exports.action = function (req, res) {
     var action = req.body.oper;
     var valorcuota = req.body.valorcuota
@@ -15,153 +17,36 @@ exports.action = function (req, res) {
     var upsap = "";
     if (sap != null) {
         sapcampos = ", sap, tarea, codigoart";
-        sapdatos =  ", "+req.body.sap+ ", '"+req.body.tarea+"',"+req.body.codigoart;
-        upsap = ", sap="+req.body.sap+ ", tarea='"+req.body.tarea+"', codigoart="+req.body.codigoart;
-    } 
-        
-
-
-    switch (action) {
-        case "add":
-            var sql = "DECLARE @ctacontable INT; " +
-                "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
-                "DECLARE @estadocto VARCHAR(100); "+
-                "SELECT @estadocto=nombre FROM sip.parametro WHERE id="+req.body.idestadocto+"; "+
-                "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, " +
-                "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
-                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, estadocontrato, " +
-                "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
-                "diferido, saldopresupuesto, tipogeneracion, comentario "+sapcampos+") "+
-                "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
-                req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
-                req.body.idplazocontrato + "," + req.body.idcondicion + "," +
-                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",@estadocto,'" +
-                req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
-                req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
-                req.body.tipogeneracion + ",'" + req.body.comentario + "'"+sapdatos+"); " +
-                "DECLARE @id INT;" +
-                "select @id = @@IDENTITY; " +
-                "select @id as id;";
-                console.log("sql:"+sql);
-            sequelize.query(sql).spread(function (contratosrv) {
-                logger.debug("------------>cc:" + contratosrv);
-                logger.debug("------------>ID:" + contratosrv[0].id)
-                if (req.body.tipogeneracion == 1) {
-                    var cuotas = calculoCuotas(
-                        req.body.valorcuota,
-                        req.body.numerocuotas,
-                        req.body.mesesentrecuotas,
-                        req.body.periodoprimeracuota,
-                        req.body.impuesto,
-                        req.body.factorimpuesto,
-                        req.body.diferido,
-                        req.body.periodoinicioservicio
-                    );
-                    var mesini = req.body.periodoinicioservicio;
-                    var mescuota = req.body.periodoprimeracuota;
-                    var inicio = mesini < mescuota ? meisini : mescuota;
-                    insertaPeriodos(contratosrv[0].id, cuotas, inicio, function (err, compromisos) {
-                        logger.debug("***Periodos Creados");
-                    });
-                }
-                res.json({ error_code: 0 });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error_code: 1 });
-            });
-
-            break;
-        case "edit":
-            var anexo = req.body.anexo == "" ? "ND" : req.body.anexo;
-
-            var sql = "DECLARE @ctacontable INT; " +
-                "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
-                "DECLARE @estadocto VARCHAR(100); "+
-                "SELECT @estadocto=nombre FROM sip.parametro WHERE id="+req.body.idestadocto+"; "+                
-                "UPDATE sip.detalleserviciocto set anexo='" + anexo + "', idcui=" + req.body.idcui + ", idservicio=" + req.body.idservicio +
-                ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
-                "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + req.body.valorcuota + ", valortotal=" + req.body.valorcuota +
-                ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
-                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + ", idcontactoproveedor=" + req.body.idcontactoproveedor +
-                ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
-                ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
-                ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
-                ", comentario='" + req.body.comentario + "' " +upsap+" "+
-                "WHERE id=" + req.body.id;
-            console.log("sqlup:" + sql);
-            sequelize.query(sql).spread(function (contratosrv) {
-                if (req.body.tipogeneracion == 1) {
-                    var cuotas = calculoCuotas(
-                        req.body.valorcuota,
-                        req.body.numerocuotas,
-                        req.body.mesesentrecuotas,
-                        req.body.periodoprimeracuota,
-                        req.body.impuesto,
-                        req.body.factorimpuesto,
-                        req.body.diferido,
-                        req.body.periodoinicioservicio
-                    );
-                    var mesini = req.body.periodoinicioservicio;
-                    var mescuota = req.body.periodoprimeracuota;
-                    logger.debug("***mesini:" + mesini + ", mescuota:" + mescuota);
-                    var inicio = mesini < mescuota ? mesini : mescuota;
-                    var result = borraPeriodos(req.body.id, function (nada) {
-                        logger.debug("*----NDADDD**:"+nada);
-                        if (nada != '10') {
-                            logger.debug("***Parametros:" + req.body.id + "," + cuotas + "," + inicio);
-                            actualizaPeriodos(req.body.id, cuotas, inicio, function (err, compromisos) {
-                                logger.debug("***Periodos Actualizados");
-                            });
-                            res.json({ error_code: 0 });
-                        } else {
-                            res.json({ error_code: 10 });
-                        }
-                    });
-                    logger.debug("***result:"+result);
-                } else {
-                    var result = borraPeriodos(req.body.id, function (nada) {
-                        logger.debug("*----NDADDD**:"+nada);
-                        if (nada != "10") {
-                            res.json({ error_code: 0 });
-                        } else{
-                            res.json({ error_code: 10 });
-                        }
-                    });
-                    logger.debug("***result:"+result);
-                }
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error_code: 1 });
-            });
-
-            break;
-        case "del":
-            models.detallecompromiso.destroy({
-                where: {
-                    iddetalleserviciocto: req.body.id
-                }
-            }).then(function (rowDeleted) {
-
-                models.detalleserviciocto.destroy({
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (rowDeleted) {
-                    res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ error_code: 1 });
-                });
-
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error_code: 1 });
-            });
-
-            break;
+        sapdatos = ", " + req.body.sap + ", '" + req.body.tarea + "'," + req.body.codigoart;
+        upsap = ", sap=" + req.body.sap + ", tarea='" + req.body.tarea + "', codigoart=" + req.body.codigoart;
     }
 
-
+    var borraPeriodos = function (idservicio, callback) {
+        logger.debug("*Brrando Periodos**:");
+        var sql0 = 'SELECT count(*) as cant from sip.detallecompromiso a JOIN sip.solicitudaprobacion b ON a.id=b.iddetallecompromiso ' +
+            'where iddetalleserviciocto=' + idservicio;
+        sequelize.query(sql0).spread(function (results) {
+            if (results[0].cant == 0) {
+                var sqldel = "delete from sip.detallecompromiso where iddetalleserviciocto=" + idservicio;
+                var borraperiodos = sequelize.query(sqldel)
+                    .spread(function (results) {
+                        logger.debug("*Periodos borrados**:");
+                        callback("*");
+                    }).catch(function (err) {
+                        //logger.error(err)
+                        logger.debug("*ERROR en borraPeriodos**:");
+                        callback("10");
+                    });
+            } else {
+                logger.debug("*ERROR en borraPeriodos**:");
+                callback("10");
+            }
+        }).catch(function (err) {
+            logger.debug("*ERROR en borraPeriodos**:");
+            callback("10");
+        });
+    }
+    
     var insertaPeriodos = function (idservicio, cuotas, mesini, callback) {
         logger.debug("insertaPeriodos:" + idservicio + "," + cuotas + " mini:" + mesini);
         models.sequelize.transaction({ autocommit: true }, function (t) {
@@ -207,19 +92,6 @@ exports.action = function (req, res) {
             logger.error(err)
             return err;
         });
-
-    }
-
-    var borraPeriodos = function (idservicio, callback) {
-        var sqldel = "delete from sip.detallecompromiso where iddetalleserviciocto=" + idservicio;
-        var borraperiodos = sequelize.query(sqldel)
-            .spread(function (results) {
-                callback("*");
-            }).catch(function (err) {
-                //logger.error(err)
-                logger.debug("*ERROR en borraPeriodos**:");
-                callback("10");
-            });
     }
 
     var actualizaPeriodos = function (idservicio, cuotas, mesini, callback) {
@@ -228,7 +100,7 @@ exports.action = function (req, res) {
 
             var promises = []
             var d = new Date();
-            var anio = d.getFullYear()         
+            var anio = d.getFullYear()
             var mes = 1; //parseInt(mesini);
             var mesidx = 0;
             //borra periodos anteriores
@@ -274,9 +146,200 @@ exports.action = function (req, res) {
             logger.error(err)
             return err;
         });
+    }    
 
+    switch (action) {
+        case "add":
+            var sql = "DECLARE @ctacontable INT; " +
+                "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
+                "DECLARE @estadocto VARCHAR(100); " +
+                "SELECT @estadocto=nombre FROM sip.parametro WHERE id=" + req.body.idestadocto + "; " +
+                "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, " +
+                "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
+                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, estadocontrato, " +
+                "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
+                "diferido, saldopresupuesto, tipogeneracion, comentario " + sapcampos + ") " +
+                "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
+                req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
+                req.body.idplazocontrato + "," + req.body.idcondicion + "," +
+                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",@estadocto,'" +
+                req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
+                req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
+                req.body.tipogeneracion + ",'" + req.body.comentario + "'" + sapdatos + "); " +
+                "DECLARE @id INT;" +
+                "select @id = @@IDENTITY; " +
+                "select @id as id;";
+            console.log("sql:" + sql);
+            sequelize.query(sql).spread(function (contratosrv) {
+                logger.debug("------------>cc:" + contratosrv);
+                logger.debug("------------>ID:" + contratosrv[0].id)
+                if (req.body.tipogeneracion == 1) {
+                    var cuotas = calculoCuotas(
+                        req.body.valorcuota,
+                        req.body.numerocuotas,
+                        req.body.mesesentrecuotas,
+                        req.body.periodoprimeracuota,
+                        req.body.impuesto,
+                        req.body.factorimpuesto,
+                        req.body.diferido,
+                        req.body.periodoinicioservicio
+                    );
+                    var mesini = req.body.periodoinicioservicio;
+                    var mescuota = req.body.periodoprimeracuota;
+                    var inicio = mesini < mescuota ? meisini : mescuota;
+                    insertaPeriodos(contratosrv[0].id, cuotas, inicio, function (err, compromisos) {
+                        logger.debug("***Periodos Creados");
+                        models.detalleserviciocto.findAll({
+                            where: { id: contratosrv[0].id },
+                        }).then(function (registro) {
+                            logtransaccion.registrar(
+                                7,
+                                contratosrv[0].id,
+                                'insert',
+                                req.session.passport.user,
+                                'contrato',
+                                registro,
+                                function (err, data) {
+                                    if (!err) {
+                                        return res.json({ error_code: 0 });
+                                    } else {
+                                        logger.error(err)
+                                        return res.json({ error_code: 1 });
+                                    }
+                                });
+                        });
+                    });
+                }
+                //res.json({ error_code: 0 });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ error_code: 1 });
+            });
+
+            break;
+        case "edit":
+            var anexo = req.body.anexo == "" ? "ND" : req.body.anexo;
+
+            var sql = "DECLARE @ctacontable INT; " +
+                "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
+                "DECLARE @estadocto VARCHAR(100); " +
+                "SELECT @estadocto=nombre FROM sip.parametro WHERE id=" + req.body.idestadocto + "; " +
+                "UPDATE sip.detalleserviciocto set anexo='" + anexo + "', idcui=" + req.body.idcui + ", idservicio=" + req.body.idservicio +
+                ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
+                "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + req.body.valorcuota + ", valortotal=" + req.body.valorcuota +
+                ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
+                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + ", idcontactoproveedor=" + req.body.idcontactoproveedor +
+                ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
+                ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
+                ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
+                ", comentario='" + req.body.comentario + "' " + upsap + " " +
+                "WHERE id=" + req.body.id;
+            console.log("sqlup:" + sql);
+            logtransaccion.registrar(
+                8,
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                models.detalleserviciocto,
+                req.body,
+                function (err, idlog) {
+                    if (!err) {
+                        sequelize.query(sql).spread(function (contratosrv) {
+                            if (req.body.tipogeneracion == 1) {
+                                var cuotas = calculoCuotas(
+                                    req.body.valorcuota,
+                                    req.body.numerocuotas,
+                                    req.body.mesesentrecuotas,
+                                    req.body.periodoprimeracuota,
+                                    req.body.impuesto,
+                                    req.body.factorimpuesto,
+                                    req.body.diferido,
+                                    req.body.periodoinicioservicio
+                                );
+                                var mesini = req.body.periodoinicioservicio;
+                                var mescuota = req.body.periodoprimeracuota;
+                                logger.debug("***mesini:" + mesini + ", mescuota:" + mescuota);
+                                var inicio = mesini < mescuota ? mesini : mescuota;
+                                var result = borraPeriodos(req.body.id, function (nada) {
+                                    logger.debug("*----NDADDD**:" + nada);
+                                    if (nada != '10') {
+                                        logger.debug("***Parametros:" + req.body.id + "," + cuotas + "," + inicio);
+                                        actualizaPeriodos(req.body.id, cuotas, inicio, function (err, compromisos) {
+                                            logger.debug("***Periodos Actualizados");
+                                            logtransaccion.actualizar(idlog, req.body.id, models.detalleserviciocto,
+                                                function (err, idlog) {
+                                                    if (!err) {
+                                                        return res.json({ error_code: 0 });
+                                                    } else {
+                                                        logger.error(err)
+                                                        return res.json({ error_code: 1 });
+                                                    }
+                                                });
+                                        });
+                                        //res.json({ error_code: 0 });
+                                    } else {
+                                        res.json({ error_code: 10 });
+                                    }
+                                });
+                                logger.debug("***result:" + result);
+                            } else {
+                                var result = borraPeriodos(req.body.id, function (nada) {
+                                    logger.debug("*----NDADDD**:" + nada);
+                                    if (nada != "10") {
+                                        res.json({ error_code: 0 });
+                                    } else {
+                                        res.json({ error_code: 10 });
+                                    }
+                                });
+                                logger.debug("***result:" + result);
+                            }
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ error_code: 1 });
+                        });
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
+            break;
+        case "del":
+            console.log("Borrando servicio");
+            var result = borraPeriodos(req.body.id, function (nada) {
+                if (nada != "10") {
+                    console.log("Periodos borrados");
+                    logtransaccion.registrar(
+                        9,
+                        req.body.id,
+                        'delete',
+                        req.session.passport.user,
+                        models.detalleserviciocto,
+                        req.body,
+                        function (err, data) {
+                            if (!err) {
+                                models.detalleserviciocto.destroy({
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (rowDeleted) {
+                                    res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    res.json({ error_code: 1 });
+                                });
+
+                            } else {
+                                logger.error(err)
+                                return res.json({ error_code: 1 });
+                            }
+                        });
+                } else {
+                    res.json({ error_code: 10 });
+                }
+            });
+                      
+            break;
     }
-
 }
 
 function calculoCuotas(cuota, ncuotas, mesesentremedio, mescuota1, coniva, frecup, diferido, desdediferido) {
@@ -523,31 +586,31 @@ exports.cuiforservice = function (req, res) {
         res.json({ error_code: 1 });
     });*/
     var sap = req.params.sap;
-    console.log("sap:"+sap);
-    if (sap == 'Continuidad'){
+    console.log("sap:" + sap);
+    if (sap == 'Continuidad') {
         var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
             "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND b.tiposervicio='Continuidad' " +
             "GROUP BY a.idservicio, b.nombre";
-            console.log("sql1:"+sql+ "sap:"+sap);
+        console.log("sql1:" + sql + "sap:" + sap);
         sequelize.query(sql).spread(function (cuis) {
             logger.debug("Rescato servicios");
             res.json(cuis);
         }).catch(function (err) {
             logger.error(err)
             res.json({ error_code: 1 });
-        });       
+        });
     } else {
         var sql = "SELECT a.idservicio AS id, b.nombre AS nombre FROM sip.plantillapresupuesto a JOIN sip.servicio b ON a.idservicio=b.id " +
             "WHERE a.idproveedor=" + req.params.idp + " AND a.idcui=" + req.params.ids + " AND  b.tarea IS NOT NULL " +
             "GROUP BY a.idservicio, b.nombre, b.tarea";
-        console.log("sql2:"+sql);
+        console.log("sql2:" + sql);
         sequelize.query(sql).spread(function (cuis) {
             logger.debug("Rescato servicios");
             res.json(cuis);
         }).catch(function (err) {
             logger.error(err)
             res.json({ error_code: 1 });
-        });              
+        });
     }
 }
 
@@ -612,15 +675,15 @@ exports.list = function (req, res) {
                     include: [{
                         model: models.contrato
                     }, {
-                        model: models.estructuracui
-                    }, {
-                        model: models.parametro
-                    }, {                        
-                        model: models.servicio,
-                        include: [{
-                            model: models.cuentascontables
+                            model: models.estructuracui
+                        }, {
+                            model: models.parametro
+                        }, {
+                            model: models.servicio,
+                            include: [{
+                                model: models.cuentascontables
+                            }]
                         }]
-                    }]
                 }).then(function (contratos) {
                     //console.dir(contratos)
                     res.json({ records: records, total: total, page: page, rows: contratos });
@@ -650,13 +713,13 @@ exports.getPeriodos = function (req, res) {
         var texto = mmm + '-' + anio;
         var newPromise = { 'id': periodo, 'nombre': texto };
         promises.push(newPromise);
-    };    
+    };
     anio = anio + 1;
     for (var i = 0; i < 12; i++) {
         var mm = mes + i;
         var mmm = mm < 10 ? '0' + mm : mm;
         //var periodo = anio + '' + mmm;
-        var periodo = parseInt(mmm)+ 12;
+        var periodo = parseInt(mmm) + 12;
         var texto = mmm + '-' + anio;
         var newPromise = { 'id': periodo, 'nombre': texto };
         promises.push(newPromise);
@@ -676,7 +739,7 @@ exports.getSaldoPresup = function (req, res) {
         " idcui=" + cui + " and idservicio=" + serv + " and idejercicio=@ejer";
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (saldo) {
-        if (saldo.length > 0){
+        if (saldo.length > 0) {
             logger.debug("En getSaldoPresup 2:" + saldo[0].montopresupuestocaja);
         }
         res.json(saldo);
@@ -693,13 +756,13 @@ exports.getListaSAP = function (req, res) {
     var proveedor = req.params.id;
     var art = req.params.id2;
 
-    var sql = "SELECT b.sap as id, b.nombreproyecto as nombre FROM sip.tareaenvuelo a "+
-        "JOIN sip.presupuestoenvuelo b ON a.idpresupuestoenvuelo=b.id "+
-        "JOIN art_program c ON b.program_id=c.program_id "+
-        "WHERE a.idproveedor = " +proveedor+" AND c.program_code="+art
-        "GROUP BY b.sap, b.nombreproyecto ";
-           
-        
+    var sql = "SELECT b.sap as id, b.nombreproyecto as nombre FROM sip.tareaenvuelo a " +
+        "JOIN sip.presupuestoenvuelo b ON a.idpresupuestoenvuelo=b.id " +
+        "JOIN art_program c ON b.program_id=c.program_id " +
+        "WHERE a.idproveedor = " + proveedor + " AND c.program_code=" + art
+    "GROUP BY b.sap, b.nombreproyecto ";
+
+
     /*var sql = "select a.sap from sip.presupuestoenvuelo a "+
         "join sip.tareaenvuelo b on b.idpresupuestoenvuelo = a.id "+
         "join art_program c on c.program_id=a.program_id "+
@@ -722,18 +785,18 @@ exports.getListaTareas = function (req, res) {
     var servicio2 = req.params.id;
     var proveedor2 = req.params.id2
     var servicio3 = 0;
-    var proveedor =0;
-    console.log("serv       icio3:"+servicio3);
-    if (servicio1>0){
-        servicio3=servicio1;
-        proveedor=proveedor1;
-    } else if (servicio2>0) {
-        servicio3=servicio2;
-        proveedor=proveedor2;
-    } 
+    var proveedor = 0;
+    console.log("serv       icio3:" + servicio3);
+    if (servicio1 > 0) {
+        servicio3 = servicio1;
+        proveedor = proveedor1;
+    } else if (servicio2 > 0) {
+        servicio3 = servicio2;
+        proveedor = proveedor2;
+    }
 
-    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio="+servicio3+
-        " AND  idproveedor="+proveedor+  
+    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio=" + servicio3 +
+        " AND  idproveedor=" + proveedor +
         " GROUP BY tarea ";
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (tareas) {

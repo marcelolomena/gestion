@@ -4,6 +4,8 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
+
 
 exports.getPersonal = function (req, res) {
 
@@ -35,86 +37,86 @@ exports.getExcel = function (req, res) {
     type: 'number',
     width: 3
   },
-  {
-    caption: 'Nombre',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'División',
-    type: 'string',
-    width: 100
-  },
-  {
-    caption: 'Sponsor 1',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'Sponsor 2',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'PMO',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'Gerente',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'Estado',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'Categoría',
-    type: 'string',
-    width: 50
-  },
-  {
-    caption: 'Q1',
-    type: 'string',
-    width: 15
-  },
-  {
-    caption: 'Q2',
-    type: 'string',
-    width: 15
-  },
-  {
-    caption: 'Q3',
-    type: 'string',
-    width: 15
-  },
-  {
-    caption: 'Q4',
-    type: 'string',
-    width: 15
-  },
-  {
-    caption: 'Fecha Comite',
-    type: 'string',
-    width: 15
-  },
-  {
-    caption: 'Año',
-    type: 'number',
-    width: 15
-  },
-  {
-    caption: 'Presupuesto Gasto (USD)',
-    type: 'number',
-    width: 15
-  },
-  {
-    caption: 'Presupuesto Inversión (USD)',
-    type: 'number',
-    width: 15
-  }
+    {
+      caption: 'Nombre',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'División',
+      type: 'string',
+      width: 100
+    },
+    {
+      caption: 'Sponsor 1',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Sponsor 2',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'PMO',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Gerente',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Estado',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Categoría',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Q1',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q2',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q3',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Q4',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Fecha Comite',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Año',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Presupuesto Gasto (USD)',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Presupuesto Inversión (USD)',
+      type: 'number',
+      width: 15
+    }
 
   ];
 
@@ -144,21 +146,21 @@ exports.getExcel = function (req, res) {
           for (var i = 0; i < iniciativas.length; i++) {
 
             a = [i + 1, iniciativas[i].nombre,
-            iniciativas[i].divisionsponsor,
-            iniciativas[i].sponsor1,
-            iniciativas[i].sponsor2,
-            iniciativas[i].pmoresponsable,
-            iniciativas[i].gerenteresponsable,
-            iniciativas[i].estado,
-            iniciativas[i].categoria,
-            iniciativas[i].q1,
-            iniciativas[i].q2,
-            iniciativas[i].q3,
-            iniciativas[i].q4,
-            iniciativas[i].fechacomite,
-            iniciativas[i].ano,
-            iniciativas[i].pptoestimadogasto,
-            iniciativas[i].pptoestimadoinversion
+              iniciativas[i].divisionsponsor,
+              iniciativas[i].sponsor1,
+              iniciativas[i].sponsor2,
+              iniciativas[i].pmoresponsable,
+              iniciativas[i].gerenteresponsable,
+              iniciativas[i].estado,
+              iniciativas[i].categoria,
+              iniciativas[i].q1,
+              iniciativas[i].q2,
+              iniciativas[i].q3,
+              iniciativas[i].q4,
+              iniciativas[i].fechacomite,
+              iniciativas[i].ano,
+              iniciativas[i].pptoestimadogasto,
+              iniciativas[i].pptoestimadoinversion
             ];
             arr.push(a);
           }
@@ -547,55 +549,106 @@ exports.action = function (req, res) {
         //fechaconversion: fecha,
         borrado: 1
       }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+        logtransaccion.registrar(
+          13,
+          iniciativa.id,
+          'insert',
+          req.session.passport.user,
+          'presupuestoenvuelo',
+          iniciativa,
+          function (err, data) {
+            if (!err) {
+              res.json({ error_code: 0 });
+            } else {
+              logger.error(err)
+              return res.json({ error_code: 1 });
+            }
+          });
+        //res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
       });
       break;
     case "edit":
-      models.presupuestoenvuelo.update({
-        nombreproyecto: req.body.nombreproyecto,
-        sap: req.body.sap,
-        program_id: req.body.program_id,
-        cuifinanciamiento1: req.body.cuifinanciamiento1,
-        porcentaje1: porcentaje1,
-        cuifinanciamiento2: req.body.cuifinanciamiento2,
-        porcentaje2: porcentaje2,
-        beneficioscuantitativos: req.body.beneficioscuantitativos,
-        beneficioscualitativos: req.body.beneficioscualitativos,
-        uidlider: req.body.uidlider,
-        uidjefeproyecto: req.body.uidjefeproyecto,
-        uidpmoresponsable: req.body.uidpmoresponsable,
-        //dolar: dolar,
-        //uf: uf,
-        //fechaconversion: req.body.fecha,
-      }, {
-          where: {
-            id: req.body.id
+      logtransaccion.registrar(
+        14,
+        req.body.id,
+        'update',
+        req.session.passport.user,
+        models.presupuestoenvuelo,
+        req.body,
+        function (err, idlog) {
+          if (!err) {
+            models.presupuestoenvuelo.update({
+              nombreproyecto: req.body.nombreproyecto,
+              sap: req.body.sap,
+              program_id: req.body.program_id,
+              cuifinanciamiento1: req.body.cuifinanciamiento1,
+              porcentaje1: porcentaje1,
+              cuifinanciamiento2: req.body.cuifinanciamiento2,
+              porcentaje2: porcentaje2,
+              beneficioscuantitativos: req.body.beneficioscuantitativos,
+              beneficioscualitativos: req.body.beneficioscualitativos,
+              uidlider: req.body.uidlider,
+              uidjefeproyecto: req.body.uidjefeproyecto,
+              uidpmoresponsable: req.body.uidpmoresponsable,
+              //dolar: dolar,
+              //uf: uf,
+              //fechaconversion: req.body.fecha,
+            }, {
+                where: {
+                  id: req.body.id
+                }
+              }).then(function (contrato) {
+                logtransaccion.actualizar(idlog, req.body.id, models.presupuestoenvuelo,
+                  function (err, idlog) {
+                    if (!err) {
+                      res.json({ error_code: 0 });
+                    } else {
+                      logger.error(err)
+                      return res.json({ error_code: 1 });
+                    }
+                  });
+                //res.json({ error_code: 0 });
+              }).catch(function (err) {
+                logger.error(err);
+                res.json({ error_code: 1 });
+              });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
           }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
         });
       break;
     case "del":
-      models.presupuestoenvuelo.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
-
+      logtransaccion.registrar(
+        15,
+        req.body.id,
+        'delete',
+        req.session.passport.user,
+        models.presupuestoenvuelo,
+        req.body,
+        function (err, data) {
+          if (!err) {
+            models.presupuestoenvuelo.destroy({
+              where: {
+                id: req.body.id
+              }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+              if (rowDeleted === 1) {
+                logger.debug('Deleted successfully');
+              }
+              res.json({ error_code: 0 });
+            }).catch(function (err) {
+              logger.error(err);
+              res.json({ error_code: 1 });
+            });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
+          }
+        });
       break;
 
   }

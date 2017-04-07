@@ -899,8 +899,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
+                if (result.error_code == 10)
+                    return [true,"No se puede borrar servicio, esta vinculado a prefacturas", ""];                
                 else
                     return [true, "", ""]
             }

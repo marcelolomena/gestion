@@ -181,8 +181,8 @@ function gridDetail(parentRowID, parentRowKey) {
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.error_code == 10) {
-                    return [false, "Periodo ya existe", ""];
+                if (result.error_code == 1) {
+                    return [false, "No se puede eliminar, periodo vinculado a prefacturas", ""];
                 } else if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
