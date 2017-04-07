@@ -45,7 +45,7 @@ var gridCalendario = {
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
                     name: 'fechaesperada', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i:s' },
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i' },
                     editable: true, editrules: { required: true },
                     searchoptions: {
                         dataInit: function (el) {
@@ -70,13 +70,14 @@ var gridCalendario = {
                                 language: "es",
                                 autoclose: true,
                                 todayHighlight: true
+
                             });
                         }
                     },
                 },
                 {
                     name: 'fechareal', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i:s' },
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i' },
                     editable: true, editrules: { required: false },
                     searchoptions: {
                         dataInit: function (el) {
@@ -187,10 +188,36 @@ var gridCalendario = {
                     } else {
                         return [true, "", ""]
                     }
-                    
+
                 },
                 onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
+                    var fechaespe = $("input#fechaesperada").val()
+                    console.log("esta es la fecha 1:" +fechaespe)
+                    var d = new Date(fechaespe)
+                    var dformat = [d.getDate(),
+                    d.getMonth() + 1,
+                    d.getFullYear()].join('-') + ' ' +
+                        [d.getHours(),
+                        d.getMinutes(),
+                        d.getSeconds()].join(':');
+                    var fechaintermedia = new Date(dformat + ' UTC')
+                    console.log("esta es la fecha 1:" +fechaintermedia)
+                    fechaespe = fechaintermedia
+                    console.log("esta es la fecha 1:" +fechaespe)
+                    var fecharea = $("input#fechareal").val()
+                    console.log("esta es la fecha 1:" +fecharea)
+                    var d2 = new Date(fecharea)
+                    var dformat2 = [d2.getDate(),
+                    d2.getMonth() + 1,
+                    d2.getFullYear()].join('-') + ' ' +
+                        [d2.getHours(),
+                        d2.getMinutes(),
+                        d2.getSeconds()].join(':');
+                    var fechaintermedia2 = new Date(dformat2 + ' UTC')
+                    fecharea = fechaintermedia2
+
+
+                    return { idsolicitudcotizacion: parentRowKey, fechanueva: fechaespe, fechanuevar: fecharea };
                 }
 
             },

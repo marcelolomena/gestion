@@ -10,38 +10,52 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechaesperada = null;
-    var fechareal = null;
+    var fechaesperada = req.body.fechanueva;
+    var fechareal = req.body.fechanuevar;
 
-    if (action != "del") {
-        if (req.body.fechaesperada != "")
-            var d = new Date(req.body.fechaesperada),
-                dformat = [d.getMonth() + 1,
-                d.getDate(),
-                d.getFullYear()].join('-') + ' ' +
-                    [d.getHours(),
-                    d.getMinutes(),
-                    d.getSeconds()].join(':');
+       /* if (req.body.fechaesperada != "") {
+            var d = new Date(req.body.fechaesperada)
+            logger.debug("la fecha rql antes: " + d)
 
-        fechaesperada = dformat
-        //fechaesperada = req.body.fechaesperada.split("-").reverse().join("-")
-        logger.debug("la fecha rql1: " + fechaesperada)
-    }
-    if (req.body.fechareal != "") {
-        //fechareal = req.body.fechareal.split("-").reverse().join("-")
-        var d2 = new Date(req.body.fechareal),
-            dformat2 = [d2.getMonth() + 1,
-            d2.getDate(),
+            //d.setUTCHours(1)
+            logger.debug("la fecha rql convertida: " + d)
+            var dformat = [d.getDate(),
+            d.getMonth() + 1,
+            d.getFullYear()].join('-') + ' ' +
+                [d.getHours(),
+                d.getMinutes(),
+                d.getSeconds()].join(':');
+
+            var fechaintermedia = new Date(dformat + ' UTC')
+
+            fechaesperada = fechaintermedia
+
+            logger.debug("la fecha rql despues: " + fechaesperada)
+        }
+        if (req.body.fechareal != "") {
+            var d2 = new Date(req.body.fechareal)
+            logger.debug("la fecha rql antes: " + d2)
+
+            //d2.setUTCHours(1)
+            logger.debug("la fecha rql convertida: " + d2)
+            var dformat2 = [d2.getDate(),
+            d2.getMonth() + 1,
             d2.getFullYear()].join('-') + ' ' +
                 [d2.getHours(),
                 d2.getMinutes(),
                 d2.getSeconds()].join(':');
 
-        fechareal = dformat2
-        logger.debug("la fecha rql2: " + fechareal)
+            var fechaintermedia2 = new Date(dformat2 + ' UTC')
 
-    }
+            fechareal = fechaintermedia2
 
+            logger.debug("la fecha rql despues: " + fechareal)
+
+        }*/
+    
+
+    logger.debug("la fecha 1: " + fechaesperada)
+    logger.debug("la fecha 2: " + fechareal)
     switch (action) {
         case "add":
             models.calendariosolicitud.create({
