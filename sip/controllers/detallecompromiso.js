@@ -2,6 +2,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -25,92 +26,105 @@ exports.action = function (req, res) {
     logger.debug("costoorigen : " + costoorigen)
     switch (action) {
         case "add":
-            /*models.detallecompromiso.create({
-                iddetalleserviciocto: req.params.idd,
-                periodo: req.body.periodo,
-                montoorigen: montoorigen,
-                costoorigen: costoorigen,
-                borrado: 1,
-                valorcuota: valorcuota
-            }).then(function (detalle) {
-                res.json({ error_code: 0 });
-            }).catch(function (err) {
-                //logger.debug(err);
-                res.json({ error_code: 1 });
-            });*/
-            
-            /*var sql="SELECT * FROM sip.detallecompromiso WHERE iddetalleserviciocto="+req.params.idd +" AND periodo="+req.body.periodo;
-            sequelize.query(sql).spread(function (rows) {
-                if (rows.length > 0) {
-                    logger.debug("periodo repetido");
-                    res.json({ error_code: 10 });
-                } else {*/
-                    sequelize.query("EXECUTE sip.InsertaPeriodoContrato "+req.params.idd+","+
-                    req.body.periodo+","+valorcuota)
-                        .then(function (rows) {
-                            logger.debug("****Creo Periodo contrato"); 
-                            res.json({ error_code: 0 });
-                        }).catch(function (err) {
-                            logger.error(err);
-                            res.json({ error_code: 1 });
-                        });                       
-                //}
-            //});            
-                
+            sequelize.query("EXECUTE sip.InsertaPeriodoContrato " + req.params.idd + "," +
+                req.body.periodo + "," + valorcuota)
+                .then(function (rows) {
+                    logger.debug("****Creo Periodo contrato:" + rows[0][0].id + ',' + JSON.stringify(rows));
+                    models.detallecompromiso.findAll({
+                        where: { id: rows[0][0].id },
+                    }).then(function (registro) {
+                        logtransaccion.registrar(
+                            10,
+                            rows[0][0].id,
+                            'insert',
+                            req.session.passport.user,
+                            'detallecompromiso',
+                            registro,
+                            function (err, data) {
+                                if (!err) {
+                                    res.json({ error_code: 0 });
+                                } else {
+                                    logger.error(err)
+                                    return res.json({ error_code: 1 });
+                                }
+                            });
+                    });
+                    //res.json({ error_code: 0 });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+
             break;
         case "edit":
-            /*
-                        var valMoneda = function (callback) {
-                            models.monedasconversion.findAll({
-                                where: [{ idmoneda: req.body.idmoneda }, { periodo: req.body.periodo }]
-                            }).then(function (monedasconversion) {
-                                callback(monedasconversion[0].valorconversion);
+            logtransaccion.registrar(
+                11,
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                models.detallecompromiso,
+                req.body,
+                function (err, idlog) {
+                    if (!err) {
+                        sequelize.query("EXECUTE sip.UpdatePeriodoContrato " + req.body.id + "," +
+                            valorcuota)
+                            .then(function (rows) {
+                                logger.debug("****Actualizo Periodo contrato");
+                                logtransaccion.actualizar(idlog, req.body.id, models.detallecompromiso,
+                                    function (err, idlog) {
+                                        if (!err) {
+                                            res.json({ error_code: 0 });
+                                        } else {
+                                            logger.error(err)
+                                            return res.json({ error_code: 1 });
+                                        }
+                                    });
                             }).catch(function (err) {
-                                logger.debug(err);
+                                logger.error(err);
+                                res.json({ error_code: 1 });
                             });
-                        }
-            */
-/*
-            models.detallecompromiso.update({
-                periodo: req.body.periodo,
-                montoorigen: montoorigen,
-                costoorigen: costoorigen,
-                valorcuota: valorcuota
-            }, {
-                    where: {
-                        id: req.body.id
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
                     }
-                }).then(function (detalle) {
-                    res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    logger.debug(err);
-                    res.json({ error_code: 1 });
-                });*/
-                
-        sequelize.query("EXECUTE sip.UpdatePeriodoContrato "+req.body.id+","+
-        valorcuota)
-            .then(function (rows) {
-                logger.debug("****Actualizo Periodo contrato"); 
-                res.json({ error_code: 0 });
-            }).catch(function (err) {
-                logger.error(err);
-                res.json({ error_code: 1 });
-            });   
+                });
             break;
         case "del":
-            models.detallecompromiso.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) {
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ error_code: 0 });
-            }).catch(function (err) {
-                logger.error(err);
-                res.json({ error_code: 1 });
-            });
+            logtransaccion.registrar(
+                12,
+                req.body.id,
+                'delete',
+                req.session.passport.user,
+                models.detallecompromiso,
+                req.body,
+                function (err, data) {
+                    if (!err) {
+                        var sql0 = 'SELECT count(*) AS total FROM sip.solicitudaprobacion WHERE iddetallecompromiso=' + req.body.id;
+                        sequelize.query(sql0).spread(function (results) {
+                            if (results[0].total == 0) {
+                                models.detallecompromiso.destroy({
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (rowDeleted) {
+                                    if (rowDeleted === 1) {
+                                        logger.debug('Deleted successfully');
+                                    }
+                                    res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                    res.json({ error_code: 1 });
+                                });
+                            } else {
+                                logger.debug("**ERROR al borrar flujo**:");
+                                res.json({ error_code: 1 });
+                            }
+                        });
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
 
             break;
     }
@@ -130,120 +144,11 @@ exports.list = function (req, res) {
         sord = "asc";
 
     var orden = sidx + " " + sord;
-       
-    sequelize.query("select * from sip.detallecompromiso where iddetalleserviciocto="+
-        req.params.id+" ORDER BY periodo")
+
+    sequelize.query("select * from sip.detallecompromiso where iddetalleserviciocto=" +
+        req.params.id + " ORDER BY periodo")
         .spread(function (rows) {
-        res.json({ records: 1, total: 1, page: 1, rows: rows });
-        });    
-    
-    
-/*
-    var additional = [{
-        "field": "iddetalleserviciocto",
-        "op": "eq",
-        "data": req.params.id
-    }];
-    
-    
-
-    var buscaParamValue = function (detallecto, callback) {
-        return models.parametro.find({
-            where: { id: detallecto.idfrecuencia }
-        }).then(function (param) {
-            switch (param.nombre) {
-                case "Anual":
-                    utilSeq.getYearRange(detallecto.fechainicio, detallecto.fechatermino, function (err, range) {
-                        callback([range.length, range])
-                    });
-                    break;
-                case "Mensual":
-                    utilSeq.getMonthRange(detallecto.fechainicio, detallecto.fechatermino, function (err, range) {
-                        callback([range.length, range])
-                    });
-                    break;
-                case "Otros":
-                    callback([0, []])
-                    break;
-            }
-
-        }).catch(function (err) {
-            logger.debug("Que paso?> " + err);
+            res.json({ records: 1, total: 1, page: 1, rows: rows });
         });
-    }
 
-    var insertaPeriodos = function (callback) {
-        models.detalleserviciocto.find({
-            where: { id: req.params.id }
-        }).then(function (detallecto) {
-            buscaParamValue(detallecto, function (param) {
-                var valcuo = detallecto.valorcuota;
-                var valmon = detallecto.idmoneda;
-                var valimp = detallecto.impuesto
-                var valfac = detallecto.factorimpuesto
-                //logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [" + req.params.id + "]")
-                models.sequelize.transaction({ autocommit: true }, function (t) {
-                    var promises = [], convert
-                    for (var i = 0; i < param[0]; i++) {
-                        //logger.debug("montoorigen = " + valcuo + valcuo * valimp);
-                        //logger.debug("costoorigen = " + valcuo + valcuo * valimp * valfac);
-                        var newPromise = models.detallecompromiso.create({
-                            'iddetalleserviciocto': req.params.id,
-                            'periodo': param[1][i], 'borrado': 1,
-                            'montoorigen': valcuo + (valcuo * valimp),
-                            'costoorigen': valcuo + (valcuo * valimp * valfac),
-                            'valorcuota': valcuo,
-                            'pending': true
-                        }, { transaction: t });
-
-                        promises.push(newPromise);
-                    };
-                    return Promise.all(promises).then(function (compromisos) {
-                        var compromisoPromises = [];
-                        for (var i = 0; i < compromisos.length; i++) {
-                            compromisoPromises.push(compromisos[i]);
-                        }
-                        return Promise.all(compromisoPromises);
-                    });
-
-                }).then(function (result) {
-                    callback(result)
-                }).catch(function (err) {
-                    logger.debug("--------> " + err);
-                });
-
-            })
-        }).catch(function (err) {
-            logger.debug(err);
-        });
-    }
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            models.detallecompromiso.count({
-                where: data
-            }).then(function (records) {
-                if (records > 0) {
-                    var total = Math.ceil(records / rows);
-                    models.detallecompromiso.findAll({
-                        offset: parseInt(rows * (page - 1)),
-                        limit: parseInt(rows),
-                        order: orden,
-                        where: data
-                    }).then(function (compromisos) {
-                        res.json({ records: records, total: total, page: page, rows: compromisos });
-                    }).catch(function (err) {
-                        logger.debug(err);
-                        res.json({ error_code: 1 });
-                    });
-                } else {
-                    insertaPeriodos(function (compromisos) {
-                        res.json({ rows: compromisos });
-                    });
-                }
-            })
-        }
-    });*/
 };

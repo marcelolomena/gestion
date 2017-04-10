@@ -4,9 +4,10 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
 
 exports.action = function (req, res) {
-    logger.debug("lala : " + req);
+  logger.debug("lala : " + req);
   var action = req.body.oper;
   var costounitario = 0
   var fechainicio;
@@ -25,7 +26,7 @@ exports.action = function (req, res) {
       fechafin = req.body.fechafin.split("-").reverse().join("-")
 
     //if (req.body.iddetalleserviciocto != "0")
-      //iddetalleserviciocto = req.body.iddetalleserviciocto
+    //iddetalleserviciocto = req.body.iddetalleserviciocto
   }
   logger.debug(action);
   switch (action) {
@@ -50,7 +51,22 @@ exports.action = function (req, res) {
         numerosolicitudcontrato: req.body.numerosolicitudcontrato,
         borrado: 1
       }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
+        logtransaccion.registrar(
+          16,
+          iniciativa.id,
+          'insert',
+          req.session.passport.user,
+          'tareaenvuelo',
+          iniciativa,
+          function (err, data) {
+            if (!err) {
+              res.json({ error_code: 0 });
+            } else {
+              logger.error(err)
+              return res.json({ error_code: 1 });
+            }
+          });
+        //res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
         res.json({ error_code: 1 });
@@ -58,50 +74,86 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      models.tareaenvuelo.update({
-        idpresupuestoenvuelo: req.body.parent_id,
-        glosa: req.body.glosa,
-        idcui: req.body.idcui,
-        idservicio: req.body.idservicio,
-        idproveedor: req.body.idproveedor,
-        tarea: req.body.tarea,
-        idtipopago: req.body.idtipopago,
-        fechainicio: fechainicio,
-        fechafin: fechafin,
-        reqcontrato: req.body.reqcontrato,
-        idmoneda: req.body.idmoneda,
-        costounitario: costounitario,
-        cantidad: req.body.cantidad,
-        coniva: req.body.coniva,
-        extension: req.body.extension,
-        numerocontrato: req.body.numerocontrato,
-        numerosolicitudcontrato: req.body.numerosolicitudcontrato
-      }, {
-          where: {
-            id: req.body.id
+      logtransaccion.registrar(
+        17,
+        req.body.id,
+        'update',
+        req.session.passport.user,
+        models.tareaenvuelo,
+        req.body,
+        function (err, idlog) {
+          if (!err) {
+            models.tareaenvuelo.update({
+              idpresupuestoenvuelo: req.body.parent_id,
+              glosa: req.body.glosa,
+              idcui: req.body.idcui,
+              idservicio: req.body.idservicio,
+              idproveedor: req.body.idproveedor,
+              tarea: req.body.tarea,
+              idtipopago: req.body.idtipopago,
+              fechainicio: fechainicio,
+              fechafin: fechafin,
+              reqcontrato: req.body.reqcontrato,
+              idmoneda: req.body.idmoneda,
+              costounitario: costounitario,
+              cantidad: req.body.cantidad,
+              coniva: req.body.coniva,
+              extension: req.body.extension,
+              numerocontrato: req.body.numerocontrato,
+              numerosolicitudcontrato: req.body.numerosolicitudcontrato
+            }, {
+                where: {
+                  id: req.body.id
+                }
+              }).then(function (contrato) {
+                logtransaccion.actualizar(idlog, req.body.id, models.tareaenvuelo,
+                  function (err, idlog) {
+                    if (!err) {
+                      res.json({ error_code: 0 });
+                    } else {
+                      logger.error(err)
+                      return res.json({ error_code: 1 });
+                    }
+                  });
+                //res.json({ error_code: 0 });
+              }).catch(function (err) {
+                logger.error(err);
+                res.json({ error_code: 1 });
+              });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
           }
-        }).then(function (contrato) {
-          res.json({ error_code: 0 });
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
         });
       break;
     case "del":
-      models.tareaenvuelo.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
-
+      logtransaccion.registrar(
+        18,
+        req.body.id,
+        'delete',
+        req.session.passport.user,
+        models.tareaenvuelo,
+        req.body,
+        function (err, data) {
+          if (!err) {
+            models.tareaenvuelo.destroy({
+              where: {
+                id: req.body.id
+              }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+              if (rowDeleted === 1) {
+                logger.debug('Deleted successfully');
+              }
+              res.json({ error_code: 0 });
+            }).catch(function (err) {
+              logger.error(err);
+              res.json({ error_code: 1 });
+            });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
+          }
+        });
       break;
 
   }
@@ -179,23 +231,23 @@ exports.list = function (req, res) {
 
 
 exports.getcontratosporpresupuesto = function (req, res) {
-    sequelize.query('select a.id, a.numero,a.nombre from sip.contrato a join sip.detalleserviciocto b on a.id= b.idcontrato join sip.presupuestoenvuelo c on c.program_id=a.program_id and c.sap=b.sap where c.id=:idpresupuesto and a.idproveedor=:idproveedor',
-        { replacements: { idpresupuesto: req.params.idpresupuesto, idproveedor: req.params.idproveedor  }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json(user);
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-    });
+  sequelize.query('select a.id, a.numero,a.nombre from sip.contrato a join sip.detalleserviciocto b on a.id= b.idcontrato join sip.presupuestoenvuelo c on c.program_id=a.program_id and c.sap=b.sap where c.id=:idpresupuesto and a.idproveedor=:idproveedor',
+    { replacements: { idpresupuesto: req.params.idpresupuesto, idproveedor: req.params.idproveedor }, type: sequelize.QueryTypes.SELECT }
+  ).then(function (user) {
+    res.json(user);
+  }).catch(function (err) {
+    logger.error(err)
+    res.json({ error_code: 1 });
+  });
 };
 
 exports.gettareasporpresupuesto = function (req, res) {
-    sequelize.query('select a.id, a.glosaservicio from sip.detalleserviciocto a where a.idcontrato=:idcontrato',
-        { replacements: { idcontrato: req.params.idcontrato }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json(user);
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-    });
+  sequelize.query('select a.id, a.glosaservicio from sip.detalleserviciocto a where a.idcontrato=:idcontrato',
+    { replacements: { idcontrato: req.params.idcontrato }, type: sequelize.QueryTypes.SELECT }
+  ).then(function (user) {
+    res.json(user);
+  }).catch(function (err) {
+    logger.error(err)
+    res.json({ error_code: 1 });
+  });
 };
