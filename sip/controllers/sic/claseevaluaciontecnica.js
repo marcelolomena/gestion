@@ -13,7 +13,8 @@ exports.action = function (req, res) {
     case "add":
       models.claseevaluaciontecnica.create({
         nombre: req.body.nombre,
-        borrado: 1
+        borrado: 1,
+        niveles: 0
       }).then(function (clase) {
         return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
@@ -158,7 +159,26 @@ exports.action2 = function (req, res) {
         comentario: req.body.comentario,
         porcentaje: req.body.porcentaje,
         borrado: 1
-      }).then(function (plantillaclausula) {
+      }).then(function (criterioevaluacion) {
+        models.claseevaluaciontecnica.findOne({
+          where: {
+            id: req.body.parent_id
+          }
+        }).then(function (records) {
+          if (parseInt(records.niveles) < 1) {
+            models.claseevaluaciontecnica.update({
+              niveles: 1
+            }, {
+                where: {
+                  id: req.body.parent_id
+                }
+              })
+          }
+        }).catch(function (err) {
+          logger.error(err)
+          return res.json({ error: 1, glosa: err.message });
+        });
+
         return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
@@ -208,8 +228,8 @@ exports.list3 = function (req, res) {
   var filters = req.query.filters;
   var sidx = req.query.sidx;
   var sord = req.query.sord;
-  logger.debug('rows: '+rows)
-  logger.debug('page: '+page)
+  logger.debug('rows: ' + rows)
+  logger.debug('page: ' + page)
 
   if (!sidx)
     sidx = "titulo";
@@ -229,13 +249,13 @@ exports.list3 = function (req, res) {
     if (err) {
       //logger.debug("->>> " + err)
     } else {
-      
+
       models.cuerpoclausula.count({
         where: data
       }).then(function (records) {
-        logger.debug("records: "+records);
+        logger.debug("records: " + records);
         var total = Math.ceil(records / rows);
-        logger.debug("total: "+total);
+        logger.debug("total: " + total);
         models.cuerpoclausula.belongsTo(models.valores, { foreignKey: 'idgrupo' });
         models.cuerpoclausula.belongsTo(models.valores, { as: 'nombretipoadjunto', foreignKey: 'tipoadjunto' });
         models.cuerpoclausula.findAll({
@@ -244,12 +264,12 @@ exports.list3 = function (req, res) {
           order: orden,
           where: data,
           include: [{
-                        model: models.valores
-                    },
-                    {
-                        model: models.valores, as: 'nombretipoadjunto'
-                    }
-                    ]
+            model: models.valores
+          },
+          {
+            model: models.valores, as: 'nombretipoadjunto'
+          }
+          ]
         }).then(function (cuerpoclausula) {
           res.json({ records: records, total: total, page: page, rows: cuerpoclausula });
         }).catch(function (err) {
@@ -265,7 +285,7 @@ exports.list3 = function (req, res) {
 exports.action3 = function (req, res) {
   var action = req.body.oper;
   var nombreadjunto = null
-  if(req.body.tipoadjunto=="48"){
+  if (req.body.tipoadjunto == "48") {
     nombreadjunto = req.body.elegirtabla
   }
 
@@ -340,9 +360,9 @@ exports.clasesevaluacion = function (req, res) {
   });
 }
 exports.porcentajecriterios = function (req, res) {
-    var sql = "select sum(porcentaje) as total from sic.criterioevaluacion where idclaseevaluaciontecnica=" + req.params.parentRowKey;
-    sequelize.query(sql)
-        .spread(function (rows) {
-            res.json(rows);
-        });
+  var sql = "select sum(porcentaje) as total from sic.criterioevaluacion where idclaseevaluaciontecnica=" + req.params.parentRowKey;
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
 };
