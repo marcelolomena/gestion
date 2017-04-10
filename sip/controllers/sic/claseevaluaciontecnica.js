@@ -228,11 +228,11 @@ exports.list3 = function (req, res) {
   var filters = req.query.filters;
   var sidx = req.query.sidx;
   var sord = req.query.sord;
-  logger.debug('rows: ' + rows)
-  logger.debug('page: ' + page)
+  //logger.debug('rows: '+rows)
+  //logger.debug('page: '+page)
 
   if (!sidx)
-    sidx = "titulo";
+    sidx = "nombre";
 
   if (!sord)
     sord = "asc";
@@ -240,7 +240,7 @@ exports.list3 = function (req, res) {
   var orden = sidx + " " + sord;
 
   var additional = [{
-    "field": "idplantillaclausula",
+    "field": "idcriterioevaluacion",
     "op": "eq",
     "data": req.params.id
   }];
@@ -249,32 +249,22 @@ exports.list3 = function (req, res) {
     if (err) {
       //logger.debug("->>> " + err)
     } else {
-
-      models.cuerpoclausula.count({
+      models.criterioevaluacion2.count({
         where: data
       }).then(function (records) {
-        logger.debug("records: " + records);
+        //logger.debug("records: "+records);
         var total = Math.ceil(records / rows);
-        logger.debug("total: " + total);
-        models.cuerpoclausula.belongsTo(models.valores, { foreignKey: 'idgrupo' });
-        models.cuerpoclausula.belongsTo(models.valores, { as: 'nombretipoadjunto', foreignKey: 'tipoadjunto' });
-        models.cuerpoclausula.findAll({
+        //logger.debug("total: "+total);
+        models.criterioevaluacion2.findAll({
           offset: parseInt(rows * (page - 1)),
           limit: parseInt(rows),
           order: orden,
-          where: data,
-          include: [{
-            model: models.valores
-          },
-          {
-            model: models.valores, as: 'nombretipoadjunto'
-          }
-          ]
-        }).then(function (cuerpoclausula) {
-          res.json({ records: records, total: total, page: page, rows: cuerpoclausula });
+          where: data
+        }).then(function (criterioevaluacion) {
+          return res.json({ records: records, total: total, page: page, rows: criterioevaluacion });
         }).catch(function (err) {
           //logger.error(err);
-          res.json({ error_code: 1 });
+          return res.json({ error_code: 1 });
         });
       })
     }
@@ -284,49 +274,60 @@ exports.list3 = function (req, res) {
 
 exports.action3 = function (req, res) {
   var action = req.body.oper;
-  var nombreadjunto = null
-  if (req.body.tipoadjunto == "48") {
-    nombreadjunto = req.body.elegirtabla
-  }
 
   switch (action) {
     case "add":
-      models.cuerpoclausula.create({
-        idplantillaclausula: req.body.parent_id,
-        titulo: req.body.titulo,
-        glosa: req.body.glosa,
-        idgrupo: req.body.idgrupo,
-        tipoadjunto: req.body.tipoadjunto,
-        nombreadjunto: nombreadjunto,
-        anexo: req.body.anexo,
+      models.criterioevaluacion2.create({
+        idcriterioevaluacion: req.body.parent_id,
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
         borrado: 1
-      }).then(function (cuerpoclausula) {
-        return res.json({ id: cuerpoclausula.id, message: 'Inicio carga', success: true });
+      }).then(function (criterioevaluacion) {
+        models.claseevaluaciontecnica.findOne({
+          where: {
+            id: req.body.abuelo
+          }
+        }).then(function (records) {
+          if (parseInt(records.niveles) < 2) {
+            models.claseevaluaciontecnica.update({
+              niveles: 2
+            }, {
+                where: {
+                  id: req.body.abuelo
+                }
+              })
+          }
+        }).catch(function (err) {
+          logger.error(err)
+          return res.json({ error: 1, glosa: err.message });
+        });
+
+        return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
-        return res.json({ id: cuerpoclausula.id, message: 'Falla', success: false });
+        return res.json({ error: 1, glosa: err.message });
       });
 
       break;
     case "edit":
-      models.cuerpoclausula.update({
-        titulo: req.body.titulo,
-        glosa: req.body.glosa,
-        idgrupo: req.body.idgrupo,
-        anexo: req.body.anexo
+      models.criterioevaluacion2.update({
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
       }, {
           where: {
             id: req.body.id
           }
-        }).then(function (cuerpoclausula) {
-          res.json({ id: req.body.id, message: 'Inicio carga', success: true });
+        }).then(function (plantillaclausula) {
+          return res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
           logger.error(err)
-          res.json({ message: err.message, success: false });
+          return res.json({ error: 1, glosa: err.message });
         });
       break;
     case "del":
-      models.cuerpoclausula.destroy({
+      models.criterioevaluacion2.destroy({
         where: {
           id: req.body.id
         }
@@ -334,10 +335,135 @@ exports.action3 = function (req, res) {
         if (rowDeleted === 1) {
           logger.debug('Deleted successfully');
         }
-        res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
         logger.error(err)
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ error: 1, glosa: err.message });
+      });
+
+      break;
+
+  }
+}
+
+
+exports.list4 = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  //logger.debug('rows: '+rows)
+  //logger.debug('page: '+page)
+
+  if (!sidx)
+    sidx = "nombre";
+
+  if (!sord)
+    sord = "asc";
+
+  var orden = sidx + " " + sord;
+
+  var additional = [{
+    "field": "idcriterioevaluacion2",
+    "op": "eq",
+    "data": req.params.id
+  }];
+
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      //logger.debug("->>> " + err)
+    } else {
+      models.criterioevaluacion3.count({
+        where: data
+      }).then(function (records) {
+        //logger.debug("records: "+records);
+        var total = Math.ceil(records / rows);
+        //logger.debug("total: "+total);
+        models.criterioevaluacion3.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data
+        }).then(function (criterioevaluacion) {
+          return res.json({ records: records, total: total, page: page, rows: criterioevaluacion });
+        }).catch(function (err) {
+          //logger.error(err);
+          return res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
+
+};
+
+exports.action4 = function (req, res) {
+  var action = req.body.oper;
+
+  switch (action) {
+    case "add":
+      models.criterioevaluacion3.create({
+        idcriterioevaluacion2: req.body.parent_id,
+        nombre: req.body.nombre,
+        pregunta: req.body.pregunta,
+        porcentaje: req.body.porcentaje,
+        borrado: 1
+      }).then(function (criterioevaluacion) {
+        models.claseevaluaciontecnica.findOne({
+          where: {
+            id: req.body.abuelo
+          }
+        }).then(function (records) {
+          if (parseInt(records.niveles) < 3) {
+            models.claseevaluaciontecnica.update({
+              niveles: 3
+            }, {
+                where: {
+                  id: req.body.abuelo
+                }
+              })
+          }
+        }).catch(function (err) {
+          logger.error(err)
+          return res.json({ error: 1, glosa: err.message });
+        });
+
+        return res.json({ error: 0, glosa: '' });
+      }).catch(function (err) {
+        logger.error(err)
+        return res.json({ error: 1, glosa: err.message });
+      });
+
+      break;
+    case "edit":
+      models.criterioevaluacion3.update({
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (plantillaclausula) {
+          return res.json({ error: 0, glosa: '' });
+        }).catch(function (err) {
+          logger.error(err)
+          return res.json({ error: 1, glosa: err.message });
+        });
+      break;
+    case "del":
+      models.criterioevaluacion3.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          logger.debug('Deleted successfully');
+        }
+        return res.json({ error: 0, glosa: '' });
+      }).catch(function (err) {
+        logger.error(err)
+        return res.json({ error: 1, glosa: err.message });
       });
 
       break;
@@ -366,3 +492,18 @@ exports.porcentajecriterios = function (req, res) {
       res.json(rows);
     });
 };
+exports.porcentajecriterios2 = function (req, res) {
+  var sql = "select sum(porcentaje) as total from sic.criterioevaluacion2 where idcriterioevaluacion=" + req.params.parentRowKey;
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+}
+
+exports.porcentajecriterios3 = function (req, res) {
+  var sql = "select sum(porcentaje) as total from sic.criterioevaluacion3 where idcriterioevaluacion2=" + req.params.parentRowKey;
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+}

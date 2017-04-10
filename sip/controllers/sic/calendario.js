@@ -10,8 +10,8 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechaesperada = req.body.fechanueva;
-    var fechareal = req.body.fechanuevar;
+    var fechaesperada = req.body.fechaesperada;
+    var fechareal = req.body.fechareal;
 
        /* if (req.body.fechaesperada != "") {
             var d = new Date(req.body.fechaesperada)

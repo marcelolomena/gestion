@@ -50,7 +50,7 @@ var gridCalendario = {
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datetimepicker({
-                                format: "dd-mm-yyyy hh:ii",
+                                format: "yyyy-mm-dd hh:ii",
                                 weekStart: 1,
                                 language: "es",
                                 autoclose: true,
@@ -65,7 +65,7 @@ var gridCalendario = {
                         dataInit: function (element) {
                             //$(element).mask("00-00-0000", { placeholder: "__-__-____" });
                             $(element).datetimepicker({
-                                format: "dd-mm-yyyy hh:ii",
+                                format: "yyyy-mm-dd hh:ii",
                                 weekStart: 1,
                                 language: "es",
                                 autoclose: true,
@@ -82,7 +82,7 @@ var gridCalendario = {
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datetimepicker({
-                                format: "dd-mm-yyyy hh:ii",
+                                format: "yyyy-mm-dd hh:ii",
                                 weekStart: 1,
                                 language: "es",
                                 autoclose: true,
@@ -97,7 +97,7 @@ var gridCalendario = {
                         dataInit: function (element) {
                             //$(element).mask("00-00-0000", { placeholder: "__-__-____" });
                             $(element).datetimepicker({
-                                format: "dd-mm-yyyy hh:ii",
+                                format: "yyyy-mm-dd hh:ii",
                                 weekStart: 1,
                                 language: "es",
                                 autoclose: true,
@@ -207,6 +207,7 @@ var gridCalendario = {
 
                 },
                 onclickSubmit: function (rowid) {
+                    /*
                     var fechaespe = $("input#fechaesperada").val()
                     console.log("esta es la fecha 1:" +fechaespe)
                     var d = new Date(fechaespe)
@@ -231,9 +232,10 @@ var gridCalendario = {
                         d2.getSeconds()].join(':');
                     var fechaintermedia2 = new Date(dformat2 + ' UTC')
                     fecharea = fechaintermedia2
+                    */
 
 
-                    return { idsolicitudcotizacion: parentRowKey, fechanueva: fechaespe, fechanuevar: fecharea };
+                    return { idsolicitudcotizacion: parentRowKey/*, fechanueva: fechaespe, fechanuevar: fecharea */};
                 }
 
             },
