@@ -15,12 +15,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Nombre {nombre}</div>";
-    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Porcentaje {porcentaje}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Pregunta {pregunta}</div>";
+    tmplPF += "<div class='column-full'>Pregunta<span style='color:red'>*</span>{ArchivoUpload}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -45,7 +40,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
     console.log("la grilla abuelo: " + grillaabuelo)
-     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
+    var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
     console.log("la rowData2 : " + rowData2)
     var parentAbuelo = rowData.id;
     console.log("la parentSolicitud : " + parentAbuelo)
@@ -54,6 +49,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
 
     var modelSubcriterios = [
         { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'idcriterioevaluacion2', name: 'idcriterioevaluacion2', hidden: true },
 
         {
             label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: false, editable: true,
@@ -121,6 +117,17 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             },
         },
 
+        {
+            name: 'ArchivoUpload',
+            hidden: true,
+            editable: true,
+            edittype: 'file',
+            editrules: { edithidden: true },
+            editoptions: {
+                enctype: "multipart/form-data"
+            },
+            search: false
+        },
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -151,7 +158,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             minusicon: "glyphicon-hand-down"
         },
         */
-        
+
         editurl: '/sic/criteriosevaluacion/action3',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
@@ -163,7 +170,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
     },
         {
             closeAfterEdit: true,
@@ -191,48 +198,21 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             },
         },
         {
+            addCaption: "Agrega Preguntas",
+            mtype: 'POST',
+            url: '/sic/criteriosevaluacion/action3',
             closeAfterAdd: true,
             recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            width: 800,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Pregunta de Evaluación",
             template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, abuelo: parentAbuelo  };
-            },
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
             beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                //$('input#notacriticidad', form).attr('readonly', 'readonly');
             },
-            beforeSubmit: function (postdata, formid) {
-                var elporcentaje = parseFloat(postdata.porcentaje);
-                console.log('porcentaje: ' + elporcentaje);
-                var suma = 0;
 
-                $.ajax({
-                    type: "GET",
-                    async: false,
-                    url: '/sic/porcentajecriterios3/' + parentRowKey,
-                    success: function (data) {
-                        console.log('porcentajequeviene: ' + data[0].total);
-                        suma = data[0].total + elporcentaje;
-                        console.log('total: ' + suma);
-                    }
-                });
-                if (suma > 100) {
-                    return [false, "Porcentaje total de criterios no puede ser mayor a 100", ""];
-                }
-
-                if (elporcentaje > 100) {
-                    return [false, "Porcentaje no puede ser mayor a 100", ""];
-                }
-                else {
-                    return [true, "", ""]
-                }
-            }
+            onclickSubmit: function (rowid) {
+                return { idcriterioevaluacion2: parentRowKey, childGridID: childGridID };
+            }, afterSubmit: UploadPre
 
         },
         {
@@ -249,11 +229,58 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+
     /*
         function showSubGrids3(subgrid_id, row_id) {
             gridCriterios3(subgrid_id, row_id, 'criterios2');
         }
         */
-        
-    
+
+
+}
+function UploadPre(response, postdata) {
+    //console.log(postdata)
+    var data = $.parseJSON(response.responseText);
+    console.dir(postdata.idcriterioevaluacion2)
+    if (data.success) {
+        if ($("#ArchivoUpload").val() != "") {
+            console.log('ESTO ES UN ID DE CRITERIO EVALUACION' + postdata.idcriterioevaluacion2)
+            ajaxPregUpload(data.id, data.idc, postdata.idcriterioevaluacion2, postdata.childGridID);
+        }
+    }
+
+    return [data.success, data.message, data.id];
+}
+
+function ajaxPregUpload(id, idc, idpadre, childGridID) {
+    var dialog = bootbox.dialog({
+        title: 'Se inicia la transferencia',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
+    });
+    dialog.init(function () {
+        console.log('ESTO ES UN ID DE CRITERIO EVALUACION' + idpadre)
+        $.ajaxFileUpload({
+            url: '/sic/criterio3/upload/' + idpadre,
+            secureuri: false,
+            fileElementId: 'ArchivoUpload',
+            dataType: 'json',
+            data: { id: id, idc:idc },
+            success: function (data, status) {
+                if (typeof (data.success) != 'undefined') {
+                    if (data.success == true) {
+                        dialog.find('.bootbox-body').html(data.message);
+                        $("#" + childGridID).trigger('reloadGrid');
+                    } else {
+                        dialog.find('.bootbox-body').html(data.message);
+                    }
+                }
+                else {
+                    dialog.find('.bootbox-body').html(data.message);
+                }
+            },
+            error: function (data, status, e) {
+                dialog.find('.bootbox-body').html(e);
+            }
+        })
+    });
 }

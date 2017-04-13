@@ -444,6 +444,10 @@ module.exports = function (passport) {
 
     router.route('/sic/porcentajecriterios3/:parentRowKey')
         .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios3);
-   
+
+    router.route('/sic/criterio3/upload/:idcriterioevaluacion2')
+        .post(isAuthenticated, claseevaluaciontecnicaController.upload);
+
+
     return router;
 }
