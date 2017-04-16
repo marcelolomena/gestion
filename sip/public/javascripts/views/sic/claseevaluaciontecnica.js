@@ -17,7 +17,7 @@ $(document).ready(function () {
             { label: 'ID', name: 'id', key: true, hidden: true },
 
             { label: 'Nombre', name: 'nombre', width: 350, align: 'left', search: false, editable: true, editrules: { required: true } },
-     
+     { label: 'Niveles', name: 'niveles', editable: false },
 
         ];
 
