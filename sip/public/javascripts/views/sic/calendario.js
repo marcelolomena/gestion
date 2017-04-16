@@ -45,7 +45,7 @@ var gridCalendario = {
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
                     name: 'fechaesperada', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i' },
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d H:i' },
                     editable: true, editrules: { required: true },
                     searchoptions: {
                         dataInit: function (el) {
@@ -77,7 +77,7 @@ var gridCalendario = {
                 },
                 {
                     name: 'fechareal', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y H:i' },
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d H:i' },
                     editable: true, editrules: { required: false },
                     searchoptions: {
                         dataInit: function (el) {
