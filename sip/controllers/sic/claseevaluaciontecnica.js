@@ -5,6 +5,12 @@ var logger = require("../../utils/logger");
 var path = require('path');
 var fs = require('fs');
 var Busboy = require('busboy');
+var nodeExcel = require('excel-export');
+var async = require('async');
+var csv = require('csv');
+var co = require('co');
+var bulk = require("../../utils/bulk");
+var nodeExcel = require('excel-export');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
@@ -402,39 +408,29 @@ exports.action4 = function (req, res) {
 
   switch (action) {
     case "add":
-      models.criterioevaluacion3.create({
-        idcriterioevaluacion2: req.body.parent_id,
-        nombre: req.body.nombre,
-        pregunta: req.body.pregunta,
-        porcentaje: req.body.porcentaje,
-        borrado: 1
-      }).then(function (criterioevaluacion) {
-        models.claseevaluaciontecnica.findOne({
-          where: {
-            id: req.body.abuelo
-          }
-        }).then(function (records) {
-          if (parseInt(records.niveles) < 3) {
-            models.claseevaluaciontecnica.update({
-              niveles: 3
-            }, {
-                where: {
-                  id: req.body.abuelo
-                }
-              })
-          }
-        }).catch(function (err) {
-          logger.error(err)
-          return res.json({ error: 1, glosa: err.message });
-        });
 
-        return res.json({ error: 0, glosa: '' });
+      models.claseevaluaciontecnica.findOne({
+        where: {
+          id: req.body.idcriterioevaluacion2
+        }
+      }).then(function (records) {
+        if (parseInt(records.niveles) < 3) {
+          models.claseevaluaciontecnica.update({
+            niveles: 3
+          }, {
+              where: {
+                id: req.body.idcriterioevaluacion2
+              }
+            })
+        }
+        return res.json({ id: req.body.idcriterioevaluacion2, idc: records.id, success: true });
       }).catch(function (err) {
         logger.error(err)
         return res.json({ error: 1, glosa: err.message });
       });
 
-      break;
+
+
     case "edit":
       models.criterioevaluacion3.update({
         nombre: req.body.nombre,
@@ -506,4 +502,111 @@ exports.porcentajecriterios3 = function (req, res) {
     .spread(function (rows) {
       res.json(rows);
     });
+}
+
+exports.upload = function (req, res) {
+
+  if (req.method === 'POST') {
+
+    var busboy = new Busboy({ headers: req.headers });
+
+    var awaitId = new Promise(function (resolve, reject) {
+
+      busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+        if (fieldname === 'idc') {
+          try {
+            resolve(val)
+          } catch (err) {
+            return reject(err);
+          }
+        } else {
+          return;
+        }
+      });
+    });
+
+
+
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {//manejador upload archivo
+
+      var saveTo = path.join(__dirname, '..' + path.sep + '..', 'temp', filename);//path al archivo
+      file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
+
+      awaitId.then(function (id) {
+
+        logger.debug("idcriterio2 : " + req.params.idcriterioevaluacion2)
+
+        var carrusel = [];
+
+        var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
+        logger.debug("ESTO ES UN INPUT" + input)
+        console.dir(input)
+        input.on('error', function (err) {
+          return res.json({ error_code: 1, message: err, success: false });
+        });
+
+        var parser = csv.parse({
+          delimiter: ';',
+          columns: true,
+          relax: true,
+          relax_column_count: true,
+          skip_empty_lines: true,
+          trim: true
+        }); //parser CSV       
+        logger.debug("ESTO ES UN PARSE" + parser)
+        input.pipe(parser);
+
+        parser.on('readable', function () {
+          var line
+
+          while (line = parser.read()) {
+            logger.debug("ESTO ES UN LINE" + line)
+            var item = {}
+            logger.debug("id : " + id)
+           // item['id'] = id;
+
+
+            item['nombre'] = line.nombre;
+            item['idcriterioevaluacion2'] = req.params.idcriterioevaluacion2;
+            item['porcentaje'] = line.porcentaje;
+            item['pregunta'] = line.pregunta;
+            item['borrado'] = 1;
+
+            console.dir(item);
+
+            carrusel.push(item);
+          }
+        });
+
+        parser.on('error', function (err) {
+          return res.json({ error_code: 1, message: err, success: false });
+        });/*error*/
+
+        //parser.on('end', function (count) {
+        parser.on('finish', function () {
+
+          models.criterioevaluacion3.bulkCreate(carrusel).then(function (events) {
+            return res.json({ message: 'Las preguntas fueron cargadas', success: true });
+          }).catch(function (err) {
+            return res.json({ message: err.message, success: false });
+          });
+
+        });/*end*/
+
+
+
+      }).catch(function (err) {
+        return res.json({ error_code: 1, message: err, success: false });
+      });
+
+    });
+
+
+    busboy.on('finish', function () {
+    });
+
+    return req.pipe(busboy);
+  }
+
+
 }
