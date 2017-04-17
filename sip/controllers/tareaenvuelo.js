@@ -5,6 +5,7 @@ var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
 
 exports.action = function (req, res) {
   logger.debug("lala : " + req);
@@ -52,7 +53,7 @@ exports.action = function (req, res) {
         borrado: 1
       }).then(function (iniciativa) {
         logtransaccion.registrar(
-          16,
+          constants.CreaTarea,
           iniciativa.id,
           'insert',
           req.session.passport.user,
@@ -75,7 +76,7 @@ exports.action = function (req, res) {
       break;
     case "edit":
       logtransaccion.registrar(
-        17,
+        constants.ActualizaTarea,
         req.body.id,
         'update',
         req.session.passport.user,
@@ -128,7 +129,7 @@ exports.action = function (req, res) {
       break;
     case "del":
       logtransaccion.registrar(
-        18,
+        constants.BorraTarea,
         req.body.id,
         'delete',
         req.session.passport.user,

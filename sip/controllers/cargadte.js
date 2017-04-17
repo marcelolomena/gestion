@@ -12,6 +12,9 @@ var AdmZip = require('adm-zip');
 var stream = require('stream');
 var et = require('elementtree');
 const fileType = require('file-type');
+var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
+
 
 exports.excel = function (req, res) {
 
@@ -873,6 +876,21 @@ exports.archivo = function (req, res) {
       });
 
     });
+    
+    var datavacia = [{ 'sin datos': '' }];
+    logtransaccion.registrar(
+        constants.IniciaCargaDTE,
+        0,
+        'insert',
+        req.session.passport.user,
+        'model',
+        datavacia,
+        function (err, data) {
+            if (err) {
+                logger.error(err)
+                return res.json({ error_code: 1 });
+            }
+        });    
 
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
@@ -922,8 +940,34 @@ exports.archivo = function (req, res) {
                       id: idcargadte
                     }
                   }).then(function (cargadte) {
+                    logtransaccion.registrar(
+                        constants.FinExitoCargaDTE,
+                        0,
+                        'insert',
+                        req.session.passport.user,
+                        'model',
+                        datavacia,
+                        function (err, data) {
+                            if (err) {
+                                logger.error(err)
+                                return res.json({ error_code: 1 });
+                            }
+                        });                    
                     return res.json({ message: "archivo " + filename + " cargado", success: true });
                   }).catch(function (err) {
+                    logtransaccion.registrar(
+                        constants.FinErrorCargaDTE,
+                        0,
+                        'insert',
+                        req.session.passport.user,
+                        'model',
+                        datavacia,
+                        function (err, data) {
+                            if (err) {
+                                logger.error(err)
+                                return res.json({ error_code: 1 });
+                            }
+                        });                    
                     logger.error(err)
                     return res.json({ message: err, success: false });
                   });

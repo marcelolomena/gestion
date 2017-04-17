@@ -4,6 +4,9 @@ var userService = require('../service/user');
 var nodeExcel = require('excel-export');
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
+
 exports.list = function (req, res) {
 
     var page = req.body.page;
@@ -158,12 +161,51 @@ exports.generar = function (req, res) {
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
-
+    var datavacia = [{ 'sin datos': '' }];
+    logtransaccion.registrar(
+        constants.IniciaGeneraPrefacturas,
+        0,
+        'insert',
+        req.session.passport.user,
+        'model',
+        datavacia,
+        function (err, data) {
+            if (err) {
+                logger.error(err)
+                return res.json({ error_code: 1 });
+            }
+        });
     logger.debug("****El peridodo:" + periodo);
     sequelize.query('EXECUTE sip.generaprefacturas '
         + periodo + ';').then(function (response) {
+            logtransaccion.registrar(
+                constants.FinExitoGeneraPrefacturas,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
             res.json({ error_code: 0 });
         }).error(function (err) {
+            logtransaccion.registrar(
+                constants.FinErrorGeneraPrefacturas,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
             logger.error(err)
             res.json(err);
         });
@@ -335,44 +377,95 @@ exports.actiondesglose = function (req, res) {
                 idcuentacontable: req.body.idcuentacontable,
                 porcentaje: req.body.porcentaje,
                 borrado: 1
-            }).then(function (iniciativa) {
-                res.json({ error_code: 0 });
+            }).then(function (desglose) {
+                logtransaccion.registrar(
+                    constants.CreaDesgloseContable,
+                    desglose.id,
+                    'insert',
+                    req.session.passport.user,
+                    'desglosecontable',
+                    desglose,
+                    function (err, data) {
+                        if (!err) {
+                            res.json({ error_code: 0 });
+                        } else {
+                            logger.error(err)
+                            return res.json({ error_code: 1 });
+                        }
+                    });
+                //res.json({ error_code: 0 });
             }).catch(function (err) {
                 logger.error(err);
                 res.json({ error_code: 1 });
             });
             break;
         case "edit":
-            models.desglosecontable.update({
-                idcui: req.body.idcui,
-                idcuentacontable: req.body.idcuentacontable,
-                porcentaje: req.body.porcentaje
-            }, {
-                    where: {
-                        id: req.body.id
+            logtransaccion.registrar(
+                constants.ActualizaDesgloseContable,
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                models.desglosecontable,
+                req.body,
+                function (err, idlog) {
+                    if (!err) {
+                        models.desglosecontable.update({
+                            idcui: req.body.idcui,
+                            idcuentacontable: req.body.idcuentacontable,
+                            porcentaje: req.body.porcentaje
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (contrato) {
+                                logtransaccion.actualizar(idlog, req.body.id, models.desglosecontable,
+                                    function (err, idlog) {
+                                        if (!err) {
+                                            res.json({ error_code: 0 });
+                                        } else {
+                                            logger.error(err)
+                                            return res.json({ error_code: 1 });
+                                        }
+                                    });
+                                //res.json({ error_code: 0 });
+                            }).catch(function (err) {
+                                logger.error(err);
+                                res.json({ error_code: 1 });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
                     }
-                }).then(function (contrato) {
-                    res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
                 });
             break;
         case "del":
-            models.desglosecontable.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ error_code: 0 });
-            }).catch(function (err) {
-                logger.error(err);
-                res.json({ error_code: 1 });
-            });
-
+            logtransaccion.registrar(
+                constants.BorraDesgloseContable,
+                req.body.id,
+                'delete',
+                req.session.passport.user,
+                models.desglosecontable,
+                req.body,
+                function (err, data) {
+                    if (!err) {
+                        models.desglosecontable.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                            if (rowDeleted === 1) {
+                                logger.debug('Deleted successfully');
+                            }
+                            res.json({ error_code: 0 });
+                        }).catch(function (err) {
+                            logger.error(err);
+                            res.json({ error_code: 1 });
+                        });
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
             break;
 
     }
@@ -402,10 +495,10 @@ exports.anular = function (req, res) {
         return models.sequelize.transaction({ autocommit: true }, function (t) {
 
             var promises = []
-            for(var i=0; i<solicitudaprobacion.length;i++){
+            for (var i = 0; i < solicitudaprobacion.length; i++) {
                 var onePromise = models.solicitudaprobacion.update({
                     iddetallecompromiso: null,
-                    idcontrato:null
+                    idcontrato: null
                 }, {
                         where: { id: solicitudaprobacion[i].id }
                     }, { transaction: t });
@@ -413,7 +506,7 @@ exports.anular = function (req, res) {
                 promises.push(onePromise);
                 var sap = solicitudaprobacion[i].sap;
                 var twoPromise;
-                console.log("***SAP:"+sap);
+                console.log("***SAP:" + sap);
                 if (sap) {
                     console.log("***SAP else");
                     twoPromise = models.flujopagoenvuelo.update({
@@ -421,7 +514,7 @@ exports.anular = function (req, res) {
                         estadopago: null
                     }, {
                             where: { id: solicitudaprobacion[i].iddetallecompromiso }
-                        }, { transaction: t });    
+                        }, { transaction: t });
                 } else {
                     console.log("***SAP dentro");
                     twoPromise = models.detallecompromiso.update({
@@ -429,8 +522,8 @@ exports.anular = function (req, res) {
                         estadopago: null
                     }, {
                             where: { id: solicitudaprobacion[i].iddetallecompromiso }
-                        }, { transaction: t });                    
-                                    
+                        }, { transaction: t });
+
                 }
 
                 promises.push(twoPromise);
@@ -542,11 +635,51 @@ exports.generarproy = function (req, res) {
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
 
-    logger.debug("****El peridodo:" + periodo);
-    sequelize.query('EXECUTE sip.generaprefacturasproy '
+    logger.debug("****El periodo:" + periodo);
+    var datavacia = [{ 'sin datos': '' }];
+    logtransaccion.registrar(
+        constants.IniciaGeneraPrefacturasProyectos,
+        0,
+        'insert',
+        req.session.passport.user,
+        'model',
+        datavacia,
+        function (err, data) {
+            if (err) {
+                logger.error(err)
+                return res.json({ error_code: 1 });
+            }
+        });    
+    return sequelize.query('EXECUTE sip.generaprefacturasproy '
         + periodo + ';').then(function (response) {
+            logtransaccion.registrar(
+                constants.FinExitoGeneraPrefacturasProyectos,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });            
             res.json({ error_code: 0 });
         }).error(function (err) {
+            logtransaccion.registrar(
+                constants.FinErrorGeneraPrefacturasProyectos,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });            
             logger.error(err)
             res.json(err);
         });

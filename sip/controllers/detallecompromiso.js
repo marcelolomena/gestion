@@ -3,6 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -34,7 +35,7 @@ exports.action = function (req, res) {
                         where: { id: rows[0][0].id },
                     }).then(function (registro) {
                         logtransaccion.registrar(
-                            10,
+                            constants.CreaFlujo,
                             rows[0][0].id,
                             'insert',
                             req.session.passport.user,
@@ -58,7 +59,7 @@ exports.action = function (req, res) {
             break;
         case "edit":
             logtransaccion.registrar(
-                11,
+                constants.ActualizaFlujo,
                 req.body.id,
                 'update',
                 req.session.passport.user,
@@ -91,7 +92,7 @@ exports.action = function (req, res) {
             break;
         case "del":
             logtransaccion.registrar(
-                12,
+                constants.BorraFlujo,
                 req.body.id,
                 'delete',
                 req.session.passport.user,

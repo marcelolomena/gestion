@@ -4,6 +4,8 @@ var fs = require('fs');
 var path = require("path");
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
 
 exports.test = function (req, res) {
 
@@ -222,6 +224,8 @@ exports.lista = function (req, res) {
 }
 
 exports.anular = function (req, res) {
+    var datavacia = [{ 'sin datos': '' }];
+    
     return models.solicitudaprobacion.find({
         where: { id: req.params.id }
     }).then(function (solicitudaprobacion) {
@@ -238,32 +242,45 @@ exports.anular = function (req, res) {
 
             promises.push(onePromise);
             var sap = solicitudaprobacion.sap;
-            console.log("***SAP:"+sap);
+            console.log("***SAP:" + sap);
             var twoPromise
-             if (sap) {
+            if (sap) {
                 console.log("***SAP else");
                 twoPromise = models.flujopagoenvuelo.update({
                     saldopago: null,
                     estadopago: null
                 }, {
                         where: { id: solicitudaprobacion.iddetallecompromiso }
-                    }, { transaction: t });                 
-             } else {
+                    }, { transaction: t });
+            } else {
                 console.log("***SAP dentro");
                 twoPromise = models.detallecompromiso.update({
                     saldopago: null,
                     estadopago: null
                 }, {
                         where: { id: solicitudaprobacion.iddetallecompromiso }
-                    }, { transaction: t });                                  
-             }
+                    }, { transaction: t });
+            }
             promises.push(twoPromise);
 
             return Promise.all(promises);
 
         }).then(function (result) {
+            logtransaccion.registrar(
+                constants.AnulaSolicitud,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
             res.json({ success: true });
-        }).catch(function (err) {
+        }).catch(function (err) {           
             logger.error(err)
             res.json({ success: false, message: err });
         });
@@ -276,10 +293,25 @@ exports.anular = function (req, res) {
 }
 
 exports.generar = function (req, res) {
+    console.log("*** Inicia Generacion Solicitudes Prefactura");
     var iniDate = new Date();
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
+    var datavacia = [{ 'sin datos': '' }];
+    logtransaccion.registrar(
+        constants.IniciaGeneraSolicitudes,
+        0,
+        'insert',
+        req.session.passport.user,
+        'model',
+        datavacia,
+        function (err, data) {
+            if (err) {
+                logger.error(err)
+                return res.json({ error_code: 1 });
+            }
+        });
 
     sql = `
                 SELECT
@@ -440,20 +472,69 @@ UNION
 
                         return Promise.all(o_promises);
                     }).then(function (result) {
+                        logtransaccion.registrar(
+                            constants.FinExitoGeneraSolicitudes,
+                            0,
+                            'insert',
+                            req.session.passport.user,
+                            'flujopagoenvuelo',
+                            datavacia,
+                            function (err, data) {
+                                if (err) {
+                                    logger.error(err)
+                                    return res.json({ error_code: 1 });
+                                }
+                            });
                         logger.debug("EXITO UPDATE DET");
                         res.json({ error_code: 0, message: "Exito!!" });
                     }).catch(function (err) {
+                        logtransaccion.registrar(
+                            constants.FinErrorGeneraSolicitudes,
+                            0,
+                            'insert',
+                            req.session.passport.user,
+                            'flujopagoenvuelo',
+                            datavacia,
+                            function (err, data) {
+                                if (err) {
+                                    logger.error(err)
+                                    return res.json({ error_code: 1 });
+                                }
+                            });
                         logger.error(err)
                         res.json({ error_code: 1, message: err });
                     });
-
                 }).catch(function (err) {
+                    logtransaccion.registrar(
+                        constants.FinErrorGeneraSolicitudes,
+                        0,
+                        'insert',
+                        req.session.passport.user,
+                        'flujopagoenvuelo',
+                        datavacia,
+                        function (err, data) {
+                            if (err) {
+                                logger.error(err)
+                                return res.json({ error_code: 1 });
+                            }
+                        });
                     logger.error(err)
                     res.json({ error_code: 1, message: err });
                 });
-
-
             }).catch(function (err) {
+                logtransaccion.registrar(
+                    constants.FinExitoGeneraSolicitudes,
+                    0,
+                    'insert',
+                    req.session.passport.user,
+                    'flujopagoenvuelo',
+                    datavacia,
+                    function (err, data) {
+                        if (err) {
+                            logger.error(err)
+                            return res.json({ error_code: 1 });
+                        }
+                    });
                 logger.error(err)
                 res.json({ error_code: 1, message: err });
             });
@@ -551,14 +632,55 @@ exports.generarProyectos = function (req, res) {
     var mes = parseInt(iniDate.getMonth()) + 1
     var mm = mes < 10 ? '0' + mes : mes;
     var periodo = iniDate.getFullYear() + '' + mm;
+    var datavacia = [{ 'sin datos': '' }];
+    
+    logtransaccion.registrar(
+        constants.IniciaGeneraSolicitudesProyectos,
+        0,
+        'insert',
+        req.session.passport.user,
+        'model',
+        datavacia,
+        function (err, data) {
+            if (err) {
+                logger.error(err)
+                return res.json({ error_code: 1 });
+            }
+        });      
     return sequelize.query('EXECUTE sip.GeneraSolicitudesAprobProyectos '
-      + periodo + ';').then(function (response) {
-        logger.debug("EXITO AL GENERAR SOLICITUDES PROYECTO");
-        res.json({ error_code: 0, message: "Exito!!" });
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1, message: err });
-    });            
+        + periodo + ';').then(function (response) {
+            logtransaccion.registrar(
+                constants.FinExitoGeneraSolicitudesProyectos,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });               
+            logger.debug("EXITO AL GENERAR SOLICITUDES PROYECTO");
+            res.json({ error_code: 0, message: "Exito!!" });
+        }).catch(function (err) {
+            logtransaccion.registrar(
+                constants.FinErrorGeneraSolicitudesProyectos,
+                0,
+                'insert',
+                req.session.passport.user,
+                'model',
+                datavacia,
+                function (err, data) {
+                    if (err) {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });             
+            logger.error(err)
+            res.json({ error_code: 1, message: err });
+        });
 }
 
 /*
