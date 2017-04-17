@@ -163,7 +163,23 @@ var gridResponsables = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Responsables"
+            caption: "Responsables",
+            loadComplete: function (data) {
+                var thisId = $.jgrid.jqID(this.id);
+                $.get('/sic/getsession', function (data) {
+                    $.each(data, function (i, item) {
+                        console.log("EL ROL ES: " + item.glosarol)
+                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
+                            $("#add_" + thisId).addClass('ui-disabled');
+                            //$("#add_gridMaster").hide();
+                            //$("#edit_" + thisId).addClass('ui-disabled');
+                            //$("#edit__gridMaster").hide();
+                            $("#del_" + thisId).addClass('ui-disabled');
+                            //$("#del__gridMaster").hide();
+                        }
+                    });
+                });
+            }
         });
         $gridTab.jqGrid('navGrid', '#navGridResp', { edit: false, add: true, del: true, search: false },
             {

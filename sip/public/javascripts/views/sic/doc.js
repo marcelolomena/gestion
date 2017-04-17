@@ -184,9 +184,48 @@ var gridDoc = {
             rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
+                var recs = $gridTab.getGridParam("reccount");
+                var thisId = $.jgrid.jqID(this.id);
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/documentousuario/' + getID,
+                    async: false,
+                    success: function (data) {
+                        var validado = data.validado
+                        console.log(validado)
+                        if (validado != "1") {
+                            //("#add_" + thisId).addClass('ui-disabled');
+                            $("#edit_" + thisId).addClass('ui-disabled');
+                            $("#del_" + thisId).addClass('ui-disabled');
+                            //$("#refresh_" + thisId).addClass('ui-disabled');
+                        } else {
+                            //$("#add_" + thisId).removeClass('ui-disabled');
+                            $("#edit_" + thisId).removeClass('ui-disabled');
+                            $("#del_" + thisId).removeClass('ui-disabled');
+                            //$("#refresh_" + thisId).removeClass('ui-disabled');
+                        }
+
+                    }
+                });
             },
             viewrecords: true,
-            caption: "Documentos"
+            caption: "Documentos",
+            loadComplete: function (data) {
+                var thisId = $.jgrid.jqID(this.id);
+                $.get('/sic/getsession', function (data) {
+                    $.each(data, function (i, item) {
+                        console.log("EL ROL ES: " + item.glosarol)
+                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
+                            //$("#add_" + thisId).addClass('ui-disabled');
+                            //$("#add_gridMaster").hide();
+                            $("#edit_" + thisId).addClass('ui-disabled');
+                            //$("#edit__gridMaster").hide();
+                            $("#del_" + thisId).addClass('ui-disabled');
+                            //$("#del__gridMaster").hide();
+                        }
+                    });
+                });
+            }
         });
 
         $gridTab.jqGrid('navGrid', '#navGrid', { edit: true, add: true, del: true, search: false },
@@ -208,7 +247,7 @@ var gridDoc = {
                         var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
                         $('#elarchivo').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
                         $('input#nombrearchivo', form).attr('readonly', 'readonly');
-                    }else{
+                    } else {
                         $('#elarchivo').html("<div class='column-full'>Archivo Actual: </div>");
                         $('input#nombrearchivo', form).attr('readonly', 'readonly');
                     }

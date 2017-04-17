@@ -456,9 +456,14 @@ $(document).ready(function () {
             var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
                 $.each(data, function (i, item) {
-                    if (item.glosarol === 'Negociador SIC') {
+                    console.log("EL ROL ES: "+item.glosarol)
+                    if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
                         $("#add_" + thisId).addClass('ui-disabled');
-                        $("#add_gridMaster").hide()
+                        //$("#add_gridMaster").hide();
+                        $("#edit_" + thisId).addClass('ui-disabled');
+                        //$("#edit__gridMaster").hide();
+                        $("#del_" + thisId).addClass('ui-disabled');
+                        //$("#del__gridMaster").hide();
                     }
                 });
             });
@@ -515,6 +520,7 @@ $(document).ready(function () {
                     }
 
                     $("#idtipo", form).attr('disabled', 'disabled');
+                    /*
                     $.get('/sic/getsession', function (data) {
                         $.each(data, function (i, item) {
                             if (item.glosarol === 'Negociador SIC') {
@@ -535,7 +541,7 @@ $(document).ready(function () {
                                 $("#fechaenviorfp", form).attr('disabled', 'disabled');
                             }
                         });
-                    });
+                    });*/
                     $("#idtipo", form).attr('disabled', 'disabled');
                     $("#idgrupo", form).attr('disabled', 'disabled');
 
@@ -605,7 +611,8 @@ $(document).ready(function () {
                 }
             }, beforeShowForm: function (form) {
                 setTimeout(function () {
-                    $("#idtipo", form).attr('disabled', 'disabled');
+                    
+                    /*
                     $.get('/sic/getsession', function (data) {
                         $.each(data, function (i, item) {
                             if (item.glosarol === 'Negociador SIC') {
@@ -630,7 +637,9 @@ $(document).ready(function () {
                             }
                         });
                     });
+                    */
                     $("#idtipo", form).attr('disabled', 'disabled');
+                    $("#idgrupo", form).attr('disabled', 'disabled');
                 }, 500);
             }
         }, {

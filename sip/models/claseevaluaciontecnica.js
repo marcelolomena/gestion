@@ -13,6 +13,10 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    niveles: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'sic',timestamps: false,tableName: 'claseevaluaciontecnica'

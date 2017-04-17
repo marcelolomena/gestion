@@ -322,3 +322,24 @@ exports.getplantillatipo = function (req, res) {
         res.json({ error: 1 });
     });
 }
+exports.documentousuario = function (req, res) {
+
+    var iddoc = req.params.iddoc;
+    var idusuario = req.session.passport.user;
+
+    sequelize.query(
+        'SELECT uid ' +
+        'FROM sic.documentoscotizacion ' +
+        'where id=:iddoc',
+        { replacements: { iddoc: iddoc }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        if (valores[0].uid == idusuario) {
+            return res.json({ validado: 1 })
+        } else {
+            return res.json({ validado: 0 })
+        }
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}

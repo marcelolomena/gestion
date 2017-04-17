@@ -20,6 +20,8 @@ var criteriosController = require('../controllers/sic/criterios');
 var claseevaluaciontecnicaController = require('../controllers/sic/claseevaluaciontecnica');
 var bitacoraController = require('../controllers/sic/bitacora');
 var estadosolicitudController = require('../controllers/sic/estadosolicitud');
+var rolessicController = require('../controllers/sic/rolessic');
+var permisosController = require('../controllers/sic/permisos')
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
@@ -380,6 +382,72 @@ module.exports = function (passport) {
 
     router.route('/sic/porcentajecriterios/:parentRowKey')
         .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios);
-   
+
+    router.get('/sic/roles', isAuthenticated, function (req, res) {
+        res.render('sic/rolessic', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/roles/list')
+        .post(isAuthenticated, rolessicController.list);
+
+    router.route('/sic/roles/list2/:id')
+        .post(isAuthenticated, rolessicController.list2);
+
+    router.route('/sic/roles/action')
+        .post(isAuthenticated, rolessicController.action);
+
+    router.route('/sic/getrolessic')
+        .get(isAuthenticated, rolessicController.getRoles);
+
+    router.get('/sic/permisos', isAuthenticated, function (req, res) {
+        res.render('sic/permisossic', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.route('/sic/permisos/list')
+        .post(isAuthenticated, permisosController.list);
+
+    router.route('/sic/permisos/list2/:id')
+        .post(isAuthenticated, permisosController.list2);
+
+    router.route('/sic/permisos/list3/:rid/:mid')
+        .post(isAuthenticated, permisosController.list3);
+
+    router.route('/sic/permisos/action')
+        .post(isAuthenticated, permisosController.action);
+
+    router.route('/sic/permisos/action2')
+        .post(isAuthenticated, permisosController.action2);
+
+    router.route('/sic/getmenus')
+        .get(isAuthenticated, permisosController.getMenus);
+
+    router.route('/sic/getsubmenus')
+        .get(isAuthenticated, permisosController.getSubMenus);
+
+    router.route('/sic/documentousuario/:iddoc')
+        .get(isAuthenticated, documentosController.documentousuario);
+
+    router.route('/sic/criteriosevaluacion/:id/list2')
+        .get(isAuthenticated, claseevaluaciontecnicaController.list3)
+
+    router.route('/sic/criteriosevaluacion/action2')
+        .post(isAuthenticated, claseevaluaciontecnicaController.action3);
+
+    router.route('/sic/porcentajecriterios2/:parentRowKey')
+        .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios2);
+
+    router.route('/sic/criteriosevaluacion/:id/list3')
+        .get(isAuthenticated, claseevaluaciontecnicaController.list4)
+
+    router.route('/sic/criteriosevaluacion/action3')
+        .post(isAuthenticated, claseevaluaciontecnicaController.action4);
+
+    router.route('/sic/porcentajecriterios3/:parentRowKey')
+        .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios3);
+
+    router.route('/sic/criterio3/upload/:idcriterioevaluacion2')
+        .post(isAuthenticated, claseevaluaciontecnicaController.upload);
+
+
     return router;
 }

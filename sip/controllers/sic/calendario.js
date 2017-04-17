@@ -10,63 +10,80 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechaesperada = req.body.fechanueva;
-    var fechareal = req.body.fechanuevar;
+    var fechaesperada = req.body.fechaesperada;
+    var fechareal = req.body.fechareal;
 
-       /* if (req.body.fechaesperada != "") {
-            var d = new Date(req.body.fechaesperada)
-            logger.debug("la fecha rql antes: " + d)
+    /* if (req.body.fechaesperada != "") {
+         var d = new Date(req.body.fechaesperada)
+         logger.debug("la fecha rql antes: " + d)
 
-            //d.setUTCHours(1)
-            logger.debug("la fecha rql convertida: " + d)
-            var dformat = [d.getDate(),
-            d.getMonth() + 1,
-            d.getFullYear()].join('-') + ' ' +
-                [d.getHours(),
-                d.getMinutes(),
-                d.getSeconds()].join(':');
+         //d.setUTCHours(1)
+         logger.debug("la fecha rql convertida: " + d)
+         var dformat = [d.getDate(),
+         d.getMonth() + 1,
+         d.getFullYear()].join('-') + ' ' +
+             [d.getHours(),
+             d.getMinutes(),
+             d.getSeconds()].join(':');
 
-            var fechaintermedia = new Date(dformat + ' UTC')
+         var fechaintermedia = new Date(dformat + ' UTC')
 
-            fechaesperada = fechaintermedia
+         fechaesperada = fechaintermedia
 
-            logger.debug("la fecha rql despues: " + fechaesperada)
-        }
-        if (req.body.fechareal != "") {
-            var d2 = new Date(req.body.fechareal)
-            logger.debug("la fecha rql antes: " + d2)
+         logger.debug("la fecha rql despues: " + fechaesperada)
+     }
+     if (req.body.fechareal != "") {
+         var d2 = new Date(req.body.fechareal)
+         logger.debug("la fecha rql antes: " + d2)
 
-            //d2.setUTCHours(1)
-            logger.debug("la fecha rql convertida: " + d2)
-            var dformat2 = [d2.getDate(),
-            d2.getMonth() + 1,
-            d2.getFullYear()].join('-') + ' ' +
-                [d2.getHours(),
-                d2.getMinutes(),
-                d2.getSeconds()].join(':');
+         //d2.setUTCHours(1)
+         logger.debug("la fecha rql convertida: " + d2)
+         var dformat2 = [d2.getDate(),
+         d2.getMonth() + 1,
+         d2.getFullYear()].join('-') + ' ' +
+             [d2.getHours(),
+             d2.getMinutes(),
+             d2.getSeconds()].join(':');
 
-            var fechaintermedia2 = new Date(dformat2 + ' UTC')
+         var fechaintermedia2 = new Date(dformat2 + ' UTC')
 
-            fechareal = fechaintermedia2
+         fechareal = fechaintermedia2
 
-            logger.debug("la fecha rql despues: " + fechareal)
+         logger.debug("la fecha rql despues: " + fechareal)
 
-        }*/
-    
+     }*/
+
 
     logger.debug("la fecha 1: " + fechaesperada)
     logger.debug("la fecha 2: " + fechareal)
     switch (action) {
         case "add":
-            models.calendariosolicitud.create({
-                idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-                descripcion: req.body.descripcion,
-                fechaesperada: fechaesperada,
-                observacion: req.body.observacion,
-                idtiporesponsable: req.body.idtiporesponsable,
-                borrado: 1,
-                fechareal: fechareal
-            }).then(function (serviciosrequeridos) {
+            var sql = `insert sic.calendariosolicitud values 
+        (:idsolicitudcotizacion,:descripcion,:fechaesperada,
+        :observacion,:idtiporesponsable,:borrado,:fechareal)
+        `
+
+            sequelize.query(sql,
+                {
+                    replacements: {
+                        idsolicitudcotizacion: req.body.idsolicitudcotizacion,
+                        descripcion: req.body.descripcion,
+                        fechaesperada: fechaesperada,
+                        observacion: req.body.observacion,
+                        idtiporesponsable: req.body.idtiporesponsable,
+                        borrado: 1,
+                        fechareal: fechareal
+                    },
+                    type: sequelize.QueryTypes.SELECT
+                }
+            ).then(function (serviciosrequeridos) {
+                /*
+                logger.debug("LA WEBADA:")
+                console.dir(serviciosrequeridos);
+                logger.debug("LA WEBADA 2:")
+                console.dir(serviciosrequeridos.id);
+                logger.debug("LA WEBADA 3:")
+                console.dir(serviciosrequeridos[0].id);
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
                     'calendariosolicitud',
@@ -83,6 +100,7 @@ exports.action = function (req, res) {
                             logger.error("->>> " + err)
                         }
                     });
+                    */
                 return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
             }).catch(function (err) {
                 logger.error(err)
@@ -91,39 +109,37 @@ exports.action = function (req, res) {
             break;
         case "edit":
 
-            bitacora.registrar(
-                req.body.idsolicitudcotizacion,
-                'calendariosolicitud',
-                req.body.id,
-                'update',
-                req.session.passport.user,
-                new Date(),
-                models.calendariosolicitud, function (err, data) {
-                    if (data) {
-                        logger.debug("->>> " + data)
+            var sql = `update sic.calendariosolicitud set 
+        descripcion = :descripcion,
+        fechaesperada = :fechaesperada,
+        observacion = :observacion,
+        idtiporesponsable = :idtiporesponsable,
+        fechareal = :fechareal 
+        where id = :id
+        `
 
-                        models.calendariosolicitud.update({
-                            descripcion: req.body.descripcion,
-                            fechaesperada: fechaesperada,
-                            observacion: req.body.observacion,
-                            idtiporesponsable: req.body.idtiporesponsable,
-                            fechareal: fechareal,
-                        }, {
-                                where: {
-                                    id: req.body.id
-                                }
-                            }).then(function (serviciosrequeridos) {
+            sequelize.query(sql,
+                {
+                    replacements: {
+                        descripcion: req.body.descripcion,
+                        fechaesperada: fechaesperada,
+                        observacion: req.body.observacion,
+                        idtiporesponsable: req.body.idtiporesponsable,
+                        fechareal: fechareal,
+                        id: req.body.id
+                    },
+                    type: sequelize.QueryTypes.SELECT
+                }
+            ).then(function (serviciosrequeridos) {
 
-                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
-                            }).catch(function (err) {
-                                logger.error(err)
-                                return res.json({ id: 0, message: err.message, success: false });
-                            });
-                    } else {
-                        logger.error("->>> " + err)
-                    }
+                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ id: 0, message: err.message, success: false });
+            });
 
-                });
+
+
 
 
             break;

@@ -1,4 +1,4 @@
-function gridCriterios(parentRowID, parentRowKey, suffix) {
+function gridCriterios2(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -31,11 +31,18 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/sic/criteriosevaluacion/" + parentRowKey + "/list";
+    var childGridURL = "/sic/criteriosevaluacion/" + parentRowKey + "/list2";
 
-    var modelCatClausulas = [
+    var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+    //console.log("la grilla padre: " + grillapadre)
+    var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+    //console.log("la rowData : " + rowData)
+    var parentClase = rowData.idclaseevaluaciontecnica;
+    //console.log("la parentSolicitud : " + parentClase)
+
+    var modelSubcriterios = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idclaseevaluaciontecnica', name: 'idclaseevaluaciontecnica',  hidden: true },
+        { label: 'idcriterioevaluacion', name: 'idcriterioevaluacion',  hidden: true },
 
         {
             label: 'Nombre', name: 'nombre', width: 200, align: 'left', search: false, editable: true,
@@ -113,25 +120,26 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Criterios de Evaluación',
+        caption: 'SubCriterios de Evaluación',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelCatClausulas,
+        colModel: modelSubcriterios,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
         subGrid: true,
-        subGridRowExpanded: showSubGrids2,
+        subGridRowExpanded: showSubGrids3,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-        editurl: '/sic/criteriosevaluacion/action',
+        
+        editurl: '/sic/criteriosevaluacion/action2',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -150,7 +158,7 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             width: 800,
-            editCaption: "Modificar Criterio Evaluación",
+            editCaption: "Modificar SubCriterio Evaluación",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -175,13 +183,13 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             width: 800,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Criterio de Evaluación",
+            addCaption: "Agregar SubCriterio de Evaluación",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey };
+                return { parent_id: parentRowKey, abuelo: parentClase  };
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -194,7 +202,7 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
                 $.ajax({
                     type: "GET",
                     async: false,
-                    url: '/sic/porcentajecriterios/' + parentRowKey,
+                    url: '/sic/porcentajecriterios2/' + parentRowKey,
                     success: function (data) {
                         console.log('porcentajequeviene: ' + data[0].total);
                         suma = data[0].total + elporcentaje;
@@ -219,7 +227,7 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Plantilla Cláusula",
+            addCaption: "Eliminar Subcriterio",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
@@ -229,8 +237,9 @@ function gridCriterios(parentRowID, parentRowKey, suffix) {
         }
     );
     
-        function showSubGrids2(subgrid_id, row_id) {
-            gridCriterios2(subgrid_id, row_id, 'criterios2');
+        function showSubGrids3(subgrid_id, row_id) {
+            gridCriterios3(subgrid_id, row_id, 'criterios2');
         }
+        
     
 }

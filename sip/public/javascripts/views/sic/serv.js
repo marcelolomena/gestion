@@ -184,7 +184,23 @@ var gridServ = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Servicios"
+            caption: "Servicios",
+            loadComplete: function (data) {
+                var thisId = $.jgrid.jqID(this.id);
+                $.get('/sic/getsession', function (data) {
+                    $.each(data, function (i, item) {
+                        console.log("EL ROL ES: " + item.glosarol)
+                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
+                            $("#add_" + thisId).addClass('ui-disabled');
+                            //$("#add_gridMaster").hide();
+                            $("#edit_" + thisId).addClass('ui-disabled');
+                            //$("#edit__gridMaster").hide();
+                            $("#del_" + thisId).addClass('ui-disabled');
+                            //$("#del__gridMaster").hide();
+                        }
+                    });
+                });
+            }
         });
         $gridTab.jqGrid('navGrid', '#navGridServ', { edit: true, add: true, del: true, search: false },
             {
@@ -413,7 +429,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         pager: "#" + childGridPagerID,
         //editurl: '/sic/desglosefactoresserv/action',
         editurl: '/sic/desglosefactoraction/' + parentRowKey + '/' + parentSolicitud,
-        
+
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
                 var grid = $("#" + childGridID);
@@ -428,7 +444,23 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
             }
-        }
+        },
+        loadComplete: function (data) {
+                var thisId = $.jgrid.jqID(this.id);
+                $.get('/sic/getsession', function (data) {
+                    $.each(data, function (i, item) {
+                        console.log("EL ROL ES: " + item.glosarol)
+                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
+                            $("#add_" + thisId).addClass('ui-disabled');
+                            //$("#add_gridMaster").hide();
+                            $("#edit_" + thisId).addClass('ui-disabled');
+                            //$("#edit__gridMaster").hide();
+                            $("#del_" + thisId).addClass('ui-disabled');
+                            //$("#del__gridMaster").hide();
+                        }
+                    });
+                });
+            }
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
@@ -696,7 +728,7 @@ console.log("la parentSolicitud : " + parentSolicitud)
                     return [true, "", ""];
                 } else {
                     return [false, result.error_text, ""];
-                    
+
                 }
 
             }
