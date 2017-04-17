@@ -28,22 +28,22 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
     var childGridPagerID = pager_id;
     var childGridURL = "/sic/criteriosevaluacion/" + parentRowKey + "/list3";
 
-    console.log("la parentKey : " + parentRowKey)
+    //console.log("la parentKey : " + parentRowKey)
 
     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-    console.log("la grilla padre: " + grillapadre)
+    //console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    console.log("la rowData : " + rowData)
+    //console.log("la rowData : " + rowData)
     var parentCriterio = rowData.idcriterioevaluacion;
-    console.log("la parentCriterio : " + parentCriterio)
+    //console.log("la parentCriterio : " + parentCriterio)
 
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
-    console.log("la grilla abuelo: " + grillaabuelo)
+    //console.log("la grilla abuelo: " + grillaabuelo)
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
-    console.log("la rowData2 : " + rowData2)
+    //console.log("la rowData2 : " + rowData2)
     var parentAbuelo = rowData.id;
-    console.log("la parentSolicitud : " + parentAbuelo)
+    //console.log("la parentSolicitud : " + parentAbuelo)
 
 
 
@@ -170,7 +170,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
+        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
     },
         {
             closeAfterEdit: true,
@@ -188,7 +188,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             },
             beforeSubmit: function (postdata, formid) {
                 var elporcentaje = parseFloat(postdata.porcentaje);
-                console.log('porcentaje: ' + elporcentaje);
+                //console.log('porcentaje: ' + elporcentaje);
                 if (elporcentaje > 100) {
                     return [false, "Porcentaje no puede ser mayor a 100", ""];
                 }
@@ -241,10 +241,8 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
 function UploadPre(response, postdata) {
     //console.log(postdata)
     var data = $.parseJSON(response.responseText);
-    console.dir(postdata.idcriterioevaluacion2)
     if (data.success) {
         if ($("#ArchivoUpload").val() != "") {
-            console.log('ESTO ES UN ID DE CRITERIO EVALUACION' + postdata.idcriterioevaluacion2)
             ajaxPregUpload(data.id, data.idc, postdata.idcriterioevaluacion2, postdata.childGridID);
         }
     }
@@ -258,7 +256,6 @@ function ajaxPregUpload(id, idc, idpadre, childGridID) {
         message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
     });
     dialog.init(function () {
-        console.log('ESTO ES UN ID DE CRITERIO EVALUACION' + idpadre)
         $.ajaxFileUpload({
             url: '/sic/criterio3/upload/' + idpadre,
             secureuri: false,

@@ -429,24 +429,27 @@ exports.action4 = function (req, res) {
         return res.json({ error: 1, glosa: err.message });
       });
 
-
-
-    case "edit":
-      models.criterioevaluacion3.update({
-        nombre: req.body.nombre,
-        comentario: req.body.comentario,
-        porcentaje: req.body.porcentaje,
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (plantillaclausula) {
-          return res.json({ error: 0, glosa: '' });
-        }).catch(function (err) {
-          logger.error(err)
-          return res.json({ error: 1, glosa: err.message });
-        });
       break;
+
+
+    /*
+        case "edit":
+          models.criterioevaluacion3.update({
+            nombre: req.body.nombre,
+            comentario: req.body.comentario,
+            porcentaje: req.body.porcentaje,
+          }, {
+              where: {
+                id: req.body.id
+              }
+            }).then(function (plantillaclausula) {
+              return res.json({ error: 0, glosa: '' });
+            }).catch(function (err) {
+              logger.error(err)
+              return res.json({ error: 1, glosa: err.message });
+            });
+          break;
+          */
     case "del":
       models.criterioevaluacion3.destroy({
         where: {
@@ -475,24 +478,24 @@ exports.clasesevaluacion = function (req, res) {
     { type: sequelize.QueryTypes.SELECT }
   ).then(function (valores) {
     //logger.debug(valores)
-    res.json(valores);
+    return res.json(valores);
   }).catch(function (err) {
     logger.error(err);
-    res.json({ error: 1 });
+    return res.json({ error: 1 });
   });
 }
 exports.porcentajecriterios = function (req, res) {
   var sql = "select sum(porcentaje) as total from sic.criterioevaluacion where idclaseevaluaciontecnica=" + req.params.parentRowKey;
   sequelize.query(sql)
     .spread(function (rows) {
-      res.json(rows);
+      return res.json(rows);
     });
 };
 exports.porcentajecriterios2 = function (req, res) {
   var sql = "select sum(porcentaje) as total from sic.criterioevaluacion2 where idcriterioevaluacion=" + req.params.parentRowKey;
   sequelize.query(sql)
     .spread(function (rows) {
-      res.json(rows);
+      return res.json(rows);
     });
 }
 
@@ -500,7 +503,7 @@ exports.porcentajecriterios3 = function (req, res) {
   var sql = "select sum(porcentaje) as total from sic.criterioevaluacion3 where idcriterioevaluacion2=" + req.params.parentRowKey;
   sequelize.query(sql)
     .spread(function (rows) {
-      res.json(rows);
+      return res.json(rows);
     });
 }
 
@@ -533,14 +536,9 @@ exports.upload = function (req, res) {
       file.pipe(fs.createWriteStream(saveTo)); //aqui lo guarda
 
       awaitId.then(function (id) {
-
-        logger.debug("idcriterio2 : " + req.params.idcriterioevaluacion2)
-
         var carrusel = [];
 
         var input = fs.createReadStream(saveTo, 'utf8'); //ahora lo lee
-        logger.debug("ESTO ES UN INPUT" + input)
-        console.dir(input)
         input.on('error', function (err) {
           return res.json({ error_code: 1, message: err, success: false });
         });
@@ -553,17 +551,15 @@ exports.upload = function (req, res) {
           skip_empty_lines: true,
           trim: true
         }); //parser CSV       
-        logger.debug("ESTO ES UN PARSE" + parser)
         input.pipe(parser);
 
         parser.on('readable', function () {
           var line
 
           while (line = parser.read()) {
-            logger.debug("ESTO ES UN LINE" + line)
             var item = {}
-            logger.debug("id : " + id)
-           // item['id'] = id;
+            //logger.debug("id : " + id)
+            // item['id'] = id;
 
 
             item['nombre'] = line.nombre;
@@ -572,7 +568,6 @@ exports.upload = function (req, res) {
             item['pregunta'] = line.pregunta;
             item['borrado'] = 1;
 
-            console.dir(item);
 
             carrusel.push(item);
           }
