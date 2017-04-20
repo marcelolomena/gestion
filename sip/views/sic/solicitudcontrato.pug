@@ -1,6 +1,6 @@
 extends base.pug
 block titulo
-  title SIC Banco de Chile - Sistema Integrado de Contratos - Preguntas al Proveedor
+  title SIC Banco de Chile - Sistema Integrado de Contratos - Solicitud de Contrato
 block jsgrilla
   style.
     .ui-th-column>div, .ui-jqgrid-btable .jqgrow>td {
@@ -21,11 +21,14 @@ block jsgrilla
   script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
   script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
   script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           
-  script(type='text/javascript', src='/javascripts/views/sic/preguntaproveedor.js')
-  script(type='text/javascript', src='/javascripts/views/sic/proveedores.js')  
+  script(type='text/javascript', src='/javascripts/views/sic/solicitudcontrato.js')
+  // script(type='text/javascript', src='/javascripts/views/sic/proveedores.js') 
+  script(type='text/javascript', src='/javascripts/views/sic/estadosolicitud.js')  
   script(type='text/javascript', src='/javascripts/views/sic/preguntas.js')
   script(type='text/javascript', src='/javascripts/views/sic/asignar.js')
-  script(type='text/javascript', src='/javascripts/views/sic/respuestas.js')  
+  script(type='text/javascript', src='/javascripts/views/sic/respuestas.js')
+  script(type='text/javascript', src='/javascripts/views/sic/respuestasrfp.js') 
+  script(type='text/javascript', src='/javascripts/views/sic/participantesproveedor.js')    
 block titulogrilla
 block grilla
  .gcontainer

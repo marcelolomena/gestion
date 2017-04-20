@@ -28,8 +28,8 @@ module.exports = function (passport) {
         return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
-    router.get('/sic/preguntaproveedor', isAuthenticated, function (req, res) {
-        return res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
+    router.get('/sic/solicitudcontrato', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcontrato', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/grid_solicitudcotizacion')
