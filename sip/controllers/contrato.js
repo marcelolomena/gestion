@@ -4,6 +4,7 @@ var utilSeq = require('../utils/seq');
 var nodeExcel = require('excel-export');
 var logger = require("../utils/logger");
 var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
 
 exports.excel = function (req, res) {
   var page = req.query.page;
@@ -246,7 +247,7 @@ exports.action = function (req, res) {
         borrado: 1
       }).then(function (contratonew) {
 				logtransaccion.registrar(
-					4,
+					constants.CreaContrato,
 					contratonew.id,
 					'insert',
 					req.session.passport.user,
@@ -269,7 +270,7 @@ exports.action = function (req, res) {
       break;
     case "edit":
 				logtransaccion.registrar(
-					5,
+					constants.ActualizaContrato,
 					req.body.id,
 					'update',
 					req.session.passport.user,
@@ -321,7 +322,7 @@ exports.action = function (req, res) {
       break;
     case "del":
 				logtransaccion.registrar(
-					6,
+					constants.BorraContrato,
 					req.body.id,
 					'delete',
 					req.session.passport.user,

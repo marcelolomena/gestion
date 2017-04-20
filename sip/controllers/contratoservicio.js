@@ -3,6 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -193,7 +194,7 @@ exports.action = function (req, res) {
                             where: { id: contratosrv[0].id },
                         }).then(function (registro) {
                             logtransaccion.registrar(
-                                7,
+                                constants.CreaServicio,
                                 contratosrv[0].id,
                                 'insert',
                                 req.session.passport.user,
@@ -236,7 +237,7 @@ exports.action = function (req, res) {
                 "WHERE id=" + req.body.id;
             console.log("sqlup:" + sql);
             logtransaccion.registrar(
-                8,
+                constants.ActualizaServicio,
                 req.body.id,
                 'update',
                 req.session.passport.user,
@@ -309,7 +310,7 @@ exports.action = function (req, res) {
                 if (nada != "10") {
                     console.log("Periodos borrados");
                     logtransaccion.registrar(
-                        9,
+                        constants.BorraServicio,
                         req.body.id,
                         'delete',
                         req.session.passport.user,

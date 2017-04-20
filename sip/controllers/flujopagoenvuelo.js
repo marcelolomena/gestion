@@ -2,6 +2,8 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
+var constants = require("../utils/constants");
 
 exports.action = function (req, res) {
     var action = req.body.oper;
@@ -32,8 +34,8 @@ exports.action = function (req, res) {
         }
     }
 
-    console.log("fecha inicio: "+fechainicio)
-    console.log("fecha fin: "+fechafin)
+    console.log("fecha inicio: " + fechainicio)
+    console.log("fecha fin: " + fechafin)
 
     switch (action) {
         case "add":
@@ -50,7 +52,22 @@ exports.action = function (req, res) {
                 cantidad: 1,
                 borrado: 1
             }).then(function (detalle) {
-                return res.json({ error_code: 0 });
+                logtransaccion.registrar(
+                    constants.CreaFlujoPago,
+                    detalle.id,
+                    'insert',
+                    req.session.passport.user,
+                    'flujopagoenvuelo',
+                    detalle,
+                    function (err, data) {
+                        if (!err) {
+                            res.json({ error_code: 0 });
+                        } else {
+                            logger.error(err)
+                            return res.json({ error_code: 1 });
+                        }
+                    });
+                //return res.json({ error_code: 0 });
             }).catch(function (err) {
                 logger.error(err);
                 return res.json({ error_code: 1 });
@@ -58,61 +75,97 @@ exports.action = function (req, res) {
 
             break;
         case "edit":
-            if (req.body.costoorigen != "") {
-                models.flujopagoenvuelo.update({
-                    idsubtarea: idsubtarea,
-                    periodo: req.body.periodo,
-                    costoorigen: costoorigen,
-                    glosaitem: req.body.glosaitem,
-                    porcentaje: porcentaje,
-                    idtipopago: tipopago,
-                    fechainicio: fechainicio,
-                    fechafin: fechafin,
-                    cantidad: 1
-                }, {
-                        where: {
-                            id: req.body.id
-                        }
-                    }).then(function (detalle) {
-                        return res.json({ error_code: 0 });
-                    }).catch(function (err) {
-                        logger.error(err);
-                        return res.json({ error_code: 1 });
-                    });
+            logtransaccion.registrar(
+                constants.ActualizaFlujoPago,
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                models.flujopagoenvuelo,
+                req.body,
+                function (err, idlog) {
+                    if (!err) {
+                        if (req.body.costoorigen != "") {
+                            models.flujopagoenvuelo.update({
+                                idsubtarea: idsubtarea,
+                                periodo: req.body.periodo,
+                                costoorigen: costoorigen,
+                                glosaitem: req.body.glosaitem,
+                                porcentaje: porcentaje,
+                                idtipopago: tipopago,
+                                fechainicio: fechainicio,
+                                fechafin: fechafin,
+                                cantidad: 1
+                            }, {
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (detalle) {
+                                    logtransaccion.actualizar(idlog, req.body.id, models.flujopagoenvuelo,
+                                        function (err, idlog) {
+                                            if (!err) {
+                                                res.json({ error_code: 0 });
+                                            } else {
+                                                logger.error(err)
+                                                return res.json({ error_code: 1 });
+                                            }
+                                        });
 
-            } else {
-                models.flujopagoenvuelo.update({
-                    periodo: req.body.periodo,
-                    fechainicio: fechainicio,
-                    fechafin: fechafin,
-                }, {
-                        where: {
-                            id: req.body.id
-                        }
-                    }).then(function (detalle) {
-                        return res.json({ error_code: 0 });
-                    }).catch(function (err) {
-                        logger.error(err);
-                        return res.json({ error_code: 1 });
-                    });
-            }
+                                    //return res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                    return res.json({ error_code: 1 });
+                                });
 
+                        } else {
+                            models.flujopagoenvuelo.update({
+                                periodo: req.body.periodo,
+                                fechainicio: fechainicio,
+                                fechafin: fechafin,
+                            }, {
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (detalle) {
+                                    return res.json({ error_code: 0 });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                    return res.json({ error_code: 1 });
+                                });
+                        }
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
             break;
         case "del":
-            models.flujopagoenvuelo.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                return res.json({ error_code: 0 });
-            }).catch(function (err) {
-                logger.error(err);
-                return res.json({ error_code: 1 });
-            });
-
+            logtransaccion.registrar(
+                constants.BorraFlujoPago,
+                req.body.id,
+                'delete',
+                req.session.passport.user,
+                models.flujopagoenvuelo,
+                req.body,
+                function (err, data) {
+                    if (!err) {
+                        models.flujopagoenvuelo.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                            if (rowDeleted === 1) {
+                                logger.debug('Deleted successfully');
+                            }
+                            return res.json({ error_code: 0 });
+                        }).catch(function (err) {
+                            logger.error(err);
+                            return res.json({ error_code: 1 });
+                        });
+                    } else {
+                        logger.error(err)
+                        return res.json({ error_code: 1 });
+                    }
+                });
             break;
     }
 }

@@ -1,6 +1,7 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
+var logtransaccion = require("../utils/logtransaccion");
 var constants = require("../utils/constants");
 
 exports.getFacturas = function (req, res) {
@@ -131,21 +132,40 @@ exports.action = function (req, res) {
   var montoneto;
   var impuesto;
   var montototal;
-  if (action == "add" || action =="edit"){
+  if (action == "add" || action == "edit") {
     montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
     impuesto = req.body.impuesto.split(".").join("").replace(",", ".");
     montototal = req.body.montototal.split(".").join("").replace(",", ".");
   }
-  
+
   switch (action) {
     case "add":
-      var sql = "INSERT INTO sip.factura (numero, idproveedor, fecha, montoneto, impuesto, montototal, borrado) " +
+      var sql = "declare @id int;" +
+        "INSERT INTO sip.factura (numero, idproveedor, fecha, montoneto, impuesto, montototal, borrado) " +
         "VALUES (" + req.body.numero + ", " + req.body.idproveedor + ", '" + req.body.fecha + "', " +
-        montoneto + ", " + impuesto + ", " + montototal + ", 1)";
+        montoneto + ", " + impuesto + ", " + montototal + ", 1);" +
+        "select @id = @@IDENTITY; " +
+        "select * from sip.factura where id=@id;";
       console.log("query:" + sql);
       sequelize.query(sql)
-        .spread(function (rows) {
-          res.json({ error_code: 0 });
+        .spread(function (factura) {
+          console.log("**Resultado:" + JSON.stringify(factura));
+          logtransaccion.registrar(
+            constants.CreaFactura,
+            factura[0].id,
+            'insert',
+            req.session.passport.user,
+            'factura',
+            factura[0],
+            function (err, data) {
+              if (!err) {
+                res.json({ error_code: 0 });
+              } else {
+                logger.error(err)
+                return res.json({ error_code: 1 });
+              }
+            });
+          //res.json({ error_code: 0 });
         }).catch(function (err) {
           logger.error(err);
           res.json({ error_code: 1 });
@@ -162,13 +182,35 @@ exports.action = function (req, res) {
         "montototal = " + montototal + " " +
         "WHERE id=" + req.body.id;
       logger.debug("sql:" + sql);
-      sequelize.query(sql).then(function (factura) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
-
+      logtransaccion.registrar(
+        constants.ActualizaFactura,
+        req.body.id,
+        'update',
+        req.session.passport.user,
+        models.factura,
+        req.body,
+        function (err, idlog) {
+          if (!err) {
+            sequelize.query(sql).then(function (factura) {
+              logtransaccion.actualizar(idlog, req.body.id, models.factura,
+                function (err, idlog) {
+                  if (!err) {
+                    res.json({ error_code: 0 });
+                  } else {
+                    logger.error(err)
+                    return res.json({ error_code: 1 });
+                  }
+                });
+              //res.json({ error_code: 0 });
+            }).catch(function (err) {
+              logger.error(err);
+              res.json({ error_code: 1 });
+            });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
+          }
+        });
       break;
     case "del":
       var sql = "delete from sip.detallefactura " +
@@ -176,12 +218,26 @@ exports.action = function (req, res) {
         "delete from sip.factura " +
         "WHERE id=" + req.body.id;
       logger.debug("sql:" + sql);
-      sequelize.query(sql).then(function (factura) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+      logtransaccion.registrar(
+        constants.BorraFactura,
+        req.body.id,
+        'delete',
+        req.session.passport.user,
+        models.factura,
+        req.body,
+        function (err, data) {
+          if (!err) {
+            sequelize.query(sql).then(function (factura) {
+              res.json({ error_code: 0 });
+            }).catch(function (err) {
+              logger.error(err);
+              res.json({ error_code: 1 });
+            });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
+          }
+        });
       break;
 
   }
@@ -198,40 +254,54 @@ exports.actionDetalle = function (req, res) {
 
   switch (action) {
     case "add":
-      if (req.body.montoneto != ""){
+      if (req.body.montoneto != "") {
         var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
-      }    
+      }
       var sql0 = "select * from sip.detallefactura where idfacturacion=" + req.body.idfacturacion;
       console.log("query0:" + sql0);
       sequelize.query(sql0).spread(function (rows) {
         if (rows.length > 0) {
           res.json({ error_code: 100 });
         } else {
-          var sql = "DECLARE @impuesto FLOAT;DECLARE @montoimpuesto FLOAT;"+
-            "SELECT @impuesto=isnull(b.impuesto,0) FROM sip.solicitudaprobacion a JOIN sip.prefactura b ON a.idprefactura=b.id where a.idfacturacion="+req.body.idfacturacion+";"+
-            "select @montoimpuesto=0;"+
-            "IF (@impuesto <> 0) SELECT @montoimpuesto ="+montoneto+"*0.19;"+
+          var sql = "DECLARE @impuesto FLOAT;DECLARE @montoimpuesto FLOAT;" +
+            "SELECT @impuesto=isnull(b.impuesto,0) FROM sip.solicitudaprobacion a JOIN sip.prefactura b ON a.idprefactura=b.id where a.idfacturacion=" + req.body.idfacturacion + ";" +
+            "select @montoimpuesto=0;" +
+            "IF (@impuesto <> 0) SELECT @montoimpuesto =" + montoneto + "*0.19;" +
             "INSERT INTO sip.detallefactura (idfactura, idprefactura, idfacturacion, montonetoorigen, montoneto, cantidad, montototal, borrado, glosaservicio, impuesto) " +
             "VALUES (" + idPre + ", " + idprefact + ", '" + req.body.idfacturacion + "', " +
             req.body.montonetopf + ", " + montoneto + ", " + req.body.cantidad + ", " + montoneto + "+@montoimpuesto, 1,'" + req.body.glosaservicio + "', @montoimpuesto);" +
             "DECLARE @id INT;" +
             "select @id = @@IDENTITY; " +
-            "select @id as id;";
+            "select * from  sip.detallefactura where id=@id;";
           console.log("query:" + sql);
           sequelize.query(sql).spread(function (rows) {
             var id = rows[0].id;
+            logtransaccion.registrar(
+              constants.CreaItemFactura,
+              rows[0].id,
+              'insert',
+              req.session.passport.user,
+              'detallefactura',
+              rows[0],
+              function (err, data) {
+                if (err) {
+                  logger.error(err)
+                  return res.json({ error_code: 1 });
+                }
+              });
+
             sql2 = "DECLARE @monto float;" +
               "DECLARE @periodo INT;" +
               "DECLARE @factorrecupera FLOAT;" +
-              "DECLARE @montoimpuesto float;"+
+              "DECLARE @montoimpuesto float;" +
               "SELECT @monto=a.montoneto, @periodo=b.periodo, @montoimpuesto=a.impuesto FROM sip.detallefactura a JOIN sip.solicitudaprobacion b ON a.idfacturacion=b.id " +
               "WHERE a.idfacturacion=" + req.body.idfacturacion + ";" +
               "SELECT @factorrecupera=factorrecuperacion FROM sip.factoriva WHERE periodo=@periodo;" +
               "INSERT sip.desgloseitemfactura " +
-              "SELECT " + id + ", idcui, idcuentacontable, porcentaje, porcentaje*@monto/100, porcentaje*@montoimpuesto/100, "+
-              "(porcentaje*@montoimpuesto/100)*@factorrecupera, (porcentaje*@monto/100) + (porcentaje*@montoimpuesto/100)*@factorrecupera, "+
-              "(porcentaje*@montoimpuesto/100)*(1-@factorrecupera),@monto*porcentaje/100+@montoimpuesto*porcentaje/100,1 "+
-              "FROM sip.desglosecontable WHERE idsolicitud=" + req.body.idfacturacion;           
+              "SELECT " + id + ", idcui, idcuentacontable, porcentaje, porcentaje*@monto/100, porcentaje*@montoimpuesto/100, " +
+              "(porcentaje*@montoimpuesto/100)*@factorrecupera, (porcentaje*@monto/100) + (porcentaje*@montoimpuesto/100)*@factorrecupera, " +
+              "(porcentaje*@montoimpuesto/100)*(1-@factorrecupera),@monto*porcentaje/100+@montoimpuesto*porcentaje/100,1 " +
+              "FROM sip.desglosecontable WHERE idsolicitud=" + req.body.idfacturacion;
             console.log("query2:" + sql2);
             sequelize.query(sql2).spread(function (rows) {
               //update campo ivacredito en factura
@@ -240,12 +310,12 @@ exports.actionDetalle = function (req, res) {
                 "SELECT @monto2=sum(ivanorecuperable) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
                 "SELECT @monto3=sum(montocosto) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
                 "SELECT @monto4=sum(ivacredito) FROM sip.desgloseitemfactura WHERE iddetallefactura=" + id + ";" +
-                "UPDATE sip.detallefactura SET ivanorecuperable=@monto2, impuesto=@monto1, montocosto=@monto3, ivacredito=@monto4 WHERE id=" + id+";"+
-                "DECLARE @idfactura INT;"+
-                "SELECT @idfactura = idfactura FROM sip.detallefactura WHERE id="+id+";"+
-                "UPDATE sip.factura SET ivanorecuperable=isnull(ivanorecuperable,0)+@monto2, montocosto=isnull(montocosto,0)+@monto3, ivacredito=isnull(ivacredito,0)+@monto4 "+
-                "where id=@idfactura";                
-                console.log("query3:" + sql3);
+                "UPDATE sip.detallefactura SET ivanorecuperable=@monto2, impuesto=@monto1, montocosto=@monto3, ivacredito=@monto4 WHERE id=" + id + ";" +
+                "DECLARE @idfactura INT;" +
+                "SELECT @idfactura = idfactura FROM sip.detallefactura WHERE id=" + id + ";" +
+                "UPDATE sip.factura SET ivanorecuperable=isnull(ivanorecuperable,0)+@monto2, montocosto=isnull(montocosto,0)+@monto3, ivacredito=isnull(ivacredito,0)+@monto4 " +
+                "where id=@idfactura";
+              console.log("query3:" + sql3);
               sequelize.query(sql3).spread(function (rows) {
                 res.json({ error_code: 0 });
               }).catch(function (err) {
@@ -264,9 +334,9 @@ exports.actionDetalle = function (req, res) {
       });
       break;
     case "edit":
-      if (req.body.montoneto != ""){
+      if (req.body.montoneto != "") {
         var montoneto = req.body.montoneto.split(".").join("").replace(",", ".");
-      }    
+      }
       var sql = "UPDATE sip.detallefactura  SET " +
         "idfacturacion = " + req.body.idfacturacion + ", " +
         "montoneto = " + req.body.montoneto + ", " +
@@ -300,22 +370,35 @@ exports.actionDetalle = function (req, res) {
 
       break;
     case "del":
-      var sql = "delete from sip.desgloseitemfactura where iddetallefactura=" + req.body.id+";"+
-        "DECLARE @monto1 FLOAT;DECLARE @monto2 FLOAT;DECLARE @monto3 FLOAT;DECLARE @idfactura INT; "+
-        "SELECT @monto1=ivanorecuperable,@monto2=montocosto,@monto3=ivacredito FROM sip.detallefactura WHERE id="+req.body.id+"; "+
-        "SELECT @idfactura=idfactura FROM sip.detallefactura WHERE id="+req.body.id+";"+
-        "UPDATE sip.factura SET ivanorecuperable=isnull(ivanorecuperable,0)-@monto1, "+
-        "montocosto=isnull(montocosto,0)-@monto2, ivacredito=isnull(ivacredito,0)-@monto3 "+
-        "WHERE id=@idfactura;"+
-        "delete from sip.detallefactura WHERE id=" + req.body.id + ";";
-
-      logger.debug("sql:" + sql);
-      sequelize.query(sql).then(function (factura) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err);
-        res.json({ error_code: 1 });
-      });
+      logtransaccion.registrar(
+        constants.BorraItemFactura,
+        req.body.id,
+        'delete',
+        req.session.passport.user,
+        models.detallefactura,
+        req.body,
+        function (err, data) {
+          if (!err) {
+            var sql = "delete from sip.desgloseitemfactura where iddetallefactura=" + req.body.id + ";" +
+              "DECLARE @monto1 FLOAT;DECLARE @monto2 FLOAT;DECLARE @monto3 FLOAT;DECLARE @idfactura INT; " +
+              "SELECT @monto1=ivanorecuperable,@monto2=montocosto,@monto3=ivacredito FROM sip.detallefactura WHERE id=" + req.body.id + "; " +
+              "SELECT @idfactura=idfactura FROM sip.detallefactura WHERE id=" + req.body.id + ";" +
+              "UPDATE sip.factura SET ivanorecuperable=isnull(ivanorecuperable,0)-@monto1, " +
+              "montocosto=isnull(montocosto,0)-@monto2, ivacredito=isnull(ivacredito,0)-@monto3 " +
+              "WHERE id=@idfactura;" +
+              "delete from sip.detallefactura WHERE id=" + req.body.id + ";";
+            logger.debug("sql:" + sql);
+            sequelize.query(sql).then(function (factura) {
+              res.json({ error_code: 0 });
+            }).catch(function (err) {
+              logger.error(err);
+              res.json({ error_code: 1 });
+            });
+          } else {
+            logger.error(err)
+            return res.json({ error_code: 1 });
+          }
+        });
       break;
 
   }
@@ -336,7 +419,7 @@ exports.getSolicitudAprob = function (req, res) {
   var idfacturacion = req.params.id
   var periodo = req.params.periodo
   var sql = "SELECT idprefactura,glosaservicio, montoaprobado-montomulta AS montoneto, round(montototalpesos,0) AS montoapagarpesos, " +
-    "a.factorconversion "+
+    "a.factorconversion " +
     "from sip.solicitudaprobacion a JOIN sip.factura b ON a.idproveedor=b.idproveedor " +
     "where idfacturacion=" + idfacturacion + " and  b.id =" + req.params.idproveedor;
   console.log("query:" + sql)
@@ -361,8 +444,8 @@ exports.getDesglose = function (req, res) {
 
 exports.getResumenContable = function (req, res) {
   logger.debug("****idfactura:" + req.params.id);
-  var total=0;
-  var page=1;
+  var total = 0;
+  var page = 1;
   sql = "DECLARE @vacio VARCHAR(10);" +
     "SELECT @vacio=' ';" +
     "WITH query AS (" +
@@ -377,9 +460,9 @@ exports.getResumenContable = function (req, res) {
     ") SELECT * FROM query ORDER BY cui desc";
   console.log(sql);
   sequelize.query(sql).spread(function (rows) {
-      var records=rows.length;
-      var total=rows.length;
-      res.json({ records: records, total: total, page: page, rows: rows });
+    var records = rows.length;
+    var total = rows.length;
+    res.json({ records: records, total: total, page: page, rows: rows });
   }).catch(function (err) {
     logger.error(err)
     res.json(err);
