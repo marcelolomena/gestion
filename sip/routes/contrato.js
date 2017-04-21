@@ -8,13 +8,13 @@ var contratoController = require('../controllers/contrato');
 module.exports = function (passport) {
 
     router.get('/contratos', isAuthenticated, function (req, res) {
-        res.render('contratos', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'contratos', title: 'CONTRATOS' });
     });
 
     router.route('/contratos/list')
         .post(isAuthenticated, contratoController.list)
         .get(isAuthenticated, contratoController.listall);
- 
+
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
 
@@ -29,15 +29,15 @@ module.exports = function (passport) {
 
     router.route('/contratoservicio/:id')
         .post(isAuthenticated, contratoservicioController.list);
-        
+
     router.route('/contratoproveedor/:id')
-        .get(isAuthenticated, contratoController.listaporproveedor); 
-        
+        .get(isAuthenticated, contratoController.listaporproveedor);
+
     router.route('/contratoservicio/plantillapresupuesto/:id')
         .get(isAuthenticated, contratoservicioController.plantillapresupuesto);
-        
+
     router.route('/contratoservicio/cuiforservice/:idp/:ids/:sap')
-        .get(isAuthenticated, contratoservicioController.cuiforservice);               
+        .get(isAuthenticated, contratoservicioController.cuiforservice);
 
     router.route('/contratoservicio/action/:id')
         .post(isAuthenticated, contratoservicioController.action);
@@ -46,23 +46,23 @@ module.exports = function (passport) {
         .post(isAuthenticated, contratoservicioController.oper);
 
     router.route('/contratoperiodos')
-        .get(isAuthenticated, contratoservicioController.getPeriodos);  
-        
+        .get(isAuthenticated, contratoservicioController.getPeriodos);
+
     router.route('/contratoservicio/saldopresup/:id/:id2')
-        .get(isAuthenticated, contratoservicioController.getSaldoPresup);            
+        .get(isAuthenticated, contratoservicioController.getSaldoPresup);
 
     router.route('/contrato/tipodocumento')
-        .get(isAuthenticated, contratoController.getTipoDocumentos);   
-        
+        .get(isAuthenticated, contratoController.getTipoDocumentos);
+
     router.route('/getcodigoart/:id')
-        .get(isAuthenticated, contratoController.getCodigoart);        
-        
+        .get(isAuthenticated, contratoController.getCodigoart);
+
     router.route('/getlistasap/:id/:id2')
-        .get(isAuthenticated, contratoservicioController.getListaSAP);        
-        
+        .get(isAuthenticated, contratoservicioController.getListaSAP);
+
     router.route('/getlistatareas/:id/:id2')
-        .get(isAuthenticated, contratoservicioController.getListaTareas);               
-        
+        .get(isAuthenticated, contratoservicioController.getListaTareas);
+
     return router;
 
 }

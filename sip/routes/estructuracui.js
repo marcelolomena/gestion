@@ -8,7 +8,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/estructuracui', isAuthenticated, function (req, res) {
-        res.render('estructuracui', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'estructuracui', title: 'COMPROMISOS POR CUI' });
     });
 
     router.route('/estructuracui/responsables')

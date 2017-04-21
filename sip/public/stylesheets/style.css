@@ -1,16 +1,19 @@
+
 @import url('stylesheet.css'); 
+
 body, html {
 	margin: 0;
 	width:100%;
 	padding:0;
-	/*	overflow:hidden;*/
 	font-family: 'robotolight';
 	font-weight: 400;
 	height: 100%;
 }
+
 body .wrap-body{
 }
-.container {
+
+.contenedor {
 	position: relative;
 	width: 100%;
 	left: 0;
@@ -21,7 +24,8 @@ body .wrap-body{
 	transition:  left 0.4s ease-in-out;
 	height: 100%;
 }
-.container.open-sidebar {
+
+.contenedor.open-sidebar {
     left: 240px;
 }
  
@@ -197,7 +201,7 @@ body .wrap-body{
 	font-size: 26px;
 	color: #FFF;
 }
-.item .item-container {
+.item .item-contenedor {
 	vertical-align: middle;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
@@ -210,7 +214,7 @@ body .wrap-body{
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 }
-.item .item-container images {
+.item .item-contenedor images {
 	display: block;
 	width: 100%;
 	height: auto;
@@ -227,7 +231,7 @@ body .wrap-body{
 	margin-left: 1000px;
 	color: #CCC;
 }
-.container #sidebar .perfil_sesion .user {
+.contenedor #sidebar .perfil_sesion .user {
 	padding-left: 74px;
 	height: 76px;
 	width: 240px;
@@ -235,11 +239,11 @@ body .wrap-body{
 	background-repeat: no-repeat;
 	background-position: 17px center;
 }
-.container #sidebar .perfil_sesion .user #p {
+.contenedor #sidebar .perfil_sesion .user #p {
 	padding-top: 28px;
 	font-size: 12px;
 }
-.container #sidebar .perfil_sesion .usuario1 {
+.contenedor #sidebar .perfil_sesion .usuario1 {
 	font-family: 'robotolight';
 	font-weight:300;
 	font-size: 11px;
@@ -249,7 +253,7 @@ body .wrap-body{
 	/*line-height: 18px;*/
 	padding-left: 18px;
 }
-.container #sidebar .perfil_sesion .usuario2 {
+.contenedor #sidebar .perfil_sesion .usuario2 {
 	font-family: 'robotolight';
 	font-weight:300;
 	font-size: 11px;
@@ -260,7 +264,7 @@ body .wrap-body{
 	padding-left: 18px;
 	mnargin-top: 18px;
 }
-.container #sidebar .perfil_sesion .usuario3 {
+.contenedor #sidebar .perfil_sesion .usuario3 {
 	font-family: 'robotolight';
 	font-weight:700;
 	font-size: 11px;
@@ -276,7 +280,7 @@ body .wrap-body{
 	color: #6baa1f;
 	text-decoration: none;
 }
-.container #sidebar .perfil_sesion {
+.contenedor #sidebar .perfil_sesion {
 	font-family: 'robotolight';
 	font-weight:300;
 	font-size: 13px;

@@ -87,7 +87,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/divisiones',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.iddivision;
@@ -123,7 +123,7 @@ $(document).ready(function () {
             searchoptions: {
                 dataUrl: '/divisiones',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.iddivision;
@@ -154,7 +154,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Gerente',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidgerente;
@@ -195,7 +195,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/PMO',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uidpmo;
@@ -236,7 +236,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/parameters/categoria',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -319,7 +319,7 @@ $(document).ready(function () {
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                $('#table_iniciativa')[0].triggerToolbar();
+                                $('#grid')[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -412,7 +412,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/parameters/estadoiniciativa',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.divisionsponsor;
@@ -441,7 +441,7 @@ $(document).ready(function () {
             dataInit: function (elem) { $(elem).width(200); }
         },
     ];
-    $("#table_iniciativa").jqGrid({
+    $("#grid").jqGrid({
         url: '/iniciativas/list',
         mtype: "POST",
         datatype: "json",
@@ -455,7 +455,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager_iniciativa",
+        pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/iniciativas/action',
@@ -472,12 +472,12 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_iniciativa").jqGrid('filterToolbar', {
+    $("#grid").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
 
-    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
+    $('#grid').jqGrid('navGrid', "#pager", {
         edit: true, add: true, del: true, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -501,7 +501,7 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+                sipLibrary.centerDialog($('#grid').attr('id'));
                 $('input#pptoestimadogasto', form).attr('readonly', 'readonly');
                 $('input#pptoestimadoinversion', form).attr('readonly', 'readonly');
                 $('input#pptoestimadoprevisto', form).attr('readonly', 'readonly');
@@ -510,7 +510,7 @@ $(document).ready(function () {
                 $('input#pptoaprobadoprevisto', form).attr('readonly', 'readonly');
                 $('input#pptoaprobadodolares', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
             }
         },
         {
@@ -532,7 +532,7 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
@@ -543,9 +543,9 @@ $(document).ready(function () {
                 $('input#pptoaprobadoinversion', form).attr('readonly', 'readonly');
                 $('input#pptoaprobadoprevisto', form).attr('readonly', 'readonly');
                 $('input#pptoaprobadodolares', form).attr('readonly', 'readonly');
-                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
+                sipLibrary.centerDialog($('#grid').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
             }
         },
         {
@@ -567,17 +567,17 @@ $(document).ready(function () {
         }
     );
 
-    $('#table_iniciativa').jqGrid('navButtonAdd', '#pager_iniciativa', {
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
         caption: "Excel",
         buttonicon: "silk-icon-page-excel",
         title: "Excel",
         position: "last",
         onClickButton: function () {
-            var grid = $('#table_iniciativa');
+            var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
             var url = '/iniciativasexcel';
-            $('#table_iniciativa').jqGrid('excelExport', { "url": url });
+            $('#grid').jqGrid('excelExport', { "url": url });
         }
     });
-    $("#pager_iniciativa_left").css("width", "");
+    $("#pager_left").css("width", "");
 });

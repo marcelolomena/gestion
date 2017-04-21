@@ -10,13 +10,13 @@ var presupuestoapruebaController = require('../controllers/presupuestoaprueba');
 module.exports = function (passport) {
 
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
-        res.render('presupuesto', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuesto', title: 'Informe de Presupuestos' });
     });
 
     router.get('/presupuestoaprobacion', isAuthenticated, function (req, res) {
-        res.render('presupuestoaprueba', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuestoaprueba', title: 'Aprobación de Presupuestos' });
     });
-    
+
     router.route('/presupuestoperiodoslist/:id')
         .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);
 
@@ -40,9 +40,9 @@ module.exports = function (passport) {
 
     router.route('/proveedorespre/:id')
         .get(isAuthenticated, presupuestoServiciosController.getProveedores);
-        
+
     router.route('/proveedorespreserv/:id/:id2')
-        .get(isAuthenticated, presupuestoServiciosController.getProveedoresServ);        
+        .get(isAuthenticated, presupuestoServiciosController.getProveedoresServ);
 
     router.route('/presupuestolist')
         .get(isAuthenticated, presupuestoController.getPresupuestoPaginados);
@@ -57,42 +57,42 @@ module.exports = function (passport) {
         .post(isAuthenticated, presupuestoController.action);
 
     router.route('/ejercicios')
-        .get(isAuthenticated, presupuestoController.getEjercicios);       
-        
+        .get(isAuthenticated, presupuestoController.getEjercicios);
+
     router.route('/getversion/:cui/:ejercicio')
-        .get(isAuthenticated, presupuestoController.getVersion);           
+        .get(isAuthenticated, presupuestoController.getVersion);
 
     router.route('/actualizaTotales/:id')
-        .get(isAuthenticated, presupuestoController.updateTotales);   
+        .get(isAuthenticated, presupuestoController.updateTotales);
 
     router.route('/presupuestoconfirma/:id/:estado/:idcui/:ideje')
-        .get(isAuthenticated, presupuestoController.confirma);   
+        .get(isAuthenticated, presupuestoController.confirma);
 
     router.route('/presupuestosconfirmados')
-        .get(isAuthenticated, presupuestoapruebaController.getPresupuestosConfirmados);   
-        
+        .get(isAuthenticated, presupuestoapruebaController.getPresupuestosConfirmados);
+
     router.route('/aprueba/:ids')
-        .get(isAuthenticated, presupuestoapruebaController.aprueba);           
+        .get(isAuthenticated, presupuestoapruebaController.aprueba);
 
     router.route('/desaprueba/:ids')
-        .get(isAuthenticated, presupuestoapruebaController.desaprueba);   
+        .get(isAuthenticated, presupuestoapruebaController.desaprueba);
 
     router.route('/serviciosfrecuencia')
-        .get(isAuthenticated, presupuestoServiciosController.getFrecuencia);  
+        .get(isAuthenticated, presupuestoServiciosController.getFrecuencia);
 
     router.route('/serviciosperiodos')
-        .get(isAuthenticated, presupuestoServiciosController.getPeriodos);  
+        .get(isAuthenticated, presupuestoServiciosController.getPeriodos);
 
     router.route('/tiporecupera')
-        .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);         
+        .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);
 
     router.get('/presupuestoeditcosto', isAuthenticated, function (req, res) {
-        res.render('presupuestoeditcosto', { user: req.user, data: req.session.passport.sidebar });
-    });        
-    
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuestoeditcosto', title: 'Informe de Presupuestos' });
+    });
+
     router.route('/presupuestoperiodoscosto/action')
-        .post(isAuthenticated, presupuestoperiodosController.actioncosto);    
-        
-     return router;       
+        .post(isAuthenticated, presupuestoperiodosController.actioncosto);
+
+    return router;
 
 }        
