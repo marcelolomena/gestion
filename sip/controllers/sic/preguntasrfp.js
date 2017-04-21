@@ -37,7 +37,7 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-           models.preguntacotizacion.findAll({
+            models.preguntacotizacion.findAll({
                 where: {
                     id: req.body.id
                 }
@@ -68,30 +68,30 @@ exports.action = function (req, res) {
                         }
                     });
             });
-            break; 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             models.preguntacotizacion.destroy({
                 where: {
                     id: req.body.id
@@ -306,3 +306,50 @@ exports.descargapreguntas = function (req, res) {
 
 
 }
+exports.proveedoressugeridostotal = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.proveedorsugerido.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.proveedorsugerido.belongsTo(models.serviciosrequeridos, { foreignKey: 'idserviciorequerido' });
+
+            models.proveedorsugerido.count({
+                include: [{
+                    model: models.serviciosrequeridos, where: { idsolicitudcotizacion: id }
+                }]
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.proveedorsugerido.findAll({
+                    attributes: [
+                        [sequelize.fn('DISTINCT', sequelize.col('[proveedor].[numrut]')), '[proveedor].[numrut]']
+                    ],
+                    //offset: parseInt(rows * (page - 1)),
+                    //limit: parseInt(rows),
+                    //order: orden,
+                    include: [{
+                        model: models.proveedor
+                    }, {
+                        model: models.serviciosrequeridos, where: { idsolicitudcotizacion: id }
+                    }
+                    ]
+                }).then(function (proveedorsugerido) {
+                    //logger.debug(solicitudcotizacion)
+                    return res.json({ records: records, total: total, page: page, rows: proveedorsugerido });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};

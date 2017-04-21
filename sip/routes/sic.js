@@ -448,6 +448,9 @@ module.exports = function (passport) {
     router.route('/sic/criterio3/upload/:idcriterioevaluacion2')
         .post(isAuthenticated, claseevaluaciontecnicaController.upload);
 
+    router.route('/sic/proveedoressugeridostotal/:id/list')
+        .get(isAuthenticated, preguntasrfpController.proveedoressugeridostotal);
+
 
     return router;
 }
