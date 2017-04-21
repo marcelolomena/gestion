@@ -41,7 +41,7 @@ module.exports = function (passport) {
                         req.session.save(() => {
                             req.session.passport.sidebar = data
                             if (parseInt(req.body.sistema) === 1) {
-                                res.render('home', { data: data });
+                                res.render('home', { data: data, page: 'home', title: '' });
                             } else {
                                 res.render('sic/home2', { data: data });
                             }
@@ -60,7 +60,7 @@ module.exports = function (passport) {
                         req.session.save(() => {
                             req.session.passport.sidebar = data
                             if (parseInt(req.body.sistema) === 1) {
-                                res.render('home', { data: data });
+                                res.render('home', { data: data, page: 'home', title: '' });
                             } else {
                                 res.render('sic/home2', { data: data });
                             }
@@ -85,9 +85,10 @@ module.exports = function (passport) {
         });
     */
 
+
     /* GET Home Page */
     router.get('/home', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'home' });
     });
 
     router.get('sic/home2', isAuthenticated, function (req, res) {

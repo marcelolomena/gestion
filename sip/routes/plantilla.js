@@ -9,7 +9,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/plantilla', isAuthenticated, function (req, res) {
-        res.render('plantilla', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'plantilla', title: 'Plantilla Presupuestaria' });        
     });
 
     router.route('/plantilla/list')

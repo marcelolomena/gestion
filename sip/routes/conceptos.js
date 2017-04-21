@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/conceptos', isAuthenticated, function (req, res) {
-        res.render('conceptos', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'conceptos', title: 'Conceptos Presupuestarios' });
     });
 
     router.route('/conceptos/list')

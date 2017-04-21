@@ -7,9 +7,10 @@ var reportesController = require('../controllers/reportes');
 module.exports = function (passport) {
 
     router.get('/reporte', isAuthenticated, function (req, res) {
-        res.render('reporte', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'reporte', title: 'REPORTE' });        
     });
 
+/*
     router.get('/reportetroya', isAuthenticated, function (req, res) {
         res.render('reportetroya', { user: req.user, data: req.session.passport.sidebar });
     });
@@ -17,7 +18,7 @@ module.exports = function (passport) {
     router.get('/reportepivote', isAuthenticated, function (req, res) {
         res.render('reportepivote', { user: req.user, data: req.session.passport.sidebar });
     });
-
+*/
     router.route('/reporte/lstGerencias')
         .get(isAuthenticated, reportesController.lstGerencias);
 

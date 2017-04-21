@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/factorrecuperacion', isAuthenticated, function (req, res) {
-        res.render('factorrecuperacion', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'factorrecuperacion', title: 'Factor de Recuperación' });
     });
 
     router.route('/factorrecuperacion/list')

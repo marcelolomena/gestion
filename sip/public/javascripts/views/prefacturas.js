@@ -36,7 +36,7 @@ function cancelId(id, factura) {
                         url: '/prefacturas/anular/' + id
                     }).done(function () {
                         bootbox.alert("Prefactura anulada ...", function () { /* your callback code */ })
-                        $("#table_prefacturas").trigger("reloadGrid");
+                        $("#grid").trigger("reloadGrid");
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         bootbox.alert("Error!!…", function () { /* your callback code */ })
                     }).always(function () {
@@ -165,7 +165,7 @@ $(document).ready(function () {
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                $('#table_prefacturas')[0].triggerToolbar();
+                                $('#grid')[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -192,7 +192,7 @@ $(document).ready(function () {
         },        
 
     ];
-    $("#table_prefacturas").jqGrid({
+    $("#grid").jqGrid({
         url: '/prefacturas/list',
         mtype: "POST",
         datatype: "json",
@@ -206,7 +206,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager_prefacturas",
+        pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/prefacturas/action',
@@ -228,15 +228,15 @@ $(document).ready(function () {
                 $.each(data, function (i, item) {
 
                     if (item.glosarol === "Administrador DIVOT") {
-                        $("#table_prefacturas").jqGrid("showCol", "Anular")
+                        $("#grid").jqGrid("showCol", "Anular")
                     }
                 });
             });
         }
     });
-    $("#table_prefacturas").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
+    $("#grid").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
 
-    $('#table_prefacturas').jqGrid('navGrid', "#pager_prefacturas", {
+    $('#grid').jqGrid('navGrid', "#pager", {
         edit: false, add: false, del: false, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -253,5 +253,5 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_prefacturas_left").css("width", "");
+    $("#pager_left").css("width", "");
 });

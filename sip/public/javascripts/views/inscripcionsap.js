@@ -47,7 +47,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/programas',
                 buildSelect: function (response) {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.program_name;
@@ -160,7 +160,7 @@ $(document).ready(function () {
 
     ];
 
-    $("#table_iniciativa").jqGrid({
+    $("#grid").jqGrid({
         url: '/inscripcionsap/listSAP',
         mtype: "POST",
         datatype: "json",
@@ -174,7 +174,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager_iniciativa",
+        pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/presupuestoiniciativa/actualiSAP',
@@ -186,9 +186,9 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
         onSelectRow: function (id) {
-            //var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
-            //$("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
-            //$("#table_iniciativa").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
+            //var temp = $('#grid').getRowData($('#grid').getGridParam("selrow")).program_id;
+            //$("#grid").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
+            //$("#grid").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
         },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
@@ -196,20 +196,20 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         },
         gridComplete: function () {
-            var recs = $("#table_iniciativa").getGridParam("reccount");
+            var recs = $("#grid").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#table_iniciativa").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
+                $("#grid").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
             }
         }
     });
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
-    $("#table_iniciativa").jqGrid('filterToolbar', {
+    $("#grid").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
 
-    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
+    $('#grid').jqGrid('navGrid', "#pager", {
         edit: true, add: false, del: false, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -242,7 +242,7 @@ $(document).ready(function () {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var grid = $("#table_iniciativa");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.id;
@@ -281,7 +281,7 @@ $(document).ready(function () {
                 $('input#glosa', form).attr('readonly', 'readonly');
                 $('input#fechafinal', form).attr('readonly', 'readonly');
                 //$('#program_id').attr('disabled', 'disabled');
-                var grid = $("#table_iniciativa");
+                var grid = $("#grid");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
                 var thissid = rowData.id;
@@ -290,10 +290,10 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 }
 
-                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
             }
         },
         {
@@ -314,7 +314,7 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    $("#pager_iniciativa_left").css("width", "");
+    $("#pager_left").css("width", "");
     
     function showSubGrids(subgrid_id, row_id) {
         gridTareasInscripcion(subgrid_id, row_id, 'tareasinscripcion');
