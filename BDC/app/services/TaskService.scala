@@ -80,26 +80,26 @@ object TaskService extends CustomColumns {
     sqlString = "EXEC art.update_task {tId},{pId},{task_title},{task_code},{plan_start_date},{plan_end_date},{task_description},{plan_time},{creation_date},{task_status},{status},{owner},{task_discipline},{completion_percentage},{remark},{task_depend},{dependencies_type},{stage},{user_role},{deliverable}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
-          'tId -> task.tId,
-          'pId -> task.pId,
-          'task_title -> task.task_title,
-          'task_code -> task.task_code,
-          'plan_start_date -> task.plan_start_date,
-          'plan_end_date -> task.plan_end_date,
-          'task_description -> task.task_description,
-          'plan_time -> task.plan_time.bigDecimal,
-          'creation_date -> task.creation_date,
-          'task_status -> task.task_status,
-          'status -> task.status,
-          'owner -> task.owner,
-          'task_discipline -> task.task_discipline,
-          'completion_percentage -> task.completion_percentage,
-          'remark -> task.remark,
-          'task_depend -> task.task_depend,
-          'dependencies_type -> task.dependencies_type,
-          'stage -> task.stage,
-          'user_role -> task.user_role,
-          'deliverable -> task.deliverable).executeUpdate()
+        'tId -> task.tId,
+        'pId -> task.pId,
+        'task_title -> task.task_title,
+        'task_code -> task.task_code,
+        'plan_start_date -> task.plan_start_date,
+        'plan_end_date -> task.plan_end_date,
+        'task_description -> task.task_description,
+        'plan_time -> task.plan_time.bigDecimal,
+        'creation_date -> task.creation_date,
+        'task_status -> task.task_status,
+        'status -> task.status,
+        'owner -> task.owner,
+        'task_discipline -> task.task_discipline,
+        'completion_percentage -> task.completion_percentage,
+        'remark -> task.remark,
+        'task_depend -> task.task_depend,
+        'dependencies_type -> task.dependencies_type,
+        'stage -> task.stage,
+        'user_role -> task.user_role,
+        'deliverable -> task.deliverable).executeUpdate()
     }
   }
 
@@ -173,15 +173,14 @@ object TaskService extends CustomColumns {
       result
     }
   }
-  
+
   def findTaskListByProjectIdAsign(pId: String): Seq[Tasks] = {
     var sqlString = ""
     sqlString = "EXEC art.task_asigned_time {pid}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('pid ->pId.toInt).as(Tasks.tasks *)
+      SQL(sqlString).on('pid -> pId.toInt).as(Tasks.tasks *)
     }
-  }  
-
+  }
 
   def getTaskGanttChart(projectId: String): JSONArray = {
     var jsonArr = new JSONArray()
@@ -256,7 +255,7 @@ object TaskService extends CustomColumns {
     var isValid = true
     for (subtask <- subtasks) {
       if (!subtask.completion_percentage.isEmpty) {
-      //if (subtask.completion_percentage.get>0) {
+        //if (subtask.completion_percentage.get>0) {
         if (subtask.completion_percentage.get != 100) {
           isValid = false
         }
@@ -272,7 +271,7 @@ object TaskService extends CustomColumns {
             actual_completion = subtask.actual_end_date.get
           }
         }
-       
+
         if (actual_completion_date == null) {
           actual_completion_date = actual_completion
         } /*else if (actual_completion.getTime > actual_completion_date.getTime) {
@@ -292,7 +291,7 @@ object TaskService extends CustomColumns {
         hrs_allocated_to_subtask += a.estimated_time.toDouble
       }
       if (!subtask.completion_percentage.isEmpty) {
-      //if (subtask.completion_percentage.get>0) {        
+        //if (subtask.completion_percentage.get>0) {        
         acutal_hours_completed_for_subtask = (hrs_allocated_to_subtask * subtask.completion_percentage.get / 100)
       } else {
         acutal_hours_completed_for_subtask = 0
@@ -469,21 +468,21 @@ object TaskService extends CustomColumns {
     }
 
   }
-  
-  def canCreateSubTask(uid:String,tid: String): Int = {
+
+  def canCreateSubTask(uid: String, tid: String): Int = {
     var sqlString = ""
     sqlString = "EXEC art.valid_create_subtask {uid},{tid}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid ->uid.toInt,
-          'tid -> tid.toInt).as(scalar[Int].single)
+      SQL(sqlString).on('uid -> uid.toInt,
+        'tid -> tid.toInt).as(scalar[Int].single)
     }
-  }  
+  }
 
   def findSubTaskListByTaskId(task_id: String): Seq[SubTasks] = {
     var sql = ""
     if (task_id != "") {
       sql = "select t.*,m.task_title as task_title from art_sub_task t,art_task m where t.is_deleted=1 AND m.is_active=1 AND (t.task_id=m.tId) AND task_id = '" + task_id + "' order by t.plan_start_date asc"
-    } else {//MAL
+    } else { //MAL
       sql = "select t.*,t.title as task_title from art_sub_task t,art_task m where t.is_deleted=1 AND m.is_active=1 AND (t.task_id=m.tId) order by t.plan_start_date asc"
     }
 
@@ -555,9 +554,9 @@ object TaskService extends CustomColumns {
     }
   }*/
   def getAllAllocatedSubTask(user_id: String): Seq[SubTasks] = {
-      var sqlString ="EXEC art.list_subtask {uid}"
+    var sqlString = "EXEC art.list_subtask {uid}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> user_id).executeQuery()as(SubTasks.subTask *)
+      SQL(sqlString).on('uid -> user_id).executeQuery() as (SubTasks.subTask *)
     }
     /*
     var sql = ""
@@ -848,7 +847,7 @@ object TaskService extends CustomColumns {
     //println(form.get.task_depend +" " +form.get.dependencies_type);
     val format = new java.text.SimpleDateFormat("dd-MM-yyyy")
     val task_depend = form.data.get("task_depend")
-    println("validando task_depend: "+form.data.get("task_depend"))
+    println("validando task_depend: " + form.data.get("task_depend"))
     var newform: play.api.data.Form[models.TaskMaster] = null
     val projectDetail = ProjectService.findProject(Integer.parseInt(form.data.get("pId").get))
     if (!form.data.get("plan_start_date").get.isEmpty() && !form.data.get("plan_end_date").get.isEmpty()) {
@@ -1223,14 +1222,14 @@ object TaskService extends CustomColumns {
       SQL(sqlString).as(TaskStatus.tStatus.singleOpt)
     }
   }
-  
+
   def findAllTaskStatus(task_id: String): Seq[TaskStatus] = {
     var sqlString = ""
     sqlString = "SELECT * from  art_task_status where task_id=" + task_id + " order by status_for_date DESC"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(TaskStatus.tStatus *)
     }
-  }  
+  }
 
   def changeDependentTaskDates(task_id: String, hours_change: Integer) = {
     if (StringUtils.isEmpty(task_id)) {
@@ -1333,6 +1332,22 @@ object TaskService extends CustomColumns {
 
   }
 
+  def canDeletedTask(tId: String): Boolean = {
+
+    var canDeleted = true
+
+    DB.withConnection { implicit connection =>
+      val result: Long = SQL(
+        "SELECT COUNT(*) FROM art_sub_task WHERE is_deleted = 1 AND  task_id = '" + tId + "'").as(scalar[Long].single)
+
+      if (result > 0)
+        canDeleted = false
+    }
+
+    canDeleted
+
+  }
+
   def updateTaskDependecy(tId: String, task_depends: String): Int = {
     DB.withConnection { implicit connection =>
       SQL(
@@ -1365,7 +1380,7 @@ object TaskService extends CustomColumns {
     var result: Option[String] = null
 
     //var sql = "select ISNULL(CONVERT(nVarChar(10),MAX(task_for_date), 110), 'NA') from (select MAX(task_for_date) task_for_date from  art_timesheet  where task_id= " + task_id + " AND is_deleted=1 AND task_type=1 UNION ALL select MAX(task_for_date) task_for_date from  art_timesheet_external  where task_id= " + task_id + " AND is_deleted=1 AND task_type=1) as fecha"
- 	var sql = "select ISNULL(REPLACE ( CONVERT(varchar(10), MAX(task_for_date), 103), '/','-'),'NA') from (select MAX(task_for_date) task_for_date from  art_timesheet  where task_id= " + task_id + " AND is_deleted=1 AND task_type=1 UNION ALL select MAX(task_for_date) task_for_date from  art_timesheet_external  where task_id= " + task_id + " AND is_deleted=1 AND task_type=1) as fecha"
+    var sql = "select ISNULL(REPLACE ( CONVERT(varchar(10), MAX(task_for_date), 103), '/','-'),'NA') from (select MAX(task_for_date) task_for_date from  art_timesheet  where task_id= " + task_id + " AND is_deleted=1 AND task_type=1 UNION ALL select MAX(task_for_date) task_for_date from  art_timesheet_external  where task_id= " + task_id + " AND is_deleted=1 AND task_type=1) as fecha"
 
     try {
       DB.withConnection { implicit connection =>
@@ -1391,7 +1406,7 @@ object TaskService extends CustomColumns {
           'plan_end_date -> end_date).executeUpdate()
     }
   }
-  
+
   def updateTaskPlannedStartDate(task_id: String, start_date: String): Int = {
 
     DB.withConnection { implicit connection =>
