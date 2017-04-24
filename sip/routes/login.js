@@ -41,7 +41,27 @@ module.exports = function (passport) {
                         req.session.save(() => {
                             req.session.passport.sidebar = data
                             if (parseInt(req.body.sistema) === 1) {
-                                res.render('home', { data: data, page: 'home', title: '' });
+
+                                models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                                return models.pagina.findOne({
+                                    where: { nombre: 'home' },
+                                    include: [{
+                                        model: models.contenido
+                                    }
+                                    ]
+                                }).then(function (pagina) {
+
+                                    return res.render('home', {
+                                        user: req.user,
+                                        data: data,
+                                        page: 'home',
+                                        title: '',
+                                        type: pagina.contenido.id
+                                    });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                });
+
                             } else {
                                 res.render('sic/home2', { data: data });
                             }
@@ -60,7 +80,25 @@ module.exports = function (passport) {
                         req.session.save(() => {
                             req.session.passport.sidebar = data
                             if (parseInt(req.body.sistema) === 1) {
-                                res.render('home', { data: data, page: 'home', title: '' });
+                                models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                                return models.pagina.findOne({
+                                    where: { nombre: 'home' },
+                                    include: [{
+                                        model: models.contenido
+                                    }
+                                    ]
+                                }).then(function (pagina) {
+                                    console.dir("WEA :" + pagina.contenido.id)
+                                    return res.render('home', {
+                                        user: req.user,
+                                        data: data,
+                                        page: 'home',
+                                        title: '',
+                                        type: pagina.contenido.id
+                                    });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                });
                             } else {
                                 res.render('sic/home2', { data: data });
                             }

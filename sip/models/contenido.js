@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('pagina', {
+  return sequelize.define('contenido', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -11,16 +11,8 @@ module.exports = function(sequelize, DataTypes) {
     nombre: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    idtipo: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'contenido',
-        key: 'id'
-      }
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'pagina'
+    schema: 'sip',timestamps: false,tableName: 'contenido'
   });
 };

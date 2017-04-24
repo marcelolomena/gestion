@@ -1,32 +1,6 @@
-html
-  head
-    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-    title SIP Banco de Chile - Sistema Integrado de Presupuesto
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')                                
-    link(rel='stylesheet', href='/stylesheets/ui.jqgrid-bootstrap.css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/bootstrap-datepicker.css', type='text/css', media='screen', charset='utf-8')        
-    link(rel='stylesheet', href='stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
-    link(rel='stylesheet', href='/stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/style.css', type='text/css', media='screen', charset='utf-8')    
-    link(rel='stylesheet', href='/stylesheets/menu.css', type='text/css', media='screen', charset='utf-8') 
-    link(rel='stylesheet', href='/stylesheets/dashboard.css', type='text/css', media='screen', charset='utf-8')         
-    script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
-    script(type='text/javascript', src='/javascripts/highcharts/highcharts.js')
-    script(type='text/javascript', src='/javascripts/highcharts/highcharts-more.js')
-    script(type='text/javascript', src='/javascripts/grid.locale-es.js')
-    script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
-    script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
-    script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js')
-    script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")
-    script(type='text/javascript', src='/javascripts/bootstrap3-typeahead.js')
-    script(type='text/javascript', src='/javascripts/script.js')
-    script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')
-    script(type='text/javascript', src='/javascripts/jsplug.js')
-    script(type='text/javascript', src='/javascripts/sip.js')
-    script(type='text/javascript', src='/resources/socket.io/socket.io.js')
-    script(type='text/javascript', src='/javascripts/bootstrap.min.js')
-    script(type='text/javascript', src='/javascripts/bootbox.min.js')
+extends layout.pug
+block append head
+    script var type = #{type}
     script var page = "#{page}"
     if(page==='contratos')
      script(type='text/javascript', src='/javascripts/views/contrato.js')
@@ -147,7 +121,7 @@ html
      script(type='text/javascript', src='/javascripts/views/consultalog.js')
     else
      script(type='text/javascript', src='/javascripts/dashboard.js')
-  body
+block content
     #contenedor.contenedor
       include sidebar.pug
       .main-content
@@ -164,149 +138,8 @@ html
                   img(src='../../images/header.png', width='384', height='95')
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
-          p(style='color: #f1563a')  
-          if(page==='home')          
-           .row
-            .col-xs-4
-             .form-group
-              select.input-large.form-control
-               option(value='') Seleccione un valor
-               option(value='GA', selected='selected') Gasto
-               option(value='IN') Inversión
-           .row
-            .col-xs-4
-             .dash-unit
-              #pie
-            .col-xs-4
-             .dash-unit
-              #linea
-            .col-xs-4
-             .dash-unit
-              #reloj
-           .row
-            .col-xs-4
-             .dash-unit
-              #torta
-            .col-xs-4
-             .dash-unit
-              #raya
-            .col-xs-4
-             .dash-unit
-              #dona
-          else if(page==='estructuracui') 
-           .row
-            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-             h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") #{title}
-           .row            
-            div(style='width: 100%')
-             #container(style='width: 100%; float: left; display: inline-block;')
-              table#gridpadre
-              #pagerpadre 
-            div(style='width: 100%')
-             #container(style='width: 100%; float: left; display: inline-block;') 
-             | -
-            div(style='width: 100%')
-             #container(style='width: 100%; float: left; display: inline-block;')
-              table#grid
-              #pager   
-          else if(page==='grafico')
-           .row          
-            .cajaFormulario
-             .formSap
-              | SAP :  
-              select#sap
-               option(value='0', selected='selected') - Escoger SAP -
-            div(style='width: 100%')
-             #container(style='width: 50%; float: left; display: inline-block;')
-             #container2(style='width: 50%; display: inline-block;')
-            div(style='width: 100%')
-             #container(style='width: 50%; float: left; display: inline-block;')
-              table#grid
-              #pager
-             #container2(style='width: 50%; display: inline-block;')
-              table#grid2
-              #pager2
-          else if(page==='hyperion')
-           .gcontainer
-            table#gridMaster
-            #pagerMaster
-            table#gridDetail
-            #pagerDetail          
-          else if(page==='pert')
-           #myDiagramDiv(style='border: solid 1px gray; width:100%; height:400px')
-          else if(page==='prefacturasolicitud') 
-           .row
-            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-             h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") #{title}
-           .row                        
-            .cajaFormulario
-             .formSap
-              | Periodo:
-              input#periodo(type='text', name='periodo', disabled, style='line-height: 20px; width: 80px; margin-right: 10px') 
-              | CUI :
-              select#cui(style='margin-right: 10px') 
-              | Proveedor:
-              select#proveedor
-              #buscar.btn Mostrar Todos       
-            div(style='width: 100%')
-             #container2(style='width: 100%; display: inline-block;')
-              table#grid
-              #pager         
-          else if(page==='reporte')    
-           #outerDiv(style='margin:50px;height:100%')  
-            #grafico_1 
-            table#grid
-            #pager
-            #grafico_2   
-            table#gridConceptoGasto
-            #dialog(style='display: none')                              
-          else if(page==='resetpwd')
-           .row
-            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-             h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") #{title}
-           .row                        
-            .cajaFormulario
-             .formFactura
-              form#miform(action='http://152.139.49.217:8080/forgot-password')    
-               | Ingrese Usuario:
-               input#user_name(type='text', name='user_name', style='line-height: 20px; width: 180px; margin-right: 10px; margin-left: 10px')
-             #buscar.btn Continuar 
-            div(style='width: 100%')
-             #container(style='width: 50%; float: left; display: inline-block;')
-              table#grid
-              #pager                
-          else if(page==='consultalog')  
-           .row
-            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-             h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") #{title}
-           .row                        
-            .cajaFormulario
-             .formSap
-              | Funcionalidad :  
-              select#funcionalidad
-               option(value='0', selected='selected') - Escoger Función -
-              select#transaccion
-               option(value='0', selected='selected') - Escoger Transacción - 
-             .formFactura
-              | Usuario:
-              select#usuario(type='text', name='factura')
-               option(value='0', selected='selected') - Escoger Usuario - 
-              span.titCajaPeriodo Periodo:
-              input#fechaini(type='text', name='fechaini')
-              |         -
-              input#fechafin(type='text', name='fechafin')
-              span.titCajaRegistro ID Registro:   
-              input#idregistro(type='text', name='idregistro')      
-             #buscar.btn Buscar     
-            div(style='width: 100%')
-             #container(style='width: 100%; float: left; display: inline-block;')
-              table#grid
-               #pager          
+          p(style='color: #f1563a')
+          if(type===2)
+           include page_home.pug
           else 
-           .row
-            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-             h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") #{title}
-           .row
-            .gcontainer
-             table#grid
-             #pager
+           include page_grid.pug

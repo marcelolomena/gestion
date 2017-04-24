@@ -11,24 +11,25 @@ var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     router.get('/contratos', isAuthenticated, function (req, res) {
-
-
-        models.pagina.findOne({
+        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+        return models.pagina.findOne({
             where: { nombre: 'contratos' },
+            include: [{
+                model: models.contenido
+            }
+            ]
         }).then(function (pagina) {
-            logger.debug("\n" + pagina.contenido)
-            res.render('home', {
+
+            return res.render('home', {
                 user: req.user,
                 data: req.session.passport.sidebar,
                 page: 'contratos',
                 title: 'CONTRATOS',
-                content: pagina.contenido
+                type: pagina.contenido.id
             });
         }).catch(function (err) {
             logger.error(err);
         });
-
-
     });
 
     router.route('/contratos/list')
