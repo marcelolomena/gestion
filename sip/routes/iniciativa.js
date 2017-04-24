@@ -26,7 +26,7 @@ module.exports = function (passport) {
         .post(isAuthenticated, compromisosporcuiController.list);
 
     router.get('/planiniciativas', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'compromisosporcui', title: 'COMPROMISOS POR CUI' });                
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'planiniciativas', title: 'PLAN INICIATIVAS' });                
     });
 
     router.route('/planiniciativas/list')

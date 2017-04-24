@@ -7,7 +7,7 @@ var logController = require('../controllers/consultalog');
 module.exports = function (passport) {
 
     router.get('/consultalog', isAuthenticated, function (req, res) {
-        res.render('consultalog', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'consultalog', title: 'Consulta Log Transacciones' });        
     });
 
     router.route('/funciones')

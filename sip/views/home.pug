@@ -136,6 +136,15 @@ html
     else if(page==='resetpwd')
      link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')        
      script(type='text/javascript', src='/javascripts/views/resetpwd.js')     
+    else if(page==='roldenegocio')
+     script(type='text/javascript', src='/javascripts/views/roldenegocio.js')
+     script(type='text/javascript').
+      var uid = #{user[0].uid};
+    else if(page==='planiniciativas')
+     script(type='text/javascript', src='/javascripts/views/planiniciativas.js')   
+    else if(page==='consultalog')
+     link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
+     script(type='text/javascript', src='/javascripts/views/consultalog.js')
     else
      script(type='text/javascript', src='/javascripts/dashboard.js')
   body
@@ -265,7 +274,34 @@ html
             div(style='width: 100%')
              #container(style='width: 50%; float: left; display: inline-block;')
               table#grid
-              #pager                 
+              #pager                
+          else if(page==='consultalog')  
+           .row
+            .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+             h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") #{title}
+           .row                        
+            .cajaFormulario
+             .formSap
+              | Funcionalidad :  
+              select#funcionalidad
+               option(value='0', selected='selected') - Escoger Función -
+              select#transaccion
+               option(value='0', selected='selected') - Escoger Transacción - 
+             .formFactura
+              | Usuario:
+              select#usuario(type='text', name='factura')
+               option(value='0', selected='selected') - Escoger Usuario - 
+              span.titCajaPeriodo Periodo:
+              input#fechaini(type='text', name='fechaini')
+              |         -
+              input#fechafin(type='text', name='fechafin')
+              span.titCajaRegistro ID Registro:   
+              input#idregistro(type='text', name='idregistro')      
+             #buscar.btn Buscar     
+            div(style='width: 100%')
+             #container(style='width: 100%; float: left; display: inline-block;')
+              table#grid
+               #pager          
           else 
            .row
             .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
