@@ -381,7 +381,7 @@ exports.listaporproveedor = function (req, res) {
 
 exports.list = function (req, res) {
 
-  console.dir(req.session)
+  //console.dir(req.session)
 
   var page = req.body.page;
   var rows = req.body.rows;

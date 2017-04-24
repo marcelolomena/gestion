@@ -4,11 +4,31 @@ var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var contratoservicioController = require('../controllers/contratoservicio');
 var contratoController = require('../controllers/contrato');
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
 
     router.get('/contratos', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'contratos', title: 'CONTRATOS' });
+
+
+        models.pagina.findOne({
+            where: { nombre: 'contratos' },
+        }).then(function (pagina) {
+            logger.debug("\n" + pagina.contenido)
+            res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'contratos',
+                title: 'CONTRATOS',
+                content: pagina.contenido
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });
+
+
     });
 
     router.route('/contratos/list')
