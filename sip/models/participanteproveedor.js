@@ -1,14 +1,14 @@
 /* jshint indent: 2 */
 
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('respuestacotizacion', {
+  return sequelize.define('participanteproveedor', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    /*
+    
     idsolicitudcotizacion: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -17,7 +17,7 @@ module.exports = function (sequelize, DataTypes) {
         key: 'id'
       }
     },
-    */
+    
     idproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -26,16 +26,12 @@ module.exports = function (sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idpregunta: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'preguntacotizacion',
-        key: 'id'
-      }
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
-    respuesta: {
-      type: DataTypes.TEXT,
+    cargo: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     borrado: {
@@ -43,6 +39,6 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-      schema: 'sic', timestamps: false, tableName: 'respuestacotizacion'
+      schema: 'sic', timestamps: false, tableName: 'participanteproveedor'
     });
 };
