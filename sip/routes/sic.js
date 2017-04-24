@@ -473,7 +473,7 @@ module.exports = function (passport) {
     router.route('/sic/flujocotizacion/:id/list')
         .get(isAuthenticated, cotizacionservicioController.listflujo)
 
-    router.route('/sic/cotizacionservicio/action')
+    router.route('/sic/flujocotizacion/action')
         .post(isAuthenticated, cotizacionservicioController.actionflujo);
 
     return router;

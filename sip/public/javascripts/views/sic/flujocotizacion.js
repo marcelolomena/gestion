@@ -15,7 +15,15 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Pregunta<span style='color:red'>*</span>{ArchivoUpload}</div>";
+    tmplPF += "<div class='column-full'>Periodo<span style='color:red'>*</span>{periodo}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Glosa Item<span style='color:red'>*</span>{glosaitem}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Pagos<span style='color:red'>*</span>{costoorigen}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -34,7 +42,7 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
     //console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
     //console.log("la rowData : " + rowData)
-    var parentCriterio = rowData.idcriterioevaluacion;
+    var parentCriterio = rowData.idserviciorequerido;
     //console.log("la parentCriterio : " + parentCriterio)
 
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
@@ -42,7 +50,7 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
     //console.log("la grilla abuelo: " + grillaabuelo)
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
     //console.log("la rowData2 : " + rowData2)
-    var parentAbuelo = rowData.id;
+    var parentSolicitud = rowData.idsolicitudcotizacion;
     //console.log("la parentSolicitud : " + parentAbuelo)
 
 
@@ -66,11 +74,11 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
             search: true, editable: true, hidden: false,
             editrules: { required: true },
         },
-        
+
         {
             label: 'Pagos', name: 'costoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editrules: { required: true },
             editoptions: {
                 dataInit: function (el) {
@@ -120,49 +128,42 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
+        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
     },
         {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            width: 800,
-            editCaption: "Modificar Pregunta de Evaluación",
+            editCaption: "Modificar Flujo Cotización ",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
-            beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            },
-            beforeSubmit: function (postdata, formid) {
-                var elporcentaje = parseFloat(postdata.porcentaje);
-                //console.log('porcentaje: ' + elporcentaje);
-                if (elporcentaje > 100) {
-                    return [false, "Porcentaje no puede ser mayor a 100", ""];
-                }
-                else {
-                    return [true, "", ""]
-                }
+            onclickSubmit: function (rowid) {
+                return { idsolicitudcotizacion: parentSolicitud };
             },
         },
         {
-            addCaption: "Agrega Preguntas",
-            mtype: 'POST',
-            url: '/sic/criteriosevaluacion/action3',
             closeAfterAdd: true,
             recreateForm: true,
-            template: tmplPF,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            beforeShowForm: function (form) {
-                //$('input#notacriticidad', form).attr('readonly', 'readonly');
+            addCaption: "Agregar Flujo Cotización",
+            template: tmplPF,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
             },
-
             onclickSubmit: function (rowid) {
-                return { idcriterioevaluacion2: parentRowKey, childGridID: childGridID };
-            }, afterSubmit: UploadPre
+                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (parseInt(postdata.idproveedor) == 0) {
+                    return [false, "Proveedor: Seleccionar un proveedor", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
 
         },
         {
@@ -170,17 +171,31 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Pregunta",
+            addCaption: "Eliminar Flujo Cotización",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }
+            }, afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                console.dir(result);
+                if (result.sucess) {
+                    return [true, "", ""];
+                } else {
+                    return [false, result.error_text, ""];
+
+                }
+
+            },
+            onclickSubmit: function (rowid) {
+                return { idsolicitudcotizacion: parentSolicitud };
+            },
         },
         {
             recreateFilter: true
         }
     );
 
- 
+
 
 
 }

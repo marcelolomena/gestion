@@ -179,31 +179,35 @@ exports.proveedoressugeridosservicio = function (req, res) {
         });
 
 };
+
 exports.actionflujo = function (req, res) {
     var action = req.body.oper;
+    var costoorigen = req.body.costoorigen
+    logger.debug("costo origen: "+costoorigen)
 
     if (action != "del") {
-        if (req.body.fecha != "")
-            fecha = req.body.fecha.split("-").reverse().join("-")
+        if (costoorigen != "")
+            costoorigen = costoorigen.split(".").join("").replace(",", ".")
     }
+
 
     switch (action) {
         case "add":
-            models.cotizacionservicio.create({
-                idserviciorequerido: req.body.parent_id,
-                idproveedor: req.body.idproveedor,
-                fecha: fecha,
-                comentario: req.body.comentario,
+            models.flujocotizacion.create({
+                idcotizacion: req.body.parent_id,
+                periodo: req.body.periodo,
+                glosaitem: req.body.glosaitem,
+                costoorigen: costoorigen,
                 borrado: 1
             }).then(function (foro) {
                 bitacora.registrarhijo(
                     req.body.idsolicitudcotizacion,
-                    'cotizacionservicio',
+                    'flujocotizacion',
                     foro.id,
                     'insert',
                     req.session.passport.user,
                     new Date(),
-                    models.cotizacionservicio,
+                    models.flujocotizacion,
                     function (err, data) {
                         if (!err) {
                             return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
@@ -221,17 +225,18 @@ exports.actionflujo = function (req, res) {
         case "edit":
             bitacora.registrarhijo(
                 req.body.idsolicitudcotizacion,
-                'cotizacionservicio',
+                'flujocotizacion',
                 req.body.id,
                 'update',
                 req.session.passport.user,
                 new Date(),
-                models.cotizacionservicio,
+                models.flujocotizacion,
                 function (err, data) {
                     if (!err) {
-                        models.cotizacionservicio.update({
-                            fecha: fecha,
-                            comentario: req.body.comentario,
+                        models.flujocotizacion.update({
+                            periodo: req.body.periodo,
+                            glosaitem: req.body.glosaitem,
+                            costoorigen: costoorigen,
                         }, {
                                 where: {
                                     id: req.body.id
@@ -251,22 +256,22 @@ exports.actionflujo = function (req, res) {
 
 
         case "del":
-            models.cotizacionservicio.findAll({
+            models.flujocotizacion.findAll({
                 where: {
                     id: req.body.id
                 }
             }).then(function (respuesta) {
                 bitacora.registrarhijo(
                     req.body.idsolicitudcotizacion,
-                    'cotizacionservicio',
+                    'flujocotizacion',
                     req.body.id,
                     'delete',
                     req.session.passport.user,
                     new Date(),
-                    models.cotizacionservicio,
+                    models.flujocotizacion,
                     function (err, data) {
                         if (!err) {
-                            models.cotizacionservicio.destroy({
+                            models.flujocotizacion.destroy({
                                 where: {
                                     id: req.body.id
                                 }
@@ -296,26 +301,22 @@ exports.listflujo = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "idserviciorequerido",
+        "field": "idcotizacion",
         "op": "eq",
         "data": req.params.id
     }];
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.cotizacionservicio.belongsTo(models.serviciosrequeridos, { foreignKey: 'idserviciorequerido' });
-            models.cotizacionservicio.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-            models.cotizacionservicio.count({
+            models.flujocotizacion.belongsTo(models.cotizacionservicio, { foreignKey: 'idcotizacion' });
+            models.flujocotizacion.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.cotizacionservicio.findAll({
+                models.flujocotizacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    where: data,
-                    include: [{
-                        model: models.proveedor
-                    }]
+                    where: data
 
                 }).then(function (cotizacionservicio) {
                     return res.json({ records: records, total: total, page: page, rows: cotizacionservicio });
