@@ -55,7 +55,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/monedas',
                 buildSelect: function (response) {
-                    var grid = $("#table_roldenegocio");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.rolnegocio;
@@ -98,7 +98,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/usuariosdelegados/'+uid,
                 buildSelect: function (response) {
-                    var grid = $("#table_roldenegocio");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uiddelegado;
@@ -131,7 +131,7 @@ $(document).ready(function () {
         },
     ];
 
-    $("#table_roldenegocio").jqGrid({
+    $("#grid").jqGrid({
         url: '/roldenegocio/list',
         mtype: "POST",
         datatype: "json",
@@ -145,17 +145,17 @@ $(document).ready(function () {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         caption: 'Lista de Usuarios',
-        pager: "#pager_roldenegocio",
+        pager: "#pager",
         viewrecords: true,
         rowList: [10, 20, 50, 100],
         editurl: '/roldenegocio/action',
         styleUI: "Bootstrap",
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
-                var grid = $("#table_roldenegocio");
+                var grid = $("#grid");
                 var rowData = grid.getRowData(rowid);
                 var uidnecesario = rowData.uid;
-                jQuery('#table_roldenegocio').setColProp('uiddelegado',{editoptions:{dataUrl: '/usuariosdelegados/'+uidnecesario}});
+                jQuery('#grid').setColProp('uiddelegado',{editoptions:{dataUrl: '/usuariosdelegados/'+uidnecesario}});
             }
         },
 
@@ -165,9 +165,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_roldenegocio").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#table_roldenegocio').jqGrid('navGrid', "#pager_roldenegocio", { edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             editCaption: "Modificar Rol de negocio/Delegado",
             closeAfterEdit: true,
@@ -191,7 +191,7 @@ $(document).ready(function () {
                 $('input#uname', form).attr('readonly', 'readonly');
                 $('input#email', form).attr('readonly', 'readonly');
 
-                var grid = $("#table_roldenegocio");
+                var grid = $("#grid");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
                 var thissid = rowData.id;
@@ -199,7 +199,7 @@ $(document).ready(function () {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
-                sipLibrary.centerDialog($("#table_roldenegocio").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
             },
             afterShowForm: function (form) {
                 if (uid != 1) {
@@ -214,7 +214,7 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_roldenegocio_left").css("width", "");
+    $("#pager_left").css("width", "");
 
 
 });
