@@ -7,7 +7,7 @@ var hyperionController = require('../controllers/hyperion');
 module.exports = function (passport) {
 
     router.get('/hyperion', isAuthenticated, function (req, res) {
-        res.render('hyperion', { user: req.user, data: req.session.passport.sidebar });
+        res.render('hyperion', { user: req.user, data: req.session.passport.sidebar, page: 'hyperion', title: 'PRESUPUESTO' });
     });
 
     router.route('/hyperion/list')

@@ -41,9 +41,48 @@ module.exports = function (passport) {
                         req.session.save(() => {
                             req.session.passport.sidebar = data
                             if (parseInt(req.body.sistema) === 1) {
-                                res.render('home', { data: data });
+
+                                models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                                return models.pagina.findOne({
+                                    where: { nombre: 'home' },
+                                    include: [{
+                                        model: models.contenido
+                                    }
+                                    ]
+                                }).then(function (pagina) {
+
+                                    return res.render('home', {
+                                        user: req.user,
+                                        data: data,
+                                        page: 'home',
+                                        title: '',
+                                        type: pagina.contenido.nombre
+                                    });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                });
+
                             } else {
-                                res.render('sic/home2', { data: data });
+                                //res.render('sic/home2', { data: data });
+                                models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                                return models.pagina.findOne({
+                                    where: { nombre: 'home2' },
+                                    include: [{
+                                        model: models.contenido
+                                    }
+                                    ]
+                                }).then(function (pagina) {
+
+                                    return res.render('home2', {
+                                        user: req.user,
+                                        data: data,
+                                        page: 'home2',
+                                        title: '',
+                                        type: pagina.contenido.nombre
+                                    });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                });                                
                             }
                         })
                     } else {
@@ -60,9 +99,46 @@ module.exports = function (passport) {
                         req.session.save(() => {
                             req.session.passport.sidebar = data
                             if (parseInt(req.body.sistema) === 1) {
-                                res.render('home', { data: data });
+                                models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                                return models.pagina.findOne({
+                                    where: { nombre: 'home' },
+                                    include: [{
+                                        model: models.contenido
+                                    }
+                                    ]
+                                }).then(function (pagina) {
+
+                                    return res.render('home', {
+                                        user: req.user,
+                                        data: data,
+                                        page: 'home',
+                                        title: '',
+                                        type: pagina.contenido.nombre
+                                    });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                });
                             } else {
-                                res.render('sic/home2', { data: data });
+                                //res.render('sic/home2', { data: data });
+                                models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                                return models.pagina.findOne({
+                                    where: { nombre: 'home2' },
+                                    include: [{
+                                        model: models.contenido
+                                    }
+                                    ]
+                                }).then(function (pagina) {
+
+                                    return res.render('home2', {
+                                        user: req.user,
+                                        data: data,
+                                        page: 'home2',
+                                        title: '',
+                                        type: pagina.contenido.nombre
+                                    });
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                });                                
                             }
                         })
                     } else {
@@ -85,13 +161,53 @@ module.exports = function (passport) {
         });
     */
 
+
     /* GET Home Page */
     router.get('/home', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar });
+        //res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'home' });
+        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+        return models.pagina.findOne({
+            where: { nombre: 'home' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'home',
+                title: '',
+                type: pagina.contenido.nombre
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });
+
     });
 
     router.get('sic/home2', isAuthenticated, function (req, res) {
-        res.render('sic/home2', { user: req.user, data: req.session.passport.sidebar });
+        //res.render('sic/home2', { user: req.user, data: req.session.passport.sidebar });
+        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+        return models.pagina.findOne({
+            where: { nombre: 'home2' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home2', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'home2',
+                title: '',
+                type: pagina.contenido.nombre
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });
     });
 
     /* Handle Logout */

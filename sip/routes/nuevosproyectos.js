@@ -9,7 +9,7 @@ var flujoNuevaTareaController = require('../controllers/flujonuevatarea');
 module.exports = function (passport) {
 
     router.get('/nuevosproyectos', isAuthenticated, function (req, res) {
-        res.render('nuevosproyectos', { user: req.user, data: req.session.passport.sidebar })
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'nuevosproyectos', title: 'NUEVOS PROYECTOS' });
     });
 
     router.route('/nuevosproyectos/list')

@@ -9,7 +9,7 @@ $(document).ready(function () {
         },
         
     ];
-    $("#table_compromisosporcui").jqGrid({
+    $("#grid").jqGrid({
         url: '/compromisosporcui/list',
         mtype: "POST",
         datatype: "json",
@@ -23,7 +23,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager_compromisosporcui",
+        pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '',
@@ -40,6 +40,7 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
+/*    
     $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
@@ -107,4 +108,5 @@ $(document).ready(function () {
         }
     );
     $("#pager_iniciativa_left").css("width", "");
+*/    
 });

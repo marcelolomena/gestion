@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/cargas', isAuthenticated, function (req, res) {
-        res.render('cargas', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'cargas', title: 'Cargas' });
     });
 
     router.route('/cargas/list')

@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/cargadte', isAuthenticated, function (req, res) {
-        res.render('cargadte', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'cargadte', title: 'Carga DTE' });
     });
 
     router.route('/cargadte/list')
@@ -23,12 +23,12 @@ module.exports = function (passport) {
         .get(isAuthenticated, cargadteController.detalle);
 
     router.route('/cargadte/items/:id')
-        .get(isAuthenticated, cargadteController.items);        
+        .get(isAuthenticated, cargadteController.items);
 
     router.route('/cargadte/download/:id')
         .get(isAuthenticated, cargadteController.excel);
 
-        
+
     return router;
 
 }

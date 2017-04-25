@@ -35,7 +35,7 @@ $(document).ready(function () {
             searchoptions: {
                 dataUrl: '/tipos',
                 buildSelect: function (response) {
-                    var grid = $("#table_parametro");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -59,7 +59,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/tipos',
                 buildSelect: function (response) {
-                    var grid = $("#table_parametro");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -90,7 +90,7 @@ $(document).ready(function () {
             searchoptions: {
                 dataUrl: '/tipos',
                 buildSelect: function (response) {
-                    var grid = $("#table_parametro");
+                    var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -122,7 +122,7 @@ $(document).ready(function () {
 
     ];
 
-    $("#table_parametro").jqGrid({
+    $("#grid").jqGrid({
         url: '/parametros/list',
         mtype: "POST",
         datatype: "json",
@@ -134,7 +134,7 @@ $(document).ready(function () {
         width: null,
         shrinkToFit: false,
         caption: 'Lista de parametros',
-        pager: "#pager_parametro",
+        pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/parametros/action',
@@ -145,9 +145,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_parametro").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#table_parametro').jqGrid('navGrid', "#pager_parametro", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             editCaption: "Modifica Parametro",
             closeAfterEdit: true,
@@ -165,9 +165,9 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#table_parametro').attr('id'));
+                sipLibrary.centerDialog($('#grid').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_parametro").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
             }
         },
         {
@@ -192,13 +192,13 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $("#table_parametro").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#table_parametro').attr('id'));
+                sipLibrary.centerDialog($('#grid').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#table_parametro").attr('id'));
+                sipLibrary.centerDialog($("#grid").attr('id'));
             }
         },
         {
@@ -220,5 +220,5 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_parametro_left").css("width", "");
+    $("#pager_left").css("width", "");
 });

@@ -37,7 +37,7 @@ exports.action = function (req, res) {
                 });
             break;
         case "del":
-           models.preguntacotizacion.findAll({
+            models.preguntacotizacion.findAll({
                 where: {
                     id: req.body.id
                 }
@@ -68,30 +68,30 @@ exports.action = function (req, res) {
                         }
                     });
             });
-            break; 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             models.preguntacotizacion.destroy({
                 where: {
                     id: req.body.id
@@ -306,3 +306,159 @@ exports.descargapreguntas = function (req, res) {
 
 
 }
+exports.proveedoressugeridostotal = function (req, res) {
+
+    var id = req.params.id;
+    var sql = "select distinct c.id, c.razonsocial from sic.proveedorsugerido a " +
+        "join sic.serviciosrequeridos b on a.idserviciorequerido=b.id " +
+        "join sip.proveedor c on c.id = a.idproveedor " +
+        "where b.idsolicitudcotizacion=" + id + "; "
+
+    sequelize.query(sql)
+        .spread(function (rows) {
+            res.json(rows);
+        });
+
+};
+exports.action2 = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+            models.respuestacotizacion.create({
+                idpregunta: req.body.parent_id,
+                idproveedor: req.body.idproveedor,
+                respuesta: req.body.respuesta,
+                borrado: 1
+            }).then(function (foro) {
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'respuestarfp',
+                    foro.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.respuestacotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    }
+                )
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false })
+            });
+            break;
+        case "edit":
+            bitacora.registrarhijo(
+                req.body.idsolicitudcotizacion,
+                'respuestarfp',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.respuestacotizacion,
+                function (err, data) {
+                    if (!err) {
+                        models.respuestacotizacion.update({
+
+                            respuesta: req.body.respuesta
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (respuestaforo) {
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
+                    }
+                });
+            break;
+
+
+        case "del":
+            models.respuestacotizacion.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (respuesta) {
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'respuestarfp',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.respuestacotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            models.respuestacotizacion.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', sucess: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+            })
+            break;
+    }
+}
+
+
+exports.list2 = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idpregunta",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.respuestacotizacion.belongsTo(models.preguntacotizacion, { foreignKey: 'idpregunta' });
+            models.respuestacotizacion.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.respuestacotizacion.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.respuestacotizacion.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [{
+                        model: models.proveedor
+                    }]
+
+                }).then(function (respuestacotizacion) {
+                    return res.json({ records: records, total: total, page: page, rows: respuestacotizacion });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};

@@ -7,7 +7,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 module.exports = function (passport) {
 
     router.get('/cuentascontables', isAuthenticated, function (req, res) {
-        res.render('cuentascontables', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'cuentascontables', title: 'Cuentas Contables' });
     });
 
     router.route('/cuentascontables/list')

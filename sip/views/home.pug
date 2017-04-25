@@ -1,23 +1,132 @@
-html
-  head
-    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-    title SIP Banco de Chile - Sistema Integrado de Presupuesto
-    link(rel='stylesheet', href='/stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/style.css', type='text/css', media='screen', charset='utf-8')    
-    link(rel='stylesheet', href='/stylesheets/menu.css', type='text/css', media='screen', charset='utf-8') 
-    link(rel='stylesheet', href='/stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
-    script(type='text/javascript', src='/javascripts/jquery-1.12.3.min.js')
-    script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')
-    script(type='text/javascript', src='/javascripts/jsplug.js')
-    script(type='text/javascript', src='/javascripts/script.js')  
-    script(type='text/javascript', src='/javascripts/views/home.js')  
-  body
-    #contenedor.container
+extends layout.pug
+block append head
+    script var type = "#{type}"
+    script var page = "#{page}"
+    if(page==='contratos')
+     script(type='text/javascript', src='/javascripts/views/contrato.js')
+     script(type='text/javascript', src='/javascripts/views/detallecontrato.js')
+     script(type='text/javascript', src='/javascripts/views/detallecompromiso.js')
+    else if(page==='cuentascontables')
+     script(type='text/javascript', src='/javascripts/views/cuentascontables.js')
+    else if(page==='iniciativas')
+     script(type='text/javascript', src='/javascripts/views/iniciativa.js')
+     script(type='text/javascript', src='/javascripts/views/iniciativaprograma.js')
+     script(type='text/javascript', src='/javascripts/views/iniciativafecha.js')
+     script(type='text/javascript', src='/javascripts/views/presupuestoiniciativa.js')
+     script(type='text/javascript', src='/javascripts/views/tareasnuevosproyectos.js')
+     script(type='text/javascript', src='/javascripts/views/flujonuevatarea.js')
+    else if(page==='cargadte')          
+     link(rel='stylesheet', href='stylesheets/font-awesome-4.7.0/css/font-awesome.min.css', type='text/css', media='screen', charset='utf-8')
+     script(type='text/javascript', src='/javascripts/views/cargadte.js')
+     script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
+    else if(page==='conceptos')     
+     script(type='text/javascript', src='/javascripts/views/conceptos.js')
+    else if(page==='cargas')   
+     link(rel='stylesheet', href='stylesheets/font-awesome-4.7.0/css/font-awesome.min.css', type='text/css', media='screen', charset='utf-8')           
+     script(type='text/javascript', src='/javascripts/views/cargas.js')
+     script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
+    else if(page==='compromisosporcui')      
+     script(type='text/javascript', src='/javascripts/views/compromisosporcui.js')
+     script(type='text/javascript', src='/javascripts/views/compromisosporcuiservicios.js')
+     script(type='text/javascript', src='/javascripts/views/compromisosporcuiflujos.js')
+    else if(page==='estructuracui')
+     script(type='text/javascript', src='/javascripts/views/estructuracui.js')
+    else if(page==='factorrecuperacion')
+     script(type='text/javascript', src='/javascripts/views/factorrecuperacion.js')
+    else if(page==='facturas')
+     script(type='text/javascript', src='/javascripts/views/facturas.js')
+    else if(page==='genprefacturas')
+     script(type='text/javascript', src='/javascripts/views/solicitudesaprobadas.js')
+    else if(page==='genprefacturasproy')
+     script(type='text/javascript', src='/javascripts/views/solicitudesaprobadasproy.js')
+    else if(page==='grafico')
+     script(type='text/javascript', src='/javascripts/views/grafico2.js')
+    else if(page==='iniciativasconsulta')
+     script(type='text/javascript', src='/javascripts/views/iniciativaconsulta.js')
+    else if(page==='hyperion')
+     script(type='text/javascript', src='/javascripts/views/hyperion.js')
+    else if(page==='monedasconversion')
+     script(type='text/javascript', src='/javascripts/views/monedasconversion.js') 
+    else if(page==='nuevosproyectos')
+     script(type='text/javascript', src='/javascripts/views/nuevosproyectos.js')
+     script(type='text/javascript', src='/javascripts/views/tareasnuevosproyecto.js')
+     script(type='text/javascript', src='/javascripts/views/flujonuevatarea.js')
+    else if(page==='plantilla')
+     script(type='text/javascript', src='/javascripts/views/plantilla.js')  
+    else if(page==='solicitud')
+     script(type='text/javascript', src='/javascripts/views/solicitud.js')          
+    else if(page==='prefactura')
+     script(type='text/javascript', src='/javascripts/views/prefactura.js')     
+    else if(page==='prefacturas')
+     script(type='text/javascript', src='/javascripts/views/prefacturas.js')
+     script(type='text/javascript', src='/javascripts/views/solicitudesfactura.js')
+     script(type='text/javascript', src='/javascripts/views/desglosesolicitud.js')
+    else if(page==='pert')
+     script(type='text/javascript', src='/javascripts/views/pert.js')
+     script(type='text/javascript', src='/javascripts/go/go-debug.js')   
+    else if(page==='solicitudProyectos')
+     script(type='text/javascript', src='/javascripts/views/solicitudProyectos.js')       
+    else if(page==='prefacturasolicitud')
+     link(rel='stylesheet', href='/stylesheets/formulario_prefactura.css', type='text/css', media='screen', charset='utf-8')
+     script(type='text/javascript', src='/javascripts/views/prefacturasolicitud.js')
+    else if(page==='presupuesto')
+     script(type='text/javascript', src='/javascripts/views/presupuesto.js')
+    else if(page==='presupuestoaprueba')
+     script(type='text/javascript', src='/javascripts/views/presupuestoaprueba.js')     
+    else if(page==='presupuestoeditcosto')
+     script(type='text/javascript', src='/javascripts/views/presupuestoeditcosto.js')   
+    else if(page==='presupuestoenvuelo')
+     script(type='text/javascript', src='/javascripts/views/presupuestoenvuelo.js')
+     script(type='text/javascript', src='/javascripts/views/tareaenvuelo.js')
+     script(type='text/javascript', src='/javascripts/views/fechaenvuelo.js')
+     script(type='text/javascript', src='/javascripts/views/conversionenvuelo.js')
+     script(type='text/javascript', src='/javascripts/views/flujopagoenvuelo.js')
+    else if(page==='inscripcionsap')
+     script(type='text/javascript', src='/javascripts/views/inscripcionsap.js')
+     script(type='text/javascript', src='/javascripts/views/tareasinscripcion.js')
+    else if(page==='reporte')
+     script(type='text/javascript', src='/javascripts/views/reporte.js')
+     script(type='text/javascript', src='/javascripts/pdfobject.min.js')  
+     style.
+      .pdfobject-container { height: 500px;}
+      .pdfobject { border: 1px solid #666; }  
+    else if(page==='proveedores')
+     script(type='text/javascript', src='/javascripts/views/proveedor.js')
+    else if(page==='parametros')
+     script(type='text/javascript', src='/javascripts/views/parametro.js')
+    else if(page==='roles')
+     script(type='text/javascript', src='/javascripts/views/roles.js')
+     script(type='text/javascript', src='/javascripts/views/roles2.js')
+    else if(page==='permisos')
+     script(type='text/javascript', src='/javascripts/views/permisos.js')
+     script(type='text/javascript', src='/javascripts/views/permisos2.js')
+     script(type='text/javascript', src='/javascripts/views/permisos3.js')
+    else if(page==='proyectos')
+     script(type='text/javascript', src='/javascripts/views/proyecto.js')
+    else if(page==='serviciosext')
+     script(type='text/javascript', src='/javascripts/views/servicios.js')
+    else if(page==='registro')
+     script(type='text/javascript', src='/javascripts/views/registro.js')
+    else if(page==='resetpwd')
+     link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')        
+     script(type='text/javascript', src='/javascripts/views/resetpwd.js')     
+    else if(page==='roldenegocio')
+     script(type='text/javascript', src='/javascripts/views/roldenegocio.js')
+     script(type='text/javascript').
+      var uid = #{user[0].uid};
+    else if(page==='planiniciativas')
+     script(type='text/javascript', src='/javascripts/views/planiniciativas.js')   
+    else if(page==='consultalog')
+     link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
+     script(type='text/javascript', src='/javascripts/views/consultalog.js')
+    else
+     script(type='text/javascript', src='/javascripts/dashboard.js')
+block content
+    #contenedor.contenedor
       include sidebar.pug
       .main-content
         .swipe-area
-        a#sidebar-toggle(href='#', data-toggle='.container')
+        a#sidebar-toggle(href='#', data-toggle='.contenedor')
           span.bar
           span.bar
           span.bar
@@ -29,88 +138,8 @@ html
                   img(src='../../images/header.png', width='384', height='95')
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
-          p(style='color: #f1563a')  
-          #zerogrid1.zerogrid
-            .header
-              h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:center") • BIENVENIDOS •
-            .row
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/dashboard.jpg', id='dashboard', alt='Dashboard', width='200', height='170', border='0', title='DASHBOARD')
-                    .item-info
-                      h3 DASHBOARD
-                  .item.t-center
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/proyectos.jpg',id='proyectos', alt='', width='200', height='170', border='0', title='PROYECTOS')
-                    .item-info
-                      h3 PROYECTOS
-                  .item.t-center
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/continuidad.jpg',id='continuidad', alt='', width='200', height='170', border='0', title='CONTINUIDAD')
-                    .item-info
-                      h3 CONTINUIDAD
-                  .item.t-center
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/contratos.jpg', id='proyectos',  alt='', width='200', height='170', border='0', title='CONTRATOS')
-                    .item-info
-                      h3 CONTRATOS
-                  .item.t-center
-          #zerogrid2.zerogrid
-            .row
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/prefacturas.jpg', alt='', border='0', title='PRE FACTURAS')
-                    .item-info
-                      h3 PRE FACTURAS
-                  .item.t-center
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/facturas.jpg', alt='', border='0', title='FACTURAS')
-                    .item-info
-                      h3 FACTURAS
-                  .item.t-center
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/parametros.jpg', alt='', border='0', title='PARAMETROS')
-                    .item-info
-                      h3 PARAMETROS
-                  .item.t-center
-              .col-1-3
-                .wrap-col
-                  .item.t-center
-                    .item-container
-                      a(href='#')
-                        img(src='../images/reportes.jpg', alt='', border='0', title='REPORTES')
-                    .item-info
-                      h3 REPORTES
-                  .item.t-center
-          .zerogrid
-            .row
-              br
-              br
-              br
-              br
+          p(style='color: #f1563a')
+          if(type==='dashboard')
+           include page_home.pug
+          else 
+           include page_grid.pug

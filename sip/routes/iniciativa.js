@@ -15,18 +15,18 @@ var iniciativaconsultaController = require('../controllers/iniciativaconsulta');
 module.exports = function (passport) {
 
     router.get('/iniciativas', isAuthenticated, function (req, res) {
-        res.render('iniciativas', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'iniciativas', title: 'INICIATIVAS' });                
     });
 
     router.get('/compromisosporcui', isAuthenticated, function (req, res) {
-        res.render('compromisosporcui', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'compromisosporcui', title: 'COMPROMISOS POR CUI' });        
     });
 
     router.route('/compromisosporcui/list')
         .post(isAuthenticated, compromisosporcuiController.list);
 
     router.get('/planiniciativas', isAuthenticated, function (req, res) {
-        res.render('planiniciativas', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'planiniciativas', title: 'PLAN INICIATIVAS' });                
     });
 
     router.route('/planiniciativas/list')
@@ -150,7 +150,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, iniciativafechaController.getFechas);
 
     router.get('/iniciativasconsulta', isAuthenticated, function (req, res) {
-        res.render('iniciativasconsulta', { user: req.user, data: req.session.passport.sidebar });
+        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'iniciativasconsulta', title: 'CONSULTA DE INICIATIVAS' });                        
     });
     
     router.route('/iniciativasconsultalist')

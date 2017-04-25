@@ -22,14 +22,16 @@ var bitacoraController = require('../controllers/sic/bitacora');
 var estadosolicitudController = require('../controllers/sic/estadosolicitud');
 var rolessicController = require('../controllers/sic/rolessic');
 var permisosController = require('../controllers/sic/permisos')
+var participantesproveedorController = require('../controllers/sic/participantesproveedor')
+var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
 
 module.exports = function (passport) {
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
         return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
     });
 
-    router.get('/sic/preguntaproveedor', isAuthenticated, function (req, res) {
-        return res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
+    router.get('/sic/solicitudcontrato', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcontrato', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.route('/sic/grid_solicitudcotizacion')
@@ -448,6 +450,31 @@ module.exports = function (passport) {
     router.route('/sic/criterio3/upload/:idcriterioevaluacion2')
         .post(isAuthenticated, claseevaluaciontecnicaController.upload);
 
+    router.route('/sic/proveedoressugeridostotal/:id')
+        .get(isAuthenticated, preguntasrfpController.proveedoressugeridostotal);
+
+    router.route('/sic/respuestasrfp/:id')
+        .post(isAuthenticated, preguntasrfpController.action2)
+        .get(isAuthenticated, preguntasrfpController.list2);
+
+    router.route('/sic/participantesproveedor/:id')
+        .post(isAuthenticated, participantesproveedorController.action)
+        .get(isAuthenticated, participantesproveedorController.list);
+
+    router.route('/sic/cotizacionservicio/:id/list')
+        .get(isAuthenticated, cotizacionservicioController.list)
+
+    router.route('/sic/cotizacionservicio/action')
+        .post(isAuthenticated, cotizacionservicioController.action);
+
+    router.route('/sic/proveedoressugeridosservicio/:id')
+        .get(isAuthenticated, cotizacionservicioController.proveedoressugeridosservicio);
+
+    router.route('/sic/flujocotizacion/:id/list')
+        .get(isAuthenticated, cotizacionservicioController.listflujo)
+
+    router.route('/sic/flujocotizacion/action')
+        .post(isAuthenticated, cotizacionservicioController.actionflujo);
 
     return router;
 }
