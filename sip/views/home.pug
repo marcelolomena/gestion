@@ -1,6 +1,6 @@
 extends layout.pug
 block append head
-    script var type = #{type}
+    script var type = "#{type}"
     script var page = "#{page}"
     if(page==='contratos')
      script(type='text/javascript', src='/javascripts/views/contrato.js')
@@ -139,7 +139,7 @@ block content
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           p(style='color: #f1563a')
-          if(type===2)
+          if(type==='dashboard')
            include page_home.pug
           else 
            include page_grid.pug
