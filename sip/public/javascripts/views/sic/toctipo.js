@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     t1 += "</div>";
 
-    var $grid = $("#table_toc"),
+    var $grid = $("#grid"),
         tocModel = [
             { label: 'ID', name: 'id', key: true, hidden: true },
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
-        pager: "#pager_toc",
+        pager: "#pager",
         subGrid: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {
@@ -49,7 +49,7 @@ $(document).ready(function () {
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $grid.jqGrid('navGrid', '#pager_toc', { edit: true, add: true, del: true, search: false },
+    $grid.jqGrid('navGrid', '#pager', { edit: true, add: true, del: true, search: false },
         {
             editCaption: "Modifica Tipo",
             closeAfterEdit: true,
