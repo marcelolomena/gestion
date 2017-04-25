@@ -19,9 +19,6 @@ block append head
       vertical-align:text-top;
       padding-top:2px;
       }   
-     //link(rel='stylesheet', href='/stylesheets/sic/datetimepicker.css', type='text/css', media='screen', charset='utf-8') 
-     //script(type='text/javascript', src='/javascripts/views/sic/bootstrap.js')
-     //script(type='text/javascript', src='/javascripts/views/sic/bootstrap-datetimepicker.js')
      script(type='text/javascript', src='/javascripts/views/sic/solicitudcotizacion.js')
      script(type='text/javascript', src='/javascripts/views/sic/estadosolicitud.js')  
      script(type='text/javascript', src='/javascripts/views/sic/doc.js')  
@@ -42,9 +39,9 @@ block append head
      script(type='text/javascript', src='/javascripts/views/sic/tocclases.js')   
      script(type='text/javascript', src='/javascripts/views/sic/tocplantilla.js')
     else if(page==='tipodocumento')
-     script(type='text/javascript', src='/javascripts/views/sic/tipodocumento.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js') 
     else if(page==='segmentoproveedor')
-     script(type='text/javascript', src='/javascripts/views/sic/segmentoproveedor.js')
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js')
     else if(page==='rolessic')
      script(type='text/javascript', src='/javascripts/views/sic/rolessic.js')
      script(type='text/javascript', src='/javascripts/views/sic/rolessic2.js')
@@ -53,7 +50,7 @@ block append head
      script(type='text/javascript', src='/javascripts/views/sic/permisossic2.js')
      script(type='text/javascript', src='/javascripts/views/sic/permisossic3.js')
     else if(page==='clasecriticidad')
-     script(type='text/javascript', src='/javascripts/views/sic/clasecriticidad.js')   
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js')   
     else if(page==='catalogoclausulas')
      script(type='text/javascript', src='/javascripts/views/sic/catalogoclausulas.js')
      script(type='text/javascript', src='/javascripts/views/sic/catalogoclausulas2.js')
@@ -80,9 +77,6 @@ block append head
       vertical-align:text-top;
       padding-top:2px;
       }    
-     script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
-     script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
-     script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')           
      script(type='text/javascript', src='/javascripts/views/sic/solicitudcontrato.js')
      script(type='text/javascript', src='/javascripts/views/sic/estadosolicitud.js')  
      script(type='text/javascript', src='/javascripts/views/sic/preguntas.js')
