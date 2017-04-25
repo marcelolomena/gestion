@@ -109,7 +109,7 @@ module.exports = function (passport) {
     router.route('/proyectoslist')
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
 
-    router.route('/lastdateload')
+    router.route('/lastdateload/:id')
         .get(isAuthenticated, proyectoController.lastdateLoad);        
 
     router.route('/proyectostareas/:id')

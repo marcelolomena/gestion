@@ -26,7 +26,7 @@ exports.transacciones = function (req, res) {
 
 exports.usuarios = function (req, res) {
   var id = req.params.id
-  var sql = "SELECT a.uid as id, (concat(b.first_name, concat(' ', b.last_name))) as nombre "+
+  var sql = "SELECT a.uid as id, (b.first_name+' '+b.last_name) as nombre "+
     "FROM sip.rol_negocio a JOIN art_user b ON a.uid=b.uid "+
     "ORDER BY nombre ";
   logger.debug("query:"+sql);

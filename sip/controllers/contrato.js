@@ -246,6 +246,7 @@ exports.action = function (req, res) {
         program_id: program_id,
         borrado: 1
       }).then(function (contratonew) {
+        console.log("****CREA contrato:"+constants.CreaContrato);
 				logtransaccion.registrar(
 					constants.CreaContrato,
 					contratonew.id,

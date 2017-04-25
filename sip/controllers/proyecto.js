@@ -92,12 +92,12 @@ exports.getProyectosPaginados = function (req, res) {
 };
 
 exports.lastdateLoad = function (req, res) {
-
+  var id = req.params.id;
   models.detallecargas.findAll({
     limit: 1,
     attributes: ['fechaarchivo'],
     order: 'fechaarchivo DESC',
-    where: { idlogcargas: 5 }
+    where: { idlogcargas: id }
   }).then(function (detallecargas) {
     console.dir(detallecargas)
     return res.json({ date: detallecargas[0].fechaarchivo });

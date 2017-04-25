@@ -182,6 +182,12 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
             var $grid = $("#grid");
             var colSum = $grid.jqGrid('getCol', 'montototal', false, 'sum');
             $grid.jqGrid('footerData', 'set', { montototal: colSum });
+            //Coloca fecha de datos
+            $.get('/lastdateload/2', function (data) {
+                var theDate = data.date.substring(0,10);
+                var display = theDate.substring(8)+'-'+theDate.substring(5,7)+'-'+theDate.substring(0,4);
+                $grid.jqGrid('setCaption', 'Lista de Facturas al ' + display);
+            });            
         },               
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         footerrow: true,

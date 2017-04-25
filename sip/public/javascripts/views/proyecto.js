@@ -116,12 +116,10 @@ $(document).ready(function () {
         },
         loadComplete: function (data) {
 
-            $.get('/lastdateload', function (data) {
-                var treshoras = 3*60*60
-                var theDate = new Date(data.date);
-                theDate.setSeconds(treshoras);
-                var fechaed = theDate.toLocaleDateString();
-                $grid.jqGrid('setCaption', 'Lista de proyectos al ' + fechaed);
+            $.get('/lastdateload/5', function (data) {
+                var theDate = data.date.substring(0,10);
+                var display = theDate.substring(8)+'-'+theDate.substring(5,7)+'-'+theDate.substring(0,4);
+                $grid.jqGrid('setCaption', 'Lista de proyectos al ' + display);
             });
 
         }

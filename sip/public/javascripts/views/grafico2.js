@@ -8,6 +8,22 @@ $(document).ready(function () {
 	});
 
     $("#sap").change(function () {
+        
+        var fechaed;
+        
+        $.ajax({
+            url: '/lastdateload/5',
+            type: 'GET',
+            async: false, 
+            success: function (data) {            
+                var theDate = data.date.substring(0,10);
+                fechaed = theDate.substring(8)+'-'+theDate.substring(5,7)+'-'+theDate.substring(0,4);
+            },
+            error: function (e) {
+
+            }                
+        });
+                
         idsap = $(this).val();
 
 		var optionsPieIncident = {
@@ -18,7 +34,7 @@ $(document).ready(function () {
 				plotShadow: false,
 				type: 'pie'
 			}, title: {
-				text: 'Presupuesto por SAP'
+				text: 'Presupuesto por SAP al '+fechaed
 			}, tooltip: {
 				formatter: function () {
 					return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) + ' %';
@@ -66,7 +82,7 @@ $(document).ready(function () {
 				plotShadow: false,
 				type: 'pie'
 			}, title: {
-				text: 'Pagado por SAP'
+				text: 'Pagado por SAP al '+fechaed
 			}, tooltip: {
 				formatter: function () {
 					return '<b>' + this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) + ' %';

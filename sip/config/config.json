@@ -14,8 +14,7 @@
             "max": 100,
             "idle": 500000
         },
-        "logging": false,
-        "timezone": "-03:00"
+        "logging": false
     },
     "testing": {
         "username": "art",

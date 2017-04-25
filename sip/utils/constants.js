@@ -38,7 +38,7 @@ define("BorraFlujoPago", 21);
 //*Prefactura
 define("IniciaGeneraSolicitudes", 22);
 define("FinExitoGeneraSolicitudes", 23);
-define("FinErrorGeneraSolicitudes", 23);
+define("FinErrorGeneraSolicitudes", 24);
 define("ModificaSolicitud", 25);
 define("AnulaSolicitud", 26);
 define("IniciaGeneraPrefacturas", 27);
