@@ -50,8 +50,8 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
     //console.log("la grilla abuelo: " + grillaabuelo)
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
     //console.log("la rowData2 : " + rowData2)
-    var parentSolicitud = rowData.idsolicitudcotizacion;
-    //console.log("la parentSolicitud : " + parentAbuelo)
+    var parentSolicitud = rowData2.idsolicitudcotizacion;
+    //console.log("la que yo necesito parentSolicitud : " + parentSolicitud)
 
 
 
@@ -155,6 +155,7 @@ function gridFlujosCotizacion(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
+                //console.log("ESTA ES LA RAZOOON: "+parentSolicitud)
                 return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
             },
             beforeSubmit: function (postdata, formid) {

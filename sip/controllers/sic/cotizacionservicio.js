@@ -15,12 +15,15 @@ var nodeExcel = require('excel-export');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    var costototal = req.body.costototal
+    var fecha = req.body.fecha
 
     if (action != "del") {
-        if (req.body.fecha != "")
-            fecha = req.body.fecha.split("-").reverse().join("-")
+        if (fecha != "")
+            fecha = fecha.split("-").reverse().join("-")
+        if (costototal != "")
+            costototal = costototal.split(".").join("").replace(",", ".")
     }
-
     switch (action) {
         case "add":
             models.cotizacionservicio.create({
@@ -29,6 +32,7 @@ exports.action = function (req, res) {
                 idmoneda: req.body.idmoneda,
                 fecha: fecha,
                 comentario: req.body.comentario,
+                costototal: costototal,
                 borrado: 1
             }).then(function (foro) {
                 bitacora.registrarhijo(
@@ -67,7 +71,8 @@ exports.action = function (req, res) {
                         models.cotizacionservicio.update({
                             fecha: fecha,
                             comentario: req.body.comentario,
-                            idmoneda: req.body.idmoneda
+                            idmoneda: req.body.idmoneda,
+                            costototal: costototal
                         }, {
                                 where: {
                                     id: req.body.id
