@@ -2,6 +2,7 @@ extends layout.pug
 block append head
     script var type = "#{type}"
     script var page = "#{page}"
+    script var idtype = #{idtype}
     if(page==='contratos')
      script(type='text/javascript', src='/javascripts/views/contrato.js')
      script(type='text/javascript', src='/javascripts/views/detallecontrato.js')
@@ -119,7 +120,8 @@ block append head
     else if(page==='consultalog')
      link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
      script(type='text/javascript', src='/javascripts/views/consultalog.js')
-    else
+    else if(page==='home')
+     link(rel='stylesheet', href='/stylesheets/dashboard.css', type='text/css', media='screen', charset='utf-8')
      script(type='text/javascript', src='/javascripts/dashboard.js')
 block content
     #contenedor.contenedor

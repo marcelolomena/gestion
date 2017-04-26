@@ -6,6 +6,21 @@
                 useUTC: false
             }
         });
+
+        //console.log("IDTIPO : " + idtype)
+
+        $.ajax({
+            url: '/dashboard/' + idtype,
+            type: 'GET',
+            success: function (data) {
+                console.dir(data)
+
+                $.each(data, function (index, element) {
+                    console.dir(element.div);
+                });
+            }
+        });
+
         var pie = Highcharts.chart('pie', {
             chart: {
                 plotBackgroundColor: null,
