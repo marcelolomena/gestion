@@ -90,7 +90,7 @@
         "username": "biometria",
         "password": "biometria123",
         "database": "art_live",
-        "host": "K-NOTE",
+        "host": "ZRISMART-PC",
         "dialect": "mssql",
         "dialectOptions": {
             "instanceName": "SQLEXPRESS"
