@@ -20,58 +20,117 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-
-            return res.json({ id: req.body.idsolicitudcotizacion, idproveedor: req.body.idproveedor, success: true });
-
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'preguntasdelproveedor',
+                req.body.id,
+                'insert',
+                req.session.passport.user,
+                new Date(),
+                models.preguntaproveedor,
+                function (err, data) {
+                    if (!err) {
+                        return res.json({ id: req.body.idsolicitudcotizacion, idproveedor: req.body.idproveedor, success: true });
+                    } else {
+                        logger.error(err)
+                        return res.json({ id: preguntaproveedor.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                    }
+                });
             break;
         case "del":
-            models.preguntaproveedor.destroy({
+            models.preguntaproveedor.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                return res.json({ success: true, glosa: 'Deleted successfully' });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({ success: false, glosa: err.message });
+            }).then(function (preguntaproveedor) {
+                bitacora.registrar(
+                    req.body.idsolicitudcotizacion,
+                    'preguntasdelproveedor',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.preguntaproveedor,
+                    function (err, data) {
+                        if (!err) {
+                            models.preguntaproveedor.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false });
+
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
             });
             break;
     }
 }
 
 exports.asignar = function (req, res) {
-    models.preguntaproveedor.update({
-        idresponsable: req.body.idresponsable,
-    }, {
-            where: {
-                id: req.body.id
+    bitacora.registrar(
+        req.body.idsolicitudcotizacion,
+        'asignarpreguntas',
+        req.body.id,
+        'asignar',
+        req.session.passport.user,
+        new Date(),
+        models.preguntaproveedor,
+        function (err, data) {
+            if (!err) {
+                models.preguntaproveedor.update({
+                    idresponsable: req.body.idresponsable,
+                }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (preguntaproveedor) {
+                        return res.json({ message: 'Exito', success: true });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
+                    });
             }
-        }).then(function (preguntaproveedor) {
-            return res.json({ message: 'Exito', success: true });
-        }).catch(function (err) {
-            logger.error(err)
-            return res.json({ message: err.message, success: false });
-        });
-
+        }
+    )
 }
 
 exports.responder = function (req, res) {
-    models.preguntaproveedor.update({
-        respuesta: req.body.respuesta,
-    }, {
-            where: {
-                id: req.body.id
-            }
-        }).then(function (preguntaproveedor) {
-            return res.json({ message: 'Exito', success: true });
-        }).catch(function (err) {
-            logger.error(err)
-            return res.json({ message: err.message, success: false });
-        });
+    bitacora.registrar(
+        req.body.idsolicitudcotizacion,
+        'respuestaspreguntas',
+        req.body.id,
+        'respuesta',
+        req.session.passport.user,
+        new Date(),
+        models.preguntaproveedor,
+        function(err, data){
+            if(!err){
+                models.preguntaproveedor.update({
+                    respuesta: req.body.respuesta,
+            },{ where: {
+                    id: req.body.id
+                }
 
+                }).then(function(preguntaproveedor){
+                    return res.json({ message: 'Exito', success: true
+
+                    });
+                }).catch(function(err){
+                    logger.error(err)
+                    return res.json({
+                        message: err.message, success: false});
+                });
+            }
+        }
+    )
 }
 
 
