@@ -40,7 +40,7 @@ block append head
      script(type='text/javascript', src='/javascripts/views/solicitudesaprobadas.js')
     else if(page==='genprefacturasproy')
      script(type='text/javascript', src='/javascripts/views/solicitudesaprobadasproy.js')
-    else if(page==='grafico')
+    else if(page==='graficotest')
      script(type='text/javascript', src='/javascripts/views/grafico2.js')
     else if(page==='iniciativasconsulta')
      script(type='text/javascript', src='/javascripts/views/iniciativaconsulta.js')
@@ -143,5 +143,7 @@ block content
           p(style='color: #f1563a')
           if(type==='dashboard')
            include page_home.pug
+          if(type==='grafico')
+           include page_grafico.pug           
           else 
            include page_grid.pug
