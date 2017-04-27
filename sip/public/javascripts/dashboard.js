@@ -7,86 +7,74 @@
             }
         });
 
-        /*
-                $.ajax({
-                    url: '/dashboard/' + idtype,
-                    type: 'GET',
-                    success: function (data) {
-                        console.dir(data)
-        
-                        $.each(data, function (index, element) {
-                            console.dir(element.div);
-                        });
-                    }
-                });
-        */
         var div = 'zon1'
         $.ajax({
             url: '/dashboard/' + idtype + '/' + div,
             type: 'GET',
             success: function (data) {
-                //console.dir(data)
+                var cat = []
+                var series = []
+                $.each(data[0].data, function (index, element) {
+                    cat.push(element.valorx)
+                });
 
                 $.each(data, function (index, element) {
-                    console.dir(element.data);
+                    var item = {}
+                    var b = []
+
+                    $.each(element.data, function (i, elem) {
+                        b.push(elem.valory)
+                    });
+
+                    item["name"] = element.name
+                    item["data"] = b
+
+                    series.push(item)
                 });
+
+                //console.dir(cat)
+                //console.dir(series)
+
+                var pie = Highcharts.chart('zon1', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Consumo Presupuesto'
+                    },
+                    /*subtitle: {
+                        text: 'Source: WorldClimate.com'
+                    },*/
+                    xAxis: {
+                        categories: cat,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '(MM)'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: series
+                });
+
+
             }
         });
-
-        var pie = Highcharts.chart('zon1', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
-            },
-            title: {
-                text: ''
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                        }
-                    }
-                }
-            },
-            series: [{
-                name: 'Brands',
-                colorByPoint: true,
-                data: [{
-                    name: 'IE',
-                    y: 56.33
-                }, {
-                    name: 'Chrome',
-                    y: 24.03,
-                    sliced: true,
-                    selected: true
-                }, {
-                    name: 'Firefox',
-                    y: 10.38
-                }, {
-                    name: 'Safari',
-                    y: 4.77
-                }, {
-                    name: 'Opera',
-                    y: 0.91
-                }, {
-                    name: 'Desconocido',
-                    y: 0.2
-                }]
-            }]
-        }
-        );
-
 
         var linea = Highcharts.chart('zon2', {
 

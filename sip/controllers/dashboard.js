@@ -29,7 +29,7 @@ exports.zone = function (req, res) {
 
     models.dashboard.findAll({
         attributes: [
-            'valory'
+            'valorx','valory'
         ],
         where: { idtipo: idtipo, div: idzona, serie: 'Plan' },
         order: 'secuencia'
@@ -42,7 +42,7 @@ exports.zone = function (req, res) {
 
         models.dashboard.findAll({
             attributes: [
-                'valory'
+                'valorx','valory'
             ],
             where: { idtipo: idtipo, div: idzona, serie: 'Real' },
             order: 'secuencia'
