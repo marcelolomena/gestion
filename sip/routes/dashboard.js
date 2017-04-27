@@ -5,8 +5,8 @@ var isAuthenticated = require('../policies/isAuthenticated')
 
 module.exports = function (passport) {
 
-    router.route('/dashboard/:id')
-        .get(isAuthenticated, dashboardController.presupuesto);
+    router.route('/dashboard/:idtipo/:idzona')
+        .get(isAuthenticated, dashboardController.zone);
 
     return router;
 

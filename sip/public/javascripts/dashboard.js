@@ -7,21 +7,33 @@
             }
         });
 
-        //console.log("IDTIPO : " + idtype)
-
+        /*
+                $.ajax({
+                    url: '/dashboard/' + idtype,
+                    type: 'GET',
+                    success: function (data) {
+                        console.dir(data)
+        
+                        $.each(data, function (index, element) {
+                            console.dir(element.div);
+                        });
+                    }
+                });
+        */
+        var div = 'zon1'
         $.ajax({
-            url: '/dashboard/' + idtype,
+            url: '/dashboard/' + idtype + '/' + div,
             type: 'GET',
             success: function (data) {
-                console.dir(data)
+                //console.dir(data)
 
                 $.each(data, function (index, element) {
-                    console.dir(element.div);
+                    console.dir(element.data);
                 });
             }
         });
 
-        var pie = Highcharts.chart('pie', {
+        var pie = Highcharts.chart('zon1', {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
@@ -76,7 +88,7 @@
         );
 
 
-        var linea = Highcharts.chart('linea', {
+        var linea = Highcharts.chart('zon2', {
 
             chart: {
                 type: 'bar'
@@ -137,7 +149,7 @@
         }
         );
 
-        var reloj = Highcharts.chart('reloj', {
+        var reloj = Highcharts.chart('zon3', {
             chart: {
                 type: 'pie'
             },
@@ -207,7 +219,7 @@
             }
         );
 
-        var torta = Highcharts.chart('torta', {
+        var torta = Highcharts.chart('zon4', {
             chart: {
                 type: 'column'
             },
@@ -245,7 +257,7 @@
         }
         );
 
-        var raya = Highcharts.chart('raya', {
+        var raya = Highcharts.chart('zon5', {
             chart: {
                 type: 'line'
             },
@@ -281,7 +293,7 @@
         }
         );
 
-        var dona = Highcharts.chart('dona', {
+        var dona = Highcharts.chart('zon6', {
             chart: {
                 type: 'spline',
                 animation: Highcharts.svg, // don't animate in old IE

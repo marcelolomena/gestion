@@ -20,10 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    tipo: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     ano: {
       type: DataTypes.INTEGER,
       allowNull: true
