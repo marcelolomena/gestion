@@ -8,8 +8,6 @@ exports.presupuesto = function (req, res) {
 
     var idtipo = req.params.id;
 
-    logger.debug("idtipo : " + idtipo)
-
     return models.dashboard.findAll({
         where: { idtipo: idtipo }
     }).then(function (dashboard) {

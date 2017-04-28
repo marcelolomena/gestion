@@ -142,8 +142,8 @@ block content
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           p(style='color: #f1563a')
           if(type==='dashboard')
-           include page_home.pug
+              include page_home.pug
           if(type==='grafico')
-           include page_grafico.pug           
-          else 
-           include page_grid.pug
+              include page_grafico.pug           
+          else if(type==='grid')
+              include page_grid.pug
