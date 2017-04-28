@@ -101,10 +101,10 @@ exports.combobox = function (req, res) {
     order: 'tabla'
   }).then(function (bitacora) {
     //iniciativas.forEach(log)
-    res.json(bitacora);
+    return res.json(bitacora);
   }).catch(function (err) {
     logger.error(err);
-    res.json({ error_code: 1 });
+    return res.json({ error_code: 1 });
   });
 }
 
@@ -116,9 +116,9 @@ exports.comboboxaction = function (req, res) {
     order: 'accion'
   }).then(function (bitacora) {
     //iniciativas.forEach(log)
-    res.json(bitacora);
+    return res.json(bitacora);
   }).catch(function (err) {
     logger.error(err);
-    res.json({ error_code: 1 });
+    return res.json({ error_code: 1 });
   });
 }
