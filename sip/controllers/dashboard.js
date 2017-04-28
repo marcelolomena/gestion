@@ -63,7 +63,7 @@ exports.zone = function (req, res) {
         });
 
 
-    } else if (idzona === 'zon2' || idzona === 'zon3' || idzona === 'zon4') {
+    } else if (idzona === 'zon2' || idzona === 'zon3' || idzona === 'zon4' || idzona=== 'zon7' ) {
 
         models.dashboard.findAll({
             attributes: [
