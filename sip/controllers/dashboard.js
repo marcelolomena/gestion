@@ -81,14 +81,45 @@ exports.zone = function (req, res) {
 
         models.dashboard.findAll({
             attributes: [
+                'serie'
+            ],
+            where: { idtipo: idtipo, div: idzona },
+            group: 'serie'
+        }).then(function (rows) {
+            const nodeData = rows.map((node) => node.get({ plain: true }));
+
+            var promesas = []
+            for (var s in rows) {
+                promesas.push(models.dashboard.findAll({
+                    attributes: [
+                        'valorx', 'valory'
+                    ],
+                    where: { idtipo: idtipo, div: idzona, serie: rows[s].serie }
+                })
+                )
+            }
+
+            Promise.all(promesas)
+                .then(function (result) {
+                    return res.json({ records: result, series: nodeData });
+                })
+
+        })
+
+    } else if (idzona === 'zon6') {
+
+        models.dashboard.findAll({
+            attributes: [
                 'valorx', 'valory'
             ],
             where: { idtipo: idtipo, div: idzona },
             order: 'secuencia'
-        }).then(function (da) {
-            return res.json(da);
+        }).then(function (rows) {
+            logger.debug(rows)
+            //const nodeData = rows.map((node) => node.get({ plain: true }));
+            return res.json(rows)
         })
-
     }
+
 
 };
