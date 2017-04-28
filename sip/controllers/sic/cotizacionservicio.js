@@ -333,3 +333,159 @@ exports.listflujo = function (req, res) {
         }
     });
 };
+
+exports.actionnota = function (req, res) {
+    var action = req.body.oper;
+    var costoorigen = req.body.costoorigen
+    logger.debug("costo origen: "+costoorigen)
+
+    if (action != "del") {
+        if (costoorigen != "")
+            costoorigen = costoorigen.split(".").join("").replace(",", ".")
+    }
+
+
+    switch (action) {
+        case "add":
+            models.flujocotizacion.create({
+                idcotizacion: req.body.parent_id,
+                periodo: req.body.periodo,
+                glosaitem: req.body.glosaitem,
+                costoorigen: costoorigen,
+                borrado: 1
+            }).then(function (foro) {
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'flujocotizacion',
+                    foro.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.flujocotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    }
+                )
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false })
+            });
+            break;
+        case "edit":
+            bitacora.registrarhijo(
+                req.body.idsolicitudcotizacion,
+                'flujocotizacion',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.flujocotizacion,
+                function (err, data) {
+                    if (!err) {
+                        models.flujocotizacion.update({
+                            periodo: req.body.periodo,
+                            glosaitem: req.body.glosaitem,
+                            costoorigen: costoorigen,
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (respuestaforo) {
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
+                    }
+                });
+            break;
+
+
+        case "del":
+            models.flujocotizacion.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (respuesta) {
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'flujocotizacion',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.flujocotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            models.flujocotizacion.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', sucess: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+            })
+            break;
+    }
+}
+
+
+exports.listnota = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idserviciorequerido",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.notaevaluaciontecnica.belongsTo(models.serviciosrequeridos, { foreignKey: 'idserviciorequerido' });
+            models.notaevaluaciontecnica.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.notaevaluaciontecnica.belongsTo(models.criterioevaluacion, { foreignKey: 'idcriterioevaluacion' });
+            models.notaevaluaciontecnica.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.notaevaluaciontecnica.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [{
+                        model: models.proveedor
+                    }, {
+                        model: models.criterioevaluacion
+                    }]
+
+                }).then(function (notaevaluaciontecnica) {
+                    return res.json({ records: records, total: total, page: page, rows: notaevaluaciontecnica });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};

@@ -638,5 +638,11 @@ module.exports = function (passport) {
     router.route('/sic/flujocotizacion/action')
         .post(isAuthenticated, cotizacionservicioController.actionflujo);
 
+    router.route('/sic/notaevaluaciontecnica/:id/list')
+        .get(isAuthenticated, cotizacionservicioController.listnota)
+
+    router.route('/sic/notaevaluaciontecnica/action')
+        .post(isAuthenticated, cotizacionservicioController.actionnota);
+
     return router;
 }
