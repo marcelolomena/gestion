@@ -113,11 +113,10 @@ exports.zone = function (req, res) {
             where: { idtipo: idtipo, div: idzona },
             order: 'secuencia'
         }).then(function (rows) {
-            logger.debug(rows)
+            //logger.debug(rows)
             //const nodeData = rows.map((node) => node.get({ plain: true }));
             return res.json(rows)
         })
     }
-
 
 };
