@@ -5,11 +5,32 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var nuevosProyectosController = require('../controllers/nuevosproyectos');
 var tareasNuevosProyectosController = require('../controllers/tareasnuevosproyectos');
 var flujoNuevaTareaController = require('../controllers/flujonuevatarea');
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
 
     router.get('/nuevosproyectos', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'nuevosproyectos', title: 'NUEVOS PROYECTOS' });
+        return models.pagina.findOne({
+            where: { nombre: 'nuevosproyectos' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'nuevosproyectos',
+                title: 'NUEVOS PROYECTOS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });           
     });
 
     router.route('/nuevosproyectos/list')

@@ -7,15 +7,55 @@ var tareaenvueloController = require('../controllers/tareaenvuelo');
 var fechaenvueloController = require('../controllers/fechaenvuelo');
 var conversionenvueloController = require('../controllers/conversionenvuelo');
 var flujopagoenvueloController = require('../controllers/flujopagoenvuelo');
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
 
     router.get('/presupuestoenvuelo', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuestoenvuelo', title: 'COMPROMISOS POR SAP' });
+        return models.pagina.findOne({
+            where: { nombre: 'presupuestoenvuelo' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'presupuestoenvuelo',
+                title: 'COMPROMISOS POR SAP',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });            
+        
     });
 
     router.get('/inscripcionsap', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'inscripcionsap', title: 'INSCRIPCIÓN SAP' });
+        return models.pagina.findOne({
+            where: { nombre: 'inscripcionsap' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'inscripcionsap',
+                title: 'INSCRIPCIÓN SAP',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
     });
 
     router.route('/presupuestoenvuelo/list')

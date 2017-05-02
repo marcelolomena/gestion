@@ -3,7 +3,9 @@ var monedasConversionController = require('../controllers/monedasconversion');
 var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
-
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
 

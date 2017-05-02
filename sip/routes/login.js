@@ -115,7 +115,8 @@ module.exports = function (passport) {
                                         data: data,
                                         page: 'home',
                                         title: '',
-                                        type: pagina.contenido.nombre
+                                        type: pagina.contenido.nombre,
+                                        idtype: pagina.contenido.id
                                     });
                                 }).catch(function (err) {
                                     logger.error(err);
@@ -166,7 +167,6 @@ module.exports = function (passport) {
 
     /* GET Home Page */
     router.get('/home', isAuthenticated, function (req, res) {
-        //res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'home' });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'home' },

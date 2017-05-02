@@ -11,22 +11,80 @@ var flujonuevatareaController = require('../controllers/flujonuevatarea');
 var compromisosporcuiController = require('../controllers/compromisosporcui');
 var planiniciativasController = require('../controllers/planiniciativas');
 var iniciativaconsultaController = require('../controllers/iniciativaconsulta');
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
 
     router.get('/iniciativas', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'iniciativas', title: 'INICIATIVAS' });                
+        return models.pagina.findOne({
+            where: { nombre: 'iniciativas' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'iniciativas',
+                title: 'INICIATIVAS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });         
     });
 
     router.get('/compromisosporcui', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'compromisosporcui', title: 'COMPROMISOS POR CUI' });        
+        return models.pagina.findOne({
+            where: { nombre: 'compromisosporcui' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'compromisosporcui',
+                title: 'COMPROMISOS POR CUI',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });         
+        
     });
 
     router.route('/compromisosporcui/list')
         .post(isAuthenticated, compromisosporcuiController.list);
 
     router.get('/planiniciativas', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'planiniciativas', title: 'PLAN INICIATIVAS' });                
+        return models.pagina.findOne({
+            where: { nombre: 'planiniciativas' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'planiniciativas',
+                title: 'PLAN INICIATIVAS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });         
     });
 
     router.route('/planiniciativas/list')
@@ -150,7 +208,25 @@ module.exports = function (passport) {
         .get(isAuthenticated, iniciativafechaController.getFechas);
 
     router.get('/iniciativasconsulta', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'iniciativasconsulta', title: 'CONSULTA DE INICIATIVAS' });                        
+        return models.pagina.findOne({
+            where: { nombre: 'iniciativasconsulta' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'iniciativasconsulta',
+                title: 'CONSULTA DE INICIATIVAS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
     });
     
     router.route('/iniciativasconsultalist')

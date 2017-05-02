@@ -27,7 +27,26 @@ var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     router.get('/proveedores', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'proveedores', title: 'Proveedores' });
+        return models.pagina.findOne({
+            where: { nombre: 'proveedores' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'proveedores',
+                title: 'Proveedores',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
+        
     });
 
     router.route('/proveedores/combobox')
@@ -49,11 +68,49 @@ module.exports = function (passport) {
         .post(isAuthenticated, contactoController.action);
 
     router.get('/parametros', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'parametros', title: 'PARAMETROS' });
+        return models.pagina.findOne({
+            where: { nombre: 'parametros' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'parametros',
+                title: 'PARAMETROS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
+        
     });
 
     router.get('/roles', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'roles', title: 'ROLES' });
+        return models.pagina.findOne({
+            where: { nombre: 'roles' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'roles',
+                title: 'ROLES',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
+        
     });
 
     router.route('/roles/list')
@@ -66,7 +123,26 @@ module.exports = function (passport) {
         .post(isAuthenticated, rolesController.action);
 
     router.get('/permisos', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'permisos', title: 'ROLES' });        
+        return models.pagina.findOne({
+            where: { nombre: 'permisos' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'permisos',
+                title: 'ROLES',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
+        
     });
 
     router.route('/permisos/list')
@@ -106,7 +182,26 @@ module.exports = function (passport) {
         .get(isAuthenticated, paramController.getListParam);
 
     router.get('/proyectos', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'proyectos', title: 'Informe de Saldos de Proyectos DIVOT' });        
+        return models.pagina.findOne({
+            where: { nombre: 'proyectos' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'proyectos',
+                title: 'Informe de Saldos de Proyectos DIVOT',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
+        
     });
 
     router.route('/proyectoslist')

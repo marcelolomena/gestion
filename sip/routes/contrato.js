@@ -25,7 +25,8 @@ module.exports = function (passport) {
                 data: req.session.passport.sidebar,
                 page: 'contratos',
                 title: 'CONTRATOS',
-                type: pagina.contenido.nombre
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
             });
         }).catch(function (err) {
             logger.error(err);

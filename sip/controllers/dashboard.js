@@ -63,7 +63,7 @@ exports.zone = function (req, res) {
         });
 
 
-    } else if (idzona === 'zon2' || idzona === 'zon3' || idzona === 'zon4' || idzona=== 'zon7' ) {
+    } else if (idzona === 'zon2' || idzona === 'zon3' || idzona === 'zon4' || idzona === 'zon7' || idzona === 'zon9' || idzona === 'zon10' || idzona === 'zon11') {
 
         models.dashboard.findAll({
             attributes: [
@@ -117,6 +117,61 @@ exports.zone = function (req, res) {
             //const nodeData = rows.map((node) => node.get({ plain: true }));
             return res.json(rows)
         })
+    } if (idzona === 'zon8') {
+
+        models.dashboard.findAll({
+            attributes: [
+                'valorx', 'valory'
+            ],
+            where: { idtipo: idtipo, div: idzona, serie: 'Mantener' },
+            order: 'secuencia'
+        }).then(function (da) {
+
+            var _mantener = {}
+            _mantener['name'] = 'Mantener'
+            _mantener['data'] = da
+            data.push(_mantener)
+
+            models.dashboard.findAll({
+                attributes: [
+                    'valorx', 'valory'
+                ],
+                where: { idtipo: idtipo, div: idzona, serie: 'Crecer' },
+                order: 'secuencia'
+            }).then(function (db) {
+                var _crecer = {}
+                _crecer['name'] = 'Crecer'
+                _crecer['data'] = db
+                data.push(_crecer)
+
+                models.dashboard.findAll({
+                    attributes: [
+                        'valorx', 'valory'
+                    ],
+                    where: { idtipo: idtipo, div: idzona, serie: 'Transformar' },
+                    order: 'secuencia'
+                }).then(function (tr) {
+
+                    var _transformar = {}
+                    _transformar['name'] = 'Transformar'
+                    _transformar['data'] = tr
+                    data.push(_transformar)
+
+                    return res.json(data);
+
+                }).catch(function (err) {
+                    logger.error(err);
+                });
+
+            }).catch(function (err) {
+                logger.error(err);
+            });
+
+        }).catch(function (err) {
+            logger.error(err);
+        });
+
+
     }
 
 };

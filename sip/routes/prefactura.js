@@ -4,6 +4,9 @@ var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var prefacturaController = require('../controllers/prefactura');
 var prefacturasController = require('../controllers/prefacturas');
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
 
@@ -11,7 +14,26 @@ module.exports = function (passport) {
         .get(isAuthenticated, prefacturaController.test);
 
     router.get('/solicitud', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'solicitud', title: 'GENERAR SOLICITUDES' });
+
+        return models.pagina.findOne({
+            where: { nombre: 'solicitud' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'solicitud',
+                title: 'GENERAR SOLICITUDES',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
     });
 
     router.route('/solicitud/lista')
@@ -24,11 +46,49 @@ module.exports = function (passport) {
         .get(isAuthenticated, prefacturaController.anular);
 
     router.get('/prefactura', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'prefactura', title: 'SOLICITUDES DE APROBACIÓN' });
+        return models.pagina.findOne({
+            where: { nombre: 'prefactura' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'prefactura',
+                title: 'SOLICITUDES DE APROBACIÓN',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
+        
     });
 
     router.get('/prefacturas', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'prefacturas', title: 'PREFACTURAS' });
+        return models.pagina.findOne({
+            where: { nombre: 'prefacturas' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'prefacturas',
+                title: 'PREFACTURAS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
+        
     });
 
     router.route('/prefacturas/anular/:id')
@@ -38,7 +98,25 @@ module.exports = function (passport) {
         .post(isAuthenticated, prefacturasController.list);
 
     router.get('/pert', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'pert', title: 'Ingreso de Facturas' });
+        return models.pagina.findOne({
+            where: { nombre: 'pert' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'pert',
+                title: 'Ingreso de Facturas',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
     });
 
     router.route('/solicitudesporfactura/:id')
@@ -57,11 +135,48 @@ module.exports = function (passport) {
         .post(isAuthenticated, prefacturasController.solicitudesaprobadasproy);
 
     router.get('/genprefacturas', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'genprefacturas', title: 'GENERAR PREFACTURAS' });
+        return models.pagina.findOne({
+            where: { nombre: 'genprefacturas' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'genprefacturas',
+                title: 'GENERAR PREFACTURAS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
+        
     });
 
     router.get('/genprefacturasproy', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'genprefacturasproy', title: 'GENERAR PREFACTURAS PROYECTOS' });
+        return models.pagina.findOne({
+            where: { nombre: 'genprefacturasproy' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'genprefacturasproy',
+                title: 'GENERAR PREFACTURAS PROYECTOS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });         
     });
 
     router.route('/desgloseporsolicitud/:id')
@@ -77,7 +192,26 @@ module.exports = function (passport) {
         .get(isAuthenticated, prefacturasController.getallcuis);
 
     router.get('/solicitudProyectos', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'solicitudProyectos', title: 'GENERAR SOLICITUDES DE PROYECTOS' });
+        return models.pagina.findOne({
+            where: { nombre: 'solicitudProyectos' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'solicitudProyectos',
+                title: 'GENERAR SOLICITUDES DE PROYECTOS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });         
+        
     });
 
     router.route('/solicitudProyectos/lista')

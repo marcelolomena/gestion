@@ -313,6 +313,8 @@ $(document).ready(function () {
             var cat = []
             var series = []
 
+            //console.dir(data)
+
             $.each(data, function (index, element) {
                 var item = {}
                 item["name"] = element.valorx
@@ -360,8 +362,126 @@ $(document).ready(function () {
         }
     });
 
+    $.ajax({
+        url: '/dashboard/' + idtype + '/zon8',
+        type: 'GET',
+        success: function (data) {
+            var cat = []
+            var series = []
+            $.each(data[0].data, function (index, element) {
+                cat.push(element.valorx)
+            });
 
-    $("#zon8").load("static/tbl.html");
-    $("#zon8").width(400).height(300);
+            //console.dir(data)
+
+            $.each(data, function (index, element) {
+                var item = {}
+                var b = []
+
+                $.each(element.data, function (i, elem) {
+                    b.push(elem.valory)
+                });
+
+                item["name"] = element.name
+                item["data"] = b
+
+                series.push(item)
+            });
+            bar.xAxis.categories = cat
+            bar.series = series
+            bar.chart.type = 'column'
+            bar.chart.renderTo = 'zon8'
+            bar.title.text = 'Comparativo del gasto'
+            var zon8 = new Highcharts.Chart(bar);
+            zon8.setSize(400, 300);
+        }
+    });
+
+    $.ajax({
+        url: '/dashboard/' + idtype + '/zon9',
+        type: 'GET',
+        success: function (data) {
+            var cat = []
+            var series = []
+            var b = []
+            var item = {}
+
+            $.each(data, function (index, element) {
+                cat.push(element.valorx)
+                b.push(element.valory)
+            });
+
+            item["name"] = ''
+            item["data"] = b
+            series.push(item)
+
+            bar.xAxis.categories = cat
+            bar.series = series
+            bar.chart.type = 'bar'
+            bar.chart.renderTo = 'zon9'
+            bar.title.text = 'Comparativo del gasto en HHEE'
+            var zon9 = new Highcharts.Chart(bar);
+            zon9.setSize(400, 300);
+        }
+    });
+
+    $.ajax({
+        url: '/dashboard/' + idtype + '/zon10',
+        type: 'GET',
+        success: function (data) {
+            var cat = []
+            var series = []
+            var b = []
+            var item = {}
+
+            $.each(data, function (index, element) {
+                cat.push(element.valorx)
+                b.push(element.valory)
+            });
+
+            item["name"] = ''
+            item["data"] = b
+            series.push(item)
+
+            bar.xAxis.categories = cat
+            bar.series = series
+            bar.chart.type = 'bar'
+            bar.chart.renderTo = 'zon10'
+            bar.title.text = 'Saldo en SAP vigentes'
+            var zon10 = new Highcharts.Chart(bar);
+            zon10.setSize(400, 300);
+        }
+    });
+
+    $.ajax({
+        url: '/dashboard/' + idtype + '/zon11',
+        type: 'GET',
+        success: function (data) {
+            var cat = []
+            var series = []
+            var b = []
+            var item = {}
+
+            $.each(data, function (index, element) {
+                cat.push(element.valorx)
+                b.push(element.valory)
+            });
+
+            item["name"] = ''
+            item["data"] = b
+            series.push(item)
+
+            bar.xAxis.categories = cat
+            bar.series = series
+            bar.chart.type = 'bar'
+            bar.chart.renderTo = 'zon11'
+            bar.title.text = 'Tiempo promedio de inscripción de cada SAP'
+            var zon11 = new Highcharts.Chart(bar);
+            zon11.setSize(400, 300);
+        }
+    });
+
+    //$("#zon12").load("static/tbl.html");
+    $("#zon12").width(400).height(300);
 
 });
