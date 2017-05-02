@@ -259,7 +259,26 @@ module.exports = function (passport) {
         .get(isAuthenticated, contactoController.getContactos);
 
     router.get('/serviciosext', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'serviciosext', title: 'SERVICIOS' });        
+        return models.pagina.findOne({
+            where: { nombre: 'serviciosext' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'serviciosext',
+                title: 'SERVICIOS',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
+        
     });
 
     router.route('/serviciosext/list')
@@ -278,7 +297,6 @@ module.exports = function (passport) {
         .get(isAuthenticated, testController.test);
 
     router.get('/graficotest', isAuthenticated, function (req, res) {
-        //res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'grafico', title: 'SAP ACTIVAS' });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'graficotest' },
@@ -312,14 +330,51 @@ module.exports = function (passport) {
         .get(isAuthenticated, graficoController.sapgrafico);
 
     router.get('/registro', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'registro', title: 'REGISTRO' });        
+        return models.pagina.findOne({
+            where: { nombre: 'registro' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'registro',
+                title: 'REGISTRO',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
     });
 
     router.route('/registro/list')
         .post(isAuthenticated, registroController.list);
 
     router.get('/resetpwd', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'resetpwd', title: 'Cambio de Password' });                
+        return models.pagina.findOne({
+            where: { nombre: 'resetpwd' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'resetpwd',
+                title: 'Cambio de Password',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });          
+        
     });
 
     router.route('/testxml')

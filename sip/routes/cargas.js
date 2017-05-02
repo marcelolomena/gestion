@@ -9,7 +9,6 @@ var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     router.get('/cargas', isAuthenticated, function (req, res) {
-        //res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'cargas', title: 'Cargas' });
         return models.pagina.findOne({
             where: { nombre: 'cargas' },
             include: [{
