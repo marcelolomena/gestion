@@ -5,6 +5,49 @@ $(document).ready(function () {
         }
     });
 
+    pageSize = 1;
+    pagesCount = $(".graficos").length;
+    var currentPage = 1;
+
+    /////////// PREPARE NAV ///////////////
+    var nav = '';
+    var totalPages = Math.ceil(pagesCount / pageSize);
+    for (var s = 0; s < totalPages; s++) {
+        nav += '<li class="numeros"><a href="#">' + (s + 1) + '</a></li>';
+    }
+    $(".pag_prev").after(nav);
+    $(".numeros").first().addClass("active");
+    //////////////////////////////////////
+
+    showPage = function () {
+        $(".graficos").hide().each(function (n) {
+            if (n >= pageSize * (currentPage - 1) && n < pageSize * currentPage)
+                $(this).show();
+        });
+    }
+    showPage();
+
+    $(".pagination li.numeros").click(function () {
+        $(".pagination li").removeClass("active");
+        $(this).addClass("active");
+        currentPage = parseInt($(this).text());
+        showPage();
+    });
+
+    $(".pagination li.pag_prev").click(function () {
+        if ($(this).next().is('.active')) return;
+        $('.numeros.active').removeClass('active').prev().addClass('active');
+        currentPage = currentPage > 1 ? (currentPage - 1) : 1;
+        showPage();
+    });
+
+    $(".pagination li.pag_next").click(function () {
+        if ($(this).prev().is('.active')) return;
+        $('.numeros.active').removeClass('active').next().addClass('active');
+        currentPage = currentPage < totalPages ? (currentPage + 1) : totalPages;
+        showPage();
+    });
+
     var lin = {
         chart: {
             type: 'line',
@@ -85,7 +128,7 @@ $(document).ready(function () {
     var bar = {
         chart: {
             renderTo: '',
-            type: 'column'
+            type: ''
         },
         title: {
             text: ''
@@ -145,6 +188,7 @@ $(document).ready(function () {
             });
             bar.xAxis.categories = cat
             bar.series = series
+            bar.chart.type = 'column'
             bar.chart.renderTo = 'zon1'
             bar.title.text = 'Consumo Presupuesto'
             var zon1 = new Highcharts.Chart(bar);
@@ -286,5 +330,38 @@ $(document).ready(function () {
             zon6.setSize(400, 300);
         }
     });
+
+
+    $.ajax({
+        url: '/dashboard/' + idtype + '/zon7',
+        type: 'GET',
+        success: function (data) {
+            var cat = []
+            var series = []
+            var b = []
+            var item = {}
+
+            $.each(data, function (index, element) {
+                cat.push(element.valorx)
+                b.push(element.valory)
+            });
+
+            item["name"] = ''
+            item["data"] = b
+            series.push(item)
+
+            bar.xAxis.categories = cat
+            bar.series = series
+            bar.chart.type = 'bar'
+            bar.chart.renderTo = 'zon7'
+            bar.title.text = 'Comparación del presupuesto aprobado'
+            var zon7 = new Highcharts.Chart(bar);
+            zon7.setSize(400, 300);
+        }
+    });
+
+
+    $("#zon8").load("static/tbl.html");
+    $("#zon8").width(400).height(300);
 
 });
