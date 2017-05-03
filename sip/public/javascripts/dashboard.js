@@ -137,7 +137,7 @@ $(document).ready(function () {
             text: 'Source: WorldClimate.com'
         },*/
         xAxis: {
-            categories: [],
+            //categories: [],
             crosshair: true
         },
         yAxis: {
@@ -172,6 +172,7 @@ $(document).ready(function () {
             $.each(data[0].data, function (index, element) {
                 cat.push(element.valorx)
             });
+            console.log(cat)
 
             $.each(data, function (index, element) {
                 var item = {}
@@ -186,6 +187,7 @@ $(document).ready(function () {
 
                 series.push(item)
             });
+            //console.dir(series)
             bar.xAxis.categories = cat
             bar.series = series
             bar.chart.type = 'column'
@@ -312,20 +314,26 @@ $(document).ready(function () {
         success: function (data) {
             var cat = []
             var series = []
-
-            //console.dir(data)
+            var b = []
+            var item = {}
 
             $.each(data, function (index, element) {
-                var item = {}
-                item["name"] = element.valorx
-                item["data"] = [element.valory]
-                series.push(item)
-                cat.push(element.valorx)
+                b.push([element.valorx, element.valory])
             });
 
-            bar.xAxis.categories = cat
+            item["name"] = "Valores"
+            item["data"] = b
+            series.push(item)
+
+            //console.dir(series)
+
+            bar.xAxis.type = 'category'
+            //bar.xAxis.labels.rotation = -45
+            //bar.xAxis.labels.style.fontSize = '13px'
+            //bar.xAxis.labels.style.fontFamily = 'Verdana, sans-serif'
             bar.series = series
             bar.chart.renderTo = 'zon6'
+            bar.chart.type = 'column'
             bar.title.text = 'Gastos en licencias'
             var zon6 = new Highcharts.Chart(bar);
 
@@ -371,7 +379,7 @@ $(document).ready(function () {
             $.each(data[0].data, function (index, element) {
                 cat.push(element.valorx)
             });
-
+            console.log(cat)
             //console.dir(data)
 
             $.each(data, function (index, element) {
@@ -387,6 +395,8 @@ $(document).ready(function () {
 
                 series.push(item)
             });
+
+            //console.dir(series)
             bar.xAxis.categories = cat
             bar.series = series
             bar.chart.type = 'column'

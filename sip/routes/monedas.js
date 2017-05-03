@@ -10,7 +10,25 @@ var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     router.get('/monedasconversion', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'monedasconversion', title: 'Monedas' });
+        return models.pagina.findOne({
+            where: { nombre: 'monedasconversion' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'monedasconversion',
+                title: 'Monedas',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });        
     });
 
     router.route('/monedas/list')

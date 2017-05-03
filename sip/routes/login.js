@@ -137,7 +137,8 @@ module.exports = function (passport) {
                                         data: data,
                                         page: 'home2',
                                         title: '',
-                                        type: pagina.contenido.nombre
+                                        type: pagina.contenido.nombre,
+                                        idtype: pagina.contenido.id
                                     });
                                 }).catch(function (err) {
                                     logger.error(err);
@@ -181,7 +182,8 @@ module.exports = function (passport) {
                 data: req.session.passport.sidebar,
                 page: 'home',
                 title: '',
-                type: pagina.contenido.nombre
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
             });
         }).catch(function (err) {
             logger.error(err);
@@ -205,7 +207,8 @@ module.exports = function (passport) {
                 data: req.session.passport.sidebar,
                 page: 'home2',
                 title: '',
-                type: pagina.contenido.nombre
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
             });
         }).catch(function (err) {
             logger.error(err);

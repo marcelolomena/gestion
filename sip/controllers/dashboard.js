@@ -139,6 +139,7 @@ exports.zone = function (req, res) {
                 where: { idtipo: idtipo, div: idzona, serie: 'Crecer' },
                 order: 'secuencia'
             }).then(function (db) {
+                console.dir(db)
                 var _crecer = {}
                 _crecer['name'] = 'Crecer'
                 _crecer['data'] = db
