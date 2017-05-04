@@ -241,6 +241,7 @@ $(document).ready(function () {
 
                 item["name"] = element.name
                 item["data"] = b
+                item["colorByPoint"] = false
 
                 series.push(item)
             });
@@ -380,6 +381,7 @@ $(document).ready(function () {
 
             item["name"] = "Valores"
             item["data"] = b
+            //item["colorByPoint"] = false
             series.push(item)
 
             //console.dir(series)
@@ -415,6 +417,7 @@ $(document).ready(function () {
 
             item["name"] = ''
             item["data"] = b
+            //item["colorByPoint"] = false
             series.push(item)
 
             bar.xAxis.categories = cat
@@ -449,6 +452,7 @@ $(document).ready(function () {
 
                 item["name"] = element.name
                 item["data"] = b
+                item["colorByPoint"] = false
 
                 series.push(item)
             });
@@ -480,6 +484,7 @@ $(document).ready(function () {
 
             item["name"] = ''
             item["data"] = b
+            //item["colorByPoint"] = false
             series.push(item)
 
             bar.xAxis.categories = cat
@@ -508,6 +513,7 @@ $(document).ready(function () {
 
             item["name"] = ''
             item["data"] = b
+            //item["colorByPoint"] = false
             series.push(item)
 
             bar.xAxis.categories = cat
@@ -536,6 +542,7 @@ $(document).ready(function () {
 
             item["name"] = ''
             item["data"] = b
+            //item["colorByPoint"] = false
             series.push(item)
 
             bar.xAxis.categories = cat
