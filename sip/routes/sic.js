@@ -94,6 +94,9 @@ module.exports = function (passport) {
     router.route('/sic/preguntas/:id')
         .get(isAuthenticated, preguntasController.list);
 
+    router.route('/sic/asignarpreguntas/:id')
+        .get(isAuthenticated, preguntasController.listasignar);
+
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
 
@@ -356,6 +359,9 @@ module.exports = function (passport) {
 
     router.route('/sic/preguntasresponsable/:id')
         .get(isAuthenticated, preguntasController.listresponsables);
+
+    router.route('/sic/preguntasresponsablenew/:id')
+        .get(isAuthenticated, preguntasController.listresponsablesnew);
 
     router.route('/sic/responder')
         .post(isAuthenticated, preguntasController.responder);

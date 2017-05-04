@@ -199,6 +199,49 @@ exports.list = function (req, res) {
         }
     });
 };
+exports.listasignar = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
+            models.preguntaproveedor.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.preguntaproveedor.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [
+                        {
+                            model: models.proveedor
+                        },
+                        { model: models.user }
+                    ]
+                }).then(function (preguntaproveedor) {
+                    return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
 
 exports.listresponsables = function (req, res) {
 
@@ -210,6 +253,53 @@ exports.listresponsables = function (req, res) {
 
     var additional = [{
         "field": "idsolicitudcotizacion",
+        "op": "eq",
+        "data": req.params.id
+    }, {
+        "field": "idresponsable",
+        "op": "eq",
+        "data": req.session.passport.user
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
+            models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
+            models.preguntaproveedor.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.preguntaproveedor.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [
+                        {
+                            model: models.proveedor
+                        },
+                        { model: models.user }
+                    ]
+                }).then(function (preguntaproveedor) {
+                    return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+exports.listresponsablesnew = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "id",
         "op": "eq",
         "data": req.params.id
     }, {
