@@ -494,6 +494,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Participantes Proveedor</a></li>"
         tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#evaluacioneconomica' id='evaluacioneconomica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Económica</a></li>"
         tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#evaluaciontecnica' id='evaluaciontecnica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Técnica</a></li>"
+        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#matrizevaluacion' id='matrizevaluacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Matriz de Evaluación</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
@@ -507,6 +508,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='participantesproveedor'><table id='participantesproveedor_t_" + parentRowKey + "'></table><div id='navGridPartPro'></div></div>"
         tabs += "<div class='tab-pane' id='evaluacioneconomica'><table id='evaluacioneconomica_t_" + parentRowKey + "'></table><div id='navGridEvEco'></div></div>"
         tabs += "<div class='tab-pane' id='evaluaciontecnica'><table id='evaluaciontecnica_t_" + parentRowKey + "'></table><div id='navGridEvTec'></div></div>"
+        tabs += "<div class='tab-pane' id='matrizevaluacion'><table id='matrizevaluacion_t_" + parentRowKey + "'></table><div id='navGridMatriz'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
         tabs += "</div>"
 
@@ -536,6 +538,8 @@ $(document).ready(function () {
                 gridEvaluacionEco.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#evaluaciontecnica') {
                 gridEvaluacionTec.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#matrizevaluacion') {
+                gridMatrizEvaluacion.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
             }
@@ -567,6 +571,8 @@ $(document).ready(function () {
                 gridEvaluacionEco.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#evaluaciontecnica') {
                 gridEvaluacionTec.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#matrizevaluacion') {
+                gridMatrizEvaluacion.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
             }

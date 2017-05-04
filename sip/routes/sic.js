@@ -24,6 +24,7 @@ var rolessicController = require('../controllers/sic/rolessic');
 var permisosController = require('../controllers/sic/permisos')
 var participantesproveedorController = require('../controllers/sic/participantesproveedor')
 var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
+var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
@@ -643,6 +644,45 @@ module.exports = function (passport) {
 
     router.route('/sic/notaevaluaciontecnica/action')
         .post(isAuthenticated, cotizacionservicioController.actionnota);
+
+    router.route('/sic/nivelclase/:id')
+        .get(isAuthenticated, cotizacionservicioController.nivelclase);
+
+    router.route('/sic/matriznivel1/:id/list')
+        .get(isAuthenticated, matrizevaluacionController.matriznivel1)
+
+    router.route('/sic/matriznivel1/:id/cols')
+        .get(isAuthenticated, matrizevaluacionController.columnas)
+
+    router.route('/sic/matriznivel2/:id/list')
+        .get(isAuthenticated, matrizevaluacionController.matriznivel2)
+
+    router.route('/sic/matrizeco/:id/cols')
+        .get(isAuthenticated, matrizevaluacionController.columnaseco)
+
+    router.route('/sic/matrizeco/:id/list')
+        .get(isAuthenticated, matrizevaluacionController.matrizeco)
+
+    router.route('/sic/matriztotal/:id/list')
+        .get(isAuthenticated, matrizevaluacionController.matriztotal)
+
+    router.route('/sic/matriztotaleco/:id/list')
+        .get(isAuthenticated, matrizevaluacionController.matriztotaleco)
+
+    router.route('/sic/matriztotalajustada/:id/list')
+        .get(isAuthenticated, matrizevaluacionController.matriztotalajustada)
+
+    router.route('/sic/criterios1/:id')
+        .get(isAuthenticated, cotizacionservicioController.criterios1)
+
+    router.route('/sic/notaevaluaciontecnica2/:id/list')
+        .get(isAuthenticated, cotizacionservicioController.listnota2)
+
+    router.route('/sic/notaevaluaciontecnica2/action')
+        .post(isAuthenticated, cotizacionservicioController.actionnota2);
+
+    router.route('/sic/criterios2/:id')
+        .get(isAuthenticated, cotizacionservicioController.criterios2)
 
     return router;
 }

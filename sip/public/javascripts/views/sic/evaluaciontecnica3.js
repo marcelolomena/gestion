@@ -1,4 +1,4 @@
-function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
+function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -15,7 +15,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Criterio {idcriterioevaluacion}</div>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Criterio {idcriterioevaluacion2}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
@@ -38,28 +38,36 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/sic/notaevaluaciontecnica/" + parentRowKey + "/list";
+    var childGridURL = "/sic/notaevaluaciontecnica2/" + parentRowKey + "/list";
 
-    var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
     //console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
     //console.log("la rowData : " + rowData)
-    var parentSolicitud = rowData.idsolicitudcotizacion;
-    var parentClaseEvaluacionTecnica = rowData.claseevaluaciontecnica;
-    console.log("la parentClaseEvaluacionTecnica : " + parentClaseEvaluacionTecnica)
+    var parentCriterio = rowData.idserviciorequerido;
+    console.log("la parentCriterio : " + parentCriterio)
+
+    var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
+    grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
+    //console.log("la grilla abuelo: " + grillaabuelo)
+    var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
+    //console.log("la rowData2 : " + rowData2)
+    var parentClaseEvaluacionTecnica = rowData2.claseevaluaciontecnica;
+    console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
 
     var modelSubcriterios = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idserviciorequerido', name: 'idserviciorequerido', hidden: true },
+        { label: 'idnotaevaluaciontecnica', name: 'idnotaevaluaciontecnica', hidden: true },
         {
-            name: 'idcriterioevaluacion', search: false, editable: true, hidden: true,
+            name: 'idcriterioevaluacion2', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/criterios1/' + parentRowKey,
+                dataUrl: '/sic/criterios2/' + parentRowKey,
                 buildSelect: function (response) {
                     var rowKey = $('#' + childGridID).getGridParam("selrow");
                     var rowData = $('#' + childGridID).getRowData(rowKey);
-                    var thissid = rowData.idcriterioevaluacion;
+                    var thissid = rowData.idcriterioevaluacion2;
                     var data = JSON.parse(response);
                     var s = "<select>";//el default
                     s += '<option value="0">--Seleccione criterio a evaluar--</option>';
@@ -79,7 +87,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             name: 'idproveedor', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/proveedoressugeridosservicio/' + parentRowKey,
+                dataUrl: '/sic/proveedoressugeridosservicio/' + parentCriterio,
                 buildSelect: function (response) {
                     var rowKey = $('#' + childGridID).getGridParam("selrow");
                     var rowData = $('#' + childGridID).getRowData(rowKey);
@@ -100,11 +108,11 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Nombre Criterio', name: 'criterioevaluacion.nombre', width: 120, align: 'left', search: true, editable: true,
+            label: 'Nombre Criterio', name: 'criterioevaluacion2.nombre', width: 120, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
         },
         {
-            label: 'Porcentaje', name: 'criterioevaluacion.porcentaje', width: 50, align: 'left', search: true, editable: true,
+            label: 'Porcentaje', name: 'criterioevaluacion2.porcentaje', width: 50, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
         },
 
@@ -183,7 +191,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Nota Evaluación Técnica (Nivel 1)',
+        caption: 'Nota Evaluación Técnica (Nivel 2)',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
@@ -196,13 +204,13 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         height: 'auto',
         pager: "#" + childGridPagerID,
         subGrid: true,
-        subGridRowExpanded: showSubGridsCot3,
+        subGridRowExpanded: showSubGridsCot4,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
 
-        editurl: '/sic/notaevaluaciontecnica/action',
+        editurl: '/sic/notaevaluaciontecnica2/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -220,13 +228,13 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Nota ",
+            editCaption: "Modificar Cotización ",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { idsolicitudcotizacion: parentCriterio };
             },
         },
         {
@@ -234,13 +242,13 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Nota",
+            addCaption: "Agregar Cotización",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, idsolicitudcotizacion: parentCriterio };
             },
             beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
@@ -272,7 +280,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { idsolicitudcotizacion: parentCriterio };
             },
         },
         {
@@ -280,7 +288,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         }
     );
 
-    function showSubGridsCot3(subgrid_id, row_id) {
+    function showSubGridsCot4(subgrid_id, row_id) {
         var nivel = 0;
         $.ajax({
             type: "GET",
@@ -290,12 +298,16 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 nivel = (data[0].niveles);
             }
         });
+        
         setTimeout(function () {
-            if (nivel > 1) {
-                gridCotizaciones3(subgrid_id, row_id, 'notaevaluacion2');
+            console.log("niveles: " + nivel)
+
+
+            if (nivel > 2) {
+                gridCotizaciones4(subgrid_id, row_id, 'notaevaluacion3');
             }
 
-        }, 500);
+        }, 1000);
     }
 
 

@@ -1,4 +1,4 @@
-function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
+function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -15,15 +15,19 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Criterio {idcriterioevaluacion}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Proveedor {idproveedor}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Nota<span style='color:red'>*</span>{nota}</div>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Fecha {fecha}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Moneda {idmoneda}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Costo Total<span style='color:red'>*</span>{costototal}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
@@ -40,41 +44,25 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     var childGridPagerID = pager_id;
     var childGridURL = "/sic/notaevaluaciontecnica/" + parentRowKey + "/list";
 
-    var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
     //console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
     //console.log("la rowData : " + rowData)
-    var parentSolicitud = rowData.idsolicitudcotizacion;
-    var parentClaseEvaluacionTecnica = rowData.claseevaluaciontecnica;
-    console.log("la parentClaseEvaluacionTecnica : " + parentClaseEvaluacionTecnica)
+    var parentCriterio = rowData.idserviciorequerido;
+    console.log("la parentCriterio : " + parentCriterio)
+
+    var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
+    grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
+    //console.log("la grilla abuelo: " + grillaabuelo)
+    var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
+    //console.log("la rowData2 : " + rowData2)
+    var parentClaseEvaluacionTecnica = rowData2.claseevaluaciontecnica;
+    console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
 
     var modelSubcriterios = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idserviciorequerido', name: 'idserviciorequerido', hidden: true },
-        {
-            name: 'idcriterioevaluacion', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/sic/criterios1/' + parentRowKey,
-                buildSelect: function (response) {
-                    var rowKey = $('#' + childGridID).getGridParam("selrow");
-                    var rowData = $('#' + childGridID).getRowData(rowKey);
-                    var thissid = rowData.idcriterioevaluacion;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Seleccione criterio a evaluar--</option>';
-                    $.each(data, function (i, item) {
-
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }
-        },
+        { label: 'idcriterioevaluacion', name: 'idcriterioevaluacion', hidden: true },
         {
             name: 'idproveedor', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -118,9 +106,13 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         {
             label: 'Nota', name: 'nota', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editrules: { required: true },
-        
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('0,00', { reverse: true });
+                }
+            }
         },
 
         {
@@ -183,7 +175,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Nota Evaluación Técnica (Nivel 1)',
+        caption: 'Nota Evaluación Técnica (Nivel 3)',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
@@ -195,14 +187,8 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        subGrid: true,
-        subGridRowExpanded: showSubGridsCot3,
-        subGridOptions: {
-            plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
-        },
 
-        editurl: '/sic/notaevaluaciontecnica/action',
+        editurl: '/sic/cotizacionservicio/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -220,7 +206,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Nota ",
+            editCaption: "Modificar Cotización ",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -234,7 +220,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Nota",
+            addCaption: "Agregar Cotización",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
@@ -280,23 +266,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         }
     );
 
-    function showSubGridsCot3(subgrid_id, row_id) {
-        var nivel = 0;
-        $.ajax({
-            type: "GET",
-            url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
-            success: function (data) {
-                //console.log(data[0].niveles)
-                nivel = (data[0].niveles);
-            }
-        });
-        setTimeout(function () {
-            if (nivel > 1) {
-                gridCotizaciones3(subgrid_id, row_id, 'notaevaluacion2');
-            }
-
-        }, 500);
-    }
+    
 
 
 }
