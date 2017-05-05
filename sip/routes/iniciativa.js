@@ -16,7 +16,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/iniciativas', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'iniciativas' },
@@ -61,10 +61,10 @@ module.exports = function (passport) {
         });         
         
     });
-
+*/
     router.route('/compromisosporcui/list')
         .post(isAuthenticated, compromisosporcuiController.list);
-
+/*
     router.get('/planiniciativas', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'planiniciativas' },
@@ -86,7 +86,7 @@ module.exports = function (passport) {
             logger.error(err);
         });         
     });
-
+*/
     router.route('/planiniciativas/list')
         .post(isAuthenticated, planiniciativasController.list);
 
@@ -206,7 +206,7 @@ module.exports = function (passport) {
 
     router.route('/iniciativagetfechas')
         .get(isAuthenticated, iniciativafechaController.getFechas);
-
+/*
     router.get('/iniciativasconsulta', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'iniciativasconsulta' },
@@ -228,7 +228,7 @@ module.exports = function (passport) {
             logger.error(err);
         });          
     });
-    
+  */  
     router.route('/iniciativasconsultalist')
         .get(isAuthenticated, iniciativaconsultaController.getInciativaConsulta);        
 

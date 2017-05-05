@@ -7,7 +7,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/cargas', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'cargas' },
@@ -29,7 +29,7 @@ module.exports = function (passport) {
             logger.error(err);
         });         
     });
-
+*/
     router.route('/cargas/list')
         .get(isAuthenticated, cargasController.list);
 

@@ -30,8 +30,8 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
+/*    
     router.get('/solicitudcotizacion', isAuthenticated, function (req, res) {
-        //return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'solicitudcotizacion' },
@@ -55,8 +55,7 @@ module.exports = function (passport) {
     });
 
     router.get('/solicitudcontrato', isAuthenticated, function (req, res) {
-        //return res.render('sic/solicitudcontrato', { user: req.user, data: req.session.passport.sidebar });
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+          models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'solicitudcontrato' },
             include: [{
@@ -77,7 +76,7 @@ module.exports = function (passport) {
         });
         
     });
-
+*/
     router.route('/sic/grid_solicitudcotizacion')
         .post(isAuthenticated, solicitudcotizacionController.action)
         .get(isAuthenticated, solicitudcotizacionController.list);
@@ -119,7 +118,6 @@ module.exports = function (passport) {
         .post(isAuthenticated, preguntasController.archivo);
 
     router.get('/sic/getsession', function (req, res) {
-        //console.dir(req.session.passport.sidebar[0])
         if (req.session.passport.sidebar[0].rol)
             return res.json(req.session.passport.sidebar[0].rol);//JSON
         else
@@ -162,9 +160,8 @@ module.exports = function (passport) {
 
     router.route('/sic/responsables/action')
         .post(isAuthenticated, responsablesController.action);
-
+/*
     router.get('/catalogoclausulas', isAuthenticated, function (req, res) {
-        //return res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'catalogoclausulas' },
@@ -187,7 +184,6 @@ module.exports = function (passport) {
     });
 
     router.get('/claseevaluaciontecnica', isAuthenticated, function (req, res) {
-        //return res.render('sic/claseevaluaciontecnica', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'claseevaluaciontecnica' },
@@ -209,7 +205,7 @@ module.exports = function (passport) {
         });        
         
     });
-
+*/
     router.route('/sic/usuarios_por_rolid/:id')
         .get(isAuthenticated, responsablesController.getUsersByRolId);
 
@@ -301,9 +297,8 @@ module.exports = function (passport) {
 
     router.route('/sic/default/:id/:gid/:tid')
         .get(isAuthenticated, clausulasController.default);
-
+/*
     router.get('/toc', isAuthenticated, function (req, res) {
-        //return res.render('sic/toc', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'toc' },
@@ -325,7 +320,7 @@ module.exports = function (passport) {
         });
         
     });
-
+*/
     router.route('/sic/grid_toctipo')
         .post(isAuthenticated, tocController.action)
         .get(isAuthenticated, tocController.list);
@@ -368,11 +363,11 @@ module.exports = function (passport) {
 
     router.route('/sic/descargarespuestas/:id')
         .get(isAuthenticated, preguntasController.descargarespuestas);
-
+/*
     router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
         return res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
     });
-
+*/
     router.route('/sic/inboxpreguntaslist')
         .post(isAuthenticated, preguntasController.listinbox);
 
@@ -397,8 +392,8 @@ module.exports = function (passport) {
     router.route('/sic/getcolorservicios/:idsolicitud')
         .get(isAuthenticated, solicitudcotizacionController.getcolorservicios);
 
+/*
     router.get('/tipodocumento', isAuthenticated, function (req, res) {
-        //res.render('sic/tipodocumento', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'tipodocumento' },
@@ -420,7 +415,7 @@ module.exports = function (passport) {
         });
         
     });
-
+*/
     router.route('/sic/grid_tipodocumento')
         .post(isAuthenticated, tipodocumentoController.action)
         .get(isAuthenticated, tipodocumentoController.list);
@@ -513,9 +508,8 @@ module.exports = function (passport) {
 
     router.route('/sic/porcentajecriterios/:parentRowKey')
         .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios);
-
+/*
     router.get('/rolessic', isAuthenticated, function (req, res) {
-        //res.render('sic/rolessic', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'rolessic' },
@@ -535,9 +529,8 @@ module.exports = function (passport) {
         }).catch(function (err) {
             logger.error(err);
         });
-        
-    });
-
+      });
+*/
     router.route('/sic/roles/list')
         .post(isAuthenticated, rolessicController.list);
 
@@ -549,9 +542,8 @@ module.exports = function (passport) {
 
     router.route('/sic/getrolessic')
         .get(isAuthenticated, rolessicController.getRoles);
-
+/*
     router.get('/permisossic', isAuthenticated, function (req, res) {
-        //res.render('sic/permisossic', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'permisossic' },
@@ -573,7 +565,7 @@ module.exports = function (passport) {
         });
         
     });
-
+*/
     router.route('/sic/permisos/list')
         .post(isAuthenticated, permisosController.list);
 

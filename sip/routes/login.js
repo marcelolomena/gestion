@@ -10,12 +10,13 @@ var models = require('../models');
 module.exports = function (passport) {
 
     /* GET login page. */
-    router.get('/', function (req, res) {
-        // Display the Login page with any flash message, if any
-        //console.log("--->>" + req.flash('message'))
-        //console.dir(req.flash)
-        res.render('index', { message: req.flash('message') });
-    });
+
+        router.get('/', function (req, res) {
+            // Display the Login page with any flash message, if any
+            //console.log("--->>" + req.flash('message'))
+            //console.dir(req.flash)
+            res.render('index', { message: req.flash('message') });
+        });
 
     /* Handle Login POST */
     const redirectsOne = {
@@ -44,14 +45,14 @@ module.exports = function (passport) {
 
                                 models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
                                 return models.pagina.findOne({
-                                    where: { nombre: 'home' },
+                                    where: { nombre: 'home' + req.body.sistema },
                                     include: [{
                                         model: models.contenido
                                     }
                                     ]
                                 }).then(function (pagina) {
 
-                                    return res.render('home', {
+                                    return res.render('home' + req.body.sistema, {
                                         user: req.user,
                                         data: data,
                                         page: 'home',
@@ -67,14 +68,14 @@ module.exports = function (passport) {
                                 //res.render('sic/home2', { data: data });
                                 models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
                                 return models.pagina.findOne({
-                                    where: { nombre: 'home2' },
+                                    where: { nombre: 'home' + req.body.sistema },
                                     include: [{
                                         model: models.contenido
                                     }
                                     ]
                                 }).then(function (pagina) {
 
-                                    return res.render('home2', {
+                                    return res.render('home' + req.body.sistema, {
                                         user: req.user,
                                         data: data,
                                         page: 'home2',
@@ -167,80 +168,80 @@ module.exports = function (passport) {
 
 
     /* GET Home Page */
-    router.get('/home', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'home' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'home',
-                title: '',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });
-
-    });
-
-    router.get('sic/home2', isAuthenticated, function (req, res) {
-        //res.render('sic/home2', { user: req.user, data: req.session.passport.sidebar });
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'home2' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'home2',
-                title: '',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });
-    });
-
-    /* Handle Logout */
-    router.get('/signout', function (req, res) {
-        req.session.destroy(function (err) {
-            if (err) {
+    /*    
+        router.get('/home', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'home' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'home',
+                    title: '',
+                    type: pagina.contenido.nombre,
+                    idtype: pagina.contenido.id
+                });
+            }).catch(function (err) {
                 logger.error(err);
-            } else {
-                req.logout();
-                res.redirect('/');
-            }
+            });
+    
         });
-
-    });
-
-    /* Handle Logout */
-    router.get('/sic/signout', function (req, res) {
-        req.session.destroy(function (err) {
-            if (err) {
+    */
+    /*
+        router.get('sic/home2', isAuthenticated, function (req, res) {
+            //res.render('sic/home2', { user: req.user, data: req.session.passport.sidebar });
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'home2' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'home2',
+                    title: '',
+                    type: pagina.contenido.nombre,
+                    idtype: pagina.contenido.id
+                });
+            }).catch(function (err) {
                 logger.error(err);
-            } else {
-                req.logout();
-                res.redirect('/');
-            }
+            });
         });
-
-    });
-
+    
+        router.get('/signout', function (req, res) {
+            req.session.destroy(function (err) {
+                if (err) {
+                    logger.error(err);
+                } else {
+                    req.logout();
+                    res.redirect('/');
+                }
+            });
+    
+        });
+    
+        router.get('/sic/signout', function (req, res) {
+            req.session.destroy(function (err) {
+                if (err) {
+                    logger.error(err);
+                } else {
+                    req.logout();
+                    res.redirect('/');
+                }
+            });
+    
+        });
+    */
     return router;
 
 }

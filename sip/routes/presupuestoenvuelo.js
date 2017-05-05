@@ -12,7 +12,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/presupuestoenvuelo', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'presupuestoenvuelo' },
@@ -35,7 +35,8 @@ module.exports = function (passport) {
         });            
         
     });
-
+*/
+/*
     router.get('/inscripcionsap', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'inscripcionsap' },
@@ -57,7 +58,7 @@ module.exports = function (passport) {
             logger.error(err);
         });          
     });
-
+*/
     router.route('/presupuestoenvuelo/list')
         .post(isAuthenticated, presupuestoenvueloController.list);
 

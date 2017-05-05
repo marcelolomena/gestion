@@ -10,7 +10,7 @@ var logger = require("../utils/logger");
 //console.log("la config: "+config);
 config.logging = function(sql){
 
-logger.debug(sql)
+//logger.debug(sql)
 
   var sqlchico = sql.toLowerCase();
 

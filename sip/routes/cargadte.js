@@ -7,7 +7,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/cargadte', isAuthenticated, function (req, res) {
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
@@ -30,7 +30,7 @@ module.exports = function (passport) {
             logger.error(err);
         });        
     });
-
+*/
     router.route('/cargadte/list')
         .get(isAuthenticated, cargadteController.list);
 

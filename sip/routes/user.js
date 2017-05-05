@@ -20,7 +20,7 @@ module.exports = function (passport) {
 
     router.route('/usuariosporprograma/:program_id')
         .get(isAuthenticated, userController.getUsersByProgram);
-
+/*
     router.get('/roldenegocio', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'roldenegocio' },
@@ -42,7 +42,7 @@ module.exports = function (passport) {
             logger.error(err);
         });         
     });
-
+*/
     router.route('/usuariosdelegados/:uid')
         .get(isAuthenticated, userController.getUsersDelegados)
 

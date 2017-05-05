@@ -25,7 +25,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/proveedores', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'proveedores' },
@@ -48,7 +48,7 @@ module.exports = function (passport) {
         });        
         
     });
-
+*/
     router.route('/proveedores/combobox')
         .get(isAuthenticated, proveedorController.combobox);
 
@@ -66,7 +66,7 @@ module.exports = function (passport) {
 
     router.route('/contactos/action')
         .post(isAuthenticated, contactoController.action);
-
+/*
     router.get('/parametros', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'parametros' },
@@ -112,7 +112,7 @@ module.exports = function (passport) {
         });        
         
     });
-
+*/
     router.route('/roles/list')
         .post(isAuthenticated, rolesController.list);
 
@@ -121,7 +121,7 @@ module.exports = function (passport) {
 
     router.route('/roles/action')
         .post(isAuthenticated, rolesController.action);
-
+/*
     router.get('/permisos', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'permisos' },
@@ -144,7 +144,7 @@ module.exports = function (passport) {
         });        
         
     });
-
+*/
     router.route('/permisos/list')
         .post(isAuthenticated, permisosController.list);
 
@@ -180,7 +180,7 @@ module.exports = function (passport) {
 
     router.route('/parameters/:param')
         .get(isAuthenticated, paramController.getListParam);
-
+/*
     router.get('/proyectos', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'proyectos' },
@@ -203,7 +203,7 @@ module.exports = function (passport) {
         });        
         
     });
-
+*/
     router.route('/proyectoslist')
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
 
@@ -257,7 +257,7 @@ module.exports = function (passport) {
 
     router.route('/contactos/:id')
         .get(isAuthenticated, contactoController.getContactos);
-
+/*
     router.get('/serviciosext', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'serviciosext' },
@@ -280,7 +280,7 @@ module.exports = function (passport) {
         });        
         
     });
-
+*/
     router.route('/serviciosext/list')
         .post(isAuthenticated, servicioController.list);
 
@@ -295,7 +295,7 @@ module.exports = function (passport) {
 
     router.route('/test')
         .get(isAuthenticated, testController.test);
-
+/*
     router.get('/graficotest', isAuthenticated, function (req, res) {
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
@@ -316,10 +316,8 @@ module.exports = function (passport) {
         }).catch(function (err) {
             logger.error(err);
         });
-
-
     });
-
+*/
     router.route('/graficodatareal/:idsap')
         .get(isAuthenticated, graficoController.graficoDataReal);
 
@@ -328,7 +326,7 @@ module.exports = function (passport) {
 
     router.route('/sapgrafico')
         .get(isAuthenticated, graficoController.sapgrafico);
-
+/*
     router.get('/registro', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'registro' },
@@ -350,10 +348,10 @@ module.exports = function (passport) {
             logger.error(err);
         });          
     });
-
+*/
     router.route('/registro/list')
         .post(isAuthenticated, registroController.list);
-
+/*
     router.get('/resetpwd', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'resetpwd' },
@@ -376,7 +374,7 @@ module.exports = function (passport) {
         });          
         
     });
-
+*/
     router.route('/testxml')
         .get(isAuthenticated, testxmlController.xmltest);
 

@@ -10,7 +10,7 @@ module.exports = function (passport) {
 
     router.route('/dashboard/:idtipo/:idzona')
         .get(isAuthenticated, dashboardController.zone);
-
+/*
     router.get('/dash1', isAuthenticated, function (req, res) {
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
@@ -33,7 +33,7 @@ module.exports = function (passport) {
             logger.error(err);
         });
     });
-
+*/
     return router;
 
 }

@@ -9,7 +9,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/prefacturasolicitud', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'prefacturasolicitud' },
@@ -31,7 +31,7 @@ module.exports = function (passport) {
             logger.error(err);
         });           
     });
-    
+  */  
     router.route('/prefacturasolicitud/:cui/:periodo/:proveedor')
         .get(isAuthenticated, prefacturasolicitudController.getSolicitudAprob);
         
@@ -52,7 +52,7 @@ module.exports = function (passport) {
         
     router.route('/prefacturasolicitud/action')
         .post(isAuthenticated, prefacturasolicitudController.action);        
-
+/*
     router.get('/facturas', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'facturas' },
@@ -75,7 +75,7 @@ module.exports = function (passport) {
         });           
         
     });
-    
+  */  
     router.route('/facturaslist')
         .get(isAuthenticated, facturasController.getFacturas);
         

@@ -7,8 +7,8 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function(passport) {
+/*    
     router.get('/segmentoproveedor', isAuthenticated, function(req, res) {
-        //res.render('sic/segmentoproveedor', { user: req.user, data: req.session.passport.sidebar });
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
             where: { nombre: 'segmentoproveedor' },
@@ -30,7 +30,7 @@ module.exports = function(passport) {
         });
         
     });
-
+*/
     router.route('/sic/segmentoproveedor/list')
         .get(isAuthenticated, segmentoController.list);
 

@@ -10,7 +10,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'presupuesto' },
@@ -32,7 +32,8 @@ module.exports = function (passport) {
             logger.error(err);
         });         
     });
-
+*/
+/*
     router.get('/presupuestoaprobacion', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'presupuestoaprueba' },
@@ -54,7 +55,7 @@ module.exports = function (passport) {
             logger.error(err);
         });            
     });
-
+*/
     router.route('/presupuestoperiodoslist/:id')
         .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);
 
@@ -123,7 +124,7 @@ module.exports = function (passport) {
 
     router.route('/tiporecupera')
         .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);
-
+/*
     router.get('/presupuestoeditcosto', isAuthenticated, function (req, res) {
         return models.pagina.findOne({
             where: { nombre: 'presupuestoeditcosto' },
@@ -145,7 +146,7 @@ module.exports = function (passport) {
             logger.error(err);
         });            
     });
-
+*/
     router.route('/presupuestoperiodoscosto/action')
         .post(isAuthenticated, presupuestoperiodosController.actioncosto);
 
