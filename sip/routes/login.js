@@ -51,11 +51,11 @@ module.exports = function (passport) {
                                     }
                                     ]
                                 }).then(function (pagina) {
-
+                                    console.log()
                                     return res.render('home' + req.body.sistema, {
                                         user: req.user,
                                         data: data,
-                                        page: 'home',
+                                        page: 'home1',
                                         title: '',
                                         type: pagina.contenido.nombre,
                                         idtype: pagina.contenido.id

@@ -8,11 +8,9 @@ var logger = require("../utils/logger");
 module.exports = function (passport) {
 
     router.get('/menu/:opt', isAuthenticated, function (req, res) {
-        console.dir(req.params)
+        //console.dir(req.params)
         console.dir(req.params.opt)
-        /*if (req.params[0] === '') {
-            res.render('index', { message: req.flash('message') });
-        }*/ if (req.params.opt === 'signout') {
+        if (req.params.opt === 'signout') {
             req.session.destroy(function (err) {
                 if (err) {
                     logger.error(err);
