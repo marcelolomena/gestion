@@ -44,7 +44,7 @@ module.exports = function (passport) {
                                     user: req.user,
                                     data: data,
                                     page: 'home' + req.body.sistema,
-                                    title: '',
+                                    title: pagina.title,
                                     type: pagina.contenido.nombre,
                                     idtype: pagina.contenido.id
                                 });
@@ -75,7 +75,7 @@ module.exports = function (passport) {
                                     user: req.user,
                                     data: data,
                                     page: 'home' + req.body.sistema,
-                                    title: '',
+                                    title: pagina.title,
                                     type: pagina.contenido.nombre,
                                     idtype: pagina.contenido.id
                                 });

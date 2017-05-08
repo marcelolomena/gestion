@@ -19,6 +19,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'contenido',
         key: 'id'
       }
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'pagina'

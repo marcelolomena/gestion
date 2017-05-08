@@ -32,7 +32,7 @@ module.exports = function (passport) {
                     user: req.user,
                     data: req.session.passport.sidebar,
                     page: req.params.opt,
-                    title: 'Generico',
+                    title: pagina.title,
                     type: pagina.contenido.nombre,
                     idtype: pagina.contenido.id
                 });
