@@ -9,7 +9,7 @@ module.exports = function (passport) {
 
     router.get('/menu/:opt', isAuthenticated, function (req, res) {
         //console.dir(req.params)
-        console.dir(req.params.opt)
+        //console.dir(req.params.opt)
         if (req.params.opt === 'signout') {
             req.session.destroy(function (err) {
                 if (err) {
