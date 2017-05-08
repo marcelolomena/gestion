@@ -13,17 +13,18 @@ module.exports = function (passport) {
         res.render('index', { message: req.flash('message') });
     });
 
-    const redirectsOne = {
-        successRedirect: '/home',
+    const redirects = {
+        //successRedirect: '/home',
         failureRedirect: '/',
         failureFlash: true
     };
+/*    
     const redirectsTwo = {
         failureRedirect: '/',
         failureFlash: true
     };
-
-    router.post('/login', passport.authenticate('local', redirectsTwo),
+*/
+    router.post('/login', passport.authenticate('local', redirects),
         function (req, res) {
             if (req.body.sistema) {
                 menu.builUserdMenu(req, function (err, data) {
