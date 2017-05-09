@@ -9,7 +9,7 @@ module.exports = function (passport) {
 
     router.get('/menu/:opt', isAuthenticated, function (req, res) {
         //console.dir(req.params)
-        console.dir(req.params.opt)
+        //console.dir(req.params.opt)
         if (req.params.opt === 'signout') {
             req.session.destroy(function (err) {
                 if (err) {
@@ -32,7 +32,7 @@ module.exports = function (passport) {
                     user: req.user,
                     data: req.session.passport.sidebar,
                     page: req.params.opt,
-                    title: req.params.opt,
+                    title: pagina.title,
                     type: pagina.contenido.nombre,
                     idtype: pagina.contenido.id
                 });
