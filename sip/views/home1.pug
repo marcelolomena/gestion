@@ -1,7 +1,8 @@
-extends layout.pug
+extends layout1.pug
 block append head
     script var type = "#{type}"
     script var page = "#{page}"
+    script var idtype = #{idtype}
     if(page==='contratos')
      script(type='text/javascript', src='/javascripts/views/contrato.js')
      script(type='text/javascript', src='/javascripts/views/detallecontrato.js')
@@ -39,7 +40,7 @@ block append head
      script(type='text/javascript', src='/javascripts/views/solicitudesaprobadas.js')
     else if(page==='genprefacturasproy')
      script(type='text/javascript', src='/javascripts/views/solicitudesaprobadasproy.js')
-    else if(page==='grafico')
+    else if(page==='graficotest')
      script(type='text/javascript', src='/javascripts/views/grafico2.js')
     else if(page==='iniciativasconsulta')
      script(type='text/javascript', src='/javascripts/views/iniciativaconsulta.js')
@@ -119,7 +120,8 @@ block append head
     else if(page==='consultalog')
      link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
      script(type='text/javascript', src='/javascripts/views/consultalog.js')
-    else
+    else if(page==='dash1')
+     link(rel='stylesheet', href='/stylesheets/dashboard.css', type='text/css', media='screen', charset='utf-8')
      script(type='text/javascript', src='/javascripts/dashboard.js')
 block content
     #contenedor.contenedor
@@ -140,6 +142,10 @@ block content
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           p(style='color: #f1563a')
           if(type==='dashboard')
-           include page_home.pug
-          else 
-           include page_grid.pug
+              include page_dash_1.pug
+          else if(type==='static')
+              include page_home1.pug
+          else if(type==='grafico')
+              include page_grafico.pug           
+          else if(type==='grid')
+              include page_grid.pug

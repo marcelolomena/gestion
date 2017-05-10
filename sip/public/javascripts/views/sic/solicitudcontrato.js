@@ -488,12 +488,11 @@ $(document).ready(function () {
         //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
         tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
         tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas del Proveedor</a></li>"
-        tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#asignar' id='asignar_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Asignar Preguntas</a></li>"
-        tabs += "<li><a href='/sic/preguntasresponsable/" + parentRowKey + "' data-target='#respuestas' id='respuestas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas Preguntas</a></li>"
         tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#respuestasrfp' id='respuestasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas del Proveedor</a></li>"
         tabs += "<li><a href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Participantes Proveedor</a></li>"
         tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#evaluacioneconomica' id='evaluacioneconomica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Económica</a></li>"
         tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#evaluaciontecnica' id='evaluaciontecnica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Técnica</a></li>"
+        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#matrizevaluacion' id='matrizevaluacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Matriz de Evaluación</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
@@ -501,12 +500,12 @@ $(document).ready(function () {
         //tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
         tabs += "<div class='tab-pane' id='preguntas'><table id='preguntas_t_" + parentRowKey + "'></table><div id='navGridPre'></div></div>"
-        tabs += "<div class='tab-pane' id='asignar'><table id='asignar_t_" + parentRowKey + "'></table><div id='navGridAsig'></div></div>"
-        tabs += "<div class='tab-pane' id='respuestas'><table id='respuestas_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
+       
         tabs += "<div class='tab-pane' id='respuestasrfp'><table id='respuestasrfp_t_" + parentRowKey + "'></table><div id='navGridRespRFP'></div></div>"
         tabs += "<div class='tab-pane' id='participantesproveedor'><table id='participantesproveedor_t_" + parentRowKey + "'></table><div id='navGridPartPro'></div></div>"
         tabs += "<div class='tab-pane' id='evaluacioneconomica'><table id='evaluacioneconomica_t_" + parentRowKey + "'></table><div id='navGridEvEco'></div></div>"
         tabs += "<div class='tab-pane' id='evaluaciontecnica'><table id='evaluaciontecnica_t_" + parentRowKey + "'></table><div id='navGridEvTec'></div></div>"
+        tabs += "<div class='tab-pane' id='matrizevaluacion'><table id='matrizevaluacion_t_" + parentRowKey + "'></table><div id='navGridMatriz'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
         tabs += "</div>"
 
@@ -524,10 +523,7 @@ $(document).ready(function () {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#preguntas') {
                 gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#asignar') {
-                gridAsignar.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#respuestas') {
-                gridRespuestas.renderGrid(loadurl, parentRowKey, targ)
+           
             } else if (targ === '#respuestasrfp') {
                 gridRespuestasRFP.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#participantesproveedor') {
@@ -536,6 +532,8 @@ $(document).ready(function () {
                 gridEvaluacionEco.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#evaluaciontecnica') {
                 gridEvaluacionTec.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#matrizevaluacion') {
+                gridMatrizEvaluacion.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
             }
@@ -555,10 +553,7 @@ $(document).ready(function () {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#preguntas') {
                 gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#asignar') {
-                gridAsignar.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#respuestas') {
-                gridRespuestas.renderGrid(loadurl, parentRowKey, targ)
+           
             } else if (targ === '#respuestasrfp') {
                 gridRespuestasRFP.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#participantesproveedor') {
@@ -567,6 +562,8 @@ $(document).ready(function () {
                 gridEvaluacionEco.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#evaluaciontecnica') {
                 gridEvaluacionTec.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#matrizevaluacion') {
+                gridMatrizEvaluacion.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
             }

@@ -4,13 +4,34 @@ var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var prefacturasolicitudController = require('../controllers/prefacturasolicitud');
 var facturasController = require('../controllers/facturas');
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/prefacturasolicitud', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'prefacturasolicitud', title: 'Solicitud de Aprobación' });
+        return models.pagina.findOne({
+            where: { nombre: 'prefacturasolicitud' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'prefacturasolicitud',
+                title: 'Solicitud de Aprobación',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });           
     });
-    
+  */  
     router.route('/prefacturasolicitud/:cui/:periodo/:proveedor')
         .get(isAuthenticated, prefacturasolicitudController.getSolicitudAprob);
         
@@ -31,11 +52,30 @@ module.exports = function (passport) {
         
     router.route('/prefacturasolicitud/action')
         .post(isAuthenticated, prefacturasolicitudController.action);        
-
+/*
     router.get('/facturas', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'facturas', title: 'Ingreso de Facturas' });
+        return models.pagina.findOne({
+            where: { nombre: 'facturas' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
+
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'facturas',
+                title: 'Ingreso de Facturas',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });           
+        
     });
-    
+  */  
     router.route('/facturaslist')
         .get(isAuthenticated, facturasController.getFacturas);
         

@@ -193,7 +193,7 @@ var gridEvaluacionEco = {
                 });
             }
         });
-        $gridTab.jqGrid('navGrid', '#navGridEvEco', { edit: true, add: false, del: false, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridEvEco', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modifica Servicio",
                 mtype: 'POST',

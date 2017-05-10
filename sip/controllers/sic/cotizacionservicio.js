@@ -15,12 +15,15 @@ var nodeExcel = require('excel-export');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    var costototal = req.body.costototal
+    var fecha = req.body.fecha
 
     if (action != "del") {
-        if (req.body.fecha != "")
-            fecha = req.body.fecha.split("-").reverse().join("-")
+        if (fecha != "")
+            fecha = fecha.split("-").reverse().join("-")
+        if (costototal != "")
+            costototal = costototal.split(".").join("").replace(",", ".")
     }
-
     switch (action) {
         case "add":
             models.cotizacionservicio.create({
@@ -29,6 +32,7 @@ exports.action = function (req, res) {
                 idmoneda: req.body.idmoneda,
                 fecha: fecha,
                 comentario: req.body.comentario,
+                costototal: costototal,
                 borrado: 1
             }).then(function (foro) {
                 bitacora.registrarhijo(
@@ -67,7 +71,8 @@ exports.action = function (req, res) {
                         models.cotizacionservicio.update({
                             fecha: fecha,
                             comentario: req.body.comentario,
-                            idmoneda: req.body.idmoneda
+                            idmoneda: req.body.idmoneda,
+                            costototal: costototal
                         }, {
                                 where: {
                                     id: req.body.id
@@ -183,7 +188,7 @@ exports.proveedoressugeridosservicio = function (req, res) {
 exports.actionflujo = function (req, res) {
     var action = req.body.oper;
     var costoorigen = req.body.costoorigen
-    logger.debug("costo origen: "+costoorigen)
+    logger.debug("costo origen: " + costoorigen)
 
     if (action != "del") {
         if (costoorigen != "")
@@ -326,5 +331,409 @@ exports.listflujo = function (req, res) {
                 });
             })
         }
+    });
+};
+
+exports.actionnota = function (req, res) {
+    var action = req.body.oper;
+
+
+    switch (action) {
+        case "add":
+            models.notaevaluaciontecnica.create({
+                idserviciorequerido: req.body.parent_id,
+                idcriterioevaluacion: req.body.idcriterioevaluacion,
+                idproveedor: req.body.idproveedor,
+                nota: req.body.nota,
+                comentario: req.body.comentario,
+                borrado: 1
+            }).then(function (foro) {
+                /*
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'flujocotizacion',
+                    foro.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.flujocotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    }
+                )
+                */
+                return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false })
+            });
+            break;
+        case "edit":
+            /*
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'flujocotizacion',
+                    req.body.id,
+                    'update',
+                    req.session.passport.user,
+                    new Date(),
+                    models.flujocotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            models.flujocotizacion.update({
+                                periodo: req.body.periodo,
+                                glosaitem: req.body.glosaitem,
+                                costoorigen: costoorigen,
+                            }, {
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (respuestaforo) {
+                                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    res.json({ message: err.message, success: false });
+                                });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+    
+                    */
+            models.notaevaluaciontecnica.update({
+                idcriterioevaluacion: req.body.idcriterioevaluacion,
+                idproveedor: req.body.idproveedor,
+                nota: req.body.nota,
+                comentario: req.body.comentario
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (respuestaforo) {
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ message: err.message, success: false });
+                });
+            break;
+
+
+        case "del":
+            /*
+                models.flujocotizacion.findAll({
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (respuesta) {
+                    bitacora.registrarhijo(
+                        req.body.idsolicitudcotizacion,
+                        'flujocotizacion',
+                        req.body.id,
+                        'delete',
+                        req.session.passport.user,
+                        new Date(),
+                        models.flujocotizacion,
+                        function (err, data) {
+                            if (!err) {
+                                models.flujocotizacion.destroy({
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (rowDeleted) {
+                                    return res.json({ message: '', sucess: true });
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    res.json({ message: err.message, success: false });
+                                });
+                            } else {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false });
+                            }
+                        });
+                })
+                */
+            models.notaevaluaciontecnica.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+                return res.json({ message: '', sucess: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false });
+            });
+            break;
+    }
+}
+
+
+exports.listnota = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idserviciorequerido",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.notaevaluaciontecnica.belongsTo(models.serviciosrequeridos, { foreignKey: 'idserviciorequerido' });
+            models.notaevaluaciontecnica.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.notaevaluaciontecnica.belongsTo(models.criterioevaluacion, { foreignKey: 'idcriterioevaluacion' });
+            models.notaevaluaciontecnica.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.notaevaluaciontecnica.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [{
+                        model: models.proveedor
+                    }, {
+                        model: models.criterioevaluacion
+                    }]
+
+                }).then(function (notaevaluaciontecnica) {
+                    return res.json({ records: records, total: total, page: page, rows: notaevaluaciontecnica });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.actionnota2 = function (req, res) {
+    var action = req.body.oper;
+
+
+    switch (action) {
+        case "add":
+            models.notaevaluaciontecnica2.create({
+                idnotaevaluaciontecnica: req.body.parent_id,
+                idcriterioevaluacion2: req.body.idcriterioevaluacion2,
+                idproveedor: req.body.idproveedor,
+                nota: req.body.nota,
+                comentario: req.body.comentario,
+                borrado: 1
+            }).then(function (foro) {
+                /*
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'flujocotizacion',
+                    foro.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.flujocotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    }
+                )
+                */
+                return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false })
+            });
+            break;
+        case "edit":
+            /*
+                bitacora.registrarhijo(
+                    req.body.idsolicitudcotizacion,
+                    'flujocotizacion',
+                    req.body.id,
+                    'update',
+                    req.session.passport.user,
+                    new Date(),
+                    models.flujocotizacion,
+                    function (err, data) {
+                        if (!err) {
+                            models.flujocotizacion.update({
+                                periodo: req.body.periodo,
+                                glosaitem: req.body.glosaitem,
+                                costoorigen: costoorigen,
+                            }, {
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (respuestaforo) {
+                                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    res.json({ message: err.message, success: false });
+                                });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+    
+                    */
+            models.notaevaluaciontecnica2.update({
+                idcriterioevaluacion2: req.body.idcriterioevaluacion2,
+                idproveedor: req.body.idproveedor,
+                nota: req.body.nota,
+                comentario: req.body.comentario
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (respuestaforo) {
+                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ message: err.message, success: false });
+                });
+            break;
+
+
+        case "del":
+            /*
+                models.flujocotizacion.findAll({
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (respuesta) {
+                    bitacora.registrarhijo(
+                        req.body.idsolicitudcotizacion,
+                        'flujocotizacion',
+                        req.body.id,
+                        'delete',
+                        req.session.passport.user,
+                        new Date(),
+                        models.flujocotizacion,
+                        function (err, data) {
+                            if (!err) {
+                                models.flujocotizacion.destroy({
+                                    where: {
+                                        id: req.body.id
+                                    }
+                                }).then(function (rowDeleted) {
+                                    return res.json({ message: '', sucess: true });
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    res.json({ message: err.message, success: false });
+                                });
+                            } else {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false });
+                            }
+                        });
+                })
+                */
+            models.notaevaluaciontecnica2.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+                return res.json({ message: '', sucess: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false });
+            });
+            break;
+    }
+}
+
+
+exports.listnota2 = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idnotaevaluaciontecnica", 
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.notaevaluaciontecnica2.belongsTo(models.notaevaluaciontecnica, { foreignKey: 'idnotaevaluaciontecnica' });
+            models.notaevaluaciontecnica2.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.notaevaluaciontecnica2.belongsTo(models.criterioevaluacion2, { foreignKey: 'idcriterioevaluacion2' });
+            models.notaevaluaciontecnica2.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.notaevaluaciontecnica2.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [{
+                        model: models.proveedor
+                    }, {
+                        model: models.criterioevaluacion2
+                    }]
+
+                }).then(function (notaevaluaciontecnica) {
+                    return res.json({ records: records, total: total, page: page, rows: notaevaluaciontecnica });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.nivelclase = function (req, res) {
+    sequelize.query('select a.niveles from sic.claseevaluaciontecnica a where a.id=:idclase',
+        { replacements: { idclase: req.params.id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.criterios1 = function (req, res) {
+    sequelize.query(`select a.id, a.nombre from sic.criterioevaluacion a 
+join sic.serviciosrequeridos b on a.idclaseevaluaciontecnica=b.claseevaluaciontecnica
+where b.id=:idserviciorequerido`,
+        { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.criterios2 = function (req, res) {
+    sequelize.query(`select a.id, a.nombre from sic.criterioevaluacion2 a 
+join sic.criterioevaluacion b on a.idcriterioevaluacion=b.id
+join sic.notaevaluaciontecnica c on c.idcriterioevaluacion = b.id
+where c.id = :idnota`,
+        { replacements: { idnota: req.params.id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
     });
 };

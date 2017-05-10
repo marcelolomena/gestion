@@ -27,6 +27,10 @@ function gridCotizaciones(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Costo Total<span style='color:red'>*</span>{costototal}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Comentario {comentario}</div>";
     tmplPF += "</div>";
 
@@ -108,6 +112,17 @@ function gridCotizaciones(parentRowID, parentRowKey, suffix) {
         {
             label: 'Moneda', name: 'moneda.moneda', width: 50, align: 'left',
             search: true, editable: false, hidden: false,
+        },
+        {
+            label: 'Costo Total', name: 'costototal', width: 80, align: 'right',
+            search: false, editable: true, hidden: false,
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
+            editrules: { required: true },
+            editoptions: {
+                dataInit: function (el) {
+                    $(el).mask('000.000.000.000.000,00', { reverse: true });
+                }
+            }
         },
 
         {

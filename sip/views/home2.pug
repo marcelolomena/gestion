@@ -2,8 +2,101 @@ extends layout2.pug
 block append head
     script var type = "#{type}"
     script var page = "#{page}"
-    if(page==='contratos')
-     script(type='text/javascript', src='/javascripts/dashboard.js')    
+    if(page==='solicitudcotizacion')
+     style.
+      .ui-th-column>div, .ui-jqgrid-btable .jqgrow>td {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      overflow: hidden;
+      vertical-align: middle;
+      }
+      .ui-jqgrid tr.jqgrow td {
+      white-space: normal !important;
+      height:auto;
+      vertical-align:text-top;
+      padding-top:2px;
+      }   
+     script(type='text/javascript', src='/javascripts/views/sic/solicitudcotizacion.js')
+     script(type='text/javascript', src='/javascripts/views/sic/estadosolicitud.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/doc.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/serv.js')
+     script(type='text/javascript', src='/javascripts/views/sic/clausula.js')
+     script(type='text/javascript', src='/javascripts/views/sic/anexos.js')
+     script(type='text/javascript', src='/javascripts/views/sic/responsables.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/calendario.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/preguntasrfp.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/foro.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/criterios.js')
+     script(type='text/javascript', src='/javascripts/views/sic/bitacora.js')
+     script(type='text/javascript', src='/javascripts/views/sic/genrfc.js')
+    else if(page==='valores')  
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js')        
+    else if(page==='toc')  
+     script(type='text/javascript', src='/javascripts/views/sic/toctipo.js')
+     script(type='text/javascript', src='/javascripts/views/sic/tocclases.js')   
+     script(type='text/javascript', src='/javascripts/views/sic/tocplantilla.js')
+    else if(page==='tipodocumento')
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js') 
+    else if(page==='segmentoproveedor')
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js')
+    else if(page==='rolessic')
+     script(type='text/javascript', src='/javascripts/views/sic/rolessic.js')
+     script(type='text/javascript', src='/javascripts/views/sic/rolessic2.js')
+    else if(page==='permisossic')
+     script(type='text/javascript', src='/javascripts/views/sic/permisossic.js')
+     script(type='text/javascript', src='/javascripts/views/sic/permisossic2.js')
+     script(type='text/javascript', src='/javascripts/views/sic/permisossic3.js')
+    else if(page==='clasecriticidad')
+     script(type='text/javascript', src='/javascripts/views/sic/' + page + '.js')   
+    else if(page==='catalogoclausulas')
+     script(type='text/javascript', src='/javascripts/views/sic/catalogoclausulas.js')
+     script(type='text/javascript', src='/javascripts/views/sic/catalogoclausulas2.js')
+     script(type='text/javascript', src='/javascripts/views/sic/catalogoclausulas3.js')
+    else if(page==='claseevaluaciontecnica')
+     script(type='text/javascript', src='/javascripts/views/sic/claseevaluaciontecnica.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/criteriosevaluacion.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/criteriosevaluacion2.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/criteriosevaluacion3.js')
+    else if(page==='solicitudcontrato')     
+     style.
+      .ui-th-column>div, .ui-jqgrid-btable .jqgrow>td {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      overflow: hidden;
+      vertical-align: middle;
+      }
+      .ui-jqgrid tr.jqgrow td {
+      white-space: normal !important;
+      height:auto;
+      vertical-align:text-top;
+      padding-top:2px;
+      }    
+     script(type='text/javascript', src='/javascripts/views/sic/solicitudcontrato.js')
+     script(type='text/javascript', src='/javascripts/views/sic/estadosolicitud.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/preguntas.js')
+     script(type='text/javascript', src='/javascripts/views/sic/asignar.js')
+     script(type='text/javascript', src='/javascripts/views/sic/respuestas.js')
+     script(type='text/javascript', src='/javascripts/views/sic/respuestasrfp.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/participantesproveedor.js')   
+     script(type='text/javascript', src='/javascripts/views/sic/evaluacioneconomica.js')
+     script(type='text/javascript', src='/javascripts/views/sic/flujocotizacion.js')  
+     script(type='text/javascript', src='/javascripts/views/sic/cotizacionservicio.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/evaluaciontecnica.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/evaluaciontecnica2.js') 
+     script(type='text/javascript', src='/javascripts/views/sic/evaluaciontecnica3.js')
+     script(type='text/javascript', src='/javascripts/views/sic/evaluaciontecnica4.js')
+     script(type='text/javascript', src='/javascripts/views/sic/matrizevaluacion.js')
+     script(type='text/javascript', src='/javascripts/views/sic/matrizevaluacion2.js')
+     script(type='text/javascript', src='/javascripts/views/sic/matrizevaluacion3.js')
+     script(type='text/javascript', src='/javascripts/views/sic/matrizevaluacion2e.js')
+     script(type='text/javascript', src='/javascripts/views/sic/matrizevaluaciontotal.js')
+     script(type='text/javascript', src='/javascripts/views/sic/bitacora.js')
 block content
     #contenedor.contenedor
       include sidebar2.pug
@@ -24,5 +117,7 @@ block content
           p(style='color: #f1563a')
           if(type==='dashboard2')
            include page_home2.pug
+          else if(type==='tabs')
+           include page_tab.pug
           else 
-           include page_grid2.pug
+           include page_grid.pug

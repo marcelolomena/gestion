@@ -18,18 +18,17 @@ exports.action = function (req, res) {
 
     switch (action) {
         case "add":
-            return res.json({ id: req.body.idsolicitudcotizacion, success: true });
             bitacora.registrar(
                 req.body.idsolicitudcotizacion,
                 'preguntasalproveedor',
-                preguntacotizacion.id,
+                req.body.id,
                 'insert',
                 req.session.passport.user,
                 new Date(),
                 models.preguntacotizacion,
                 function (err, data) {
                     if (!err) {
-                        return res.json({ id: preguntacotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        return res.json({ id: req.body.idsolicitudcotizacion, success: true });
                     } else {
                         logger.error(err)
                         return res.json({ id: preguntacotizacion.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
@@ -69,28 +68,6 @@ exports.action = function (req, res) {
                     });
             });
             break;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             models.preguntacotizacion.destroy({
                 where: {

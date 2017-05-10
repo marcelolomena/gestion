@@ -45,6 +45,10 @@ module.exports = function (sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    costototal: {
+      type: DataTypes.FLOAT,
+      allowNull: true
     }
   }, {
       schema: 'sic', timestamps: false, tableName: 'cotizacionservicio'

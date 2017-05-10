@@ -114,24 +114,24 @@ module.exports = (function () {
 
             if (additional) {
                 additional.forEach(function (item) {
-                        switch (item.op) {
-                            case "cn":
-                                condition.push({ [item.field]: { $like: '%' + item.data + '%' } });
-                                break;
-                            case "eq":
-                                if (item.data != 0)
-                                    condition.push({ [item.field]: item.data });
-                                break;
-                            case "ge":
-                                condition.push({ [item.field]: { $gte: item.data } });
-                                break;
-                            case "le":
-                                condition.push({ [item.field]: { $lte: item.data } });
-                                break;
-                            case "ne":
-                                condition.push({ [item.field]: { $ne: item.data } });
-                                break;
-                        }
+                    switch (item.op) {
+                        case "cn":
+                            condition.push({ [item.field]: { $like: '%' + item.data + '%' } });
+                            break;
+                        case "eq":
+                            if (item.data != 0)
+                                condition.push({ [item.field]: item.data });
+                            break;
+                        case "ge":
+                            condition.push({ [item.field]: { $gte: item.data } });
+                            break;
+                        case "le":
+                            condition.push({ [item.field]: { $lte: item.data } });
+                            break;
+                        case "ne":
+                            condition.push({ [item.field]: { $ne: item.data } });
+                            break;
+                    }
 
                     //condition.push({ [item.field]: item.data });
                 })
@@ -144,7 +144,7 @@ module.exports = (function () {
         }
         callback(undefined, condition);
     }
-    
+
 
     var sprintf = function () {
         var args = arguments,
@@ -240,24 +240,24 @@ module.exports = (function () {
 
             if (additional) {
                 additional.forEach(function (item) {
-                        switch (item.op) {
-                            case "cn":
-                                condition.push({ [item.field]: { $like: '%' + item.data + '%' } });
-                                break;
-                            case "eq":
-                                if (item.data != 0)
-                                    condition.push({ [item.field]: item.data });
-                                break;
-                            case "ge":
-                                condition.push({ [item.field]: { $gte: item.data } });
-                                break;
-                            case "le":
-                                condition.push({ [item.field]: { $lte: item.data } });
-                                break;
-                            case "ne":
-                                condition.push({ [item.field]: { $ne: item.data } });
-                                break;
-                        }
+                    switch (item.op) {
+                        case "cn":
+                            condition.push({ [item.field]: { $like: '%' + item.data + '%' } });
+                            break;
+                        case "eq":
+                            if (item.data != 0)
+                                condition.push({ [item.field]: item.data });
+                            break;
+                        case "ge":
+                            condition.push({ [item.field]: { $gte: item.data } });
+                            break;
+                        case "le":
+                            condition.push({ [item.field]: { $lte: item.data } });
+                            break;
+                        case "ne":
+                            condition.push({ [item.field]: { $ne: item.data } });
+                            break;
+                    }
 
                     //condition.push({ [item.field]: item.data });
                 })
@@ -398,9 +398,38 @@ module.exports = (function () {
 
         return result;
     }
+    var getValuesFromRows = function (rows, associations) {
+        // get POD (plain old data) values
+        var values;
+        if (rows instanceof Array) {
+            // call this method on every element of the given array of rows
+            values = [];
+            for (var i = 0; i < rows.length; ++i) {
+                // recurse
+                values[i] = this.getValuesFromRows(rows[i], associations);
+            }
+        }
+        else if (rows) {
+            // only one row
+            values = rows.dataValues;
+
+            // get values from associated rows
+            if (values && associations) {
+                for (var i = 0; i < associations.length; ++i) {
+                    var association = associations[i];
+                    var propName = association.as;
+
+                    // recurse
+                    values[propName] = this.getValuesFromRows(values[propName], association.include);
+                };
+            }
+        }
+
+        return values;
+    }
     return {
         buildCondition: buildCondition,
-        buildConditionFilter:buildConditionFilter,
+        buildConditionFilter: buildConditionFilter,
         buildConditionExternal: buildConditionExternal,
         buildAdditionalCondition: buildAdditionalCondition,
         buildAdditionalConditionFilter: buildAdditionalConditionFilter,
@@ -409,6 +438,7 @@ module.exports = (function () {
         getYearRange: getYearRange,
         getPeriodRange: getPeriodRange,
         JSON2CSV: JSON2CSV,
+        getValuesFromRows: getValuesFromRows,
         sprintf: sprintf
     };
 })();

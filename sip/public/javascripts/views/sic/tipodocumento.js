@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     t1 += "</div>";
 
-    var $grid = $("#table_tipodocumento"),
+    var $grid = $("#grid"),
         catalogoclausulasModel = [
             {
                 label: 'Plantilla', name: 'id', key: true, hidden: false, width: 50,
@@ -82,12 +82,12 @@ $(document).ready(function () {
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
-        pager: "#pager_tipodocumento",
+        pager: "#pager",
     });
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $grid.jqGrid('navGrid', '#pager_tipodocumento', { edit: true, add: true, del: true, search: false },
+    $grid.jqGrid('navGrid', '#pager', { edit: true, add: true, del: true, search: false },
         {
             editCaption: "Modifica Tipo de Documento",
             closeAfterEdit: true,
@@ -182,7 +182,7 @@ function ajaxDocUpload(id) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
                         dialog.find('.bootbox-body').html(data.message);
-                        $("#table_tipodocumento").trigger('reloadGrid');
+                        $("#grid").trigger('reloadGrid');
                     } else {
                         dialog.find('.bootbox-body').html(data.message);
                     }

@@ -5,18 +5,57 @@ var presupuestoController = require('../controllers/presupuesto');
 var presupuestoServiciosController = require('../controllers/presupuestoservicio');
 var presupuestoperiodosController = require('../controllers/presupuestoperiodos');
 var presupuestoapruebaController = require('../controllers/presupuestoaprueba');
-
+var models = require('../models');
+var sequelize = require('../models/index').sequelize;
+var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/presupuestocontinuidad', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuesto', title: 'Informe de Presupuestos' });
-    });
+        return models.pagina.findOne({
+            where: { nombre: 'presupuesto' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
 
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'presupuesto',
+                title: 'Informe de Presupuestos',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });         
+    });
+*/
+/*
     router.get('/presupuestoaprobacion', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuestoaprueba', title: 'Aprobación de Presupuestos' });
-    });
+        return models.pagina.findOne({
+            where: { nombre: 'presupuestoaprueba' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
 
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'presupuestoaprueba',
+                title: 'Aprobación de Presupuestos',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });            
+    });
+*/
     router.route('/presupuestoperiodoslist/:id')
         .get(isAuthenticated, presupuestoperiodosController.getPresupuestoPeriodos);
 
@@ -85,11 +124,29 @@ module.exports = function (passport) {
 
     router.route('/tiporecupera')
         .get(isAuthenticated, presupuestoServiciosController.getTipoRecupera);
-
+/*
     router.get('/presupuestoeditcosto', isAuthenticated, function (req, res) {
-        res.render('home', { user: req.user, data: req.session.passport.sidebar, page: 'presupuestoeditcosto', title: 'Informe de Presupuestos' });
-    });
+        return models.pagina.findOne({
+            where: { nombre: 'presupuestoeditcosto' },
+            include: [{
+                model: models.contenido
+            }
+            ]
+        }).then(function (pagina) {
 
+            return res.render('home', {
+                user: req.user,
+                data: req.session.passport.sidebar,
+                page: 'presupuestoeditcosto',
+                title: 'Informe de Presupuestos',
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
+            });
+        }).catch(function (err) {
+            logger.error(err);
+        });            
+    });
+*/
     router.route('/presupuestoperiodoscosto/action')
         .post(isAuthenticated, presupuestoperiodosController.actioncosto);
 

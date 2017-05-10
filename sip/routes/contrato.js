@@ -9,7 +9,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-
+/*
     router.get('/contratos', isAuthenticated, function (req, res) {
         models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
         return models.pagina.findOne({
@@ -25,13 +25,14 @@ module.exports = function (passport) {
                 data: req.session.passport.sidebar,
                 page: 'contratos',
                 title: 'CONTRATOS',
-                type: pagina.contenido.nombre
+                type: pagina.contenido.nombre,
+                idtype: pagina.contenido.id
             });
         }).catch(function (err) {
             logger.error(err);
         });
     });
-
+*/
     router.route('/contratos/list')
         .post(isAuthenticated, contratoController.list)
         .get(isAuthenticated, contratoController.listall);
