@@ -378,7 +378,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+            label: 'Negociador', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
@@ -502,7 +502,7 @@ $(document).ready(function () {
                 } if (parseInt(postdata.idestadosol) == 0) {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
-                    return [false, "PMO: Debe escoger un valor", ""];
+                    return [false, "Negociador: Debe escoger un valor", ""];
                 } if (parseInt(postdata.nombreart) == "") {
                     return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
                 } if (parseInt(postdata.tipodocumento) == 0) {
@@ -551,7 +551,7 @@ $(document).ready(function () {
                 } if (parseInt(postdata.idestadosol) == 0) {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
-                    return [false, "PMO: Debe escoger un valor", ""];
+                    return [false, "Negociador: Debe escoger un valor", ""];
                 } if (parseInt(postdata.nombreart) == "") {
                     return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
                 } if (parseInt(postdata.tipodocumento) == 0) {

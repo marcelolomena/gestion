@@ -115,11 +115,13 @@ exports.action = function (req, res) {
 };
 
 exports.combobox = function (req, res) {
-  models.proveedor.findAll({
-    order: 'razonsocial'
-  }).then(function (proveedores) {
-    //iniciativas.forEach(log)
-    res.json(proveedores);
+  //models.proveedor.findAll({
+  //   order: 'razonsocial'
+  //}).then(function (proveedores) {
+  var sql = 'SELECT * FROM sip.proveedor WHERE id IN (SELECT idproveedor FROM sip.plantillapresupuesto) ORDER BY razonsocial';
+  return sequelize.query(sql)
+      .spread(function (proveedores) {    
+    return res.json(proveedores);
   }).catch(function (err) {
     logger.error(err);
     res.json({ error_code: 1 });

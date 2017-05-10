@@ -67,11 +67,12 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     templateServicio += "<div class='column-half'>Contacto<span style='color:red'>*</span>{idcontactoproveedor}</div>";
     templateServicio += "</div>";
     
-    templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='form-row' style='display: none;'>";
     templateServicio += "<div class='column-half'>Saldo Presupuesto{saldopresupuesto}</div>";   
     templateServicio += "</div>";
     
     templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Monto Contrato<span style='color:red'>*</span>{montocontrato}</div>";
     templateServicio += "<div class='column-half'>Valor Cuota<span style='color:red'>*</span>{valorcuota}</div>";
     templateServicio += "<div class='column-half'>Moneda<span style='color:red'>*</span>{idmoneda}</div>";
     templateServicio += "</div>";
@@ -367,6 +368,16 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     }
                 }                
             },
+            {
+                label: 'Monto Contrato', name: 'montocontrato', width: 100, align: 'right',
+                search: false, editable: true, hidden: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 2 },
+                editoptions: {
+                    dataInit: function (el) {
+                        $(el).mask('000.000.000.000.000,00', { reverse: true });
+                    }
+                }                
+            },            
             {
                 label: 'idmoneda', name: 'idmoneda', search: false, editable: true, hidden: true,
                 edittype: "select",
@@ -725,7 +736,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             },
             beforeSubmit: function (postdata, formid) {
                 postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
+                postdata.montocontrato = postdata.montocontrato.split(".").join("").replace(",", ".");
                 var cuota = new Number(postdata.valorcuota);  
+                var montocontrato = new Number(postdata.montocontrato);  
                 var mecuotas =  new Number(postdata.mesesentrecuotas);
                 var cantcuotas = new Number(postdata.numerocuotas);       
 
@@ -747,6 +760,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Condición: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idcontactoproveedor) == 0) {
                     return [false, "Contacto: Debe escoger un valor", ""];
+                }  if (isNaN(montocontrato) || montocontrato <= 0) {
+                    return [false, "Monto Contrato: Debe ingresar un valor", ""];                    
                 }  if (isNaN(cuota) || cuota <= 0) {
                     return [false, "Valor cuota: Debe ingresar un valor", ""];
                 } if (parseInt(postdata.idmoneda) == 0) {
@@ -830,7 +845,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
                 postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
+                postdata.montocontrato = postdata.montocontrato.split(".").join("").replace(",", ".");
                 var cuota = new Number(postdata.valorcuota);  
+                var montocontrato = new Number(postdata.montocontrato);  
                 var mecuotas =  new Number(postdata.mesesentrecuotas);
                 var cantcuotas = new Number(postdata.numerocuotas);       
                 if (parseInt(postdata.sap) == 0) {
@@ -855,6 +872,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Condición: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idcontactoproveedor) == 0) {
                     return [false, "Contacto: Debe escoger un valor", ""];
+                } if (isNaN(montocontrato) || montocontrato <= 0) {
+                    return [false, "Monto Contrato: Debe ingresar un valor mayor que cero", ""];
                 } if (isNaN(cuota) || cuota <= 0) {
                     return [false, "Valor cuota: Debe ingresar un valor mayor que cero", ""];
                 } if (parseInt(postdata.idmoneda) == 0) {

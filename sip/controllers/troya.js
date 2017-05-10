@@ -57,7 +57,8 @@ exports.proveedorcui = function (req, res) {
     "ORDER BY b.razonsocial ";*/
     var sql = "DECLARE @idcui INT "+
     "SELECT @idcui=cui FROM sip.estructuracui WHERE  id="+idcui+ " "+
-    "SELECT a.idproveedor, b.razonsocial FROM sip.discoverer a JOIN sip.proveedor b ON a.idproveedor=b.id "+ 
+    "SELECT a.idproveedor, b.razonsocial FROM sip.discoverer a JOIN sip.proveedor b ON a.idproveedor=b.id "+
+    "JOIN sip.plantillapresupuesto c ON c.idproveedor=a.idproveedor "+ 
     "WHERE a.cuiseccion = @idcui "+
     "GROUP BY a.idproveedor, b.razonsocial "+
     "HAVING b.razonsocial <> 'NULL' "+

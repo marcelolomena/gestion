@@ -391,12 +391,14 @@ exports.list = function (req, res) {
   var sord = req.body.sord;
 
   if (!sidx)
-    sidx = "nombre";
+    sidx = "id";
 
   if (!sord)
-    sord = "asc";
+    sord = "desc";
 
   var orden = "[contrato]." + sidx + " " + sord;
+  
+  console.log("***ORDER:"+orden);
 
   utilSeq.buildCondition(filters, function (err, data) {
     if (err) {

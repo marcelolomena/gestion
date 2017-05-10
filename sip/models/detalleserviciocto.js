@@ -177,7 +177,11 @@ module.exports = function(sequelize, DataTypes) {
     comentario: {
       type: DataTypes.STRING,
       allowNull: true
-    }    
+    },
+    montocontrato: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }       
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleserviciocto'
   });

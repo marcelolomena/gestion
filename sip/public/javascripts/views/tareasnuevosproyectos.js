@@ -475,8 +475,11 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
+                const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
+                } if (!regex.test(postdata.tarea)) {
+                    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
                 } if (postdata.idcui == 0) {
                     return [false, "CUI: Debe seleccionar un valor", ""];
                 } if (postdata.idproveedor == 0) {
@@ -571,8 +574,11 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
+                const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;                
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
+                } if (!regex.test(postdata.tarea)) {
+                    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];                      
                 } if (postdata.idcui == 0) {
                     return [false, "CUI: Debe seleccionar un valor", ""];
                 } if (postdata.idproveedor == 0) {

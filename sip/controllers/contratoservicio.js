@@ -159,14 +159,14 @@ exports.action = function (req, res) {
                 "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
                 "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, estadocontrato, " +
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
-                "diferido, saldopresupuesto, tipogeneracion, comentario " + sapcampos + ") " +
+                "diferido, saldopresupuesto, tipogeneracion, comentario, montocontrato " + sapcampos + ") " +
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
                 req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
                 req.body.idplazocontrato + "," + req.body.idcondicion + "," +
                 req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",@estadocto,'" +
                 req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
                 req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
-                req.body.tipogeneracion + ",'" + req.body.comentario + "'" + sapdatos + "); " +
+                req.body.tipogeneracion + ",'" + req.body.comentario + "'," + req.body.montocontrato + sapdatos + "); " +
                 "DECLARE @id INT;" +
                 "select @id = @@IDENTITY; " +
                 "select @id as id;";
@@ -233,7 +233,7 @@ exports.action = function (req, res) {
                 ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
                 ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
                 ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
-                ", comentario='" + req.body.comentario + "' " + upsap + " " +
+                ", comentario='" + req.body.comentario + "', montocontrato="+ req.body.montocontrato + upsap + " " +
                 "WHERE id=" + req.body.id;
             console.log("sqlup:" + sql);
             logtransaccion.registrar(

@@ -14,7 +14,6 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color: red'>*</span>PMO {uidpmo}</div>";
     tmpl += "<div class='column-half'><span style='color: red'>*</span>Gerente {uidgerente}</div>";
     tmpl += "</div>";
 
@@ -190,7 +189,6 @@ $(document).ready(function () {
         {
             label: 'PMO', name: 'uidpmo',
             search: false, editable: true, hidden: true,
-            editrules: { required: true },
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/PMO',
@@ -226,7 +224,7 @@ $(document).ready(function () {
         {
             label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
             search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required: true }
+            editrules: { edithidden: false }
         },
         {
             label: 'Categoria', name: 'idcategoria',
@@ -289,22 +287,22 @@ $(document).ready(function () {
         },
         {
             label: 'Q1', name: 'q1', width: 50, align: 'left',
-            search: false, editable: true, hidden: false,
+            search: false, editable: true, hidden: true,
             editoptions: {placeholder: "Q1 o vacío" }
         },
         {
             label: 'Q2', name: 'q2', width: 50, align: 'left',
-            search: false, editable: true, hidden: false,
+            search: false, editable: true, hidden: true,
             editoptions: {placeholder: "Q2 o vacío" }
         },
         {
             label: 'Q3', name: 'q3', width: 50, align: 'left',
-            search: false, editable: true, hidden: false,
+            search: false, editable: true, hidden: true,
             editoptions: {placeholder: "Q3 o vacío" }
         },
         {
             label: 'Q4', name: 'q4', width: 50, align: 'left',
-            search: false, editable: true, hidden: false,
+            search: false, editable: true, hidden: true,
             editoptions: {placeholder: "Q4 o vacío" }
         },
         {
