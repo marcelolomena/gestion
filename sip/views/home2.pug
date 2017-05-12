@@ -115,9 +115,4 @@ block content
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 h2(style="font-family:'robotolight', sans-serif; color: #FFFFFF; font-weight:300; text-align:center") SISTEMA DE CONTRATOS
           p(style='color: #f1563a')
-          if(type==='dashboard2')
-           include page_home2.pug
-          else if(type==='tabs')
-           include page_tab.pug
-          else 
-           include page_grid.pug
+          p!= html

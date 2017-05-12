@@ -141,11 +141,4 @@ block content
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 img(src='../images/header_titulo.png', width='384', height='95', border='0')
           p(style='color: #f1563a')
-          if(type==='dashboard')
-              include page_dash_1.pug
-          else if(type==='static')
-              include page_home1.pug
-          else if(type==='grafico')
-              include page_grafico.pug           
-          else if(type==='grid')
-              include page_grid.pug
+          p!= html
