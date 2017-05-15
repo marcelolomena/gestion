@@ -31,33 +31,22 @@ module.exports = function (passport) {
                 if (data) {
                     req.session.save(() => {
                         req.session.passport.sidebar = data
-
-                        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+                        models.pagina.belongsTo(models.sistema, { foreignKey: 'idsistema' });
+                        models.pagina.belongsTo(models.contenido, { foreignKey: 'idcontenido' });
                         return models.pagina.findOne({
                             where: { nombre: 'home' + idsistema },
-                            include: [{
-                                model: models.contenido
-                            }
+                            include: [
+                                {
+                                    model: models.sistema
+                                },
+                                {
+                                    model: models.contenido
+                                }
                             ]
                         }).then(function (pagina) {
-                            var tmpl
-
-                            if (pagina.contenido.nombre === 'dashboard')
-                                tmpl = pug.renderFile('views/page_dash_1.pug', {
-                                    title: pagina.title
-                                });
-                            else if (pagina.contenido.nombre === 'static')
-                                tmpl = pug.renderFile('views/page_home' + idsistema + '.pug', {
-                                    title: pagina.title
-                                });
-                            else if (pagina.contenido.nombre === 'grafico')
-                                tmpl = pug.renderFile('views/page_grafico.pug', {
-                                    title: pagina.title
-                                });
-                            else if (pagina.contenido.nombre === 'grid')
-                                tmpl = pug.renderFile('views/page_grid.pug', {
-                                    title: pagina.title
-                                });
+                            var tmpl = pug.renderFile(pagina.contenido.plantilla, {
+                                title: pagina.title
+                            });
 
                             return res.render('home' + idsistema, {
                                 user: req.user,
@@ -89,35 +78,23 @@ module.exports = function (passport) {
                 }
             });
         } else {
-            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            models.pagina.belongsTo(models.sistema, { foreignKey: 'idsistema' });
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idcontenido' });
             return models.pagina.findOne({
                 where: { nombre: req.params.opt },
-                include: [{
-                    model: models.contenido
-                }
+                include: [
+                    {
+                        model: models.sistema
+                    },
+                    {
+                        model: models.contenido
+                    }
                 ]
             }).then(function (pagina) {
-                var tmpl
-                if (pagina.contenido.nombre === 'dashboard')
-                    tmpl = pug.renderFile('views/page_dash_1.pug', {
-                        title: pagina.title
-                    });
-                else if (pagina.contenido.nombre === 'static')
-                    tmpl = pug.renderFile('views/page_home' + req.session.passport.sidebar[0].sistema + '.pug', {
-                        title: pagina.title
-                    });
-                else if (pagina.contenido.nombre === 'grafico')
-                    tmpl = pug.renderFile('views/page_grafico.pug', {
-                        title: pagina.title
-                    });
-                else if (pagina.contenido.nombre === 'grid')
-                    tmpl = pug.renderFile('views/page_grid.pug', {
-                        title: pagina.title
-                    });
-                else if (pagina.contenido.nombre === 'tabs')
-                    tmpl = pug.renderFile('views/page_tab.pug', {
-                        title: pagina.title
-                    });
+
+                var tmpl = pug.renderFile(pagina.contenido.plantilla, {
+                    title: pagina.title
+                });
 
                 return res.render('home' + req.session.passport.sidebar[0].sistema, {
                     user: req.user,

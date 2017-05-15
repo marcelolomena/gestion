@@ -11,6 +11,10 @@ module.exports = function(sequelize, DataTypes) {
     nombre: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    plantilla: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'contenido'
