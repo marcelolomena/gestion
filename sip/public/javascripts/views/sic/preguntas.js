@@ -72,12 +72,12 @@ var gridPreguntas = {
             ],
             rowNum: 20,
             pager: '#navGridPre',
-            subGrid: true,
-            subGridRowExpanded: showSubGridsRespuesta,
-            subGridOptions: {
-                plusicon: "glyphicon glyphicon-hand-right",
-                minusicon: "glyphicon glyphicon-hand-down"
-            },
+            //subGrid: true,
+            //subGridRowExpanded: showSubGridsRespuesta,
+            //subGridOptions: {
+            //    plusicon: "glyphicon glyphicon-hand-right",
+            //    minusicon: "glyphicon glyphicon-hand-down"
+            //},
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
@@ -95,6 +95,7 @@ var gridPreguntas = {
             caption: "Preguntas"
         });
 
+        
         var lastSelection;
 
         function editRow(id) {

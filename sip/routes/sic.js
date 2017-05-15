@@ -30,53 +30,53 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-/*    
-    router.get('/solicitudcotizacion', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'solicitudcotizacion' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'solicitudcotizacion',
-                title: '',
-                type: pagina.contenido.nombre
+    /*    
+        router.get('/solicitudcotizacion', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'solicitudcotizacion' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'solicitudcotizacion',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
             });
-        }).catch(function (err) {
-            logger.error(err);
+            
         });
-        
-    });
-
-    router.get('/solicitudcontrato', isAuthenticated, function (req, res) {
-          models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'solicitudcontrato' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'solicitudcontrato',
-                title: '',
-                type: pagina.contenido.nombre
+    
+        router.get('/solicitudcontrato', isAuthenticated, function (req, res) {
+              models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'solicitudcontrato' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'solicitudcontrato',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
             });
-        }).catch(function (err) {
-            logger.error(err);
+            
         });
-        
-    });
-*/
+    */
     router.route('/sic/grid_solicitudcotizacion')
         .post(isAuthenticated, solicitudcotizacionController.action)
         .get(isAuthenticated, solicitudcotizacionController.list);
@@ -160,52 +160,52 @@ module.exports = function (passport) {
 
     router.route('/sic/responsables/action')
         .post(isAuthenticated, responsablesController.action);
-/*
-    router.get('/catalogoclausulas', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'catalogoclausulas' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'catalogoclausulas',
-                title: '',
-                type: pagina.contenido.nombre
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-    });
-
-    router.get('/claseevaluaciontecnica', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'claseevaluaciontecnica' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'claseevaluaciontecnica',
-                title: '',
-                type: pagina.contenido.nombre
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
-    });
-*/
+    /*
+        router.get('/catalogoclausulas', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'catalogoclausulas' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'catalogoclausulas',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
+            });        
+        });
+    
+        router.get('/claseevaluaciontecnica', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'claseevaluaciontecnica' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'claseevaluaciontecnica',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
+            });        
+            
+        });
+    */
     router.route('/sic/usuarios_por_rolid/:id')
         .get(isAuthenticated, responsablesController.getUsersByRolId);
 
@@ -297,30 +297,30 @@ module.exports = function (passport) {
 
     router.route('/sic/default/:id/:gid/:tid')
         .get(isAuthenticated, clausulasController.default);
-/*
-    router.get('/toc', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'toc' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'toc',
-                title: '',
-                type: pagina.contenido.nombre
+    /*
+        router.get('/toc', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'toc' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'toc',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
             });
-        }).catch(function (err) {
-            logger.error(err);
+            
         });
-        
-    });
-*/
+    */
     router.route('/sic/grid_toctipo')
         .post(isAuthenticated, tocController.action)
         .get(isAuthenticated, tocController.list);
@@ -363,11 +363,11 @@ module.exports = function (passport) {
 
     router.route('/sic/descargarespuestas/:id')
         .get(isAuthenticated, preguntasController.descargarespuestas);
-/*
-    router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
-        return res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
-    });
-*/
+    /*
+        router.get('/sic/inboxpreguntas', isAuthenticated, function (req, res) {
+            return res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
+        });
+    */
     router.route('/sic/inboxpreguntaslist')
         .post(isAuthenticated, preguntasController.listinbox);
 
@@ -392,30 +392,30 @@ module.exports = function (passport) {
     router.route('/sic/getcolorservicios/:idsolicitud')
         .get(isAuthenticated, solicitudcotizacionController.getcolorservicios);
 
-/*
-    router.get('/tipodocumento', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'tipodocumento' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'tipodocumento',
-                title: '',
-                type: pagina.contenido.nombre
+    /*
+        router.get('/tipodocumento', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'tipodocumento' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'tipodocumento',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
             });
-        }).catch(function (err) {
-            logger.error(err);
+            
         });
-        
-    });
-*/
+    */
     router.route('/sic/grid_tipodocumento')
         .post(isAuthenticated, tipodocumentoController.action)
         .get(isAuthenticated, tipodocumentoController.list);
@@ -508,29 +508,29 @@ module.exports = function (passport) {
 
     router.route('/sic/porcentajecriterios/:parentRowKey')
         .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios);
-/*
-    router.get('/rolessic', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'rolessic' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'rolessic',
-                title: '',
-                type: pagina.contenido.nombre
+    /*
+        router.get('/rolessic', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'rolessic' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'rolessic',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
             });
-        }).catch(function (err) {
-            logger.error(err);
-        });
-      });
-*/
+          });
+    */
     router.route('/sic/roles/list')
         .post(isAuthenticated, rolessicController.list);
 
@@ -542,30 +542,30 @@ module.exports = function (passport) {
 
     router.route('/sic/getrolessic')
         .get(isAuthenticated, rolessicController.getRoles);
-/*
-    router.get('/permisossic', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'permisossic' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'permisossic',
-                title: '',
-                type: pagina.contenido.nombre
+    /*
+        router.get('/permisossic', isAuthenticated, function (req, res) {
+            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
+            return models.pagina.findOne({
+                where: { nombre: 'permisossic' },
+                include: [{
+                    model: models.contenido
+                }
+                ]
+            }).then(function (pagina) {
+    
+                return res.render('home2', {
+                    user: req.user,
+                    data: req.session.passport.sidebar,
+                    page: 'permisossic',
+                    title: '',
+                    type: pagina.contenido.nombre
+                });
+            }).catch(function (err) {
+                logger.error(err);
             });
-        }).catch(function (err) {
-            logger.error(err);
+            
         });
-        
-    });
-*/
+    */
     router.route('/sic/permisos/list')
         .post(isAuthenticated, permisosController.list);
 
@@ -681,6 +681,10 @@ module.exports = function (passport) {
 
     router.route('/sic/criterios2/:id')
         .get(isAuthenticated, cotizacionservicioController.criterios2)
+
+    router.route('/sic/listaaprobaciondocumento/:id/list')
+        .get(isAuthenticated, documentosController.listaaprobaciondoc);
+
 
     return router;
 }

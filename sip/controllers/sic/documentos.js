@@ -343,3 +343,129 @@ exports.documentousuario = function (req, res) {
         res.json({ error: 1 });
     });
 }
+
+exports.listaaprobaciondoc = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.aprobaciondocumento.belongsTo(models.documentoscotizacion, { foreignKey: 'iddocumentocotizacion' });
+            models.aprobaciondocumento.belongsTo(models.user, { foreignKey: 'idusuario' });
+            models.aprobaciondocumento.count({
+                where: {
+                    iddocumentocotizacion: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.aprobaciondocumento.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        iddocumentocotizacion: id
+                    },
+                    include: [
+                        {
+                            model: models.user
+                        },
+                        {
+                            model: models.documentoscotizacion
+                        },
+
+                    ]
+                }).then(function (aprobaciondocumento) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: aprobaciondocumento });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
+
+/*
+exports.actionaprob = function (req, res) {
+  var action = req.body.oper;
+
+  switch (action) {
+    case "add":
+      models.aprobaciondocumento.create({
+        iddocume: req.body.parent_id,
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
+        borrado: 1
+      }).then(function (criterioevaluacion) {
+        models.claseevaluaciontecnica.findOne({
+          where: {
+            id: req.body.abuelo
+          }
+        }).then(function (records) {
+          if (parseInt(records.niveles) < 2) {
+            models.claseevaluaciontecnica.update({
+              niveles: 2
+            }, {
+                where: {
+                  id: req.body.abuelo
+                }
+              })
+          }
+        }).catch(function (err) {
+          logger.error(err)
+          return res.json({ error: 1, glosa: err.message });
+        });
+
+        return res.json({ error: 0, glosa: '' });
+      }).catch(function (err) {
+        logger.error(err)
+        return res.json({ error: 1, glosa: err.message });
+      });
+
+      break;
+    case "edit":
+      models.criterioevaluacion2.update({
+        nombre: req.body.nombre,
+        comentario: req.body.comentario,
+        porcentaje: req.body.porcentaje,
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (plantillaclausula) {
+          return res.json({ error: 0, glosa: '' });
+        }).catch(function (err) {
+          logger.error(err)
+          return res.json({ error: 1, glosa: err.message });
+        });
+      break;
+    case "del":
+      models.criterioevaluacion2.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          logger.debug('Deleted successfully');
+        }
+        return res.json({ error: 0, glosa: '' });
+      }).catch(function (err) {
+        logger.error(err)
+        return res.json({ error: 1, glosa: err.message });
+      });
+
+      break;
+
+  }
+}
+*/
