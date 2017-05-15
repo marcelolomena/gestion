@@ -391,10 +391,10 @@ exports.list = function (req, res) {
   var sord = req.body.sord;
 
   if (!sidx)
-    sidx = "id";
+    sidx = "nombre";
 
   if (!sord)
-    sord = "desc";
+    sord = "asc";
 
   var orden = "[contrato]." + sidx + " " + sord;
   
