@@ -33,30 +33,39 @@ module.exports = function (passport) {
                         req.session.passport.sidebar = data
                         models.pagina.belongsTo(models.sistema, { foreignKey: 'idsistema' });
                         models.pagina.belongsTo(models.contenido, { foreignKey: 'idcontenido' });
-                        return models.pagina.findOne({
-                            where: { nombre: 'home' + idsistema },
-                            include: [
-                                {
-                                    model: models.sistema
-                                },
-                                {
-                                    model: models.contenido
-                                }
-                            ]
-                        }).then(function (pagina) {
-                            var tmpl = pug.renderFile(pagina.contenido.plantilla, {
-                                title: pagina.title
+
+                        return models.sistema.findOne({
+                            where: { id: idsistema }
+                        }).then(function (home) {
+
+                            return models.pagina.findOne({
+                                where: { nombre: home.pagina },
+                                include: [
+                                    {
+                                        model: models.sistema
+                                    },
+                                    {
+                                        model: models.contenido
+                                    }
+                                ]
+                            }).then(function (pagina) {
+                                var tmpl = pug.renderFile(pagina.contenido.plantilla, {
+                                    title: pagina.title
+                                });
+
+                                return res.render(home.pagina, {
+                                    user: req.user,
+                                    data: data,
+                                    page: home.pagina,
+                                    title: pagina.title,
+                                    type: pagina.contenido.nombre,
+                                    idtype: pagina.contenido.id,
+                                    html: tmpl
+                                });
+                            }).catch(function (err) {
+                                logger.error(err);
                             });
 
-                            return res.render('home' + idsistema, {
-                                user: req.user,
-                                data: data,
-                                page: 'home' + idsistema,
-                                title: pagina.title,
-                                type: pagina.contenido.nombre,
-                                idtype: pagina.contenido.id,
-                                html: tmpl
-                            });
                         }).catch(function (err) {
                             logger.error(err);
                         });
@@ -80,30 +89,39 @@ module.exports = function (passport) {
         } else {
             models.pagina.belongsTo(models.sistema, { foreignKey: 'idsistema' });
             models.pagina.belongsTo(models.contenido, { foreignKey: 'idcontenido' });
-            return models.pagina.findOne({
-                where: { nombre: req.params.opt },
-                include: [
-                    {
-                        model: models.sistema
-                    },
-                    {
-                        model: models.contenido
-                    }
-                ]
-            }).then(function (pagina) {
 
-                var tmpl = pug.renderFile(pagina.contenido.plantilla, {
-                    title: pagina.title
-                });
+            return models.sistema.findOne({
+                where: { id: req.session.passport.sidebar[0].sistema }
+            }).then(function (home) {
 
-                return res.render('home' + req.session.passport.sidebar[0].sistema, {
-                    user: req.user,
-                    data: req.session.passport.sidebar,
-                    page: req.params.opt,
-                    title: pagina.title,
-                    type: pagina.contenido.nombre,
-                    idtype: pagina.contenido.id,
-                    html: tmpl
+                return models.pagina.findOne({
+                    where: { nombre: req.params.opt },
+                    include: [
+                        {
+                            model: models.sistema
+                        },
+                        {
+                            model: models.contenido
+                        }
+                    ]
+                }).then(function (pagina) {
+
+                    var tmpl = pug.renderFile(pagina.contenido.plantilla, {
+                        title: pagina.title
+                    });
+
+                    return res.render(home.pagina, {
+                        user: req.user,
+                        data: req.session.passport.sidebar,
+                        page: req.params.opt,
+                        title: pagina.title,
+                        type: pagina.contenido.nombre,
+                        idtype: pagina.contenido.id,
+                        html: tmpl
+                    });
+
+                }).catch(function (err) {
+                    logger.error(err);
                 });
 
             }).catch(function (err) {
