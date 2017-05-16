@@ -76,7 +76,8 @@ module.exports = function (passport) {
             });
         });
 
-    router.get('/menu/:opt', isAuthenticated, function (req, res) {
+    router.get('/menu/:opt', isAuthenticated, function (req, res, next) {
+        var idsistema = req.session.passport.sidebar[0].sistema
         if (req.params.opt === 'signout') {
             req.session.destroy(function (err) {
                 if (err) {
@@ -91,7 +92,7 @@ module.exports = function (passport) {
             models.pagina.belongsTo(models.contenido, { foreignKey: 'idcontenido' });
 
             return models.sistema.findOne({
-                where: { id: req.session.passport.sidebar[0].sistema }
+                where: { id: idsistema }
             }).then(function (home) {
 
                 return models.pagina.findOne({
@@ -105,6 +106,9 @@ module.exports = function (passport) {
                         }
                     ]
                 }).then(function (pagina) {
+
+                    if (idsistema != pagina.idsistema)
+                        throw new Error("No tiene permiso para ver una página de otro sistema")
 
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title
@@ -121,11 +125,12 @@ module.exports = function (passport) {
                     });
 
                 }).catch(function (err) {
-                    logger.error(err);
+                    throw err;
                 });
 
             }).catch(function (err) {
                 logger.error(err);
+                return next(err)
             });
         }
     });
