@@ -20,15 +20,6 @@ exports.matriznivel1 = function (req, res) {
     })
 };
 
-var flatten = function (arr) {
-    return arr.reduce(function (explored, toExplore) {
-        return explored.concat(
-            Array.isArray(toExplore)
-                ? flatten(toExplore)
-                : toExplore
-        );
-    }, []);
-}
 
 var matrizEvaluacion = function (id, callback) {
     sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX)
@@ -54,6 +45,46 @@ SET @sql = 'SELECT idcriterioevaluacion, idserviciorequerido, porcentaje, nombre
             PIVOT
             (
               MAX(nota) FOR razonsocial IN (' + @cols + ')
+            ) p'
+
+EXECUTE(@sql)
+    `,
+        { replacements: { idserviciorequerido: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (data) {
+        //res.json({rows: user});
+        callback(undefined, data);
+    }).catch(function (err) {
+        //logger.error(err)
+        //res.json({ error_code: 1 });
+        callback(err, undefined);
+    });
+
+}
+
+var matrizEvaluacionEconomica = function (id, callback) {
+    sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX)
+
+SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
+            FROM sic.cotizacionservicio a
+			join sip.proveedor b on a.idproveedor=b.id
+			where a.idserviciorequerido=:idserviciorequerido
+            ORDER BY 1
+            FOR XML PATH(''), TYPE
+            ).value('.', 'NVARCHAR(MAX)'),1,1,'')
+
+SET @sql = 'SELECT moneda, ' + @cols + '
+              FROM
+            (
+              SELECT idmoneda, razonsocial, idserviciorequerido, costototal
+                FROM sic.cotizacionservicio r
+				join sip.proveedor x on r.idproveedor = x.id
+				where idserviciorequerido= `+ id + `
+            ) s
+			join sip.moneda x on s.idmoneda = x.id
+			
+            PIVOT
+            (
+              MAX(costototal) FOR razonsocial IN (' + @cols + ')
             ) p'
 
 EXECUTE(@sql)
@@ -143,40 +174,10 @@ exports.columnaseco = function (req, res) {
 };
 
 exports.matrizeco = function (req, res) {
-    sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX)
-
-SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
-            FROM sic.cotizacionservicio a
-			join sip.proveedor b on a.idproveedor=b.id
-			where a.idserviciorequerido=:idserviciorequerido
-            ORDER BY 1
-            FOR XML PATH(''), TYPE
-            ).value('.', 'NVARCHAR(MAX)'),1,1,'')
-
-SET @sql = 'SELECT moneda, ' + @cols + '
-              FROM
-            (
-              SELECT idmoneda, razonsocial, idserviciorequerido, costototal
-                FROM sic.cotizacionservicio r
-				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido= `+ req.params.id + `
-            ) s
-			join sip.moneda x on s.idmoneda = x.id
-			
-            PIVOT
-            (
-              MAX(costototal) FOR razonsocial IN (' + @cols + ')
-            ) p'
-
-EXECUTE(@sql)
-    `,
-        { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json({ rows: user });
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-    });
+    matrizEvaluacionEconomica(req.params.id, function (err, data) {
+        //console.dir(data)
+        res.json({ rows: data });
+    })
 };
 
 exports.matriztotalajustada = function (req, res) {
@@ -202,7 +203,7 @@ exports.matriztotalajustada = function (req, res) {
         console.dir(total)
         var sum = (r, a) => r.map((b, i) => a[i] + b);
         var tot1 = total.reduce(sum)
-        console.log(tot1);
+        console.log("EL TOTAL" + tot1);
         var maxim = tot1.max()
         console.log(maxim);
         var ponderados = []
@@ -212,6 +213,11 @@ exports.matriztotalajustada = function (req, res) {
             } else {
                 ponderados.push((tot1[k] / maxim) * 100)
             }
+        }
+        var ponderados2 = []
+        for (var k = 0; k < tot1.length; k++) {
+            ponderados2.push(tot1[k])
+
         }
         console.dir(proveedores)
         var eljson = []
@@ -227,11 +233,80 @@ exports.matriztotalajustada = function (req, res) {
         var o = JSON.stringify(eljson).replace(patron, ",");
         console.dir(JSON.parse(o));
 
-        res.json({ rows: JSON.parse(o) });
+        var eljson2 = []
+        for (var l = 0; l < proveedores.length; l++) {
+            var item = {}
+            var name = proveedores[l]
+            item[name] = ponderados2[l]
+            eljson2.push(item)
+
+        }
+        console.dir(eljson2)
+        var o2 = JSON.stringify(eljson2).replace(patron, ",");
+        console.dir(JSON.parse(o2));
+
+        res.json({ rows: JSON.parse(o), rows2: JSON.parse(o2) });
     })
 };
 
 exports.matriztotaleco = function (req, res) {
+
+    matrizEvaluacionEconomica(req.params.id, function (err, data) {
+        //console.dir(data)
+        //res.json({ rows: data });
+        var total = []
+        var totales = []
+        var proveedores = []
+        
+            var moneda = data[0].moneda
+            var fila = JSON.stringify(data[0]).replace('}', '').split(",")
+
+            var datum = []
+            for (var j = 1; j < fila.length; j++) {
+                datum.push(parseFloat(fila[j].split(":")[1]))
+                proveedores.push(fila[j].split(":")[0].replace(/["']/g, ""))
+            }
+            total.push(datum)
+        
+
+        console.dir(total)
+        var sum = (r, a) => r.map((b, i) => a[i] + b);
+        var tot1 = total.reduce(sum)
+        console.log("EL TOTAL" + tot1);
+        var maxim = tot1.min()
+        console.log(maxim);
+        var ponderados = []
+        for (var k = 0; k < tot1.length; k++) {
+            if (tot1[k] === maxim) {
+                ponderados.push(100)
+            } else {
+                ponderados.push(( maxim/tot1[k]) * 100)
+            }
+        }
+        
+        console.dir(proveedores)
+        var eljson = []
+        for (var l = 0; l < proveedores.length; l++) {
+            var item = {}
+            var name = proveedores[l]
+            item[name] = ponderados[l]
+            eljson.push(item)
+
+        }
+        console.dir(eljson)
+        var patron = /},{/g
+        var o = JSON.stringify(eljson).replace(patron, ",");
+        console.dir(JSON.parse(o));
+
+        
+        
+
+        res.json({ rows: JSON.parse(o) });
+    })
+
+
+    
+    /*
     sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX), @costobarato float, @sqlfinal NVARCHAR(MAX), @query NVARCHAR(MAX), @alias NVARCHAR(MAX), @num INT = 0
 
 SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
@@ -397,6 +472,7 @@ EXECUTE(@sqlfinal)
         logger.error(err)
         res.json({ error_code: 1 });
     });
+    */
 };
 
 exports.matriztotal = function (req, res) {

@@ -267,8 +267,8 @@ function showSubGridsEva1(subgrid_id, row_id) {
 
     gridEva1(subgrid_id, row_id, 'eva1');
 
-    gridEvaTotalTec(subgrid_id, row_id, 'evatotaltec');
-    gridEvaTotalTec2(subgrid_id, row_id, 'evatotaltec2');
+    //gridEvaTotalTec(subgrid_id, row_id, 'evatotaltec');
+    //gridEvaTotalTec2(subgrid_id, row_id, 'evatotaltec2');
 
 }
 

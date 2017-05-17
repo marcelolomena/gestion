@@ -69,7 +69,7 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
             //pager: "#" + childGridPagerID,
             subGrid: true,
             footerrow: true,
-            userDataOnFooter: true,
+            //userDataOnFooter: true,
             subGridRowExpanded: showSubGridsEva2,
             subGridOptions: {
                 plusicon: "glyphicon-hand-right",
@@ -82,26 +82,37 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
                     url: "/sic/matriztotalajustada/" + parentRowKey + "/list",
                     success: function (data) {
                         console.log(data.rows[0])
-                        $("#" + childGridID).jqGrid('footerData', 'set', data.rows[0]);
+
+
+                        //$("#" + childGridID).jqGrid('footerData', 'set', data.rows[0]);
+
+
+                        var elfooter = '<tr role="row" class="jqgrow ui-row-ltr" >'
+                            + '<td role=\"gridcell\" style=\"width: 25px;\">&nbsp;</td>'
+                            + '<td role=\"gridcell\">&nbsp;</td>'
+                            + '<td role=\"gridcell\">Calificación Técnica No Ajustada</td>'
+                        jQuery.each(data.rows2[0], function (key, val) {
+                            elfooter += '<td role=\"gridcell\">' + val + '</td>'
+                        });
+                        elfooter += '</tr>'
 
                         $(".ui-jqgrid-ftable").find('tbody')
-                            .append(
-                            '<tr role="row" class="jqgrow ui-row-ltr" >'
+                            .append(elfooter
+                            );
+
+                        var elfooter2 = '<tr role="row" class="jqgrow ui-row-ltr" >'
+                            + '<td role=\"gridcell\" style=\"width: 25px;\">&nbsp;</td>'
                             + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">lelo</td>'
-                            + '<td role=\"gridcell\">lelo</td>'
-                            + '</tr>');
+                            + '<td role=\"gridcell\">Calificación Técnica Ajustada</td>'
+                        jQuery.each(data.rows[0], function (key, val) {
+                            elfooter2 += '<td role=\"gridcell\">' + val + '</td>'
+                        });
+                        elfooter2 += '</tr>'
+
                         $(".ui-jqgrid-ftable").find('tbody')
-                            .append(
-                            '<tr role="row" class="jqgrow ui-row-ltr" >'
-                            + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">lelo</td>'
-                            + '<td role=\"gridcell\">lelo</td>'
-                            + '</tr>');
+                            .append(elfooter2
+                            );
+                        $('.footrow').hide();
                     }
                 });
             }
