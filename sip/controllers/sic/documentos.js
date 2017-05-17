@@ -394,78 +394,105 @@ exports.listaaprobaciondoc = function (req, res) {
 
 };
 
-/*
-exports.actionaprob = function (req, res) {
-  var action = req.body.oper;
+exports.actionaprobaciondoc = function (req, res) {
+    var action = req.body.oper;
+    var iddocumentocotizacion = req.body.parent_id;
+    var idsolicitudcotizacion = req.body.abuelo;
+    console.dir(iddocumentocotizacion);
+    console.dir(idsolicitudcotizacion);
+    switch (action) {
+        case "add":
+            models.aprobaciondocumento.create({
+                iddocumentocotizacion,
+                idusuario: req.session.passport.user,
+                nombrecorto: req.body.nombrecorto,
+                tipoaprobacion: req.body.tipoaprobacion,
+                observacion: req.body.observacion,
+                borrado: 1
+            }).then(function (aprobaciondocumento) {
 
-  switch (action) {
-    case "add":
-      models.aprobaciondocumento.create({
-        iddocume: req.body.parent_id,
-        nombre: req.body.nombre,
-        comentario: req.body.comentario,
-        porcentaje: req.body.porcentaje,
-        borrado: 1
-      }).then(function (criterioevaluacion) {
-        models.claseevaluaciontecnica.findOne({
-          where: {
-            id: req.body.abuelo
-          }
-        }).then(function (records) {
-          if (parseInt(records.niveles) < 2) {
-            models.claseevaluaciontecnica.update({
-              niveles: 2
-            }, {
-                where: {
-                  id: req.body.abuelo
-                }
-              })
-          }
-        }).catch(function (err) {
-          logger.error(err)
-          return res.json({ error: 1, glosa: err.message });
-        });
+                bitacora.registrar(
+                    idsolicitudcotizacion,
+                    'aprobaciondocumento',
+                    aprobaciondocumento.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.aprobaciondocumento,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: aprobaciondocumento.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: aprobaciondocumento.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    });
 
-        return res.json({ error: 0, glosa: '' });
-      }).catch(function (err) {
-        logger.error(err)
-        return res.json({ error: 1, glosa: err.message });
-      });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false });
+            });
+            break;
+        case "edit":
 
-      break;
-    case "edit":
-      models.criterioevaluacion2.update({
-        nombre: req.body.nombre,
-        comentario: req.body.comentario,
-        porcentaje: req.body.porcentaje,
-      }, {
-          where: {
-            id: req.body.id
-          }
-        }).then(function (plantillaclausula) {
-          return res.json({ error: 0, glosa: '' });
-        }).catch(function (err) {
-          logger.error(err)
-          return res.json({ error: 1, glosa: err.message });
-        });
-      break;
-    case "del":
-      models.criterioevaluacion2.destroy({
-        where: {
-          id: req.body.id
-        }
-      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-        if (rowDeleted === 1) {
-          logger.debug('Deleted successfully');
-        }
-        return res.json({ error: 0, glosa: '' });
-      }).catch(function (err) {
-        logger.error(err)
-        return res.json({ error: 1, glosa: err.message });
-      });
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'aprobaciondocumento',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.aprobaciondocumento,
+                function (err, data) {
+                    if (!err) {
+                        models.aprobaciondocumento.update({
+                            iddocumentocotizacion,
+                            idusuario: req.session.passport.user,
+                            nombrecorto: req.body.nombrecorto,
+                            tipoaprobacion: req.body.tipoaprobacion,
+                            observacion: req.body.observacion,
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (aprobaciondocumento) {
+                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
+                    }
+                });
 
-      break;
+            break;
+        case "del":
+            bitacora.registrar(
+                idsolicitudcotizacion,
+                'aprobaciondocumento',
+                req.body.id,
+                'delete',
+                req.session.passport.user,
+                new Date(),
+                models.aprobaciondocumento,
+                function (err, data) {
+                    if (!err) {
+                        models.aprobaciondocumento.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) {
+                            return res.json({ message: '', success: true });
+                        }).catch(function (err) {
+                            return res.json({ message: err.message, success: false });
+                        });
+                    } else {
+                        return res.json({ message: err.message, success: false });
+                    }
+                });
 
-  }
+            break;
+    }
 }
-*/

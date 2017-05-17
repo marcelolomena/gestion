@@ -677,14 +677,16 @@ module.exports = function (passport) {
         .get(isAuthenticated, cotizacionservicioController.listnota2)
 
     router.route('/sic/notaevaluaciontecnica2/action')
-        .post(isAuthenticated, cotizacionservicioController.actionnota2);
+        .post(isAuthenticated, cotizacionservicioController.actionnota2)
 
     router.route('/sic/criterios2/:id')
         .get(isAuthenticated, cotizacionservicioController.criterios2)
 
     router.route('/sic/listaaprobaciondocumento/:id/list')
-        .get(isAuthenticated, documentosController.listaaprobaciondoc);
+        .get(isAuthenticated, documentosController.listaaprobaciondoc)
 
+    router.route('/sic/actionaprobaciondoc/:id/:idpadre')
+        .post(isAuthenticated, documentosController.actionaprobaciondoc);
 
     return router;
 }
