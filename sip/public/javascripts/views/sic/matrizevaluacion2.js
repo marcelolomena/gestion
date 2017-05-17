@@ -81,12 +81,6 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
                     type: "GET",
                     url: "/sic/matriztotalajustada/" + parentRowKey + "/list",
                     success: function (data) {
-                        console.log(data.rows[0])
-
-
-                        //$("#" + childGridID).jqGrid('footerData', 'set', data.rows[0]);
-
-
                         var elfooter = '<tr role="row" class="jqgrow ui-row-ltr" >'
                             + '<td role=\"gridcell\" style=\"width: 25px;\">&nbsp;</td>'
                             + '<td role=\"gridcell\">&nbsp;</td>'
@@ -96,22 +90,31 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
                         });
                         elfooter += '</tr>'
 
-                        $(".ui-jqgrid-ftable").find('tbody')
+                        $("[id*='evatec'] .ui-jqgrid-ftable").find('tbody')
                             .append(elfooter
                             );
-
+                        /*
+                                                $(".ui-jqgrid-ftable").find('tbody')
+                                                    .append(elfooter
+                                                    );
+                        */
                         var elfooter2 = '<tr role="row" class="jqgrow ui-row-ltr" >'
                             + '<td role=\"gridcell\" style=\"width: 25px;\">&nbsp;</td>'
                             + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">Calificación Técnica Ajustada</td>'
+                            + '<td role=\"gridcell\"><b>Calificación Técnica Ajustada</b></td>'
                         jQuery.each(data.rows[0], function (key, val) {
-                            elfooter2 += '<td role=\"gridcell\">' + val + '</td>'
+                            elfooter2 += '<td role=\"gridcell\"><b>' + val.toFixed(2) + '</b></td>'
                         });
                         elfooter2 += '</tr>'
 
+                        $("[id*='evatec'] .ui-jqgrid-ftable").find('tbody')
+                            .append(elfooter2
+                            );
+/*
                         $(".ui-jqgrid-ftable").find('tbody')
                             .append(elfooter2
                             );
+*/                            
                         $('.footrow').hide();
                     }
                 });

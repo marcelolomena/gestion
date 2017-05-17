@@ -80,16 +80,20 @@ function gridEva1E(parentRowID, parentRowKey, suffix) {
 
                         var elfooter = '<tr role="row" class="jqgrow ui-row-ltr" >'
                             + '<td role=\"gridcell\">&nbsp;</td>'
-                            + '<td role=\"gridcell\">Calificación Económica Ajustada</td>'
+                            + '<td role=\"gridcell\"><b>Calificación Económica Ajustada</b></td>'
                         jQuery.each(data.rows[0], function (key, val) {
-                            elfooter += '<td role=\"gridcell\">' + val + '</td>'
+                            elfooter += '<td role=\"gridcell\"><b>' + val.toFixed(2) + '</b></td>'
                         });
                         elfooter += '</tr>'
 
+                        $("[id*='evaeco'] .ui-jqgrid-ftable").find('tbody')
+                            .append(elfooter
+                            );
+/*
                         $(".ui-jqgrid-ftable").find('tbody')
                             .append(elfooter
                             );
-
+*/
                     }
                 });
             }

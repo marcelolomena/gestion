@@ -261,11 +261,11 @@ var gridMatrizEvaluacion = {
 }
 
 function showSubGridsEva1(subgrid_id, row_id) {
-    gridEva1E(subgrid_id, row_id, 'eva1e');
+    gridEva1E(subgrid_id, row_id, 'evaeco');
 
-    gridEvaTotalEco(subgrid_id, row_id, 'evatotaleco');
+    //gridEvaTotalEco(subgrid_id, row_id, 'evatotaleco');
 
-    gridEva1(subgrid_id, row_id, 'eva1');
+    gridEva1(subgrid_id, row_id, 'evatec');
 
     //gridEvaTotalTec(subgrid_id, row_id, 'evatotaltec');
     //gridEvaTotalTec2(subgrid_id, row_id, 'evatotaltec2');
