@@ -445,6 +445,10 @@ function gridabrobaciondoc(parentRowID, parentRowKey, suffix) {
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentClase, abuelo: parentSolicitud };
+            },
+            
             
         },
         {
@@ -476,7 +480,10 @@ function gridabrobaciondoc(parentRowID, parentRowKey, suffix) {
             addCaption: "Eliminar Aprobación",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }
+            },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentClase, abuelo: parentSolicitud };
+            },
         },
         {
             recreateFilter: true

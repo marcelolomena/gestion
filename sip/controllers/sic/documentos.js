@@ -411,7 +411,7 @@ exports.actionaprobaciondoc = function (req, res) {
                 borrado: 1
             }).then(function (aprobaciondocumento) {
 
-                bitacora.registrar(
+                bitacora.registrarhijo(
                     idsolicitudcotizacion,
                     'aprobaciondocumento',
                     aprobaciondocumento.id,
@@ -435,8 +435,8 @@ exports.actionaprobaciondoc = function (req, res) {
             break;
         case "edit":
 
-            bitacora.registrar(
-                req.body.idsolicitudcotizacion,
+            bitacora.registrarhijo(
+                idsolicitudcotizacion,
                 'aprobaciondocumento',
                 req.body.id,
                 'update',
@@ -456,43 +456,46 @@ exports.actionaprobaciondoc = function (req, res) {
                                     id: req.body.id
                                 }
                             }).then(function (aprobaciondocumento) {
-                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
-                                logger.error(err)
-                                res.json({ message: err.message, success: false });
+                                return res.json({ message: err.message, success: false });
                             });
                     } else {
-                        logger.error(err)
                         return res.json({ message: err.message, success: false });
                     }
                 });
 
             break;
         case "del":
-            bitacora.registrar(
-                idsolicitudcotizacion,
-                'aprobaciondocumento',
-                req.body.id,
-                'delete',
-                req.session.passport.user,
-                new Date(),
-                models.aprobaciondocumento,
-                function (err, data) {
-                    if (!err) {
-                        models.aprobaciondocumento.destroy({
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (rowDeleted) {
-                            return res.json({ message: '', success: true });
-                        }).catch(function (err) {
+            models.aprobaciondocumento.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (aprobaciondocumento) {
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'aprobaciondocumento',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.aprobaciondocumento,
+                    function (err, data) {
+                        if (!err) {
+                            models.aprobaciondocumento.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                return res.json({ message: err.message, success: false });
+                            });
+                        } else {
                             return res.json({ message: err.message, success: false });
-                        });
-                    } else {
-                        return res.json({ message: err.message, success: false });
-                    }
-                });
-
+                        }
+                    });
+            })
             break;
     }
 }
