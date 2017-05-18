@@ -53,18 +53,31 @@ module.exports = function (passport) {
                                     title: pagina.title
                                 });
 
-                                //var script = pug.renderFile(pagina.contenido.script);
-                                //logger.debug(script)
-
-                                return res.render(home.pagina, {
-                                    user: req.user,
-                                    data: data,
-                                    page: home.pagina,
-                                    title: pagina.title,
-                                    type: pagina.contenido.nombre,
-                                    idtype: pagina.contenido.id,
-                                    html: tmpl
-                                });
+                                logger.debug("[" + pagina.script + "]")
+                                if (pagina.script) {
+                                    var script = pug.render(pagina.script, { title: pagina.title });
+                                    logger.debug(script)
+                                    return res.render(home.pagina, {
+                                        user: req.user,
+                                        data: data,
+                                        page: home.pagina,
+                                        title: pagina.title,
+                                        type: pagina.contenido.nombre,
+                                        idtype: pagina.contenido.id,
+                                        html: tmpl,
+                                        script: script
+                                    });
+                                } else {
+                                    return res.render(home.pagina, {
+                                        user: req.user,
+                                        data: data,
+                                        page: home.pagina,
+                                        title: pagina.title,
+                                        type: pagina.contenido.nombre,
+                                        idtype: pagina.contenido.id,
+                                        html: tmpl
+                                    });
+                                }
                             }).catch(function (err) {
                                 logger.error(err);
                             });
@@ -116,9 +129,11 @@ module.exports = function (passport) {
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title
                     });
+                    //logger.debug(tmpl)
 
-                    //var script = pug.renderFile(pagina.contenido.script);
-                    //logger.debug(script)
+                    //logger.debug(pagina.script)
+                    var script = pug.render(pagina.script);
+                    logger.debug("[" + script+ "]")
 
                     return res.render(home.pagina, {
                         user: req.user,

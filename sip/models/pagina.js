@@ -31,11 +31,11 @@ module.exports = function(sequelize, DataTypes) {
         model: 'sistema',
         key: 'id'
       }
-    }/*,
+    },
     script: {
       type: DataTypes.STRING,
       allowNull: true
-    }*/
+    }
   }, {
     schema: 'sip',timestamps: false,tableName: 'pagina'
   });
