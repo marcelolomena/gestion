@@ -72,7 +72,7 @@ exports.action = function (req, res) {
             break;
     }
 }
-
+/*
 exports.asignar = function (req, res) {
     bitacora.registrar(
         req.body.idsolicitudcotizacion,
@@ -131,7 +131,7 @@ exports.responder = function (req, res) {
         }
     )
 }
-
+*/
 
 exports.proveedorespre = function (req, res) {
 
@@ -155,6 +155,7 @@ exports.proveedorespre = function (req, res) {
 
 }
 
+
 exports.list = function (req, res) {
 
     var page = req.query.page;
@@ -173,7 +174,6 @@ exports.list = function (req, res) {
         if (data) {
             models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
             models.preguntaproveedor.count({
                 where: data
             }).then(function (records) {
@@ -185,8 +185,7 @@ exports.list = function (req, res) {
                     include: [
                         {
                             model: models.proveedor
-                        },
-                        { model: models.user }
+                        }
                     ]
                 }).then(function (preguntaproveedor) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
@@ -198,6 +197,8 @@ exports.list = function (req, res) {
         }
     });
 };
+
+/*
 exports.listasignar = function (req, res) {
 
     var page = req.query.page;
@@ -216,7 +217,6 @@ exports.listasignar = function (req, res) {
         if (data) {
             models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
             models.preguntaproveedor.count({
                 where: data
             }).then(function (records) {
@@ -228,8 +228,7 @@ exports.listasignar = function (req, res) {
                     include: [
                         {
                             model: models.proveedor
-                        },
-                        { model: models.user }
+                        }
                     ]
                 }).then(function (preguntaproveedor) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
@@ -264,7 +263,6 @@ exports.listresponsables = function (req, res) {
         if (data) {
             models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
             models.preguntaproveedor.count({
                 where: data
             }).then(function (records) {
@@ -276,8 +274,7 @@ exports.listresponsables = function (req, res) {
                     include: [
                         {
                             model: models.proveedor
-                        },
-                        { model: models.user }
+                        }
                     ]
                 }).then(function (preguntaproveedor) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
@@ -311,7 +308,6 @@ exports.listresponsablesnew = function (req, res) {
         if (data) {
             models.preguntaproveedor.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
             models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
-            models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
             models.preguntaproveedor.count({
                 where: data
             }).then(function (records) {
@@ -323,8 +319,7 @@ exports.listresponsablesnew = function (req, res) {
                     include: [
                         {
                             model: models.proveedor
-                        },
-                        { model: models.user }
+                        }
                     ]
                 }).then(function (preguntaproveedor) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
@@ -336,7 +331,7 @@ exports.listresponsablesnew = function (req, res) {
     });
 };
 
-
+*/
 exports.archivo = function (req, res) {
 
     if (req.method === 'POST') {
@@ -413,11 +408,11 @@ exports.archivo = function (req, res) {
                             var item = {}
                             item['idsolicitudcotizacion'] = idsolicitudcotizacion;
                             item['idproveedor'] = idproveedor;
-                            item['idresponsable'] = null;
                             item['tipo'] = line.tipo;
                             item['pregunta'] = line.pregunta;
-                            item['respuesta'] = null;
+                            item['respuesta'] = line.respuesta;
                             item['borrado'] = 1;
+                            item['responsable'] = line.responsable;
 
                             console.dir(item);
 
@@ -445,12 +440,10 @@ exports.archivo = function (req, res) {
 
                 }).catch(function (err) {
                     return res.json({ error_code: 1, message: err, success: false });
-                    logger.error(err)
                 });
 
             }).catch(function (err) {
                 return res.json({ error_code: 1, message: err, success: false });
-                logger.error(err)
             });
 
         });
@@ -467,15 +460,11 @@ exports.archivo = function (req, res) {
 
 exports.descargarespuestas = function (req, res) {
 
-    models.preguntaproveedor.belongsTo(models.user, { foreignKey: 'idresponsable' });
     models.preguntaproveedor.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
     models.preguntaproveedor.findAll({
-        attributes: [['id', 'id'], ['pregunta', 'pregunta'], ['respuesta', 'respuesta']],
+        attributes: [['id', 'id'], ['pregunta', 'pregunta'], ['respuesta', 'respuesta'], ['responsable', 'responsable'], ['tipo', 'tipo'] ],
         where: { idsolicitudcotizacion: req.params.id },
-        include: [{
-            attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
-            model: models.user
-        },
+        include: [
         {
             attributes: [['razonsocial', 'proveedor']],
             model: models.proveedor
@@ -490,7 +479,7 @@ exports.descargarespuestas = function (req, res) {
                 type: 'string',
                 width: 30
             },
-            /*
+            
             {
                 caption: 'Proveedor',
                 type: 'string',
@@ -501,7 +490,13 @@ exports.descargarespuestas = function (req, res) {
                 type: 'string',
                 width: 200
             },
-            */
+
+            {
+                caption: 'tipo',
+                type: 'string',
+                width: 200
+            },
+            
             {
                 caption: 'Pregunta',
                 type: 'string',
@@ -522,11 +517,12 @@ exports.descargarespuestas = function (req, res) {
 
         for (var p in preguntaproveedor) {
 
-            var user = preguntaproveedor[p].user
+            //var user = preguntaproveedor[p].user
             var provider = preguntaproveedor[p].proveedor
-            var responsable = ''
-            var proveedor = ''
+            var responsable = preguntaproveedor[p].responsable
+            var tipo = preguntaproveedor[p].tipo
 
+            /*
             for (var x in user) {
                 if (user[x].nombre && user[x].apellido) {
                     //logger.debug(user[x].nombre + ' ' + user[x].apellido)
@@ -534,23 +530,27 @@ exports.descargarespuestas = function (req, res) {
                 }
             }
 
+            */
             for (var y in provider) {
                 if (provider[y].proveedor) {
                     proveedor = provider[y].proveedor
                 }
             }
 
-            var respuesta = ''
+            var respuesta = preguntaproveedor[p].respuesta
+            /*
             if (preguntaproveedor[p].respuesta) {
                 respuesta = preguntaproveedor[p].respuesta.replace(noHTML, '')
                 //logger.debug("cvacacv : " + respuesta)
             }
+            */
             //logger.debug("el id es: " + preguntaproveedor[p].id)
 
             a = [
                 preguntaproveedor[p].id.toString(),
-                //proveedor,
-                //responsable,
+                proveedor,
+                responsable,
+                tipo,
                 preguntaproveedor[p].pregunta,
                 respuesta
             ]
@@ -573,6 +573,7 @@ exports.descargarespuestas = function (req, res) {
 
 
 }
+/*
 exports.getresponsablessolicitud = function (req, res) {
 
     var id = req.params.id;
@@ -584,7 +585,6 @@ exports.getresponsablessolicitud = function (req, res) {
         'order by a.first_name, a.last_name ',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
-        //logger.debug(valores)
         return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
@@ -672,3 +672,5 @@ exports.actioninbox = function (req, res) {
         });
 
 }
+
+*/

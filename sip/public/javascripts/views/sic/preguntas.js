@@ -55,7 +55,7 @@ var gridPreguntas = {
 
 
 
-                { name: 'responsable', width: 100, search: false, editable: true, hidden: false, formatter: returnResponsable, },
+                { name: 'responsable', width: 100, search: false, editable: true, hidden: false, },
                 { name: 'pregunta', width: 350, search: false, editable: false, hidden: false },
                 {
                     name: 'fileToUpload',

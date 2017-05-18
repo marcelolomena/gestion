@@ -34,7 +34,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     respuesta: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: false
     },
     borrado: {
       type: DataTypes.INTEGER,

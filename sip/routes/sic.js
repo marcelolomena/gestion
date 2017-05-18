@@ -93,8 +93,8 @@ module.exports = function (passport) {
     router.route('/sic/preguntas/:id')
         .get(isAuthenticated, preguntasController.list);
 
-    router.route('/sic/asignarpreguntas/:id')
-        .get(isAuthenticated, preguntasController.listasignar);
+    //router.route('/sic/asignarpreguntas/:id')
+    //    .get(isAuthenticated, preguntasController.listasignar);
 
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
@@ -215,8 +215,8 @@ module.exports = function (passport) {
     router.route('/sic/tecnicosresponsables/:idsolicitud')
         .get(isAuthenticated, responsablesController.tecnicosresponsables);
 
-    router.route('/sic/getresponsablessolicitud/:id')
-        .get(isAuthenticated, preguntasController.getresponsablessolicitud);
+    //router.route('/sic/getresponsablessolicitud/:id')
+    //    .get(isAuthenticated, preguntasController.getresponsablessolicitud);
 
     router.route('/sic/grid_catalogoclausulas')
         .post(isAuthenticated, catalogoclausulasController.action)
@@ -349,17 +349,17 @@ module.exports = function (passport) {
     router.route('/sic/tipos')
         .get(isAuthenticated, solicitudcotizacionController.tipoclausula);
 
-    router.route('/sic/asignar')
-        .post(isAuthenticated, preguntasController.asignar);
+    //router.route('/sic/asignar')
+    //    .post(isAuthenticated, preguntasController.asignar);
 
-    router.route('/sic/preguntasresponsable/:id')
-        .get(isAuthenticated, preguntasController.listresponsables);
+    //router.route('/sic/preguntasresponsable/:id')
+    //    .get(isAuthenticated, preguntasController.listresponsables);
 
-    router.route('/sic/preguntasresponsablenew/:id')
-        .get(isAuthenticated, preguntasController.listresponsablesnew);
+    //router.route('/sic/preguntasresponsablenew/:id')
+    //    .get(isAuthenticated, preguntasController.listresponsablesnew);
 
-    router.route('/sic/responder')
-        .post(isAuthenticated, preguntasController.responder);
+    //router.route('/sic/responder')
+    //    .post(isAuthenticated, preguntasController.responder);
 
     router.route('/sic/descargarespuestas/:id')
         .get(isAuthenticated, preguntasController.descargarespuestas);
@@ -368,11 +368,11 @@ module.exports = function (passport) {
             return res.render('sic/inboxpreguntas', { user: req.user, data: req.session.passport.sidebar });
         });
     */
-    router.route('/sic/inboxpreguntaslist')
-        .post(isAuthenticated, preguntasController.listinbox);
+    //router.route('/sic/inboxpreguntaslist')
+    //    .post(isAuthenticated, preguntasController.listinbox);
 
-    router.route('/sic/inboxpreguntasaction')
-        .post(isAuthenticated, preguntasController.actioninbox);
+    //router.route('/sic/inboxpreguntasaction')
+    //    .post(isAuthenticated, preguntasController.actioninbox);
 
     router.route('/sic/calendario/:id')
         .get(isAuthenticated, calendarioController.list);
