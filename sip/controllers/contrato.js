@@ -241,9 +241,6 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
-        idcontactofacturacion: req.body.idcontactofacturacion,
-        codigoart: req.body.codigoart,
-        program_id: program_id,
         borrado: 1
       }).then(function (contratonew) {
         console.log("****CREA contrato:"+constants.CreaContrato);
@@ -291,10 +288,7 @@ exports.action = function (req, res) {
                 nombre: req.body.nombre,
                 idproveedor: req.body.idproveedor,
                 uidpmo: req.body.uidpmo,
-                pmoresponsable: req.body.pmoresponsable,
-                idcontactofacturacion:req.body.idcontactofacturacion,
-                codigoart: req.body.codigoart,
-                program_id: program_id
+                pmoresponsable: req.body.pmoresponsable
               }, {
                   where: {
                     id: req.body.id
@@ -390,12 +384,13 @@ exports.list = function (req, res) {
   var sidx = req.body.sidx;
   var sord = req.body.sord;
 
-  if (!sidx)
-    sidx = "id";
-
-  if (!sord)
+  if (!sidx) {
+    sidx = "numero";
     sord = "desc";
-
+  } else if (!sord) {
+    sord = "desc";
+  }
+  
   var orden = "[contrato]." + sidx + " " + sord;
   
   console.log("***ORDER:"+orden);

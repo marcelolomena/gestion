@@ -13,7 +13,7 @@ function showSubGrids(subgrid_id, row_id) {
 function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     var rowData = $("#grid").getRowData(row_id);
     var tipocontrato = rowData.tipocontrato;
-    var codigoart = rowData.codigoart;
+    var codigoart = $('#'+subgrid_table_id).getRowData($('#'+subgrid_table_id).getGridParam("selrow")).codigoart;
     var proveedor = rowData.idproveedor;
     console.log("tipocontrato:"+tipocontrato+", codigoart:"+codigoart+", proveedor:"+proveedor);
     var subgrid_table_id, pager_id, toppager_id;
@@ -64,7 +64,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Condición<span style='color:red'>*</span>{idcondicion}</div>";
-    templateServicio += "<div class='column-half'>Contacto<span style='color:red'>*</span>{idcontactoproveedor}</div>";
     templateServicio += "</div>";
     
     templateServicio += "<div class='form-row' style='display: none;'>";
@@ -121,10 +120,43 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         page: 1,
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
+            { label: 'Codigo ART', name: 'codigoart', width: 100, align: 'left', search: true, editable: true,
+                editoptions: { size: 10,
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thissid = $(this).val();
+                            var pgrid = $("#grid")
+                            var prowKey = pgrid.getGridParam("selrow");
+                            var prowData = pgrid.getRowData(prowKey);
+                            var pthissid = rowData.tipocontrato;                               
+                            $.ajax({
+                                type: "GET",
+                                url: '/getlistasap/' + proveedor+'/'+thissid,
+                                async: false,
+                                success: function (data) {
+                                    var r = "<select>";
+                                    r += '<option value="0">--Escoger SAP--</option>';
+                                    $.each(data, function (i, item) {
+                                        r += '<option value="' + data[i].id + '">' + data[i].nombre+ '</option>';
+                                    });
+                                    r += "</select>";
+                                    $("#sap").html(r);
+                                }
+                            });
+                            $("input#sap").val($('option:selected', this).text());
+                        }
+                    }],
+                }                    
+            }, 
             { label: 'SAP', name: 'sap', width: 100, align: 'left', search: true, editable: true,
                 edittype: "select",
                 editoptions: {
                     dataUrl: '/getlistasap/' + proveedor+'/'+codigoart,
+                    postData: function (rowid, value, cmName) {
+                        return {
+                            codigoart: $('#' + subgrid_table_id).getRowData(rowid).codigoart
+                        }
+                    },                         
                     buildSelect: function (response) {
                         var grid = $('#' + subgrid_table_id);
                         var rowKey = grid.getGridParam("selrow");
@@ -132,22 +164,19 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var thissid = rowData.sap;
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
-                        s += '<option value="0">--Sin SAP--</option>';
+                        s += '<option value="0">--Escoger SAP--</option>';                        
                         $.each(data, function (i, item) {
-                            //console.log("nombre:"+data[i].id+" = this:"+thissid);
                             if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' +  data[i].id+'-'+data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
                             } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].id+'-'+data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                             }
                         });
+
                         return s + "</select>";
-                    },
+                    }                    
                 }             
-            },
-            { label: 'Codigo ART', name: 'codigoart', width: 100, align: 'left', search: true, editable: true,
-                editoptions: { size: 10, readonly: 'readonly', defaultValue: codigoart}  
-            },                        
+            },                                   
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },          
             {
                 label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
@@ -162,6 +191,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         var data = JSON.parse(response);
                         var s = "<select>";//el default
                         s += '<option value="0">--Escoger CUI--</option>';
+                        
                         $.each(data, function (i, item) {
                             //console.log("nombre:"+data[i].id+" = this:"+thissid);
                             if (data[i].id == thissid) {
@@ -693,13 +723,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         //width: null,
         pager: $('#' + pager_id),
         styleUI: "Bootstrap",
-//        loadError: sipLibrary.jqGrid_loadErrorHandler,
-//        gridComplete: function () {
-//            var recs = $('#' + subgrid_table_id).getGridParam("reccount");
-//            if (isNaN(recs) || recs == 0) {
-//                $('#' + subgrid_table_id).addRowData("blankRow", { "anexo": "No hay datos" });
-//            }
-//        },
         subGrid: true,
         subGridRowExpanded: gridDetail,
         subGridOptions: {
@@ -758,8 +781,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Plazo: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idcondicion) == 0) {
                     return [false, "Condición: Debe escoger un valor", ""];
-                } if (parseInt(postdata.idcontactoproveedor) == 0) {
-                    return [false, "Contacto: Debe escoger un valor", ""];
                 }  if (isNaN(montocontrato) || montocontrato <= 0) {
                     return [false, "Monto Contrato: Debe ingresar un valor", ""];                    
                 }  if (isNaN(cuota) || cuota <= 0) {
@@ -870,8 +891,6 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     return [false, "Plazo: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idcondicion) == 0) {
                     return [false, "Condición: Debe escoger un valor", ""];
-                } if (parseInt(postdata.idcontactoproveedor) == 0) {
-                    return [false, "Contacto: Debe escoger un valor", ""];
                 } if (isNaN(montocontrato) || montocontrato <= 0) {
                     return [false, "Monto Contrato: Debe ingresar un valor mayor que cero", ""];
                 } if (isNaN(cuota) || cuota <= 0) {

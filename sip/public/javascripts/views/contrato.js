@@ -9,7 +9,6 @@ $(document).ready(function () {
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Contrato<span style='color:red'>*</span>{nombre}</div>";
     template += "<div class='column-full'>Proveedor<span style='color:red'>*</span>{idproveedor}</div>";
-    template += "<div class='column-full'>Contacto Facturación<span style='color:red'>*</span>{idcontactofacturacion}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -38,11 +37,6 @@ $(document).ready(function () {
     template += "<div class='column-half'>estadosolicitud{estadosolicitud}</div>";
     template += "<div class='column-full'>{program_id}</div>";    
     template += "</div>";
-    
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>Codigo Art<span style='color:red'>*</span>{codigoart}</div>";
-    template += "<div class='column-full'>Nombre Art{nombreart}</div>";
-    template += "</div>";    
 
     template += "<hr style='width:100%;'/>";
     template += "<div> {sData} {cData}  </div>";
@@ -191,30 +185,6 @@ $(document).ready(function () {
                 }
             },
         },
-        {
-                label: 'idcontactofacturacion', name: 'idcontactofacturacion', search: false, editable: true, hidden: true,
-                edittype: "select",
-                editoptions: {
-                    dataUrl: '/contactos/' + idproveedor,
-                    buildSelect: function (response) {
-                        var grid = $("#grid");
-                        var rowKey = grid.getGridParam("selrow");
-                        var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.idcontactofacturacion;
-                        var data = JSON.parse(response);
-                        var s = "<select>";//el default
-                        s += '<option value="0">--Escoger Contacto Facturación--</option>';
-                        $.each(data, function (i, item) {
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].contacto + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].contacto + '</option>';
-                            }
-                        });
-                        return s + "</select>";
-                    }
-                }
-            },
         {
             label: 'Estado Solicitud', name: 'idestadosol', hidden: true, search: true, editable: true,
             edittype: "select",
@@ -380,47 +350,7 @@ $(document).ready(function () {
         {
             label: 'Negociador', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
-        },
-        {
-            label: 'Codigo ART', name: 'codigoart', width: 200, align: 'left', search: true, editable: true,hidden:true,
-            editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10,                
-            dataEvents: [{
-                type: 'change', fn: function (e) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);                 
-                    console.log("rowData:" + rowData);
-                    var thissid = $(this).val();
-                    $.ajax({
-                        type: "GET",
-                        url: '/getcodigoart/' + thissid,
-                        async: false,
-                        success: function (data) {
-                            if (data.length > 0) {
-                                console.log("glosa:" + data[0].nombreart);
-                                $("input#nombreart").val(data[0].nombreart);
-                                $("input#program_id").val(data[0].program_id);
-                            } else {
-                                alert("No existe el codigo art ingresado");
-                                $("input#nombreart").val("");
-                                $("input#program_id").val("0");                                
-                            }
-                        }
-                    });
-                    }
-            }],
-           
-
-        } 
-        },
-        {
-            label: 'Nombre', name: 'nombreart', width: 200, align: 'left', search: true, editable: true, hidden: true,
-            editrules: { edithidden: false }, hidedlg: true, editoptions: { size: 10, readonly: 'readonly'} 
-        },   
-        {
-            label: 'ID Art', name: 'program_id', width: 200, align: 'left', search: false, editable: true,
-            hidden: true, editoptions: {defaultValue: "0"}
-        }                     
+        }                
     ];
     $("#grid").jqGrid({
         url: '/contratos/list',
@@ -503,8 +433,6 @@ $(document).ready(function () {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "Negociador: Debe escoger un valor", ""];
-                } if (parseInt(postdata.nombreart) == "") {
-                    return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
                 } if (parseInt(postdata.tipodocumento) == 0) {
                     return [false, "Tipo Documento: Debe escoger un valor", ""];                    
                 } else {
@@ -540,6 +468,7 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
+                console.log("Postdata:'"+postdata.codigoart+"'"+"tipocontrato:"+postdata.tipocontrato);
                 if (postdata.nombre.trim().length == 0) {
                     return [false, "Contrato: Debe ingresar un texto", ""];
                 } if (parseInt(postdata.idproveedor) == 0) {
@@ -552,8 +481,6 @@ $(document).ready(function () {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "Negociador: Debe escoger un valor", ""];
-                } if (parseInt(postdata.nombreart) == "") {
-                    return [false, "Codigo ART: Se requiere un codigo existente", ""];                    
                 } if (parseInt(postdata.tipodocumento) == 0) {
                     return [false, "Tipo Documento: Debe escoger un valor", ""];                    
                 } else {

@@ -157,13 +157,13 @@ exports.action = function (req, res) {
                 "SELECT @estadocto=nombre FROM sip.parametro WHERE id=" + req.body.idestadocto + "; " +
                 "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, " +
                 "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
-                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idcontactoproveedor, idestadocto, estadocontrato, " +
+                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idestadocto, estadocontrato, " +
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
                 "diferido, saldopresupuesto, tipogeneracion, comentario, montocontrato " + sapcampos + ") " +
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
                 req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
                 req.body.idplazocontrato + "," + req.body.idcondicion + "," +
-                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idcontactoproveedor + "," + req.body.idestadocto + ",@estadocto,'" +
+                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idestadocto + ",@estadocto,'" +
                 req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
                 req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
                 req.body.tipogeneracion + ",'" + req.body.comentario + "'," + req.body.montocontrato + sapdatos + "); " +
@@ -229,7 +229,7 @@ exports.action = function (req, res) {
                 ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
                 "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + req.body.valorcuota + ", valortotal=" + req.body.valorcuota +
                 ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
-                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + ", idcontactoproveedor=" + req.body.idcontactoproveedor +
+                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + 
                 ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
                 ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
                 ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
@@ -753,15 +753,21 @@ exports.getSaldoPresup = function (req, res) {
 };
 
 exports.getListaSAP = function (req, res) {
-    logger.debug("En getSaldoPresup");
+    logger.debug("************En getSaldoPresup:"+req.query.codigoart);
     var proveedor = req.params.id;
     var art = req.params.id2;
+    var art2 = req.query.codigoart;
+    logger.debug("************ART:"+art2);
+    
+    if (art2 > 0) {
+        art = art2;
+    }
 
     var sql = "SELECT b.sap as id, b.nombreproyecto as nombre FROM sip.tareaenvuelo a " +
         "JOIN sip.presupuestoenvuelo b ON a.idpresupuestoenvuelo=b.id " +
         "JOIN art_program c ON b.program_id=c.program_id " +
-        "WHERE a.idproveedor = " + proveedor + " AND c.program_code=" + art
-    "GROUP BY b.sap, b.nombreproyecto ";
+        "WHERE a.idproveedor = " + proveedor + " AND c.program_code=" + art +
+    " GROUP BY b.sap, b.nombreproyecto ";
 
 
     /*var sql = "select a.sap from sip.presupuestoenvuelo a "+
