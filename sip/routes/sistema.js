@@ -52,32 +52,20 @@ module.exports = function (passport) {
                                 var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                                     title: pagina.title
                                 });
+                                var script = ""
+                                if (pagina.script)
+                                    script = pug.render(pagina.script);
 
-                                logger.debug("[" + pagina.script + "]")
-                                if (pagina.script) {
-                                    var script = pug.render(pagina.script, { title: pagina.title });
-                                    logger.debug(script)
-                                    return res.render(home.pagina, {
-                                        user: req.user,
-                                        data: data,
-                                        page: home.pagina,
-                                        title: pagina.title,
-                                        type: pagina.contenido.nombre,
-                                        idtype: pagina.contenido.id,
-                                        html: tmpl,
-                                        script: script
-                                    });
-                                } else {
-                                    return res.render(home.pagina, {
-                                        user: req.user,
-                                        data: data,
-                                        page: home.pagina,
-                                        title: pagina.title,
-                                        type: pagina.contenido.nombre,
-                                        idtype: pagina.contenido.id,
-                                        html: tmpl
-                                    });
-                                }
+                                return res.render(home.pagina, {
+                                    user: req.user,
+                                    data: data,
+                                    page: home.pagina,
+                                    title: pagina.title,
+                                    type: pagina.contenido.nombre,
+                                    idtype: pagina.contenido.id,
+                                    html: tmpl,
+                                    script: script
+                                });
                             }).catch(function (err) {
                                 logger.error(err);
                             });
@@ -129,12 +117,7 @@ module.exports = function (passport) {
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title
                     });
-                    //logger.debug(tmpl)
-
-                    //logger.debug(pagina.script)
                     var script = pug.render(pagina.script);
-                    logger.debug("[" + script+ "]")
-
                     return res.render(home.pagina, {
                         user: req.user,
                         data: req.session.passport.sidebar,
@@ -142,7 +125,8 @@ module.exports = function (passport) {
                         title: pagina.title,
                         type: pagina.contenido.nombre,
                         idtype: pagina.contenido.id,
-                        html: tmpl
+                        html: tmpl,
+                        script: script
                     });
 
                 }).catch(function (err) {
