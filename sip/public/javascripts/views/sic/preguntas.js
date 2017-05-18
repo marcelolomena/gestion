@@ -84,18 +84,18 @@ var gridPreguntas = {
             height: "auto",
             autowidth: true,
             shrinkToFit: true,
-            loadonce: true,
-            onSelectRow: editRow,
+            //loadonce: true,
+            //onSelectRow: editRow,
             //width: 1000,
             //rownumbers: true,
-            //onSelectRow: function (id) {
-            //    var getID = $(this).jqGrid('getCell', id, 'id');
-            //},
+            onSelectRow: function (id) {
+                var getID = $(this).jqGrid('getCell', id, 'id');
+            },
             viewrecords: true,
             caption: "Preguntas"
         });
 
-        
+        /*
         var lastSelection;
 
         function editRow(id) {
@@ -105,7 +105,7 @@ var gridPreguntas = {
                 grid.jqGrid('editRow', id, { keys: true, focusField: 4 });
                 lastSelection = id;
             }
-        }
+        }*/
 
         $gridTab.jqGrid('navGrid', '#navGridPre', { edit: false, add: true, del: true, search: false },
             {

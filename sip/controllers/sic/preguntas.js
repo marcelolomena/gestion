@@ -32,7 +32,6 @@ exports.action = function (req, res) {
                     if (!err) {
                         return res.json({ id: req.body.idsolicitudcotizacion, idproveedor: req.body.idproveedor, success: true });
                     } else {
-                        logger.error(err)
                         return res.json({ id: preguntaproveedor.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
                     }
                 });
@@ -330,7 +329,6 @@ exports.listresponsablesnew = function (req, res) {
                 }).then(function (preguntaproveedor) {
                     return res.json({ records: records, total: total, page: page, rows: preguntaproveedor });
                 }).catch(function (err) {
-                    logger.error(err);
                     return res.json({ error_code: 1 });
                 });
             })

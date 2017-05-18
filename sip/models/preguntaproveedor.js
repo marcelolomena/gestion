@@ -24,14 +24,6 @@ module.exports = function (sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idresponsable: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'user',
-        key: 'uid'
-      }
-    },
     tipo: {
       type: DataTypes.STRING,
       allowNull: false
@@ -47,6 +39,10 @@ module.exports = function (sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    responsable: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {
       schema: 'sic', timestamps: false, tableName: 'preguntaproveedor'
