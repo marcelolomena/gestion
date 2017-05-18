@@ -53,6 +53,9 @@ module.exports = function (passport) {
                                     title: pagina.title
                                 });
 
+                                var script = pug.renderFile(pagina.contenido.script);
+                                logger.debug(script)
+
                                 return res.render(home.pagina, {
                                     user: req.user,
                                     data: data,
@@ -113,6 +116,9 @@ module.exports = function (passport) {
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title
                     });
+
+                    var script = pug.renderFile(pagina.contenido.script);
+                    logger.debug(script)
 
                     return res.render(home.pagina, {
                         user: req.user,
