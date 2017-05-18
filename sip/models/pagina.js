@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    idtipo: {
+    idcontenido: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -23,7 +23,19 @@ module.exports = function(sequelize, DataTypes) {
     title: {
       type: DataTypes.STRING,
       allowNull: true
-    }
+    },
+    idsistema: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'sistema',
+        key: 'id'
+      }
+    }/*,
+    script: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }*/
   }, {
     schema: 'sip',timestamps: false,tableName: 'pagina'
   });

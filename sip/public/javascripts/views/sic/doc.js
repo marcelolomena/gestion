@@ -174,6 +174,12 @@ var gridDoc = {
             ],
             rowNum: 20,
             pager: '#navGrid',
+            subGrid: true,
+            subGridRowExpanded: showSubGridaprobaciondoc,
+            subGridOptions: {
+                plusicon: "glyphicon glyphicon-hand-right",
+                minusicon: "glyphicon glyphicon-hand-down"
+            },
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
@@ -315,6 +321,179 @@ var gridDoc = {
     }
 }
 
+function showSubGridaprobaciondoc(subgrid_id, row_id) {
+    gridabrobaciondoc(subgrid_id, row_id, 'aprobacionesdoc');
+}
+
+function gridabrobaciondoc(parentRowID, parentRowKey, suffix) {
+    var subgrid_id = parentRowID;
+    var row_id = parentRowKey;
+    var subgrid_table_id, pager_id, toppager_id;
+    subgrid_table_id = subgrid_id + '_t';
+    pager_id = 'p_' + subgrid_table_id;
+    toppager_id = subgrid_table_id + '_toppager';
+    if (suffix) {
+        subgrid_table_id += suffix;
+        pager_id += suffix;
+    }
+
+    var oldRadio = ""
+
+    var tmplPF = "<div id='responsive-form' class='clearfix'>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Tipo Aprobación {tipoaprobacion}</div>";
+    tmplPF += "<div class='column-half'><span style='color: red'>*</span>Observación {observacion}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' style='display: none;'>";
+    tmplPF += "</div>";
+
+    tmplPF += "<hr style='width:100%;'/>";
+    tmplPF += "<div> {sData} {cData}  </div>";
+    tmplPF += "</div>";
+    var childGridID = subgrid_table_id;
+    var childGridPagerID = pager_id;
+    var childGridURL = "/sic/listaaprobaciondocumento/" + parentRowKey + "/list";
+
+    var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+    console.log("la grilla padre: " + grillapadre)
+    var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+    console.log("la rowData : " + rowData)
+    var parentClase = rowData.id;
+    console.log("la parentClase : " + parentClase)
+    var parentSolicitud = subgrid_id.split("_")[2]
+    console.log("la parentSolicitud : " + parentSolicitud)
+    
+    var modelSubcriterios = [
+        { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'iddocumentocotizacion', name: 'iddocumentocotizacion', hidden: true },
+        { name: 'Nombre', width: 100, search: false, editable: true, hidden: false, formatter: returnResponsable, },
+        {
+            label: 'Tipo Aprobación', name: 'tipoaprobacion', search: false, editable: true, hidden: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemAprobacion
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.tipoaprobacion;
+                if (val == 1) {
+                    dato = 'Aceptado';
+                } else if (val == 0) {
+                    dato = 'Rechazado';
+                }
+                return dato;
+            }
+        },
+        {
+            label: 'Observación', name: 'observacion', width: 250, align: 'left',
+            search: true, editable: true, editoptions: { rows: "2", cols: "50" },
+            editrules: { required: true }, edittype: "textarea", hidden: false
+
+        },
+
+    ];
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        rowNum: 20,
+        datatype: "json",
+        caption: 'Aprobaciones',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
+        page: 1,
+        colModel: modelSubcriterios,
+        viewrecords: true,
+        styleUI: "Bootstrap",
+        regional: 'es',
+        height: 'auto',
+        pager: "#" + childGridPagerID,
+
+        editurl: '/sic/actionaprobaciondoc/' + parentSolicitud + '/' + parentClase,
+        //editurl: '/sic/listaaprobaciondocumento/action',
+        gridComplete: function () {
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "nombre": "No hay datos" });
+            }
+        }
+    });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+    },
+        {
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            width: 800,
+            editCaption: "Modificar Aprobación",
+            template: tmplPF,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentClase, abuelo: parentSolicitud };
+            },
+            
+            
+        },
+        {
+            closeAfterAdd: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            width: 800,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Agregar Aprobación",
+            template: tmplPF,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentClase, abuelo: parentSolicitud };
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+
+
+
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Eliminar Aprobación",
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentClase, abuelo: parentSolicitud };
+            },
+        },
+        {
+            recreateFilter: true
+        }
+    );
+
+
+}
+
+
 
 function returnDocLinkDoc(cellValue, options, rowdata, parentRowKey) {
     if (rowdata.nombrearchivo != "") {
@@ -392,3 +571,11 @@ function getLabelValue(e, action, textvalue) {
         console.log("o nada??")
     }
 }
+
+function returnResponsable(cellValue, options, rowdata, action) {
+    if (rowdata.user != null)
+        return rowdata.user.first_name + ' ' + rowdata.user.last_name;
+    else
+        return '';
+}
+

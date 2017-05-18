@@ -152,6 +152,20 @@ var sipLibrary = {
         }
         //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+    }, radioElemAprobacion: function(value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="tipoaprobacion" value="1"',
+            breakline = '/>Aceptado</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="tipoaprobacion" value="0"',
+            endnaradio = '/>Rechazado</label>';
+
+        if (value === 'Aceptado') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'Rechazado') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        //return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
     }
     , currencyFormatter: function(cellvalue, options, rowObject) {
         var formatoptions = options.colModel.formatoptions || {};

@@ -2,8 +2,8 @@ $(document).ready(function () {
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_idcui'>CUI<span style='color:red'>*</span>{idcui}</div>";
-    t1 += "<div class='column-half' id='d_idtecnico'>Técnico<span style='color:red'>*</span>{idtecnico}</div>";
+    t1 += "<div class='column-half' id='d_idcui'>CUI Responsable Proyecto<span style='color:red'>*</span>{idcui}</div>";
+    t1 += "<div class='column-half' id='d_idtecnico'>Técnico Responsable<span style='color:red'>*</span>{idtecnico}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
@@ -142,7 +142,7 @@ $(document).ready(function () {
         },
         { label: 'CUI', name: 'cui', jsonmap: "estructuracui.cui", width: 80, align: 'left', search: true, sortable: false, editable: true, hidden: false },
         {
-            label: 'Técnico', name: 'idtecnico', search: false, editable: true, hidden: true,
+            label: 'Técnico Responsable', name: 'idtecnico', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Técnico--"
@@ -639,7 +639,7 @@ $(document).ready(function () {
                     });
                     */
                     $("#idtipo", form).attr('disabled', 'disabled');
-                    $("#idgrupo", form).attr('disabled', 'disabled');
+                    //$("#idgrupo", form).attr('disabled', 'disabled');
                 }, 500);
             }
         }, {

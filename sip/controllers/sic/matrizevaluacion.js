@@ -14,6 +14,14 @@ var bulk = require("../../utils/bulk");
 var nodeExcel = require('excel-export');
 
 exports.matriznivel1 = function (req, res) {
+    matrizEvaluacion(req.params.id, function (err, data) {
+        //console.dir(data)
+        res.json({ rows: data });
+    })
+};
+
+
+var matrizEvaluacion = function (id, callback) {
     sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX)
 
 SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
@@ -30,7 +38,7 @@ SET @sql = 'SELECT idcriterioevaluacion, idserviciorequerido, porcentaje, nombre
               SELECT idcriterioevaluacion, idserviciorequerido, razonsocial, nota
                 FROM sic.notaevaluaciontecnica r
 				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido= `+req.params.id+ ` 
+				where idserviciorequerido= `+ id + ` 
             ) s
 			join sic.criterioevaluacion x on s.idcriterioevaluacion = x.id
 			
@@ -41,14 +49,57 @@ SET @sql = 'SELECT idcriterioevaluacion, idserviciorequerido, porcentaje, nombre
 
 EXECUTE(@sql)
     `,
-        { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json({rows: user});
+        { replacements: { idserviciorequerido: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (data) {
+        //res.json({rows: user});
+        callback(undefined, data);
     }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
+        //logger.error(err)
+        //res.json({ error_code: 1 });
+        callback(err, undefined);
     });
-};
+
+}
+
+var matrizEvaluacionEconomica = function (id, callback) {
+    sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX)
+
+SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
+            FROM sic.cotizacionservicio a
+			join sip.proveedor b on a.idproveedor=b.id
+			where a.idserviciorequerido=:idserviciorequerido
+            ORDER BY 1
+            FOR XML PATH(''), TYPE
+            ).value('.', 'NVARCHAR(MAX)'),1,1,'')
+
+SET @sql = 'SELECT moneda, ' + @cols + '
+              FROM
+            (
+              SELECT idmoneda, razonsocial, idserviciorequerido, costototal
+                FROM sic.cotizacionservicio r
+				join sip.proveedor x on r.idproveedor = x.id
+				where idserviciorequerido= `+ id + `
+            ) s
+			join sip.moneda x on s.idmoneda = x.id
+			
+            PIVOT
+            (
+              MAX(costototal) FOR razonsocial IN (' + @cols + ')
+            ) p'
+
+EXECUTE(@sql)
+    `,
+        { replacements: { idserviciorequerido: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (data) {
+        //res.json({rows: user});
+        callback(undefined, data);
+    }).catch(function (err) {
+        //logger.error(err)
+        //res.json({ error_code: 1 });
+        callback(err, undefined);
+    });
+
+}
 
 
 exports.columnas = function (req, res) {
@@ -86,7 +137,7 @@ SET @sql = 'SELECT idcriterioevaluacion2, nombre, porcentaje, ' + @cols + '
                 FROM sic.notaevaluaciontecnica2 r
 				join sip.proveedor x on r.idproveedor = x.id
 				join sic.criterioevaluacion2 t on t.id=r.idcriterioevaluacion2
-				where t.idcriterioevaluacion=`+req.params.id+`
+				where t.idcriterioevaluacion=`+ req.params.id + `
             ) s
 			join sic.criterioevaluacion2 x on s.idcriterioevaluacion2 = x.id
 			
@@ -99,7 +150,7 @@ EXECUTE(@sql)
     `,
         { replacements: { idcriterioevaluacion: req.params.id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
-        res.json({rows: user});
+        res.json({ rows: user });
     }).catch(function (err) {
         logger.error(err)
         res.json({ error_code: 1 });
@@ -123,153 +174,145 @@ exports.columnaseco = function (req, res) {
 };
 
 exports.matrizeco = function (req, res) {
-    sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX)
-
-SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
-            FROM sic.cotizacionservicio a
-			join sip.proveedor b on a.idproveedor=b.id
-			where a.idserviciorequerido=:idserviciorequerido
-            ORDER BY 1
-            FOR XML PATH(''), TYPE
-            ).value('.', 'NVARCHAR(MAX)'),1,1,'')
-
-SET @sql = 'SELECT moneda, ' + @cols + '
-              FROM
-            (
-              SELECT idmoneda, razonsocial, idserviciorequerido, costototal
-                FROM sic.cotizacionservicio r
-				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido= `+req.params.id+`
-            ) s
-			join sip.moneda x on s.idmoneda = x.id
-			
-            PIVOT
-            (
-              MAX(costototal) FOR razonsocial IN (' + @cols + ')
-            ) p'
-
-EXECUTE(@sql)
-    `,
-        { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json({rows: user});
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-    });
+    matrizEvaluacionEconomica(req.params.id, function (err, data) {
+        //console.dir(data)
+        res.json({ rows: data });
+    })
 };
 
-exports.matriztotal = function (req, res) {
-    sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX),  @sqlfinal NVARCHAR(MAX), @query NVARCHAR(MAX), @alias NVARCHAR(MAX), @num INT = 0
+exports.matriztotalajustada = function (req, res) {
+    matrizEvaluacion(req.params.id, function (err, data) {
+        //console.dir(data)
+        //res.json({ rows: data });
+        var total = []
+        var totales = []
+        var proveedores = []
+        for (var i = 0; i < data.length; i++) {
+            var porcentaje = parseFloat(data[i].porcentaje) / 100
+            var fila = JSON.stringify(data[i]).replace('}', '').split(",")
 
+            var datum = []
+            for (var j = 4; j < fila.length; j++) {
+                datum.push(porcentaje * parseFloat(fila[j].split(":")[1]))
+                if (i == 0)
+                    proveedores.push(fila[j].split(":")[0].replace(/["']/g, ""))
+            }
+            total.push(datum)
+        }
 
-SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
-            FROM sic.notaevaluaciontecnica a
-			join sip.proveedor b on a.idproveedor=b.id
-			where a.idserviciorequerido=:idserviciorequerido
-            ORDER BY 1
-            FOR XML PATH(''), TYPE
-            ).value('.', 'NVARCHAR(MAX)'),1,1,'')
+        console.dir(total)
+        var sum = (r, a) => r.map((b, i) => a[i] + b);
+        var tot1 = total.reduce(sum)
+        console.log("EL TOTAL" + tot1);
+        var maxim = tot1.max()
+        console.log(maxim);
+        var ponderados = []
+        for (var k = 0; k < tot1.length; k++) {
+            if (tot1[k] === maxim) {
+                ponderados.push(100)
+            } else {
+                ponderados.push((tot1[k] / maxim) * 100)
+            }
+        }
+        var ponderados2 = []
+        for (var k = 0; k < tot1.length; k++) {
+            ponderados2.push(tot1[k])
 
---print (@cols)
-DECLARE @intBandera INT =  0
-DECLARE @intTamano INT =  0
-DECLARE @strValor NVARCHAR(MAX) = ''
-DECLARE @strCadena NVARCHAR(MAX) = @cols
+        }
+        console.dir(proveedores)
+        var eljson = []
+        for (var l = 0; l < proveedores.length; l++) {
+            var item = {}
+            var name = proveedores[l]
+            item[name] = ponderados[l]
+            eljson.push(item)
 
-DECLARE @sumas table (suma NVARCHAR(MAX));
- 
-WHILE @intBandera = 0
-BEGIN
-  BEGIN TRY
-    SET @strValor = RIGHT(LEFT(@strCadena,CHARINDEX(',', @strCadena,1)-1),CHARINDEX(',', @strCadena,1)-1)
-    
+        }
+        console.dir(eljson)
+        var patron = /},{/g
+        var o = JSON.stringify(eljson).replace(patron, ",");
+        console.dir(JSON.parse(o));
 
-	SET @sql = ' select SUM('+@strValor+') as '+@strValor+' from (
-			SELECT idcriterioevaluacion, idserviciorequerido, nombre, ' + @cols + '
-              FROM
-            (
-              SELECT idcriterioevaluacion, idserviciorequerido, razonsocial, nombre, nota*(porcentaje/100) as resultado
-                FROM sic.notaevaluaciontecnica r
-				join sip.proveedor x on r.idproveedor = x.id
-				join sic.criterioevaluacion l on r.idcriterioevaluacion = l.id
-				where idserviciorequerido=`+req.params.id+` 
-            ) s
-			--join sic.criterioevaluacion x on s.idcriterioevaluacion = x.id
-			
-            PIVOT
-            (
-              MAX(resultado) FOR razonsocial IN (' + @cols + ')
-            ) p ) a'
+        var eljson2 = []
+        for (var l = 0; l < proveedores.length; l++) {
+            var item = {}
+            var name = proveedores[l]
+            item[name] = ponderados2[l]
+            eljson2.push(item)
 
-			insert into @sumas values (@sql)
+        }
+        console.dir(eljson2)
+        var o2 = JSON.stringify(eljson2).replace(patron, ",");
+        console.dir(JSON.parse(o2));
 
-    SET @intTamano = LEN(@strValor)
-	 
- 
-    SET @strCadena = SUBSTRING(@strCadena,@intTamano + 2, LEN(@strCadena)) 
-  END TRY
-  BEGIN CATCH 
-    SET @sql = ' select SUM('+@strCadena+') as '+@strCadena+' from (
-			SELECT idcriterioevaluacion, idserviciorequerido, nombre, ' + @cols + '
-              FROM
-            (
-              SELECT idcriterioevaluacion, idserviciorequerido, razonsocial, nombre, nota*(porcentaje/100) as resultado
-                FROM sic.notaevaluaciontecnica r
-				join sip.proveedor x on r.idproveedor = x.id
-				join sic.criterioevaluacion l on r.idcriterioevaluacion = l.id
-				where idserviciorequerido=`+req.params.id+` 
-            ) s
-			--join sic.criterioevaluacion x on s.idcriterioevaluacion = x.id
-			
-            PIVOT
-            (
-              MAX(resultado) FOR razonsocial IN (' + @cols + ')
-            ) p ) a'
-	insert into @sumas values (@sql)
-    SET @intBandera = 1
-  END CATCH 
-END
-SET @sqlfinal = 'select ''Calificación técnica no ajustada'' as porcentaje, * from ( '
-
-declare CURSOR1 cursor for 
-select suma from @sumas 
-open CURSOR1
-fetch next from CURSOR1 
-into @query 
-while @@fetch_status = 0 
-        begin 
-		SET @num = @num+1
-        SET @alias = 'alias'+CONVERT(varchar(10), @num)
-		SET @sqlfinal = @sqlfinal+@query+') as '+@alias+',('
-
-        fetch next from CURSOR1 
-        into @query 
-        end 
-close CURSOR1 
-deallocate CURSOR1
-
-SET @sqlfinal = SUBSTRING (@sqlfinal, 1, Len(@sqlfinal) - 2 )
-
---PRINT (@sqlfinal)
-EXECUTE (@sqlfinal)
-    `,
-        { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
-    ).then(function (user) {
-        res.json({rows: user});
-    }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-    });
+        res.json({ rows: JSON.parse(o), rows2: JSON.parse(o2) });
+    })
 };
 
 exports.matriztotaleco = function (req, res) {
+
+    matrizEvaluacionEconomica(req.params.id, function (err, data) {
+        //console.dir(data)
+        //res.json({ rows: data });
+        var total = []
+        var totales = []
+        var proveedores = []
+        
+            var moneda = data[0].moneda
+            var fila = JSON.stringify(data[0]).replace('}', '').split(",")
+
+            var datum = []
+            for (var j = 1; j < fila.length; j++) {
+                datum.push(parseFloat(fila[j].split(":")[1]))
+                proveedores.push(fila[j].split(":")[0].replace(/["']/g, ""))
+            }
+            total.push(datum)
+        
+
+        console.dir(total)
+        var sum = (r, a) => r.map((b, i) => a[i] + b);
+        var tot1 = total.reduce(sum)
+        console.log("EL TOTAL" + tot1);
+        var maxim = tot1.min()
+        console.log(maxim);
+        var ponderados = []
+        for (var k = 0; k < tot1.length; k++) {
+            if (tot1[k] === maxim) {
+                ponderados.push(100)
+            } else {
+                ponderados.push(( maxim/tot1[k]) * 100)
+            }
+        }
+        
+        console.dir(proveedores)
+        var eljson = []
+        for (var l = 0; l < proveedores.length; l++) {
+            var item = {}
+            var name = proveedores[l]
+            item[name] = ponderados[l]
+            eljson.push(item)
+
+        }
+        console.dir(eljson)
+        var patron = /},{/g
+        var o = JSON.stringify(eljson).replace(patron, ",");
+        console.dir(JSON.parse(o));
+
+        
+        
+
+        res.json({ rows: JSON.parse(o) });
+    })
+
+
+    
+    /*
     sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX), @costobarato float, @sqlfinal NVARCHAR(MAX), @query NVARCHAR(MAX), @alias NVARCHAR(MAX), @num INT = 0
 
 SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
             FROM sic.cotizacionservicio a
 			join sip.proveedor b on a.idproveedor=b.id
-			where a.idserviciorequerido=`+req.params.id+`
+			where a.idserviciorequerido=`+ req.params.id + `
             ORDER BY 1
             FOR XML PATH(''), TYPE
             ).value('.', 'NVARCHAR(MAX)'),1,1,'')
@@ -284,7 +327,7 @@ DECLARE @sumas table (suma NVARCHAR(MAX));
 
 SELECT @proveedorbarato=idproveedor, @costobarato = costototal
 FROM sic.cotizacionservicio
-where idserviciorequerido=`+req.params.id+` and costototal = (SELECT MIN(costototal) FROM sic.cotizacionservicio where idserviciorequerido=`+req.params.id+`)
+where idserviciorequerido=`+ req.params.id + ` and costototal = (SELECT MIN(costototal) FROM sic.cotizacionservicio where idserviciorequerido=` + req.params.id + `)
 
  
 WHILE @intBandera = 0
@@ -305,7 +348,7 @@ BEGIN
 			SELECT idmoneda, razonsocial, idserviciorequerido, 100 as costototal
                 FROM sic.cotizacionservicio r
 				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido=`+req.params.id+` 
+				where idserviciorequerido=`+ req.params.id + ` 
 				) s
 			join sip.moneda x on s.idmoneda = x.id
             PIVOT
@@ -324,10 +367,10 @@ BEGIN
 
 			SELECT idmoneda, razonsocial, idserviciorequerido, ((SELECT costototal
 FROM sic.cotizacionservicio
-where idserviciorequerido=`+req.params.id+` and costototal = (SELECT MIN(costototal) FROM sic.cotizacionservicio where idserviciorequerido=`+req.params.id+`))/costototal)*100 as costototal
+where idserviciorequerido=`+ req.params.id + ` and costototal = (SELECT MIN(costototal) FROM sic.cotizacionservicio where idserviciorequerido=` + req.params.id + `))/costototal)*100 as costototal
                 FROM sic.cotizacionservicio r
 				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido=`+req.params.id+` 
+				where idserviciorequerido=`+ req.params.id + ` 
 				) s
 			join sip.moneda x on s.idmoneda = x.id
             PIVOT
@@ -358,7 +401,7 @@ where idserviciorequerido=`+req.params.id+` and costototal = (SELECT MIN(costoto
 			SELECT idmoneda, razonsocial, idserviciorequerido, 100 as costototal
                 FROM sic.cotizacionservicio r
 				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido=`+req.params.id+` 
+				where idserviciorequerido=`+ req.params.id + ` 
 				) s
 			join sip.moneda x on s.idmoneda = x.id
             PIVOT
@@ -377,10 +420,10 @@ where idserviciorequerido=`+req.params.id+` and costototal = (SELECT MIN(costoto
 
 			SELECT idmoneda, razonsocial, idserviciorequerido, ((SELECT costototal
 FROM sic.cotizacionservicio
-where idserviciorequerido=`+req.params.id+` and costototal = (SELECT MIN(costototal) FROM sic.cotizacionservicio where idserviciorequerido=`+req.params.id+`))/costototal)*100 as costototal
+where idserviciorequerido=`+ req.params.id + ` and costototal = (SELECT MIN(costototal) FROM sic.cotizacionservicio where idserviciorequerido=` + req.params.id + `))/costototal)*100 as costototal
                 FROM sic.cotizacionservicio r
 				join sip.proveedor x on r.idproveedor = x.id
-				where idserviciorequerido=`+req.params.id+` 
+				where idserviciorequerido=`+ req.params.id + ` 
 				) s
 			join sip.moneda x on s.idmoneda = x.id
             PIVOT
@@ -424,21 +467,22 @@ EXECUTE(@sqlfinal)
     `,
         { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
-        res.json({rows: user});
+        res.json({ rows: user });
     }).catch(function (err) {
         logger.error(err)
         res.json({ error_code: 1 });
     });
+    */
 };
 
-exports.matriztotalajustada = function (req, res) {
+exports.matriztotal = function (req, res) {
     sequelize.query(`DECLARE @cols NVARCHAR(MAX), @sql NVARCHAR(MAX),  @sqlfinal NVARCHAR(MAX), @query NVARCHAR(MAX), @alias NVARCHAR(MAX), @num INT = 0
 
 
 SET @cols = STUFF((SELECT DISTINCT ',' + QUOTENAME(b.razonsocial)
             FROM sic.notaevaluaciontecnica a
 			join sip.proveedor b on a.idproveedor=b.id
-			where a.idserviciorequerido=`+req.params.id+`
+			where a.idserviciorequerido=`+ req.params.id + `
             ORDER BY 1
             FOR XML PATH(''), TYPE
             ).value('.', 'NVARCHAR(MAX)'),1,1,'')
@@ -465,7 +509,7 @@ BEGIN
                 FROM sic.notaevaluaciontecnica r
 				join sip.proveedor x on r.idproveedor = x.id
 				join sic.criterioevaluacion l on r.idcriterioevaluacion = l.id
-				where idserviciorequerido=`+req.params.id+` 
+				where idserviciorequerido=`+ req.params.id + ` 
             ) s
 			--join sic.criterioevaluacion x on s.idcriterioevaluacion = x.id
 			
@@ -490,7 +534,7 @@ BEGIN
                 FROM sic.notaevaluaciontecnica r
 				join sip.proveedor x on r.idproveedor = x.id
 				join sic.criterioevaluacion l on r.idcriterioevaluacion = l.id
-				where idserviciorequerido=`+req.params.id+` 
+				where idserviciorequerido=`+ req.params.id + ` 
             ) s
 			--join sic.criterioevaluacion x on s.idcriterioevaluacion = x.id
 			
@@ -528,7 +572,7 @@ EXECUTE (@sqlfinal)
     `,
         { replacements: { idserviciorequerido: req.params.id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (user) {
-        res.json({rows: user});
+        res.json({ rows: user });
     }).catch(function (err) {
         logger.error(err)
         res.json({ error_code: 1 });

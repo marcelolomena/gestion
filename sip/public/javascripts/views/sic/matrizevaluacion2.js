@@ -49,111 +49,147 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
-setTimeout(function () {
-    $("#" + childGridID).jqGrid({
-        url: childGridURL,
-        mtype: "GET",
-        rowNum: 20,
-        datatype: "json",
-        caption: 'Evaluación Técnica (Nivel 1)',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
-        page: 1,
-        colModel: colmodel,
-        viewrecords: true,
-        styleUI: "Bootstrap",
-        regional: 'es',
-        height: 'auto',
-        //pager: "#" + childGridPagerID,
-        subGrid: true,
-        subGridRowExpanded: showSubGridsEva2,
-        subGridOptions: {
-            plusicon: "glyphicon-hand-right",
-            minusicon: "glyphicon-hand-down"
-        },
+    setTimeout(function () {
+        $("#" + childGridID).jqGrid({
+            url: childGridURL,
+            mtype: "GET",
+            rowNum: 20,
+            datatype: "json",
+            caption: 'Evaluación Técnica (Nivel 1)',
+            //width: null,
+            //shrinkToFit: false,
+            autowidth: true,  // set 'true' here
+            shrinkToFit: true, // well, it's 'true' by default
+            page: 1,
+            colModel: colmodel,
+            viewrecords: true,
+            styleUI: "Bootstrap",
+            regional: 'es',
+            height: 'auto',
+            //pager: "#" + childGridPagerID,
+            subGrid: true,
+            footerrow: true,
+            //userDataOnFooter: true,
+            subGridRowExpanded: showSubGridsEva2,
+            subGridOptions: {
+                plusicon: "glyphicon-hand-right",
+                minusicon: "glyphicon-hand-down"
+            },
+            editurl: '/sic/cotizacionservicio/action',
+            gridComplete: function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/sic/matriztotalajustada/" + parentRowKey + "/list",
+                    success: function (data) {
+                        var elfooter = '<tr role="row" class="jqgrow ui-row-ltr" >'
+                            + '<td role=\"gridcell\" style=\"width: 25px;\">&nbsp;</td>'
+                            + '<td role=\"gridcell\">&nbsp;</td>'
+                            + '<td role=\"gridcell\">Calificación Técnica No Ajustada</td>'
+                        jQuery.each(data.rows2[0], function (key, val) {
+                            elfooter += '<td role=\"gridcell\">' + val + '</td>'
+                        });
+                        elfooter += '</tr>'
 
-        editurl: '/sic/cotizacionservicio/action',
-        gridComplete: function () {
-            var recs = $("#" + childGridID).getGridParam("reccount");
-            if (isNaN(recs) || recs == 0) {
+                        $("[id*='evatec'] .ui-jqgrid-ftable").find('tbody')
+                            .append(elfooter
+                            );
+                        /*
+                                                $(".ui-jqgrid-ftable").find('tbody')
+                                                    .append(elfooter
+                                                    );
+                        */
+                        var elfooter2 = '<tr role="row" class="jqgrow ui-row-ltr" >'
+                            + '<td role=\"gridcell\" style=\"width: 25px;\">&nbsp;</td>'
+                            + '<td role=\"gridcell\">&nbsp;</td>'
+                            + '<td role=\"gridcell\"><b>Calificación Técnica Ajustada</b></td>'
+                        jQuery.each(data.rows[0], function (key, val) {
+                            elfooter2 += '<td role=\"gridcell\"><b>' + val.toFixed(2) + '</b></td>'
+                        });
+                        elfooter2 += '</tr>'
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "proveedor.razonsocial": "No hay datos" });
+                        $("[id*='evatec'] .ui-jqgrid-ftable").find('tbody')
+                            .append(elfooter2
+                            );
+/*
+                        $(".ui-jqgrid-ftable").find('tbody')
+                            .append(elfooter2
+                            );
+*/                            
+                        $('.footrow').hide();
+                    }
+                });
             }
-        }
-    });
-    // ocultar columnas $('.ui-jqgrid-hdiv').hide();
-   
+        });
 
-    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    },
-        {
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Cotización ",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
-            },
+
+        $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+            edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
         },
-        {
-            closeAfterAdd: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Cotización",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
+            {
+                closeAfterEdit: true,
+                recreateForm: true,
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                editCaption: "Modificar Cotización ",
+                template: tmplPF,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentSolicitud };
+                },
             },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (parseInt(postdata.idproveedor) == 0) {
-                    return [false, "Proveedor: Seleccionar un proveedor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
-
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Respuesta",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                console.dir(result);
-                if (result.sucess) {
-                    return [true, "", ""];
-                } else {
-                    return [false, result.error_text, ""];
-
-                }
+            {
+                closeAfterAdd: true,
+                recreateForm: true,
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                addCaption: "Agregar Cotización",
+                template: tmplPF,
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                onclickSubmit: function (rowid) {
+                    return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+                },
+                beforeSubmit: function (postdata, formid) {
+                    if (parseInt(postdata.idproveedor) == 0) {
+                        return [false, "Proveedor: Seleccionar un proveedor", ""];
+                    } else {
+                        return [true, "", ""]
+                    }
+                },
 
             },
-            onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+            {
+                closeAfterDelete: true,
+                recreateForm: true,
+                ajaxEditOptions: sipLibrary.jsonOptions,
+                serializeEditData: sipLibrary.createJSON,
+                addCaption: "Eliminar Respuesta",
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                }, afterSubmit: function (response, postdata) {
+                    var json = response.responseText;
+                    var result = JSON.parse(json);
+                    console.dir(result);
+                    if (result.sucess) {
+                        return [true, "", ""];
+                    } else {
+                        return [false, result.error_text, ""];
+
+                    }
+
+                },
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentSolicitud };
+                },
             },
-        },
-        {
-            recreateFilter: true
-        }
-    );
- }, 1000);
+            {
+                recreateFilter: true
+            }
+        );
+    }, 1000);
     function showSubGridsEva2(subgrid_id, row_id) {
         var nivel = 0;
         $.ajax({

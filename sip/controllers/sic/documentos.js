@@ -343,3 +343,159 @@ exports.documentousuario = function (req, res) {
         res.json({ error: 1 });
     });
 }
+
+exports.listaaprobaciondoc = function (req, res) {
+
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.aprobaciondocumento.belongsTo(models.documentoscotizacion, { foreignKey: 'iddocumentocotizacion' });
+            models.aprobaciondocumento.belongsTo(models.user, { foreignKey: 'idusuario' });
+            models.aprobaciondocumento.count({
+                where: {
+                    iddocumentocotizacion: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.aprobaciondocumento.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        iddocumentocotizacion: id
+                    },
+                    include: [
+                        {
+                            model: models.user
+                        },
+                        {
+                            model: models.documentoscotizacion
+                        },
+
+                    ]
+                }).then(function (aprobaciondocumento) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({ records: records, total: total, page: page, rows: aprobaciondocumento });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+
+};
+
+exports.actionaprobaciondoc = function (req, res) {
+    var action = req.body.oper;
+    var iddocumentocotizacion = req.body.parent_id;
+    var idsolicitudcotizacion = req.body.abuelo;
+    console.dir(iddocumentocotizacion);
+    console.dir(idsolicitudcotizacion);
+    switch (action) {
+        case "add":
+            models.aprobaciondocumento.create({
+                iddocumentocotizacion,
+                idusuario: req.session.passport.user,
+                nombrecorto: req.body.nombrecorto,
+                tipoaprobacion: req.body.tipoaprobacion,
+                observacion: req.body.observacion,
+                borrado: 1
+            }).then(function (aprobaciondocumento) {
+
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'aprobaciondocumento',
+                    aprobaciondocumento.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.aprobaciondocumento,
+                    function (err, data) {
+                        if (!err) {
+                            return res.json({ id: aprobaciondocumento.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        } else {
+                            logger.error(err)
+                            return res.json({ id: aprobaciondocumento.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                        }
+                    });
+
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false });
+            });
+            break;
+        case "edit":
+
+            bitacora.registrarhijo(
+                idsolicitudcotizacion,
+                'aprobaciondocumento',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.aprobaciondocumento,
+                function (err, data) {
+                    if (!err) {
+                        models.aprobaciondocumento.update({
+                            iddocumentocotizacion,
+                            idusuario: req.session.passport.user,
+                            nombrecorto: req.body.nombrecorto,
+                            tipoaprobacion: req.body.tipoaprobacion,
+                            observacion: req.body.observacion,
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (aprobaciondocumento) {
+                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                return res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        return res.json({ message: err.message, success: false });
+                    }
+                });
+
+            break;
+        case "del":
+            models.aprobaciondocumento.findAll({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (aprobaciondocumento) {
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'aprobaciondocumento',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.aprobaciondocumento,
+                    function (err, data) {
+                        if (!err) {
+                            models.aprobaciondocumento.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', success: true });
+                            }).catch(function (err) {
+                                return res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
+            })
+            break;
+    }
+}

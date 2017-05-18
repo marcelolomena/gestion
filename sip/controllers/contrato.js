@@ -384,13 +384,12 @@ exports.list = function (req, res) {
   var sidx = req.body.sidx;
   var sord = req.body.sord;
 
-  if (!sidx) {
-    sidx = "numero";
-    sord = "desc";
-  } else if (!sord) {
-    sord = "desc";
-  }
-  
+  if (!sidx)
+    sidx = "nombre";
+
+  if (!sord)
+    sord = "asc";
+
   var orden = "[contrato]." + sidx + " " + sord;
   
   console.log("***ORDER:"+orden);
