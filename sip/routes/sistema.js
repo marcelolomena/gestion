@@ -53,8 +53,8 @@ module.exports = function (passport) {
                                     title: pagina.title
                                 });
 
-                                var script = pug.renderFile(pagina.contenido.script);
-                                logger.debug(script)
+                                //var script = pug.renderFile(pagina.contenido.script);
+                                //logger.debug(script)
 
                                 return res.render(home.pagina, {
                                     user: req.user,
@@ -117,8 +117,8 @@ module.exports = function (passport) {
                         title: pagina.title
                     });
 
-                    var script = pug.renderFile(pagina.contenido.script);
-                    logger.debug(script)
+                    //var script = pug.renderFile(pagina.contenido.script);
+                    //logger.debug(script)
 
                     return res.render(home.pagina, {
                         user: req.user,
