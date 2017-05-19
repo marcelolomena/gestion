@@ -507,6 +507,40 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+    
+    $("#" + childGridID).jqGrid('navButtonAdd',  "#" + childGridPagerID, {
+        caption: "",
+        buttonicon: "glyphicon glyphicon glyphicon-check",
+        title: "Copiar SAP",
+        position: "last",
+        onClickButton: function () {
+            var grid = $("#" + childGridID)
+            var rowKey = grid.getGridParam("selrow");
+            var rowData = grid.getRowData(rowKey);
+
+            if (rowKey != null) {
+                $.ajax({
+                    url: "/presupuestoiniciativa/copiasap/" + rowData.id,
+                    dataType: 'json',
+                    async: false,
+                    success: function (j) {
+                        //var json = response.responseText;
+                        //var result = JSON.parse(json);
+                        console.log("j:" + j);
+                        if (j.error_code == 0) {
+                            $("#" + childGridID).trigger("reloadGrid");
+                        } else {
+                            alert("No fue posible copiar la SAP");
+                        }
+                    }
+                });
+
+            } else {
+                alert("Debe seleccionar una fila");
+            }
+        }
+    });
+    
 }
 function showSubGrids2(subgrid_id, row_id) {
     gridTareasNuevosProyectos(subgrid_id, row_id, 'tareas');

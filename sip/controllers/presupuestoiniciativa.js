@@ -324,3 +324,17 @@ exports.getJefe = function (req, res) {
 
 };
 
+
+exports.copiaSAP = function (req, res) {
+
+  var iniciativabase = req.params.id;
+  console.log("**Iniciativa a copiar: "+iniciativabase);
+
+  sequelize.query('EXECUTE sip.CopiaSAPIniciativa ' + iniciativabase
+    + ';').then(function (response) {
+      res.json({ error_code: 0 });
+    }).error(function (err) {
+      res.json(err);
+    });
+
+};

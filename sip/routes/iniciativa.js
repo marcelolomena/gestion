@@ -237,6 +237,8 @@ module.exports = function (passport) {
 
     router.route('/iniciativasconsultaword')
         .get(isAuthenticated, iniciativaconsultaController.getWord);
+        
+     
                 
     return router;
 

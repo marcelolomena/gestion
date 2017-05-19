@@ -100,7 +100,7 @@ exports.getCUIServicio = function (req, res) {
 };
 
 exports.getProveedorCUI = function (req, res) {
-  sequelize.query('SELECT distinct a.idproveedor, b.razonsocial FROM sip.plantillapresupuesto a join sip.proveedor b on b.id=a.idproveedor where b.borrado = 1 and a.idcui=:idcui and a.idservicio=:idservicio',
+  sequelize.query('SELECT distinct a.idproveedor, b.razonsocial FROM sip.plantillapresupuesto a join sip.proveedor b on b.id=a.idproveedor where b.borrado = 1 and a.idcui=:idcui and a.idservicio=:idservicio order by b.razonsocial',
     { replacements: { idservicio: req.params.idservicio, idcui: req.params.idcui }, type: sequelize.QueryTypes.SELECT }
   ).then(function (user) {
     console.dir(user);
