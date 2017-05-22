@@ -35,7 +35,7 @@ function gridEva1E(parentRowID, parentRowKey, suffix) {
             colmodel.push({ label: 'Moneda', name: 'moneda', key: false, hidden: false })
 
             for (i = 0; i < jsonData.length; i++) {
-                colmodel.push({ label: jsonData[i].razonsocial, name: jsonData[i].razonsocial, key: false, hidden: false })
+                colmodel.push({ label: jsonData[i].razonsocial, name: jsonData[i].razonsocial, key: false, formatter: 'number', formatoptions: { decimalPlaces: 2 }, hidden: false })
             }
 
 
