@@ -41,9 +41,9 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     var childGridURL = "/sic/notaevaluaciontecnica/" + parentRowKey + "/list";
 
     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-    //console.log("la grilla padre: " + grillapadre)
+    console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    //console.log("la rowData : " + rowData)
+    console.log("la rowData : " + rowData)
     var parentSolicitud = rowData.idsolicitudcotizacion;
     var parentClaseEvaluacionTecnica = rowData.claseevaluaciontecnica;
     console.log("la parentClaseEvaluacionTecnica : " + parentClaseEvaluacionTecnica)
@@ -226,7 +226,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
         },
         {
@@ -240,7 +240,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
             beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
@@ -272,7 +272,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey , abuelo: parentSolicitud };
             },
         },
         {

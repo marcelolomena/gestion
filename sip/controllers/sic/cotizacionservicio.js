@@ -336,7 +336,8 @@ exports.listflujo = function (req, res) {
 
 exports.actionnota = function (req, res) {
     var action = req.body.oper;
-
+    var idsolicitudcotizacion = req.body.abuelo;
+    console.dir('ESTO ES UN IDSOLICITUDCOTIZACION: ' + idsolicitudcotizacion);
 
     switch (action) {
         case "add":
@@ -347,126 +348,94 @@ exports.actionnota = function (req, res) {
                 nota: req.body.nota,
                 comentario: req.body.comentario,
                 borrado: 1
-            }).then(function (foro) {
-                /*
+            }).then(function (notaevaluaciontecnica) {
                 bitacora.registrarhijo(
-                    req.body.idsolicitudcotizacion,
-                    'flujocotizacion',
-                    foro.id,
+                    idsolicitudcotizacion,
+                    'notaevaluaciontecnicalv1',
+                    notaevaluaciontecnica.id,
                     'insert',
                     req.session.passport.user,
                     new Date(),
-                    models.flujocotizacion,
+                    models.notaevaluaciontecnica,
                     function (err, data) {
                         if (!err) {
-                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            return res.json({ id: notaevaluaciontecnica.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
                             logger.error(err)
-                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
-                        }
-                    }
-                )
-                */
-                return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ message: err.message, success: false })
-            });
-            break;
-        case "edit":
-            /*
-                bitacora.registrarhijo(
-                    req.body.idsolicitudcotizacion,
-                    'flujocotizacion',
-                    req.body.id,
-                    'update',
-                    req.session.passport.user,
-                    new Date(),
-                    models.flujocotizacion,
-                    function (err, data) {
-                        if (!err) {
-                            models.flujocotizacion.update({
-                                periodo: req.body.periodo,
-                                glosaitem: req.body.glosaitem,
-                                costoorigen: costoorigen,
-                            }, {
-                                    where: {
-                                        id: req.body.id
-                                    }
-                                }).then(function (respuestaforo) {
-                                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-                                }).catch(function (err) {
-                                    logger.error(err)
-                                    res.json({ message: err.message, success: false });
-                                });
-                        } else {
-                            logger.error(err)
-                            return res.json({ message: err.message, success: false });
+                            return res.json({ id: notaevaluaciontecnica.id, parent: idsolicitudcotizacion, message: 'Falla', success: false });
                         }
                     });
-    
-                    */
-            models.notaevaluaciontecnica.update({
-                idcriterioevaluacion: req.body.idcriterioevaluacion,
-                idproveedor: req.body.idproveedor,
-                nota: req.body.nota,
-                comentario: req.body.comentario
-            }, {
-                    where: {
-                        id: req.body.id
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ message: err.message, success: false })
+            });
+
+            break;
+        case "edit":
+            bitacora.registrarhijo(
+                idsolicitudcotizacion,
+                'notaevaluaciontecnicalv1',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.notaevaluaciontecnica,
+                function (err, data) {
+                    if (!err) {
+                        models.notaevaluaciontecnica.update({
+                            idcriterioevaluacion: req.body.idcriterioevaluacion,
+                            idproveedor: req.body.idproveedor,
+                            nota: req.body.nota,
+                            comentario: req.body.comentario
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (notaevaluaciontecnica) {
+                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
                     }
-                }).then(function (respuestaforo) {
-                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ message: err.message, success: false });
                 });
             break;
 
 
         case "del":
-            /*
-                models.flujocotizacion.findAll({
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (respuesta) {
-                    bitacora.registrarhijo(
-                        req.body.idsolicitudcotizacion,
-                        'flujocotizacion',
-                        req.body.id,
-                        'delete',
-                        req.session.passport.user,
-                        new Date(),
-                        models.flujocotizacion,
-                        function (err, data) {
-                            if (!err) {
-                                models.flujocotizacion.destroy({
-                                    where: {
-                                        id: req.body.id
-                                    }
-                                }).then(function (rowDeleted) {
-                                    return res.json({ message: '', sucess: true });
-                                }).catch(function (err) {
-                                    logger.error(err)
-                                    res.json({ message: err.message, success: false });
-                                });
-                            } else {
-                                logger.error(err)
-                                return res.json({ message: err.message, success: false });
-                            }
-                        });
-                })
-                */
-            models.notaevaluaciontecnica.destroy({
+            models.notaevaluaciontecnica.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) {
-                return res.json({ message: '', sucess: true });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ message: err.message, success: false });
+            }).then(function (notaevaluaciontecnica) {
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'notaevaluaciontecnicalv1',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.notaevaluaciontecnica,
+                    function (err, data) {
+                        if (!err) {
+                            models.notaevaluaciontecnica.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', sucess: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
             });
             break;
     }
@@ -520,6 +489,8 @@ exports.listnota = function (req, res) {
 exports.actionnota2 = function (req, res) {
     var action = req.body.oper;
 
+    var idsolicitudcotizacion = req.body.idsolicitudcotizacion;
+    console.dir('ESTO ES UN IDSOLICITUDCOTIZACION: ' + idsolicitudcotizacion);
 
     switch (action) {
         case "add":
@@ -530,126 +501,93 @@ exports.actionnota2 = function (req, res) {
                 nota: req.body.nota,
                 comentario: req.body.comentario,
                 borrado: 1
-            }).then(function (foro) {
-                /*
+            }).then(function (notaevaluaciontecnica2) {
                 bitacora.registrarhijo(
-                    req.body.idsolicitudcotizacion,
-                    'flujocotizacion',
-                    foro.id,
+                    idsolicitudcotizacion,
+                    'notaevaluaciontecnicalv2',
+                    notaevaluaciontecnica2.id,
                     'insert',
                     req.session.passport.user,
                     new Date(),
-                    models.flujocotizacion,
+                    models.notaevaluaciontecnica2,
                     function (err, data) {
                         if (!err) {
-                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
                             logger.error(err)
-                            return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+                            return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Falla', success: false });
                         }
-                    }
-                )
-                */
-                return res.json({ id: foro.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                    });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ message: err.message, success: false })
+                return res.json({ message: err.message, success: false })
             });
             break;
         case "edit":
-            /*
-                bitacora.registrarhijo(
-                    req.body.idsolicitudcotizacion,
-                    'flujocotizacion',
-                    req.body.id,
-                    'update',
-                    req.session.passport.user,
-                    new Date(),
-                    models.flujocotizacion,
-                    function (err, data) {
-                        if (!err) {
-                            models.flujocotizacion.update({
-                                periodo: req.body.periodo,
-                                glosaitem: req.body.glosaitem,
-                                costoorigen: costoorigen,
-                            }, {
-                                    where: {
-                                        id: req.body.id
-                                    }
-                                }).then(function (respuestaforo) {
-                                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-                                }).catch(function (err) {
-                                    logger.error(err)
-                                    res.json({ message: err.message, success: false });
-                                });
-                        } else {
-                            logger.error(err)
-                            return res.json({ message: err.message, success: false });
-                        }
-                    });
-    
-                    */
-            models.notaevaluaciontecnica2.update({
-                idcriterioevaluacion2: req.body.idcriterioevaluacion2,
-                idproveedor: req.body.idproveedor,
-                nota: req.body.nota,
-                comentario: req.body.comentario
-            }, {
-                    where: {
-                        id: req.body.id
+            bitacora.registrarhijo(
+                idsolicitudcotizacion,
+                'notaevaluaciontecnicalv2',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.notaevaluaciontecnica2,
+                function (err, data) {
+                    if (!err) {
+                        models.notaevaluaciontecnica2.update({
+                            idcriterioevaluacion2: req.body.idcriterioevaluacion2,
+                            idproveedor: req.body.idproveedor,
+                            nota: req.body.nota,
+                            comentario: req.body.comentario
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (notaevaluaciontecnica2) {
+                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false });
+                            });
+                    } else {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false });
                     }
-                }).then(function (respuestaforo) {
-                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ message: err.message, success: false });
                 });
             break;
 
 
         case "del":
-            /*
-                models.flujocotizacion.findAll({
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (respuesta) {
-                    bitacora.registrarhijo(
-                        req.body.idsolicitudcotizacion,
-                        'flujocotizacion',
-                        req.body.id,
-                        'delete',
-                        req.session.passport.user,
-                        new Date(),
-                        models.flujocotizacion,
-                        function (err, data) {
-                            if (!err) {
-                                models.flujocotizacion.destroy({
-                                    where: {
-                                        id: req.body.id
-                                    }
-                                }).then(function (rowDeleted) {
-                                    return res.json({ message: '', sucess: true });
-                                }).catch(function (err) {
-                                    logger.error(err)
-                                    res.json({ message: err.message, success: false });
-                                });
-                            } else {
-                                logger.error(err)
-                                return res.json({ message: err.message, success: false });
-                            }
-                        });
-                })
-                */
-            models.notaevaluaciontecnica2.destroy({
+            models.notaevaluaciontecnica2.findAll({
                 where: {
                     id: req.body.id
                 }
-            }).then(function (rowDeleted) {
-                return res.json({ message: '', sucess: true });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ message: err.message, success: false });
+            }).then(function (notaevaluaciontecnica2) {
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'notaevaluaciontecnicalv2',
+                    req.body.id,
+                    'delete',
+                    req.session.passport.user,
+                    new Date(),
+                    models.notaevaluaciontecnica2,
+                    function (err, data) {
+                        if (!err) {
+                            models.notaevaluaciontecnica2.destroy({
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (rowDeleted) {
+                                return res.json({ message: '', sucess: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                res.json({ message: err.message, success: false });
+                            });
+                        } else {
+                            logger.error(err)
+                            return res.json({ message: err.message, success: false });
+                        }
+                    });
             });
             break;
     }
@@ -665,7 +603,7 @@ exports.listnota2 = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "idnotaevaluaciontecnica", 
+        "field": "idnotaevaluaciontecnica",
         "op": "eq",
         "data": req.params.id
     }];

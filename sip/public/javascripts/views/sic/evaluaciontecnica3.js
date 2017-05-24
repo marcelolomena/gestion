@@ -41,19 +41,23 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
     var childGridURL = "/sic/notaevaluaciontecnica2/" + parentRowKey + "/list";
 
      var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-    //console.log("la grilla padre: " + grillapadre)
+    console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    //console.log("la rowData : " + rowData)
+    console.log("la rowData : " + rowData)
     var parentCriterio = rowData.idserviciorequerido;
     console.log("la parentCriterio : " + parentCriterio)
 
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
-    //console.log("la grilla abuelo: " + grillaabuelo)
+    console.log("la grilla abuelo: " + grillaabuelo)
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
-    //console.log("la rowData2 : " + rowData2)
+    console.log("la rowData2 : " + rowData2)
     var parentClaseEvaluacionTecnica = rowData2.claseevaluaciontecnica;
     console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
+
+
+    var parentSolicitud = subgrid_id.split("_")[2]
+    console.log("la parentSolicitud : " + parentSolicitud)
 
     var modelSubcriterios = [
         { label: 'id', name: 'id', key: true, hidden: true },
@@ -234,7 +238,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentCriterio };
+                return { idsolicitudcotizacion: parentSolicitud };
             },
         },
         {
@@ -248,7 +252,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentCriterio };
+                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
             },
             beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
@@ -280,7 +284,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentCriterio };
+                return { idsolicitudcotizacion: parentSolicitud };
             },
         },
         {
