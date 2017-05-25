@@ -696,5 +696,11 @@ module.exports = function (passport) {
     router.route('/sic/adjudicacion/:id/cols')
         .get(isAuthenticated, adjudicacionController.columnas)
 
+    router.route('/sic/adjudicados/:id/list')
+        .get(isAuthenticated, adjudicacionController.listadjudicados)
+
+    router.route('/sic/adjudicados/action')
+        .post(isAuthenticated, adjudicacionController.action)
+
     return router;
 }
