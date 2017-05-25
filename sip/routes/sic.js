@@ -25,6 +25,8 @@ var permisosController = require('../controllers/sic/permisos')
 var participantesproveedorController = require('../controllers/sic/participantesproveedor')
 var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
 var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
+var adjudicacionController = require('../controllers/sic/adjudicacion')
+
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
@@ -687,6 +689,12 @@ module.exports = function (passport) {
 
     router.route('/sic/actionaprobaciondoc/:id/:idpadre')
         .post(isAuthenticated, documentosController.actionaprobaciondoc);
+
+    router.route('/sic/adjudicacion/:id')
+        .get(isAuthenticated, adjudicacionController.list)
+
+    router.route('/sic/adjudicacion/:id/cols')
+        .get(isAuthenticated, adjudicacionController.columnas)
 
     return router;
 }

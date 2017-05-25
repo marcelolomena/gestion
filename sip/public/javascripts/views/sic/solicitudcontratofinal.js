@@ -487,7 +487,7 @@ $(document).ready(function () {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
         tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
-        tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Adjudicación</a></li>"
+        tabs += "<li><a href='/sic/adjudicacion/" + parentRowKey + "' data-target='#adjudicacion' id='adjudicacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Adjudicación</a></li>"
         tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#respuestasrfp' id='respuestasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Solicitudes de Contrato</a></li>"
         tabs += "<li><a href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>TOC</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
@@ -496,7 +496,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-content'>"
         //tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
-        tabs += "<div class='tab-pane' id='preguntas'><table id='preguntas_t_" + parentRowKey + "'></table><div id='navGridPre'></div></div>" 
+        tabs += "<div class='tab-pane' id='adjudicacion'><table id='adjudicacion_t_" + parentRowKey + "'></table><div id='navGridAdj'></div></div>" 
         tabs += "<div class='tab-pane' id='evaluaciontecnica'><table id='evaluaciontecnica_t_" + parentRowKey + "'></table><div id='navGridEvTec'></div></div>"
         tabs += "<div class='tab-pane' id='matrizevaluacion'><table id='matrizevaluacion_t_" + parentRowKey + "'></table><div id='navGridMatriz'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
@@ -511,8 +511,8 @@ $(document).ready(function () {
 
             if (targ === '#estadosolicitud') {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#preguntas') {
-                gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#adjudicacion') {
+                gridAdjudicacion.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#evaluaciontecnica') {
                 gridEvaluacionTec.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#matrizevaluacion') {
@@ -534,8 +534,8 @@ $(document).ready(function () {
             }*/
             if (targ === '#estadosolicitud') {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
-            } else if (targ === '#preguntas') {
-                gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#adjudicacion') {
+                gridAdjudicacion.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#evaluaciontecnica') {
                 gridEvaluacionTec.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#matrizevaluacion') {
