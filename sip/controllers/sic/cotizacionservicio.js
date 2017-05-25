@@ -512,12 +512,57 @@ exports.actionnota2 = function (req, res) {
                     models.notaevaluaciontecnica2,
                     function (err, data) {
                         if (!err) {
+                            models.notaevaluaciontecnica2.belongsTo(models.criterioevaluacion2, { foreignKey: 'idcriterioevaluacion2' });
+                            models.notaevaluaciontecnica2.findAll({
+                                where: {
+                                    idnotaevaluaciontecnica: req.body.parent_id
+                                },
+                                include: [{
+                                    model: models.criterioevaluacion2
+                                }]
+                            }).then(function (notaevaluaciontecnica2) {
+                                var suma = 0
+                                var sumaporcentaje = 0
+                                for (var i in notaevaluaciontecnica2) {
+                                    var notaponderada = (notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje) / 100 * notaevaluaciontecnica2[i].nota
+                                    suma = suma + notaponderada;
+                                    logger.debug("esto es una suma: " + suma)
+                                    sumaporcentaje = sumaporcentaje + notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje
+
+                                }
+                                logger.debug("esto es la suma final: " + suma)
+                                logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
+                                if (sumaporcentaje == 100) {
+                                    models.notaevaluaciontecnica.update({
+                                        nota: suma
+                                    }, {
+                                            where: {
+                                                id: req.body.parent_id
+                                            }
+                                        })
+                                } else {
+                                    models.notaevaluaciontecnica.update({
+                                        nota: 0
+                                    }, {
+                                            where: {
+                                                id: req.body.parent_id
+                                            }
+                                        })
+                                }
+
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ message: err.message, success: false })
+                            });
+
+
                             return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
                             logger.error(err)
                             return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Falla', success: false });
                         }
                     });
+
             }).catch(function (err) {
                 logger.error(err)
                 return res.json({ message: err.message, success: false })
@@ -544,6 +589,81 @@ exports.actionnota2 = function (req, res) {
                                     id: req.body.id
                                 }
                             }).then(function (notaevaluaciontecnica2) {
+
+
+
+                                models.notaevaluaciontecnica2.belongsTo(models.criterioevaluacion2, { foreignKey: 'idcriterioevaluacion2' });
+                                models.notaevaluaciontecnica2.findAll({
+                                    where: {
+                                        idnotaevaluaciontecnica: req.body.parent_id
+                                    },
+                                    include: [{
+                                        model: models.criterioevaluacion2
+                                    }]
+                                }).then(function (notaevaluaciontecnica2) {
+                                    console.dir(notaevaluaciontecnica2);
+                                    /*calculito(notaevaluaciontecnica2).then(function (resultado) {
+                                        
+                                        if (resultado[1] == 100) {
+                                            models.notaevaluaciontecnica.update({
+                                                nota: resultado[0]
+                                            }, {
+                                                    where: {
+                                                        id: req.body.parent_id
+                                                    }
+                                                })
+                                        } else {
+                                            models.notaevaluaciontecnica.update({
+                                                nota: 0
+                                            }, {
+                                                    where: {
+                                                        id: req.body.parent_id
+                                                    }
+                                                })
+                                        }
+                                    }).catch(function (err) {
+                                        console.log("salio por aqui")
+                                        logger.error(err)
+                                    });
+                                    */
+                                    
+                                    
+                                    var suma = 0
+                                    var sumaporcentaje = 0
+                                    for (var i in notaevaluaciontecnica2) {
+                                        var notaponderada = (notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje) / 100 * notaevaluaciontecnica2[i].nota
+
+                                        suma = suma + notaponderada;
+
+                                        sumaporcentaje = sumaporcentaje + notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje
+
+                                    }
+                                    logger.debug("esto es la suma final: " + suma)
+                                    logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
+
+                                   
+                                    if (sumaporcentaje == 100) {
+                                        models.notaevaluaciontecnica.update({
+                                            nota: suma
+                                        }, {
+                                                where: {
+                                                    id: req.body.parent_id
+                                                }
+                                            })
+                                    } else {
+                                        models.notaevaluaciontecnica.update({
+                                            nota: 0
+                                        }, {
+                                                where: {
+                                                    id: req.body.parent_id
+                                                }
+                                            })
+                                    }
+                                     
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    return res.json({ message: err.message, success: false })
+                                });
                                 return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
@@ -573,11 +693,69 @@ exports.actionnota2 = function (req, res) {
                     models.notaevaluaciontecnica2,
                     function (err, data) {
                         if (!err) {
+                            
+                            
+                            
+                            
+                            
                             models.notaevaluaciontecnica2.destroy({
                                 where: {
                                     id: req.body.id
                                 }
                             }).then(function (rowDeleted) {
+
+                                models.notaevaluaciontecnica2.belongsTo(models.criterioevaluacion2, { foreignKey: 'idcriterioevaluacion2' });
+                                models.notaevaluaciontecnica2.findAll({
+                                    where: {
+                                        idnotaevaluaciontecnica: req.body.parent_id
+                                    },
+                                    include: [{
+                                        model: models.criterioevaluacion2
+                                    }]
+                                }).then(function (notaevaluaciontecnica2) {
+                                    console.dir(notaevaluaciontecnica2)
+                                    /*
+                                    var suma = 0
+                                    var sumaporcentaje = 0
+                                    for (var i in notaevaluaciontecnica2) {
+                                        var notaponderada = (notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje) / 100 * notaevaluaciontecnica2[i].nota
+                                        suma = suma + notaponderada;
+                                        logger.debug("esto es una suma: " + suma)
+                                        sumaporcentaje = sumaporcentaje + notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje
+
+                                    }
+                                    logger.debug("esto es la suma final: " + suma)
+                                    logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
+                                    */
+                                    calculito(notaevaluaciontecnica2).then(function (resultado) {
+                                        console.dir(resultado);
+                                        if (resultado[1] == 100) {
+                                            models.notaevaluaciontecnica.update({
+                                                nota: resultado[0]
+                                            }, {
+                                                    where: {
+                                                        id: req.body.parent_id
+                                                    }
+                                                })
+                                        } else {
+                                            models.notaevaluaciontecnica.update({
+                                                nota: 0
+                                            }, {
+                                                    where: {
+                                                        id: req.body.parent_id
+                                                    }
+                                                })
+                                        }
+                                    }).catch(function (err) {
+                                        console.log("salio por aqui")
+                                        logger.error(err)
+                                    });
+
+                                }).catch(function (err) {
+                                    logger.error(err)
+                                    return res.json({ message: err.message, success: false })
+                                });
+
                                 return res.json({ message: '', sucess: true });
                             }).catch(function (err) {
                                 logger.error(err)
@@ -593,6 +771,33 @@ exports.actionnota2 = function (req, res) {
     }
 }
 
+var calculito = function (row) {
+    //Todo: agregar idprefactura
+    return new Promise(function (resolve, reject) {
+        try {
+            console.dir(row)
+            var suma = 0
+            var sumaporcentaje = 0
+            var res = []
+            for (var i in row) {
+                logger.debug("porcentaje [" + row[i].criterioevaluacion2.porcentaje + "]")
+                logger.debug("nota [" + row[i].nota + "]")
+                var notaponderada = (row[i].criterioevaluacion2.porcentaje) / 100 * row[i].nota
+                suma = suma + notaponderada;
+                sumaporcentaje = sumaporcentaje + row[i].criterioevaluacion2.porcentaje
+
+                res.push(suma)
+                res.push(sumaporcentaje)
+            }
+
+            resolve(res);
+
+        } catch (err) {
+            reject(err);
+        }
+    })
+
+}
 
 exports.listnota2 = function (req, res) {
 
