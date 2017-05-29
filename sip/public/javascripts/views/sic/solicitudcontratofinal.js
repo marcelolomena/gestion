@@ -489,7 +489,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
         tabs += "<li><a href='/sic/adjudicacion/" + parentRowKey + "' data-target='#adjudicacion' id='adjudicacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Adjudicación</a></li>"
         tabs += "<li><a href='/sic/solicitudcontrato/" + parentRowKey + "' data-target='#contratoadjudicado' id='contratoadjudicado_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Solicitudes de Contrato</a></li>"
-        tabs += "<li><a href=/sic/clausulas/" + parentRowKey + " data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>TOC</a></li>"
+        tabs += "<li><a href=/sic/solicitudcontrato/" + parentRowKey + " data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>TOC</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
@@ -516,7 +516,7 @@ $(document).ready(function () {
             } else if (targ === '#contratoadjudicado') {
                 gridSolicitudContrato.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#clausulas') {
-                gridClausula.renderGrid(loadurl, parentRowKey, targ)
+                gridTOC.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
             }

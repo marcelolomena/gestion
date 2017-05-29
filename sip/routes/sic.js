@@ -709,5 +709,20 @@ module.exports = function (passport) {
     router.route('/sic/solicitudcontrato/action')
         .post(isAuthenticated, solicitudcontratoController.action)
 
+    router.route('/sic/tocsolcon/:id/list')
+        .get(isAuthenticated, clausulasController.listsolcon)
+
+    router.route('/sic/defaulttoc/:id')
+        .get(isAuthenticated, clausulasController.defaulttoc);
+
+    router.route('/sic/documentowordsolcon/:id')
+        .get(isAuthenticated, clausulasController.downloadsolcon);
+
+    router.route('/sic/clausulassolcon/action')
+        .post(isAuthenticated, clausulasController.actionsolcon);
+
+    router.route('/sic/textosolcon/:id')
+        .get(isAuthenticated, clausulasController.textosolcon);
+
     return router;
 }
