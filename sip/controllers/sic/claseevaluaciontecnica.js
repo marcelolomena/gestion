@@ -408,23 +408,22 @@ exports.action4 = function (req, res) {
 
   switch (action) {
     case "add":
-      console.log(req.body.idclaseevaluaciontecnica)
+
       models.claseevaluaciontecnica.findOne({
         where: {
-          id: req.body.idclaseevaluaciontecnica
+          id: req.body.idcriterioevaluacion2
         }
       }).then(function (records) {
-        console.dir(records)
         if (parseInt(records.niveles) < 3) {
           models.claseevaluaciontecnica.update({
             niveles: 3
           }, {
               where: {
-                id: req.body.idclaseevaluaciontecnica
+                id: req.body.idcriterioevaluacion2
               }
             })
         }
-        return res.json({ id: req.body.idclaseevaluaciontecnica, idc: records.id, success: true });
+        return res.json({ id: req.body.idcriterioevaluacion2, idc: records.id, success: true });
       }).catch(function (err) {
         logger.error(err)
         return res.json({ error: 1, glosa: err.message });
@@ -565,10 +564,10 @@ exports.upload = function (req, res) {
 
             item['nombre'] = line.nombre;
             item['idcriterioevaluacion2'] = req.params.idcriterioevaluacion2;
-            item['porcentaje'] = cast(line.porcentaje);
+            item['porcentaje'] = line.porcentaje;
             item['pregunta'] = line.pregunta;
             item['borrado'] = 1;
-            console.dir(item);
+
 
             carrusel.push(item);
           }
