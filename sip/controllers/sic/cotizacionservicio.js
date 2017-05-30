@@ -345,7 +345,7 @@ exports.actionnota = function (req, res) {
                 idserviciorequerido: req.body.parent_id,
                 idcriterioevaluacion: req.body.idcriterioevaluacion,
                 idproveedor: req.body.idproveedor,
-                nota: req.body.nota,
+                nota: 0,
                 comentario: req.body.comentario,
                 borrado: 1
             }).then(function (notaevaluaciontecnica) {
@@ -385,7 +385,7 @@ exports.actionnota = function (req, res) {
                         models.notaevaluaciontecnica.update({
                             idcriterioevaluacion: req.body.idcriterioevaluacion,
                             idproveedor: req.body.idproveedor,
-                            nota: req.body.nota,
+                            nota: 0,
                             comentario: req.body.comentario
                         }, {
                                 where: {
@@ -498,7 +498,7 @@ exports.actionnota2 = function (req, res) {
                 idnotaevaluaciontecnica: req.body.parent_id,
                 idcriterioevaluacion2: req.body.idcriterioevaluacion2,
                 idproveedor: req.body.idproveedor,
-                nota: req.body.nota,
+                nota: 0,
                 comentario: req.body.comentario,
                 borrado: 1
             }).then(function (notaevaluaciontecnica2) {
@@ -582,7 +582,7 @@ exports.actionnota2 = function (req, res) {
                         models.notaevaluaciontecnica2.update({
                             idcriterioevaluacion2: req.body.idcriterioevaluacion2,
                             idproveedor: req.body.idproveedor,
-                            nota: req.body.nota,
+                            nota: 0,
                             comentario: req.body.comentario
                         }, {
                                 where: {
@@ -853,6 +853,7 @@ exports.nivelclase = function (req, res) {
         res.json({ error_code: 1 });
     });
 };
+
 
 exports.criterios1 = function (req, res) {
     sequelize.query(`select a.id, a.nombre from sic.criterioevaluacion a 
