@@ -7,6 +7,12 @@ module.exports = function (passport) {
 
     router.route('/sysadmin')
         .post(isAuthenticated, sysadminController.grid);
+
+    router.route('/sysadmin/sistema')
+        .post(isAuthenticated, sysadminController.sistema);      
+
+    router.route('/sysadmin/contenido')
+        .post(isAuthenticated, sysadminController.contenido);            
     return router;
 
 }

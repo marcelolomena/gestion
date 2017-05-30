@@ -15,6 +15,10 @@ module.exports = function(sequelize, DataTypes) {
     plantilla: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'contenido'
