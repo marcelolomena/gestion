@@ -212,7 +212,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             },
 
             onclickSubmit: function (rowid) {
-                return { idclaseevaluaciontecnica: parentbisabuelo, childGridID: childGridID };
+                return { idclaseevaluaciontecnica: parentbisabuelo, childGridID: childGridID, idcriterioevaluacion2: parentRowKey };
             }, afterSubmit: UploadPre
 
         },
@@ -256,13 +256,15 @@ function UploadPre(response, postdata) {
 }
 
 function ajaxPregUpload(id, idc, idpadre, childGridID) {
+    console.log("ESTA WEA SI FUNCIONA CTM: "+id)
+    console.log("este es:"+idc)
     var dialog = bootbox.dialog({
         title: 'Se inicia la transferencia',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
     });
     dialog.init(function () {
         $.ajaxFileUpload({
-            url: '/sic/criterio3/upload/' + parentRowKey,
+            url: '/sic/criterio3/upload/' + idc,
             secureuri: false,
             fileElementId: 'ArchivoUpload',
             dataType: 'json',

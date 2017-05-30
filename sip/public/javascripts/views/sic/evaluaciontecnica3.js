@@ -303,7 +303,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                     return [true, "", ""]
                 }
             },
-            
+
 
         },
         {
@@ -340,21 +340,23 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
         $.ajax({
             type: "GET",
             url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
-            
+
             success: function (data) {
                 //console.log(data[0].niveles)
                 nivel = (data[0].niveles);
             }
         });
 
+        setTimeout(function () {
+            console.log("niveles: " + nivel)
 
-        console.log("niveles: " + nivel)
 
-
-        if (nivel > 2) {
-            gridCotizaciones4(subgrid_id, row_id, 'notaevaluacion3');
-        }
+            if (nivel > 2) {
+                gridCotizaciones4(subgrid_id, row_id, 'notaevaluacion3');
+            }
+        }, 500);
     }
+
 
 
 }

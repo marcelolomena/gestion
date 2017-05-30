@@ -724,5 +724,18 @@ module.exports = function (passport) {
     router.route('/sic/textosolcon/:id')
         .get(isAuthenticated, clausulasController.textosolcon);
 
+    router.route('/sic/notaevaluaciontecnica3/:id/list')
+        .get(isAuthenticated, cotizacionservicioController.listnota3)
+
+    router.route('/sic/notaevaluaciontecnica3/action')
+        .post(isAuthenticated, cotizacionservicioController.actionnota3)
+
+    router.route('/sic/criterios3/:id')
+        .get(isAuthenticated, cotizacionservicioController.criterios3)
+
+    router.route('/sic/proveedoressugeridosserviciodesdenota2/:id')
+        .get(isAuthenticated, cotizacionservicioController.proveedoressugeridosserviciodesdenota2);
+
+
     return router;
 }

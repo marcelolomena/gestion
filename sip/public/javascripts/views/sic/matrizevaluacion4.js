@@ -1,4 +1,4 @@
-function gridEva2(parentRowID, parentRowKey, suffix) {
+function gridEva3(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -164,24 +164,7 @@ setTimeout(function () {
         }
     );
  }, 1000);
-    function showSubGridsEva2(subgrid_id, row_id) {
-        var nivel = 0;
-        $.ajax({
-            type: "GET",
-            url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
-            success: function (data) {
-                //console.log(data[0].niveles)
-                nivel = (data[0].niveles);
-            }
-        });
-        setTimeout(function () {
-            console.log("BUEN NIVEL:"+nivel)
-            if (nivel > 2) {
-                gridEva3(subgrid_id, row_id, 'eva3');
-            }
-
-        }, 500);
-    }
+    
 
 
 }

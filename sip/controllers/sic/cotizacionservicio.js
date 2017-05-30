@@ -626,8 +626,8 @@ exports.actionnota2 = function (req, res) {
                                         logger.error(err)
                                     });
                                     */
-                                    
-                                    
+
+
                                     var suma = 0
                                     var sumaporcentaje = 0
                                     for (var i in notaevaluaciontecnica2) {
@@ -641,7 +641,7 @@ exports.actionnota2 = function (req, res) {
                                     logger.debug("esto es la suma final: " + suma)
                                     logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
 
-                                   
+
                                     if (sumaporcentaje == 100) {
                                         models.notaevaluaciontecnica.update({
                                             nota: suma
@@ -659,7 +659,7 @@ exports.actionnota2 = function (req, res) {
                                                 }
                                             })
                                     }
-                                     
+
                                 }).catch(function (err) {
                                     logger.error(err)
                                     return res.json({ message: err.message, success: false })
@@ -693,11 +693,11 @@ exports.actionnota2 = function (req, res) {
                     models.notaevaluaciontecnica2,
                     function (err, data) {
                         if (!err) {
-                            
-                            
-                            
-                            
-                            
+
+
+
+
+
                             models.notaevaluaciontecnica2.destroy({
                                 where: {
                                     id: req.body.id
@@ -880,4 +880,410 @@ where c.id = :idnota`,
         logger.error(err)
         res.json({ error_code: 1 });
     });
+};
+
+exports.listnota3 = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idnotaevaluaciontecnica2",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.notaevaluaciontecnica3.belongsTo(models.notaevaluaciontecnica2, { foreignKey: 'idnotaevaluaciontecnica2' });
+            models.notaevaluaciontecnica3.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.notaevaluaciontecnica3.belongsTo(models.criterioevaluacion3, { foreignKey: 'idcriterioevaluacion3' });
+            models.notaevaluaciontecnica3.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.notaevaluaciontecnica3.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    include: [{
+                        model: models.proveedor
+                    }, {
+                        model: models.criterioevaluacion3
+                    }]
+
+                }).then(function (notaevaluaciontecnica3) {
+                    return res.json({ records: records, total: total, page: page, rows: notaevaluaciontecnica3 });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.actionnota3 = function (req, res) {
+    var action = req.body.oper;
+    /*
+        var idsolicitudcotizacion = req.body.idsolicitudcotizacion;
+        console.dir('ESTO ES UN IDSOLICITUDCOTIZACION: ' + idsolicitudcotizacion);
+    */
+    switch (action) {
+        case "add":
+            models.notaevaluaciontecnica3.create({
+                idnotaevaluaciontecnica2: req.body.parent_id,
+                idcriterioevaluacion3: req.body.idcriterioevaluacion3,
+                idproveedor: req.body.idproveedor,
+                nota: req.body.nota,
+                comentario: req.body.comentario,
+                respuesta: req.body.respuesta,
+                borrado: 1
+            }).then(function (notaevaluaciontecnica3) {
+                /*
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'notaevaluaciontecnicalv2',
+                    notaevaluaciontecnica2.id,
+                    'insert',
+                    req.session.passport.user,
+                    new Date(),
+                    models.notaevaluaciontecnica2,
+                    function (err, data) {
+                        if (!err) {
+                            */
+                models.notaevaluaciontecnica3.belongsTo(models.criterioevaluacion3, { foreignKey: 'idcriterioevaluacion3' });
+                models.notaevaluaciontecnica3.findAll({
+                    where: {
+                        idnotaevaluaciontecnica2: req.body.parent_id
+                    },
+                    include: [{
+                        model: models.criterioevaluacion3
+                    }]
+                }).then(function (notaevaluaciontecnica3) {
+                    var suma = 0
+                    var sumasub = 0
+                    var sumaporcentaje = 0
+                    var sumasubporcentaje = 0
+
+                    for (var i in notaevaluaciontecnica3) {
+                        var notaponderada = (notaevaluaciontecnica3[i].criterioevaluacion3.porcentaje) / 100 * notaevaluaciontecnica3[i].nota
+                        suma = suma + notaponderada;
+                        logger.debug("esto es una suma: " + suma)
+                        sumaporcentaje = sumaporcentaje + notaevaluaciontecnica3[i].criterioevaluacion3.porcentaje
+
+                    }
+                    logger.debug("esto es la suma final: " + suma)
+                    logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
+                    if (sumaporcentaje == 100) {
+                        models.notaevaluaciontecnica2.update({
+                            nota: suma
+                        }, {
+                                where: {
+                                    id: req.body.parent_id
+                                }
+                            })
+                        sequelize.query(`select a.nota, c.porcentaje from sic.notaevaluaciontecnica2 a 
+join sic.notaevaluaciontecnica b on b.id=a.idnotaevaluaciontecnica
+join sic.criterioevaluacion2 c on c.id=a.idcriterioevaluacion2
+where b.id=:idnota2`,
+                            { replacements: { idnota2: notaevaluaciontecnica3[0].idnotaevaluaciontecnica2 }, type: sequelize.QueryTypes.SELECT }
+                        ).then(function (notaevaluaciontecnica2) {
+                            var suma2 = 0
+                            var sumaporcentaje2 = 0
+                            for (var i in notaevaluaciontecnica2) {
+                                var notaponderada2 = (notaevaluaciontecnica2[i].porcentaje) / 100 * notaevaluaciontecnica2[i].nota
+                                suma2 = suma2 + notaponderada2;
+                                logger.debug("esto es una suma: " + suma2)
+                                sumaporcentaje2 = sumaporcentaje2 + notaevaluaciontecnica2[i].porcentaje
+
+                            }
+                            logger.debug("esto es la suma final: " + suma2)
+                            logger.debug("esto es la suma porcentaje: " + sumaporcentaje2)
+                            if (sumaporcentaje2 == 100) {
+                                models.notaevaluaciontecnica.update({
+                                    nota: suma2
+                                }, {
+                                        where: {
+                                            id: req.body.parent_id
+                                        }
+                                    })
+                            } else {
+                                models.notaevaluaciontecnica.update({
+                                    nota: 0
+                                }, {
+                                        where: {
+                                            id: req.body.parent_id
+                                        }
+                                    })
+                            }
+
+
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({ error_code: 1 });
+                        });
+
+
+
+                    } else {
+                        models.notaevaluaciontecnica2.update({
+                            nota: 0
+                        }, {
+                                where: {
+                                    id: req.body.parent_id
+                                }
+                            })
+                    }
+
+
+
+
+
+
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ message: err.message, success: false })
+                });
+
+
+                return res.json({ id: notaevaluaciontecnica3.id, /*parent: idsolicitudcotizacion,*/ message: 'Inicio carga', success: true });
+
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({ message: err.message, success: false })
+            });
+            break;
+        case "edit":
+            /*
+                bitacora.registrarhijo(
+                    idsolicitudcotizacion,
+                    'notaevaluaciontecnicalv2',
+                    req.body.id,
+                    'update',
+                    req.session.passport.user,
+                    new Date(),
+                    models.notaevaluaciontecnica2,
+                    function (err, data) {
+                        if (!err) {
+                            */
+            models.notaevaluaciontecnica3.update({
+
+                nota: req.body.nota,
+                comentario: req.body.comentario,
+                respuesta: req.body.respuesta
+            }, {
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (notaevaluaciontecnica2) {
+
+
+
+                    models.notaevaluaciontecnica3.belongsTo(models.criterioevaluacion3, { foreignKey: 'idcriterioevaluacion3' });
+                    models.notaevaluaciontecnica3.findAll({
+                        where: {
+                            idnotaevaluaciontecnica2: req.body.parent_id
+                        },
+                        include: [{
+                            model: models.criterioevaluacion3
+                        }]
+                    }).then(function (notaevaluaciontecnica3) {
+                        console.dir(notaevaluaciontecnica3);
+                        /*calculito(notaevaluaciontecnica2).then(function (resultado) {
+                            
+                            if (resultado[1] == 100) {
+                                models.notaevaluaciontecnica.update({
+                                    nota: resultado[0]
+                                }, {
+                                        where: {
+                                            id: req.body.parent_id
+                                        }
+                                    })
+                            } else {
+                                models.notaevaluaciontecnica.update({
+                                    nota: 0
+                                }, {
+                                        where: {
+                                            id: req.body.parent_id
+                                        }
+                                    })
+                            }
+                        }).catch(function (err) {
+                            console.log("salio por aqui")
+                            logger.error(err)
+                        });
+                        */
+
+
+                        var suma = 0
+                        var sumaporcentaje = 0
+                        for (var i in notaevaluaciontecnica3) {
+                            var notaponderada = (notaevaluaciontecnica3[i].criterioevaluacion3.porcentaje) / 100 * notaevaluaciontecnica3[i].nota
+
+                            suma = suma + notaponderada;
+
+                            sumaporcentaje = sumaporcentaje + notaevaluaciontecnica3[i].criterioevaluacion3.porcentaje
+
+                        }
+                        logger.debug("esto es la suma final: " + suma)
+                        logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
+
+
+                        if (sumaporcentaje == 100) {
+                            models.notaevaluaciontecnica2.update({
+                                nota: suma
+                            }, {
+                                    where: {
+                                        id: req.body.parent_id
+                                    }
+                                })
+                        } else {
+                            models.notaevaluaciontecnica2.update({
+                                nota: 0
+                            }, {
+                                    where: {
+                                        id: req.body.parent_id
+                                    }
+                                })
+                        }
+
+                    }).catch(function (err) {
+                        logger.error(err)
+                        return res.json({ message: err.message, success: false })
+                    });
+                    return res.json({ id: req.body.id, /*parent: idsolicitudcotizacion, */message: 'Inicio carga', success: true });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ message: err.message, success: false });
+                });
+
+
+            break;
+
+
+        case "del":
+            /*
+                models.notaevaluaciontecnica2.findAll({
+                    where: {
+                        id: req.body.id
+                    }
+                }).then(function (notaevaluaciontecnica2) {
+                    bitacora.registrarhijo(
+                        idsolicitudcotizacion,
+                        'notaevaluaciontecnicalv2',
+                        req.body.id,
+                        'delete',
+                        req.session.passport.user,
+                        new Date(),
+                        models.notaevaluaciontecnica2,
+                        function (err, data) {
+                            if (!err) {
+    
+    
+    
+    */
+
+            models.notaevaluaciontecnica3.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+
+                models.notaevaluaciontecnica3.belongsTo(models.criterioevaluacion3, { foreignKey: 'idcriterioevaluacion3' });
+                models.notaevaluaciontecnica3.findAll({
+                    where: {
+                        idnotaevaluaciontecnica2: req.body.parent_id
+                    },
+                    include: [{
+                        model: models.criterioevaluacion3
+                    }]
+                }).then(function (notaevaluaciontecnica3) {
+                    console.dir(notaevaluaciontecnica3)
+                    /*
+                    var suma = 0
+                    var sumaporcentaje = 0
+                    for (var i in notaevaluaciontecnica2) {
+                        var notaponderada = (notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje) / 100 * notaevaluaciontecnica2[i].nota
+                        suma = suma + notaponderada;
+                        logger.debug("esto es una suma: " + suma)
+                        sumaporcentaje = sumaporcentaje + notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje
+
+                    }
+                    logger.debug("esto es la suma final: " + suma)
+                    logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
+                    */
+                    calculito(notaevaluaciontecnica3).then(function (resultado) {
+                        console.dir(resultado);
+                        if (resultado[1] == 100) {
+                            models.notaevaluaciontecnica2.update({
+                                nota: resultado[0]
+                            }, {
+                                    where: {
+                                        id: req.body.parent_id
+                                    }
+                                })
+                        } else {
+                            models.notaevaluaciontecnica2.update({
+                                nota: 0
+                            }, {
+                                    where: {
+                                        id: req.body.parent_id
+                                    }
+                                })
+                        }
+                    }).catch(function (err) {
+                        console.log("salio por aqui")
+                        logger.error(err)
+                    });
+
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({ message: err.message, success: false })
+                });
+
+                return res.json({ message: '', sucess: true });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ message: err.message, success: false });
+            });
+
+
+
+            break;
+    }
+}
+
+exports.criterios3 = function (req, res) {
+    sequelize.query(`select a.id, a.pregunta from sic.criterioevaluacion3 a 
+join sic.criterioevaluacion2 b on a.idcriterioevaluacion2=b.id
+join sic.notaevaluaciontecnica2 c on c.idcriterioevaluacion2 = b.id
+where c.id = :idnota`,
+        { replacements: { idnota: req.params.id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+};
+
+exports.proveedoressugeridosserviciodesdenota2 = function (req, res) {
+
+    var id = req.params.id;
+    var sql = `select c.id, c.razonsocial from sic.proveedorsugerido a 
+        join sip.proveedor c on c.id = a.idproveedor 
+		join sic.serviciosrequeridos d on a.idserviciorequerido=d.id
+		join sic.notaevaluaciontecnica e on e.idserviciorequerido=d.id
+		join sic.notaevaluaciontecnica2 f on f.idnotaevaluaciontecnica=e.id
+        where f.id=`+ id
+
+    sequelize.query(sql)
+        .spread(function (rows) {
+            res.json(rows);
+        });
+
 };
