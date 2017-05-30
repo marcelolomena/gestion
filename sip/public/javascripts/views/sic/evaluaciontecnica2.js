@@ -119,7 +119,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             label: 'Nota', name: 'nota', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editrules: { required: true },
+            editrules: { required: false },
         
         },
 
@@ -228,6 +228,27 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
+            beforeShowForm: function (form) {
+                var nivel = 0;
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
+                    success: function (data) {
+                        console.log(data[0].niveles)
+                        nivel = (data[0].niveles);
+                    }
+                });
+
+
+                console.log("niveles: " + nivel)
+
+
+                if (nivel > 2) {
+                    $("input#nota").attr("readonly", false);
+                } else {
+                    $("input#nota").attr("readonly", true);
+                }
+            }
         },
         {
             closeAfterAdd: true,
@@ -249,6 +270,27 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                     return [true, "", ""]
                 }
             },
+            beforeShowForm: function (form) {
+                var nivel = 0;
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
+                    success: function (data) {
+                        console.log(data[0].niveles)
+                        nivel = (data[0].niveles);
+                    }
+                });
+
+
+                console.log("niveles: " + nivel)
+
+
+                if (nivel > 2) {
+                    $("input#nota").attr("readonly", false);
+                } else {
+                    $("input#nota").attr("readonly", true);
+                }
+            }
 
         },
         {
