@@ -929,10 +929,7 @@ exports.listnota3 = function (req, res) {
 
 exports.actionnota3 = function (req, res) {
     var action = req.body.oper;
-    /*
-        var idsolicitudcotizacion = req.body.idsolicitudcotizacion;
-        console.dir('ESTO ES UN IDSOLICITUDCOTIZACION: ' + idsolicitudcotizacion);
-    */
+
     switch (action) {
         case "add":
             models.notaevaluaciontecnica3.create({
@@ -944,18 +941,7 @@ exports.actionnota3 = function (req, res) {
                 respuesta: req.body.respuesta,
                 borrado: 1
             }).then(function (notaevaluaciontecnica3) {
-                /*
-                bitacora.registrarhijo(
-                    idsolicitudcotizacion,
-                    'notaevaluaciontecnicalv2',
-                    notaevaluaciontecnica2.id,
-                    'insert',
-                    req.session.passport.user,
-                    new Date(),
-                    models.notaevaluaciontecnica2,
-                    function (err, data) {
-                        if (!err) {
-                            */
+
                 models.notaevaluaciontecnica3.belongsTo(models.criterioevaluacion3, { foreignKey: 'idcriterioevaluacion3' });
                 models.notaevaluaciontecnica3.findAll({
                     where: {
@@ -1053,18 +1039,7 @@ where b.id=:idnota1`,
             });
             break;
         case "edit":
-            /*
-                bitacora.registrarhijo(
-                    idsolicitudcotizacion,
-                    'notaevaluaciontecnicalv2',
-                    req.body.id,
-                    'update',
-                    req.session.passport.user,
-                    new Date(),
-                    models.notaevaluaciontecnica2,
-                    function (err, data) {
-                        if (!err) {
-                            */
+
             models.notaevaluaciontecnica3.update({
 
                 nota: req.body.nota,
@@ -1199,26 +1174,6 @@ where b.id=:idnota1`,
 
 
         case "del":
-            /*
-                models.notaevaluaciontecnica2.findAll({
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (notaevaluaciontecnica2) {
-                    bitacora.registrarhijo(
-                        idsolicitudcotizacion,
-                        'notaevaluaciontecnicalv2',
-                        req.body.id,
-                        'delete',
-                        req.session.passport.user,
-                        new Date(),
-                        models.notaevaluaciontecnica2,
-                        function (err, data) {
-                            if (!err) {
-    
-    
-    
-    */
 
             models.notaevaluaciontecnica3.destroy({
                 where: {
