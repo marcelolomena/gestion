@@ -975,7 +975,7 @@ exports.actionnota3 = function (req, res) {
                                             nota: suma2
                                         }, {
                                                 where: {
-                                                    id: req.body.parent_id
+                                                    id: req.body.idnota1
                                                 }
                                             })
                                     } else {
@@ -983,7 +983,7 @@ exports.actionnota3 = function (req, res) {
                                             nota: 0
                                         }, {
                                                 where: {
-                                                    id: req.body.parent_id
+                                                    id: req.body.idnota1
                                                 }
                                             })
                                     }
@@ -1145,7 +1145,7 @@ exports.actionnota3 = function (req, res) {
                                             nota: suma2
                                         }, {
                                                 where: {
-                                                    id: req.body.parent_id
+                                                    id: req.body.idnota1
                                                 }
                                             })
                                     } else {
@@ -1153,7 +1153,7 @@ exports.actionnota3 = function (req, res) {
                                             nota: 0
                                         }, {
                                                 where: {
-                                                    id: req.body.parent_id
+                                                    id: req.body.idnota1
                                                 }
                                             })
                                     }
