@@ -1056,19 +1056,21 @@ exports.actionnota3 = function (req, res) {
                                         logger.debug("--------------------------------->>> esto es la suma final2 lv1: " + suma2)
                                         logger.debug("--------------------------------->>> esto es la suma porcentaje2 lv1: " + sumaporcentaje2)
                                         if (sumaporcentaje2 == 100) {
+                                            logger.debug("100% : " + sumaporcentaje2 + " id --> " + req.body.idnota1)
                                             models.notaevaluaciontecnica.update({
                                                 nota: suma2
                                             }, {
                                                     where: {
-                                                        id: req.body.parent_id
+                                                        id: req.body.idnota1
                                                     }
                                                 })
                                         } else {
+                                            logger.debug("<100% : " + sumaporcentaje2 + " id --> " + req.body.idnota1)
                                             models.notaevaluaciontecnica.update({
                                                 nota: 0
                                             }, {
                                                     where: {
-                                                        id: req.body.parent_id
+                                                        id: req.body.idnota1
                                                     }
                                                 })
                                         }
