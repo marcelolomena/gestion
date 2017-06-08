@@ -14,8 +14,8 @@ exports.action = function (req, res) {
     var tipopago = 84
 
     if (action != "del") {
-        if (costoorigen != "")
-            costoorigen = costoorigen.split(".").join("").replace(",", ".")
+        //if (costoorigen != "")
+        //    costoorigen = costoorigen.split(".").join("").replace(",", ".")
 
         var ano = req.body.periodo.substring(0, 4);
         var mes = req.body.periodo.substring(4, 6);

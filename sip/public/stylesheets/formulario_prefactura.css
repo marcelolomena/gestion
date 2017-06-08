@@ -75,6 +75,41 @@
 	height: 27px;
 	line-height: 24px;
 }
+.formSap #nombreini {
+	border: 1px solid #7fb2cc;
+	color: #036;
+	width: 124px;
+	height: 27px;
+	line-height: 24px;
+}
+.formSap #numart {
+	border: 1px solid #7fb2cc;
+	color: #036;
+	width: 124px;
+	height: 27px;
+	line-height: 24px;
+}
+.formSap #pmo {
+	color: #036;
+	padding-right: 25px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: left;
+	border: 1px solid #7fb2cc;
+	background-color: #ecf4f7;
+	margin-left: 10px;
+}.formSap #estado {
+	color: #036;
+	padding-right: 25px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: left;
+	border: 1px solid #7fb2cc;
+	background-color: #ecf4f7;
+	margin-left: 10px;
+}
 .formFactura #buscar {
 	background-color: #069;
 	height: 28px;

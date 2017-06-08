@@ -627,7 +627,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
         },        
         {
             label: 'Cuota', name: 'cuota', search: false, editable: true, hidden: true,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 }
+            formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },        
         {
             label: '# Cuotas', name: 'numerocuota', search: false, editable: true, hidden: true,

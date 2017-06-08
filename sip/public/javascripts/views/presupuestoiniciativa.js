@@ -275,9 +275,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('0.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
 
@@ -287,9 +285,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('00.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -366,6 +362,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
+                var uf = new Number(postdata.uf.replace(",", "."));
+                var dolar = new Number(postdata.dolar.replace(",", "."));
+                
                 if (postdata.uidlider == 0) {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
@@ -384,8 +383,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 console.log('total: ' + lasuma);
                 if (lasuma != 100) {
                     return [false, "Porcentajes no suman 100", ""];
-                }
-                else {
+                }  if (isNaN(dolar) || dolar < 0) {
+                    return [false, "Dolar: Ingrese un número valido", ""];
+                }  if (isNaN(uf) || uf < 0) {
+                    return [false, "UF: Ingrese un número valido", ""];
+                } else {
                     return [true, "", ""]
                 }
             },
@@ -450,6 +452,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
+                var dolar = new Number(postdata.dolar.replace(",", "."));
+                postdata.dolar=dolar;
+                var uf = new Number(postdata.uf.replace(",", "."));
+                postdata.uf=uf;
+                                
                 if (postdata.uidlider == 0) {
                     return [false, "Lider: Campo obligatorio", ""];
                 } if (postdata.uidjefeproyecto == 0) {
@@ -468,8 +475,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 console.log('total: ' + lasuma);
                 if (lasuma != 100) {
                     return [false, "Porcentajes no suman 100", ""];
-                }
-                else {
+                }  if (isNaN(dolar) || dolar < 0) {
+                    return [false, "Dolar: Ingrese un número valido", ""];
+                }  if (isNaN(uf) || uf < 0) {
+                    return [false, "UF: Ingrese un número valido", ""];
+                } else {
                     return [true, "", ""]
                 }
             },

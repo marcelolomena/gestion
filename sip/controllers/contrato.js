@@ -349,6 +349,7 @@ exports.action = function (req, res) {
 }
 
 exports.listall = function (req, res) {
+  console.dir("***************EN LISTALL ***************************");
   models.contrato.findAll({
     attributes: ['id', 'nombre'],
     where: { 'nombre': { $ne: null } },
@@ -376,7 +377,7 @@ exports.listaporproveedor = function (req, res) {
 
 exports.list = function (req, res) {
 
-  //console.dir(req.session)
+  console.dir("***************EN LIST ***************************");
 
   var page = req.body.page;
   var rows = req.body.rows;
@@ -429,6 +430,7 @@ exports.list = function (req, res) {
 };
 
 exports.listNew = function (req, res) {
+  console.dir("***************EN LISTNEW ***************************");
   var page = req.body.page;
   var rowspp = req.body.rows;
   var filters = req.body.filters;

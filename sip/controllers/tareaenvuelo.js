@@ -39,6 +39,7 @@ exports.action = function (req, res) {
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
+        nombre: req.body.nombretarea,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
         fechafin: fechafin,
@@ -91,6 +92,7 @@ exports.action = function (req, res) {
               idservicio: req.body.idservicio,
               idproveedor: req.body.idproveedor,
               tarea: req.body.tarea,
+              nombre: req.body.nombretarea,
               idtipopago: req.body.idtipopago,
               fechainicio: fechainicio,
               fechafin: fechafin,
@@ -247,6 +249,19 @@ exports.gettareasporpresupuesto = function (req, res) {
     { replacements: { idcontrato: req.params.idcontrato }, type: sequelize.QueryTypes.SELECT }
   ).then(function (user) {
     res.json(user);
+  }).catch(function (err) {
+    logger.error(err)
+    res.json({ error_code: 1 });
+  });
+};
+
+exports.getnuevatarea = function (req, res) {
+  sequelize.query('select substring(tarea,1,4) AS tarea, convert(INT,substring(tarea,5,2)) AS numero  from sip.tareaenvuelo '+
+    'WHERE idpresupuestoenvuelo = :idpresupuesto AND idservicio=:idservicio '+
+    'ORDER BY numero desc ',
+    { replacements: { idpresupuesto: req.params.idpresupuesto, idservicio: req.params.idservicio }, type: sequelize.QueryTypes.SELECT }
+  ).then(function (tarea) {
+    res.json(tarea);
   }).catch(function (err) {
     logger.error(err)
     res.json({ error_code: 1 });

@@ -1,4 +1,65 @@
 $(document).ready(function () {
+
+    $.ajax({
+        url: '/usuarios_por_rol/PMO',
+        type: 'GET',
+        async: false, 
+        success: function (j) {            
+            $('#pmo').append('<option value="0"> - Escoger PMO - </option>');
+            $.each(j, function (i, item) {
+                $('#pmo').append('<option value="' + item.uid + '">' + item.first_name + ' '+ item.last_name + '</option>');
+            });
+        },
+        error: function (e) {
+
+        }                
+    });
+    
+    $.ajax({
+        url: '/parameters/estadoiniciativa',
+        type: 'GET',
+        async: false, 
+        success: function (j) {            
+            $('#estado').append('<option value="0"> - Escoger Estado - </option>');
+            $.each(j, function (i, item) {
+                $('#estado').append('<option value="' + item.id + '">' + item.nombre + '</option>');
+            });
+        },
+        error: function (e) {
+
+        }                
+    });    
+        
+    nombreini = $('#nombreini').val();
+    numart = $('#numart').val();
+    pmo = $('#pmo').val();
+    estado = $('#estado').val();    
+    loadGrid(nombreini, numart, pmo, estado);     
+               
+    $("#buscar").click(function(){
+   
+       nombreini = $('#nombreini').val();
+       numart = $('#numart').val();
+       pmo = $('#pmo').val();
+       estado = $('#estado').val();
+       loadGrid(nombreini, numart, pmo, estado);
+    });
+
+});    
+    
+var leida = false;
+var proveedorx;
+function loadGrid(nombreini, numart, pmo, estado) {
+	var url = "/iniciativas/list";
+	if (leida){
+        $("#grid").setGridParam({ postData: {nombreini:nombreini, numart:numart, pmo:pmo, estado:estado, page:1, rows:10} });
+        $("#grid").jqGrid('setCaption', "Iniciativas").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	} else {
+		showIniciativas(nombreini, numart, pmo, estado);
+	}
+}
+    
+function showIniciativas(nombreini, numart, pmo, estado) {    
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
@@ -74,7 +135,7 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editrules: { required: true },
             editoptions: {placeholder: "Nombre del proyecto" }
         },
@@ -116,7 +177,7 @@ $(document).ready(function () {
         },
         {
             label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true },
             stype: 'select',
             searchoptions: {
@@ -142,7 +203,7 @@ $(document).ready(function () {
         },
         {
             label: 'Sponsor', name: 'sponsor1', width: 150, align: 'left',
-            search: true, editable: true, hidden: false,
+            search: false, editable: true, hidden: false,
             editoptions: {placeholder: "Nombre y apellido Sponsor 1" }
         },
         {
@@ -183,7 +244,7 @@ $(document).ready(function () {
         },
         {
             label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
@@ -223,7 +284,7 @@ $(document).ready(function () {
         },
         {
             label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,hidden: true,
             editrules: { edithidden: false }
         },
         {
@@ -264,17 +325,17 @@ $(document).ready(function () {
         },
         {
             label: 'Categoria', name: 'categoria', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Estado', name: 'estado', width: 150, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Año', name: 'ano', width: 50, align: 'left',
-            search: true, editable: true,
+            search: false, editable: true,
             editrules: { required: true },
             editoptions: {
                 dataInit: function (element) {
@@ -442,6 +503,20 @@ $(document).ready(function () {
     $("#grid").jqGrid({
         url: '/iniciativas/list',
         mtype: "POST",
+        postData: {
+            nombreini : function () {
+                return nombreini;
+            },
+            numart : function () {
+                return numart;
+            },
+            pmo : function () {
+                return pmo;
+            },
+            estado : function () {
+                return estado;
+            }                                                        
+        },            
         datatype: "json",
         page: 1,
         colModel: modelIniciativa,
@@ -578,4 +653,9 @@ $(document).ready(function () {
         }
     });
     $("#pager_left").css("width", "");
-});
+    
+
+	leida = true;    
+    
+}
+

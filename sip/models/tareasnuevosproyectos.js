@@ -91,7 +91,11 @@ module.exports = function(sequelize, DataTypes) {
     glosa: {
       type: DataTypes.STRING,
       allowNull: true
-    }
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'tareasnuevosproyectos'
   });

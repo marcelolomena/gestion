@@ -189,14 +189,12 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
             editrules: {required:true},
         },*/
         {
-            label: 'Pagos', name: 'costoorigen', width: 80, align: 'right',
+            label: 'Pago', name: 'costoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editrules: {required:true},
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -424,7 +422,17 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
+            },
+            beforeSubmit: function (postdata, formid) {
+                var costoorigen = new Number(postdata.costoorigen.replace(",", "."));
+                postdata.costoorigen=costoorigen;
+                
+                if (isNaN(costoorigen) || costoorigen < 0) {
+                    return [false, "Pago: Ingrese un número valido", ""];
+                } else {
+                    return [true, "", ""]
+                }                
+            }            
         },
         {
             closeAfterAdd: true,
@@ -450,7 +458,17 @@ function gridFlujoNuevaTarea(parentRowID, parentRowKey, suffix) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
+            },
+            beforeSubmit: function (postdata, formid) {
+                var costoorigen = new Number(postdata.costoorigen.replace(",", "."));
+                postdata.costoorigen=costoorigen;
+                
+                if (isNaN(costoorigen) || costoorigen < 0) {
+                    return [false, "Pago: Ingrese un número valido", ""];
+                } else {
+                    return [true, "", ""]
+                }                
+            }                  
         },
         {
             closeAfterDelete: true,
