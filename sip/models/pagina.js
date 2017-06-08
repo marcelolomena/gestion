@@ -35,6 +35,9 @@ module.exports = function(sequelize, DataTypes) {
     script: {
       type: DataTypes.STRING,
       allowNull: true
+    },borrado: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'pagina'

@@ -408,22 +408,23 @@ exports.action4 = function (req, res) {
 
   switch (action) {
     case "add":
-
+      console.log(req.body.idclaseevaluaciontecnica)
       models.claseevaluaciontecnica.findOne({
         where: {
-          id: req.body.idcriterioevaluacion2
+          id: req.body.idclaseevaluaciontecnica
         }
       }).then(function (records) {
+        console.dir(records)
         if (parseInt(records.niveles) < 3) {
           models.claseevaluaciontecnica.update({
             niveles: 3
           }, {
               where: {
-                id: req.body.idcriterioevaluacion2
+                id: req.body.idclaseevaluaciontecnica
               }
             })
         }
-        return res.json({ id: req.body.idcriterioevaluacion2, idc: records.id, success: true });
+        return res.json({ id: req.body.idclaseevaluaciontecnica, idc: req.body.idcriterioevaluacion2, success: true });
       }).catch(function (err) {
         logger.error(err)
         return res.json({ error: 1, glosa: err.message });
@@ -508,6 +509,7 @@ exports.porcentajecriterios3 = function (req, res) {
 }
 
 exports.upload = function (req, res) {
+  console.log("HOLA")
 
   if (req.method === 'POST') {
 
@@ -564,10 +566,10 @@ exports.upload = function (req, res) {
 
             item['nombre'] = line.nombre;
             item['idcriterioevaluacion2'] = req.params.idcriterioevaluacion2;
-            item['porcentaje'] = line.porcentaje;
+            item['porcentaje'] = parseFloat(line.porcentaje);
             item['pregunta'] = line.pregunta;
             item['borrado'] = 1;
-
+            console.dir(item);
 
             carrusel.push(item);
           }
@@ -579,7 +581,8 @@ exports.upload = function (req, res) {
 
         //parser.on('end', function (count) {
         parser.on('finish', function () {
-
+          console.log("HOLA DE NUEVO")
+          console.dir(carrusel)
           models.criterioevaluacion3.bulkCreate(carrusel).then(function (events) {
             return res.json({ message: 'Las preguntas fueron cargadas', success: true });
           }).catch(function (err) {

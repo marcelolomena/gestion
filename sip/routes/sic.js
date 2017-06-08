@@ -25,6 +25,9 @@ var permisosController = require('../controllers/sic/permisos')
 var participantesproveedorController = require('../controllers/sic/participantesproveedor')
 var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
 var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
+var adjudicacionController = require('../controllers/sic/adjudicacion')
+var solicitudcontratoController =  require('../controllers/sic/solicitudcontrato')
+
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
@@ -687,6 +690,52 @@ module.exports = function (passport) {
 
     router.route('/sic/actionaprobaciondoc/:id/:idpadre')
         .post(isAuthenticated, documentosController.actionaprobaciondoc);
+
+    router.route('/sic/adjudicacion/:id')
+        .get(isAuthenticated, adjudicacionController.list)
+
+    router.route('/sic/adjudicacion/:id/cols')
+        .get(isAuthenticated, adjudicacionController.columnas)
+
+    router.route('/sic/adjudicados/:id/list')
+        .get(isAuthenticated, adjudicacionController.listadjudicados)
+
+    router.route('/sic/adjudicados/action')
+        .post(isAuthenticated, adjudicacionController.action)
+
+    router.route('/sic/solicitudcontrato/:id')
+        .get(isAuthenticated, solicitudcontratoController.list)
+
+    router.route('/sic/solicitudcontrato/action')
+        .post(isAuthenticated, solicitudcontratoController.action)
+
+    router.route('/sic/tocsolcon/:id/list')
+        .get(isAuthenticated, clausulasController.listsolcon)
+
+    router.route('/sic/defaulttoc/:id')
+        .get(isAuthenticated, clausulasController.defaulttoc);
+
+    router.route('/sic/documentowordsolcon/:id')
+        .get(isAuthenticated, clausulasController.downloadsolcon);
+
+    router.route('/sic/clausulassolcon/action')
+        .post(isAuthenticated, clausulasController.actionsolcon);
+
+    router.route('/sic/textosolcon/:id')
+        .get(isAuthenticated, clausulasController.textosolcon);
+
+    router.route('/sic/notaevaluaciontecnica3/:id/list')
+        .get(isAuthenticated, cotizacionservicioController.listnota3)
+
+    router.route('/sic/notaevaluaciontecnica3/action')
+        .post(isAuthenticated, cotizacionservicioController.actionnota3)
+
+    router.route('/sic/criterios3/:id')
+        .get(isAuthenticated, cotizacionservicioController.criterios3)
+
+    router.route('/sic/proveedoressugeridosserviciodesdenota2/:id')
+        .get(isAuthenticated, cotizacionservicioController.proveedoressugeridosserviciodesdenota2);
+
 
     return router;
 }

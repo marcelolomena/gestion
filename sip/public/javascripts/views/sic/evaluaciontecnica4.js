@@ -15,19 +15,19 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
     var tmplPF = "<div id='responsive-form' class='clearfix'>";
 
     tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Pregunta {idcriterioevaluacion3}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row'>";
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Proveedor {idproveedor}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Fecha {fecha}</div>";
+    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Respuesta {respuesta}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'><span style='color: red'>*</span>Moneda {idmoneda}</div>";
-    tmplPF += "</div>";
-
-    tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Costo Total<span style='color:red'>*</span>{costototal}</div>";
+    tmplPF += "<div class='column-full'>Nota<span style='color:red'>*</span>{nota}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
@@ -42,14 +42,14 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/sic/notaevaluaciontecnica/" + parentRowKey + "/list";
+    var childGridURL = "/sic/notaevaluaciontecnica3/" + parentRowKey + "/list";
 
-     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+    var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
     //console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
     //console.log("la rowData : " + rowData)
     var parentCriterio = rowData.idserviciorequerido;
-    console.log("la parentCriterio : " + parentCriterio)
+    //console.log("la parentCriterio : " + parentCriterio)
 
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
@@ -57,17 +57,52 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
     //console.log("la rowData2 : " + rowData2)
     var parentClaseEvaluacionTecnica = rowData2.claseevaluaciontecnica;
-    console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
+
+    //console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
+    var bisabuelo = rowData.idnotaevaluacion;
+    var parenabuelo = rowData2.id
+    var parentbisabuelo = rowData.id
+    var rowData1000 = $("#" + grillaabuelo).getRowData(bisabuelo);
+
+    //console.log("la PARENABUELO : " + parenabuelo)
+    //console.log("la PARENBISABULO : " + bisabuelo)
+    //console.dir(rowData1000[0].id)
+    var parent_bisabuelo = rowData1000[0].id
+
 
     var modelSubcriterios = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idserviciorequerido', name: 'idserviciorequerido', hidden: true },
-        { label: 'idcriterioevaluacion', name: 'idcriterioevaluacion', hidden: true },
+        { label: 'idnotaevaluaciontecnica2', name: 'idnotaevaluaciontecnica2', hidden: true },
+        {
+            name: 'idcriterioevaluacion3', search: false, editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/sic/criterios3/' + parentRowKey,
+                buildSelect: function (response) {
+                    var rowKey = $('#' + childGridID).getGridParam("selrow");
+                    var rowData = $('#' + childGridID).getRowData(rowKey);
+                    var thissid = rowData.idcriterioevaluacion2;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Seleccione criterio a evaluar--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].pregunta + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].pregunta + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
         {
             name: 'idproveedor', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/proveedoressugeridosservicio/' + parentRowKey,
+                dataUrl: '/sic/proveedoressugeridosserviciodesdenota2/' + parentRowKey,
                 buildSelect: function (response) {
                     var rowKey = $('#' + childGridID).getGridParam("selrow");
                     var rowData = $('#' + childGridID).getRowData(rowKey);
@@ -88,11 +123,11 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Nombre Criterio', name: 'criterioevaluacion.nombre', width: 120, align: 'left', search: true, editable: true,
+            label: 'Nombre Criterio', name: 'criterioevaluacion3.pregunta', width: 120, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
         },
         {
-            label: 'Porcentaje', name: 'criterioevaluacion.porcentaje', width: 50, align: 'left', search: true, editable: true,
+            label: 'Porcentaje', name: 'criterioevaluacion3.porcentaje', width: 50, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
         },
 
@@ -106,13 +141,59 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
         {
             label: 'Nota', name: 'nota', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 },
-            editrules: { required: true },
+            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            editrules: { required: false },
+
+        },
+
+        {
+            label: 'Respuesta', name: 'respuesta', width: 300, align: 'left', search: false, editable: true,
+            edittype: 'custom',
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('0,00', { reverse: true });
+                custom_element: function (value, options) {
+                    var elm = $("<textarea></textarea>");
+                    elm.val(value);
+                    setTimeout(function () {
+                        //tinymce.remove();
+                        //var ctr = $("#" + options.id).tinymce();
+                        //if (ctr !== null) {
+                        //    ctr.remove();
+                        //}
+                        try {
+                            tinymce.remove("#" + options.id);
+                        } catch (ex) { }
+                        tinymce.init({
+                            menubar: false,
+                            statusbar: false,
+                            selector: "#" + options.id,
+                            plugins: "link",
+                            height: 200,
+                        });
+                    }, 50);
+                    return elm;
+                },
+                custom_value: function (element, oper, gridval) {
+                    var id;
+                    if (element.length > 0) {
+                        id = element.attr("id");
+                    } else if (typeof element.selector === "string") {
+                        var sels = element.selector.split(" "),
+                            idSel = sels[sels.length - 1];
+                        if (idSel.charAt(0) === "#") {
+                            id = idSel.substring(1);
+                        } else {
+                            return "";
+                        }
+                    }
+                    if (oper === "get") {
+                        return tinymce.get(id).getContent({ format: "row" });
+                    } else if (oper === "set") {
+                        if (tinymce.get(id)) {
+                            tinymce.get(id).setContent(gridval);
+                        }
+                    }
                 }
-            }
+            },
         },
 
         {
@@ -188,7 +269,7 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
         height: 'auto',
         pager: "#" + childGridPagerID,
 
-        editurl: '/sic/cotizacionservicio/action',
+        editurl: '/sic/notaevaluaciontecnica3/action',
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
@@ -206,13 +287,13 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Cotización ",
+            editCaption: "Modificar Nota Respuesta ",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, idnota1: parent_bisabuelo/*, idsolicitudcotizacion: parentSolicitud*/ };
             },
         },
         {
@@ -220,13 +301,13 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Cotización",
+            addCaption: "Agregar Nota Respuesta",
             template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, idnota1: parent_bisabuelo/*, idsolicitudcotizacion: parentSolicitud*/ };
             },
             beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
@@ -242,7 +323,7 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Respuesta",
+            addCaption: "Eliminar Nota Respuesta",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {
@@ -258,7 +339,7 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, idnota1: parent_bisabuelo/*, idsolicitudcotizacion: parentSolicitud*/ };
             },
         },
         {
@@ -266,7 +347,7 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
         }
     );
 
-    
+
 
 
 }

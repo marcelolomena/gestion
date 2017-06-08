@@ -41,9 +41,9 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     var childGridURL = "/sic/notaevaluaciontecnica/" + parentRowKey + "/list";
 
     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-    //console.log("la grilla padre: " + grillapadre)
+    console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    //console.log("la rowData : " + rowData)
+    console.log("la rowData : " + rowData)
     var parentSolicitud = rowData.idsolicitudcotizacion;
     var parentClaseEvaluacionTecnica = rowData.claseevaluaciontecnica;
     console.log("la parentClaseEvaluacionTecnica : " + parentClaseEvaluacionTecnica)
@@ -119,7 +119,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             label: 'Nota', name: 'nota', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editrules: { required: true },
+            editrules: { required: false },
         
         },
 
@@ -226,8 +226,29 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
+            beforeShowForm: function (form) {
+                var nivel = 0;
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
+                    success: function (data) {
+                        console.log(data[0].niveles)
+                        nivel = (data[0].niveles);
+                    }
+                });
+
+
+                console.log("niveles: " + nivel)
+
+
+                if (nivel > 2) {
+                    $("input#nota").attr("readonly", false);
+                } else {
+                    $("input#nota").attr("readonly", true);
+                }
+            }
         },
         {
             closeAfterAdd: true,
@@ -240,7 +261,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
             beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
@@ -249,6 +270,27 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                     return [true, "", ""]
                 }
             },
+            beforeShowForm: function (form) {
+                var nivel = 0;
+                $.ajax({
+                    type: "GET",
+                    url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
+                    success: function (data) {
+                        console.log(data[0].niveles)
+                        nivel = (data[0].niveles);
+                    }
+                });
+
+
+                console.log("niveles: " + nivel)
+
+
+                if (nivel > 2) {
+                    $("input#nota").attr("readonly", false);
+                } else {
+                    $("input#nota").attr("readonly", true);
+                }
+            }
 
         },
         {
@@ -272,7 +314,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey , abuelo: parentSolicitud };
             },
         },
         {

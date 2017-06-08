@@ -28,23 +28,24 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
     var childGridPagerID = pager_id;
     var childGridURL = "/sic/criteriosevaluacion/" + parentRowKey + "/list3";
 
-    //console.log("la parentKey : " + parentRowKey)
+    console.log("la parentKey : " + parentRowKey)
 
     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-    //console.log("la grilla padre: " + grillapadre)
+    console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    //console.log("la rowData : " + rowData)
+    console.log("la rowData : " + rowData)
     var parentCriterio = rowData.idcriterioevaluacion;
-    //console.log("la parentCriterio : " + parentCriterio)
+    console.log("la parentCriterio : " + parentCriterio)
 
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
-    //console.log("la grilla abuelo: " + grillaabuelo)
+    console.log("la grilla abuelo: " + grillaabuelo)
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
-    //console.log("la rowData2 : " + rowData2)
+    console.dir(rowData2)
     var parentAbuelo = rowData.id;
-    //console.log("la parentSolicitud : " + parentAbuelo)
-
+    console.log("la parentSolicitud : " + parentAbuelo)
+    var parentbisabuelo = rowData2.idclaseevaluaciontecnica;
+    console.log("la parentbisabuelo : " + parentbisabuelo)
 
 
     var modelSubcriterios = [
@@ -211,7 +212,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             },
 
             onclickSubmit: function (rowid) {
-                return { idcriterioevaluacion2: parentRowKey, childGridID: childGridID };
+                return { idclaseevaluaciontecnica: parentbisabuelo, childGridID: childGridID, idcriterioevaluacion2: parentRowKey };
             }, afterSubmit: UploadPre
 
         },
@@ -221,6 +222,8 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             addCaption: "Eliminar Pregunta",
+            mtype: 'POST',
+            url: '/sic/criteriosevaluacion/action3',
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }
@@ -244,6 +247,8 @@ function UploadPre(response, postdata) {
     if (data.success) {
         if ($("#ArchivoUpload").val() != "") {
             ajaxPregUpload(data.id, data.idc, postdata.idcriterioevaluacion2, postdata.childGridID);
+            console.log(data.id);
+            console.log(data.idc);
         }
     }
 
@@ -251,13 +256,15 @@ function UploadPre(response, postdata) {
 }
 
 function ajaxPregUpload(id, idc, idpadre, childGridID) {
+    console.log("ESTA WEA SI FUNCIONA CTM: "+id)
+    console.log("este es:"+idc)
     var dialog = bootbox.dialog({
         title: 'Se inicia la transferencia',
         message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
     });
     dialog.init(function () {
         $.ajaxFileUpload({
-            url: '/sic/criterio3/upload/' + idpadre,
+            url: '/sic/criterio3/upload/' + idc,
             secureuri: false,
             fileElementId: 'ArchivoUpload',
             dataType: 'json',

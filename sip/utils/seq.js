@@ -75,8 +75,40 @@ module.exports = (function () {
                     });
                 }
             }
+        } catch (e) {
+            logger.error(e)
+            return callback(e);
+        }
+        callback(undefined, condition);
+    }
+    var buildGenericFilter = function (filters, callback) {
+        var condition = [];
+        try {
+            if (filters) {
 
-            //condition.push({ borrado: 1 })
+                var jsonObj = JSON.parse(filters);
+
+                if (JSON.stringify(jsonObj.rules) != '[]') {
+
+                    jsonObj.rules.forEach(function (item) {
+                        switch (item.op) {
+                            case "cn":
+                                condition.push({ [item.field]: { $like: '%' + item.data + '%' } });
+                                break;
+                            case "eq":
+                                if (item.data != 0)
+                                    condition.push({ [item.field]: item.data });
+                                break;
+                            case "ge":
+                                condition.push({ [item.field]: { $gte: item.data } });
+                                break;
+                            case "le":
+                                condition.push({ [item.field]: { $lte: item.data } });
+                                break;
+                        }
+                    });
+                }
+            }
         } catch (e) {
             logger.error(e)
             return callback(e);
@@ -430,6 +462,7 @@ module.exports = (function () {
     return {
         buildCondition: buildCondition,
         buildConditionFilter: buildConditionFilter,
+        buildGenericFilter: buildGenericFilter,
         buildConditionExternal: buildConditionExternal,
         buildAdditionalCondition: buildAdditionalCondition,
         buildAdditionalConditionFilter: buildAdditionalConditionFilter,
