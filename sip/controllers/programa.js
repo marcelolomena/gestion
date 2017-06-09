@@ -37,3 +37,11 @@ exports.getProgramasId = function (req, res) {
 
 };
 
+exports.getProgramaCode = function (req, res) {
+    models.programa.find({ where: { 'program_code': req.params.id } }).then(function (programa) {
+        res.json(programa);
+    }).error(function (err) {
+        res.send(err);
+    });
+};
+

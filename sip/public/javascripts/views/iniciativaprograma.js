@@ -1,15 +1,15 @@
 function gridIniciativaPrograma(parentRowID, parentRowKey) {
     var tmplP = "<div id='responsive-form' class='clearfix'>";
-
+   
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'><span style='color: red'>*</span>Proyecto {nombre}</div>";
-    tmplP += "<div class='column-half'>Art {codigoart}</div>";
+    tmplP += "<div class='column-full'><span style='color: red'>*</span>Proyecto {nombre}</div>";
+    tmplP += "<div class='column-full'><span style='color: red'>*</span>División {iddivision}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'><span style='color: red'>*</span>División {iddivision}</div>";
+    tmplP += "<div class='column-half'>Art {codigoart}</div>";    
     tmplP += "<div class='column-half'>Programas {program_id}</div>";
-    tmplP += "</div>";
+    tmplP += "</div>";    
 
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-full'>Sponsor {sponsor1}</div>";
@@ -142,52 +142,44 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     }
                 }],
             },
-            dataInit: function (elem) { $(elem).width(200); }
+            //dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Art', name: 'codigoart', width: 150, align: 'center',
-            search: false, editable: true, hidden: false,
+            label: 'Art', name: 'codigoart', width: 250, align: 'left',
+            search: true, editable: true, hidden: false,
             editoptions: {
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        console.log("****change ok"+$('codigoart', this).val());
-                        var idRRHH = $('codigoart', this).val()
-                        if (idRRHH != "0") {
-                            $.ajax({
-                                type: "GET",
-                                url: '/programas/' + idRRHH,
-                                async: false,
-                                success: function (data) {
-                                    var grid = $("#" + childGridID);
-                                    var rowKey = grid.getGridParam("selrow");
-                                    var rowData = grid.getRowData(rowKey);
-                                    var thissid = rowData.program_name;
-                                    var s = "<select>";//el default
-                                    s += '<option value="0">--Escoger Programa--</option>';
-                                    $.each(data, function (i, item) {
-                                        if (data[i].program_name == thissid) {
-                                            s += '<option value="' + data[i].program_id + '" selected>' + data[i].program_name + '</option>';
-                                        } else {
-                                            s += '<option value="' + data[i].program_id + '">' + data[i].program_name + '</option>';
-                                        }
-                                    });
-                                    s += "</select>";
-                                    $("select#program_id").html(s);
-                                    $("input#codigoart").val(data.program_code);
-                                }
-                            });
-                        } else {
-                            $("input#codigoart").val(null);
+            dataEvents: [{
+                type: 'change', fn: function (e) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);                 
+                    console.log("rowData:" + rowData);
+                    var thissid = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: '/getcodigoart/' + thissid,
+                        async: false,
+                        success: function (data) {
+                            var grid = $("#" + childGridID);
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.program_name;
+                            var s = "<select>";//el default
+                            //s += '<option value="0">--Escoger Programa--</option>';
+                            s += '<option value="' + data[0].program_id + '" selected>' + data[0].nombreart + '</option>';
+                            s += "</select>";
+                            $("select#program_id").html(s);
+                            $("input#codigoart").val(data.program_code);
                         }
-
+                    });
                     }
-                }],
+            }],
             },                
         },        
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
             search: true, editable: true, hidden: false,
-            editrules: { required: true }
+            editrules: { required: true },  editoptions: { readonly: 'readonly'} 
         },
         {
             label: 'División', name: 'iddivision',
@@ -306,7 +298,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { required: true, edithidden: false }
         },
         {
-            label: 'PMO', name: 'uidpmo',
+            label: 'PMO', name: 'uidpmo', 
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -342,8 +334,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
-            search: false, editable: true, hidedlg: true,
+            label: 'PMO', name: 'pmoresponsable', width: 250, align: 'left',
+            search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true },
         },
         {
@@ -388,8 +380,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left',
-            search: false, editable: true, hidedlg: true,
+            label: 'Estado', name: 'estado', width: 250, align: 'left',
+            search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
@@ -453,7 +445,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Gasto Estimado (US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
                 defaultValue:0
@@ -806,7 +798,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     
                 }, 500);
 
-                $('input#codigoart', form).attr('readonly', 'readonly');
+                //$('input#codigoart', form).attr('readonly', 'readonly');
             },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
