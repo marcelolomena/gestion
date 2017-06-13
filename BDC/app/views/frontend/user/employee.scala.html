@@ -59,14 +59,14 @@
 								<div class="width_full task_list_div" id="task_list_@p.program_id">
 									@for(s <- SubTaskServices.findSubTasksListForProgram(session.get("uId").get, p.program_id.get.toString())){
 										<span class="left">&raquo;</span>
-										<span class="employee_task_title" id="@s.sub_task_id"><a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())"> @s.task</a> </span>
+										<span class="employee_task_title" id="@s.sub_task_id">@*<a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())">*@ <a href="@controllers.Frontend.routes.TimeSheet.productsTimesheet()" id="timesheet_id"> @s.task</a> </span>
 									}
 								</div>
 							</div>
 						}
 						
 						
-						<h3 style="font-size:13px;height:26px;padding-left: 5px;">Tareas sin avance informado</h3>
+						<h3 style="font-size:13px;height:26px;padding-left: 5px;">Mis Subtareas asignadas a terceros</h3>
 						@for(pt <- programTask){
 							
 							<div class="dash_right_data_2">
@@ -134,7 +134,7 @@
 			<div style="float:left;">
 					<span class="left" style="height: 200px; width: 200px; border: solid black 1px;"><img  width="200" height="200" src="@if(!employee.get.profile_image.isEmpty){/documents/@employee.get.profile_image}else{/assets/frontend/images/male_l.jpg}" alt="no image"></span>
 					@if(Integer.parseInt(session.get("uId").get) ==  Integer.parseInt(employee.get.uid.get.toString()) ){
-						<span class="left emp_edit" > <a href="/edit-users-profile/@employee.get.uid.get.toString()"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" alt="" class="edit-profile">@Messages("employee.editProfile")</a></span>
+						@*<span class="left emp_edit" > <a href="/edit-users-profile/@employee.get.uid.get.toString()"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" alt="" class="edit-profile">@Messages("employee.editProfile")</a></span>*@
 					   <span class="left emp_edit" > <a id="edit-profile-image"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">@Messages("employee.editImage") </a></span>
 					   <span class="left emp_edit" style="width: 170px;"> <a href="/reset-password"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">@Messages("resetpassword.resetPassword")</a></span>
 					   

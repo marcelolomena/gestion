@@ -22,18 +22,20 @@
 				}
 				
 				@*@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){*@
-				@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){
+				@if(utils.UserAccess.checkAccess(req,"sub_task_gantt")){
+				@*@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){*@
 					<a href='@controllers.Frontend.routes.Documents.uploadDocument(taskDetail.get.sub_task_id.get.toString, "SUBTASK", "ADD")'><span class="upload-document-icon">@Messages("uploaddocument.uploaddocument")</span></a>
 				}
 				@*TimesheetService.validateUserForHistoricalTimebooking(taskDetail.get.sub_task_id.get.toString,session.get("uId").get) &&*@
 				@*@if( utils.UserAccess.checkAccess(req,"sub_task_book_time")){*@
+					
 				@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){
 					<a href='@controllers.Frontend.routes.TimeSheet.bookTime(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.booktime")</span></a>	
 				}
 				
-				@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){ 
+				@*@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){ 
 					<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.gotosubtaskdetailpage")</span></a>
-				}
+				}*@
 				@*@if(isSubtaskAllocated && utils.UserAccess.checkAccess(req,"sub_task_delete")){*@
 	            @if(isSubtaskAllocated && TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){ 			
 					<span id="delete-sub-task-id" class="delete-sub-task" >

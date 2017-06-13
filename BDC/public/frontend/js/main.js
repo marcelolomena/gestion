@@ -1214,6 +1214,7 @@ function assignSubTaskFo() {
 										$(".leftPanel").css("z-index", "2");
 
 										renderEarnValue(m_id);
+										renderEarnValuepro(m_id);
 										var delay = 300;
 										setTimeout(function() {
 											getTaskDetails(t_id);
@@ -2567,6 +2568,39 @@ function renderEarnValue(id) {
 	}, delay);
 }
 
+function renderEarnValuepro(id) {
+
+	var url = "/earn-value-pro?id=" + id + "&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var mainString = ""
+		var obj = JSON.parse(data);
+
+		if (obj.EV) {
+			//$("#ev2").html(obj.EV);
+			$("#pv2").html(obj.PV);
+			//$("#pai2").html(obj.PAI);
+			//$("#ac2").html(obj.AC);
+			$("#spi2").html(obj.SPI);
+			//$("#cpi2").html(obj.CPI);
+			//$("#eac2").html(obj.EAC);
+			//$("#etc2").html(obj.ETC);
+			$("#pae2").html(obj.PAE);
+			//$("#hp2").html(obj.HP);
+			//$("#ha2").html(obj.HA);
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
 function rederOnloadTaskDependence() {
 	var _this = $("#task_depend").val();
 
@@ -3473,6 +3507,38 @@ function renderProjectEarnValue(id) {
 		$(".loader").css("display", "none");
 	}, delay);
 }
+function renderProjectEarnValuepro(id) {
+
+	var url = "/project-earn-value-pro?id=" + id + "&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var mainString = ""
+		var obj = JSON.parse(data);
+
+		if (obj.EV) {
+			//$("#ev").html(obj.EV);
+			$("#pv2").html(obj.PV);
+			//$("#pai").html(obj.PAI);
+			//$("#ac").html(obj.AC);
+			$("#spi2").html(obj.SPI);
+			//$("#cpi").html(obj.CPI);
+			//$("#eac").html(obj.EAC);
+			//$("#etc").html(obj.ETC);
+			$("#pae2").html(obj.PAE);
+			//$("#hp").html(obj.HP);
+			//$("#ha").html(obj.HA);			
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
 function renderCriticalPath() {
 	var _this = $("#critical_path");
 	if (_this.is(":checked")) {
@@ -3585,6 +3651,38 @@ function renderProgramEarnValue(id) {
 			$("#pae").html(obj.PAE);
 			$("#hp").html(obj.HP);
 			$("#ha").html(obj.HA);
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
+function renderProgramEarnValuepro(id) {
+
+	var url = "/program-earn-value-pro?id=" + id + "&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var obj = JSON.parse(data);
+
+		if (obj.EV) {
+			//$("#ev").html(obj.EV);
+			$("#pv2").html(obj.PV);
+			//$("#pai").html(obj.PAI);
+			//$("#ac").html(obj.AC);
+			$("#spi2").html(obj.SPI);
+			//$("#cpi").html(obj.CPI);
+			//$("#eac").html(obj.EAC);
+			//$("#etc").html(obj.ETC);
+			$("#pae2").html(obj.PAE);
+			//$("#hp").html(obj.HP);
+			//$("#ha").html(obj.HA);
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}

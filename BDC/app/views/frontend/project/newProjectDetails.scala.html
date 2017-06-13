@@ -156,6 +156,27 @@
 						</tbody>
 					</table>
 	  			</div>
+	  			
+	  			
+	  			<div class="width_full  " id="earn-value-info"  >
+				<h3 id="productNm">
+				    <span class="left"> Análisis del Valor Ganado Proporcional </span>
+			    </h3> 
+					 <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="table_header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="p_values width160px"><span id="pv2"></span></td>
+							<td class="table_header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="p_values width160px"><span id="spi2"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.pae")</td>
+							<td class="p_values width160px"><span id="pae2"></span></td>
+						</tr>
+						</tbody>
+					</table>
+	  			</div>
  		  }
 
 		  
@@ -871,6 +892,7 @@ jQuery(document).ready(function() {
 							getRenderGanttChart(10);
 						}
 						renderProjectEarnValue($("#project_id").val()); 
+						renderProjectEarnValuepro($("#project_id").val()); 
 
 						var changeSet = $("#project_changeset").val();
 						var finalReleaseChanges = "";
