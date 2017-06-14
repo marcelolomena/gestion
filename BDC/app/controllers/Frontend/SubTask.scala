@@ -34,6 +34,7 @@ import models.SubTaskAllocationExternal
 import services.RiskService
 import services.TaskDesciplineService
 import services.UserProfileServices
+import services.SpiCpiCalculationsService
 
 object SubTask extends Controller {
 
@@ -1205,6 +1206,26 @@ object SubTask extends Controller {
       Redirect(routes.Login.loginUser())
     }
 
+  }
+  
+  def findpae(id: String) = Action { implicit request =>
+    var node = new JSONObject()
+    var calculos = SpiCpiCalculationsService.findIndicatorspro(id, 3)
+    for (s <- calculos) {
+
+      node.put("EV", s.ev + " hrs")
+      node.put("PV", s.pv + " hrs")
+      node.put("AC", s.ac + " hrs")
+      node.put("CPI", s.cpi)
+      node.put("SPI", s.spi)
+      node.put("ETC", s.etc + " hrs")
+      node.put("EAC", s.eac + " hrs")
+      node.put("PAI", s.pai + " %")
+      node.put("PAE", s.pae + " %")
+      node.put("HP", s.hp + " hrs")
+      node.put("HA", s.ha + " hrs")
+    }
+    Ok(node.toString())
   }
 
   def updateTaskStartDates(sub_task_id: String, start_date: String) = Action { implicit request =>

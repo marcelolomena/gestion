@@ -299,7 +299,10 @@ object SubTaskServices extends CustomColumns {
       null
     }
   }
-
+  
+  
+  
+  
   def findSubTaskDetailsByTaskIDs(taskIds: String): Seq[SubTasks] = {
     var sql = ""
     sql = "select t.* from art_sub_task t where is_deleted=1 and t.task_id IN (" + taskIds + ") order by t.added_date desc"

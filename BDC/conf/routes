@@ -430,6 +430,7 @@ GET    /get-dependent-tasks-list                                                
 GET    /get-dependent-task-dates                                                                      controllers.Frontend.Task.setDependentTaskDate(tasks :String)
 GET    /earn-value                                                                                    controllers.Frontend.Task.calculateEarnValue(id:String)
 GET    /earn-value-pro                                                                                controllers.Frontend.Task.calculateEarnValuePro(id:String)
+GET    /find-pae                                                                              	 	  controllers.Frontend.SubTask.findpae(id:String)
 GET    /project-task-details/$taskid<[A-Za-z0-9_-]+>                                                  controllers.Frontend.Task.projectTaskDetails(taskid:String)
 GET    /get-updated-tasks                                                                             controllers.Frontend.Task.updatedTaskList(project_id:String)
 GET    /delete-task                                                                                   controllers.Frontend.Task.deleteTask(id:String)

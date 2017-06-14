@@ -2601,6 +2601,39 @@ function renderEarnValuepro(id) {
 	}, delay);
 }
 
+function renderPae(id) {
+
+	var url = "/find-pae?id=" + id + "&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var mainString = ""
+		var obj = JSON.parse(data);
+
+		if (obj.EV) {
+			//$("#ev").html(obj.EV);
+			//$("#pv").html(obj.PV);
+			//$("#pai").html(obj.PAI);
+			//$("#ac").html(obj.AC);
+			$("#elspi").html(obj.SPI);
+			$("#elcpi").html(obj.CPI);
+			//$("#eac").html(obj.EAC);
+			//$("#etc").html(obj.ETC);
+			$("#elpae").html(obj.PAE);
+			//$("#hp").html(obj.HP);
+			//$("#ha").html(obj.HA);
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
 function rederOnloadTaskDependence() {
 	var _this = $("#task_depend").val();
 
