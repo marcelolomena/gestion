@@ -46,7 +46,7 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Contrato', name: 'nombre', width: 250, align: 'left', search: true, editable: true },
         {
-            label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, jsonmap: "proveedor.id",
+            label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, 
             edittype: "select",
             editoptions: {
                 dataUrl: '/proveedores/combobox',
@@ -170,7 +170,7 @@ $(document).ready(function () {
         { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true, hidden:true },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left', search: true,
-            editable: true, jsonmap: "proveedor.razonsocial",
+            editable: true, jsonmap: "razonsocial",
             stype: 'select',
             searchoptions: {
                 dataUrl: '/proveedores/combobox',

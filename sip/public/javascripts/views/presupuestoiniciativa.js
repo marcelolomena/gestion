@@ -363,7 +363,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             },
             beforeSubmit: function (postdata, formid) {
                 var uf = new Number(postdata.uf.replace(",", "."));
+                postdata.uf=uf;
                 var dolar = new Number(postdata.dolar.replace(",", "."));
+                postdata.dolar=dolar;
                 
                 if (postdata.uidlider == 0) {
                     return [false, "Lider: Campo obligatorio", ""];
