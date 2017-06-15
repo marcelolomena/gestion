@@ -705,8 +705,9 @@ function renderValidateSubTaskFromList(){
 			});
 			$('#subtask_div_change_id').dialog('open');
 			*/
-			var url="/sub-task-details-from-timesheet/" + subtask;
-			$(location).attr('href',url);
+			//var url="/sub-task-details-from-timesheet/" + subtask;
+			//$(location).attr('href',url);
+			$('#subtask_div_change_id').addClass('display-none');
 	}else {
 		$('#subtask_div_change_id').addClass('display-none');
 	}

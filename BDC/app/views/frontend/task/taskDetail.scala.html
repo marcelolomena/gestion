@@ -22,18 +22,20 @@
 				}
 				
 				@*@if(utils.UserAccess.checkAccess(req,"sub_task_document_upload")){*@
-				@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){
+				@if(utils.UserAccess.checkAccess(req,"sub_task_gantt")){
+				@*@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){*@
 					<a href='@controllers.Frontend.routes.Documents.uploadDocument(taskDetail.get.sub_task_id.get.toString, "SUBTASK", "ADD")'><span class="upload-document-icon">@Messages("uploaddocument.uploaddocument")</span></a>
 				}
 				@*TimesheetService.validateUserForHistoricalTimebooking(taskDetail.get.sub_task_id.get.toString,session.get("uId").get) &&*@
 				@*@if( utils.UserAccess.checkAccess(req,"sub_task_book_time")){*@
+					
 				@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){
 					<a href='@controllers.Frontend.routes.TimeSheet.bookTime(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.booktime")</span></a>	
 				}
 				
-				@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){ 
+				@*@if(TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){ 
 					<a href='@controllers.Frontend.routes.SubTask.subTaskDetails(taskDetail.get.sub_task_id.get.toString)'><span class="upload-document-icon">@Messages("programdetails.gotosubtaskdetailpage")</span></a>
-				}
+				}*@
 				@*@if(isSubtaskAllocated && utils.UserAccess.checkAccess(req,"sub_task_delete")){*@
 	            @if(isSubtaskAllocated && TaskService.permisosTarea(taskDetail.get.task_id.toString(),session.get("uId").get)==1){ 			
 					<span id="delete-sub-task-id" class="delete-sub-task" >
@@ -151,11 +153,23 @@
 			</tr>
 			
 			<tr>
-				<td class="th-header">@Messages("addSubTask.completionper")</td>
-				<td>
+				<td class="th-header left">@Messages("addSubTask.completionper")</td>
+				<td class="left">
 					@if(taskDetail.get.completion_percentage.isEmpty){0}else{@taskDetail.get.completion_percentage} %
 				</td>
+				<td class="th-header left" style="margin-left: 425px;">% Avance Esperado</td>
+				<td class="left" id="elpae"> 
+				</td>
 			</tr>
+			
+			<tr>
+				<td class="th-header left">SPI</td >
+				<td class="left" id="elspi"></td>
+				<td class="th-header left" style="margin-left: 440px;">CPI</td>
+				<td class="left" id="elcpi"></td>
+			</tr>
+			
+		
 			
 			
 			
@@ -204,7 +218,7 @@
    	   </div>
    	   <div class="team-title width_full" style="float: left;width:100%;padding:0px;margin:0px;"> 
 	   	   <h3 style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;" class="layer-title">
-				<span class="left">Las personas que est�n trabajando en esto!</span>
+				<span class="left">Las personas que están trabajando en esto!</span>
 				<!-- <span style="float: right;" class="team-title right"> 
 		   			<span class="team-heading"></span>   
 				</span> -->
@@ -217,6 +231,7 @@
 	$(document).ready(function() {
 		$("#delete-sub-task-id").on("click", renderDeleteSubTask);
 		$(".delete-doc-subtask").on("click", deleteDocumentSubtask);
+		renderPae($("#sub_task_id").val());
 	});
 	function renderDeleteSubTask() {
 		var _this = $(this);

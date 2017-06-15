@@ -848,6 +848,25 @@ object ProjectMaster extends Controller {
     */
     Ok(node.toString())
   }
+  def calculateProjectEarnValueActionpro(id: String) = Action { implicit request =>
+    var node = new JSONObject()
+    var calculos = SpiCpiCalculationsService.findIndicatorspro(id,1)
+    for (s <- calculos) {
+      
+      node.put("EV", s.ev + " hrs")
+      node.put("PV", s.pv + " hrs")
+      node.put("AC", s.ac + " hrs")
+      node.put("CPI", s.cpi)
+      node.put("SPI", s.spi)
+      node.put("ETC", s.etc + " hrs")
+      node.put("EAC", s.eac + " hrs")
+      node.put("PAI", s.pai + " %")
+      node.put("PAE", s.pae + " %")
+      node.put("HP", s.hp + " hrs")
+      node.put("HA", s.ha + " hrs")
+    }    
+    Ok(node.toString())
+  }
   def newProjectSAP(project_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       if (StringUtils.isNotEmpty(project_id)) {

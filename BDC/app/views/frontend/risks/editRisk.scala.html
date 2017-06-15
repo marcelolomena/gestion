@@ -102,7 +102,7 @@
 		      		<div class="right width-pr50 padding-top-3px" >
 			      		@select(
 				         riskForm("probablity_of_occurence"),
-				         options("2"->"Alto", "1"->"Mediano","0"->"Bajo"),
+				         options("0"->"Bajo", "1"->"Mediano","2"->"Alto"),
 				         'class -> "input-xlarge ",
 				         '_label -> Messages("addNewRisk.occurenceProbability"),
 				          '_default -> Messages("addNewRisk.occurenceProbabilityHint")
@@ -112,7 +112,7 @@
 		            <div class="right width-pr50 padding-top-3px" >
 			      		@select(
 				         riskForm("quantification"),
-				         options("2"->"Alto", "1"->"Mediano","0"->"Bajo"),
+				         options("0"->"Bajo", "1"->"Mediano","2"->"Alto"),
 				         'class -> "input-xlarge ",
 				         '_label -> Messages("addNewRisk.quantification"),
 				          '_default -> Messages("addNewRisk.quantificationHint")
@@ -125,7 +125,7 @@
 		      		<div class="right width-pr50 padding-top-3px" >
 			      		@select(
 				         riskForm("strategic_reply"),
-				         options("0"->"Acceptar", "1"->"Mitgar","2"->"Evitar", "3" -> "Transerir"),
+				         options("0"->"Aceptar", "1"->"Mitigar","2"->"Evitar", "3" -> "Transferir"),
 				         'class -> "input-xlarge ",
 				         '_label -> Messages("addNewRisk.strategicReply"),
 				          '_default -> Messages("addNewRisk.strategicReplyHint")

@@ -776,6 +776,26 @@ object Task extends Controller {
 */
     Ok(node.toString())
   }
+  
+  def calculateEarnValuePro(id: String) = Action { implicit request =>
+    var node = new JSONObject()
+    var calculos = SpiCpiCalculationsService.findIndicatorspro(id, 0)
+    for (s <- calculos) {
+
+      node.put("EV", s.ev + " hrs")
+      node.put("PV", s.pv + " hrs")
+      node.put("AC", s.ac + " hrs")
+      node.put("CPI", s.cpi)
+      node.put("SPI", s.spi)
+      node.put("ETC", s.etc + " hrs")
+      node.put("EAC", s.eac + " hrs")
+      node.put("PAI", s.pai + " %")
+      node.put("PAE", s.pae + " %")
+      node.put("HP", s.hp + " hrs")
+      node.put("HA", s.ha + " hrs")
+    }
+    Ok(node.toString())
+  }
 
   /**
    * Method to display tasks list in gantt chart format on project detail page.

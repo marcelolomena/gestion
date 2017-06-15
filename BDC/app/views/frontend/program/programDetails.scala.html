@@ -313,6 +313,27 @@
 						</tbody>
 					</table>
 	  			</div>
+	  			
+	  			
+	  			<h3 id="productNm">
+					<a href="javascript:toggleDiv('earn-value-info');"><span class="left">Análisis del Valor Ganado Proporcional</span></a>
+				</h3>
+				<div class="width_full" id="earn-value-info"  >
+					 <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="table_header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="p_values width160px"><span id="pv2"></span></td>
+							<td class="table_header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="p_values width160px"><span id="spi2"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.pae")</td>
+							<td class="p_values width160px"><span id="pae2"></span></td>
+						</tr>
+						</tbody>
+					</table>
+	  			</div>
  		  }  	
   	<h3 id="productNm">
 		<a href="javascript:toggleDiv('mstatus');"><span class="left">Lista de Estados</span></a>
@@ -1331,6 +1352,7 @@
 						}
 						
 						renderProgramEarnValue($("#program").val());
+						renderProgramEarnValuepro($("#program").val());
 						var changeSet = $("#program_changeset").val();
 						var relelaseDateChanges = "";
 						var initialPlannedDateChanges = "";
