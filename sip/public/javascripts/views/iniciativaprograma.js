@@ -169,7 +169,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                             s += '<option value="' + data[0].program_id + '" selected>' + data[0].nombreart + '</option>';
                             s += "</select>";
                             $("select#program_id").html(s);
-                            $("input#codigoart").val(data.program_code);
+                            //$("input#codigoart").val(data.program_code);
                         }
                     });
                     }

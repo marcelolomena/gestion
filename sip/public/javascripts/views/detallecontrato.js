@@ -1,4 +1,5 @@
 function showSubGrids(subgrid_id, row_id) {
+    console.log("Grillllaaa");
     var rowData = $("#grid").getRowData(row_id);
     var tipocontrato = rowData.tipocontrato;
 
@@ -12,6 +13,7 @@ function showSubGrids(subgrid_id, row_id) {
 
 function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     var rowData = $("#grid").getRowData(row_id);
+    console.log("Data:"+JSON.stringify(rowData));
     var tipocontrato = rowData.tipocontrato;
     var codigoart = $('#'+subgrid_table_id).getRowData($('#'+subgrid_table_id).getGridParam("selrow")).codigoart;
     var proveedor = rowData.idproveedor;
