@@ -1,0 +1,31 @@
+{
+    "name": "sip",
+    "version": "1.0.2",
+    "private": true,
+    "scripts": {
+        "start": "node  --max-old-space-size=2048 ./bin/www"
+    },
+    "dependencies": {
+        "mssql": "latest",
+        "body-parser": "^1.7.0",
+        "cookie-parser": "~1.3.5",
+        "debug": "~2.2.0",
+        "express": "4.14.0",
+        "express-session": "latest",
+        "pug": "latest",
+        "serve-favicon": "~2.3.0",
+        "bcryptjs": "latest",
+        "squel": "latest",
+        "passport": "latest",
+        "passport-local": "latest",
+        "sequelize": "3.24.5",
+        "express-flash": "0.0.2",
+        "tedious": "latest",
+        "bcrypt-nodejs": "latest",
+        "winston-daily-rotate-file": "1.3.1",
+        "winston": "2.2.0",
+        "co": "4.6.0",
+        "connect-session-sequelize": "latest",
+        "socket.io": "1.4.6"
+    }
+}

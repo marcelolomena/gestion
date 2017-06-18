@@ -510,6 +510,7 @@ GET    /employee-overview                                                       
 POST   /employee-search                                                                               controllers.Frontend.User.searchEmployeeResult()
 GET    /get-gerencia-by-division/:divisionId                                                          controllers.Frontend.User.getGerenciaForDivision(divisionId : String)
 GET    /get-department-by-gerencia/:gerenciaId                                                        controllers.Frontend.User.getDepartmentForGerencia(gerenciaId : String)
+GET    /find-datos-rrhh                                                                            controllers.Frontend.User.findDatosRRHH(id:String)
   
 #Documents
 
@@ -559,7 +560,7 @@ GET    /edit-predefined-task/$id<[A-Za-z0-9_-]+>                                
 POST   /edit-predefined-task/$id<[A-Za-z0-9_-]+>                                                      controllers.Frontend.Generics.updatePredefinedTask(id:String)
 GET    /delete-predefined-task/$id<[A-Za-z0-9_-]+>                                                    controllers.Frontend.Generics.deletePredefinedTask(id:String)
 GET    /get-predefined-tasks                                                                          controllers.Frontend.Generics.getPredefinedTask(task_mode : String)
-POST   /add-predefined-task-to-project                                                                controllers.Frontend.Generics.addPredefinedTaskToProject(id: String, task_mode : String,task_depend: String)
+POST   /add-predefined-task-to-project                                                                controllers.Frontend.Generics.addPredefinedTaskToProject(id: String, task_mode : String,task_depend: String,plan_time: String)
 GET    /delete-predefined-task/:task_id                                                               controllers.Frontend.Generics.deletedPredefinedTask(task_id : String)
 GET    /add-generic-tasks                                                                             controllers.Frontend.Generics.addGenericTask(task_mode : String)
 GET    /edit-tasks-dependency                                                                         controllers.Frontend.Generics.editTaskDependency(task_id:String,task_mode : String)

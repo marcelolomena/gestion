@@ -311,13 +311,14 @@ function renderSelectTask() {
 	 * 
 	 */
 	var task = $("#project_mode").val();
+	var plan_time = $("#plan_time").val();
 	var tds = $("#selected_task_dependency_" + id).val();
 	if (typeof (tds) == 'undefined') {
 		tds = ""
 	}
 	var _self = $(this);
 	var url = "/add-predefined-task-to-project?id=" + id + "&task_mode=" + task
-			+ "&task_depend=" + tds;
+			+ "&task_depend=" + tds + "&plan_time=" + plan_time;
 	$.post(url, function(data) {
 		if (data == 'success') {
 			var _this = $(".generic-tasks-list");

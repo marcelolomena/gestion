@@ -77,6 +77,7 @@
 					@for((subtask,index) <- subtasks.zipWithIndex){
 					<div class="@if( index%2==0 ){ subtask_list_1 }else{ subtask_list_2 } subtask_list " >
 			           <span id="todalafila" class="left project-type-list " style=" width: 672px;" >
+			           		<span id="t_@subtask.sub_task_id.get" style="width: 25%; float:left; display:none;" class="left width138px">@subtask.task_id</span>
 			           		<span style="width: 25%; float:left;" class="left width138px">@subtask.task_Details</span>
 			           		<span style="width: 30%; float:left;" class="subtask_name"  id="s_@subtask.sub_task_id.get"> @subtask.task</span>
 			           		<span style="width: 10%; float:left;">@subtask.completion_percentage</span>

@@ -668,7 +668,10 @@ function renderTimesheetActivity(){
 }
 
 function renderValidateSubTaskFromList(){
-	var subtask = $(this).attr('id').split("_")[1] ;
+	var x = $(this).attr('id').split("_")[1] ;
+	var subtask = $('#t_'+x).text();
+	//console.log('hola')
+	//console.log(x)
 	$('#program_container').find(".subtask_name").each(function() {
 		var _this = $(this);
 		_this.parent().parent().removeClass('highlight-class');
@@ -705,8 +708,8 @@ function renderValidateSubTaskFromList(){
 			});
 			$('#subtask_div_change_id').dialog('open');
 			*/
-			//var url="/sub-task-details-from-timesheet/" + subtask;
-			//$(location).attr('href',url);
+			var url="/project-task-details/" + subtask;
+			$(location).attr('href',url);
 			$('#subtask_div_change_id').addClass('display-none');
 	}else {
 		$('#subtask_div_change_id').addClass('display-none');

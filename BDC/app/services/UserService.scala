@@ -1426,4 +1426,11 @@ object UserService extends CustomColumns {
       SQL(sqlString).as(Users.user *)
     }
   }
+  def findDatosRRHH(id: String): Seq[DataRRHH] = {
+
+    var sqlString = "EXEC art.datosrrhh {id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt).executeQuery() as (DataRRHH.datarrhh *)
+    }
+  }
 }

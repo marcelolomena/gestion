@@ -931,7 +931,7 @@ object Generics extends Controller {
     }
   }
 
-  def addPredefinedTaskToProject(id: String, task_mode: String, task_depend: String) = Action { implicit request =>
+  def addPredefinedTaskToProject(id: String, task_mode: String, task_depend: String, plan_time: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val predefinedTask = GenericService.findPredefinedTasksDetails(id)
       val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
@@ -942,7 +942,7 @@ object Generics extends Controller {
         new_task_depend = task_depend
       }
       val taskDetails = GenericTasks(None, Integer.parseInt(task_mode), predefinedTask.get.task_title, "SYS" + Random.nextInt(9999),
-        new Date(), new Date(), predefinedTask.get.task_description, 0,
+        new Date(), new Date(), predefinedTask.get.task_description, Integer.parseInt(plan_time),
         new Date(), 0, 1, 1, predefinedTask.get.task_discipline, Option(0),
         predefinedTask.get.remark, Option(new_task_depend), predefinedTask.get.stage, predefinedTask.get.user_role, predefinedTask.get.deliverable, predefinedTask.get.task_type, predefinedTask.get.tId.get, 1)
 

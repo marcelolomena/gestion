@@ -1000,4 +1000,17 @@ def getConsumoMes(employeeid: String,fecha: String) = Action { implicit request 
 
     
   }
+
+def findDatosRRHH(id: String) = Action { implicit request =>
+    var node = new JSONObject()
+    var datos = UserService.findDatosRRHH(id)
+    for (s <- datos) {
+
+      node.put("division", s.division )
+      node.put("gerencia", s.gerencia )
+      node.put("departamento", s.departamento )
+    }
+    Ok(node.toString())
+  }
 }
+
