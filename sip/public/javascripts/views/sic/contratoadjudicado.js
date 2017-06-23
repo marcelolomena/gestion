@@ -177,7 +177,7 @@ var gridSolicitudContrato = {
                 onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
-                     if (postdata.descripcion.trim().length == 0) {
+                    if (postdata.descripcion.trim().length == 0) {
                         return [false, "Comentario: Debe ingresar un comentario", ""];
                     } else {
                         return [true, "", ""]
@@ -250,6 +250,57 @@ var gridSolicitudContrato = {
                     console.log("error: " + e)
 
                 }
+
+            }
+        });
+
+/*
+        $gridTab.jqGrid('navButtonAdd', '#navGridSolCon', {
+            caption: "",
+            //id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-floppy-save",
+
+            title: "Generar Contratos",
+            position: "last",
+            onClickButton: function () {
+                //var rowKey = $gridTab.getGridParam("selrow");
+                //var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
+                console.log("esto es una solicitud: " + parentRowKey)
+                try {
+                    var url = '/sic/guardarcontrato/' + parentRowKey;
+                    $gridTab.jqGrid('excelExport', { "url": url });
+                } catch (e) {
+                    console.log("error: " + e)
+
+                }
+
+            }
+        });
+        */
+
+        $gridTab.jqGrid('navButtonAdd', '#navGridSolCon', {
+            caption: "",
+            id: "pushpin_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-floppy-save",
+            title: "Generar Contratos",
+            position: "last",
+            onClickButton: function () {
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
+
+                var dialog = bootbox.dialog({
+                    title: 'Generando Contratos',
+                    message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
+                });
+                dialog.init(function () {
+                    $.getJSON('/sic/guardarcontrato/' + parentRowKey, function (res) {
+                        $gridTab.trigger("reloadGrid");
+                        dialog.find('.bootbox-body').html(res.message);
+                    });
+                });
 
             }
         });

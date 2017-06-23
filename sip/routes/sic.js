@@ -736,6 +736,9 @@ module.exports = function (passport) {
     router.route('/sic/proveedoressugeridosserviciodesdenota2/:id')
         .get(isAuthenticated, cotizacionservicioController.proveedoressugeridosserviciodesdenota2);
 
+    router.route('/sic/guardarcontrato/:id')
+        .get(isAuthenticated, solicitudcontratoController.guardarcontrato)
+
 
     return router;
 }

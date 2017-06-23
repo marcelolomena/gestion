@@ -381,7 +381,8 @@ exports.action = function (req, res) {
                 idsolicitudcotizacion: req.body.abuelo,
                 fechaadjudicacion: fecha,
                 descripcion: req.body.descripcion,
-                borrado: 1
+                borrado: 1,
+                traspaso: 0
             }).then(function (solicitudcontrato) {
                 bitacora.registrarhijo(
                     req.body.abuelo,

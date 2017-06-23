@@ -92,10 +92,10 @@ exports.action = function (req, res) {
                                     id: req.body.id
                                 }
                             }).then(function (solicitudcontrato) {
-                                res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ message: err.message, success: false });
+                                return res.json({ message: err.message, success: false });
                             });
                     } else {
                         logger.error(err)
@@ -105,3 +105,22 @@ exports.action = function (req, res) {
             break;
     }
 }
+
+
+exports.guardarcontrato = function (req, res) {
+
+    var idsolicitudcontrato = req.params.id
+    console.log(idsolicitudcontrato)
+    return models.solicitudcontrato.findOne({
+        //attributes: ['id', 'descripcion', 'numerorfp'],
+        where: { id: idsolicitudcontrato }
+    }).then(function (solicitudcontrato) {
+        sequelize.query('EXECUTE sic.laviejaconfiable2 ' + idsolicitudcontrato)
+    }).catch(function (err) {
+        logger.error(err.message);
+        console.log("Error al buscar Solicitud:" + err)
+        throw new Error(err);
+    });
+}
+
+
