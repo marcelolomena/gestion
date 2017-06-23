@@ -221,6 +221,9 @@ module.exports = function (passport) {
 
     router.route('/programa/:id')
         .get(isAuthenticated, programaController.getPrograma);
+        
+    router.route('/programacode/:id')
+        .get(isAuthenticated, programaController.getProgramaCode);        
 
     router.route('/programas/:id')
         .get(isAuthenticated, programaController.getProgramasId);

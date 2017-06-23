@@ -144,7 +144,7 @@ exports.action = function (req, res) {
 
   if (action != "del") {
     if (req.body.costounitario != "")
-      costounitario = req.body.costounitario.split(".").join("").replace(",", ".")
+      costounitario = req.body.costounitario; //.split(".").join("").replace(",", ".")
 
     if (req.body.fechainicio != "")
       fechainicio = req.body.fechainicio.split("-").reverse().join("-")
@@ -161,6 +161,7 @@ exports.action = function (req, res) {
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
+        nombre: req.body.nombre,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
         fechafin: fechafin,
@@ -185,6 +186,7 @@ exports.action = function (req, res) {
         idservicio: req.body.idservicio,
         idproveedor: req.body.idproveedor,
         tarea: req.body.tarea,
+        nombre: req.body.nombre,
         idtipopago: req.body.idtipopago,
         fechainicio: fechainicio,
         fechafin: fechafin,

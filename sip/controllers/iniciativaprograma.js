@@ -9,28 +9,31 @@ exports.action = function (req, res) {
   var programid = null
 
   if (action != "del") {
-    if (req.body.pptoestimadogasto != "")
-      gasto = req.body.pptoestimadogasto.split(".").join("").replace(",", ".")
-    logger.debug("*************el gasto: "+gasto);
+    
+    logger.debug("*************el gasto: "+gasto+ ", "+req.body.pptoestimadogasto);  
+    if (req.body.pptoestimadogasto != ""){
+      gasto = req.body.pptoestimadogasto.replace(",", ".");
+      logger.debug("*************el gasto: "+gasto+ ", "+req.body.pptoestimadogasto);
+    }
 
     if (req.body.pptoestimadoinversion != "")
-      inversion = req.body.pptoestimadoinversion.split(".").join("").replace(",", ".")
+      inversion = req.body.pptoestimadoinversion;//.split(".").join("").replace(",", ".")
 
     if (req.body.pptoestimadoprevisto != "")
-      previsto = req.body.pptoestimadoprevisto.split(".").join("").replace(",", ".")
+      previsto = req.body.pptoestimadoprevisto;//.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadogasto != "")
-      gastoaprobado = req.body.pptoaprobadogasto.split(".").join("").replace(",", ".")
+      gastoaprobado = req.body.pptoaprobadogasto;//.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadoinversion != "")
-      inversionaprobada = req.body.pptoaprobadoinversion.split(".").join("").replace(",", ".")
+      inversionaprobada = req.body.pptoaprobadoinversion;//.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadoprevisto != "")
-      aprobado = req.body.pptoaprobadoprevisto.split(".").join("").replace(",", ".")
+      aprobado = req.body.pptoaprobadoprevisto;//.split(".").join("").replace(",", ".")
 
     if (req.body.pptoaprobadodolares != "")
-      aprobadodolares = req.body.pptoaprobadodolares.split(".").join("").replace(",", ".")
-    logger.debug("*************el aprobadodolares: "+aprobadodolares);
+      aprobadodolares = req.body.pptoaprobadodolares;//.split(".").join("").replace(",", ".")
+    logger.debug("*************el aprobadodolares: "+aprobadodolares); 
 
     if (req.body.program_id != "0")
       programid = req.body.program_id

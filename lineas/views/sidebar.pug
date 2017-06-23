@@ -1,0 +1,24 @@
+#sidebar
+  .perfil_sesion
+    .user
+     #p #{data[0].nombre}
+    .usuario3 
+      a(href='#') Perfil
+    .usuario3
+      a(href='/menu/signout') Cerrar Sesión
+      
+  #cssmenu
+    ul
+      each val in data[1].menus
+        li.has-sub
+          a(href='#')
+            span=val.menu.menu
+          ul
+            each vol in val.submenu
+              li
+                if(vol.url!='conferencia')
+                  a(href='/'+vol.url)
+                    span=vol.opt
+                else                    
+                  a(href='https://152.139.147.41:3001/'+vol.url)
+                    span=vol.opt                

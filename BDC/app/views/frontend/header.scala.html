@@ -3,7 +3,7 @@
 	<div class="logo_part_main">
 		<div class="logo_new">
 			@if(Integer.parseInt(session.get("utype").get) != 0){			
-				<a href="/road-map"><img src="@routes.Assets.at("frontend/images/new_logo.png")" alt=""></a>
+				<a href="/employee/@session.get("uId").get"><img src="@routes.Assets.at("frontend/images/new_logo.png")" alt=""></a>
 			}else{
 				<a href="javascript:void(0)"><img src="@routes.Assets.at("frontend/images/new_logo.png")" alt=""></a>
 			}

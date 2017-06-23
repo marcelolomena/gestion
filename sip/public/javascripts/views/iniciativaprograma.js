@@ -1,15 +1,15 @@
 function gridIniciativaPrograma(parentRowID, parentRowKey) {
     var tmplP = "<div id='responsive-form' class='clearfix'>";
-
+   
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'><span style='color: red'>*</span>Proyecto {nombre}</div>";
-    tmplP += "<div class='column-half'>Art {codigoart}</div>";
+    tmplP += "<div class='column-full'><span style='color: red'>*</span>Proyecto {nombre}</div>";
+    tmplP += "<div class='column-full'><span style='color: red'>*</span>División {iddivision}</div>";
     tmplP += "</div>";
 
     tmplP += "<div class='form-row'>";
-    tmplP += "<div class='column-half'><span style='color: red'>*</span>División {iddivision}</div>";
+    tmplP += "<div class='column-half'>Art {codigoart}</div>";    
     tmplP += "<div class='column-half'>Programas {program_id}</div>";
-    tmplP += "</div>";
+    tmplP += "</div>";    
 
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-full'>Sponsor {sponsor1}</div>";
@@ -47,7 +47,11 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
     tmplP += "<div class='column-three'>Mes inicio Proyectado {mesinicioprevisto}</div>";
     tmplP += "<div class='column-three'>Año inicio Proyectado {anoinicioprevisto}</div>";
     tmplP += "</div>";
-
+    
+    tmplP += "<div class='form-row'>";
+    tmplP += "<div class='column-full'>Formato de Montos: XXX,XX. Ej: 100,54</div>";
+    tmplP += "</div>";
+    
     tmplP += "<div class='form-row'>";
     tmplP += "<div class='column-three'>Gasto Estimado {pptoestimadogasto}</div>";
     tmplP += "<div class='column-three'>Inversión Estimada {pptoestimadoinversion}</div>";
@@ -138,16 +142,44 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     }
                 }],
             },
-            dataInit: function (elem) { $(elem).width(200); }
+            //dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Art', name: 'codigoart', width: 150, align: 'center',
-            search: false, editable: true
-        },
+            label: 'Art', name: 'codigoart', width: 250, align: 'left',
+            search: true, editable: true, hidden: false,
+            editoptions: {
+            dataEvents: [{
+                type: 'change', fn: function (e) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);                 
+                    console.log("rowData:" + rowData);
+                    var thissid = $(this).val();
+                    $.ajax({
+                        type: "GET",
+                        url: '/getcodigoart/' + thissid,
+                        async: false,
+                        success: function (data) {
+                            var grid = $("#" + childGridID);
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.program_name;
+                            var s = "<select>";//el default
+                            //s += '<option value="0">--Escoger Programa--</option>';
+                            s += '<option value="' + data[0].program_id + '" selected>' + data[0].nombreart + '</option>';
+                            s += "</select>";
+                            $("select#program_id").html(s);
+                            //$("input#codigoart").val(data.program_code);
+                        }
+                    });
+                    }
+            }],
+            },                
+        },        
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
             search: true, editable: true, hidden: false,
-            editrules: { required: true }
+            editrules: { required: true },  editoptions: { readonly: 'readonly'} 
         },
         {
             label: 'División', name: 'iddivision',
@@ -266,7 +298,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { required: true, edithidden: false }
         },
         {
-            label: 'PMO', name: 'uidpmo',
+            label: 'PMO', name: 'uidpmo', 
             search: false, editable: true, hidden: true,
             editrules: { required: true },
             edittype: "select",
@@ -302,8 +334,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 150, align: 'left',
-            search: false, editable: true, hidedlg: true,
+            label: 'PMO', name: 'pmoresponsable', width: 250, align: 'left',
+            search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true },
         },
         {
@@ -348,8 +380,8 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left',
-            search: false, editable: true, hidedlg: true,
+            label: 'Estado', name: 'estado', width: 250, align: 'left',
+            search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
@@ -413,12 +445,10 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         },
         {
             label: 'Gasto Estimado (US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
-            search: true, editable: true, hidden: false, formatter: 'number',
+            search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -426,9 +456,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -436,9 +464,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -446,9 +472,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -456,9 +480,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -466,9 +488,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -476,9 +496,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -780,14 +798,44 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                     
                 }, 500);
 
-                $('input#codigoart', form).attr('readonly', 'readonly');
+                //$('input#codigoart', form).attr('readonly', 'readonly');
             },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             },
             beforeSubmit: function (postdata, formid) {
+                var estimadogasto = new Number(postdata.pptoestimadogasto.replace(",", "."));
+                postdata.pptoestimadogasto=estimadogasto;
+                var estimadoinversion = new Number(postdata.pptoestimadoinversion.replace(",", "."));
+                postdata.pptoestimadoinversion=estimadoinversion;
+                var estimadoprevisto = new Number(postdata.pptoestimadoprevisto.replace(",", "."));
+                postdata.pptoestimadoprevisto=estimadoprevisto;
+                var aprobadogasto = new Number(postdata.pptoaprobadogasto.replace(",", "."));
+                postdata.pptoaprobadogasto=aprobadogasto;
+                var aprobadoinversion = new Number(postdata.pptoaprobadoinversion.replace(",", "."));
+                postdata.pptoaprobadoinversion=aprobadoinversion;
+                var aprobadoprevisto = new Number(postdata.pptoaprobadoprevisto.replace(",", "."));
+                postdata.pptoaprobadoprevisto=aprobadoprevisto;
+                var aprobadodolares = new Number(postdata.pptoaprobadodolares.replace(",", "."));
+                postdata.pptoaprobadodolares=aprobadodolares;
+                
                 if (postdata.idetapa == 0) {
                     return [false, "Etapa: Campo obligatorio", ""];
+                }  if (isNaN(estimadogasto) || estimadogasto < 0) {
+                    console.log("gasto:"+estimadogasto);
+                    return [false, "Gasto Estimado: Ingrese un número valido", ""];
+                }  if (isNaN(estimadoinversion) || estimadoinversion < 0) {
+                    return [false, "Inversión Estimada: Ingrese un número valido", ""];
+                }  if (isNaN(estimadoprevisto) || estimadoprevisto < 0) {
+                    return [false, "Presupuesto Estimado: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadogasto) || aprobadogasto < 0) {
+                    return [false, "Gasto Aprobado: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadoinversion) || aprobadoinversion < 0) {
+                    return [false, "Inversión Aprobada: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadoprevisto) || aprobadoprevisto < 0) {
+                    return [false, "Presupuesto Aprobado: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadodolares) || aprobadodolares < 0) {
+                    return [false, "Presupuesto Aprobado Dolares: Ingrese un número valido", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -897,14 +945,44 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
                             $("#codigoart", form).val(data.codigoart);
                     }
                 });
-                $('input#codigoart', form).attr('readonly', 'readonly');
+                //$('input#codigoart', form).attr('readonly', 'readonly');
             },
             afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             },
             beforeSubmit: function (postdata, formid) {
+                var estimadogasto = new Number(postdata.pptoestimadogasto.replace(",", "."));
+                postdata.pptoestimadogasto=estimadogasto;
+                var estimadoinversion = new Number(postdata.pptoestimadoinversion.replace(",", "."));
+                postdata.pptoestimadoinversion=estimadoinversion;
+                var estimadoprevisto = new Number(postdata.pptoestimadoprevisto.replace(",", "."));
+                postdata.pptoestimadoprevisto=estimadoprevisto;
+                var aprobadogasto = new Number(postdata.pptoaprobadogasto.replace(",", "."));
+                postdata.pptoaprobadogasto=aprobadogasto;
+                var aprobadoinversion = new Number(postdata.pptoaprobadoinversion.replace(",", "."));
+                postdata.pptoaprobadoinversion=aprobadoinversion;
+                var aprobadoprevisto = new Number(postdata.pptoaprobadoprevisto.replace(",", "."));
+                postdata.pptoaprobadoprevisto=aprobadoprevisto;
+                var aprobadodolares = new Number(postdata.pptoaprobadodolares.replace(",", "."));
+                postdata.pptoaprobadodolares=aprobadodolares;
+                
                 if (postdata.idetapa == 0) {
                     return [false, "Etapa: Campo obligatorio", ""];
+                }  if (isNaN(estimadogasto) || estimadogasto < 0) {
+                    console.log("gasto:"+estimadogasto);
+                    return [false, "Gasto Estimado: Ingrese un número valido", ""];
+                }  if (isNaN(estimadoinversion) || estimadoinversion < 0) {
+                    return [false, "Inversión Estimada: Ingrese un número valido", ""];
+                }  if (isNaN(estimadoprevisto) || estimadoprevisto < 0) {
+                    return [false, "Presupuesto Estimado: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadogasto) || aprobadogasto < 0) {
+                    return [false, "Gasto Aprobado: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadoinversion) || aprobadoinversion < 0) {
+                    return [false, "Inversión Aprobada: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadoprevisto) || aprobadoprevisto < 0) {
+                    return [false, "Presupuesto Aprobado: Ingrese un número valido", ""];
+                }  if (isNaN(aprobadodolares) || aprobadodolares < 0) {
+                    return [false, "Presupuesto Aprobado Dolares: Ingrese un número valido", ""];
                 } else {
                     return [true, "", ""]
                 }

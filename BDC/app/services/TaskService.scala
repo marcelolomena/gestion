@@ -1425,32 +1425,32 @@ object TaskService extends CustomColumns {
   //VP
   def getTaskPlannedValue(task_id: String) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 0).executeQuery().as(scalar[Double].singleOpt)
     }
   }
 
   def getTaskSPI(task_id: String) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 3).executeQuery().as(scalar[Double].singleOpt)
     }
   }
   def getTaskCPI(task_id: String) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 4).executeQuery().as(scalar[Double].singleOpt)
     }
   }
   def getTaskAEC(task_id: String) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 5).executeQuery().as(scalar[Double].singleOpt)
     }
   }
   def getTaskETC(task_id: String) = {
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 6).executeQuery().as(scalar[Double].singleOpt)
     }
   }
@@ -1499,7 +1499,7 @@ SELECT ISNULL(SUM(hours),0) hours FROM art_timesheet_external WHERE  task_id="""
       result
     }*/
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 7).executeQuery().as(scalar[Double].singleOpt)
     }
   }
@@ -1605,7 +1605,7 @@ SELECT ISNULL(SUM(hours),0) hours FROM art_timesheet_external WHERE  task_id="""
     }
     */
     DB.withConnection { implicit connection =>
-      SQL("EXEC art.calc_task {tId},{tipo}").on(
+      SQL("EXEC art.calc_task_proporcional {tId},{tipo}").on(
         'tId -> task_id.toInt, 'tipo -> 2).executeQuery().as(scalar[Double].singleOpt)
     }
   }

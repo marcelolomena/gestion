@@ -22,10 +22,10 @@ exports.action = function (req, res) {
     }
 
     if (req.body.dolar != "")
-      dolar = req.body.dolar.split(".").join("").replace(",", ".")
+      dolar = req.body.dolar; //.split(".").join("").replace(",", ".")
 
     if (req.body.uf != "")
-      uf = req.body.uf.split(".").join("").replace(",", ".")
+      uf = req.body.uf; //.split(".").join("").replace(",", ".")
 
     if (req.body.fechaconversion != "")
       fecha = req.body.fechaconversion.split("-").reverse().join("-")

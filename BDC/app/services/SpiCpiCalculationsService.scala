@@ -52,6 +52,14 @@ object SpiCpiCalculationsService extends CustomColumns {
       SQL(sqlString).on('id -> id.toInt, 'nivel -> nivel).executeQuery() as (Indicators.indicators *)
     }
   }
+  
+  def findIndicatorspro(id: String, nivel: Int): Seq[Indicators] = {
+
+    var sqlString = "EXEC art.calc_task_proporcional {id},{nivel}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id.toInt, 'nivel -> nivel).executeQuery() as (Indicators.indicators *)
+    }
+  }
 
   def findCalculationsForDashboard(program_id: String): Option[SpiCpiCalculations] = {
     DB.withConnection { implicit connection =>

@@ -59,14 +59,14 @@
 								<div class="width_full task_list_div" id="task_list_@p.program_id">
 									@for(s <- SubTaskServices.findSubTasksListForProgram(session.get("uId").get, p.program_id.get.toString())){
 										<span class="left">&raquo;</span>
-										<span class="employee_task_title" id="@s.sub_task_id"><a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())"> @s.task</a> </span>
+										<span class="employee_task_title" id="@s.sub_task_id">@*<a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())">*@ <a href="@controllers.Frontend.routes.TimeSheet.productsTimesheet()" id="timesheet_id"> @s.task</a> </span>
 									}
 								</div>
 							</div>
 						}
 						
 						
-						<h3 style="font-size:13px;height:26px;padding-left: 5px;">Tareas sin avance informado</h3>
+						<h3 style="font-size:13px;height:26px;padding-left: 5px;">Mis Subtareas asignadas a terceros</h3>
 						@for(pt <- programTask){
 							
 							<div class="dash_right_data_2">
@@ -134,7 +134,7 @@
 			<div style="float:left;">
 					<span class="left" style="height: 200px; width: 200px; border: solid black 1px;"><img  width="200" height="200" src="@if(!employee.get.profile_image.isEmpty){/documents/@employee.get.profile_image}else{/assets/frontend/images/male_l.jpg}" alt="no image"></span>
 					@if(Integer.parseInt(session.get("uId").get) ==  Integer.parseInt(employee.get.uid.get.toString()) ){
-						<span class="left emp_edit" > <a href="/edit-users-profile/@employee.get.uid.get.toString()"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" alt="" class="edit-profile">@Messages("employee.editProfile")</a></span>
+						@*<span class="left emp_edit" > <a href="/edit-users-profile/@employee.get.uid.get.toString()"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" alt="" class="edit-profile">@Messages("employee.editProfile")</a></span>*@
 					   <span class="left emp_edit" > <a id="edit-profile-image"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">@Messages("employee.editImage") </a></span>
 					   <span class="left emp_edit" style="width: 170px;"> <a href="/reset-password"><img width="11" style="margin-right:5px;" src="@routes.Assets.at("frontend/images/edit.png")" class="edit-profile">@Messages("resetpassword.resetPassword")</a></span>
 					   
@@ -154,35 +154,19 @@
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.division") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							@if(!employeeOffice.isEmpty){
-								@if(!DivisionService.findDivisionById(employeeOffice.get.division).isEmpty){
-									@DivisionService.findDivisionById(employeeOffice.get.division).get.division	
-								}else{
-								NA
-								}
-							}else{
-							NA
-							}
+							<span id="ladivision"></span>
 						</span>
 					</div>
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.gerencia") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							@if(!employeeOffice.get.gerencia.isEmpty && !GenrenciaService.findGenrenciaById(employeeOffice.get.gerencia.get).isEmpty){
-								@GenrenciaService.findGenrenciaById(employeeOffice.get.gerencia.get).get.genrencia		
-							}else{
-								NA
-							}
+							<span id="lagerencia"></span>
 						</span>
 					</div>
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.department") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							@if(!employeeOffice.get.department.isEmpty && !DepartmentService.findDepartmentById(employeeOffice.get.department.get).isEmpty){
-								@DepartmentService.findDepartmentById(employeeOffice.get.department.get).get.department		
-							}else{
-							NA
-							}
+							<span id="eldepto"></span>
 						</span>
 					</div>
 				</div>
@@ -317,6 +301,32 @@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script type="text/javascript">
+function renderDatosRRHH(id) {
+
+	var url = "/find-datos-rrhh?id=" + id + "&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var mainString = ""
+		var obj = JSON.parse(data);
+
+		if (obj.division) {
+			$("#ladivision").html(obj.division);
+			$("#lagerencia").html(obj.gerencia);
+			$("#eldepto").html(obj.departamento);
+			//$("#hp").html(obj.HP);
+			//$("#ha").html(obj.HA);
+		} else {
+			console.log("algo paso")
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
 var month = [
              "Enero","Febrero","Marzo","Abril","Mayo","Junio",
              "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
@@ -708,6 +718,9 @@ var month = [
 											"display-none");
 									$('#upload_doc').css('width', '550px')
 								});
+						
+						
+						renderDatosRRHH($("#uId").val());
 
 					});
 </script>

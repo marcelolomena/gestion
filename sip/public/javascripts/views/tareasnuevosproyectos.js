@@ -16,7 +16,11 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'><span style='color: red'>*</span>Servicio{idservicio}</div>";
     template += "<div class='column-half'><span style='color: red'>*</span>Tarea{tarea}</div>";
     template += "</div>";
-
+    
+    template += "<div class='form-row'>";
+    template += "<div class='column-full'><span style='color: red'>*</span>Nombre Tarea{nombre}</div>";
+    template += "</div>";  
+    
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>CUI{idcui}</div>";
     template += "<div class='column-half'><span style='color: red'>*</span>Proveedor{idproveedor}</div>";
@@ -210,6 +214,11 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             editoptions: {placeholder: "X.X.X de acuerdo a formato de tarea" }
         },
         {
+            label: 'Nombre Tarea', name: 'nombre', width: 300, align: 'left',
+            search: false, editable: true, hidden: true,
+            editrules: { required: true }
+        },        
+        {
             label: 'Glosa Factura', name: 'glosa', width: 150, align: 'left',
             search: true, editable: true, hidden: false,
             edittype: "textarea", editrules: { required: false },
@@ -371,9 +380,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: { required: true },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                    defaultValue:0
             },
             search: true, editable: true, hidden: false,
         },
@@ -383,9 +390,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             editrules: {required: true},
             formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000,00', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -475,6 +480,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
+                var costounitario = new Number(postdata.costounitario.replace(",", "."));
+                postdata.costounitario=costounitario;
+                
                 const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
@@ -488,6 +496,8 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     return [false, "Tipo Pago: Debe seleccionar un valor", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe seleccionar un valor", ""];
+                }  if (isNaN(costounitario) || costounitario < 0) {
+                    return [false, "Costo Unitario: Ingrese un número valido", ""];                    
                 } else {
                     return [true, "", ""]
                 }
@@ -574,6 +584,8 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
+                var costounitario = new Number(postdata.costounitario.replace(",", "."));
+                postdata.costounitario=costounitario;
                 const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;                
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
@@ -587,6 +599,8 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     return [false, "Tipo Pago: Debe seleccionar un valor", ""];
                 } if (postdata.idmoneda == 0) {
                     return [false, "Moneda: Debe seleccionar un valor", ""];
+                }  if (isNaN(costounitario) || costounitario < 0) {
+                    return [false, "Costo Unitario: Ingrese un número valido", ""];                    
                 } else {
                     return [true, "", ""]
                 }

@@ -176,7 +176,7 @@
  }
  .pre_discipline{
  	float: left;
- 	width: 120px;
+ 	width: 100px;
  }
  .pre_role{
 	float: left;
@@ -184,7 +184,7 @@
  }
   .pre_deliverable{
  	float: left;
- 	width: 150px;
+ 	width: 100px;
  	padding-right: 15px
  }
 #manage-predefined-tasks select{
@@ -198,6 +198,10 @@
  .pre_depend{
  	float: left;
  	width: 150px;
+ }
+ .pre_plan_time{
+ 	float: left;
+ 	width: 65px;
  }
  .pre_action{
  	float: left;
@@ -260,8 +264,15 @@
 .generic-tasks-list .pre_depend{
 	width: 235px;
 }
+.generic-tasks-list .pre_plan_time{
+	width: 65px;
+}
 .generic-tasks-list .task-listing .pre_depend{
 	width: 235px;
+
+}
+.generic-tasks-list .task-listing .pre_plan_time{
+	width: 65px;
 
 }
 .generic-tasks-list .multiselect input{

@@ -349,6 +349,7 @@ exports.action = function (req, res) {
 }
 
 exports.listall = function (req, res) {
+  console.dir("***************EN LISTALL ***************************");
   models.contrato.findAll({
     attributes: ['id', 'nombre'],
     where: { 'nombre': { $ne: null } },
@@ -374,9 +375,9 @@ exports.listaporproveedor = function (req, res) {
   });
 }
 
-exports.list = function (req, res) {
+exports.listOld = function (req, res) {
 
-  //console.dir(req.session)
+  console.dir("***************EN LIST ***************************");
 
   var page = req.body.page;
   var rows = req.body.rows;
@@ -428,7 +429,8 @@ exports.list = function (req, res) {
 
 };
 
-exports.listNew = function (req, res) {
+exports.list = function (req, res) {
+  console.dir("***************EN LISTNEW ***************************");
   var page = req.body.page;
   var rowspp = req.body.rows;
   var filters = req.body.filters;
@@ -436,11 +438,11 @@ exports.listNew = function (req, res) {
   var sord = req.body.sord;
   var condition = "";
 
-  if (!sidx)
+  if (!sidx) {
     sidx = "a.id";
+    sord = "desc";    
+  }
 
-  if (!sord)
-    sord = "asc";
     
   var order = sidx + " " + sord;
   
@@ -448,15 +450,16 @@ exports.listNew = function (req, res) {
     var jsonObj = JSON.parse(filters);
     if (JSON.stringify(jsonObj.rules) != '[]') {
       jsonObj.rules.forEach(function (item) {
-        if (item.op === 'cn') {
-          if (item.field=='Iniciativa') {
-            condition += "a.nombre like '%" + item.data + "%' AND ";
-          } else if (item.field=='nombre' || item.field=='estado' || item.field=='pmoresponsable') {
-            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
-          }  else if (item.field=='glosa' ) {
-            condition += 'c.' + item.field + " like '%" + item.data + "%' AND ";
+        if (item.op === 'eq' && item.data !='0') {
+          if (item.field == 'idproveedor') {
+            condition += 'a.' + item.field + "=" + item.data + " AND ";
+          } else if (item.field == 'tiposolicitud') {
+            condition += 'a.idtiposolicitud=' + item.data + " AND ";
+          } else if (item.field == 'numero') {
+            condition += "a.numero like '%" + item.data + "%' AND ";
           }
-          
+        } else if (item.op === 'cn' ) {
+            condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
         }
       });
       condition = condition.substring(0, condition.length - 5);
@@ -465,38 +468,34 @@ exports.listNew = function (req, res) {
   }          
   var sqlcount = "DECLARE @idfechafinal int;"+
   "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC;"+ 
-  "SELECT count(*) AS count FROM  sip.iniciativa a "+
-  "LEFT JOIN sip.iniciativaprograma b ON a.id=b.idiniciativa LEFT JOIN sip.presupuestoiniciativa c "+ 
-  "ON b.id=c.idiniciativaprograma LEFT JOIN sip.iniciativafecha d ON b.id=d.idiniciativaprograma "+
-  "AND d.idtipofecha=@idfechafinal "; 
+  "SELECT count(*) AS count FROM  sip.contrato a "+
+  "LEFT JOIN sip.proveedor b ON a.idproveedor=b.id "+ 
+  "LEFT JOIN sip.contactoproveedor c ON a.idcontactofacturacion=c.id ";
   if (filters && condition != "") {
     sqlcount += "WHERE " + condition + " ";
   }  
-  var sqlok = "DECLARE @idfechafinal int;"+
-    "SELECT TOP 1 @idfechafinal=id FROM sip.parametro WHERE tipo='tipofecha' ORDER BY valor DESC; "+
-    "declare @rowsPerPage as bigint; " +
+  var sqlok = "declare @rowsPerPage as bigint; " +
     "declare @pageNum as bigint;" +
     "set @rowsPerPage=" + rowspp + "; " +
     "set @pageNum=" + page + ";   " +
     "With SQLPaging As   ( " +
     "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-    "as resultNum, a.nombre Iniciativa, b.nombre, b.estado, c.glosa, "+
-    "c.parainscripcion Inscrita, d.fecha FechaEntrega, b.pmoresponsable FROM  sip.iniciativa a "+
-    "LEFT JOIN sip.iniciativaprograma b ON a.id=b.idiniciativa LEFT JOIN sip.presupuestoiniciativa c "+ 
-    "ON b.id=c.idiniciativaprograma LEFT JOIN sip.iniciativafecha d ON b.id=d.idiniciativaprograma "+
-    "AND d.idtipofecha=@idfechafinal ";
+    "as resultNum, a.*, b.razonsocial, c.contacto "+
+    "FROM  sip.contrato a "+
+    "LEFT JOIN sip.proveedor b ON a.idproveedor=b.id "+ 
+    "LEFT JOIN sip.contactoproveedor c ON a.idcontactofacturacion=c.id ";
     if (filters && condition != "") {
       console.log("**" + condition + "**");
       sqlok += "WHERE " + condition + " ";
     }    
     sqlok += ") " +
     "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
-    console.log("SQL:"+sqlcount);
+    console.log("SQL1:"+sqlcount);
     sequelize.query(sqlcount).spread(function (recs) {
       var records = recs[0].count;
       var total = Math.ceil(parseInt(recs[0].count) / rowspp);
       console.log("Total:"+total+ "recs[0].count:"+recs[0].count);
-      console.log("SQL:"+sqlok);
+      console.log("SQL2:"+sqlok);
       sequelize.query(sqlok).spread(function (rows) {
         res.json({ records: records, total: total, page: page, rows: rows });
       });

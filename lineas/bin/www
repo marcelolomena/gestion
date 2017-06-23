@@ -1,0 +1,135 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app'),
+  models = require("../models"),
+  debug = require('debug')('sip:server'),
+  http = require('http'),
+  fs = require('fs'),
+  cluster = require('cluster'),
+  logger = require("../utils/logger");
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT | '4000');
+app.set('port', port);
+
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+
+if (cluster.isMaster) {
+  var numWorkers = require('os').cpus().length;
+
+  logger.debug('Iniciando cluster maestro con ' + numWorkers + ' trabajadores...');
+
+  for (var i = 0; i < numWorkers; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('online', function (worker) {
+    logger.debug('Trabajador ' + worker.process.pid + ' esta en linea');
+  });
+
+  cluster.on('exit', function (worker, code, signal) {
+    logger.debug('Trabajador ' + worker.process.pid + ' muerto con codigo: ' + code + ', y señal: ' + signal);
+    logger.debug('Iniciando un nuevo trabajador');
+    cluster.fork();
+  });
+} else {
+  models.sequelize.sync().then(startApp)
+    .catch(function (e) {
+      logger.error(e)
+      throw new Error(e);
+    });
+}
+
+
+var handleClient = function (socket) {
+  function log() {
+    var array = [">>> Mensaje desde el servidor: "];
+    for (var i = 0; i < arguments.length; i++) {
+      array.push(arguments[i]);
+    }
+    socket.emit('log', array);
+  }
+
+};
+
+function startApp() {
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      logger.error(bind + ' no tiene acceso');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      logger.error(bind + ' ya esta en uso');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  logger.debug('Escuchando en ' + bind);
+}

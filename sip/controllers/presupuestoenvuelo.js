@@ -291,7 +291,7 @@ exports.list = function (req, res) {
             },
             {
               attributes: [['first_name', 'nombre'], ['last_name', 'apellido']],
-              model: models.user, as: 'pmo', where: filter_two,
+              model: models.user, as: 'pmo', where: filter_two, required: false
             },
             {
               model: models.programa

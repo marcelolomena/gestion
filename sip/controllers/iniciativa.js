@@ -200,7 +200,81 @@ exports.get = function (req, res) {
   });
 };
 
+
 exports.list = function (req, res) {
+  
+  var page = req.body.page;
+  var filas = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+  var nombre = req.body.nombreini;
+  var art = req.body.numart;
+  var pmo = req.body.pmo;
+  var estado = req.body.estado;
+  
+  console.log("**** page :"+page+", "+req.query.page);
+  var sql = "DECLARE @cui INT; "+
+  "DECLARE @PageSize INT; "+
+  "SELECT @PageSize="+filas+"; "+
+  "DECLARE @PageNumber INT; "+
+  "SELECT @PageNumber="+page+"; "
+  
+  var select = sql +"SELECT DISTINCT a.* FROM sip.iniciativa a "+
+    "left join sip.iniciativaprograma b ON a.id=b.idiniciativa "+
+    "left JOIN sip.presupuestoiniciativa c ON b.id=c.idiniciativaprograma ";
+  var where = "";
+  var qnombre = "";
+  var qart = "";
+  var qpmo = "";
+  var qestado = "";
+  var filtro = 0;
+  if (nombre) {
+    qnombre = "(a.nombre LIKE '%"+nombre+"%' OR b.nombre LIKE '%"+nombre+"%') ";
+    filtro = 1;
+  } 
+  if (art) {
+    qart = "AND b.codigoart="+art+" ";
+    filtro = 1;
+  }
+  if (pmo != 0) {
+    qpmo = "AND b.uidpmo="+pmo+" ";
+    filtro = 1;
+  }
+  if (estado != 0) {
+    qestado = "AND (a.idestado="+estado+" OR b.idestado="+estado+") ";
+    filtro = 1;
+  }    
+  if (filtro == 1){
+    where = qnombre + qart + qpmo + qestado;
+    console.log("***WHERE:"+where.substring(0, 3));
+    if (where.substring(0, 3) == "AND") {
+      where = "WHERE "+where.substring(3);
+    } else {
+      where = "WHERE "+where;
+    }
+    select = select + where;
+  }
+  
+  sql2 = select + "ORDER BY a.nombre OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+  var records;
+  logger.debug("sql:"+sql2);
+  sequelize.query(select)
+    .spread(function (rowscount) {
+      records=rowscount.length;
+    }).then(function(response){      
+      sequelize.query(sql2)
+        .spread(function (rows) {      
+      var total=Math.ceil(records / filas);
+      res.json({ records: records, total: total, page: page, rows: rows });
+    }).catch(function (err) {
+        logger.error(err)
+          res.json({ error_code: 1 });
+    });
+  });
+}
+
+exports.listOld = function (req, res) {
 
   var page = req.body.page;
   var rows = req.body.rows;
