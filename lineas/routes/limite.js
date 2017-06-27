@@ -14,11 +14,17 @@ module.exports = function (passport) {
         .post(isAuthenticated, carteraController.action)
         .get(isAuthenticated, carteraController.list);
 
-    router.route('/lineas/:id')
-        .get(isAuthenticated, carteraController.listlineas);
+    router.route('/limite/:id')
+        .get(isAuthenticated, carteraController.listlimite);
 
-    router.route('/lineas')
-        .post(isAuthenticated, carteraController.actionlineas);
+    router.route('/limite')
+        .post(isAuthenticated, carteraController.actionlimite);
+
+    router.route('/garantia/:id')
+        .get(isAuthenticated, carteraController.listgarantia);
+
+    router.route('/garantia')
+        .post(isAuthenticated, carteraController.actiongarantia);
 
     router.route('/grupo')
         .post(isAuthenticated, grupoController.action)
@@ -29,6 +35,12 @@ module.exports = function (passport) {
 
     router.route('/grupodesglose')
         .post(isAuthenticated, grupoController.actiondesglose);
+
+    router.route('/getdatoscliente/:rut')
+        .get(isAuthenticated, carteraController.getdatoscliente);
+
+    router.route('/buscargrupo/:rut')
+        .get(isAuthenticated, grupoController.getgrupo);
 
     return router;
 }

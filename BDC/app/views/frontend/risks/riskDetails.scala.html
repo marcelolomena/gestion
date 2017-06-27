@@ -111,9 +111,9 @@
 				  			<td class="p_values width380px">
 								@{
 									risk.get.probablity_of_occurence match{
-										case 0=>"Alto"
+										case 0=>"Bajo"
 										case 1=>"Mediano"
-										case 2=>"Bajo"
+										case 2=>"Alto"
 										
 									}
 									
@@ -123,9 +123,9 @@
 				  			<td class="p_values">
 							@{
 									risk.get.quantification match{
-										case 0=>"Alto"
+										case 0=>"Bajo"
 										case 1=>"Mediano"
-										case 2=>"Bajo"
+										case 2=>"Alto"
 									}
 									
 							}				  			
@@ -137,10 +137,10 @@
 				  			<td class="p_values width380px">
 							@{
 									risk.get.strategic_reply match{
-										case 0=> "Acceptar"
-										case 1=> "Mitgar"
+										case 0=> "Aceptar"
+										case 1=> "Mitigar"
 										case 2=> "Evitar"
-										case 3=> "Transerir"
+										case 3=> "Transferir"
 									}
 							}				  			
 				  			</td>

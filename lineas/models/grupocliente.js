@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('grupodesglose', {
+  return sequelize.define('grupocliente', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -16,13 +16,13 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    rut: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    razonsocial: {
-      type: DataTypes.STRING,
-      allowNull: true
+    rutcliente: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'cliente',
+        key: 'rut'
+      }
     }
   }, {
     schema: 'dbo', timestamps: false, tableName: 'grupodesglose'

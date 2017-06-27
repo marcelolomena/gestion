@@ -708,7 +708,7 @@ function renderValidateSubTaskFromList(){
 			});
 			$('#subtask_div_change_id').dialog('open');
 			*/
-			var url="/project-task-details/" + subtask;
+			var url="/project-task-details/" + subtask + "#" +x ;
 			$(location).attr('href',url);
 			$('#subtask_div_change_id').addClass('display-none');
 	}else {

@@ -1,4 +1,4 @@
-var gridLineas = {
+var gridLimite = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
         var $gridTab = $(targ + "_t_" + parentRowKey)
@@ -6,20 +6,25 @@ var gridLineas = {
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Color<span style='color:red'>*</span>{idcolor}</div>";
+        tmpl += `<div class='column-full'>Garantías Disponibles: <br />
+        <br />   
+        <input type="checkbox" name="chk_group" value="1" />  Terreno<br />
+        <input type="checkbox" name="chk_group" value="2" />  Máquina <br />
+        <input type="checkbox" name="chk_group" value="3" />  Propiedad <br />`
         tmpl += "</div>";
 
-        tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Comentario<span style='color:red'>*</span>{comentario}</div>";
-        tmpl += "</div>";
-
-        tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full' style='display: none;'>Fecha {fecha}</div>";
-        tmpl += "</div>";
-        tmpl += "<div class='form-row', id='mensajefecha'>";
-        tmpl += "<div class='column-full'></div>";
-        tmpl += "</div>";
-
+        /*
+                tmpl += "<div class='form-row'>";
+                tmpl += "<div class='column-full'>Comentario<span style='color:red'>*</span>{comentario}</div>";
+                tmpl += "</div>";
+        
+                tmpl += "<div class='form-row'>";
+                tmpl += "<div class='column-full' style='display: none;'>Fecha {fecha}</div>";
+                tmpl += "</div>";
+                tmpl += "<div class='form-row', id='mensajefecha'>";
+                tmpl += "<div class='column-full'></div>";
+                tmpl += "</div>";
+        */
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -28,7 +33,7 @@ var gridLineas = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'ID Mac', 'N° Aprob', 'Tipo de Riesgo', 'Descripción', 'Plazo Residual', 'Aprob Actual', 'Deuda Actual', 'Sometido Aprob'],
+            colNames: ['Id', 'ID Mac', 'N° Aprob', 'Tipo de Riesgo', 'Tipo Límite', 'Plazo Residual', 'Aprob Actual', 'Deuda Actual', 'Sometido Aprob', 'Moneda', 'Comentario', 'Garantía Estatal', 'Fecha Venc'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true, width: 10,
@@ -37,27 +42,64 @@ var gridLineas = {
                 { name: 'idmac', hidden: true, editable: true },
                 { name: 'numero', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { name: 'tiporiesgo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'descripcion', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'tipolimite', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { name: 'plazoresidual', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'abrobactualmonto', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'deudaactualmonto', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'someaprobmonto', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'abrobactual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'deudaactual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'someaprob', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'moneda', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'comentario', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                
+                {
+                    name: 'fechavencimiento', width: 100, align: 'left', search: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    editable: true, editrules: { required: true },
+                    searchoptions: {
+                        dataInit: function (el) {
+                            $(el).datepicker({
+                                language: 'es',
+                                format: 'dd-mm-yyyy',
+                                autoclose: true,
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        $gridTab[0].triggerToolbar();
+                                    }, 100);
+                                }
+                            });
+                        },
+                        sopt: ["eq", "le", "ge"]
+                    },
+                    editoptions: {
+                        size: 10, maxlengh: 10,
+                        dataInit: function (element) {
+                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                        }
+                    },
+                },
             ],
             rowNum: 20,
-            pager: '#navGridLineas',
+            pager: '#navGridLimite',
             styleUI: "Bootstrap",
             //sortname: 'fecha',
             //sortorder: "desc",
             height: "auto",
             //shrinkToFit: true,
             //autowidth: true,
-            width: 950,
+            width: 1350,
+            subGrid: true,
+            subGridRowExpanded: subGridSublimite,
+            subGridOptions: {
+                plusicon: "glyphicon-hand-right",
+                minusicon: "glyphicon-hand-down"
+            },
             rownumbers: false,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Descripción de los Créditos",
+            caption: "Descripción de los Limites",
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
             },
@@ -70,9 +112,9 @@ var gridLineas = {
                 $this.jqGrid('footerData', 'set', { plazoresidual: "DIRECTO:", abrobactualmonto: colSum }, false);
                 */
                 var $this = $(this),
-                    sum = $this.jqGrid("getCol", "abrobactualmonto", false, "sum"),
-                    sum2 = $this.jqGrid("getCol", "deudaactualmonto", false, "sum"),
-                    sum3 = $this.jqGrid("getCol", "someaprobmonto", false, "sum"),
+                    sum = $this.jqGrid("getCol", "abrobactual", false, "sum"),
+                    sum2 = $this.jqGrid("getCol", "deudaactual", false, "sum"),
+                    sum3 = $this.jqGrid("getCol", "someaprob", false, "sum"),
                     $footerRow = $(this.grid.sDiv).find("tr.footrow"),
                     localData = $this.jqGrid("getGridParam", "data"),
                     totalRows = localData.length,
@@ -112,43 +154,43 @@ var gridLineas = {
                     });
                     $newFooterRow3.insertAfter($newFooterRow2);
                 }
-                $this.jqGrid("footerData", "set", { plazoresidual: "Directo", abrobactualmonto: sum, deudaactualmonto: sum2, someaprobmonto: sum3  });
+                $this.jqGrid("footerData", "set", { plazoresidual: "Directo", abrobactual: sum, deudaactual: sum2, someaprob: sum3 });
 
                 // calculate the value for the second footer row
-                
+
                 $newFooterRow.find(">td[aria-describedby=" + this.id + "_plazoresidual]").text("Contingente:");
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_abrobactualmonto]").text(
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_abrobactual]").text(
                     0
                 );
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_deudaactualmonto]").text(
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_deudaactual]").text(
                     0
                 );
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_someaprobmonto]").text(
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_someaprob]").text(
                     0
                 );
 
                 $newFooterRow2.find(">td[aria-describedby=" + this.id + "_plazoresidual]").text("Derivados (EC):");
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_abrobactualmonto]").text(
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_abrobactual]").text(
                     0
                 );
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_deudaactualmonto]").text(
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_deudaactual]").text(
                     0
                 );
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_someaprobmonto]").text(
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_someaprob]").text(
                     0
                 );
 
                 $newFooterRow3.find(">td[aria-describedby=" + this.id + "_plazoresidual]").text("Entrega Diferida:");
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_abrobactualmonto]").text(
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_abrobactual]").text(
                     0
                 );
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_deudaactualmonto]").text(
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_deudaactual]").text(
                     0
                 );
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_someaprobmonto]").text(
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_someaprob]").text(
                     0
                 );
-                
+
 
 
 
@@ -156,14 +198,14 @@ var gridLineas = {
             }
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridLineas', { edit: true, add: true, del: true, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridLimite', { edit: true, add: true, del: true, search: false },
             {
-                editCaption: "Modificar Linea",
+                editCaption: "Modificar Límite",
                 closeAfterEdit: true,
                 recreateForm: true,
                 template: tmpl,
                 mtype: 'POST',
-                url: '/lineas/action',
+                url: '/limite',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
@@ -184,12 +226,12 @@ var gridLineas = {
                     }
                 }
             }, {
-                addCaption: "Agregar Linea",
+                addCaption: "Agregar Límite",
                 closeAfterAdd: true,
                 recreateForm: true,
-                template: tmpl,
+                //template: tmpl,
                 mtype: 'POST',
-                url: '/lineas/action',
+                url: '/limite',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
@@ -223,19 +265,20 @@ var gridLineas = {
                     }
 
                     var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
-                    return { idsolicitudcotizacion: parentRowKey, fecha: lafechastring };
+                    return { parent_id: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
-                    if (parseInt(postdata.idcolor) == 0) {
+                    /*
+                    if (parseInt(postdata.fechavencimiento) == 0) {
                         return [false, "Color: Debe escoger un valor", ""];
                     } if (postdata.comentario.trim().length == 0) {
                         return [false, "Comentario: Debe ingresar un comentario", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
+                    } else {*/
+                    return [true, "", ""]
+                    //}
                 }
             }, {
                 mtype: 'POST',
-                url: '/lineas/action',
+                url: '/limite',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 onclickSubmit: function (rowid) {
@@ -243,7 +286,7 @@ var gridLineas = {
                 },
                 beforeShowForm: function (form) {
                     ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará el estado:</b><br><b>" + ret.comentario + "</b> ?");
+                    $("td.delmsg", form).html("<b>Usted borrará el limite:</b><br><b>" + ret.tipolimite + "</b> ?");
 
                 },
                 afterSubmit: function (response, postdata) {
@@ -255,5 +298,43 @@ var gridLineas = {
                         return [true, "", ""]
                 }
             });
+/*
+       $gridTab.jqGrid('navButtonAdd', "#navGridLimite", {
+            caption: "",
+            buttonicon: "glyphicon glyphicon-download-alt",
+            title: "Excel",
+            position: "last",
+            onClickButton: function () {
+                var s;
+                s = $gridTab.jqGrid('getGridParam', 'selarrrow');
+
+                if (s.length > 0) {
+                    // Make AJAX call to get the dynamic form content
+                    $.ajax({
+                        cache: false,
+                        async: true,
+                        type: 'POST',
+                        url: "/TargetItems/MarkPurchasesPaidRequest",
+                        data: {
+                            PurchaseIds: JSON.stringify(s)
+                        },
+                        success: function (content) {
+                            // Add the content to the div
+                            $('#MarkPurchasePaidModal').html(content);
+                            // Display the modal
+                            $("#MarkPurchasePaidModal").dialog("open");
+                        },
+                        error: function (res, status, exception) {
+                            alert(status + ": " + exception);
+                        },
+                        modal: true
+                    });
+                }
+            }
+        });
+        */
     }
+}
+function subGridSublimite(subgrid_id, row_id) {
+    //gridDesgloseGrupo(subgrid_id, row_id, 'desgrupo');
 }

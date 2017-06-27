@@ -17,7 +17,7 @@ $(document).ready(function () {
     template += "</div>";
 
     var modelGrupo = [
-        { label: 'id', name: 'id', key: true, hidden: true },
+        { label: 'Id', name: 'id', width: 30, key: true, hidden: false },
         { label: 'Rut', name: 'rut', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Nombre', name: 'nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Razón Social', name: 'razonsocial', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -58,22 +58,22 @@ $(document).ready(function () {
 
     $("#grid").jqGrid('navGrid', "#pager", {
         edit: true, add: true, del: true, search: false,
-        refresh: true, view: true, position: "left", cloneToTop: false
+        refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modifica Clase de Criticidad",
-            template: template,
+            editCaption: "Modifica Grupo",
+            //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.success != true)
-                    return [false, result.error_text, ""];
+                if (result.error != "0")
+                    return [false, "Error en llamada a Servidor", ""];
                 else
                     return [true, "", ""]
             },beforeSubmit: function (postdata, formid) {
@@ -128,8 +128,8 @@ $(document).ready(function () {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Clase de Criticidad",
-            template: template,
+            addCaption: "Agregar Grupo",
+            //template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
@@ -153,7 +153,7 @@ $(document).ready(function () {
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.success != true)
+                if (result.error != "0")
                     return [false, "Error en llamada a Servidor", ""];
                 else
                     return [true, "", ""]
@@ -175,7 +175,7 @@ $(document).ready(function () {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Clase de Criticidad",
+            addCaption: "Eliminar Grupo",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {
@@ -298,8 +298,8 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Desglose Colores",
-            template: tmplPnotas,
+            editCaption: "Modificar Desglose Grupo",
+            //template: tmplPnotas,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -313,10 +313,10 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.success != true)
-                    {return [false, result.error_text, ""];}
-                else    
-                    {return [true, "", ""]}
+                if (result.error != "0")
+                    return [false, "Error en llamada a Servidor", ""];
+                else
+                    return [true, "", ""]
 
              }, beforeShowForm: function (form) {                          
                 $('input#nombrenota', form).attr('readonly', 'readonly');
@@ -332,8 +332,8 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Desglose Colores",
-            template: tmplPnotas,
+            addCaption: "Agregar Desglose Grupo",
+            //template: tmplPnotas,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
@@ -352,10 +352,10 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
-                if (result.success != true)
-                    {return [false, result.error_text, ""];}
-                else    
-                    {return [true, "", ""]}
+                if (result.error != "0")
+                    return [false, "Error en llamada a Servidor", ""];
+                else
+                    return [true, "", ""]
             },
             beforeShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -369,7 +369,7 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Color",
+            addCaption: "Elimina Desglose Grupo",
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, afterSubmit: function (response, postdata) {

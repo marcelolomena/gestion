@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('lineas', {
+  return sequelize.define('limite', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -20,11 +20,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    tiporiesgo: {
+    tipolimite: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    descripcion: {
+    tiporiesgo: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -32,35 +32,39 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    aprobactualmoneda: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    abrobactualmonto: {
+    abrobactual: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    deudaactualmoneda: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    deudaactualmonto: {
+    deudaactual: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    someaprobmoneda: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    someaprobmonto: {
+    someaprob: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    someaprobmm: {
+    moneda: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    garantiaestatal: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    aprobacionpuntual: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fechavencimiento: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    comentario: {
       type: DataTypes.STRING,
       allowNull: true
     }
   }, {
-    schema: 'dbo', timestamps: false, tableName: 'lineas'
+    schema: 'dbo', timestamps: false, tableName: 'limite'
   });
 };

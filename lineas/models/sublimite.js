@@ -1,82 +1,70 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('mac', {
+  return sequelize.define('sublimite', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    rut: {
+    idlimite: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'limite',
+        key: 'id'
+      }
+    },
+    numero: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    nombre: {
+    tipolimite: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    actividad: {
+    tiporiesgo: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    oficina: {
+    plazoresidual: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    ejecutivo: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechacreacion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechaproxvenc: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechavencant: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    ratinggrupo: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nivelatr: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    ratingind: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    clasificacion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    vigilancia: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    fechainf: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    promediosaldovista: {
+    abrobactual: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    deudasbif: {
+    deudaactual: {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    aprobvinculado: {
+    someaprob: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    moneda: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    garantiaestatal: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    aprobacionpuntual: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    fechavencimiento: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    comentario: {
       type: DataTypes.STRING,
       allowNull: true
     }
   }, {
-    schema: 'dbo', timestamps: false, tableName: 'mac'
+    schema: 'dbo', timestamps: false, tableName: 'sublimite'
   });
 };
