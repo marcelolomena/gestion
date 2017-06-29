@@ -1,0 +1,84 @@
+var express = require('express'),
+  path = require('path'),
+  favicon = require('serve-favicon'),
+  cookieParser = require('cookie-parser'),
+  bodyParser = require('body-parser'),
+  flash = require('express-flash'),
+  fs = require('fs'),
+  app = express(),
+  logDirectory = path.join(__dirname, 'log'),
+  passport = require('passport'),
+  session = require('express-session'),
+  SequelizeStore = require('connect-session-sequelize')(session.Store),
+  sequelize = require('./models/index').sequelize,
+  logger = require("./utils/logger");
+
+
+logger.debug("iniciando")
+
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
+
+// Configuring Passport
+app.use(session({
+  secret: 'keyboard cat',
+  cookie: { secure: false, maxAge: (24 * 60 * 60 * 1000) },
+  name: 'DIVOT',
+  resave: false,
+  saveUninitialized: false,
+  store: new SequelizeStore({
+    checkExpirationInterval: 60 * 60 * 1000,
+    expiration: 24 * 60 * 60 * 1000,
+    db: sequelize
+  })
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
+var routes = require('./routes')(app, passport);
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  var err = new Error('Página no encontrada');
+  err.status = 404;
+  next(err);
+});
+
+// error handlers
+
+if (app.get('env') === 'development') {
+  app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function (err, req, res, next) {
+  logger.error(err);
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
+module.exports = app;

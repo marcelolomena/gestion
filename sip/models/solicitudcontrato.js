@@ -46,6 +46,10 @@ module.exports = function (sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    traspaso: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
       schema: 'sic', timestamps: false, tableName: 'solicitudcontrato'

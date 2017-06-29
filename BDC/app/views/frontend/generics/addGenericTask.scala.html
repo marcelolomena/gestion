@@ -48,6 +48,7 @@
 		 <span class="pre_discipline">  @Messages("maintenance.taskdiscipline")</span>
 		 <span class="pre_role"> @Messages("maintenance.userrole")</span>
 		 <span class="pre_deliverable"> @Messages("maintenance.deliverable")</span>
+		 <span class="pre_plan_time"> Duración</span>
 		 <span class="pre_depend"> Dependencias</span>
 		 <span class="pre_action"> @Messages("maintenance.action")</span>
 		 </li>
@@ -81,6 +82,9 @@
 				 	}else{
 				 		<span class="pre_deliverable"> &nbsp; </span>
 				 	}
+				 	
+				 	<span class="pre_plan_time"> <input type="text" id="plan_time" name="plan_time" value="" style="
+    width: 40px; margin: 0px; min-height: 0px;"></span>
 				 <span class="pre_depend" id="pre_depend_@t.tId.get">
 					@if(gTasks.size>0){
 				 		<input type="hidden" value="" id="selected_task_dependency_@t.tId" />	
