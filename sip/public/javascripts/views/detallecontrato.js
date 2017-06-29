@@ -39,7 +39,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
         templateServicio += "</div>";        
     }
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>CUI<span style='color:red'>*</span>{idcui}</div>";    
+    templateServicio += "<div class='column-half'>CUI Responsable DIVOT<span style='color:red'>*</span>{idcui}</div>";    
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
@@ -74,39 +74,41 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
     
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Monto Contrato<span style='color:red'>*</span>{montocontrato}</div>";
-    templateServicio += "<div class='column-half'>Valor Cuota<span style='color:red'>*</span>{valorcuota}</div>";
     templateServicio += "<div class='column-half'>Moneda<span style='color:red'>*</span>{idmoneda}</div>";
     templateServicio += "</div>";
+    
+    if (tipocontrato == 'Continuidad') {
+        templateServicio += "<div class='form-row'>";  
+        templateServicio += "<div class='column-half'>Valor Cuota<span style='color:red'>*</span>{valorcuota}</div>";    
+        templateServicio += "<div class='column-half'>Factor<span style='color:red'>*</span>{factorimpuesto}</div>";
+        templateServicio += "</div>";
+    
+        templateServicio += "<div class='form-row'>";
+        templateServicio += "<div class='column-half'>Primera Cuota<span style='color:red'>*</span>{periodoprimeracuota}</div>";
+        templateServicio += "<div class='column-half'>Inicio Servicio<span style='color:red'>*</span>{periodoinicioservicio}</div>";        
+        templateServicio += "</div>";    
 
-    templateServicio += "<div class='form-row'>";  
-    templateServicio += "<div class='column-half'>Factor<span style='color:red'>*</span>{factorimpuesto}</div>";
+        templateServicio += "<div class='form-row'>";
+        templateServicio += "<div class='column-half'>Meses Entre Cuotas<span style='color:red'>*</span>{mesesentrecuotas}</div>";
+        templateServicio += "<div class='column-half'>Cantidad de Cuotas<span style='color:red'>*</span>{numerocuotas}</div>";
+        templateServicio += "</div>";
+    }
+
+    templateServicio += "<div class='form-row'>";     
+    templateServicio += "<div class='column-half'>Nombre Servicio<span style='color:red'>*</span>{glosaservicio}</div>";
     templateServicio += "</div>";
     
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Primera Cuota<span style='color:red'>*</span>{periodoprimeracuota}</div>";
-    templateServicio += "<div class='column-half'>Inicio Servicio<span style='color:red'>*</span>{periodoinicioservicio}</div>";        
-    templateServicio += "</div>";    
-
-    templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Meses Entre Cuotas<span style='color:red'>*</span>{mesesentrecuotas}</div>";
-    templateServicio += "<div class='column-half'>Cantidad de Cuotas<span style='color:red'>*</span>{numerocuotas}</div>";
-    templateServicio += "</div>";
-        
     templateServicio += "<div class='form-row'>";     
-    templateServicio += "<div class='column-half'>Descripción<span style='color:red'>*</span>{glosaservicio}</div>";
-    templateServicio += "</div>";
-    
-    templateServicio += "<div class='form-row'>";     
-    templateServicio += "<div class='column-half'>Comentario<span style='color:red'>*</span>{comentario}</div>";
+    templateServicio += "<div class='column-half'>Comentario{comentario}</div>";
     templateServicio += "</div>";         
       
     templateServicio += "<div class='form-row'>";
-    templateServicio += "<div class='column-half'>Más IVA<span style='color:red'>*</span>{impuesto}</div>";  
-    templateServicio += "<div class='column-half'>Diferido<span style='color:red'>*</span>{diferido}</div>";
-    templateServicio += "<div class='column-half'>Calculo Automático de Cuotas<span style='color:red'>*</span>{tipogeneracion}</div>";     
+    templateServicio += "<div class='column-half'>Más IVA{impuesto}</div>"; 
+    if (tipocontrato == 'Continuidad') {     
+        templateServicio += "<div class='column-half'>Diferido{diferido}</div>";
+        templateServicio += "<div class='column-half'>Calculo Automático de Cuotas{tipogeneracion}</div>";   
+    }  
     templateServicio += "</div>";    
-
-
 
     templateServicio += "<hr style='width:100%;'/>";
     templateServicio += "<div> {sData} {cData}  </div>";
@@ -139,7 +141,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                                     var r = "<select>";
                                     r += '<option value="0">--Escoger SAP--</option>';
                                     $.each(data, function (i, item) {
-                                        r += '<option value="' + data[i].id + '">' + data[i].nombre+ '</option>';
+                                        r += '<option value="' + data[i].id + '">' + data[i].id+ ' ' +data[i].nombre+ '</option>';
                                     });
                                     r += "</select>";
                                     $("#sap").html(r);
@@ -169,9 +171,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                         s += '<option value="0">--Escoger SAP--</option>';                        
                         $.each(data, function (i, item) {
                             if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].id+ ' ' +data[i].nombre + '</option>';
                             } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].id+ ' ' +data[i].nombre + '</option>';
                             }
                         });
 
@@ -231,7 +233,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }
             },
             {
-                label: 'CUI', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
+                label: 'CUI Responsable Divot', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
                 //jsonmap: "EstructuraCui.nombre"
             },
             {
@@ -629,7 +631,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
-                label: 'Descripción', name: 'glosaservicio', search: true, editable: true, hidden: false,
+                label: 'Nombre Servicio', name: 'glosaservicio', search: true, editable: true, hidden: false,
                 edittype: "textarea"
             },
             {
@@ -760,7 +762,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-                postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
+                if (typeof(postdata.valorcuota) != "undefined"){
+                    postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
+                }
                 postdata.montocontrato = postdata.montocontrato.split(".").join("").replace(",", ".");
                 var cuota = new Number(postdata.valorcuota);  
                 var montocontrato = new Number(postdata.montocontrato);  
@@ -786,8 +790,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 }  if (isNaN(montocontrato) || montocontrato <= 0) {
                     return [false, "Monto Contrato: Debe ingresar un valor", ""];                    
                 }  if (isNaN(cuota) || cuota <= 0) {
-                    return [false, "Valor cuota: Debe ingresar un valor", ""];
-                } if (parseInt(postdata.idmoneda) == 0) {
+                    if (typeof(postdata.valorcuota) != "undefined"){
+                        return [false, "Valor cuota: Debe ingresar un valor mayor que cero", ""];
+                    }                } if (parseInt(postdata.idmoneda) == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
                 } if (parseInt(postdata.factorimpuesto) == -1) {
                     return [false, "Factor: Debe escoger un valor", ""];
@@ -796,9 +801,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 } if (postdata.periodoinicioservicio == 0) {
                     return [false, "Inicio Servicio: Debe ingresar un valor", ""];
                 }  if (isNaN(mecuotas) || mecuotas <= 0) {
-                    return [false, "Meses Entre Cuotas: Debe escoger un valor", ""];
+                    if (typeof(postdata.mesesentrecuotas) != "undefined"){
+                        return [false, "Meses Entre Cuotas: Debe escoger un valor", ""];
+                    }
                 } if (isNaN(cantcuotas) || cantcuotas <= 0) {
-                    return [false, "Cantidad de Cuotas: Debe escoger un valor", ""];
+                    if (typeof(postdata.numerocuotas) != "undefined"){
+                        return [false, "Cantidad de Cuotas: Debe escoger un valor", ""];
+                    }
                 } if (postdata.glosaservicio.trim().length == 0) {
                     return [false, "Descripción: Debe ingresar un texto", ""];
                 } else {
@@ -867,7 +876,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             }, beforeSubmit: function (postdata, formid) {
-                postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
+                if (typeof(postdata.valorcuota) != "undefined"){
+                    postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
+                }
                 postdata.montocontrato = postdata.montocontrato.split(".").join("").replace(",", ".");
                 var cuota = new Number(postdata.valorcuota);  
                 var montocontrato = new Number(postdata.montocontrato);  
@@ -896,7 +907,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 } if (isNaN(montocontrato) || montocontrato <= 0) {
                     return [false, "Monto Contrato: Debe ingresar un valor mayor que cero", ""];
                 } if (isNaN(cuota) || cuota <= 0) {
-                    return [false, "Valor cuota: Debe ingresar un valor mayor que cero", ""];
+                    if (typeof(postdata.valorcuota) != "undefined"){
+                        return [false, "Valor cuota: Debe ingresar un valor mayor que cero", ""];
+                    }
                 } if (parseInt(postdata.idmoneda) == 0) {
                     return [false, "Moneda: Debe escoger un valor", ""];
                 } if (parseInt(postdata.factorimpuesto) == -1) {
@@ -906,9 +919,13 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 } if (postdata.periodoinicioservicio == 0) {
                     return [false, "Inicio Servicio: Debe ingresar un valor", ""];
                 } if (isNaN(mecuotas) || mecuotas <= 0) {
-                    return [false, "Meses Entre Cuotas: Debe escoger un valor", ""];
+                    if (typeof(postdata.mesesentrecuotas) != "undefined"){
+                        return [false, "Meses Entre Cuotas: Debe escoger un valor", ""];
+                    }
                 } if (isNaN(cantcuotas) || cantcuotas <= 0) {
-                    return [false, "Cantidad de Cuotas: Debe escoger un valor", ""];
+                    if (typeof(postdata.numerocuotas) != "undefined"){
+                        return [false, "Cantidad de Cuotas: Debe escoger un valor", ""];
+                    }
                 } if (postdata.glosaservicio.trim().length == 0) {
                     return [false, "Descripción: Debe ingresar un texto", ""];
                 } else {
@@ -920,8 +937,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"idservicio\",\"op\":\"cn\",\"data\":\"" + postdata.idservicio + "\"}]}";
-                    $('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    //var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"idservicio\",\"op\":\"cn\",\"data\":\"" + postdata.idservicio + "\"}]}";
+                    //$('#' + subgrid_table_id).jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {

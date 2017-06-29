@@ -148,8 +148,16 @@ exports.action = function (req, res) {
             return err;
         });
     }    
-
+    var cuota = (typeof(req.body.valorcuota) != "undefined") ? req.body.valorcuota:"NULL";
+    var factorimpuesto = (typeof(req.body.factorimpuesto) != "undefined") ? req.body.factorimpuesto:"NULL";
+    var mesesentrecuotas = (typeof(req.body.mesesentrecuotas) != "undefined") ? req.body.mesesentrecuotas:"NULL";
+    var periodoprimeracuota = (typeof(req.body.periodoprimeracuota) != "undefined") ? req.body.periodoprimeracuota:"NULL";
+    var numerocuotas = (typeof(req.body.numerocuotas) != "undefined") ? req.body.numerocuotas:"NULL";
+    var periodoinicioservicio = (typeof(req.body.periodoinicioservicio) != "undefined") ? req.body.periodoinicioservicio:"NULL";
+    var diferido = (typeof(req.body.diferido) != "undefined") ? req.body.diferido:"NULL";
+    var tipogeneracion = (typeof(req.body.tipogeneracion) != "undefined") ? req.body.tipogeneracion:"NULL";
     switch (action) {
+        
         case "add":
             var sql = "DECLARE @ctacontable INT; " +
                 "SELECT @ctacontable=idcuenta FROM sip.servicio WHERE id=" + req.body.idservicio + "; " +
@@ -161,12 +169,12 @@ exports.action = function (req, res) {
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
                 "diferido, saldopresupuesto, tipogeneracion, comentario, montocontrato " + sapcampos + ") " +
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
-                req.body.fechatermino + "','" + req.body.fechacontrol + "'," + req.body.valorcuota + "," + req.body.valorcuota + "," + req.body.idmoneda + "," +
+                req.body.fechatermino + "','" + req.body.fechacontrol + "'," + cuota + "," + cuota + "," + req.body.idmoneda + "," +
                 req.body.idplazocontrato + "," + req.body.idcondicion + "," +
-                req.body.impuesto + "," + req.body.factorimpuesto + "," + req.body.idestadocto + ",@estadocto,'" +
-                req.body.glosaservicio + "',1," + req.body.mesesentrecuotas + "," + req.body.periodoprimeracuota + "," +
-                req.body.numerocuotas + "," + req.body.periodoinicioservicio + "," + req.body.diferido + "," + req.body.saldopresupuesto + "," +
-                req.body.tipogeneracion + ",'" + req.body.comentario + "'," + req.body.montocontrato + sapdatos + "); " +
+                req.body.impuesto + "," + factorimpuesto + "," + req.body.idestadocto + ",@estadocto,'" +
+                req.body.glosaservicio + "',1," + mesesentrecuotas + "," + periodoprimeracuota + "," +
+                numerocuotas + "," + periodoinicioservicio + "," + diferido + "," + req.body.saldopresupuesto + "," +
+                tipogeneracion + ",'" + req.body.comentario + "'," + req.body.montocontrato + sapdatos + "); " +
                 "DECLARE @id INT;" +
                 "select @id = @@IDENTITY; " +
                 "select @id as id;";
@@ -210,6 +218,8 @@ exports.action = function (req, res) {
                                 });
                         });
                     });
+                } else {
+                    return res.json({ error_code: 0 });
                 }
                 //res.json({ error_code: 0 });
             }).catch(function (err) {
@@ -227,12 +237,12 @@ exports.action = function (req, res) {
                 "SELECT @estadocto=nombre FROM sip.parametro WHERE id=" + req.body.idestadocto + "; " +
                 "UPDATE sip.detalleserviciocto set anexo='" + anexo + "', idcui=" + req.body.idcui + ", idservicio=" + req.body.idservicio +
                 ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
-                "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + req.body.valorcuota + ", valortotal=" + req.body.valorcuota +
+                "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + cuota + ", valortotal=" + cuota +
                 ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
-                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + req.body.factorimpuesto + 
-                ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + req.body.mesesentrecuotas +
-                ", periodoprimeracuota=" + req.body.periodoprimeracuota + ", numerocuotas=" + req.body.numerocuotas + ", periodoinicioservicio=" + req.body.periodoinicioservicio +
-                ", diferido=" + req.body.diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + req.body.tipogeneracion +
+                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + factorimpuesto + 
+                ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + mesesentrecuotas +
+                ", periodoprimeracuota=" + periodoprimeracuota + ", numerocuotas=" + numerocuotas + ", periodoinicioservicio=" + periodoinicioservicio +
+                ", diferido=" + diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + tipogeneracion +
                 ", comentario='" + req.body.comentario + "', montocontrato="+ req.body.montocontrato + upsap + " " +
                 "WHERE id=" + req.body.id;
             console.log("sqlup:" + sql);
@@ -287,9 +297,9 @@ exports.action = function (req, res) {
                                 var result = borraPeriodos(req.body.id, function (nada) {
                                     logger.debug("*----NDADDD**:" + nada);
                                     if (nada != "10") {
-                                        res.json({ error_code: 0 });
+                                        return res.json({ error_code: 0 });
                                     } else {
-                                        res.json({ error_code: 10 });
+                                        return res.json({ error_code: 10 });
                                     }
                                 });
                                 logger.debug("***result:" + result);
@@ -802,7 +812,7 @@ exports.getListaTareas = function (req, res) {
         proveedor = proveedor2;
     }
 
-    var sql = "SELECT tarea id, min(glosa) nombre FROM sip.tareaenvuelo WHERE idservicio=" + servicio3 +
+    var sql = "SELECT tarea id, min(tarea +' '+glosa) nombre FROM sip.tareaenvuelo WHERE idservicio=" + servicio3 +
         " AND  idproveedor=" + proveedor +
         " GROUP BY tarea ";
     logger.debug("query:" + sql);

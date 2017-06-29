@@ -179,7 +179,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         {
             label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
             search: true, editable: true, hidden: false,
-            editrules: { required: true },  editoptions: { readonly: 'readonly'} 
+            editrules: { required: true } 
         },
         {
             label: 'División', name: 'iddivision',

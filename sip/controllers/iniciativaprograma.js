@@ -170,7 +170,7 @@ exports.action = function (req, res) {
           q4: req.body.q4,
           //fechacomite: req.body.fechacomite,
           idmoneda: req.body.idmoneda,
-          pptoestimadogasto: parseFloat(gasto),
+          pptoestimadogasto: gasto,
           pptoestimadoinversion: inversion,
           pptoestimadoprevisto: previsto,
           pptoaprobadogasto: gastoaprobado,

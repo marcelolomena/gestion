@@ -17,9 +17,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'><span style='color: red'>*</span>Tarea{tarea}</div>";
     template += "</div>";
     
-    template += "<div class='form-row'>";
-    template += "<div class='column-full'><span style='color: red'>*</span>Nombre Tarea{nombre}</div>";
-    template += "</div>";  
+    //template += "<div class='form-row'>";
+    //template += "<div class='column-full'><span style='color: red'>*</span>Nombre Tarea{nombre}</div>";
+    //template += "</div>";  
     
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>CUI{idcui}</div>";
@@ -482,12 +482,14 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             beforeSubmit: function (postdata, formid) {
                 var costounitario = new Number(postdata.costounitario.replace(",", "."));
                 postdata.costounitario=costounitario;
-                
+                var tareatxt =   postdata.tarea;
                 const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
-                } if (!regex.test(postdata.tarea)) {
-                    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
+                //} if (!regex.test(postdata.tarea)) { 
+                //    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
+                } if (tareatxt.length > 100) { 
+                    return [false, "Tarea: Ingrese un nombre más corto", ""];                  
                 } if (postdata.idcui == 0) {
                     return [false, "CUI: Debe seleccionar un valor", ""];
                 } if (postdata.idproveedor == 0) {
@@ -586,11 +588,14 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             beforeSubmit: function (postdata, formid) {
                 var costounitario = new Number(postdata.costounitario.replace(",", "."));
                 postdata.costounitario=costounitario;
-                const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;                
+                const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;  
+                var tareatxt =   postdata.tarea;            
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
-                } if (!regex.test(postdata.tarea)) {
-                    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];                      
+                //} if (!regex.test(postdata.tarea)) {
+                //    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
+                } if (tareatxt.length > 100) { 
+                    return [false, "Tarea: Ingrese un nombre más corto", ""];                                    
                 } if (postdata.idcui == 0) {
                     return [false, "CUI: Debe seleccionar un valor", ""];
                 } if (postdata.idproveedor == 0) {

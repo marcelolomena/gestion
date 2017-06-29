@@ -323,7 +323,7 @@ exports.getCUIs = function (req, res) {
   logger.debug("******rol*********:" + req.session.passport.sidebar[0].rid);
   logger.debug("*ROLADM*:" + constants.ROLADMDIVOT);
   if (rol == constants.ROLADMDIVOT) {
-    var sql = "SELECT id, nombre FROM sip.estructuracui " +
+    var sql = "SELECT id, convert(VARCHAR, cui)+' '+nombre AS nombre FROM sip.estructuracui " +
       "ORDER BY nombre";
     sequelize.query(sql)
       .spread(function (rows) {
