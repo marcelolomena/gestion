@@ -119,5 +119,21 @@
         },
         "logging": false,
         "timezone": "-03:00"
+    },
+    "local3": {
+        "username": "biometria",
+        "password": "biometria123",
+        "database": "lineas",
+        "host": "ZRISMART02",
+        "dialect": "mssql",
+        "dialectOptions": {
+            "instanceName": "SQLEXPRESS"
+        },
+        "pool": {
+            "min": 5,
+            "max": 100,
+            "idle": 500000
+        },
+        "timezone": "-03:00"
     }
 }
