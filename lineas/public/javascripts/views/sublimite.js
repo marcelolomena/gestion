@@ -69,14 +69,14 @@ function gridSublimite(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        /*
+        
         subGrid: true,
-        subGridRowExpanded: showSubGrids3,
+        subGridRowExpanded: showSubGridsGarantiaSub,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-        */
+        
 
         editurl: '/limite/action3',
         gridComplete: function () {
@@ -205,4 +205,7 @@ function ajaxPregUpload(id, idc, idpadre, childGridID) {
             }
         })
     });
+}
+function showSubGridsGarantiaSub(subgrid_id, row_id) {
+    gridGarantiaSub(subgrid_id, row_id, 'garantiasub');
 }

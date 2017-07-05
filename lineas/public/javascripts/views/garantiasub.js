@@ -1,4 +1,4 @@
-function gridGarantia(parentRowID, parentRowKey, suffix) {
+function gridGarantiaSub(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -28,7 +28,7 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
     var childGridPagerID = pager_id;
     var childGridURL = "/garantialimite/" + parentRowKey;
 
-    var modelGarantia = [
+    var modelGarantiaSub = [
         {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
@@ -63,7 +63,7 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelGarantia,
+        colModel: modelGarantiaSub,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
