@@ -18,6 +18,9 @@ module.exports = function (passport) {
     router.route('/limite/:id')
         .get(isAuthenticated, carteraController.listlimite);
 
+    router.route('/vermac/:id')
+        .get(isAuthenticated, carteraController.listlimite);
+
     router.route('/limite')
         .post(isAuthenticated, carteraController.actionlimite);
 
