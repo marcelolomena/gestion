@@ -6,7 +6,8 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 var carteraController = require('../controllers/cartera')
-var grupoController = require('../controllers/grupo')
+//var grupoController = require('../controllers/grupo')
+//var macgrupalController = require('../controllers/macgrupal')
 
 module.exports = function (passport) {
 
@@ -25,7 +26,7 @@ module.exports = function (passport) {
 
     router.route('/garantia')
         .post(isAuthenticated, carteraController.actiongarantia);
-
+/*
     router.route('/grupo')
         .post(isAuthenticated, grupoController.action)
         .get(isAuthenticated, grupoController.list);
@@ -35,12 +36,19 @@ module.exports = function (passport) {
 
     router.route('/grupodesglose')
         .post(isAuthenticated, grupoController.actiondesglose);
-
+*/
     router.route('/getdatoscliente/:rut')
         .get(isAuthenticated, carteraController.getdatoscliente);
-
+/*
     router.route('/buscargrupo/:rut')
         .get(isAuthenticated, grupoController.getgrupo);
+
+    router.route('/grid_macgrupal')
+        .post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.list);
+*/
+    router.route('/macs/:id')
+        .get(isAuthenticated, carteraController.listmacs);
 
     return router;
 }

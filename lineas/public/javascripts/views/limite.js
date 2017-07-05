@@ -6,7 +6,7 @@ var gridLimite = {
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += `<div class='column-full'>Garantías Disponibles: <br />
+        tmpl += `<div id="garantiascliente" class='column-full'>Garantías Disponibles: <br />
         <br />   
         <input type="checkbox" name="chk_group" value="1" />  Terreno<br />
         <input type="checkbox" name="chk_group" value="2" />  Máquina <br />
@@ -33,51 +33,26 @@ var gridLimite = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'ID Mac', 'N° Aprob', 'Tipo de Riesgo', 'Tipo Límite', 'Plazo Residual', 'Aprob Actual', 'Deuda Actual', 'Sometido Aprob', 'Moneda', 'Comentario', 'Garantía Estatal', 'Fecha Venc'],
+            colNames: ['Id', 'MacIndividual_Id', 'N° Aprob', 'T. Riesgo', 'Tipo Límite','Descripción', 'P. Residual', 'Moneda','Aprobado', 'Deuda', 'Some. Aprob', 'G. Estatal'],
             colModel: [
                 {
-                    name: 'id', index: 'id', key: true, hidden: true, width: 10,
+                    name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { name: 'idmac', hidden: true, editable: true },
-                { name: 'numero', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'tiporiesgo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'tipolimite', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'plazoresidual', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'abrobactual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'deudaactual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'someaprob', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'moneda', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'comentario', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'MacIndividual_Id', hidden: true, editable: true },
+                { name: 'Numero', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'TipoRiesgo', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'Tipolimite', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'Comentario', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'PlazoResudual', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'Moneda', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'MontoAprobado', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'DeudaActual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'MontoAprobacion', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
                 
-                {
-                    name: 'fechavencimiento', width: 100, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
-                    },
-                },
+                
+                { name: 'Garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+                
             ],
             rowNum: 20,
             pager: '#navGridLimite',
@@ -336,5 +311,6 @@ var gridLimite = {
     }
 }
 function subGridSublimite(subgrid_id, row_id) {
-    //gridDesgloseGrupo(subgrid_id, row_id, 'desgrupo');
+    gridSublimite(subgrid_id, row_id, 'sublimite');
+    gridGarantia(subgrid_id, row_id, 'garantia');
 }

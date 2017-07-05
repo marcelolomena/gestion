@@ -113,12 +113,12 @@ exports.list = function (req, res) {
     var sord = req.query.sord;
 
     if (!sidx)
-        sidx = "rut";
+        sidx = "Rut";
 
     if (!sord)
         sord = "asc";
 
-    var orden = "[mac]." + sidx + " " + sord;
+    var orden = "[MacIndividual]." + sidx + " " + sord;
 
     var filter_one = []
     var filter_two = []
@@ -141,15 +141,28 @@ exports.list = function (req, res) {
         if (err) {
             logger.debug("->>> " + err)
         } else {
-            models.mac.count({
+            models.MacIndividual.belongsTo(models.MacGrupalMacIndividual, { foreignKey: 'Id' });
+            models.MacGrupalMacIndividual.belongsTo(models.MacGrupal, { foreignKey: 'MacGrupal_Id' });
+            models.MacGrupal.belongsTo(models.Grupo, { foreignKey: 'Grupo_Id' });
+            models.MacIndividual.count({
                 where: filter_one
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.mac.findAll({
+
+                models.MacIndividual.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: orden,
-                    where: filter_one
+                    where: filter_one,
+                    include: [{
+                        model: models.MacGrupalMacIndividual,
+                        include: [{
+                            model: models.MacGrupal,
+                            include: [{
+                                model: models.Grupo
+                            }]
+                        }]
+                    }]
                 }).then(function (mac) {
                     return res.json({ records: records, total: total, page: page, rows: mac });
                 }).catch(function (err) {
@@ -251,33 +264,33 @@ exports.listlimite = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "idmac",
+        "field": "MacIndividual_Id",
         "op": "eq",
         "data": req.params.id
     }];
 
     if (!sidx)
-        sidx = "numero";
+        sidx = "Numero";
 
     if (!sord)
         sord = "asc";
 
-    var orden = "[limite]." + sidx + " " + sord;
+    var orden = "[Linea]." + sidx + " " + sord;
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.limite.belongsTo(models.mac, { foreignKey: 'idmac' });
-            models.limite.count({
+            models.Linea.belongsTo(models.MacIndividual, { foreignKey: 'MacIndividual_Id' });
+            models.Linea.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.limite.findAll({
+                models.Linea.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,
                     order: orden,
                     include: [{
-                        model: models.mac
+                        model: models.MacIndividual
                     }]
                 }).then(function (lineas) {
                     return res.json({ records: records, total: total, page: page, rows: lineas });
@@ -429,3 +442,51 @@ exports.getdatoscliente = function (req, res) {
     });
 
 }
+
+exports.listmacs = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "idgrupo",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "rut";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[mac]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.mac.belongsTo(models.macgrupal, { foreignKey: 'idgrupo' });
+            models.mac.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.mac.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    include: [{
+                        model: models.macgrupal
+                    }]
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};

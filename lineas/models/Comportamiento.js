@@ -1,18 +1,18 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('Grupo', {
+	return sequelize.define('Comportamiento', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			primaryKey: true,
 			autoIncrement: true
 		},
-		Nombre: {
+		Comportamiento: {
 			type: DataTypes.STRING,
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Grupo'
+		schema: 'dbo', timestamps: false, tableName: 'Comportamiento'
 	});
 };
