@@ -33,7 +33,7 @@ var gridVermac = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'MacIndividual_Id', 'N° Aprob', 'T. Riesgo', 'Tipo Límite','Descripción', 'P. Residual', 'Moneda','Aprobado', 'Deuda', 'Some. Aprob', 'G. Estatal'],
+            colNames: ['Id', 'MacIndividual_Id', 'OP', 'Credito', 'Tipo Límite','Descripción', 'Plazo Residual', 'Moneda','Aprobado', 'Deuda', 'Some. Aprob', 'Condicion'],
             colModel: [
                 {
                     name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
@@ -184,7 +184,8 @@ var gridVermac = {
 
     }
 }
-function subGridSublimite(subgrid_id, row_id) {
-    gridSublimiteOp(subgrid_id, row_id, 'sublimite');
-    //gridGarantia(subgrid_id, row_id, 'garantia');
+
+function subGridSublimite(subgrid_id, row_id) {         
+      gridSublimiteOp(subgrid_id, row_id, 'sublimite');
+      gridOperacion(subgrid_id, row_id, 'veroperacion');
 }
