@@ -430,8 +430,25 @@ exports.listgarantia = function (req, res) {
 };
 exports.getdatoscliente = function (req, res) {
     sequelize.query(
-        'select * from dbo.cliente ' +
+        'select * from dbo.Empresa ' +
         'where rut =  ' + req.params.rut,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+
+exports.getgrupo = function (req, res) {
+    sequelize.query(
+        'select a.Id, a.Nombre from dbo.Grupo a  ' +
+        'join dbo.GrupoEmpresa b on b.Grupo_Id=a.Id  ' +
+        'join dbo.Empresa c on c.Id = b.Empresa_Id  ' +
+        'where c.rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

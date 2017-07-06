@@ -42,10 +42,10 @@ module.exports = function (passport) {
 */
     router.route('/getdatoscliente/:rut')
         .get(isAuthenticated, carteraController.getdatoscliente);
-/*
-    router.route('/buscargrupo/:rut')
-        .get(isAuthenticated, grupoController.getgrupo);
 
+    router.route('/buscargrupo/:rut')
+        .get(isAuthenticated, carteraController.getgrupo);
+/*
     router.route('/grid_macgrupal')
         .post(isAuthenticated, macgrupalController.action)
         .get(isAuthenticated, macgrupalController.list);
