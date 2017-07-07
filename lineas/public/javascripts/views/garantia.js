@@ -26,7 +26,7 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/garantialimite/" + parentRowKey;
+    var childGridURL = "/garantiareallimite/" + parentRowKey;
 
     var modelGarantia = [
         {

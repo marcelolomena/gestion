@@ -556,7 +556,7 @@ exports.listsublimite = function (req, res) {
     });
 };
 
-xports.listoperacion = function (req, res) {
+exports.listoperacion = function (req, res) {
 
     var page = req.query.page;
     var rows = req.query.rows;
