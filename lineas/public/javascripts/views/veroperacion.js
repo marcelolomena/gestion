@@ -26,7 +26,7 @@ function gridOperacion(parentRowID, parentRowKey, suffix) { //no esta activa
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/limite/" + parentRowKey;
+    var childGridURL = "/operaciones/" + parentRowKey;
 
     var modelOperacion = [
         {

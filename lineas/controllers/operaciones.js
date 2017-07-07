@@ -571,29 +571,29 @@ exports.listoperacion = function (req, res) {
     }];
 
     if (!sidx)
-        sidx = "Numero";
+        sidx = "Plazo";
 
     if (!sord)
         sord = "asc";
 
-    var orden = "[Sublinea]." + sidx + " " + sord;
+    var orden = "[Operacion]." + sidx + " " + sord; //modelo
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.Sublinea.belongsTo(models.Linea, { foreignKey: 'Linea_Id' });
-            models.Sublinea.count({
+            models.Operacion.belongsTo(models.Sublinea, { foreignKey: 'Sublinea_Id' });
+            models.Operacion.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.Sublinea.findAll({
+                models.Operacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,
                     order: orden,
                     include: [{
-                        model: models.Linea
+                        model: models.Sublinea
                     }]
-                }).then(function (lineas) {
+                }).then(function (lineas) {//revisar
                     return res.json({ records: records, total: total, page: page, rows: lineas });
                 }).catch(function (err) {
                     logger.error(err);
