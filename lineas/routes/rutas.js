@@ -6,6 +6,7 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 var carteraController = require('../controllers/cartera')
+var operacionesController = require('../controllers/operaciones')
 //var grupoController = require('../controllers/grupo')
 var macgrupalController = require('../controllers/macgrupal')
 
@@ -17,6 +18,9 @@ module.exports = function (passport) {
 
     router.route('/limite/:id')
         .get(isAuthenticated, carteraController.listlimite);
+
+    //router.route('/sublimite/:id')
+    //    .get(isAuthenticated, carteraController.sublistlimite);
 
     router.route('/vermac/:id')
         .get(isAuthenticated, carteraController.listlimite);
@@ -57,5 +61,13 @@ module.exports = function (passport) {
     router.route('/macs/:id')
         .get(isAuthenticated, carteraController.listmacs);
 
+    router.route('/limite/:id')
+        .get(isAuthenticated, operacionesController.listlimite);
+
+    router.route('/sublimite/:id')
+        .get(isAuthenticated, operacionesController.listsublimite);
+
+    router.route('/operaciones/:id')
+        .get(isAuthenticated, operacionesController.listoperacion);
     return router;
 }
