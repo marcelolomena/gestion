@@ -45,28 +45,28 @@ function gridCotizaciones4(parentRowID, parentRowKey, suffix) {
     var childGridURL = "/sic/notaevaluaciontecnica3/" + parentRowKey + "/list";
 
     var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-    //console.log("la grilla padre: " + grillapadre)
+    console.log("la grilla padre: " + grillapadre)
     var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    //console.log("la rowData : " + rowData)
+    console.log("la rowData : " + rowData)
     var parentCriterio = rowData.idserviciorequerido;
-    //console.log("la parentCriterio : " + parentCriterio)
+    console.log("la parentCriterio : " + parentCriterio)
 
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
-    //console.log("la grilla abuelo: " + grillaabuelo)
+    console.log("la grilla abuelo: " + grillaabuelo)
     var rowData2 = $("#" + grillaabuelo).getRowData(parentCriterio);
-    //console.log("la rowData2 : " + rowData2)
+    console.log("la rowData2 : " + rowData2)
     var parentClaseEvaluacionTecnica = rowData2.claseevaluaciontecnica;
 
-    //console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
+    console.log("la parentAbuelo : " + parentClaseEvaluacionTecnica)
     var bisabuelo = rowData.idnotaevaluacion;
     var parenabuelo = rowData2.id
     var parentbisabuelo = rowData.id
     var rowData1000 = $("#" + grillaabuelo).getRowData(bisabuelo);
 
-    //console.log("la PARENABUELO : " + parenabuelo)
-    //console.log("la PARENBISABULO : " + bisabuelo)
-    //console.dir(rowData1000[0].id)
+    console.log("la PARENABUELO : " + parenabuelo)
+    console.log("la PARENBISABULO : " + bisabuelo)
+    console.dir(rowData1000[0].id)
     var parent_bisabuelo = rowData1000[0].id
 
 

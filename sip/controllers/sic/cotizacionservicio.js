@@ -498,7 +498,7 @@ exports.actionnota2 = function (req, res) {
                 idnotaevaluaciontecnica: req.body.parent_id,
                 idcriterioevaluacion2: req.body.idcriterioevaluacion2,
                 idproveedor: req.body.idproveedor,
-                nota: 0,
+                nota:req.body.nota,
                 comentario: req.body.comentario,
                 borrado: 1
             }).then(function (notaevaluaciontecnica2) {
@@ -521,34 +521,40 @@ exports.actionnota2 = function (req, res) {
                                     model: models.criterioevaluacion2
                                 }]
                             }).then(function (notaevaluaciontecnica2) {
-                                var suma = 0
-                                var sumaporcentaje = 0
-                                for (var i in notaevaluaciontecnica2) {
-                                    var notaponderada = (notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje) / 100 * notaevaluaciontecnica2[i].nota
-                                    suma = suma + notaponderada;
-                                    logger.debug("esto es una suma: " + suma)
-                                    sumaporcentaje = sumaporcentaje + notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje
+                                sequelize.query(`select sum((c.porcentaje/100) * a.nota ) notaponderada, sum(c.porcentaje) sumaporcentaje from sic.notaevaluaciontecnica2 a 
+                                                join sic.notaevaluaciontecnica b on b.id=a.idnotaevaluaciontecnica
+                                                join sic.criterioevaluacion2 c on c.id=a.idcriterioevaluacion2
+                                                where b.id=:idnota1`,
+                                        { replacements: { idnota1: req.body.parent_id }, type: sequelize.QueryTypes.SELECT }
+                                ).then(function(notaevaluaciontecnica1){
+                                    var suma2 = notaevaluaciontecnica1[0].notaponderada
+                                    var sumaporcentaje2 = notaevaluaciontecnica1[0].sumaporcentaje
+                                    logger.debug("--------------------------------->>> esto es la suma final2 lv1: " + suma2)
+                                    logger.debug("--------------------------------->>> esto es la suma porcentaje2 lv1: " + sumaporcentaje2)
+                                    if(sumaporcentaje2 == 100){
+                                        logger.debug("100% : " + sumaporcentaje2 + " id --> " + req.body.idnota1)
+                                        models.notaevaluaciontecnica.update({
+                                            nota: suma2
+                                        }, {
+                                            where: {
+                                                id: req.body.idnota1
+                                            }
+                                        })
+                                    }else{
+                                        logger.debug("<100% : " + sumaporcentaje2 + " id --> " + req.body.idnota1)
+                                            models.notaevaluaciontecnica.update({
+                                                nota: 0
+                                            }, {
+                                                    where: {
+                                                        id: req.body.idnota1
+                                                    }
+                                                })
+                                    }
 
-                                }
-                                logger.debug("esto es la suma final: " + suma)
-                                logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
-                                if (sumaporcentaje == 100) {
-                                    models.notaevaluaciontecnica.update({
-                                        nota: suma
-                                    }, {
-                                            where: {
-                                                id: req.body.parent_id
-                                            }
-                                        })
-                                } else {
-                                    models.notaevaluaciontecnica.update({
-                                        nota: 0
-                                    }, {
-                                            where: {
-                                                id: req.body.parent_id
-                                            }
-                                        })
-                                }
+                                }).catch(function (err) {
+                                        logger.error(err)
+                                        return res.json({ error_code: 1 });
+                                });
 
                             }).catch(function (err) {
                                 logger.error(err)
@@ -567,6 +573,7 @@ exports.actionnota2 = function (req, res) {
                 logger.error(err)
                 return res.json({ message: err.message, success: false })
             });
+            return res.json({ id: req.body.id, /*parent: idsolicitudcotizacion, */message: 'Inicio carga', success: true });
             break;
         case "edit":
             bitacora.registrarhijo(
@@ -582,89 +589,49 @@ exports.actionnota2 = function (req, res) {
                         models.notaevaluaciontecnica2.update({
                             idcriterioevaluacion2: req.body.idcriterioevaluacion2,
                             idproveedor: req.body.idproveedor,
-                            nota: 0,
+                            nota: req.body.nota,
                             comentario: req.body.comentario
                         }, {
                                 where: {
                                     id: req.body.id
                                 }
                             }).then(function (notaevaluaciontecnica2) {
-
-
-
-                                models.notaevaluaciontecnica2.belongsTo(models.criterioevaluacion2, { foreignKey: 'idcriterioevaluacion2' });
-                                models.notaevaluaciontecnica2.findAll({
-                                    where: {
-                                        idnotaevaluaciontecnica: req.body.parent_id
-                                    },
-                                    include: [{
-                                        model: models.criterioevaluacion2
-                                    }]
-                                }).then(function (notaevaluaciontecnica2) {
-                                    console.dir(notaevaluaciontecnica2);
-                                    /*calculito(notaevaluaciontecnica2).then(function (resultado) {
-                                        
-                                        if (resultado[1] == 100) {
-                                            models.notaevaluaciontecnica.update({
-                                                nota: resultado[0]
-                                            }, {
-                                                    where: {
-                                                        id: req.body.parent_id
-                                                    }
-                                                })
-                                        } else {
+                                sequelize.query(`select sum((c.porcentaje/100) * a.nota ) notaponderada, sum(c.porcentaje) sumaporcentaje from sic.notaevaluaciontecnica2 a 
+                                                join sic.notaevaluaciontecnica b on b.id=a.idnotaevaluaciontecnica
+                                                join sic.criterioevaluacion2 c on c.id=a.idcriterioevaluacion2
+                                                where b.id=:idnota1`,
+                                        { replacements: { idnota1: req.body.parent_id }, type: sequelize.QueryTypes.SELECT }
+                                ).then(function(notaevaluaciontecnica1){
+                                    var suma2 = notaevaluaciontecnica1[0].notaponderada
+                                    var sumaporcentaje2 = notaevaluaciontecnica1[0].sumaporcentaje
+                                    logger.debug("--------------------------------->>> esto es la suma final2 lv1: " + suma2)
+                                    logger.debug("--------------------------------->>> esto es la suma porcentaje2 lv1: " + sumaporcentaje2)
+                                    if(sumaporcentaje2 == 100){
+                                        logger.debug("100% : " + sumaporcentaje2 + " id --> " + req.body.idnota1)
+                                        models.notaevaluaciontecnica.update({
+                                            nota: suma2
+                                        }, {
+                                            where: {
+                                                id: req.body.idnota1
+                                            }
+                                        })
+                                    }else{
+                                        logger.debug("<100% : " + sumaporcentaje2 + " id --> " + req.body.idnota1)
                                             models.notaevaluaciontecnica.update({
                                                 nota: 0
                                             }, {
                                                     where: {
-                                                        id: req.body.parent_id
+                                                        id: req.body.idnota1
                                                     }
                                                 })
-                                        }
-                                    }).catch(function (err) {
-                                        console.log("salio por aqui")
-                                        logger.error(err)
-                                    });
-                                    */
-
-
-                                    var suma = 0
-                                    var sumaporcentaje = 0
-                                    for (var i in notaevaluaciontecnica2) {
-                                        var notaponderada = (notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje) / 100 * notaevaluaciontecnica2[i].nota
-
-                                        suma = suma + notaponderada;
-
-                                        sumaporcentaje = sumaporcentaje + notaevaluaciontecnica2[i].criterioevaluacion2.porcentaje
-
-                                    }
-                                    logger.debug("esto es la suma final: " + suma)
-                                    logger.debug("esto es la suma porcentaje: " + sumaporcentaje)
-
-
-                                    if (sumaporcentaje == 100) {
-                                        models.notaevaluaciontecnica.update({
-                                            nota: suma
-                                        }, {
-                                                where: {
-                                                    id: req.body.parent_id
-                                                }
-                                            })
-                                    } else {
-                                        models.notaevaluaciontecnica.update({
-                                            nota: 0
-                                        }, {
-                                                where: {
-                                                    id: req.body.parent_id
-                                                }
-                                            })
                                     }
 
                                 }).catch(function (err) {
-                                    logger.error(err)
-                                    return res.json({ message: err.message, success: false })
+                                        logger.error(err)
+                                        return res.json({ error_code: 1 });
                                 });
-                                return res.json({ id: req.body.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
+
+
                             }).catch(function (err) {
                                 logger.error(err)
                                 return res.json({ message: err.message, success: false });
@@ -674,6 +641,7 @@ exports.actionnota2 = function (req, res) {
                         return res.json({ message: err.message, success: false });
                     }
                 });
+                return res.json({ id: req.body.id, /*parent: idsolicitudcotizacion, */message: 'Inicio carga', success: true });
             break;
 
 

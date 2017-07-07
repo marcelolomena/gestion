@@ -46,7 +46,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
     console.log("la rowData : " + rowData)
     var parentCriterio = rowData.idserviciorequerido;
     console.log("la parentCriterio : " + parentCriterio)
-
+    console.log("ESTO ES UN PARENTROWKEY : " + parentRowKey)
     var grillaabuelo = grillapadre.substring(0, grillapadre.lastIndexOf("_"));
     grillaabuelo = grillaabuelo.substring(0, grillaabuelo.lastIndexOf("_"));
     console.log("la grilla abuelo: " + grillaabuelo)
@@ -245,6 +245,12 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                     success: function (data) {
                         console.log(data[0].niveles)
                         nivel = (data[0].niveles);
+                        console.log("ESTAMOS EN NIVEL 2 DE: "+ data[0].niveles)
+                        if (parseInt(nivel) > 2) {
+                            $("input#nota").attr("readonly", true);
+                        } else {
+                            $("input#nota").attr("readonly", false);
+                        }
                     }
                 });
 
@@ -252,15 +258,16 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                 console.log("niveles: " + nivel)
 
 
-                if (nivel > 3) {
-                    $("input#nota").attr("readonly", false);
-                } else {
-                    $("input#nota").attr("readonly", true);
-                }
+                
             },
+            onclickSubmit: function (rowid) {
+                return { parent_id: parentRowKey, idnota1: parentRowKey/*, idsolicitudcotizacion: parentSolicitud*/ };
+            },
+            /*
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
             }
+            */
         },
         {
             closeAfterAdd: true,
@@ -283,18 +290,15 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                     success: function (data) {
                         console.log(data[0].niveles)
                         nivel = (data[0].niveles);
+                        if (parseInt(nivel) > 2) {
+                            $("input#nota").attr("readonly", true);
+                        } else {
+                            $("input#nota").attr("readonly", false);
+                        }
                     }
                 });
 
-
-                console.log("niveles: " + nivel)
-
-
-                if (nivel > 3) {
-                    $("input#nota").attr("readonly", false);
-                } else {
-                    $("input#nota").attr("readonly", true);
-                }
+                console.log("estamos en el nivel: " + nivel)
             },
             beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
