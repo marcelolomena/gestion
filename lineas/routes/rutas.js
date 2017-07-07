@@ -7,7 +7,7 @@ var logger = require("../utils/logger");
 
 var carteraController = require('../controllers/cartera')
 //var grupoController = require('../controllers/grupo')
-//var macgrupalController = require('../controllers/macgrupal')
+var macgrupalController = require('../controllers/macgrupal')
 
 module.exports = function (passport) {
 
@@ -45,11 +45,15 @@ module.exports = function (passport) {
 
     router.route('/buscargrupo/:rut')
         .get(isAuthenticated, carteraController.getgrupo);
-/*
-    router.route('/grid_macgrupal')
-        .post(isAuthenticated, macgrupalController.action)
+
+    router.route('/vermacgrupal/:id')
+        //.post(isAuthenticated, macgrupalController.action)
         .get(isAuthenticated, macgrupalController.list);
-*/
+
+    router.route('/macindividuales/:id')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.listindividuales);  
+
     router.route('/macs/:id')
         .get(isAuthenticated, carteraController.listmacs);
 

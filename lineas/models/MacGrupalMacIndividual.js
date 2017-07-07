@@ -1,6 +1,6 @@
 /* jshint indent: 1 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
 	return sequelize.define('MacGrupalMacIndividual', {
 		Id: {
 			type: DataTypes.INTEGER,
@@ -10,13 +10,21 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		MacIndividual_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true
+			allowNull: true,
+			references: {
+				model: 'MacIndividual',
+				key: 'Id'
+			}
 		},
 		MacGrupal_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true
+			allowNull: true,
+			references: {
+				model: 'MacGrupal',
+				key: 'Id'
+			}
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'MacGrupalMacIndividual'
-	});
+			schema: 'dbo', timestamps: false, tableName: 'MacGrupalMacIndividual'
+		});
 };

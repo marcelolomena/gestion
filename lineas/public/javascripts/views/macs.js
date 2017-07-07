@@ -1,449 +1,321 @@
-var gridMacs = {
-
-    renderGrid: function (loadurl, parentRowKey, targ) {
-        var $gridTab = $(targ + "_t_" + parentRowKey)
-
-        var tmpl = "<div id='responsive-form' class='clearfix'>";
-
-        tmpl += "<div class='form-row'>";
-        tmpl += `<div class='column-full'>Garantías Disponibles: <br />
-        <br />   
-        <input type="checkbox" name="chk_group" value="1" />  Terreno<br />
-        <input type="checkbox" name="chk_group" value="2" />  Máquina <br />
-        <input type="checkbox" name="chk_group" value="3" />  Propiedad <br />`
-        tmpl += "</div>";
-
-        /*
-                tmpl += "<div class='form-row'>";
-                tmpl += "<div class='column-full'>Comentario<span style='color:red'>*</span>{comentario}</div>";
-                tmpl += "</div>";
-        
-                tmpl += "<div class='form-row'>";
-                tmpl += "<div class='column-full' style='display: none;'>Fecha {fecha}</div>";
-                tmpl += "</div>";
-                tmpl += "<div class='form-row', id='mensajefecha'>";
-                tmpl += "<div class='column-full'></div>";
-                tmpl += "</div>";
-        */
-        tmpl += "<hr style='width:100%;'/>";
-        tmpl += "<div> {sData} {cData}  </div>";
-        tmpl += "</div>";
-
-        $gridTab.jqGrid({
-            url: loadurl,
-            datatype: "json",
-            mtype: "GET",
-            //colNames: ['Id', 'ID Mac Grupal', 'N° Aprob', 'Tipo de Riesgo', 'Tipo Límite', 'Plazo Residual', 'Aprob Actual', 'Deuda Actual', 'Sometido Aprob', 'Moneda', 'Comentario', 'Garantía Estatal', 'Fecha Venc'],
-            colModel: [
-                {
-                    name: 'id', index: 'id', key: true, hidden: true, width: 10,
-                    editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
-                },
-                { name: 'idmacgrupal', hidden: true, editable: true },
-                {
-                    label: ' ', name: 'marca', key: false, hidden: false, width: 30,
-                    formatter: function (cellvalue, options, rowObject) {
-
-                        dato = '<input type="checkbox" name="chk_group" value="1" />'
-
-                        return dato
-                    }
-                },
-                {
-                    label: 'Rut',
-                    name: 'rut',
-                    width: 80,
-                    align: 'left',
-                    search: false,
-                    editable: true,
-                    hidden: false,
-                    editoptions: {
-                        dataEvents: [{
-                            type: 'change', fn: function (e) {
-                                var grid = $grid
-                                var rowKey = grid.getGridParam("selrow");
-                                var rowData = grid.getRowData(rowKey);
-                                //console.log("rowData:" + rowData);
-                                var thissid = $(this).val();
-                                $.ajax({
-                                    type: "GET",
-                                    url: '/getdatoscliente/' + thissid,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data.length > 0) {
-                                            //console.log("glosa:" + data[0].glosaservicio);
-                                            $("input#nombre").val(data[0].razonsocial);
-                                            $("input#actividad").val("INMOBILIARIA");
-                                            $("input#oficina").val("CENTRAL");
-                                            $("input#ejecutivo").val("SERGIO VALENZUELA");;
-                                            $("input#fechacreacion").val("2016-05-21");
-                                            $("input#fechaproxvenc").val("2016-06-31");
-                                            $("input#fechavencant").val("2016-05-22");
-                                            $("input#ratinggrupo").val("0");
-                                            $("input#nivelatr").val("R3");
-                                            $("input#ratingind").val("0");
-                                            $("input#clasificacion").val("A5");
-                                            $("input#vigilancia").val("NO");
-                                            $("input#fechainf").val("2016-06-22");
-                                            $("input#promediosaldovista").val("650");
-                                            $("input#deudasbif").val("350");
-                                            $("input#aprobvinculado").val("NO");
-
-                                        } else {
-                                            alert("No existe cliente en Base de Datos");
-                                        }
-                                    }
-                                });
-
-                            }
-                        }],
-                    }
-                },
-
-                //{ label: 'Rut', name: 'rut', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Nombre', name: 'nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Actividad', name: 'actividad', width: 150, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Oficina', name: 'oficina', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Ejecutivo', name: 'ejecutivo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-                {
-                    label: 'Creación', name: 'fechacreacion', width: 80, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
-                    },
-                },
-                {
-                    label: 'Vencimiento', name: 'fechaproxvenc', width: 80, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
-                    },
-                },
-                {
-                    label: 'Venc. Anterior', name: 'fechavencant', width: 100, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
-                    },
-                },
-                { label: 'R. Indiv.', name: 'ratingind', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'R. Grupal', name: 'ratinggrupo', width: 90, hidden: false, search: true, editable: true, editrules: { required: true } },
-
-                { label: 'N. Atrib.', name: 'nivelatr', width: 110, hidden: false, search: true, editable: true, editrules: { required: true } },
-
-                { label: 'Clasific.', name: 'clasificacion', width: 90, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Vigilancia', name: 'vigilancia', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
-                {
-                    label: 'Info al', name: 'fechainf', width: 90, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                    editable: true, editrules: { required: true },
-                    searchoptions: {
-                        dataInit: function (el) {
-                            $(el).datepicker({
-                                language: 'es',
-                                format: 'dd-mm-yyyy',
-                                autoclose: true,
-                                onSelect: function (dateText, inst) {
-                                    setTimeout(function () {
-                                        $gridTab[0].triggerToolbar();
-                                    }, 100);
-                                }
-                            });
-                        },
-                        sopt: ["eq", "le", "ge"]
-                    },
-                    editoptions: {
-                        size: 10, maxlengh: 10,
-                        dataInit: function (element) {
-                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
-                        }
-                    },
-                },
-                { label: 'Prom Saldo V', name: 'promediosaldovista', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { label: 'Deuda SBIF', name: 'deudasbif', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { label: 'Aprobación', name: 'aprobvinculado', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
-
-            ],
-            rowNum: 20,
-            pager: '#navGridMacs',
-            styleUI: "Bootstrap",
-            //sortname: 'fecha',
-            //sortorder: "desc",
-            height: "auto",
-            //shrinkToFit: true,
-            //autowidth: true,
-            width: 1350,
-            subGrid: true,
-            subGridRowExpanded: showChildGrid2,
-            subGridBeforeExpand: function (divid, rowid) {
-                var expanded = jQuery("td.sgexpanded", $gridTab)[0];
-                if (expanded) {
-                    setTimeout(function () {
-                        $(expanded).trigger("click");
-                    }, 100);
-                }
-            },
-            rownumbers: false,
-            onSelectRow: function (id) {
-                var getID = $(this).jqGrid('getCell', id, 'id');
-            },
-            viewrecords: true,
-            caption: "MACs Individuales",
-            loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
-            },
-            footerrow: false
-        });
-
-        $gridTab.jqGrid('navGrid', '#navGridMacs', { edit: false, add: true, del: true, search: false },
-            {
-                editCaption: "Modificar MAC",
-                closeAfterEdit: true,
-                recreateForm: true,
-                template: tmpl,
-                mtype: 'POST',
-                url: '/limite',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function (form) {
-                    var rowKey = $gridTab.getGridParam("selrow");
-                    var rowData = $gridTab.getRowData(rowKey);
-                    var thissid = rowData.fecha;
-                    $('#mensajefecha').html("<div class='column-full'>Estado con fecha: " + thissid + "</div>");
-                },
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                }, beforeSubmit: function (postdata, formid) {
-                    if (parseInt(postdata.idcolor) == 0) {
-                        return [false, "Color: Debe escoger un valor", ""];
-                    } if (postdata.comentario.trim().length == 0) {
-                        return [false, "Comentario: Debe ingresar un comentario", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                }
-            }, {
-                addCaption: "Agregar MAC",
-                closeAfterAdd: true,
-                recreateForm: true,
-                //template: tmpl,
-                mtype: 'POST',
-                url: '/limite',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function (form) {
-                    var lafechaactual = new Date();
-                    var elanoactual = lafechaactual.getFullYear();
-                    var elmesactual = (lafechaactual.getMonth() + 1);
-                    if (elmesactual < 10) {
-                        elmesactual = "0" + elmesactual
-                    }
-                    var eldiaactual = lafechaactual.getDate();
-                    if (eldiaactual < 10) {
-                        eldiaactual = "0" + eldiaactual
-                    }
-
-                    var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
-                    $('input#fecha').html(lafechastring);
-                    $('input#fecha').attr('value', lafechastring);
-                    $('#mensajefecha').html("<div class='column-full'>El estado se guardará con fecha: " + lafechastring + "</div>");
-
-                },
-                onclickSubmit: function (rowid) {
-                    var lafechaactual = new Date();
-                    var elanoactual = lafechaactual.getFullYear();
-                    var elmesactual = (lafechaactual.getMonth() + 1);
-                    if (elmesactual < 10) {
-                        elmesactual = "0" + elmesactual
-                    }
-                    var eldiaactual = lafechaactual.getDate();
-                    if (eldiaactual < 10) {
-                        eldiaactual = "0" + eldiaactual
-                    }
-
-                    var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
-                    return { parent_id: parentRowKey };
-                }, beforeSubmit: function (postdata, formid) {
-                    /*
-                    if (parseInt(postdata.fechavencimiento) == 0) {
-                        return [false, "Color: Debe escoger un valor", ""];
-                    } if (postdata.comentario.trim().length == 0) {
-                        return [false, "Comentario: Debe ingresar un comentario", ""];
-                    } else {*/
-                    return [true, "", ""]
-                    //}
-                }
-            }, {
-                mtype: 'POST',
-                url: '/limite',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                },
-                beforeShowForm: function (form) {
-                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará el limite:</b><br><b>" + ret.tipolimite + "</b> ?");
-
-                },
-                afterSubmit: function (response, postdata) {
-                    var json = response.responseText;
-                    var result = JSON.parse(json);
-                    if (!result.success)
-                        return [false, result.message, ""];
-                    else
-                        return [true, "", ""]
-                }
-            });
-        /*
-               $gridTab.jqGrid('navButtonAdd', "#navGridLimite", {
-                    caption: "",
-                    buttonicon: "glyphicon glyphicon-download-alt",
-                    title: "Excel",
-                    position: "last",
-                    onClickButton: function () {
-                        var s;
-                        s = $gridTab.jqGrid('getGridParam', 'selarrrow');
-        
-                        if (s.length > 0) {
-                            // Make AJAX call to get the dynamic form content
-                            $.ajax({
-                                cache: false,
-                                async: true,
-                                type: 'POST',
-                                url: "/TargetItems/MarkPurchasesPaidRequest",
-                                data: {
-                                    PurchaseIds: JSON.stringify(s)
-                                },
-                                success: function (content) {
-                                    // Add the content to the div
-                                    $('#MarkPurchasePaidModal').html(content);
-                                    // Display the modal
-                                    $("#MarkPurchasePaidModal").dialog("open");
-                                },
-                                error: function (res, status, exception) {
-                                    alert(status + ": " + exception);
-                                },
-                                modal: true
-                            });
-                        }
-                    }
-                });
-                */
+function gridMacIndividual(parentRowID, parentRowKey, suffix) {
+    var subgrid_id = parentRowID;
+    var row_id = parentRowKey;
+    var subgrid_table_id, pager_id, toppager_id;
+    subgrid_table_id = subgrid_id + '_t';
+    pager_id = 'p_' + subgrid_table_id;
+    toppager_id = subgrid_table_id + '_toppager';
+    if (suffix) {
+        subgrid_table_id += suffix;
+        pager_id += suffix;
     }
+
+    var oldRadio = ""
+
+    var tmplPF = "<div id='responsive-form' class='clearfix'>";
+
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-full'>Pregunta<span style='color:red'>*</span>{ArchivoUpload}</div>";
+    tmplPF += "</div>";
+
+    tmplPF += "<div class='form-row' style='display: none;'>";
+    tmplPF += "</div>";
+
+    tmplPF += "<hr style='width:100%;'/>";
+    tmplPF += "<div> {sData} {cData}  </div>";
+    tmplPF += "</div>";
+    var childGridID = subgrid_table_id;
+    var childGridPagerID = pager_id;
+    var childGridURL = "/macindividuales/" + parentRowKey;
+
+    var modelGarantia = [
+        { label: 'ID', name: 'Id', key: true, hidden: true },
+        {
+            label: ' ', name: 'marca', key: false, hidden: false, width: 30,
+            formatter: function (cellvalue, options, rowObject) {
+
+                dato = '<input type="checkbox" name="chk_group" value="1" />'
+
+                return dato
+            }
+        },
+        {
+            label: 'Rut',
+            name: 'Rut',
+            width: 80,
+            align: 'left',
+            search: false,
+            editable: true,
+            hidden: false
+        },
+        {
+            label: 'Cliente', name: 'Nombre', width: 150, hidden: false, search: true, editable: true, editrules: { required: true }
+        },
+
+        { label: 'R. Individ.', name: 'RatingIndividual', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+
+        { label: 'Clasif.', name: 'Clasificacion', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Vigil.', name: 'Vigilancia', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
+        {
+            label: 'Directo', name: 'Directo', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Contingente', name: 'Contingente', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Derivados', name: 'Derivados', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Entrega Dif.', name: 'Diferida', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Total', name: 'Total', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Var Aprob.', name: 'VarAprobacion', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Deuda Banco', name: 'DeudaBanco', width: 120, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Gar. Real', name: 'GarantiaReal', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'SBIF+ACHEL', name: 'SBIFACHEL', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 200000) + 1000);
+                return dato
+            }
+        },
+        {
+            label: 'Penetración', name: 'Penetracion', width: 100, hidden: false, search: true, editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                dato = Math.floor((Math.random() * 100) + 0);
+                return dato + '%'
+            }
+        },
+
+
+
+
+    ];
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        rowNum: 20,
+        datatype: "json",
+        caption: 'MACs Individuales',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
+        page: 1,
+        colModel: modelGarantia,
+        viewrecords: true,
+        styleUI: "Bootstrap",
+        regional: 'es',
+        height: 'auto',
+        pager: "#" + childGridPagerID,
+        /*
+        subGrid: true,
+        subGridRowExpanded: showSubGrids3,
+        subGridOptions: {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        },
+        */
+
+        editurl: '/limite/action3',
+        gridComplete: function () {
+            var recs = $("#" + childGridID).getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                $("#" + childGridID).addRowData("blankRow", { "id": 0, "nombre": "No hay datos" });
+            }
+        },
+        footerrow: true,
+        loadComplete: function () {
+            var sum1 = $("#" + childGridID).jqGrid('getCol', 'Directo', false, 'sum');
+            var sum2 = $("#" + childGridID).jqGrid('getCol', 'Contingente', false, 'sum');
+            var sum3 = $("#" + childGridID).jqGrid('getCol', 'Derivados', false, 'sum');
+            var sum4 = $("#" + childGridID).jqGrid('getCol', 'Diferida', false, 'sum');
+            var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
+            var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
+            var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
+            var sum8 = $("#" + childGridID).jqGrid('getCol', 'GarantiaReal', false, 'sum');
+            var sum9 = $("#" + childGridID).jqGrid('getCol', 'SBIFACHEL', false, 'sum');
+            var sum10 = $("#" + childGridID).jqGrid('getCol', 'Penetracion', false, 'avg');
+
+            $("#" + childGridID).jqGrid('footerData', 'set',
+                {
+                    Vigilancia: 'Totales:', 
+                    Directo: sum1,
+                    Contingente: sum2,
+                    Derivados: sum3,
+                    Diferida : sum4,
+                    Total : sum5,
+                    VarAprobacion : sum6,
+                    DeudaBanco: sum7,
+                    GarantiaReal: sum8,
+                    SBIFACHEL: sum9,
+                    Penetracion: sum10
+
+                });
+        }
+
+    });
+
+    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
+        edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
+    },
+        {
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            width: 800,
+            editCaption: "Modificar Pregunta de Evaluación",
+            template: tmplPF,
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            },
+            beforeShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+            },
+            beforeSubmit: function (postdata, formid) {
+                var elporcentaje = parseFloat(postdata.porcentaje);
+                //console.log('porcentaje: ' + elporcentaje);
+                if (elporcentaje > 100) {
+                    return [false, "Porcentaje no puede ser mayor a 100", ""];
+                }
+                else {
+                    return [true, "", ""]
+                }
+            },
+        },
+        {
+            addCaption: "Agrega Preguntas",
+            mtype: 'POST',
+            url: '/sic/criteriosevaluacion/action3',
+            closeAfterAdd: true,
+            recreateForm: true,
+            template: tmplPF,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            beforeShowForm: function (form) {
+                //$('input#notacriticidad', form).attr('readonly', 'readonly');
+            },
+
+            onclickSubmit: function (rowid) {
+                return { idclaseevaluaciontecnica: parentbisabuelo, childGridID: childGridID, idcriterioevaluacion2: parentRowKey };
+            }, afterSubmit: UploadPre
+
+        },
+        {
+            closeAfterDelete: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            addCaption: "Eliminar Pregunta",
+            mtype: 'POST',
+            url: '/sic/criteriosevaluacion/action3',
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }
+        },
+        {
+            recreateFilter: true
+        }
+    );
+
+    /*
+        function showSubGrids3(subgrid_id, row_id) {
+            gridCriterios3(subgrid_id, row_id, 'criterios2');
+        }
+        */
+
+
 }
-function showChildGrid2(parentRowID, parentRowKey) {
-    var grillapadre = parentRowID.substring(0, parentRowID.lastIndexOf("_"));
-    console.log("la grilla padre: " + grillapadre)
-    var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-    console.log("la rowData : " + rowData)
-    var parentRUT = rowData.rut;
-    console.log("la parentRUT : " + parentRUT)
-    var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/limite/" + parentRowKey + "' data-target='#limite' id='limite_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Límites</a></li>"
-    //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
-    //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
-    tabs += "<li><a href='/garantia/" + parentRUT + "' data-target='#garantia' id='garantia_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Garantías</a></li>"
-    tabs += "<li><a href='/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
-    tabs += "</ul>"
-
-    tabs += "<div class='tab-content'>"
-    tabs += "<div class='tab-pane active' id='limite'><div class='container-fluid'><table id='limite_t_" + parentRowKey + "'></table><div id='navGridLimite'></div></div></div>"
-    //tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
-    //tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t_" + parentRowKey + "'></table><div id='navGridAprob'></div></div>"
-    tabs += "<div class='tab-pane' id='garantia'><table id='garantia_t_" + parentRowKey + "'></table><div id='navGridGar'></div></div>"
-    tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
-    tabs += "</div>"
-
-    $("#" + parentRowID).append(tabs);
-    $('#limite_tab_' + parentRowKey).addClass('media_node active span')
-    $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
-        var $this = $(this),
-            loadurl = $this.attr('href'),
-            targ = $this.attr('data-target');
-        if (targ === '#limite') {
-            gridLimite.renderGrid(loadurl, parentRowKey, targ)
-        } else if (targ === '#garantia') {
-            gridGarantia.renderGrid(loadurl, parentRowKey, targ)
+function UploadPre(response, postdata) {
+    //console.log(postdata)
+    var data = $.parseJSON(response.responseText);
+    if (data.success) {
+        if ($("#ArchivoUpload").val() != "") {
+            ajaxPregUpload(data.id, data.idc, postdata.idcriterioevaluacion2, postdata.childGridID);
+            console.log(data.id);
+            console.log(data.idc);
         }
+    }
 
-        $this.tab('show');
-        return false;
+    return [data.success, data.message, data.id];
+}
+
+function ajaxPregUpload(id, idc, idpadre, childGridID) {
+    console.log("ESTA WEA SI FUNCIONA CTM: " + id)
+    console.log("este es:" + idc)
+    var dialog = bootbox.dialog({
+        title: 'Se inicia la transferencia',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
     });
-
-    $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
-        var $this = $(this),
-            loadurl = $this.attr('href'),
-            targ = $this.attr('data-target');
-        if (targ === '#limites') {
-            gridLimite.renderGrid(loadurl, parentRowKey, targ)
-        } else if (targ === '#garantia') {
-            gridGarantia.renderGrid(loadurl, parentRowKey, targ)
-        }
-
-        $this.tab('show');
-        return false;
+    dialog.init(function () {
+        $.ajaxFileUpload({
+            url: '/sic/criterio3/upload/' + idc,
+            secureuri: false,
+            fileElementId: 'ArchivoUpload',
+            dataType: 'json',
+            data: { id: id, idc: idc },
+            success: function (data, status) {
+                if (typeof (data.success) != 'undefined') {
+                    if (data.success == true) {
+                        dialog.find('.bootbox-body').html(data.message);
+                        $("#" + childGridID).trigger('reloadGrid');
+                    } else {
+                        dialog.find('.bootbox-body').html(data.message);
+                    }
+                }
+                else {
+                    dialog.find('.bootbox-body').html(data.message);
+                }
+            },
+            error: function (data, status, e) {
+                dialog.find('.bootbox-body').html(e);
+            }
+        })
     });
-
 }

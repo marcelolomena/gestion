@@ -68,6 +68,10 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
+		PromedioSaldoVistaUlt12M: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		Grupo_Id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
