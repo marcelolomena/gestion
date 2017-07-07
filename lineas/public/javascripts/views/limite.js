@@ -43,12 +43,12 @@ var gridLimite = {
                 { name: 'Numero', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { name: 'TipoRiesgo', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { name: 'Tipolimite', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'Comentario', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'PlazoResudual', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'Comentario', width: 350, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { name: 'PlazoResudual', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { name: 'Moneda', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { name: 'MontoAprobado', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'DeudaActual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { name: 'MontoAprobacion', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+                { name: 'MontoAprobado', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { name: 'DeudaActual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { name: 'MontoAprobacion', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 
                 
                 { name: 'Garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -87,9 +87,9 @@ var gridLimite = {
                 $this.jqGrid('footerData', 'set', { plazoresidual: "DIRECTO:", abrobactualmonto: colSum }, false);
                 */
                 var $this = $(this),
-                    sum = $this.jqGrid("getCol", "abrobactual", false, "sum"),
-                    sum2 = $this.jqGrid("getCol", "deudaactual", false, "sum"),
-                    sum3 = $this.jqGrid("getCol", "someaprob", false, "sum"),
+                    sum = $this.jqGrid("getCol", "MontoAprobado", false, "sum"),
+                    sum2 = $this.jqGrid("getCol", "DeudaActual", false, "sum"),
+                    sum3 = $this.jqGrid("getCol", "MontoAprobacion", false, "sum"),
                     $footerRow = $(this.grid.sDiv).find("tr.footrow"),
                     localData = $this.jqGrid("getGridParam", "data"),
                     totalRows = localData.length,
@@ -129,40 +129,40 @@ var gridLimite = {
                     });
                     $newFooterRow3.insertAfter($newFooterRow2);
                 }
-                $this.jqGrid("footerData", "set", { plazoresidual: "Directo", abrobactual: sum, deudaactual: sum2, someaprob: sum3 });
+                $this.jqGrid("footerData", "set", { Moneda: "Directo", MontoAprobado: sum, DeudaActual: sum2, MontoAprobacion: sum3 });
 
                 // calculate the value for the second footer row
 
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_plazoresidual]").text("Contingente:");
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_abrobactual]").text(
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_Moneda]").text("Contingente:");
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_MontoAprobado]").text(
                     0
                 );
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_deudaactual]").text(
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_DeudaActual]").text(
                     0
                 );
-                $newFooterRow.find(">td[aria-describedby=" + this.id + "_someaprob]").text(
-                    0
-                );
-
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_plazoresidual]").text("Derivados (EC):");
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_abrobactual]").text(
-                    0
-                );
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_deudaactual]").text(
-                    0
-                );
-                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_someaprob]").text(
+                $newFooterRow.find(">td[aria-describedby=" + this.id + "_MontoAprobacion]").text(
                     0
                 );
 
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_plazoresidual]").text("Entrega Diferida:");
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_abrobactual]").text(
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_Moneda]").text("Derivados (EC):");
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_MontoAprobado]").text(
                     0
                 );
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_deudaactual]").text(
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_DeudaActual]").text(
                     0
                 );
-                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_someaprob]").text(
+                $newFooterRow2.find(">td[aria-describedby=" + this.id + "_MontoAprobacion]").text(
+                    0
+                );
+
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_Moneda]").text("Entrega Diferida:");
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_MontoAprobado]").text(
+                    0
+                );
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_DeudaActual]").text(
+                    0
+                );
+                $newFooterRow3.find(">td[aria-describedby=" + this.id + "_MontoAprobacion]").text(
                     0
                 );
 

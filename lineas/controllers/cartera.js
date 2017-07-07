@@ -303,6 +303,54 @@ exports.listlimite = function (req, res) {
     });
 };
 
+exports.listsublimite = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "MacIndividual_Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "Numero";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[Linea]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.Linea.belongsTo(models.MacIndividual, { foreignKey: 'MacIndividual_Id' });
+            models.Linea.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.Linea.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    include: [{
+                        model: models.MacIndividual
+                    }]
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
 exports.actiongarantia = function (req, res) {
     var action = req.body.oper;
 
