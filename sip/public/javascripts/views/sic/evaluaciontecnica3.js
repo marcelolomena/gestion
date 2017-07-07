@@ -280,7 +280,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+                return { parent_id: parentRowKey, idnota1: parentRowKey/*, idsolicitudcotizacion: parentSolicitud*/ };
             },
             beforeShowForm: function (form) {
                 var nivel = 0;
@@ -331,8 +331,8 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
-            }
+                return { parent_id: parentRowKey, idnota1: parentRowKey/*, idsolicitudcotizacion: parentSolicitud*/ };
+            },
         },
         {
             recreateFilter: true

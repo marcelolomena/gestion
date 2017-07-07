@@ -520,7 +520,7 @@ exports.actionnota2 = function (req, res) {
                                 include: [{
                                     model: models.criterioevaluacion2
                                 }]
-                            }).then(function (notaevaluaciontecnica2) {
+                            }).then(function (notaevaluaciontecnica3) {
                                 sequelize.query(`select sum((c.porcentaje/100) * a.nota ) notaponderada, sum(c.porcentaje) sumaporcentaje from sic.notaevaluaciontecnica2 a 
                                                 join sic.notaevaluaciontecnica b on b.id=a.idnotaevaluaciontecnica
                                                 join sic.criterioevaluacion2 c on c.id=a.idcriterioevaluacion2
@@ -560,9 +560,7 @@ exports.actionnota2 = function (req, res) {
                                 logger.error(err)
                                 return res.json({ message: err.message, success: false })
                             });
-
-
-                            return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                        return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
                             logger.error(err)
                             return res.json({ id: notaevaluaciontecnica2.id, parent: idsolicitudcotizacion, message: 'Falla', success: false });
@@ -573,7 +571,6 @@ exports.actionnota2 = function (req, res) {
                 logger.error(err)
                 return res.json({ message: err.message, success: false })
             });
-            return res.json({ id: req.body.id, /*parent: idsolicitudcotizacion, */message: 'Inicio carga', success: true });
             break;
         case "edit":
             bitacora.registrarhijo(
