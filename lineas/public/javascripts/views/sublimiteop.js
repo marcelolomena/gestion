@@ -26,7 +26,7 @@ function gridSublimiteOp(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/limite/" + parentRowKey;
+    var childGridURL = "/sublimite/" + parentRowKey;
 
     var modelSublimite = [
         {

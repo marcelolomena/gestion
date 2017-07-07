@@ -228,26 +228,28 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
+            
             beforeShowForm: function (form) {
                 var nivel = 0;
                 $.ajax({
                     type: "GET",
                     url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
                     success: function (data) {
-                        console.log(data[0].niveles)
+                        console.log("ESTAMOS EN NIVEL 1 DE: "+ data[0].niveles)
                         nivel = (data[0].niveles);
+                        if (parseInt(nivel) > 1) {
+                            $("input#nota").attr("readonly", true);
+                        } else {
+                            $("input#nota").attr("readonly", false);
+                        }
                     }
                 });
 
+                console.log("ESTO ES UN PARENTCLASEEVALUACIONTECNICA: "+ parentClaseEvaluacionTecnica)
+                console.log("estamos en el nivel: " + nivel)
 
-                console.log("niveles: " + nivel)
 
-
-                if (nivel > 2) {
-                    $("input#nota").attr("readonly", false);
-                } else {
-                    $("input#nota").attr("readonly", true);
-                }
+                
             }
         },
         {
@@ -278,6 +280,11 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                     success: function (data) {
                         console.log(data[0].niveles)
                         nivel = (data[0].niveles);
+                        if (parseInt(nivel) > 1) {
+                            $("input#nota").attr("readonly", true);
+                        } else {
+                            $("input#nota").attr("readonly", false);
+                        }
                     }
                 });
 
@@ -285,11 +292,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 console.log("niveles: " + nivel)
 
 
-                if (nivel > 2) {
-                    $("input#nota").attr("readonly", false);
-                } else {
-                    $("input#nota").attr("readonly", true);
-                }
+                
             }
 
         },

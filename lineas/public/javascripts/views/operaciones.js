@@ -23,10 +23,12 @@ $(document).ready(function () {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            if (targ === '#vermac') {
-                gridVermac.renderGrid(loadurl, targ)
-            } else if (targ === '#garantia') {
+            if (targ === '#vermac') { //ver mac es la grilla padre
+                gridVermac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
+            } else if (targ === '#reservar') {
                 gridReservar.renderGrid(loadurl, targ)
+            }else if (targ === '#bitacora'){
+                gridBitacora.renderGrid(loadurl, targ)
             }
 
             $this.tab('show');
@@ -39,8 +41,10 @@ $(document).ready(function () {
                 targ = $this.attr('data-target');
             if (targ === '#vermac') {
                 gridVermac.renderGrid(loadurl,  targ)
-            } else if (targ === '#garantia') {
-                gridReservar.renderGrid(loadurl,  targ)
+            } else if (targ === '#reservar') {
+                gridReservar.renderGrid(loadurl, targ)
+            }else if (targ === '#bitacora'){
+                gridBitacora.renderGrid(loadurl, targ)
             }
 
             $this.tab('show');

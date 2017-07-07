@@ -68,7 +68,7 @@ function gridOperacion(parentRowID, parentRowKey, suffix) { //no esta activa
         pager: "#" + childGridPagerID,
         
         //activar o desactivar
-        subGrid: true,
+        subGrid: false,
         subGridRowExpanded: subGridProducto,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
@@ -206,6 +206,6 @@ function ajaxPregUpload(id, idc, idpadre, childGridID) {
 }
 
 function subGridProducto(subgrid_id, row_id) {
-    gridProducto(subgrid_id, row_id, 'verproducto');
+    //gridProducto(subgrid_id, row_id, 'verproducto');
     //gridGarantia(subgrid_id, row_id, 'garantia');
 }

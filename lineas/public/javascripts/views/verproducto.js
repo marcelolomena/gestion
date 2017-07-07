@@ -204,3 +204,8 @@ function ajaxPregUpload(id, idc, idpadre, childGridID) {
         })
     });
 }
+
+function subGridSublimite(subgrid_id, row_id) {
+    gridSublimiteOp(subgrid_id, row_id, 'sublimite');
+    //gridGarantia(subgrid_id, row_id, 'garantia');
+}
