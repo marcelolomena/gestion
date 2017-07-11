@@ -54,91 +54,162 @@ exports.action = function (req, res) {
      }*/
 
 
-    logger.debug("la fecha 1: " + fechaesperada)
-    logger.debug("la fecha 2: " + fechareal)
+    //logger.debug("la fecha 1: " + fechaesperada)
+    //logger.debug("la fecha 2: " + fechareal)
     switch (action) {
         case "add":
-            var sql = `insert sic.calendariosolicitud values 
-        (:idsolicitudcotizacion,:descripcion,:fechaesperada,
-        :observacion,:idtiporesponsable,:borrado,:fechareal)
-        `
-
-            sequelize.query(sql,
-                {
-                    replacements: {
-                        idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-                        descripcion: req.body.descripcion,
-                        fechaesperada: fechaesperada,
-                        observacion: req.body.observacion,
-                        idtiporesponsable: req.body.idtiporesponsable,
-                        borrado: 1,
-                        fechareal: fechareal
-                    },
-                    type: sequelize.QueryTypes.SELECT
-                }
-            ).then(function (serviciosrequeridos) {
-                /*
-                logger.debug("LA WEBADA:")
-                console.dir(serviciosrequeridos);
-                logger.debug("LA WEBADA 2:")
-                console.dir(serviciosrequeridos.id);
-                logger.debug("LA WEBADA 3:")
-                console.dir(serviciosrequeridos[0].id);
+            models.calendariosolicitud.create({
+                idsolicitudcotizacion: req.body.idsolicitudcotizacion,
+                descripcion: req.body.descripcion,
+                fechaesperada: fechaesperada,
+                observacion: req.body.observacion,
+                idtiporesponsable: req.body.idtiporesponsable,
+                borrado: 1,
+                fechareal: fechareal
+            }).then(function (calendariosolicitud) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
                     'calendariosolicitud',
-                    serviciosrequeridos.id,
+                    calendariosolicitud.id,
                     'insert',
                     req.session.passport.user,
                     new Date(),
                     models.calendariosolicitud,
                     function (err, data) {
-                        if (data) {
-                            logger.debug("->>> " + data)
-
+                        if (!err) {
+                            return res.json({ id: calendariosolicitud.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                         } else {
-                            logger.error("->>> " + err)
+                            logger.error(err)
+                            return res.json({ id: calendariosolicitud.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
                         }
                     });
-                    */
-                return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({ id: 0, message: err.message, success: false });
-            });
+            })
+
+            /*
+           
+           
+           
+           var sql = `insert sic.calendariosolicitud values 
+       (:idsolicitudcotizacion,:descripcion,:fechaesperada,
+       :observacion,:idtiporesponsable,:borrado,:fechareal)
+       `
+
+           sequelize.query(sql,
+               {
+                   replacements: {
+                       idsolicitudcotizacion: req.body.idsolicitudcotizacion,
+                       descripcion: req.body.descripcion,
+                       fechaesperada: fechaesperada,
+                       observacion: req.body.observacion,
+                       idtiporesponsable: req.body.idtiporesponsable,
+                       borrado: 1,
+                       fechareal: fechareal
+                   },
+                   type: sequelize.QueryTypes.SELECT
+               }
+           ).then(function (serviciosrequeridos) {
+              
+               logger.debug("LA WEBADA:")
+               console.dir(serviciosrequeridos);
+               logger.debug("LA WEBADA 2:")
+               console.dir(serviciosrequeridos.id);
+               logger.debug("LA WEBADA 3:")
+               console.dir(serviciosrequeridos[0].id);
+               bitacora.registrar(
+                   req.body.idsolicitudcotizacion,
+                   'calendariosolicitud',
+                   serviciosrequeridos.id,
+                   'insert',
+                   req.session.passport.user,
+                   new Date(),
+                   models.calendariosolicitud,
+                   function (err, data) {
+                       if (data) {
+                           logger.debug("->>> " + data)
+
+                       } else {
+                           logger.error("->>> " + err)
+                       }
+                   });
+                  
+               return res.json({ id: serviciosrequeridos.id, parent: req.body.idsolicitudcotizacion, message: 'Insertando', success: true });
+           }).catch(function (err) {
+               logger.error(err)
+               return res.json({ id: 0, message: err.message, success: false });
+           });
+            */
             break;
         case "edit":
 
-            var sql = `update sic.calendariosolicitud set 
-        descripcion = :descripcion,
-        fechaesperada = :fechaesperada,
-        observacion = :observacion,
-        idtiporesponsable = :idtiporesponsable,
-        fechareal = :fechareal 
-        where id = :id
-        `
+            bitacora.registrar(
+                req.body.idsolicitudcotizacion,
+                'calendariosolicitud',
+                req.body.id,
+                'update',
+                req.session.passport.user,
+                new Date(),
+                models.calendariosolicitud,
+                function (err, data) {
+                    if (!err) {
+                        models.calendariosolicitud.update({
+                            descripcion: req.body.descripcion,
+                            fechaesperada: fechaesperada,
+                            observacion: req.body.observacion,
+                            idtiporesponsable: req.body.idtiporesponsable,
+                            fechareal: fechareal,
+                        }, {
+                                where: {
+                                    id: req.body.id
+                                }
+                            }).then(function (calendariosolicitud) {
+                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+                            }).catch(function (err) {
+                                logger.error(err)
+                                return res.json({ message: 'Falla', success: false });
+                            });
 
-            sequelize.query(sql,
-                {
-                    replacements: {
-                        descripcion: req.body.descripcion,
-                        fechaesperada: fechaesperada,
-                        observacion: req.body.observacion,
-                        idtiporesponsable: req.body.idtiporesponsable,
-                        fechareal: fechareal,
-                        id: req.body.id
-                    },
-                    type: sequelize.QueryTypes.SELECT
-                }
-            ).then(function (serviciosrequeridos) {
-
-                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({ id: 0, message: err.message, success: false });
-            });
+                    } else {
+                        logger.error("->" + err)
+                        return res.json({ message: err.message, success: false});
+                    }
+                });
 
 
+
+            /*
+            
+            
+            
+                        var sql = `update sic.calendariosolicitud set 
+                    descripcion = :descripcion,
+                    fechaesperada = :fechaesperada,
+                    observacion = :observacion,
+                    idtiporesponsable = :idtiporesponsable,
+                    fechareal = :fechareal 
+                    where id = :id
+                    `
+            
+                        sequelize.query(sql,
+                            {
+                                replacements: {
+                                    descripcion: req.body.descripcion,
+                                    fechaesperada: fechaesperada,
+                                    observacion: req.body.observacion,
+                                    idtiporesponsable: req.body.idtiporesponsable,
+                                    fechareal: fechareal,
+                                    id: req.body.id
+                                },
+                                type: sequelize.QueryTypes.SELECT
+                            }
+                        ).then(function (serviciosrequeridos) {
+            
+                            return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({ id: 0, message: err.message, success: false });
+                        });
+            
+            */
 
 
 
