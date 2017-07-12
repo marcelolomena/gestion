@@ -2,35 +2,37 @@ $(document).ready(function () {
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full'>RUT: {rut}</div>";
-    t1 += "<div class='column-full'>Nombre: {nombre}</div>";
-    t1 += "<div class='column-full'>Actividad: {actividad}</div>";
+    t1 += "<div class='column-full'>RUT: {Rut}</div>";
+    t1 += "<div class='column-full'>Nombre: {Nombre}</div>";
+    t1 += "<div class='column-full'>Actividad: {ActividadEconomica}</div>";
     t1 += "</div>"
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half'>Oficina: {oficina}</div>";
-    t1 += "<div class='column-half'>Ejecutivo: {ejecutivo}</div>";
+    t1 += "<div class='column-half'>Oficina: {Oficina}</div>";
+    t1 += "<div class='column-half'>Ejecutivo: {EquipoCobertura}</div>";
     t1 += "</div>"
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half'>Fecha Creación: {fechacreacion}</div>";
-    t1 += "<div class='column-half'>Fecha Prox. Vencimiento: {fechaproxvenc}</div>";
+    t1 += "<div class='column-three'>Creación: {FechaCreacion}</div>";
+    t1 += "<div class='column-three'>Prox. Vencimiento: {FechaVencimiento}</div>";
+    t1 += "<div class='column-three'>Vencimiento Ant.: {FechaVencimientoMacAnterior}</div>";
+    t1 += "</div>"
+
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-three'>Rating Individual: {RatingIndividual}</div>";
+    t1 += "<div class='column-three'>Nivel Atribución: {NivelAtribucion}</div>";
+    t1 += "<div class='column-three'>Clasificación: {Clasificacion}</div>";
     t1 += "</div>"
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full'>Fecha Vencimiento Ant.: {fechavencant}</div>";
+    t1 += "<div class='column-half'>MAC Grupal:</br> <span id='elgrupo'><select><option value='0'>--Escoger Grupo--</option></select></span></div>";
+    t1 += "<div class='column-three'>Rating Grupal: {RatingGrupal}</div>";
     t1 += "</div>"
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-four'>Rating Individual: {ratingind}</div>";
-    t1 += "<div class='column-four'>Rating Grupal: {ratinggrupo}</div>";
-    t1 += "<div class='column-four'>Nivel Atribución: {nivelatr}</div>";
-    t1 += "<div class='column-four'>Clasificación: {clasificacion}</div>";
+    t1 += "<div class='column-half'>Vigilancia: {Vigilancia}</div>";
+    t1 += "<div class='column-half'>Fecha información: {FechaInformacionFinanciera}</div>";
     t1 += "</div>"
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half'>Vigilancia: {vigilancia}</div>";
-    t1 += "<div class='column-half'>Fecha información: {fechainf}</div>";
-    t1 += "</div>"
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-three'>Promedio Saldo Vista: {promediosaldovista}</div>";
-    t1 += "<div class='column-three'>Deuda SBIF: {deudasbif}</div>";
-    t1 += "<div class='column-three'>Aprob Vinculado: {aprobvinculado}</div>";
+    t1 += "<div class='column-three'>Promedio Saldo Vista: {PromedioSaldoVista}</div>";
+    t1 += "<div class='column-three'>Deuda SBIF: {DeudaSbif}</div>";
+    t1 += "<div class='column-three'>Aprob Vinculado: {AprobadoVinculado}</div>";
     t1 += "</div>"
 
     t1 += "</div>";
@@ -41,11 +43,12 @@ $(document).ready(function () {
     t1 += "</div>";
 
     var $grid = $("#gridMaster"), carteraModel = [
-        { label: 'ID', name: 'id', key: true, hidden: true },
+        { label: 'ID', name: 'Id', key: true, hidden: true },
+        { label: 'Empresa_Id', name: 'Empresa_Id', hidden: true },
 
         {
             label: 'Rut',
-            name: 'rut',
+            name: 'Rut',
             width: 80,
             align: 'left',
             search: false,
@@ -66,59 +69,70 @@ $(document).ready(function () {
                             success: function (data) {
                                 if (data.length > 0) {
                                     //console.log("glosa:" + data[0].glosaservicio);
-                                    $("input#nombre").val(data[0].razonsocial);
-                                    $("input#actividad").val("INMOBILIARIA");
-                                    $("input#oficina").val("CENTRAL");
-                                    $("input#ejecutivo").val("SERGIO VALENZUELA");;
-                                    $("input#fechacreacion").val("2016-05-21");
-                                    $("input#fechaproxvenc").val("2016-06-31");
-                                    $("input#fechavencant").val("2016-05-22");
-                                    $("input#ratinggrupo").val("0");
-                                    $("input#nivelatr").val("R3");
-                                    $("input#ratingind").val("0");
-                                    $("input#clasificacion").val("A5");
-                                    $("input#vigilancia").val("NO");
-                                    $("input#fechainf").val("2016-06-22");
-                                    $("input#promediosaldovista").val("650");
-                                    $("input#deudasbif").val("350");
-                                    $("input#aprobvinculado").val("NO");
+                                    $("input#Nombre").val(data[0].Nombre);
+                                    $("input#ActividadEconomica").val("Sociedad de inversiones");
+                                    $("input#Oficina").val("CENTRAL");
+                                    $("input#EquipoCobertura").val("SERGIO VALENZUELA");;
+                                    $("input#FechaCreacion").val("2016-05-21");
+                                    $("input#FechaVencimiento").val("2016-06-31");
+                                    $("input#FechaVencimientoMacAnterior").val("2016-05-22");
+                                    $("input#RatingGrupal").val("0");
+                                    $("input#NivelAtribucion").val("R3");
+                                    $("input#RatingIndividual").val("0");
+                                    $("input#Clasificacion").val("A5");
+                                    $("input#Vigilancia").val("NO");
+                                    $("input#FechaInformacionFinanciera").val("2016-06-22");
+                                    $("input#PromedioSaldoVista").val("650");
+                                    $("input#DeudaSbif").val("350");
+                                    $("input#AprobadoVinculado").val("");
 
                                 } else {
                                     alert("No existe cliente en Base de Datos");
                                 }
                             }
                         });
+                        setTimeout(function () {
+                            var rut = $('#Rut').val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/buscargrupo/' + rut,
+                                success: function (data) {
+                                    var s = "<select id='grupos'>";
+                                    s += '<option value="0">--Escoger Grupo--</option>';
+                                    $.each(data, function (i, item) {
+                                        s += '<option value="' + data[i].Id + '">' + data[i].Nombre + '</option>';
+                                    });
+                                    s += "</select>";
+                                    $("#elgrupo").html(s);
+                                }
+                            });
+                        }, 500);
 
                     }
                 }],
-            },
-            formatter: function (cellvalue, options, rowObject) {
-                var rut = rowObject.rut;
-                var dato = ""
-                $.ajax({
-                    type: "GET",
-                    url: '/buscargrupo/' + rut,
-                    async: false,
-                    success: function (data) {
-                        if (data.length > 0) {
-                            console.log(data[0].rutcliente)
-                            dato = '<a href="/menu/macgrupal/'+data[0].idgrupo+'">'+rut+'</a>'
-                        } else {
-                            dato = '<a href="/menu/macgrupal/#">'+rut+'</a>';
-                        }
-                    }
-                }); 
-                return dato
             }
         },
 
         //{ label: 'Rut', name: 'rut', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Nombre', name: 'nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Actividad', name: 'actividad', width: 150, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Oficina', name: 'oficina', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Ejecutivo', name: 'ejecutivo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'Fecha Creación', name: 'fechacreacion', width: 80, align: 'left', search: false,
+            label: 'Nombre', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true }
+        },
+        {
+            label: ' Id MAC Grupal', jsonmap: 'MacGrupalMacIndividual.MacGrupal.Id', name: 'idmacgrupal', hidden: true, search: true, editable: true
+        },
+        {
+            label: 'Grupo', name: 'MacGrupalMacIndividual.MacGrupal.Grupo.Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = ""
+                dato = '<a href="/menu/macgrupal">' + cellvalue + '</a>'
+                return dato
+            }
+        },
+        { label: 'Actividad', name: 'ActividadEconomica', width: 150, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Oficina', name: 'Oficina', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'E. Cobertura', name: 'EquipoCobertura', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+        {
+            label: 'F. Creación', name: 'FechaCreacion', width: 80, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: { required: true },
             searchoptions: {
@@ -145,7 +159,7 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Fecha Venc', name: 'fechaproxvenc', width: 80, align: 'left', search: false,
+            label: 'F. Venc.', name: 'FechaVencimiento', width: 80, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: { required: true },
             searchoptions: {
@@ -172,7 +186,7 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Fecha Ant Venc', name: 'fechavencant', width: 100, align: 'left', search: false,
+            label: 'F. Ant Venc', name: 'FechaVencimientoMacAnterior', width: 100, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: { required: true },
             searchoptions: {
@@ -198,15 +212,15 @@ $(document).ready(function () {
                 }
             },
         },
-        { label: 'Rating Ind', name: 'ratingind', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Rating Grupo', name: 'ratinggrupo', width: 90, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'R. Individ.', name: 'RatingIndividual', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'R. Grupal', name: 'RatingGrupal', width: 90, hidden: false, search: true, editable: true, editrules: { required: true } },
 
-        { label: 'Nivel Atribución', name: 'nivelatr', width: 110, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'N. Atribución', name: 'NivelAtribucion', width: 110, hidden: false, search: true, editable: true, editrules: { required: true } },
 
-        { label: 'Clasificación', name: 'clasificacion', width: 90, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Vigilancia', name: 'vigilancia', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Clasificación', name: 'Clasificacion', width: 90, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Vigilancia', name: 'Vigilancia', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'Fecha Info', name: 'fechainf', width: 90, align: 'left', search: false,
+            label: 'F. Info', name: 'FechaInformacionFinanciera', width: 90, align: 'left', search: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, editrules: { required: true },
             searchoptions: {
@@ -232,9 +246,9 @@ $(document).ready(function () {
                 }
             },
         },
-        { label: 'Prom Saldo V', name: 'promediosaldovista', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-        { label: 'Deuda SBIF', name: 'deudasbif', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-        { label: 'Aprobación', name: 'aprobvinculado', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'P. Saldo V', name: 'PromedioSaldoVista', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+        { label: 'D. SBIF', name: 'DeudaSbif', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
+        { label: 'A. Vinculado', name: 'AprobadoVinculado', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
 
 
     ];
@@ -330,7 +344,7 @@ $(document).ready(function () {
                 } else if (postdata.descripcion.trim().length == 0) {
                     return [false, "Descripción: Debe ingresar una descripción", ""];
                 } else {
-*/
+    */
                 return [true, "", ""]
                 // }
 
@@ -342,10 +356,6 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
 
-            }, beforeShowForm: function (form) {
-                setTimeout(function () {
-                    $("#idtipo", form).attr('disabled', 'disabled');
-                }, 500);
             }
         }, {
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -375,7 +385,7 @@ $(document).ready(function () {
         //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
         tabs += "<li><a href='/garantia/" + parentRUT + "' data-target='#garantia' id='garantia_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Garantías</a></li>"
-        //tabs += "<li><a href='/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
+        tabs += "<li><a href='/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"
@@ -383,7 +393,7 @@ $(document).ready(function () {
         //tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
         //tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t_" + parentRowKey + "'></table><div id='navGridAprob'></div></div>"
         tabs += "<div class='tab-pane' id='garantia'><table id='garantia_t_" + parentRowKey + "'></table><div id='navGridGar'></div></div>"
-        //tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
+        tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
         tabs += "</div>"
 
         $("#" + parentRowID).append(tabs);

@@ -103,7 +103,6 @@ exports.action = function (req, res) {
 
     }
 }
-
 exports.list = function (req, res) {
 
     var page = req.query.page;
@@ -112,68 +111,92 @@ exports.list = function (req, res) {
     var sidx = req.query.sidx;
     var sord = req.query.sord;
 
+    var additional = [{
+        "field": "Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
     if (!sidx)
-        sidx = "Rut";
+        sidx = "[Grupo].Nombre";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.MacGrupal.belongsTo(models.Grupo, { foreignKey: 'Grupo_Id' });
+            models.MacGrupal.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.MacGrupal.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    include: [{
+                        model: models.Grupo
+                    }]
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+exports.listindividuales = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [];
+
+    if (!sidx)
+        sidx = "Id";
 
     if (!sord)
         sord = "asc";
 
     var orden = "[MacIndividual]." + sidx + " " + sord;
 
-    var filter_one = []
-    var filter_two = []
-    var filter_three = []
-    var filter_four = []
-
-    if (filters != undefined) {
-        //logger.debug(filters)
-        var item = {}
-        var jsonObj = JSON.parse(filters);
-
-        jsonObj.rules.forEach(function (item) {
-            if (item.field) {
-                filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
-            }
-        })
-    }
-
-    utilSeq.buildConditionFilter(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            models.MacIndividual.belongsTo(models.MacGrupalMacIndividual, { foreignKey: 'Id' });
-            models.MacGrupalMacIndividual.belongsTo(models.MacGrupal, { foreignKey: 'MacGrupal_Id' });
-            models.MacGrupal.belongsTo(models.Grupo, { foreignKey: 'Grupo_Id' });
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.MacIndividual.belongsToMany(models.MacGrupal, { through: models.MacGrupalMacIndividual, foreignKey: 'MacIndividual_Id' });
+            models.MacGrupal.belongsToMany(models.MacIndividual, { through: models.MacGrupalMacIndividual, foreignKey: 'MacGrupal_Id' });
             models.MacIndividual.count({
-                where: filter_one
+                where: data,
+                include: [{
+                    model: models.MacGrupal, where: [{Id: req.params.id}]
+                }]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-
                 models.MacIndividual.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
+                    where: data,
                     order: orden,
-                    where: filter_one,
                     include: [{
-                        model: models.MacGrupalMacIndividual,
-                        include: [{
-                            model: models.MacGrupal,
-                            include: [{
-                                model: models.Grupo
-                            }]
-                        }]
-                    }]
-                }).then(function (mac) {
-                    return res.json({ records: records, total: total, page: page, rows: mac });
+                    model: models.MacGrupal, where: [{Id: req.params.id}]
+                }]
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
                 }).catch(function (err) {
-                    logger.error(err.message);
+                    logger.error(err);
                     res.json({ error_code: 1 });
                 });
             })
         }
     });
-
-}
+};
 
 exports.actionlimite = function (req, res) {
     var action = req.body.oper;
@@ -264,127 +287,33 @@ exports.listlimite = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "MacIndividual_Id",
+        "field": "idmac",
         "op": "eq",
         "data": req.params.id
     }];
 
     if (!sidx)
-        sidx = "Numero";
+        sidx = "numero";
 
     if (!sord)
         sord = "asc";
 
-    var orden = "[Linea]." + sidx + " " + sord;
+    var orden = "[limite]." + sidx + " " + sord;
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.Linea.belongsTo(models.MacIndividual, { foreignKey: 'MacIndividual_Id' });
-            models.Linea.count({
+            models.limite.belongsTo(models.mac, { foreignKey: 'idmac' });
+            models.limite.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.Linea.findAll({
+                models.limite.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,
                     order: orden,
                     include: [{
-                        model: models.MacIndividual
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
-
-exports.listsublimite = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "Linea_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "Numero";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[Sublinea]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Sublinea.belongsTo(models.Linea, { foreignKey: 'Linea_Id' });
-            models.Sublinea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Sublinea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.Linea
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
-
-exports.listgarantiareallimite = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [];
-
-    if (!sidx)
-        sidx = "Id";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[GarantiasReales]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.GarantiasReales.belongsToMany(models.Linea, { through: models.LineaGarantiaReal, foreignKey: 'GarantiasReales_Id' });
-            models.Linea.belongsToMany(models.GarantiasReales, { through: models.LineaGarantiaReal, foreignKey: 'Linea_Id' });
-
-            models.GarantiasReales.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.GarantiasReales.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.Linea, where: [{ Id: req.params.id }]
+                        model: models.mac
                     }]
                 }).then(function (lineas) {
                     return res.json({ records: records, total: total, page: page, rows: lineas });
@@ -524,7 +453,7 @@ exports.listgarantia = function (req, res) {
 };
 exports.getdatoscliente = function (req, res) {
     sequelize.query(
-        'select * from dbo.Empresa ' +
+        'select * from dbo.cliente ' +
         'where rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -536,68 +465,3 @@ exports.getdatoscliente = function (req, res) {
     });
 
 }
-
-exports.getgrupo = function (req, res) {
-    sequelize.query(
-        'select a.Id, a.Nombre from dbo.Grupo a  ' +
-        'join dbo.GrupoEmpresa b on b.Grupo_Id=a.Id  ' +
-        'join dbo.Empresa c on c.Id = b.Empresa_Id  ' +
-        'where c.rut =  ' + req.params.rut,
-        { type: sequelize.QueryTypes.SELECT }
-    ).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
-    }).catch(function (err) {
-        logger.error(err);
-        res.json({ error: 1 });
-    });
-
-}
-
-exports.listmacs = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "idgrupo",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "rut";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[mac]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.mac.belongsTo(models.macgrupal, { foreignKey: 'idgrupo' });
-            models.mac.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.mac.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.macgrupal
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};

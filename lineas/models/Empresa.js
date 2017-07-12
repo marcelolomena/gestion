@@ -1,7 +1,7 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('Grupo', {
+	return sequelize.define('Empresa', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -11,8 +11,16 @@ module.exports = function(sequelize, DataTypes) {
 		Nombre: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		RazonSocial: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Rut: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Grupo'
+		schema: 'dbo', timestamps: false, tableName: 'Empresa'
 	});
 };

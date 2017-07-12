@@ -6,7 +6,9 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 var carteraController = require('../controllers/cartera')
-var grupoController = require('../controllers/grupo')
+var operacionesController = require('../controllers/operaciones')
+//var grupoController = require('../controllers/grupo')
+var macgrupalController = require('../controllers/macgrupal')
 
 module.exports = function (passport) {
 
@@ -17,6 +19,15 @@ module.exports = function (passport) {
     router.route('/limite/:id')
         .get(isAuthenticated, carteraController.listlimite);
 
+    router.route('/sublimite/:id')
+        .get(isAuthenticated, carteraController.listsublimite);
+
+    router.route('/garantiareallimite/:id')
+        .get(isAuthenticated, carteraController.listgarantiareallimite);
+
+    router.route('/vermac/:id')
+        .get(isAuthenticated, carteraController.listlimite);
+
     router.route('/limite')
         .post(isAuthenticated, carteraController.actionlimite);
 
@@ -25,7 +36,7 @@ module.exports = function (passport) {
 
     router.route('/garantia')
         .post(isAuthenticated, carteraController.actiongarantia);
-
+/*
     router.route('/grupo')
         .post(isAuthenticated, grupoController.action)
         .get(isAuthenticated, grupoController.list);
@@ -35,12 +46,31 @@ module.exports = function (passport) {
 
     router.route('/grupodesglose')
         .post(isAuthenticated, grupoController.actiondesglose);
-
+*/
     router.route('/getdatoscliente/:rut')
         .get(isAuthenticated, carteraController.getdatoscliente);
 
     router.route('/buscargrupo/:rut')
-        .get(isAuthenticated, grupoController.getgrupo);
+        .get(isAuthenticated, carteraController.getgrupo);
 
+    router.route('/vermacgrupal/:id')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.list);
+
+    router.route('/macindividuales/:id')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.listindividuales);  
+
+    router.route('/macs/:id')
+        .get(isAuthenticated, carteraController.listmacs);
+
+    router.route('/limite/:id')
+        .get(isAuthenticated, operacionesController.listlimite);
+
+    router.route('/sublimite/:id')
+        .get(isAuthenticated, operacionesController.listsublimite);
+
+    router.route('/operaciones/:id')
+        .get(isAuthenticated, operacionesController.listoperacion);
     return router;
 }

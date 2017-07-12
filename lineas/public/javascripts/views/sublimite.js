@@ -1,4 +1,4 @@
-function gridGarantia(parentRowID, parentRowKey, suffix) {
+function gridSublimite(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -26,9 +26,9 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/garantiareallimite/" + parentRowKey;
+    var childGridURL = "/sublimite/" + parentRowKey;
 
-    var modelGarantia = [
+    var modelSublimite = [
         {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
@@ -57,26 +57,26 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Garantias',
+        caption: 'Sublimites',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelGarantia,
+        colModel: modelSublimite,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        /*
+        
         subGrid: true,
-        subGridRowExpanded: showSubGrids3,
+        subGridRowExpanded: showSubGridsGarantiaSub,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-        */
+        
 
         editurl: '/limite/action3',
         gridComplete: function () {
@@ -205,4 +205,7 @@ function ajaxPregUpload(id, idc, idpadre, childGridID) {
             }
         })
     });
+}
+function showSubGridsGarantiaSub(subgrid_id, row_id) {
+    gridGarantiaSub(subgrid_id, row_id, 'garantiasub');
 }

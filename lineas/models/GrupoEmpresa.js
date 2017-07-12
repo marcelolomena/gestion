@@ -1,18 +1,22 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('Grupo', {
+	return sequelize.define('GrupoEmpresa', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			primaryKey: true,
 			autoIncrement: true
 		},
-		Nombre: {
-			type: DataTypes.STRING,
+		Empresa_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Grupo_Id: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Grupo'
+		schema: 'dbo', timestamps: false, tableName: 'GrupoEmpresa'
 	});
 };

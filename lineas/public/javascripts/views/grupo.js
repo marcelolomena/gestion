@@ -192,19 +192,6 @@ $(document).ready(function () {
         }
     );
 
-    $("#grid").jqGrid('navButtonAdd', "#pager", {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Excel",
-        position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/conceptos/excel';
-            $('#grid').jqGrid('excelExport', { "url": url });
-        }
-    });
-
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {
@@ -251,8 +238,8 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
     var modelDesgloseGrupo = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'idgrupo', name: 'idgrupo', hidden: true, editable: true },
-        { label: 'Rut', name: 'rut', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Razón Social', name: 'razonsocial', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Rut', name: 'rutcliente', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Razón Social', name: 'cliente.razonsocial', width: 250, hidden: false, search: true, editable: false, editrules: { required: true } },
         
     ];
 
@@ -291,7 +278,7 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
@@ -387,199 +374,3 @@ function gridDesgloseGrupo(parentRowID, parentRowKey,suffix) {
     );
 
 };
-function gridDesgloseNotas(parentRowID, parentRowKey) {
-    var tmplPnotas = "<div id='responsive-form' class='clearfix'>";
-
-    tmplPnotas += "<div class='form-row'>";
-    tmplPnotas += "<div class='column-full'>Nota{idnota}</div>";
-    tmplPnotas += "</div>";
-
-    tmplPnotas += "<div class='form-row'>";
-    tmplPnotas += "<div class='column-full'>Nombre Nota{nombrenota}</div>";
-    tmplPnotas += "</div>";
-
-    tmplPnotas += "<div class='form-row' style='display: none;'>";
-    tmplPnotas += "<div class='column-half'>iddesglosefactores{iddesglosefactores}</div>";
-    tmplPnotas += "</div>";
-
-    tmplPnotas += "<hr style='width:100%;'/>";
-    tmplPnotas += "<div> {sData} {cData}  </div>";
-    tmplPnotas += "</div>";
-
-    var childGridID = parentRowID + "_table";
-    var childGridPagerID = parentRowID + "_pager";
-    var childGridURL = "/sic/desglosenotas/" + parentRowKey;
-
-    var modelDesgloseNotas = [
-        { label: 'id', name: 'id', key: true, hidden: true },    
-        {
-            label: 'Nota', name: 'idnota', editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/sic/clasecriticidad/notas',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idnota;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Nota--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].nombre == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        var thistid = $(this).val();
-                        $("input#idnota").val($('option:selected', this).text());
-                    }
-                }],
-            }
-        },          
-        {
-            label: 'Nota', name: 'nombre', width: 50, editrules: { required: true }, search: false,
-            align: 'left', editable: true, formatter: 'number',
-        },
-        {
-                label: 'Nombre Nota', name: 'nombrenota', search: false, editable: true, hidden: false,
-                edittype: "textarea"
-        }
-    ];
-
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
-
-    $("#" + childGridID).jqGrid({
-        url: childGridURL,
-        mtype: "POST",
-        datatype: "json",
-        page: 1,
-        caption: 'Desglose Notas',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
-        colModel: modelDesgloseNotas,
-        viewrecords: true,
-        styleUI: "Bootstrap",
-        regional: 'es',
-        height: 'auto',
-        pager: "#" + childGridPagerID,
-        editurl: '/sic/actiondesglosenotas/action',
-        gridComplete: function () {
-            var recs = $("#" + childGridID).getGridParam("reccount");
-            if (isNaN(recs) || recs == 0) {
-
-                $("#" + childGridID).addRowData("blankRow", { "nombrenota": "No hay datos" },{"nota":""});
-            }
-        }
-    });
-
-    $("#" + childGridID).jqGrid('filterToolbar', {
-        stringResult: true, searchOperators: true,
-        searchOnEnter: false, defaultSearch: 'cn'
-    });
-
-    $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    },
-        {
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Desglose Notas",
-            template: tmplPnotas,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.nota == 0) {
-                    return [false, "Nota: Campo obligatorio", ""];
-                }  
-                else    
-                    {return [true, "", ""]}              
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.success != true)
-                    {return [false, result.error_text, ""];}
-                else    
-                    {return [true, "", ""]}
-
-             }, beforeShowForm: function (form) {                          
-                $('input#nombrenota', form).attr('readonly', 'readonly');
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-          
-            },
-            afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
-        },
-        {
-            closeAfterAdd: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Desglose Notas",
-            template: tmplPnotas,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (postdata.nombrenota == '') {
-                    return [false, "Nombre Nota: Campo obligatorio", ""];
-                } else if (postdata.nota == 0) {
-                    return [false, "Nota: Campo obligatorio", ""];
-                }  else {
-                    return [true, "", ""]
-                }           
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey };
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.success != true)
-                    {return [false, result.error_text, ""];}
-                else    
-                    {return [true, "", ""]}
-            },
-            beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            },
-            afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Elimina Nota",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.success != true)
-                    return [false, result.error_text, ""];
-                else
-                    return [true, "", ""]
-            }
-        },
-        {
-            recreateFilter: true
-        }
-    );
-
-}

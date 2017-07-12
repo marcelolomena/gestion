@@ -303,100 +303,6 @@ exports.listlimite = function (req, res) {
     });
 };
 
-exports.listsublimite = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "Linea_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "Numero";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[Sublinea]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Sublinea.belongsTo(models.Linea, { foreignKey: 'Linea_Id' });
-            models.Sublinea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Sublinea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.Linea
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
-
-exports.listgarantiareallimite = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [];
-
-    if (!sidx)
-        sidx = "Id";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[GarantiasReales]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.GarantiasReales.belongsToMany(models.Linea, { through: models.LineaGarantiaReal, foreignKey: 'GarantiasReales_Id' });
-            models.Linea.belongsToMany(models.GarantiasReales, { through: models.LineaGarantiaReal, foreignKey: 'Linea_Id' });
-
-            models.GarantiasReales.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.GarantiasReales.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.Linea, where: [{ Id: req.params.id }]
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
-
 exports.actiongarantia = function (req, res) {
     var action = req.body.oper;
 
@@ -592,6 +498,102 @@ exports.listmacs = function (req, res) {
                         model: models.macgrupal
                     }]
                 }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.listsublimite = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "Linea_Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "Numero";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[Sublinea]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.Sublinea.belongsTo(models.Linea, { foreignKey: 'Linea_Id' });
+            models.Sublinea.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.Sublinea.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    include: [{
+                        model: models.Linea
+                    }]
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.listoperacion = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "Sublinea_Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "Plazo";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[Operacion]." + sidx + " " + sord; //modelo
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.Operacion.belongsTo(models.Sublinea, { foreignKey: 'Sublinea_Id' });
+            models.Operacion.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.Operacion.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    include: [{
+                        model: models.Sublinea
+                    }]
+                }).then(function (lineas) {//revisar
                     return res.json({ records: records, total: total, page: page, rows: lineas });
                 }).catch(function (err) {
                     logger.error(err);

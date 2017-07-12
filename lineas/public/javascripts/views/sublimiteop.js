@@ -1,4 +1,4 @@
-function gridGarantia(parentRowID, parentRowKey, suffix) {
+function gridSublimiteOp(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -26,26 +26,26 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/garantiareallimite/" + parentRowKey;
+    var childGridURL = "/sublimite/" + parentRowKey;
 
-    var modelGarantia = [
+    var modelSublimite = [
         {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
         },
         { label: 'MacIndividual_Id', name: 'MacIndividual_Id', hidden: true, editable: true },
-        { label: 'N° Aprob', name: 'Numero', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'OP', name: 'Numero', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'T. Riesgo', name: 'TipoRiesgo', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Tipo Límite', name: 'Tipolimite', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Credito', name: 'Tipolimite', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Descripción', name: 'Comentario', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'P. Residual', name: 'PlazoResudual', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Plazo Residual', name: 'PlazoResudual', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Moneda', name: 'Moneda', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Aprobado', name: 'MontoAprobado', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
         { label: 'Deuda', name: 'DeudaActual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
         { label: 'Some. Aprob', name: 'MontoAprobacion', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
 
 
-        { label: 'G. Estatal', name: 'Garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Condicion', name: 'Garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
 
     ];
 
@@ -57,26 +57,26 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Garantias',
+        caption: 'Sublimites',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelGarantia,
+        colModel: modelSublimite,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        /*
+        
         subGrid: true,
-        subGridRowExpanded: showSubGrids3,
+        subGridRowExpanded: subGridOperacion,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-        */
+        
 
         editurl: '/limite/action3',
         gridComplete: function () {
@@ -205,4 +205,9 @@ function ajaxPregUpload(id, idc, idpadre, childGridID) {
             }
         })
     });
+}
+
+function subGridOperacion(subgrid_id, row_id) {
+    gridOperacion(subgrid_id, row_id, 'veroperacion');
+    //gridGarantia(subgrid_id, row_id, 'garantia');
 }

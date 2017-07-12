@@ -138,7 +138,7 @@ exports.proveedorespre = function (req, res) {
     var id = req.params.id;
 
     sequelize.query(
-        'select c.id, c.razonsocial from sic.proveedorsugerido a ' +
+        'select distinct c.id, c.razonsocial from sic.proveedorsugerido a ' +
         'join sic.serviciosrequeridos b on a.idserviciorequerido = b.id ' +
         'join sip.proveedor c on a.idproveedor=c.id  ' +
         'where b.idsolicitudcotizacion=:id order by c.razonsocial ',
