@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Monto: {
+		MontoInicial: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -38,6 +38,26 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		Sublinea_Id: {
 			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		MontoActual: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Otorgamiento: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaIngreso: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		VencimientoCurse: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Citidoc: {
+			type: DataTypes.STRING,
 			allowNull: true
 		}
 	}, {

@@ -34,10 +34,10 @@ function gridOperacion(parentRowID, parentRowKey, suffix) { //no esta activa
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
         },
         //{ label: 'Id', name: 'Id', hidden: true, editable: true },
-        { label: 'Plazo', name: 'Plazo', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'T. Credito', name: 'TipoCredito', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+        //{ label: 'Plazo', name: 'Plazo', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'T. Operacion', name: 'TipoCredito', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Moneda', name: 'Moneda', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Monto', name: 'Monto', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Monto', name: 'MontoInicial', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Tasa', name: 'Tasa', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Vencimiento', name: 'Vencimiento', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
         { label: 'Curse', name: 'Curse', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
@@ -115,7 +115,7 @@ function gridOperacion(parentRowID, parentRowKey, suffix) { //no esta activa
             },
         },
         {
-            addCaption: "Agrega Preguntas",
+            addCaption: "Agrega Preguntas", //se genera el form del boton "+""
             mtype: 'POST',
             url: '/sic/criteriosevaluacion/action3',
             closeAfterAdd: true,
